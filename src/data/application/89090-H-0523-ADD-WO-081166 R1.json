@@ -1,0 +1,60 @@
+{
+  "aplicationName": "89090-H-0523-ADD-WO-081166 R1",
+  "companyName": "YAMAL AIRLINES",
+  "planeNumber": "89090",
+  "planeType": "RRJ-95B",
+  "serviceType": "SB-ADD",
+  "dateOfAplication": "05.04.2023",
+  "companyID": {
+    "$oid": "63b5ccc5b7fd6da202520ecf"
+  },
+  "planeID": {
+    "$oid": "63b5c9a1b7fd6da202520ea9"
+  },
+  "isCreatedProject": false,
+  "ownerId": {
+    "$oid": "63ce5fe80d3d3600145f56c8"
+  },
+
+  "routineTasks": [],
+
+  "additionalTasks": [
+    {
+      "id": 1,
+      "taskNumber": "RRJ-27-00417-БД ",
+      "taskDescription": "СИСТЕМА УПРАВЛЕНИЯ САМОЛЕТОМ - ПОВЫШЕНИЕ ПРОЧНОСТИ КОНСТРУКЦИИ КРОНШТЕЙНОВ ПРИВОДА ЭЛЕРОНОВ"
+    },
+    {
+      "id": 2,
+      "taskNumber": "RRJ-27-00442-БД ",
+      "taskDescription": "СИСТЕМА УПРАВЛЕНИЯ САМОЛЁТОМ — ВНЕДРЕНИЕ ВЕРСИИ ПО СДУ 6.5"
+    },
+    {
+      "id": 3,
+      "taskNumber": "RRJ-31-00491-БД ",
+      "taskDescription": "ЗАМЕНА ПО БЛОКОВ EIU-100 НА ВЕРСИЮ 1.8"
+    },
+    {
+      "id": 4,
+      "taskNumber": "RRJ-53-00271-БД ",
+      "taskDescription": "ФЮЗЕЛЯЖ - УСИЛЕНИЕ ОТСЕКА Ф3 ЗАМЕНА ЭЛЕМЕНТОВ КОНСТРУКЦИИ ШПАНГОУТОВ 25, 27 и 28"
+    },
+    {
+      "id": 5,
+      "taskNumber": "RRJ-53-00279-БД ",
+      "taskDescription": "ФЮЗЕЛЯЖ - УСИЛЕНИЕ КОНСТРУКЦИИ ШПАНГОУТОВ 43,44 ЗАДНЕГО БГО"
+    },
+    {
+      "id": 6,
+      "taskNumber": "RRJ-53-00462-БД ",
+      "taskDescription": "ФЮЗЕЛЯЖ — ИСКЛЮЧЕНИЕ КОРРОЗИОННЫХ ПОРАЖЕНИЙ УЗЛОВ СТЫКА ОТСЕКА Ф5 И Ф6"
+    },
+    {
+      "id": 7,
+      "taskNumber": "RRJ-57-00402-БД ",
+      "taskDescription": "КРЫЛО - ХВОСТОВАЯ ЧАСТЬ КРЫЛА - ДОРАБОТКА УЗЛА НАВЕСКИ ПРИВОДА ЭЛЕРОНА"
+    }
+  ],
+
+  "hardTimeTasks": []
+}

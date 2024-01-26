@@ -1,0 +1,2476 @@
+[
+  {
+    "panel": "414GL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ВЕРХНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414MR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПЕРЕДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424MR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПЕРЕДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424GL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПЕРЕДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414TL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424TL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414TR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424TR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414CL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414ER",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ДАТЧИКУ УГЛОВЫХ ПЕРЕМЕЩЕНИЙ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424CL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121JW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424ER",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ДАТЧИКУ УГЛОВЫХ ПЕРЕМЕЩЕНИЙ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121KW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414JL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121LW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414NR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424JL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424NR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414KL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414PR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424KL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424PR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414DL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414FR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424DL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424FR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414LL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414QR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424LL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424QR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.03333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "431A",
+    "description": "ПЕРЕДНИЙ ОБТЕКАТЕЛЬ ПИЛОНА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "PYLON",
+    "zone": 430,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "441A",
+    "description": "ПЕРЕДНИЙ ОБТЕКАТЕЛЬ ПИЛОНА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "PYLON",
+    "zone": 440,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "413AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.11666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "413AR",
+    "description": "ПРАВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.11666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "423AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.11666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "423AR",
+    "description": "ПРАВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.11666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.08333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.13333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "414AR",
+    "description": "ПРАВАЯ СТВОРКА КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.08333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.13333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.08333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.13333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "424AR",
+    "description": "ПРАВУЮ СТВОРКУ КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.08333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.13333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "153PT",
+    "description": "153PT",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122BW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122HW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121BW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121MW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121NW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151BW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151KW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151LW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121AF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122AF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122DF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122EF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122BF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122FF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122CF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121BF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121CF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121DF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "523AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "523BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "523CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "523DB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "524CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "524BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "524AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522GB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522FB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522EB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522DB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "194G",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.16666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "522AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "193G",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.16666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "521CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "521BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "521AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "521AT",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "122JW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.36666666666666664,
+    "openingSkill": "MEC",
+    "closingTime": 0.5666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "624CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "624BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "624AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "623DB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "623CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "623BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "623AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622GB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622FB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622EB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622DB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "622AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "621CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "621BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "621AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "621AT",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152CF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152FF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151LF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151MF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151EC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.6666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 1,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151CC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.6666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 1,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "541A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 2",
+    "area": "FLAPS",
+    "zone": 540,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "641A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 2",
+    "area": "FLAPS",
+    "zone": 640,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "191A",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.3333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.5,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "195AT",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.2,
+    "openingSkill": "MEC",
+    "closingTime": 0.30000000000000004,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "196AT",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.2,
+    "openingSkill": "MEC",
+    "closingTime": 0.30000000000000004,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "193AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.2,
+    "openingSkill": "MEC",
+    "closingTime": 0.30000000000000004,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "194AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.2,
+    "openingSkill": "MEC",
+    "closingTime": 0.30000000000000004,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "191E",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.3333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.5,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "192E",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.3333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.5,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "195AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "196AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "643A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 4",
+    "area": "FLAPS",
+    "zone": 640,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "543A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 4",
+    "area": "FLAPS",
+    "zone": 540,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "544A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 5",
+    "area": "FLAPS",
+    "zone": 540,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "644A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 5",
+    "area": "FLAPS",
+    "zone": 640,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151DW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151FW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151GW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151HW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "151JW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152BW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152DW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "116-1A",
+    "description": "ОТСЕК ВЕТРОДВИГАТЕЛЯ",
+    "area": "RAT",
+    "zone": 110,
+    "openingTime": 0.05,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152FW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "152GW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "openingTime": 0.3,
+    "openingSkill": "MEC",
+    "closingTime": 0.44999999999999996,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": 731,
+    "description": "СТВОРКА ЛЕВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ",
+    "area": "MLG DOORS",
+    "zone": 730,
+    "openingTime": 0.05,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": 741,
+    "description": "СТВОРКА ПРАВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ",
+    "area": "MLG DOORS",
+    "zone": 740,
+    "openingTime": 0.05,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "674AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ ЭЛЕРОНА",
+    "area": "AILERONS",
+    "zone": 670,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "574AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ ЭЛЕРОНА",
+    "area": "AILERONS",
+    "zone": 570,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673GB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573GB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573FB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573EB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573DB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "572AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "572BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.08333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.11666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "570AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "openingTime": 0.25,
+    "openingSkill": "MEC",
+    "closingTime": 0.3333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673FB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673EB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673DB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "672AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "672BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "openingTime": 0.08333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.11666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673ET",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673DT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673CT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673BT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "673AT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573AT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573BT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573CT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573DT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "573ET",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "442D",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "442C",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "442B",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "442A",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "432D",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "432C",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "432B",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "432A",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "openingTime": 0.31666666666666665,
+    "openingSkill": "MEC",
+    "closingTime": 0.4666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "191CB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "192CB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.03333333333333333,
+    "openingSkill": "MEC",
+    "closingTime": 0.05,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "191GT",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "192GT",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "193B",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.2,
+    "openingSkill": "MEC",
+    "closingTime": 0.30000000000000004,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "194B",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.2,
+    "openingSkill": "MEC",
+    "closingTime": 0.30000000000000004,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "193EB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.16666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "194EB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "openingTime": 0.11666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.16666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "314D",
+    "description": "ПАНЕЛЬ ДОСТУПА ЗАДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА",
+    "area": "THS",
+    "zone": 310,
+    "openingTime": 0.05,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "324DR",
+    "description": "ПРАВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.6,
+    "openingSkill": "MEC",
+    "closingTime": 0.8999999999999999,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "324CL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.6,
+    "openingSkill": "MEC",
+    "closingTime": 0.8999999999999999,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "324BL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.6,
+    "openingSkill": "MEC",
+    "closingTime": 0.8999999999999999,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "324AL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.6,
+    "openingSkill": "MEC",
+    "closingTime": 0.8999999999999999,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "323AL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.6,
+    "openingSkill": "MEC",
+    "closingTime": 0.8999999999999999,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "322BL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.6,
+    "openingSkill": "MEC",
+    "closingTime": 0.8999999999999999,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "241EW",
+    "description": "ПАНЕЛЬ ДОСТУПА К БЛОКАМ АВИОНИКИ",
+    "area": "AFT CABIN",
+    "zone": 240,
+    "openingTime": 0.05,
+    "openingSkill": "MEC",
+    "closingTime": 0.08333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "313B",
+    "description": "ПАНЕЛЬ ДОСТУПА ЗАДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА",
+    "area": "THS",
+    "zone": 310,
+    "openingTime": 0.05,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "333AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "333BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "333CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "343AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "343BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "343CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "333AT",
+    "description": "ДОСТУП К ЛЕВОЙ ФАРЕ ОСВЕЩЕНИЯ ЭМБЛЕМЫ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.25,
+    "openingSkill": "MEC",
+    "closingTime": 0.4166666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "343AT",
+    "description": "ДОСТУП К ПРАВОЙ ФАРЕ ОСВЕЩЕНИЯ ЭМБЛЕМЫ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.25,
+    "openingSkill": "MEC",
+    "closingTime": 0.4166666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121CC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.6666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 1,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "334AB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121FC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.6666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 1,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "325A",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121DC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.6666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 1,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "325F",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "325E",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "325D",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "121GW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "openingTime": 0.35,
+    "openingSkill": "MEC",
+    "closingTime": 0.5333333333333333,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "325C",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "325B",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.25,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "334BB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "334CB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "334DB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "334EB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "344AB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "344BB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "344CB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "344DB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "344EB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "333AA",
+    "description": "НИЖНЯЯ ПАНЕЛЬ ДОСТУПА РВ",
+    "area": "THS",
+    "zone": 330,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "343AA",
+    "description": "НИЖНЯЯ ПАНЕЛЬ ДОСТУПА РВ",
+    "area": "THS",
+    "zone": 340,
+    "openingTime": 0.16666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.26666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "412A",
+    "description": "КРЫШКА ЛЮКА ВЫПУСКНОГО ОТВЕРСТИЯ ПОС ВОЗДУХОЗАБОРНИКА",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "422A",
+    "description": "КРЫШКА ЛЮКА ВЫПУСКНОГО ОТВЕРСТИЯ ПОС ВОЗДУХОЗАБОРНИКА",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "412CR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К БЛОКУ ЗАЩИТЫ ДВИГАТЕЛЯ ОТ РАСКРУТКИ",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "422CR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К БЛОКУ ЗАЩИТЫ ДВИГАТЕЛЯ ОТ РАСКРУТКИ",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "412DR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПОС ВОЗДУХОЗАБОРНИКА",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "422DR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПОС ВОЗДУХОЗАБОРНИКА",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "412BR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ДАТЧИКУ ТЕМПЕРАТУРЫ T12",
+    "area": "ENG",
+    "zone": 410,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "422BR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ДАТЧИКУ ТЕМПЕРАТУРЫ T12",
+    "area": "ENG",
+    "zone": 420,
+    "openingTime": 0.06666666666666667,
+    "openingSkill": "MEC",
+    "closingTime": 0.06666666666666667,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "222BT",
+    "description": "222BT",
+    "openingTime": 0.016666666666666666,
+    "openingSkill": "MEC",
+    "closingTime": 0.016666666666666666,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "232JT",
+    "description": "232JT",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "533AB",
+    "description": "533AB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "533BB",
+    "description": "533BB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "533CB",
+    "description": "533CB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "550AB",
+    "description": "550AB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "571AT",
+    "description": "571AT",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "633AB",
+    "description": "633AB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "633BB",
+    "description": "633BB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "633CB",
+    "description": "633CB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "650AB",
+    "description": "650AB",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  },
+  {
+    "panel": "671AT",
+    "description": "671AT",
+    "openingTime": 0,
+    "openingSkill": "MEC",
+    "closingTime": 0,
+    "closingSkill": "MEC"
+  }
+]

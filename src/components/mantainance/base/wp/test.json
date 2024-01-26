@@ -1,0 +1,22 @@
+{
+  "_id": {
+    "$oid": "651e83a979054480be471b09"
+  },
+  "taskNumber": "521000-02-1",
+  "section": "2-52",
+  "sourceTaskRef": "MRB 52.10.00/11",
+  "access": "831 831FZ 831GZ\n832 832FZ 832GZ\n841 841FZ 841GZ\n842 842FZ 842GZ",
+  "zone": "831\n832\n841\n842",
+  "taskDescription": "PASSENGER/CREW DOOR\n\nFUNCTIONAL CHECK OF DOOR SUSPENSION",
+  "specialization": "AF",
+  "code": "FNC",
+  "workInterval": "36 MO\nOR\n8000 FC\nOR\n12000 FH",
+  "document": "MRB 6",
+  "amtoss": "521000-720-001",
+  "workerNumber": "1\n1\n1\n1",
+  "mainWorkTime": "0.05\n0.05\n0.05\n0.05",
+  "accessTaskTime": "0.06\n0.06\n0.06\n0.06",
+  "preparationCode": "802+804",
+  "applicability": "ALL",
+  "acType": "a320"
+}

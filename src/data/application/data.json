@@ -1,0 +1,3040 @@
+[
+  {
+    "id": 1,
+    "taskNumber": "115000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЕВОГО ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА (EWIS) (512310209)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 2,
+    "taskNumber": "116000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРАВОГО ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА (EWIS) (512310211)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 3,
+    "taskNumber": "117000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕГО ПРИБОРНОГО ОТСЕКА (EWIS) (512310261)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 4,
+    "taskNumber": "139000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) НИЖНЕЙ ПОЛОВИНЫ ФЮЗЕЛЯЖА – ЦЕНТРАЛЬНОЙ ЧАСТИ БИМСА (EWIS) (512310262)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 5,
+    "taskNumber": "141000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЕВОГО",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 6,
+    "taskNumber": "200000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНЕШНИЙ) ВЕРХНЕЙ ЧАСТИ ФЮЗЕЛЯЖА ВКЛЮЧАЯ ГЕРМЕТИЧНЫЕ ЛЮКИ (512310303)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 7,
+    "taskNumber": "210000ZT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНЕШНИЙ) ВЕРХНЕЙ ЧАСТИ ФЮЗЕЛЯЖА - КАБИНЫ ЭКИПАЖА (512310312)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 8,
+    "taskNumber": "324000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЗАДНЕЙ ЧАСТИ КИЛЯ (EWIS) (512310199)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 9,
+    "taskNumber": "333000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЕВОЙ ЗАЛОНЖЕРОННОЙ ЧАСТИ СТАБИЛИЗАТОРА (EWIS) (512310197)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 10,
+    "taskNumber": "343000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРАВОЙ ЗАЛОНЖЕРОННОЙ ЧАСТИ СТАБИЛИЗАТОРА (EWIS) (512310198)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 11,
+    "taskNumber": "414000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) РЕВЕРСИВНОГО УСТРОЙСТВА ЛЕВОЙ СИЛОВОЙ УСТАНОВКИ (EWIS) (512310204)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 12,
+    "taskNumber": "424000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) РЕВЕРСИВНОГО УСТРОЙСТВА ПРАВОЙ СИЛОВОЙ УСТАНОВКИ (EWIS) (512310264)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 13,
+    "taskNumber": "500000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНЕШНИЙ) ВЕРХНЕЙ ПОВЕРХНОСТИ ЛЕВОЙ КОНСОЛИ КРЫЛА (512310205)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 14,
+    "taskNumber": "540000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 2 ЗАКРЫЛКА ЛЕВОЙ КОНСОЛИ КРЫЛА (512310213)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 15,
+    "taskNumber": "540000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 3 ЗАКРЫЛКА ЛЕВОЙ КОНСОЛИ КРЫЛА (512310214)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 16,
+    "taskNumber": "540000ZT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 4 ЗАКРЫЛКА ЛЕВОЙ КОНСОЛИ КРЫЛА (512310215)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 17,
+    "taskNumber": "540000ZT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 5 ЗАКРЫЛКА ЛЕВОЙ КОНСОЛИ КРЫЛА (512310212)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 18,
+    "taskNumber": "572000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ ЛЕВОЙ КОНСОЛИ КРЫЛА (EWIS) (512310304)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 19,
+    "taskNumber": "574000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ ЛЕВОЙ КОНСОЛЬ КРЫЛА В ЗОНЕ ЭЛЕРОНА (EWIS) (512310218)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 20,
+    "taskNumber": "600000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНЕШНИЙ) ВЕРХНЕЙ ПОВЕРХНОСТИ ПРАВОЙ КОНСОЛИ КРЫЛА (512310217)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 21,
+    "taskNumber": "640000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 2 ЗАКРЫЛКА ПРАВОЙ КОНСОЛИ КРЫЛА (512310221)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 22,
+    "taskNumber": "640000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 3 ЗАКРЫЛКА ПРАВОЙ КОНСОЛИ КРЫЛА (512310265)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 23,
+    "taskNumber": "640000ZT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 4 ЗАКРЫЛКА ПРАВОЙ КОНСОЛИ КРЫЛА (512310224)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 24,
+    "taskNumber": "640000ZT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ 5 ЗАКРЫЛКА ПРАВОЙ КОНСОЛИ КРЫЛА (512310219)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 25,
+    "taskNumber": "672000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ ПРАВОЙ КОНСОЛИ КРЫЛА (EWIS) (512310226)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 26,
+    "taskNumber": "674000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ ПРАВОЙ КОНСОЛИ КРЫЛА В ЗОНЕ ЭЛЕРОНА (EWIS) (512310227)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 27,
+    "taskNumber": "810000ZT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЮКА ПЕРЕДНЕГО ПРИБОРНОГО ОТСЕКА И ЕГО ОКАНТОВКИ (512310228)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 28,
+    "taskNumber": "201116MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ ВЕТРОДВИГАТЕЛЯ (RAT) F1-XL-(M17)-09 (ВСЕ ВС КРОМЕ MSN 95096), F1-XL- (512310267)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 29,
+    "taskNumber": "201117MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-XL-(M17)-11, FC-XR-(M21)-12, FC-P-(10-11)-32, FC-P-(10-11 (512310235)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 30,
+    "taskNumber": "201117MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЛЕВОЙ И ПРАВОЙ ПОЛОВИНЕ ПЕРЕДНЕГО ПРИБО (512310236)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 31,
+    "taskNumber": "201125MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-XL-(M17)-11 01 (EWIS) (512310237)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 32,
+    "taskNumber": "201127MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ FC-XR-(M21)-12 (EWIS) (512310266)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 33,
+    "taskNumber": "201131MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-XR-(M21)-12 И FC-XR-(M21)-22 01 (EWIS) (512310268)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 34,
+    "taskNumber": "201135MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР КАБЕЛЯ ПИТАНИЯ НАСОСА ПОДКАЧКИ (L1- L2) MG-XLA-(M26)-03 (ВС MSN 95007-95029) (512310271)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 35,
+    "taskNumber": "201136MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР КАБЕЛЯ ПИТАНИЯ НАСОСА ПОДКАЧКИ (R1-R2) MG-XRA-(M25)-04 (ВС MSN 95007-95029) И (512310273)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 36,
+    "taskNumber": "201155MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-PL-(M16)-31 И FC-XL-(M17)-11 МЕЖДУ ЛЕВОЙ БОКОВОЙ ПАНЕЛЬЮ (512310269)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 37,
+    "taskNumber": "201156MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-XR-(M21)-12 МЕЖДУ ПРАВОЙ БОКОВОЙ ПАНЕЛЬЮ ЗАДНЕГО БГО И ФЮ (512310232)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 38,
+    "taskNumber": "201157MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-XR-(M21)-12 (EWIS) (512310270)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 39,
+    "taskNumber": "201313MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ КОНТАКТОРА ЗАПУСКА ВСУ, ПРОВОДКИ ГЕНЕРАТОРА ВСУ И ПРОВОДКИ СИСТЕМЫ З (512310272)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 40,
+    "taskNumber": "201411MT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЛЕВОЙ СИЛОВОЙ УСТАНОВКЕ (EWIS) (512310238)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 41,
+    "taskNumber": "201411MT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЭЛЕКТРОЖГУТОВ ОБВЯЗКИ ДВИГАТЕЛЯ ЛЕВОЙ СИЛОВОЙ УСТАНОВКИ (EWIS) (512310276)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 42,
+    "taskNumber": "201421MT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ПРАВОЙ СИЛОВОЙ УСТАНОВКЕ (EWIS) (512310239)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 43,
+    "taskNumber": "201421MT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЭЛЕКТРОЖГУТОВ ОБВЯЗКИ ДВИГАТЕЛЯ ПРАВОЙ СИЛОВОЙ УСТАНОВКИ (EWIS) (512310240)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 44,
+    "taskNumber": "201431MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЖГУТА М30 В ЗОНЕ ПЕРЕДНЕГО ОБТЕКАТЕЛЯ И КОРОБКИ РАЗЪЕМОВ ЛЕВОГО ПИЛОНА (EWIS) (512310274)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 45,
+    "taskNumber": "201432MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЖГУТА М30 В ЗОНЕ СРЕДНЕГО ОБТЕКАТЕЛЯ И БАЛКИ ЛЕВОГО ПИЛОНА (EWIS) (512310275)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 46,
+    "taskNumber": "201441MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЖГУТА М30 В ЗОНЕ ПЕРЕДНЕГО ОБТЕКАТЕЛЯ И КОРОБКИ РАЗЪЕМОВ ПРАВОГО ПИЛОНА (EWIS (512310233)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 47,
+    "taskNumber": "201442MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЖГУТА М30 В ЗОНЕ СРЕДНЕГО ОБТЕКАТЕЛЯ И БАЛКИ ПРАВОГО ПИЛОНА (EWIS) (512310242)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 48,
+    "taskNumber": "201521MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ WL-XF-(M30L)-09 ЛЕВОЙ КОНСОЛИ КРЫЛА (EWIS) (512310277)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 49,
+    "taskNumber": "201621MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ WR-XF-(M30R)-09 ПРАВОЙ КОНСОЛИ КРЫЛА (EWIS) (512310241)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 50,
+    "taskNumber": "202112MT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ МОДУЛЯ ВОЗДУШНЫХ СИГНАЛОВ В ПЕРЕДНЕМ ТЕХНИЧЕСКОМ ОТСЕКЕ НА ОБЩЕЕ СОС (512310243)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 51,
+    "taskNumber": "202115MT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПЕРЕМЫЧЕК МЕТАЛЛИЗАЦИИ ЛЮКА ДОСТУПА ЛЕВОГО ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА НА О (512310278)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 52,
+    "taskNumber": "202116MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПЕРЕМЫЧЕК МЕТАЛЛИЗАЦИИ ЛЮКА ДОСТУПА ПРАВОГО ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА НА (512310280)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 53,
+    "taskNumber": "29-SDM-01",
+    "amtoss": "N/A",
+    "taskDescription": " ТРУБОПРОВОДЫ ГИДРАВЛИЧЕСКОЙ СИСТЕМЫ В ПИЛОНЕ ДВИГАТЕЛЯ (511992877)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 54,
+    "taskNumber": "235100MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ МИКРОФОНОВ КИСЛОРОДНОЙ МАСКИ (512310244)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 55,
+    "taskNumber": "237100MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ПОДВОДНОГО АКУСТИЧЕСКОГО СИГНАЛИЗАТОРА РЕГИСТРАТОРА ЗВУКОВОЙ ИНФОРМАЦИИ (512310234)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 56,
+    "taskNumber": "291000MT-16",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ (ПРОВЕРКА НА ВНУТРЕННЮЮ ГЕРМЕТИЧНОСТЬ) ГС1, ГС2, ГС3 (512310245)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 57,
+    "taskNumber": "313100MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ПОДВОДНОГО АКУСТИЧЕСКОГО СИГНАЛИЗАТОРА РЕГИСТРАТОРА ПАРАМЕТРИЧЕСКОЙ ИНФОРМ (512310281)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 58,
+    "taskNumber": "321000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ООШ (512310284)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 59,
+    "taskNumber": "322000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ПОШ (512310286)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 60,
+    "taskNumber": "344300PT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СИСТЕМЫ ПРЕДОТВРАЩЕНИЯ СТОЛКНОВЕНИЙ В ВОЗДУХЕ И РАННЕГО ПРЕДУПРЕЖДЕНИЯ ПРИ (512310306)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 61,
+    "taskNumber": "345200PT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ГЛОБАЛЬНОЙ СИСТЕМЫ ОПРЕДЕЛЕНИЯ МЕСТОПОЛОЖЕНИЯ (512310229)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 62,
+    "taskNumber": "345300PT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СИСТЕМЫ УПРАВЛЕНИЯ ВОЗДУШНЫМ ДВИЖЕНИЕМ (512310230)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 63,
+    "taskNumber": "345500PT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ДАЛЬНОМЕРНОГО ОБОРУДОВАНИЯ (512310231)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 64,
+    "taskNumber": "352000MT-06",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР АВАРИЙНОГО КИСЛОРОДНОГО КОНТЕЙНЕРА (СТВОРКА И ЗАПИРАЮЩИЙ МЕХАНИЗМ) И КИСЛОРОДНОГО ГЕ (512310246)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 65,
+    "taskNumber": "361000PT-01",
+    "amtoss": "N/A",
+    "taskDescription": " СПИСАНИЕ (ЗАМЕНА) УПЛОТНИТЕЛЬНЫХ КОЛЕЦ P",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 66,
+    "taskNumber": "521000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР УПОРНЫХ ФИТИНГОВ ПЕРЕДНИХ, ЗАДНИХ ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕЙ, ВКЛЮЧАЯ ОТВЕ (512310202)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 67,
+    "taskNumber": "523000MT-09",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНОГО ЗАЗОРА ГРУЗОВОЙ ДВЕРИ НА ПРЕДМЕТ ЗАСОРЕНИЯ (512310287)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 68,
+    "taskNumber": "524000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР УПОРНЫХ ФИТИНГОВ И КРОНШТЕЙНОВ ЛЮКА ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА (512310305)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 69,
+    "taskNumber": "524000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР УПОРНЫХ ФИТИНГОВ И КРОНШТЕЙНОВ ЛЮКОВ ЛЕВОГО И ПРАВОГО ТЕХНИЧЕСКИХ О (512310253)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 70,
+    "taskNumber": "524000ST-09",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР УПОРНЫХ ФИТИНГОВ И КРОНШТЕЙНОВ ЛЮКА ПЕРЕДНЕГО ПРИБОРНОГО ОТСЕКА (512310255)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 71,
+    "taskNumber": "04-12-1-ALI-222",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ОКАНТОВКИ И БАЛОК ОКАНТОВКИ ПРОЕМА ПЕРЕДНЕЙ ГРУЗОВОЙ ДВЕРИ ПО ШП",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 72,
+    "taskNumber": "530500MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ДРЕНАЖНЫХ ТРУБОПРОВОДОВ ПОДДОНА НАД СТЕЛЛАЖОМ ОБОРУДОВАНИЯ В ПЕРЕДНЕМ ПРИБ (512310200)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 73,
+    "taskNumber": "530500MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ДРЕНАЖНЫХ КЛАПАНОВ НА ПРЕДМЕТ ЗАКЛИНИВАНИЯ (512310282)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 74,
+    "taskNumber": "530500MT-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНЫХ ОТВЕРСТИЙ НА ПРЕДМЕТ ЗАСОРЕНИЯ В ЗОНЕ ПОРОГОВ ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕ (512310201)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 75,
+    "taskNumber": "530500MT-06",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ДРЕНАЖНОГО ТРУБОПРОВОДА В ПЕРЕДНЕМ ТЕХНИЧЕСКОМ ОТСЕКЕ НА ПРЕДМЕТ ЗАСОРЕНИЯ (512709584)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 76,
+    "taskNumber": "530500MT-09",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ОЧИСТКА) НИЖНЕЙ ПАНЕЛИ МЕЖДУ ШП",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 77,
+    "taskNumber": "530500MT-10",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНЫХ ОТВЕРСТИЙ НА ПРЕДМЕТ ЗАСОРЕНИЯ (НОСОВОЙ ОБТЕКАТЕЛЬ, ОБТЕКАТЕЛЬ КРЫЛО-ФЮ (512310249)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 78,
+    "taskNumber": "537000ST-34",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР ОКАНТОВКИ И БАЛОК ОКАНТОВКИ ПРОЕМА ЗАДНЕЙ ГРУЗОВОЙ ДВЕРИ ПО ШП",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 79,
+    "taskNumber": "04-12-1-ALI-228",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ОКАНТОВКИ И БАЛОК ОКАНТОВКИ ПРОЕМА ЗАДНЕЙ ГРУЗОВОЙ ДВЕРИ ПО ШП",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 80,
+    "taskNumber": "540500MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНЫХ ОТВЕРСТИЙ СРЕДНЕГО И ЗАДНЕГО ОБТЕКАТЕЛЕЙ НА ПРЕДМЕТ ЗАСОРЕНИЯ (512310250)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 81,
+    "taskNumber": "540500MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ДРЕНАЖНЫХ ТРУБОПРОВОДОВ СРЕДНЕГО И ЗАДНЕГО ОБТЕКАТЕЛЕЙ НА ПРЕДМЕТ ЗАСОРЕНИ (512310283)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 82,
+    "taskNumber": "545000ST-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР КОМПОЗИТНОЙ ОБШИВКИ ЗАДНЕГО ОБТЕКАТЕЛЯ НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ, РАССЛА (512310288)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 83,
+    "taskNumber": "550500MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНЫХ ЗАЗОРОВ ",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 84,
+    "taskNumber": "551000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВЕРХНЕЙ И НИЖНЕЙ ПАНЕЛЕЙ СТАБИЛИЗАТОРА (512310291)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 85,
+    "taskNumber": "551000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ НАВЕСКИ СТАБИЛИЗАТОРА (ВКЛЮЧАЯ БОЛТЫ И ОСИ) (512310257)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 86,
+    "taskNumber": "551000ST-11",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ НАВЕСКИ И КРЕПЛЕНИЯ ПРИВОДОВ РУЛЯ ВЫСОТЫ НА ЗАДНЕМ ЛОНЖЕРОНЕ СТАБИЛИ (512310307)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 87,
+    "taskNumber": "552000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ОБШИВОК РВ НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ (512310258)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 88,
+    "taskNumber": "570500MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНЫХ ЗАЗОРОВ, ОТВЕРСТИЙ НА ПРЕДМЕТ ЗАСОРЕНИЯ (512310251)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 89,
+    "taskNumber": "570500MT-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНОГО ОТВЕРСТИЯ В КЕССОНЕ КРЫЛА МЕЖДУ НЕРВЮРАМИ 18 И 21 (СУХОЙ ОТСЕК) НА ПРЕ (512310290)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 90,
+    "taskNumber": "570500MT-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДРЕНАЖНЫХ ОТВЕРСТИЙ В ЗАКОНЦОВКАХ КРЫЛА НА ПРЕДМЕТ ЗАСОРЕНИЯ (512310292)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 91,
+    "taskNumber": "572000ST-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СТЕНКИ ПЕРЕДНЕГО ЛОНЖЕРОНА КОРНЕВОЙ ЧАСТИ (512310293)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 92,
+    "taskNumber": "572000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ВЕРХНЕГО И НИЖНЕГО КРОНШТЕЙНОВ КРЕПЛЕНИЯ ШАССИЙНОЙ БАЛКИ (512310259)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 93,
+    "taskNumber": "572000ST-21",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР НИЖНЕЙ ПЕРЕДНЕЙ ПАНЕЛИ ЛЕВОЙ И ПРАВОЙ ОЧК В ЗОНЕ ПЕРЕДНЕГО ЛОНЖЕРОНА МЕ (512310308)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 94,
+    "taskNumber": "574000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР СИЛОВЫХ ДИАФРАГМ (СЕКЦИИ ПРЕДКРЫЛКОВ 1-4) (512310295)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 95,
+    "taskNumber": "574000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ВНУТРЕННЕЙ ОБШИВКИ (СЕКЦИИ 1-4) (512310309)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 96,
+    "taskNumber": "575000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ВЕРХНЕЙ И НИЖНЕЙ ТЯГ КРЕПЛЕНИЯ ШАССИЙНОЙ БАЛКИ С ЗАДНИМ ЛОНЖЕРОНОМ (512310296)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 97,
+    "taskNumber": "575000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР РЕЛЬСОВ 1, 2, 3, 4, 5 ВНЕШНЕГО И ВНУТРЕННЕГО ЗАКРЫЛКОВ И УЗЛА НАВЕСКИ 1 (512310260)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 98,
+    "taskNumber": "576000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВЕРХНИХ И НИЖНИХ ПАНЕЛЕЙ ЭЛЕРОНА НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ, РАССЛОЕНИЕ (512310297)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 99,
+    "taskNumber": "577000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ КРЕПЛЕНИЯ ПРИВОДОВ, НАВЕСОК И СЕРЕГ ИНТЕРЦЕПТОРОВ СЕКЦИЙ 1, 2 И 3, В (512310310)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 100,
+    "taskNumber": "577000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВЕРХНЕЙ И НИЖНЕЙ ОБШИВОК ИНТЕРЦЕПТОРОВ СЕКЦИЙ 1, 2 И 3 НА ПРЕДМЕТ П (512310298)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 101,
+    "taskNumber": "577000ST-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ КРЕПЛЕНИЯ ПРИВОДОВ, И НАВЕСКИ И СЕРЕГ ТОРМОЗНЫХ ЩИТКОВ СЕКЦИЙ 1, 2, ВК (512310311)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 102,
+    "taskNumber": "577000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВЕРХНЕЙ И НИЖНЕЙ ОБШИВОК ТОРМОЗНЫХ ЩИТКОВ СЕКЦИЙ 1, 2 НА ПРЕДМЕТ ПО (512310203)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 103,
+    "taskNumber": "572000ST-27",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ КРЕПЛЕНИЯ ПРИВОДОВ ЭЛЕРОНА, РАСПОЛОЖЕННЫХ НА ЗАДНЕМ ЛОНЖЕРОНЕ (512709586)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 104,
+    "taskNumber": "572000ST-28",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНА КРЕПЛЕНИЯ ПРИВОДА ТОРМОЗНОГО ЩИТКА, РАСПОЛОЖЕННОГО НА ЗАДНЕМ ЛО (512310315)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 105,
+    "taskNumber": "716100MT-12",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (БОРОСКОПИЯ) ВОЗДУШНОГО КОЛЛЕКТОРА ВОЗДУХОЗАБОРНИКА НА ОБЩЕЕ СОСТОЯНИЕ И (512310294)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 106,
+    "taskNumber": "716100MT-14",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (БОРОСКОПИЯ) РЁБЕР ЖЁСТКОСТИ И КРОНШТЕЙНОВ ВОЗДУШНОГО КОЛЛЕКТОРА ВОЗДУХО (512310252)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 107,
+    "taskNumber": "783000MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ И КРЕПЛЕНИЙ ПРИВОДОВ ПОВОРОТНЫХ СТВОРОК НА ОБЩЕЕ И ТЕХНИЧЕСКОЕ СОСТОЯНИЕ (512310302)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 108,
+    "taskNumber": "783000MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ФИТИНГОВ ОСЕЙ ПОВОРОТНЫХ СТВОРОК НА ОБЩЕЕ И ТЕХНИЧЕСКОЕ СОСТОЯНИЕ РЕВЕРСИВНОГО УСТРО (512310299)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 109,
+    "taskNumber": "783000MT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОТИВОПОЖАРНЫХ ЭКРАНОВ ПЕРЕДНЕГО ШПАНГОУТА НА ОБЩЕЕ СОСТОЯНИЕ И НАДЕЖНОСТЬ Т (512310300)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 110,
+    "taskNumber": "783000MT-14",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ТРЕТИЧНОГО ЗАМКА ПОВОРОТНОЙ СТВОРКИ НА ПРЕДМЕТ ПОВРЕЖДЕНИЯ СИСТЕМЫ БЛОКИРОВКИ РЕВ (512310285)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 111,
+    "taskNumber": "783000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ПЕРЕДНИХ И ЗАДНИХ V-ОБРАЗНЫХ ПРОФИЛЕЙ РЕВЕРСИВНОГО УСТРОЙСТВА (512310301)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "id": 112,
+    "taskNumber": "783000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР СТЯЖНЫХ ЗАМКОВ И ОКРУЖАЮЩЕЙ КОНСТРУКЦИИ РЕВЕРСИВНОГО УСТРОЙСТВА НА ПРЕДМЕТ (512310206)",
+    "WOCustomer": 507974376,
+    "WOPackageType": "1C"
+  },
+  {
+    "taskNumber": "111000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) НОСОВОГО ОБТЕКАТЕЛЯ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "112000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "116000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА ВЕТРОГЕНЕРАТОРА (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "127000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПОДПОЛЬНОГО ПРОСТРАНСТВА ПЕРЕДНЕГО БАГАЖНО-ГРУЗОВОГО ОТСЕКА -01",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "131000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА СИСТЕМЫ КОНДИЦИОНИРОВАНИЯ ВОЗДУХА -02 (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "133000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЦЕНТРОПЛАНА (EWIS) (CDCCL)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "155000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРОСТРАНСТВА МЕЖДУ ЛЕВОЙ БОКОВОЙ СТЕНКОЙ ЗАДНЕГО БАГАЖНО-ГРУЗОВО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "156000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРОСТРАНСТВА МЕЖДУ ПРАВОЙ БОКОВОЙ СТЕНКОЙ ЗАДНЕГО БАГАЖНО-ГРУЗОВ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "157000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПОДПОЛЬНОГО ПРОСТРАНСТВА ЗАДНЕГО БАГАЖНО-ГРУЗОВОГО ОТСЕКА -01 (E",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "191000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЕВОЙ СТОРОНЫ ПЕРЕДНЕЙ ЧАСТИ ОБТЕКАТЕЛЯ КРЫЛО-ФЮЗЕЛЯЖ И НОСОВОЙ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "192000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРАВОЙ СТОРОНЫ ПЕРЕДНЕЙ ЧАСТИ ОБТЕКАТЕЛЯ КРЫЛО-ФЮЗЕЛЯЖ И НОСОВОЙ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "195000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЕВОЙ СТОРОНЫ ЗАДНЕЙ ЧАСТИ ОБТЕКАТЕЛЯ КРЫЛО-ФЮЗЕЛЯЖ И ЗАДНЕЙ ЧАС",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "196000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРАВОЙ СТОРОНЫ ЗАДНЕЙ ЧАСТИ ОБТЕКАТЕЛЯ КРЫЛО-ФЮЗЕЛЯЖ И ЗАДНЕЙ ЧА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "210000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ВЕРХНЕЙ ЧАСТИ ФЮЗЕЛЯЖА - КАБИНЫ ЭКИПАЖА (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "325000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) РУЛЯ НАПРАВЛЕНИЯ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "412000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ВОЗДУХОЗАБОРНИКА ЛЕВОЙ СИЛОВОЙ УСТАНОВКИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "422000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ВОЗДУХОЗАБОРНИКА ПРАВОЙ СИЛОВОЙ УСТАНОВКИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "531000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА 1, 2, 3 И РАСХОДНОГО ОТСЕКА КЕССОНА ЛЕВОЙ КОНСОЛИ КРЫЛА (",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "631000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА 1, 2, 3 И РАСХОДНОГО ОТСЕКА КЕССОНА ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "810000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЮКА ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА И ЕГО ОКАНТОВКИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "810000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЮКА ЛЕВОГО ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА И ЕГО ОКАНТОВКИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "810000ZT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЛЮКА ПРАВОГО ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА И ЕГО ОКАНТОВКИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "820000ZT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ДВЕРИ ПЕРЕДНЕГО БАГАЖНО-ГРУЗОВОГО ОТСЕКА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "820000ZT-04",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ДВЕРИ ЗАДНЕГО БАГАЖНО-ГРУЗОВОГО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "830000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕЙ ПАССАЖИРСКОЙ ДВЕРИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "830000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЗАДНЕЙ ПАССАЖИРСКОЙ ДВЕРИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "840000ZT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕЙ СЛУЖЕБНОЙ ДВЕРИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "840000ZT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЗАДНЕЙ СЛУЖЕБНОЙ ДВЕРИ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201112MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ПЕРЕДНЕМ ТЕХНИЧЕСКОМ ОТСЕКЕ (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201115MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЛЕВОМ ПЕРЕДНЕМ ТЕХНИЧЕСКОМ ОТСЕКЕ (EWIS",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201116MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ПРАВОМ ПЕРЕДНЕМ ТЕХНИЧЕСКОМ ОТСЕКЕ (EWI",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201125MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS МЕЖДУ ЛЕВОЙ БОКОВОЙ ПАНЕЛЬЮ ПЕРЕДНЕГО БГО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201127MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЛЕВОЙ И ПРАВОЙ ЧАСТИ ПОДПОЛЬНОГО ПРОСТР",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201141MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ FC-XR-(M21)-12, FC-XL-(M17)-21, FC-XR-(M21)-22, FC-XL-(M17)-13, F1-",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201155MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ НЕОБХОДИМОСТИ) ЭЛЕМЕНТОВ EWIS МЕЖДУ ЛЕВОЙ БОКОВОЙ ПАНЕЛЬЮ ЗАДНЕГО БГО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201156MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ НЕОБХОДИМОСТИ) ЭЛЕМЕНТОВ EWIS МЕЖДУ ПРАВОЙ БОКОВОЙ ПАНЕЛЬЮ ЗАДНЕГО БГ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201157MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЛЕВОЙ И ПРАВОЙ ЧАСТИ ПОДПОЛЬНОГО ПРОСТР",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201161MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ОТСЕКЕ САНТЕХНИЧЕСКОГО ОБОРУДОВАНИЯ (EW",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201191MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЛЕВОЙ ПЕРЕДНЕЙ ЧАСТИ ОБТЕКАТЕЛЯ КРЫЛО-Ф",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201192MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ПРАВОЙ ПЕРЕДНЕЙ ЧАСТИ ОБТЕКАТЕЛЯ КРЫЛО-",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201210MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ПРОВОДКИ УПРАВЛЕНИЯ ЭЛЕРОНАМИ, РУЛЕМ ВЫСОТЫ, РУЛЕМ НАПРАВЛЕНИЯ, ИНТЕРЦЕПТОРАМИ И ТОР",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201414MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЭЛЕКТРОЖГУТОВ РЕВЕРСИВНОГО УСТРОЙСТВА ЛЕВОЙ СИЛОВОЙ УСТАНОВКИ (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "201424MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЭЛЕКТРОЖГУТОВ РЕВЕРСИВНОГО УСТРОЙСТВА ПРАВОЙ СИЛОВОЙ УСТАНОВКИ (EWIS)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "202120MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЗАЗЕМЛЕНИЯ В ПЕРЕДНЕМ БГО НА ОБЩЕЕ СОСТОЯНИЕ И НАДЕЖНОСТЬ КРЕПЛЕНИЯ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "202120MT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ МОДУЛЕЙ ВОЗДУШНЫХ СИГНАЛОВ И ДАТЧИКОВ ДЫМА В ПЕРЕДНЕМ БГО (ВКЛЮЧАЯ В",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "202150MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЗАЗЕМЛЕНИЯ В ЗАДНЕМ БГО НА ОБЩЕЕ СОСТОЯНИЕ И НАДЕЖНОСТЬ КРЕПЛЕНИЯ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "202150MT-03",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СИЛОВОЙ ПРОВОДКИ И ПРОВОДКИ ДАТЧИКОВ ДЫМА В ЗАДНЕМ БГО НА ОБЩЕЕ СОСТОЯНИЕ И Н",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "202330MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПЕРЕМЫЧЕК МЕТАЛЛИЗАЦИИ КОНСТРУКЦИИ ЛЕВОГО И ПРАВОГО РУЛЯ ВЫСОТЫ НА ОБЩЕЕ СОСТ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "202415MT-02",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР МЕТАЛЛИЧЕСКИХ ПРУЖИН И ПЛОЩАДОК МЕТАЛИЗАЦИИ СОПЛА СМЕШЕНИЯ ПОТОКОВ ЛЕВОЙ И ПР",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "253000MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ТОЧЕК КРЕПЛЕНИЯ КУХОННЫХ МОДУЛЕЙ (ФИТИНГОВ, ТЯГ) НА НАЛИЧИЕ КОРРОЗИИ, ПОВРЕЖДЕНИЙ, Т",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "254000MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ КРЕПЛЕНИЯ ТУАЛЕТНОГО МОДУЛЯ НА ОБЩЕЕ СОСТОЯНИЕ И НАДЕЖНОСТЬ СОЕДИНЕНИЙ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "256500MT-01",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СТАЦИОНАРНОГО АВАРИЙНОГО РАДИОМАЯКА (ELT)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "521000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ОКАНТОВОК ДЕКОМПРЕССИОННОГО КЛАПАНА ПЕРЕДНИХ, ЗАДНИХ ВХОДНЫХ И СЛУЖЕБНЫХ Д",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "521000ST-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ОБШИВКИ, БОКОВЫХ ПАНЕЛЕЙ, НИШ НАРУЖНЫХ РУЧЕК ПЕРЕДНИХ, ЗАДНИХ ВХОДН",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "521000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ЗАПИРАЮЩИХ, НАПРАВЛЯЮЩИХ И УПОРНЫХ ФИТИНГОВ ПЕРЕДНИХ, ЗАДНИХ ВХОДНЫХ И СЛУ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "523000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР СЕГМЕНТОВ ПЕТЕЛЬ ПЕРЕДНЕЙ И ЗАДНЕЙ ГРУЗОВЫХ ДВЕРЕЙ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "523000ST-09",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ОГРАНИЧИТЕЛЬНЫХ УПОРОВ ПЕРЕДНЕЙ И ЗАДНЕЙ ГРУЗОВЫХ ДВЕРЕЙ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "524000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ОБШИВКИ И БАЛОК ЛЮКА ПЕРЕДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "524000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ОБШИВКИ И БАЛОК ЛЮКОВ ЛЕВОГО И ПРАВОГО ТЕХНИЧЕСКИХ ОТСЕКОВ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "524000ST-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ОБШИВКИ И БАЛОК ЛЮКА ПЕРЕДНЕГО ПРИБОРНОГО ОТСЕКА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "528100ST-04",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР НАРУЖНЫХ ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "528200ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР НАРУЖНЫХ ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "531000ST-12",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР НИШИ ПОШ И КРОНШТЕЙНОВ КРЕПЛЕНИЯ ЦИЛИНДРА УБОРКИ-ВЫПУСКА ПОШ И КРОН",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "531000ST-18",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПЕРЕПЛЕТА ОКОН КАБИНЫ ЭКИПАЖА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "535000ST-16",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР НИШИ ООШ, ВКЛЮЧАЯ ОБШИВКУ ГЕРМОПЛАТО МЕЖДУ ШП. 29-33",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "535000ST-21",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПАНЕЛЕЙ ОБТЕКАТЕЛЯ КРЫЛО-ФЮЗЕЛЯЖ НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "537000ST-22",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЗАДНЕЙ ПОВЕРХНОСТИ ОБШИВОК ГЕРМОШПАНГОУТА 51",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "537000ST-33",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР НИЖНЕЙ ЧАСТИ ГЕРМОШПАНГОУТА 51 ИЗ ОТСЕКА САНТЕХНИЧЕСКОГО ОБОРУДО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "538000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ НАВЕСКИ СТАБИЛИЗАТОРА ПО ШП. 58",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "538000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ТЯГ И ПОДКОСОВ ШП. 56 И 58",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "538000ST-12",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ КРЕПЛЕНИЯ ОТСЕКОВ ФЮЗЕЛЯЖА 5, 6 И КРОНШТЕЙНОВ НАВЕСКИ ОТСЕКА ВСУ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "538000ST-13",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) ОБШИВКИ ВЕРХНЕЙ ПАНЕЛИ МЕЖДУ ШПАНГОУТАМИ 51-58 ВЕРХНЕЙ ЗОНЫ В",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "539000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ КРЕПЛЕНИЯ ВСПОМОГАТЕЛЬНОГО ДВИГАТЕЛЯ НА ШП. 58А",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "539000ST-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР ЗАДНЕГО (ИХ) КРОНШТЕЙНА (ОВ) КРЕПЛЕНИЯ ВСПОМОГАТЕЛЬНОГО ДВИГАТЕЛЯ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "545000ST-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ ДЕТАЛЬНЫЙ ОСМОТР ЗАДНЕГО ПОДКОСА, ВНЕШНЕГО ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "545000ST-04",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР БОКОВЫХ СТЕНОК БАЛКИ ПИЛОНА С ОСОБЫМ ВНИМАНИЕМ К ЗОНАМ УСТАНОВКИ БОЛТ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "551000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ПЕРЕДНЕГО ЛОНЖЕРОНА СТАБИЛИЗАТОРА И КРОНШТЕЙНА ПРИВОДА МПС",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "551000ST-04",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ЗАДНЕГО ЛОНЖЕРОНА СТАБИЛИЗАТОРА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "551000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР СТЫКОВЫХ НАКЛАДОК ПО НЕРВЮРЕ 0 И ВЕРХНИХ И НИЖНИХ РАЗДАТОЧНЫХ ПОЯСОВ КРЕПЛ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "552000ST-02",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ПРОСТУКИВАНИЕ) ОБШИВОК РВ НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ, РАССЛАИВАНИЯ ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "553000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ НАВЕСКИ И ПРИВОДОВ РН",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "553000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР БОЛТОВ СТЫКА КИЛЯ И ФЮЗЕЛЯЖА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "554000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ПРОСТУКИВАНИЕ) ОБШИВКИ РН НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ, РАССЛАИВАНИЯ ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "554000ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ НАВЕСКИ И ПРИВОДОВ РН",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "571000ST-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВНЕШНЕЙ ПОВЕРХНОСТИ СТЕНКИ ЗАДНЕГО ЛОНЖЕРОНА ЦЕНТРОПЛАНА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "571000ST-04",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ДЕТАЛЬНЫЙ ОСМОТР ВЕРХНЕГО И НИЖНЕГО ПОЯСОВ ЗАДНЕГО ЛОНЖЕРОНА ЦЕНТРОПЛАНА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "571000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВЕРХНЕГО ПОЯСА БИМСА НА НИЖНИХ ПОВЕРХНОСТЯХ ЦЕНТРОПЛАНА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "572000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ВНЕШНЕЙ ПОВЕРХНОСТИ ВЕРХНЕЙ И НИЖНЕЙ ОБШИВОК ОЧК, ВКЛЮЧАЯ ВЕРХНИЕ И Н",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "572000ST-09",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР ФИТИНГОВ ЦЕНТРОПЛАНА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "572000ST-12",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР БОРТОВОЙ НЕРВЮРЫ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "572000ST-16",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР СТЕНОК ЗАДНЕГО ЛОНЖЕРОНА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "572000ST-17",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) КОРНЕВОЙ ЧАСТИ СТЕНКИ ПЕРЕДНЕГО ЛОНЖЕРОНА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "572000ST-23",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ НАВЕСКИ 2, 4 И 5 ЗАКРЫЛКОВ РАСПОЛОЖЕННЫХ НА ЗАДНЕМ ЛОНЖЕРОН",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "574000ST-02",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР КАРЕТОК 1-9 ПРЕДКРЫЛКОВ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "574000ST-07",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР КОРНЕВОЙ И КОНЦЕВОЙ ДИАФРАГМ (СЕКЦИИ 1-4)",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "574000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) РЕЛЬСОВ 1-9, СИЛОВЫХ ДИАФРАГМ И ПРОДОЛЬНОГО НАБОРА ПРЕДКРЫЛКО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ НАВЕСКИ ШАССИЙНОЙ БАЛКИ, КРОНШТЕЙНА КРЕПЛЕНИЯ ПЕРЕДНЕГО ПОДКОС",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-05",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР (ПРЕДОХРАНИТЕЛЬНЫХ) ШТИФТОВ (4 ШТ.) УЗЛА КРЕПЛЕНИЯ ООШ К ЗАДНЕМУ ЛОНЖЕР",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-08",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР КАРЕТОК ЗАКРЫЛКОВ 1 ДО 5, КРОНШТЕЙНОВ НАВЕСОК 1, 2, 4, 5, КРОНШТЕЙНА НА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-10",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ИМПЕДАНСНЫЙ МЕТОД) ОБШИВОК ВНУТРЕННЕГО ЗАКРЫЛКА НА ПРЕДМЕТ ПОВРЕЖДЕНИЯ,",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-11",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) НОСОВОЙ ЧАСТИ КОРНЕВОЙ НЕРВЮРЫ ВНУТРЕННЕГО ЗАКРЫЛКА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-14",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ НАВЕСКИ ТОРМОЗНЫХ ЩИТКОВ НА ШАССИЙНОЙ БАЛКЕ И НА ЗАДНЕМ ЛОНЖЕРОНЕ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-15",
+    "amtoss": "N/A",
+    "taskDescription": " ВНУТРЕННИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ НАВЕСКИ 1-7 ИНТЕРЦЕПТОРОВ НА ЗАДНЕМ ЛОНЖЕРОНЕ КРЫЛА И КРОНШ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-18",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ИМПЕДАНСНЫЙ МЕТОД) ОБШИВОК ВНЕШНЕГО ЗА-КРЫЛКА НА ПРЕДМЕТ ПОВРЕЖДЕНИЯ, Р",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "576000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ПРОСТУКИВАНИЕ) ВЕРХНИХ И НИЖНИХ ПАНЕЛЕЙ ЭЛЕРОНА НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ,",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-20",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР УЗЛА КРЕПЛЕНИЯ ЗАДНЕГО ПОДКОСА ООШ И ШБ, СЕРЬГИ КРЕПЛЕНИЯ ШБ К ШПАНГОУТУ 3",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "575000ST-21",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КРОНШТЕЙНОВ КРЕПЛЕНИЯ ВЕРХНЕЙ СТВОРКИ ООШ НА НИЖНЕЙ ПАНЕЛИ ОТСЕКА ООШ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "711100ST-03",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР СТЯЖНЫХ ЗАМКОВ И СКОБ СТВОРОК КАПОТОВ ВЕНТИЛЯТОРА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "712100ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ПЕРЕДНЕГО УЗЛА КРЕПЛЕНИЯ ДВИГАТЕЛЯ ВКЛЮЧАЯ ВИДИМЫЕ ЧАСТИ БОЛТОВ ПИЛОНА И С",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "712200ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ЗАДНЕГО УЗЛА КРЕПЛЕНИЯ ДВИГАТЕЛЯ ВКЛЮЧАЯ ВИДИМЫЕ ЧАСТИ БОЛТОВ ПИЛОНА И СРЕ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "716100ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ФЛАНЦА ВОЗДУХОЗАБОРНИКА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "781000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР V-ОБРАЗНОЙ КАНАВКИ СОПЛА СМЕШЕНИЯ ПОТОКОВ",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "783000ST-01",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПЛАВАЮЩИХ ТЯГ И ШАРНИРОВ КРЕПЛЕНИЯ СТВОРОК КАПОТА РЕВЕРСИВНОГО УСТР",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "783000ST-06",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ОСНОВНЫХ ЗАМКОВ РЕВЕРСИВНОГО УСТРОЙСТВА ВКЛЮЧАЯ ФИТИНГИ И КОНСТРУКЦИЮ ПОВО",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "783000ST-10",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ТРЕТИЧНОГО ЗАМКА И ФИТИНГА ТРЕТИЧНОГО ЗАМКА РЕВЕРСИВНОГО УСТРОЙСТВА",
+    "WOCustomer": "507974452",
+    "WOPackageType": "4Y"
+  },
+  {
+    "taskNumber": "00-0233-23",
+    "amtoss": "N/A",
+    "taskDescription": "ПРЕДОСТАВЛЕНИЕ РЕКОМЕНДАЦИЙ ПО ФАКТУ НЕОБХОДИМОСТИ НАНЕСЕНИЯ ВОДООТТАЛ",
+    "WOCustomer": "511837356",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "00-0397-23",
+    "amtoss": "N/A",
+    "taskDescription": "НАНЕСЕНИЯ ВОДООТТАЛКИВАЮЩЕГО СОСТАВА D-5026NS И ПРОФИЛАКТИЧЕСКОГО СОСТ",
+    "WOCustomer": "512573007",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-36-00329-БД",
+    "amtoss": "N/A",
+    "taskDescription": "ПНЕВМАТИЧЕСКАЯ СИСТЕМА — ИЗМЕНЕНИЕ КОНСТРУКЦИИ ТРУБЫ ОТБОРА ВОЗДУХА (S",
+    "WOCustomer": "508825043",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-12-0001",
+    "amtoss": "N/A",
+    "taskDescription": "СЛИВ ОТСТОЯ ТОПЛИВА",
+    "WOCustomer": "511850086",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-12-0002",
+    "amtoss": "N/A",
+    "taskDescription": "НАРУЖНАЯ ОЧИСТКА САМОЛЁТА",
+    "WOCustomer": "512753804",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-05-00-0002-R00-INSP",
+    "amtoss": "N/A",
+    "taskDescription": "ВНЕШНИЙ ОСМОТР ВС НА НАЛИЧИЕ ПОВРЕЖДЕНИЙ И РЕМОНТОВ",
+    "WOCustomer": "507999114",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-25-0001",
+    "amtoss": "N/A",
+    "taskDescription": "ОБЩАЯ УБОРКА ИНТЕРЬЕРА",
+    "WOCustomer": "511849565",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "17-21-20",
+    "amtoss": "N/A",
+    "taskDescription": "ОСМОТР СОЕДИНИТЕЛЯ P",
+    "WOCustomer": "509629077",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "113000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) НИШИ ПЕРЕДНЕЙ ОПОРЫ ШАССИ (EWIS)",
+    "WOCustomer": "512308392",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "125000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПРОСТРАНСТВА МЕЖДУ ЛЕВОЙ БОКОВОЙ СТЕНКОЙ ПЕРЕДНЕГО БАГАЖНО-ГРУЗО",
+    "WOCustomer": "512309865",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "135000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА ПОД ЦЕНТРОПЛАНОМ (ЛЕВАЯ ПОЛОВИНА) И ЦЕНТРАЛЬНОЙ ЧАСТИ ОБТ",
+    "WOCustomer": "512309867",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "136000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА ПОД ЦЕНТРОПЛАНОМ (ПРАВАЯ ПОЛОВИНА) И ЦЕНТРАЛЬНОЙ ЧАСТИ ОБ",
+    "WOCustomer": "512309866",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "137000ZT-02  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) НИШИ ЛЕВОЙ И ПРАВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ -02 (EWIS)",
+    "WOCustomer": "512308393",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "160000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА САНТЕХНИЧЕСКОГО ОБОРУДОВАНИЯ (EWIS)",
+    "WOCustomer": "512309868",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "240000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЗАДНЕГО ВЕСТИБЮЛЯ (EWIS)",
+    "WOCustomer": "512309869",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "300000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНЕШНИЙ) ХВОСТОВОЙ ЧАСТИ ФЮЗЕЛЯЖА И ОПЕРЕНИЯ",
+    "WOCustomer": "512309852",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "317000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ВИДИМОЙ ЧАСТИ ОТСЕКА ВЫХЛОПНОГО УСТРОЙСТВА ВСУ И ХВОСТОВОГО ОБТЕ",
+    "WOCustomer": "512309851",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "522000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) НОСОВОЙ ЧАСТИ ЛЕВОЙ КОНСОЛИ КРЫЛА ДО ПЕРЕДНЕГО ЛОНЖЕРОНА ОТ НЕРВ",
+    "WOCustomer": "512309854",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "571000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА ШАССИ В ЛЕВОЙ КОНСОЛИ КРЫЛА (EWIS)",
+    "WOCustomer": "512309855",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "573000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ ЛЕВОЙ КОНСОЛИ КРЫЛА В ЗОНЕ ЗАКРЫЛКА (EWIS)",
+    "WOCustomer": "512309876",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "671000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ОТСЕКА ШАССИ В ПРАВОЙ КОНСОЛИ КРЫЛА (EWIS)",
+    "WOCustomer": "512309856",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "622000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) НОСОВОЙ ЧАСТИ ПРАВОЙ КОНСОЛИ КРЫЛА ДО ПЕРЕДНЕГО ЛОНЖЕРОНА ОТ НЕР",
+    "WOCustomer": "512309875",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "673000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ ПРАВОЙ КОНСОЛИ КРЫЛА В ЗОНЕ ЗАКРЫЛКА (EWIS)",
+    "WOCustomer": "512309857",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "710000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕЙ ОПОРЫ ШАССИ И СТВОРОК (EWIS)",
+    "WOCustomer": "512308387",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "201137MT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ MG-XLA-(M26)-03 И MG-XRA-(M25)-04 (ВС MSN 95007-95029) ИЛИ MG-XLA-(M",
+    "WOCustomer": "512308389",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "201730MT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ ЛЕВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ (EWIS)",
+    "WOCustomer": "512308395",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "201740MT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ПРОВОДКИ ПРАВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ (EWIS)",
+    "WOCustomer": "512308390",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "221100MT-04  ",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СИСТЕМЫ АВТОМАТИЧЕСКОГО УПРАВЛЕНИЯ ПОЛЁТОМ (ПРОВЕРА КНОПОК ОТКЛЮЧЕНИЯ АВТО",
+    "WOCustomer": "512309863",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-23-71-00-CVR-1A",
+    "amtoss": "N/A",
+    "taskDescription": "СЧИТЫВАНИЕ ДАННЫХ С РЕГИСТРАТОРА ЗВУКОВОЙ ИНФОРМАЦИИ (CVR)-1A ЧЕК",
+    "WOCustomer": "512753803",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-31-31-00-FDR-1A",
+    "amtoss": "N/A",
+    "taskDescription": "СЧИТЫВАНИЕ ДАННЫХ С РЕГИСТРАТОРА ПАРАМЕТРИЧЕСКОЙ ИНФОРМАЦИИ (FDR)-1A",
+    "WOCustomer": "512753802",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "242000MT-04  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР АВАРИЙНОЙ СИСТЕМЫ ПЕРЕМЕННОГО ТОКА",
+    "WOCustomer": "512309861",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "242000MT-05  ",
+    "amtoss": "N/A",
+    "taskDescription": " СМАЗКА ВЕТРОДВИГАТЕЛЯ (RAT)",
+    "WOCustomer": "512309862",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "242000MT-17  ",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ АВАРИЙНОЙ СИСТЕМЫ ПЕРЕМЕННОГО ТОКА",
+    "WOCustomer": "512309859",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "242000MT-19  ",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ УРОВНЯ ГИДРАВЛИЧЕСКОЙ ЖИДКОСТИ НАСОСА УБОРКИ ВЕТРОДВИГАТЕЛЯ (RAT)",
+    "WOCustomer": "512309860",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "04-30-ALI-07-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ АВТОМАТИЧЕСКОГО ВЫПУСКА ВЕТРОДВИГАТЕЛЯ",
+    "WOCustomer": "509801562",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "04-30-ALI-07-02  ",
+    "amtoss": "N/A",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ РУЧНОГО ВЫПУСКА ВЕТРОДВИГАТЕЛЯ",
+    "WOCustomer": "509801563",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511728011",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕВЕКТА: ПРИ ТО ОБНАРУЖЕНО ПОВРЕЖДЕНИЕ ДЕКОРАТИВНОЙ  НАКЛАДКИ АВАРИЙНОГО ...",
+    "WOCustomer": "511728011",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511728094",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕВЕКТА: ПРИ ТО ОБНАРУЖЕНО ПОВРЕЖДЕНИЕ ДЕКОРАТИВНОЙ  НАКЛАДКИ АВАРИЙНОГО ...",
+    "WOCustomer": "511728094",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511728135",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕВЕКТА: ПРИ ТО ОБНАРУЖЕНО ПОВРЕЖДЕНИЕ ДЕКОРАТИВНОЙ  НАКЛАДКИ АВАРИЙНОГО ...",
+    "WOCustomer": "511728135",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "EOC-RRJ95-25-0001-R00",
+    "amtoss": "N/A",
+    "taskDescription": "ЗАМЕНА КОВРОВОГО ПОКРЫТИЯ В ПАССАЖИРСКОМ САЛОНЕ НА ВС ТИПА RRJ-95B",
+    "WOCustomer": "511949805",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "EOC-RRJ95-25-0002-R00",
+    "amtoss": "N/A",
+    "taskDescription": "ЗАМЕНА КОВРОВОГО ПОКРЫТИЯ В КАБИНЕ ПИЛОТОВ НА ВС ТИПА RRJ-95B",
+    "WOCustomer": "511949870",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-25-0008-INSP",
+    "amtoss": "N/A",
+    "taskDescription": "ОСМОТР АСО И ВНУТРЕННЕЙ МАРКИРОВКИ ПАСС.КАБИНЫ",
+    "WOCustomer": "510706731",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "АЕМ-СБ-0953-01",
+    "amtoss": "N/A",
+    "taskDescription": "ЗАМЕНА ЗАГЛУШЕК РЕЛЬСОВ ПОЛА НА ВС ТИПА RRJ-95",
+    "WOCustomer": "512559269",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "АЕМ-СБ-0973-01",
+    "amtoss": "N/A",
+    "taskDescription": "УСТАНОВКА ВИТРИНЫ ДЛЯ ЖУРНАЛОВ НА ВС ТИПА RRJ-95",
+    "WOCustomer": "512690230",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511695523",
+    "amtoss": "N/A",
+    "taskDescription": "ТРЕЩИНА НА КОЖУХЕ ОБЛИЦОВКИ СИСТЕМЫ POWER ASSIST ДВЕРИ 1L  ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА :ТРЕЩИ...",
+    "WOCustomer": "511695523",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "256400MT-09  ",
+    "amtoss": "N/A",
+    "taskDescription": " СПИСАНИЕ (ЗАМЕНА) БАТАРЕЙ МЕГАФОНА",
+    "WOCustomer": "512309864",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511577315",
+    "amtoss": "N/A",
+    "taskDescription": "FINDING (NRC) WO 511019902 ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: ПОВРЕЖДЕНА ВИТРИНА ДЛЯ ЖУРНАЛОВ НАПР...",
+    "WOCustomer": "511577315",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "512738263",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: СЛОМАНА ЗАЩИТНАЯ КРЫШКА МАНОМЕТРА POWERASSIST ДВЕРИ 1L  ИНТЕРВАЛ...",
+    "WOCustomer": "512738263",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "512745163",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА:СЛОМАНО КРЕПЛЕНИЕ СОЛНЦЕЗАЩИТНОЙ ШТОРКИ ФОРТОЧКИ СО СТОРОНЫ СМ1. ...",
+    "WOCustomer": "512745163",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-25-0007",
+    "amtoss": "N/A",
+    "taskDescription": "C-CLASS SEATS",
+    "WOCustomer": "512753801",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-25-0007",
+    "amtoss": "N/A",
+    "taskDescription": "CABIN",
+    "WOCustomer": "512753800",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-25-0007",
+    "amtoss": "N/A",
+    "taskDescription": "Y-CLASS SEATS",
+    "WOCustomer": "512753799",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-25-00085-БУ",
+    "amtoss": "N/A",
+    "taskDescription": "БЫТОВОЕ И АВАРИЙНО-СПАСАТЕЛЬНОЕ ОБОРУДОВАНИЕ –",
+    "WOCustomer": "508199274",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "FINDING (NRC) DOCUMENT MD-RRJ95-25-0007",
+    "amtoss": "N/A",
+    "taskDescription": "CABIN ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: В КАБИНЕ ПИЛОТОВ Г...",
+    "WOCustomer": "511842100",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "FINDING (NRC) DOCUMENT MD-RRJ95-25-0007",
+    "amtoss": "N/A",
+    "taskDescription": "Y-CLASS SEATS ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: ОТСУТСТВУЮ...",
+    "WOCustomer": "511841613",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: ОТСУТСТВУЮТ ЗАГЛУШКИ ВИНТОВ (2ШТ.) НА СТАНЦИИ БОРТПРОВОДНИКА 1L ...",
+    "amtoss": "N/A",
+    "WOCustomer": "511702226",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511577312",
+    "amtoss": "N/A",
+    "taskDescription": "FINDING (NRC) WO 511019902 ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: - ПОВРЕЖДЕН РАЗДЕЛИТЕЛЬ ТЕЛЕЖЕК НА К...",
+    "WOCustomer": "511577312",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511702411",
+    "amtoss": "N/A",
+    "taskDescription": "FINDING (NRC) WO 511640094 ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: ПОВРЕЖДЕН НИЖНИЙ ЛЕВЫЙ ОТБОЙНИК НА З...",
+    "WOCustomer": "511702411",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511842109",
+    "amtoss": "N/A",
+    "taskDescription": "FINDING (NRC) DOCUMENT MD-RRJ95-25-0007CABIN ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: СИЛИКОНОВЫЕ ОТБОЙН...",
+    "WOCustomer": "511842109",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "512688406",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: ЗАПИСЬ ЭКИПАЖА: У КИПЯТИЛЬНИКА №505 НЕ РАБОТАЕТ КНОПКА BREW. ПОС...",
+    "WOCustomer": "512688406",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "512682380",
+    "amtoss": "N/A",
+    "taskDescription": "ТЕЧЕТ ПРИБОР ДЛЯ ПРИГОТОВЛЕНИЯ НАПИТКОВ ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: КИПЯТИЛЬНИК 102 ТЕЧЁТ. И...",
+    "WOCustomer": "512682380",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-25-62-00-INSP",
+    "amtoss": "N/A",
+    "taskDescription": "ИНСПЕКЦИЯ СПАСАТЕЛЬНЫХ ЖИЛЕТОВ",
+    "WOCustomer": "511849569",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "56000022-1",
+    "amtoss": "N/A",
+    "taskDescription": "A25953751 FC(FUNCTIONAL CHECK) ",
+    "WOCustomer": "510689830",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "56000022-1",
+    "amtoss": "N/A",
+    "taskDescription": "A25953773 FC(FUNCTIONAL CHECK) ",
+    "WOCustomer": "510689849",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "56000022-1",
+    "amtoss": "N/A",
+    "taskDescription": "A25953791 FC(FUNCTIONAL CHECK) ",
+    "WOCustomer": "510689774",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "56000022-1",
+    "amtoss": "N/A",
+    "taskDescription": "A25954596 FC(FUNCTIONAL CHECK) ",
+    "WOCustomer": "510689786",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-27-00417-БД",
+    "amtoss": "N/A",
+    "taskDescription": "СИСТЕМА УПРАВЛЕНИЯ САМОЛЕТОМ — ПОВЫШЕНИЕ ПРОЧНОСТИ КОНСТРУКЦИИ КРОНШТЕ",
+    "WOCustomer": "508866440",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-27-00442-БД",
+    "amtoss": "N/A",
+    "taskDescription": "СИСТЕМА УПРАВЛЕНИЯ САМОЛЁТОМ — ВНЕДРЕНИЕ ВЕРСИИ ПО СДУ 6.5",
+    "WOCustomer": "510207756",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "281000MT-12  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР ГЕРМЕТИЧНЫХ РАЗЪЁМОВ ЭЛЕКТРИЧЕСКИХ ЖГУТОВ ЦЕНТРАЛЬНОГО БАКА, ЛЕВЫХ И ПРАВЫХ В",
+    "WOCustomer": "512309871",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "29-0139-23",
+    "amtoss": "N/A",
+    "taskDescription": "ПРЕДОСТАВЛЕНИЕ РЕКОМЕНДАЦИЙ ПО ПРОВЕРКЕ СОСТОЯНИЯ ГИДРАВЛИЧЕСКИХ",
+    "WOCustomer": "511680269",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-31-31-05-IFDMU-PCMCIA",
+    "amtoss": "N/A",
+    "taskDescription": "ЗАМЕНА PCMCIA-КАРТЫ БЛОКА СБОРА И ПРЕОБРАЗОВАНИЯ ПАРАМЕТРИЧЕСКОЙ",
+    "WOCustomer": "510706724",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "321000ST-02  ",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ОСЕЙ В СБОРЕ",
+    "WOCustomer": "511993043",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "322000ST-02  ",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР ОСЕЙ В СБОРЕ",
+    "WOCustomer": "511993142",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "324200MT-05  ",
+    "amtoss": "N/A",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ УРОВНЯ ГИДРАВЛИЧЕСКОЙ ЖИДКОСТИ В ЭКОЛОГИЧЕСКОМ БАЧКЕ",
+    "WOCustomer": "512447102",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511964105",
+    "amtoss": "N/A",
+    "taskDescription": "ПРОВЕРКА ЗАЗОРОВ ВЕРХНИХ СТВОРОК, ЩИТКОВ И НИЖНИХ СТВОРОК ООШ 1. ВЫПОЛНИТЕ ПРОВЕРКУ ЗАЗОРОВ И ...",
+    "WOCustomer": "511964105",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-33-00-00-ОСВЕЩЕНИЕ",
+    "amtoss": "N/A",
+    "taskDescription": "КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ОСВЕЩЕНИЯ И СВЕТОВОЙ СИГНАЛИЗАЦИИ",
+    "WOCustomer": "511725437",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511577327",
+    "amtoss": "N/A",
+    "taskDescription": "РАМКА ТАБЛО \"ВЫХОД\" ДВЕРИ 2R ЗАМЕЧАНИЕ: ПРИ ТО ОБНАРУЖЕНО ПОВРЕЖДЕНИЕ РАМКИ ТАБЛО \"ВЫХОД\" ДВЕР...",
+    "WOCustomer": "511577327",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "511864482",
+    "amtoss": "N/A",
+    "taskDescription": "ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА: \"ДЕКОРАТИВНАЯ РАМКА ТАБЛО \"ВЫХОД",
+    "WOCustomer": "511864482",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ95-36-00-00-001",
+    "amtoss": "N/A",
+    "taskDescription": "ПРОФИЛАКТИЧЕСКАЯ ЗАМЕНА УПЛОТНЕНИЙ В СИСТЕМАХ ОТБОРА",
+    "WOCustomer": "512742577",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "2022-FATA-01020A-05-002",
+    "amtoss": "N/A",
+    "taskDescription": "ПРОВЕРКА ЧУВСТВИТЕЛЬНЫХ ЭЛЕМЕНТОВ СИСТЕМЫ ОБНАРУЖЕНИЯ УТЕЧЕК",
+    "WOCustomer": "509181377",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "00-0613-22",
+    "amtoss": "N/A",
+    "taskDescription": "ПРЕДОСТАВЛЕНИЕ РЕШЕНИЯ RRJ0000-053-9729",
+    "WOCustomer": "510298424",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "52-0216-23",
+    "amtoss": "N/A",
+    "taskDescription": "ДЕТАЛЬНЫЙ ОСМОТР ПРОФИЛЕЙ ГЕРМЕТИЗАЦИИ ВХОДНЫХ, СЛУЖЕБНЫХ И ГРУЗОВЫХ",
+    "WOCustomer": "511866014",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "512544057",
+    "amtoss": "N/A",
+    "taskDescription": "ИНСПЕКТОРСКАЯ ПРОВЕРКА ОПИСАНИЕ ОТЛОЖЕННОГО ДЕФЕКТА:ЛЮЧЕК ПУЛЬТА УПРАВЛЕНИЯ ЗАПРАВКОЙ, РЕЗИНОВ...",
+    "WOCustomer": "512544057",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "523000ST-06  ",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР КУЛАЧКОВ И ФЮЗЕЛЯЖНОЙ ЧАСТИ ЗАМКОВ ПЕРЕДНЕЙ И ЗАДНЕЙ ГРУЗОВЫХ ДВЕРЕЙ",
+    "WOCustomer": "512309872",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "523000PT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ПРОМЫВКА МЕХАНИЗМА ДЕКОМПРЕССИОННОГО КЛАПАНА ГРУЗОВЫХ ДВЕРЕЙ",
+    "WOCustomer": "512309858",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "527000PT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " РЕГУЛИРОВКА БЕСКОНТАКТНЫХ ДАТЧИКОВ ГРУЗОВЫХ ДВЕРЕЙ",
+    "WOCustomer": "512309877",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "510676064",
+    "amtoss": "N/A",
+    "taskDescription": "FINDING (NRC) CHECK 5A ЧЕК ОТЛОЖЕННЫЙ ДЕФЕКТ: ОЖИДАНИЕ ПЕРЕВОДА РЕМОНТА БАЛОК ПРОЕМА ЗАДНЕЙ ГР...",
+    "WOCustomer": "510676064",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-55-00482-БУ",
+    "amtoss": "N/A",
+    "taskDescription": "ОПЕРЕНИЕ — ИСКЛЮЧЕНИЕ ПОПАДАНИЯ ВЛАГИ В КЕССОН СТАБИЛИЗАТОРА",
+    "WOCustomer": "512422396",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-55-00489-БД",
+    "amtoss": "N/A",
+    "taskDescription": "ОПЕРЕНИЕ – ЗАМЕНА БОЛТОВ КРЕПЛЕНИЯ КРОНШТЕЙНОВ МЕХАНИЗМА",
+    "WOCustomer": "508087303",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "552000ST-05  ",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) ЛОНЖЕРОНА РВ В ЗОНЕ УЗЛОВ ПРИВОДА 1, 2 И УЗЛОВ НАВЕСКИ 1, 2,",
+    "WOCustomer": "512309879",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-57-00402-БД",
+    "amtoss": "N/A",
+    "taskDescription": "КРЫЛО - ХВОСТОВАЯ ЧАСТЬ КРЫЛА - ДОРАБОТКА УЗЛА НАВЕСКИ ПРИВОДА",
+    "WOCustomer": "508450638",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "RRJ-57-00447-БУ",
+    "amtoss": "N/A",
+    "taskDescription": "КРЫЛО — ОТСЕК №2 ОЧК — ВНЕДРЕНИЕ ПЕРЕЛИВНЫХ ОТВЕРСТИЙ В НЕРВЮРЕ",
+    "WOCustomer": "511718885",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "574000ST-04  ",
+    "amtoss": "N/A",
+    "taskDescription": " ВНЕШНИЙ - ДЕТАЛЬНЫЙ ОСМОТР РЕЛЬСОВ ПРЕДКРЫЛКОВ 1-9, СРЕЗНЫХ И ЭКСЦЕНТРИКОВЫХ БОЛТОВ",
+    "WOCustomer": "512309873",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-18  ",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР УЗЛА НАВЕСКИ 1 ЗАКРЫЛКА",
+    "WOCustomer": "511114560",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-19  ",
+    "amtoss": "N/A",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ЗАДНЕГО ПРОФИЛЯ УЗЛА НАВЕСКИ 4 ЗАКРЫЛКА",
+    "WOCustomer": "511410820",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "576000ST-10  ",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) ЛОНЖЕРОНА ЭЛЕРОНА В ЗОНЕ МЕЖДУ ДИАФРАГМАМИ 7-8 И 10-11 НА ПРЕ",
+    "WOCustomer": "512309880",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "576000ST-11  ",
+    "amtoss": "N/A",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (ЭНДОСКОП) ЛОНЖЕРОНА ЭЛЕРОНА В ЗОНЕ МЕЖДУ ДИАФРАГМАМИ 6-7, 8-10 И ДИАФРА",
+    "WOCustomer": "512309881",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "EOD-RRJ95-57-0001-R00-1.1",
+    "amtoss": "N/A",
+    "taskDescription": "ДЕТАЛЬНЫЙ ОСМОТР СЕРЕГ ЭЛЕРОНА (РЭ 57-60-00-220-801)",
+    "WOCustomer": "508487742",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "EOD-RRJ95-57-0003-R00-1.3",
+    "amtoss": "N/A",
+    "taskDescription": "ДЕТАЛЬНЫЙ ОСМОТР УЗЛОВ НАВЕСКИ 1,2,3,4 И УЗЛОВ КРЕПЛЕНИЯ ПРИВОДОВ",
+    "WOCustomer": "508487994",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "EOD-RRJ95-57-0004-R00-1.4,5",
+    "amtoss": "N/A",
+    "taskDescription": "ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ХВОСТОВОЙ ЧАСТИ КОНСОЛЕЙ КРЫЛА",
+    "WOCustomer": "508488134",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "EOD-RRJ95-57-0006-R00-1.6",
+    "amtoss": "N/A",
+    "taskDescription": "ДЕТАЛЬНЫЙ ОСМОТР СТРАХОВОЧНЫХ КРОНШТЕЙНОВ ЭЛЕРОНОВ",
+    "WOCustomer": "508488298",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "510062756",
+    "amtoss": "N/A",
+    "taskDescription": "КОНСЕРВАЦИЯ ДВИГАТЕЛЯ НА СРОК ДО 3 МЕСЯЦЕВ ВЫПОЛНИТЕ КОНСЕРВАЦИЮ ДВИГАТЕЛЯ #1,  ESN 146494 НА ...",
+    "WOCustomer": "510062756",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "510062781",
+    "amtoss": "N/A",
+    "taskDescription": "КОНСЕРВАЦИЯ ДВИГАТЕЛЯ НА СРОК ДО 3 МЕСЯЦЕВ ВЫПОЛНИТЕ КОНСЕРВАЦИЮ ДВИГАТЕЛЯ #2,  ESN 146495 НА ...",
+    "WOCustomer": "510062781",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "510067574",
+    "amtoss": "N/A",
+    "taskDescription": "РАСКОНСЕРВАЦИЯ ДВИГАТЕЛЯ ПОСЛЕ ОКОНЧАНИЯ РАБОТ НА ВС ПО (C-CHECK) ВЫПОЛНИТЕ РАСКОНСЕРВАЦИЮ ДВИ...",
+    "WOCustomer": "510067574",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "510067696",
+    "amtoss": "N/A",
+    "taskDescription": "РАСКОНСЕРВАЦИЯ ДВИГАТЕЛЯ ПОСЛЕ ОКОНЧАНИЯ РАБОТ НА ВС ПО (C-CHECK) ВЫПОЛНИТЕ РАСКОНСЕРВАЦИЮ ДВИ...",
+    "WOCustomer": "510067696",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "413000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ВНУТРЕННЕЙ ПОВЕРХНОСТИ КАПОТОВ ВЕНТИЛЯТОРА ЛЕВОЙ СИЛОВОЙ УСТАНОВ",
+    "WOCustomer": "512309870",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "423000ZT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ВНУТРЕННЕЙ ПОВЕРХНОСТИ КАПОТОВ ВЕНТИЛЯТОРА ПРАВОЙ СИЛОВОЙ УСТАНО",
+    "WOCustomer": "512309853",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "MD-RRJ95-72-00-00-100-803",
+    "amtoss": "N/A",
+    "taskDescription": "CLEAN THE ENGINE GAS-PATH WITH PURE WATER",
+    "WOCustomer": "511850040",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "760000MT-01  ",
+    "amtoss": "N/A",
+    "taskDescription": " \"КОНТРОЛЬ РАБОТОСПОСОБНОСТИ РУД С ЦЕЛЬЮ УБЕДИТЬСЯ В СВОБОДЕ ПЕРЕМЕЩЕНИЯ НА РЕЖИМ \"\"APR\"\"\"",
+    "WOCustomer": "512309874",
+    "WOPackageType": "ROUTINE"
+  },
+  {
+    "taskNumber": "110000PT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР НАРУЖНЫХ НАДПИСЕЙ И ТРАФАРЕТОВ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "324100PT-01",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР БОЛТОВ КРЕПЛЕНИЯ ТОЛКАТЕЛЕЙ КРЫШЕК УЗЛОВ ПЕДАЛЕЙ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "201311MT-02",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS В ЗАДНЕМ ТЕХНИЧЕСКОМ ОТСЕКЕ (EWIS)",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "04-30-ALI-17",
+    "taskDescription": " Проверка взаимодействия между блоками КСКВ и системой центрального вычислителя",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "212200MT-07",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ (СЧИТЫВАНИЕ БСТО) С ЦЕЛЬЮ УБЕДИТЬСЯ В ОТСУТСТВИИ ОТКАЗОВ НАГНЕТАЮЩЕГО ВЕНТИЛЯТОРА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "213100MT-05",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ВЫПУСКНОГО КЛАПАНА ПРИ ПОМОЩИ КНОПОЧНОГО ПЕРЕЛЮЧАТЕЛЯ “EMERG D-PRESS” НА П",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "216200PT-01",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ОЧИСТКА) ВЕНТИЛИРУЕМЫХ ДАТЧИКОВ ТЕМПЕРАТУРЫ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "237100PT-01",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СИСТЕМЫ РЕГИСТРАЦИИ ЗВУКОВОЙ ИНФОРМАЦИИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "242000MT-13",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ПЕРЕКЛЮЧЕНИЯ ШИНЫ СТАТИЧЕСКОГО ПРЕОБРАЗОВАТЕЛЯ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "242000MT-20",
+    "taskDescription": " СПИСАНИЕ (ЗАМЕНА) МАСЛА И ФИЛЬТРОЭЛЕМЕНТОВ МАСЛОФИЛЬТРОВ ПРИВОД-ГЕНЕРАТОРОВ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "251100MT-03",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ИНЕРЦИОННОГО МЕХАНИЗМА СТОПОРЕНИЯ РЕМНЕЙ БЕЗОПАСНОСТИ КРЕСЕЛ КОМАНДИРА ВОЗ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "252200MT-03",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ИНЕРЦИОННОГО МЕХАНИЗМА СТОПОРЕНИЯ РЕМНЕЙ БЕЗОПАСНОСТИ КРЕСЛА БОРТПРОВОДНИК",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "256100MT-02",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДАВЛЕНИЯ БАЛЛОНА ПО МАНОМЕТРУ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "256400MT-05",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ОСВЕТИТЕЛЬНЫХ ФОНАРЕЙ EF-3",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "262300MT-16",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР БАЛЛОНА ОГНЕТУШИТЕЛЯ ТУАЛЕТА И ВЫПУСКНЫХ ТРУБ НА ПРЕДМЕТ ПОВРЕЖДЕНИЙ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "04-30-ALI-01",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ КНОПОК-ТАБЛО L ENG FIRE И R ENG FIRE",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "278000MT-11",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ (ПРОВЕРКА ИНДИКАЦИИ) ЭЛЕКТРИЧЕСКИХ НАГРЕВАТЕЛЕЙ ПРИВОДОВ С ПЛАНЕТАРНОЙ ПЕР",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "291000MT-17",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ СИГНАЛИЗАТОРОВ ЗАСОРЕНИЯ ФИЛЬТРОВ НАГНЕТАНИЯ И СЛИВА НАСОСНЫХ СТАНЦИИ ПЕРЕМЕННОГО",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "291000MT-18",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ (СЧИТЫВАНИЕ СООБЩЕНИЙ БСТО) С ЦЕЛЬЮ УБЕДИТЬСЯ В ОТСУТСТВИИ СООБЩЕНИЙ ОТ СИГНАЛИЗА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "293000MT-06",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ НАСОСНОЙ СТАНЦИИ ПОСТОЯННОГО ТОКА (DCMP2)",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "293000MT-09",
+    "taskDescription": " ВИЗАУЛЬНЫЙ КОНТРОЛЬ (СЧИТЫВАНИЕ БСТО) С ЦЕЛЬЮ УБЕДИТЬСЯ В ОТСУТСТВИИ ОТКАЗОВ ДАТЧИКОВ ДАВЛЕНИЯ ГИДРОА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "304300MT-02",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДАВЛЕНИЯ В БАЛЛОНЕ С ГИДРОФОБИЗИРУЮЩЕЙ ЖИДКОСТЬЮ (ГФЖ) ПО МАНОМЕТРУ И ПРОВЕРКА УР",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "04-30-ALI-16",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ ДАТЧИКОВ ДАВЛЕНИЯ ПОС КРЫЛА (1-D301,2-D301, 3-D301,4-D301)",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "04-30-ALI-19",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ КНОПКИ-ТАБЛО WINDOW PROBE НА ПУЛЬТЕ УПРАВЛЕНИЯ ANTI-ICE",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "311600MT-01",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ (СЧИТЫВАНИЕ БСТО) С ЦЕЛЬЮ УБЕДИТЬСЯ В ОТСТУТСТВИИ СООБЩЕНИЙ О НЕИСПРАВНОСТЯХ КОНТ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "314100MT-01",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ (СЧИТЫВАНИЕ СООБЩЕНИЙ БСТО) С ЦЕЛЬЮ УБЕДИТЬСЯ В ОТСУТСТВИИ СООБЩЕНИЙ О НЕИСПРАВНО",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "321100MT-02",
+    "taskDescription": " СМАЗКА КОМПОНЕНТОВ ОСНОВНОЙ ОПОРЫ ШАССИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "321100MT-07",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР РОЛИКОВ СЕРЕГ ЗАМКОВ УБРАННОГО ПОЛОЖЕНИЯ ОСНОВНЫХ ОПОР ШАССИ С ЦЕЛЬЮ УБЕДИТЬСЯ В СВО",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "321100MT-17",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ АМОРТИЗАЦИОННОЙ СТОЙКИ ОСНОВНОЙ ОПОРЫ ШАССИ С ЦЕЛЬЮ ПРОВЕРКИ СТОЯНОЧНОГО ОБЖАТИЯ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "321200MT-05",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР РОЛИКА СЕРЬГИ ЗАМКА ЗАКРЫТОГО ПОЛОЖЕНИЯ ФЮЗЕЛЯЖНОЙ СТВОРКИ ОСНОВНОЙ ОПОРЫ ШАССИ С ЦЕ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "322100MT-02",
+    "taskDescription": " СМАЗКА КОМПОНЕНТОВ ПЕРЕДНЕЙ ОПОРЫ ШАССИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "322100MT-03",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ АМОРТИЗАЦИОННОЙ СТОЙКИ ПЕРЕДНЕЙ ОПОРЫ ШАССИ С ЦЕЛЬЮ ПРОВЕРКИ СТОЯНОЧНОГО ОБЖАТИЯ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "322100MT-07",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР РОЛИКА СЕРЬГИ ЗАМКА УБРАННОГО ПОЛОЖЕНИЯ ПЕРЕДНЕЙ ОПОРЫ ШАССИ С ЦЕЛЬЮ УБЕДИТЬСЯ В СВО",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "322200MT-05",
+    "taskDescription": " СМАЗКА (ПРИНУДИТЕЛЬНАЯ) КОМПОНЕНТОВ ТЯГ ЗАДНИХ СТВОРОК ПЕРЕДНЕЙ ОПОРЫ ШАССИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "323000MT-02",
+    "taskDescription": " СМАЗКА ЦИЛИНДРА УБОРКИ И ВЫПУСКА ОСНОВНОЙ ОПОРЫ ШАССИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "323000MT-04",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ЗАМКА ЗАКРЫТОГО ПОЛОЖЕНИЯ ФЮЗЕЛЯЖНОЙ СТВОРКИ ОСНОВНОЙ ОПОРЫ ШАССИ С ЦЕЛЬЮ ОБНАРУЖЕНИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "323000MT-05",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ЗАМКА УБРАННОГО ПОЛОЖЕНИЯ ПЕРЕДНЕЙ ОПОРЫ ШАССИ С ЦЕЛЬЮ ОБНАРУЖЕНИЯ ПОВРЕЖДЕНИЙ, ОТКА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "323000MT-06",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ЗАМКА УБРАННОГО ПОЛОЖЕНИЯ ОСНОВНОЙ ОПОРЫ ШАССИ С ЦЕЛЬЮ ОБНАРУЖЕНИЯ ПОВРЕЖДЕНИЙ, ОТКА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "323000MT-08",
+    "taskDescription": " СМАЗКА ЦИЛИНДРА УБОРКИ-ВЫПУСКА ПЕРЕДНЕЙ ОПОРЫ ШАССИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "323000MT-10",
+    "taskDescription": " СМАЗКА ЦИЛИНДРА ФЮЗЕЛЯЖНОЙ СТВОРКИ И РОЛИКА СЕРЬГИ ЗАМКА ЗАКРЫТОГО ПОЛОЖЕНИЯ ФЮЗЕЛЯЖНОЙ СТВОРКИ ОСНОВ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "454500PT-01",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ИНФОРМАЦИИ ОБ ОТКАЗАХ СИСТЕМ САМОЛЁТА ПОСЛЕ ПОЛЁТА , КОНТРОЛЬ РАБОТОСПОСОБНОСТИ С",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "04-30-ALI-15",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ СЕЛЕКТОРНЫХ КЛАПАНОВ АВАРИЙНОГО ВЫПУСКА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "335000MT-01",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ АВАРИЙНОГО ОСВЕЩЕНИЯ ПРИ ПОМОЩИ КНОПКИ “EMER LIGHTS TEST” НА ПЕРЕДНЕМ ПУЛЬ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "353000MT-08",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ДЫМОЗАЩИТНОГО КАПЮШОНА И УКЛАДОЧНОГО БЛОКА ДЛЯ ДЫМОЗАЩИТНОГО КАПЮШОНА НА ОБЩЕЕ СОСТО",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "351000PT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР КИСЛОРОДНЫХ МАСОК ЧЛЕНОВ ЭКИПАЖА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "36-SDM-02",
+    "taskDescription": " ЛЕВЫЙ ДВИГАТЕЛЬ. ИНСПЕКЦИЯ В СООТВЕТСТВИИ С SISAM-400 REV.G STEPS 4.C.(2), 4.C.(4): ECS PYLON DUCT TIE",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "36-SDM-04",
+    "taskDescription": " ПРАВЫЙ ДВИГАТЕЛЬ. ИНСПЕКЦИЯ В СООТВЕТСТВИИ С SISAM-400 REV.G STEPS 4.C.(2), 4.C.(4): ECS PYLON DUCT TIE",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "362200MT-04",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ (СЧИТЫВАНИЕ БСТО) С ЦЕЛЬЮ УБЕДИТЬСЯ В ОТСУТСТВИИ НЕИСПРАВНОСТЕЙ КОНТУРОВ СИСТЕМЫ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "521000MT-02",
+    "taskDescription": " ВИЗУАЛЬНЫЙ КОНТРОЛЬ ДАВЛЕНИЯ ПО МАНОМЕТРУ БАЛЛОНА МЕХАНИЗМА АВТОМАТИЧЕСКОГО ОТКРЫТИЯ ДВЕРИ (EPAS)",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "521000MT-12",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ФЮЗЕЛЯЖНЫХ ФИТИНГОВ (И ИХ ДРЕНАЖНЫХ ОТВЕРСТИЙ) ПЛАНКИ ФАРТУКА АВАРИЙНОГО ТРАПА НА ОТ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "04-30-ALI-20",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ ДЕМПФЕРОВ МЕХАНИЗМОВ АВАРИЙНОГО ОТКРЫТИЯ ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕЙ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "521000MT-15",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ МЕХАНИЗМА АВАРИЙНОГО ОТКРЫТИЯ ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕЙ НА ПРЕДМЕТ КОРРЕК",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "521000PT-02",
+    "taskDescription": " КОНТРОЛЬ ЦЕЛОСТНОСТИ КОНТРОЛЬНЫХ РИСОК ОПОРНЫХ БОЛТОВ ДВЕРИ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "521000PT-04",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ МЕХАНИЗМОВ ПОДЪЁМА, ЗАПИРАНИЯ И СТОПОРЕНИЯ ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕЙ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "523000MT-18",
+    "taskDescription": " ОБСЛУЖИВАНИЕ (ПЕРЕЗАРЯДКА) ГАЗОВЫХ ПРУЖИН ГРУЗОВЫХ ДВЕРЕЙ",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "800000MT-01",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР МАГНИТНОЙ ПРОБКИ ВОЗДУШНОГО ТУРБОСТАРТЕРА",
+    "WOCustomer": "507974369",
+    "WOPackageType": "1A"
+  },
+  {
+    "taskNumber": "431000ZT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕГО ОБТЕКАТЕЛЯ И КОРОБКИ РАЗЪЕМОВ ЛЕВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "432000ZT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) СРЕДНЕГО ОБТЕКАТЕЛЯ И БАЛКИ ЛЕВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "441000ZT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ПЕРЕДНЕГО ОБТЕКАТЕЛЯ И КОРОБКИ РАЗЪЕМОВ ПРАВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "442000ZT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) СРЕДНЕГО ОБТЕКАТЕЛЯ И БАЛКИ ПРАВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "446000ZT-01",
+    "taskDescription": " ОБЩИЙ ВИЗУАЛЬНЫЙ ОСМОТР (ВНУТРЕННИЙ) ЗАДНЕГО ОБТЕКАТЕЛЯ ЛЕВОГО И ПРАВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "201432MT-02",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS ЛЕВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "201442MT-02",
+    "taskDescription": " ВОССТАНОВЛЕНИЕ (ЧИСТКА В СЛУЧАЕ ЗАГРЯЗНЕНИЯ) ЭЛЕМЕНТОВ EWIS ПРАВОГО ПИЛОНА (EWIS)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "04-30-ALI-03",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ КНОПКИ CARGO FWD (AFT)",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "04-30-ALI-12",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР МЕХАНИЗМА ПЕРЕСТАНОВКИ СТАБИЛИЗАТОРА",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "04-30-ALI-14",
+    "taskDescription": " КОНТРОЛЬ ИСПРАВНОСТИ ТОРМОЗОВ, ДАТЧИКОВ ИЗНОСА ГАЕК И ДАТЧИКА РАЗРУШЕНИЯ ХОДОВОГО ВИНТА МЕХАНИЗМА ПЕ",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "291000MT-01",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР (АНАЛИЗ ГИДРАВЛИЧЕСКОЙ ЖИДКОСТИ) С ЦЕЛЬЮ ОПРЕДЕЛИТЬ, НАХОДЯТСЯ ЛИ ФИЗИКО",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "304300MT-01",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СИСТЕМЫ ПОДАЧИ ГИДРОФОБИЗИРУЮЩЕЙ ЖИДКОСТИ НА ЛОБОВЫЕ СТЕКЛА",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "527000MT-01",
+    "taskDescription": " КОНТРОЛЬ РАБОТОСПОСОБНОСТИ СИГНАЛИЗАЦИИ ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕЙ, ГРУЗОВЫХ ДВЕРЕЙ И ГЕРМЕТИЧНЫХ ЛЮК",
+    "WOCustomer": 507974409,
+    "WOPackageType": "4A"
+  },
+  {
+    "taskNumber": "MD-RRJ95-17-0001-INSP",
+    "WOCustomer": "511849574",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "36-SDM-01  ",
+    "taskDescription": " ЛЕВЫЙ ДВИГАТЕЛЬ. ИНСПЕКЦИЯ В СООТВЕТСТВИИ С SISAM-400 REV.G STEP 4.C.(1) & 4.C.(3): ECS HIGH PRESSURE D",
+    "WOCustomer": "512552574",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "36-SDM-03  ",
+    "taskDescription": " ПРАВЫЙ ДВИГАТЕЛЬ. ИНСПЕКЦИЯ В СООТВЕТСТВИИ С SISAM-400 REV.G STEP 4.C.(1) & 4.C.(3): ECS HIGH PRESSURE",
+    "WOCustomer": "512552575",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-157 (00) ",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР НИЖНИХ ЗАШИВОК ВХОДНЫХ И СЛУЖЕБНЫХ ДВЕРЕЙ",
+    "WOCustomer": "510359030",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "63074 (0) ",
+    "taskDescription": " SDL ITEM #3 - ИНСПЕКЦИЯ РЕМОНТА КОРРОЗИИ",
+    "WOCustomer": "508183465",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-232  ",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР РАДИУСОВ ВЫРЕЗА ПОД СТАБИЛИЗАТОР В БОКОВЫХ ПАНЕЛЯХ ОТСЕКА ФЮЗЕЛЯЖА Ф5",
+    "WOCustomer": "512709631",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-186  ",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР ТЯГ И ПОДКОСОВ ОТСЕКА Ф5",
+    "WOCustomer": "512709629",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-188 (00) ",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР СИЛОВЫХ ДИАФРАГМ СЕКЦИИ 2 ПРЕДКРЫЛКА",
+    "WOCustomer": "512709630",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-072 (00) ",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР БОКОВЫХ ПАНЕЛЕЙ СИЛОВОЙ БАЛКИ ПИЛОНА В РАЙОНАХ ТЕХНОЛОГИЧЕСКИХ ВЫРЕЗ",
+    "WOCustomer": "511385471",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-074 (01) ",
+    "taskDescription": " СПЕЦИАЛЬНЫЙ ДЕТАЛЬНЫЙ ОСМОТР РЁБЕР ЖЁСТКОСТИ СИЛОВОЙ БАЛКИ ПИЛОНА В ЗОНЕ КРЕПЛЕНИЯ ПОДКОСОВ № 2 И",
+    "WOCustomer": "511114548",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-100  ",
+    "taskDescription": " ДЕТАЛЬНЫЙ ОСМОТР БОЛТОВ УЗЛА НАВЕСКИ 2 ПЕРВОЙ СЕКЦИИ ИНТЕРЦЕПТОРА.",
+    "WOCustomer": "512709628",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146494 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509036708",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146494 SC(SERVICE) ",
+    "WOCustomer": "509036853",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146494 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509037082",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146494 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509048625",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146494 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509048836",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146494 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509049158",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146495 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509036706",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146495 SC(SERVICE) ",
+    "WOCustomer": "509036854",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146495 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509037083",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146495 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509048624",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146495 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509048837",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S17",
+    "taskDescription": "146495 SD(SPECIAL DETAILED INSPECTION) ",
+    "WOCustomer": "509049159",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S-73-0046",
+    "taskDescription": "ENG FUEL AND CONTROL - PERIODICAL VISUAL INSPECTION OF THE TBV PLATE",
+    "WOCustomer": "511842008",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S-73-0046",
+    "taskDescription": "ENG FUEL AND CONTROL - PERIODICAL VISUAL INSPECTION OF THE TBV PLATE",
+    "WOCustomer": "511842009",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S-78-0003",
+    "taskDescription": "EXHAUST - INSPECTION OF THE MIXER (366–215–514–0)",
+    "WOCustomer": "511851487",
+    "WOPackageType": "FLS"
+  },
+  {
+    "taskNumber": "SAM146-1S-78-0003",
+    "taskDescription": "EXHAUST - INSPECTION OF THE MIXER (366–215–514–0)",
+    "WOCustomer": "511851493",
+    "WOPackageType": "FLS"
+  }
+]

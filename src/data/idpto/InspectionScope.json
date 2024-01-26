@@ -1,0 +1,7386 @@
+[
+  {
+    "taskNumber": "274100MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "121300PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "121300PT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "242000MT-19",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "242000MT-05",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201137MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201311MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201311MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201432MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201730MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201740MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201112MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201115MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201116MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201116MT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201161MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "202112MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "202141MT-09",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "151-1000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "201151MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201210MT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "233000ZT-131",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "201313MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201442MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "321100MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "322100MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "322200MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "400000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "400000ZT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "201521MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201571MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "100000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "110000PT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "111000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "116000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "117000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "117000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "121000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "121000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "121-1000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "121-1000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "121-1000ZT-131",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "121-1000ZT-132",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "113000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "137000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "112000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "115000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "116000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "139000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "160000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-131",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-31",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-51",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-71",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "123000ZT-91",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "125000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "125000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "126000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "126000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "127000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "127000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "131000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "131000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "131000ZT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "131000ZT-131",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "131000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "131000ZT-32",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "131000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "131000ZT-52",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "131000ZT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "131000ZT-92",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "133000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "135000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "136000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "137000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "137000ZT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "137000ZT-05",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "137000ZT-131",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "137000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "137000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "137000ZT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "137000ZT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "141000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "141000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "141000ZT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "141000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "141000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "151000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "151000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "151-1000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "153000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "153000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "153000ZT-31",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "153000ZT-51",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "153000ZT-91",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "155000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "155000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "156000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "156000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "157000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "157000ZT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "170000PT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "170000PT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "170000PT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "191000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "192000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "195000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "196000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "200000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "201116MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201117MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201117MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "201121MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201121MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201121MT-131",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "201121MT-132",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201123MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "201123MT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "201123MT-131",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-132",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201123MT-31",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-32",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201123MT-51",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-52",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201123MT-71",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-72",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201123MT-91",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201123MT-92",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201125MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201125MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201125MT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201125MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201127MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201127MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201127MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201131MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-131",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201131MT-132",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201131MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201135MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201136MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201137-1MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201137-1MT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201137-1MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201137-1MT-132",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201137-1MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201137-1MT-32",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201137-1MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201137-1MT-52",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201137-1MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201137-1MT-92",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201137MT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201141MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201141MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201141MT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201141MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201141MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201141MT-51",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201141MT-52",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201151MT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201153MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201153MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201153MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201153MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201153MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201155MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201155MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201155MT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201155MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201156MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201156MT-02",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201156MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201157MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201157MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201191MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201192MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201210MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201220MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201220MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201220MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201220MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201220MT-71",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201220MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201231MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201231MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201231MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201231MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201231MT-71",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201231MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201233MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201233MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201233MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201233MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201233MT-71",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201233MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201240MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201240MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201240MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201240MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201240MT-71",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201240MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201411MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201411MT-04",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201414MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201421MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "201421MT-04",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201424MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201431MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201432MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201441MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201442MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201621MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "201671MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "202115MT-04",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "202116MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202117MT-06",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202120MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202120MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "202120MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "202131MT-06",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "202137-1MT-71",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "202137-1MT-72",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "202141MT-05",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "202141MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202141MT-08",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202150MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202150MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "202311MT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202330MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202415MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202520MT-05",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "202620MT-05",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "210000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "210000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "210000ZT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "220000ZT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-131",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "220000ZT-132",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "220000ZT-32",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "220000ZT-52",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-71",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-72",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "220000ZT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "220000ZT-92",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "221100MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "231000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-131",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-132",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "231000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-32",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "231000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-72",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "231000ZT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "231000ZT-92",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "233000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "233000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "233000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "233000ZT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "233000ZT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-131",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-132",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-32",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-52",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-72",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "240000ZT-92",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "275000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "275000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "278000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "278000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "253000MT-96",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "281000MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "281000MT-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "282000MT-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "291000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "291000MT-20",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "291000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "300000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "304300MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "311000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "313000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "317000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "323000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "325000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "326000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322100MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321100MT-17",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321100MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "322100MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "331000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "333000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "334000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "335000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "341000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "343000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "344000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "345000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "411000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "421000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "431000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "441000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "432000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "442000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "446000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "412000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "413000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "414000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "415000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "422000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "423000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "424000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "425000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "442000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "500000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "500000ZT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "520000PT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "522000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "525000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "573000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "572000ZT-01",
+    "inspectionScope": 2
+  },
+  {
+    "taskNumber": "531000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "540000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "540000ZT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "540000ZT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "540000ZT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "550000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "560000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "571000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "590000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "590000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "600000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "600000ZT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "622000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "625000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "631000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "640000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "640000ZT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "640000ZT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "640000ZT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "650000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "660000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "671000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "672000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "673000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "674000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "690000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "690000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "710000ZT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "730000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "730000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "740000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "740000ZT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "810000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "810000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "810000ZT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "810000ZT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "820000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "820000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "820000ZT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "820000ZT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "830000PT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "830000PT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "830000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "830000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "830000ZT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "830000ZT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "840000PT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "840000PT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "840000ZT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "840000ZT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "840000ZT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "840000ZT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "213100MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "213100MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "216200PT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "213100MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "213100MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "215100MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "043000-017",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "043000-018",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "043000-022",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "212100MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "212100MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "212100MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "212100MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "212200MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "212200MT-06",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "212200MT-07",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "212200MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "212200MT-09",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "212300MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "215200MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "215200MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "215200MT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "215200MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "215300MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "235100MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "235100MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "235300MT-31",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "236000MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "237100MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "237100MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "237100PT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "242000MT-13",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "242000MT-20",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "242000MT-11",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "243000MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "043000-007A",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "043000-007B",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "242000MT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "242000MT-17",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "243000MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "243000MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "243000MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256500MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256500MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256500MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256500MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "242000MT-10",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "251100MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "251100MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "252000MT-132",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-31",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "252000MT-32",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-33",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "252000MT-52",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-54",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-71",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "252000MT-72",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "252000MT-92",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252000MT-94",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-131",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-132",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-133",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-134",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-135",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-136",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-32",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-33",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-35",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-36",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-37",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-38",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-39",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-40",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "252100MT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-52",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-53",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-54",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-55",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-56",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-57",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-58",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-59",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-72",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-73",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-75",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-77",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-78",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-92",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-93",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-94",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-95",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252100MT-96",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-97",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "252100MT-98",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100MT-99",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252100PT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252200MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252200MT-05",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252200MT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252200MT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252200MT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252310MT-131",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252310MT-132",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252310MT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252310MT-72",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "252320MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252320MT-02",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252320MT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252320MT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "252400MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "253000MT-31",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "253000MT-32",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-33",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "253000MT-35",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "253000MT-93",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "254000MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "254000MT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-04",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "254000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "254000MT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-33",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "254000MT-34",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-93",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "254000MT-94",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "254000MT-95",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256000MT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256000MT-52",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256000MT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256000MT-92",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256100MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256100MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "256100MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "256100MT-05",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256100MT-31",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256110MT-01",
+    "inspectionScope": "Q1Q2"
+  },
+  {
+    "taskNumber": "256110MT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256110MT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256110MT-32",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256110MT-71",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256200MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-07",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-07",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-07",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-07",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256200MT-31",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256300MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "256400MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-07",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-09",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-09",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-09",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-10",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256400MT-12",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-12",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-12",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-13",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "256400MT-32",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256400MT-33",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-52",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256400MT-53",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-72",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256400MT-73",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256400MT-92",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256400MT-93",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256500MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "256600MT-100",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256600MT-51",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256600MT-60",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256600MT-91",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "256100MT-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-30-ALI-04-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-30-ALI-04-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262200PT‐10",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262100MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262100MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "261100MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262200MT-12",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262200MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262200MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-001",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "043000-002",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "043000-003",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "043000-004А",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-004В",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "261200MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "261300MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "261300MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "261400MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "261400MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262100MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262100MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262100MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262100MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262200MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262200MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262200MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262200PT-10",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262300MT-15",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262300MT-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "262400MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262400MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262400MT-07",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "262400MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262400MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262400MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262400MT-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262400MT-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262400MT-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262500MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262500MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "262500MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "262500MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "262500MT-31",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "262500MT-32",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-30-ALI-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-30-ALI-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "275000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "275000MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "275000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "278000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "278000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "275000MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "274100MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-010",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-011",
+    "inspectionScope": 1
+  },
+  {
+    "taskNumber": "043000-012",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-013",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "043000-014",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "271100MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "272100MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "273100MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "274100MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "275000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "275000MT-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "275000MT-09",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "276000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "276000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "276000MT-03",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "278000MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "278000MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "278000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "278000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "278000MT-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "278000MT-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "279100MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "279100MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "282000MT-17",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "281000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "281000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "281800MT-05",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "281800MT-06",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "281800MT-07",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "282000MT-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "282000MT-15",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "282000MT-18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "282000MT-19",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "282000MT-20",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "291000MT-18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "293000MT-06",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "292000MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "292000MT-05",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "292000MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "291000MT-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "291000MT-16",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "291000MT-17",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "291000MT-18",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "291000MT-19",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "293000MT-09",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "303100PT‐01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "301000MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "043000-016",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "043000-019",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "278000MT-10",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "278000MT-11",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "303100PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "304300MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000MT-13",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "31-SDM-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "262200MT-07",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "313100MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "311600MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "313100MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "313100PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "313100PT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "314100MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-086",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-30-ALI-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-077",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-078",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-079",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-086",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-15",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "323000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "323000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324200MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-006",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-015",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "320000PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321000ST-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321100MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321100MT-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321100MT-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321100MT-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321100MT-18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321100MT-19",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321200MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321200MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321200MT-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322000PT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322100MT-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322100MT-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "322100MT-13",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322100MT-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "322100MT-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "323000MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "323000MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "323000MT-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "323000MT-16",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324000PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324100MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324100MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324100MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324100MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324100MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324100PT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324200MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324200MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324200MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324300MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324300MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324300MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324300MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324300MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324300MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324300MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "324300MT-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324300MT-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "454500PT-01/2",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "454500PT-01/3",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "531000ST-17",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-17",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "334400MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "335000MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "335000MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "335000MT-05",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "335000MT-05",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "335000MT-07",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "335000MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "335000MT-09",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "335000MT-10",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "335000MT-11",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "335000MT-12",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "335000MT-13",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "341100PT‐02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "344100PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "341100MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "344300PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "341100MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "341100MT-03",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "341100PT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "342100MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "342200PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345100MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345200PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345300MT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345300PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345500PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345700MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "345700MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "345700MT-01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "345700MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345700MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "345700MT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "346100PT-01",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "346100PT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "352000MT-05",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "351000MT-08",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "351000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-57",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-131",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-132",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "043000-005",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "235100MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "351000MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "351000MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "351000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "351000MT-09",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "351000PT-01",
+    "inspectionScope": "И"
+  },
+  {
+    "taskNumber": "352000MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-06",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-133",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-135",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-136",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-32",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-33",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-35",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-39",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-40",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-53",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-54",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-55",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-58",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-73",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-74",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-75",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-77",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-78",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-93",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-94",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "352000MT-95",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-97",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "352000MT-98",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-02",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-05",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-06",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-06",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-06",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-07",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "353000MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-08",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-31",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "353000MT-32",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "362200MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "362200MT-04",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "361000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "361000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "361000MT-03",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "361000MT-07",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "361000PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "253000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "253000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "253000MT-34",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "254000MT-32",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "254000MT-92",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "381000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "381000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "381000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "381000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "383000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "383000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "383000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "383000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "383000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "383000MT-06",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "383000MT-32",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "383000MT-34",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "383000MT-91",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "383000MT-93",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "443000MT-131",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "443000MT-51",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "443000MT-91",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "454500PT‐01",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "454500PT-01/1",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "454500PT-02",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "470000MT-09",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "470000MT-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "470000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "470000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "470000MT-10",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "470000MT-11",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "470000PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "490000PT‐01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "499000MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "499000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "499000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "492400MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "492200MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "492400MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "490000PT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "491200MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "491300MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "491600MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "491600MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "491700MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "494000MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "494000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "495000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "497000PT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "499000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "499000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "508100MT-01",
+    "inspectionScope": "B1.1/B2"
+  },
+  {
+    "taskNumber": "04-30-ALI-20",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "04-30-ALI-21",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-107",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000PT‐04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000PT‐01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "527000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "527000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-214",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-231",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-006",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-007",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-008",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-009",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-010",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-011",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "043000-020",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "043000-021",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-066",
+    "inspectionScope": 1
+  },
+  {
+    "taskNumber": "041200A-067",
+    "inspectionScope": 1
+  },
+  {
+    "taskNumber": "041200A-068",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-156",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-157",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "256100MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "321200MT-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321200MT-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321200MT‑11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "321200MT‑12",
+    "inspectionScope": "B1.1 "
+  },
+  {
+    "taskNumber": "322200MT‑06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "322200MT‑07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "324100MT‑07",
+    "inspectionScope": "B2"
+  },
+  {
+    "taskNumber": "521000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000MT-08",
+    "inspectionScope": 11
+  },
+  {
+    "taskNumber": "521000MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000MT-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000MT-13",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000MT‑14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000MT‑15",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "521000PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000PT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000PT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "521000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "521000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000MT-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000MT-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000MT‑17",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000MT‑18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000PT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000PT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "523000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "524000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "525100MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "525100MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "525100MT-03",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "525100MT-04",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "527000MT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "527000PT-01",
+    "inspectionScope": "Q1/Q2"
+  },
+  {
+    "taskNumber": "528100ST-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "528100ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528100ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528100ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528100ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528100ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528100ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528100ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528200ST-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "528200ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528200ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "528200ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-218",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-15",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "537000ST-33",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "537000ST-134",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "537000ST-303",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "523000MT-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-046",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-047",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-048A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-048B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-048C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-049",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-050",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-051",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-052A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-052B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-052C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-053A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-053B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-054",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-055A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-055B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-056A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-056B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-056C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-056D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-056E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-057A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-057B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-057C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-057D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-058A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-058B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-058C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-058D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-059",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-060",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-061A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-061B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-062A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-062B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-063A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-063B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-063C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-064",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-065",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-069",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-070",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-071A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-071B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-081",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-109",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-110",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-111",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-112",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-113",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-114A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-114B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-115",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-116A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-116B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-117A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-117B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-119",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-120A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-120B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-121A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-121B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-122",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-123",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-124A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-124B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-125",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-126",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-127",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-128",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-129A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-129B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-130A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-130B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-131",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-132",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-133",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-134",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-135",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-136",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-137A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-137B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-138",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-139",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-140",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-141A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-141B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-142A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-142B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-142C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-142D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-143",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-144A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-144B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-144C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-144D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-144E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-144F",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-154",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-183",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-178",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-179",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-180",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-186A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-186В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-215",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-216",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-217",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-218",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-219",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-220",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-221",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-222A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-222В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-223",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-224",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-225",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-226",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-227",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-228A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-228В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-229",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-230",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-232",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-235",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-237",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-002",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-003",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-004",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-005",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-012",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-013",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-103",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-104",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-105",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-106A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-106B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-108",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "530500MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "530500MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "530500MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "530500MT-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-13",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-18",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-19",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "531000ST-20",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-135",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-136",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-137",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-14",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-25",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-26",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-301",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-302",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-303",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-31",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-32",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-33",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-34",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-35",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-36",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-37",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-38",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-39",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-51",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-53",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-74",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-75",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-91",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-93",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "533000ST-95",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-135",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-136",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-137",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-14",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-19",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-20",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-21",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-23",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-24",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-26",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-27",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-28",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-301",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-302",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-51",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-53",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-76",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-77",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-91",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "535000ST-93",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-136",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-22",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-29",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-30",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-301",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-302",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-31",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-32",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-34",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-36",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-37",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-38",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-51",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-57",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-91",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-93",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-97",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "537000ST-98",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "538000ST-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "538000ST-14",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "539000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "539000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-072",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-073",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-074",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-072",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-073A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-073B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-074A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-074В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-075",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-196",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "540500MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "540500MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "545000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "545000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "545000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "545000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "545000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-147",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200В-003",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-145A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-145B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-145C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-146",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-147",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-148",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-149",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "553000ST-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "041200A-185",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-236",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-001",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-002",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-003",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-004",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200В-002",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "550500MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "550500MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "551000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "551000ST-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "551000ST-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "552000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "552000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "552000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "552000ST‑05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "552000ST‑06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "553000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "553000ST-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "553000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "553000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "553000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "553000ST-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "554000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "554000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "554000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "554000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "561100MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "561200MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "561200MT‑03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-082",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-083",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-085",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-088",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-089",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-090",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-092",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-094",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-095",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-097",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-098",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-099",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-155",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-192",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-206",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-207",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-208",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-209",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-210",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-211",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-212",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-1-ALI-213",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-15",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-16",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-17",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "04-12-4-ALI-19",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "574100MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "574100MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "577000ST-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "577000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-001A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-001B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-002A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-002B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-003A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-003B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-004A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-004B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-005A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-005B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-006A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-006B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-007A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-007B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-007C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-008",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-009A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-009B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-010A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-010B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-010C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-011A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-011B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-011C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-011D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-012A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-012B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-012C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-013A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-013B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-013C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-013D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-014",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-015",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-016A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-016B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-017",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-018A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-018B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-018C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-018D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-018E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-018F",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-019",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-020A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-020B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-020C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-021",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-022A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-022B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-022C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-023A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-023B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-023C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-023D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-024A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-024B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-024C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-025A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-025B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-026A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-026B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-026C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-027",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-028",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-029",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-030",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-031",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-032",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-033",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-034",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-035A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-035B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-035C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-036",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-037A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-037B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-037C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-037D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-038",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-039A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-039B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-040",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-041A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-041B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-042A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-042B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-043A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-043B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-044",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-045A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-045B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-082A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-082B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-082C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-083A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-083B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-083C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-085",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087С",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087F",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-087G",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-088A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-088B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-088C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-088D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-089A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-089B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-089C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-089D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-089E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-090A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-090B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-090C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-090D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-090E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-091A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-091B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-092A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-092B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-093A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-093C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-094",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-095",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-096",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-097A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-097B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-097C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-098A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-098B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-098C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-099A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-099",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-099C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-100A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-100B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-101A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-101B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-102A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-102A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-150",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-152A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-152B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-152C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-152D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-152E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-153A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-153B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-153C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-153D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-155A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-155B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-158A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-158B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-159A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-159B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-159C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-159D",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-159E",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-159F",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-160",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-161",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-162A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-162B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-163",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-164",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-165",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-166",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-167",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-168",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-169A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-169B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-170A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-170B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-171",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-172",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-173",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-174",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-175A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-175B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-175C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-176",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-177",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-181",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-182A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-182B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-184",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-187",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-188",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-189",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-190",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-191A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-191В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-191С",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-192",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-193",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-194",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-195",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-197",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-198",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-199",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-200",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-201",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-202А",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-202B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-203",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-204",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-205",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-206A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-206В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-206С",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-207",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-208A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-208В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-209A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-209В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-210A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-210В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-211A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-211В",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-212",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-213",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-233",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-234",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-005",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-006",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-007",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-008",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-009",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-010",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-011",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-012",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-013",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-014",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-015",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-016",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Б-017",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200В-001",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-001",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-014",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-015",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-016",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-017",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-018",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200Г-019",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "281000MT-12",
+    "inspectionScope": "Q2"
+  },
+  {
+    "taskNumber": "574000ST-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "574000ST-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "570500MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "570500MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "570500MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "570500MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "570500MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "571000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "571000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "571000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "571000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "571000ST-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "571000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-17",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "572000ST-21",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-23",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-25",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST-26",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST‑27",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "572000ST‑28",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "573000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "573000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "573000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574000ST-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "574100MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574100MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "574100MT-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000PT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-14",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST-18",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST-19",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "575000ST‑20",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "575000ST‑21",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "576000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "576000ST-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "576000ST‑10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "576000ST‑11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "577000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "577000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "577000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "577000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "577000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "577000ST-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "577000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "577000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "577000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "36-SDM-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "36-SDM-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "36-SDM-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "36-SDM-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-076",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-151A",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-151B",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "041200A-151C",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "711100MT-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "712300ST-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712300ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "711100MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712100ST-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712100ST-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712100ST-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712200ST-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712200ST-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712200ST-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712300ST-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "712300ST-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "202412MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "716100MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "716100MT-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "716100MT-13",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100MT-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "716100MT-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "716100ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "717000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "724000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT‑13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-06",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-07",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-08",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-09",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-12",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "724000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "724000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "725000MT-10",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "722000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-03",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-04",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "722000MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "722000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "723000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "723000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "723000MT-11",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "726000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "730000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "760000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "781000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "781000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-05",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-13",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "783000MT-14",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "783000MT-15",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000MT-16",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-01",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-02",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-03",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-04",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-05",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "783000ST-06",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-07",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-08",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-09",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-10",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-11",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "783000ST-12",
+    "inspectionScope": "B1.1"
+  },
+  {
+    "taskNumber": "790000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "790000MT-02",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "800000MT-01",
+    "inspectionScope": "Q1"
+  },
+  {
+    "taskNumber": "800000MT-02",
+    "inspectionScope": "Q1"
+  }
+]

@@ -1,0 +1,1388 @@
+[
+  {
+    "removeItemName": "414GL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ВЕРХНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414MR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПЕРЕДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424MR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПЕРЕДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424GL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ПЕРЕДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414TL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424TL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414TR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424TR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ЗАДНЕЙ ПЕТЛЕ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414CL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414ER",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ДАТЧИКУ УГЛОВЫХ ПЕРЕМЕЩЕНИЙ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424CL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121JW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424ER",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ДАТЧИКУ УГЛОВЫХ ПЕРЕМЕЩЕНИЙ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121KW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414JL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121LW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414NR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424JL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424NR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414KL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414PR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424KL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424PR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414DL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414FR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424DL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424FR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К ОСИ ПОВОРОТНОЙ СТВОРКИ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414LL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414QR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424LL",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424QR",
+    "description": "КРЫШКА ЛЮКА ДОСТУПА К НИЖНЕМУ ОСНОВНОМУ ЗАМКУ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "431A",
+    "description": "ПЕРЕДНИЙ ОБТЕКАТЕЛЬ ПИЛОНА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "PYLON",
+    "zone": 430,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "441A",
+    "description": "ПЕРЕДНИЙ ОБТЕКАТЕЛЬ ПИЛОНА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "PYLON",
+    "zone": 440,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "413AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "413AR",
+    "description": "ПРАВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "423AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "423AR",
+    "description": "ПРАВАЯ СТВОРКА КАПОТА ВЕНТИЛЯТОРА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "414AR",
+    "description": "ПРАВАЯ СТВОРКА КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ЛЕВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 410,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424AL",
+    "description": "ЛЕВАЯ СТВОРКА КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "424AR",
+    "description": "ПРАВУЮ СТВОРКУ КАПОТА РЕВЕРСИВНОГО УСТРОЙСТВА ПРАВОГО ДВИГАТЕЛЯ",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "122HW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "122AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121BW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121MW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121NW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151AW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151BW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "122FF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "122CF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121DF",
+    "description": "ПАНЕЛЬ ПОЛА В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "523AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "523BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "524AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "194G",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "522AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "193G",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "521CB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "521BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "521AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "521AT",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ЛЕВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 520,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "122JW",
+    "description": "ТОРЦЕВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "624AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "623BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "623AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "622AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "621BB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "621AB",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "621AT",
+    "description": "ПАНЕЛЬ ПРЕДКРЫЛКОВ ПРАВОЙ КОНСОЛИ КРЫЛА",
+    "area": "SLATS",
+    "zone": 620,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152CF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152FF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151MF",
+    "description": "ПАНЕЛЬ ПОЛА В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151EC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151CC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "541A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 2",
+    "area": "FLAPS",
+    "zone": 540,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "641A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 2",
+    "area": "FLAPS",
+    "zone": 640,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "193AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "194AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "195AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "196AB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "643A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 4",
+    "area": "FLAPS",
+    "zone": 640,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "543A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 4",
+    "area": "FLAPS",
+    "zone": 540,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "544A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 5",
+    "area": "FLAPS",
+    "zone": 540,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "644A",
+    "description": "ПЕРЕДНЯЯ СЕКЦИЯ ОБТЕКАТЕЛЯ УЗЛА НАВЕСКИ ЗАКРЫЛКА 5",
+    "area": "FLAPS",
+    "zone": 640,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151DW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151FW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151GW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151HW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "151JW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152BW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152DW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "116-1A",
+    "description": "ОТСЕК ВЕТРОДВИГАТЕЛЯ",
+    "area": "RAT",
+    "zone": 110,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152FW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "152GW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ЗАДНЕМ БГО",
+    "area": "AFT C/C",
+    "zone": 150,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "731",
+    "description": "СТВОРКА ЛЕВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ",
+    "area": "MLG DOORS",
+    "zone": 730,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "741",
+    "description": "СТВОРКА ПРАВОЙ ОСНОВНОЙ ОПОРЫ ШАССИ",
+    "area": "MLG DOORS",
+    "zone": 740,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "674AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ ЭЛЕРОНА",
+    "area": "AILERONS",
+    "zone": 670,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "574AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ ЭЛЕРОНА",
+    "area": "AILERONS",
+    "zone": 570,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673GB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573GB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573FB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573EB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573DB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "572AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "570AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673FB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673EB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673DB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "672AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ТРАНСМИССИИ ЗАКРЫЛКА",
+    "area": "FLAPS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673ET",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673DT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673CT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673BT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "673AT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 680,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573AT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573BT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573CT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573DT",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "573ET",
+    "description": "ПАНЕЛЬ ДОСТУПА К УЗЛАМ НАВЕСКИ ИНТЕРЦЕПТОРОВ",
+    "area": "SPPOILERS",
+    "zone": 580,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "442D",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "442C",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "442B",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "442A",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ПРАВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 440,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "432D",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "432C",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "432B",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "432A",
+    "description": "СРЕДНИЙ ОБТЕКАТЕЛЬ ЛЕВОГО ПИЛОНА",
+    "area": "PYLON",
+    "zone": 430,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "191CB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "192CB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "191GT",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "192GT",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "193B",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "194B",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "193EB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "194EB",
+    "description": "ОБТЕКАТЕЛЬ КРЫЛО-ФЮЗЕЛЯЖ",
+    "area": "FUS",
+    "zone": 190,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "314D",
+    "description": "ПАНЕЛЬ ДОСТУПА ЗАДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА",
+    "area": "THS",
+    "zone": 310,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "324DR",
+    "description": "ПРАВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "324CL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "324BL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "324AL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "323AL",
+    "description": "ЛЕВАЯ ПЕНЕЛЬ ДОСТУПА НА КИЛЕ",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "241EW",
+    "description": "ПАНЕЛЬ ДОСТУПА К БЛОКАМ АВИОНИКИ",
+    "area": "AFT CABIN",
+    "zone": 240,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "313B",
+    "description": "ПАНЕЛЬ ДОСТУПА ЗАДНЕГО ТЕХНИЧЕСКОГО ОТСЕКА",
+    "area": "THS",
+    "zone": 310,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "333AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "333BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "333CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "343AB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "343BB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "343CB",
+    "description": "ПАНЕЛЬ ДОСТУПА К ПРИВОДАМ РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "333AT",
+    "description": "ДОСТУП К ЛЕВОЙ ФАРЕ ОСВЕЩЕНИЯ ЭМБЛЕМЫ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "343AT",
+    "description": "ДОСТУП К ПРАВОЙ ФАРЕ ОСВЕЩЕНИЯ ЭМБЛЕМЫ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121CC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "334AB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121FC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "325A",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121DC",
+    "description": "ПОТОЛОЧНАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "325F",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "325E",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121CW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "325D",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121EW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "121GW",
+    "description": "БОКОВАЯ ПАНЕЛЬ В ПЕРЕДНЕМ БГО",
+    "area": "FWD C/C",
+    "zone": 120,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "325C",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "325B",
+    "description": "КРЫШКА ЛОБОВИКА РН",
+    "area": "FIN",
+    "zone": 320,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "334BB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "334CB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "334DB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "334EB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "344AB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "344BB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "344CB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "344DB",
+    "description": "КРЫШКА ЛОБОВИКА РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "333AA",
+    "description": "НИЖНЯЯ ПАНЕЛЬ ДОСТУПА РВ",
+    "area": "THS",
+    "zone": 330,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "343AA",
+    "description": "НИЖНЯЯ ПАНЕЛЬ ДОСТУПА РВ",
+    "area": "THS",
+    "zone": 340,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "422A",
+    "description": "КРЫШКА ЛЮКА ВЫПУСКНОГО ОТВЕРСТИЯ ПОС ВОЗДУХОЗАБОРНИКА",
+    "area": "ENG",
+    "zone": 420,
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "222BT",
+    "description": "222BT",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "232JT",
+    "description": "232JT",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "533AB",
+    "description": "533AB",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "550AB",
+    "description": "550AB",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "633AB",
+    "description": "633AB",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "650AB",
+    "description": "650AB",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "193D",
+    "description": "-",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "194D",
+    "description": "-",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "436",
+    "description": "-",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "446",
+    "description": "-",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  },
+  {
+    "removeItemName": "670AB",
+    "description": "-",
+    "area": "-",
+    "zone": "-",
+    "projectWO": 1004
+  }
+]
