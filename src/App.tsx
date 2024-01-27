@@ -100,9 +100,9 @@ const App: FC = () => {
   return (
     <div className="App">
       <ConfigProvider locale={language === "ru" ? ruRU : enUS}>
-        {/* <Main></Main> */}
+        <Main></Main>
         {/* MAIN */}
-        <UpdateElectron />
+    
       </ConfigProvider>
     </div>
   );

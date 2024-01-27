@@ -3,7 +3,10 @@ import { useCallback, useEffect, useState } from 'react'
 import Modal from '@/components/update/Modal'
 import Progress from '@/components/update/Progress'
 import './update.css'
-
+import { Button } from 'antd'
+import {
+  CloudUploadOutlined
+} from "@ant-design/icons";
 const Update = () => {
   const [checking, setChecking] = useState(false)
   const [updateAvailable, setUpdateAvailable] = useState(false)
@@ -122,9 +125,9 @@ const Update = () => {
               )}
         </div>
       </Modal>
-      <button disabled={checking} onClick={checkUpdate}>
-        {checking ? 'Checking...' : 'Check update'}
-      </button>
+      <Button   className="w-full  text-start  border-none hover:bg-gray-200" disabled={checking} onClick={checkUpdate}>
+      <CloudUploadOutlined /> {checking ? 'Checking...' : 'Check update'}
+      </Button>
     </>
   )
 }

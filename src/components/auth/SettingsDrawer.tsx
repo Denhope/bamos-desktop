@@ -1,7 +1,7 @@
 import { Avatar, Button, Divider, Drawer, Form, Row, Space } from "antd";
 import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
-
+import UpdateElectron from "@/components/update";
 import {
   FieldTimeOutlined,
   LogoutOutlined,
@@ -52,6 +52,8 @@ const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
           <Button className="w-full  text-start  border-none hover:bg-gray-200">
             <UsergroupDeleteOutlined /> Bamos Support
           </Button>
+
+          <UpdateElectron />
 
           <Divider></Divider>
           <Button
