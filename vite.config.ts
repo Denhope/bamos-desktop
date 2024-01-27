@@ -4,9 +4,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import electron from "vite-plugin-electron/simple";
 import pkg from "./package.json";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
-import renderer from "vite-plugin-electron-renderer";
-import requireTransform from "vite-plugin-require-transform";
+
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -24,7 +22,7 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       react(),
-      // nodePolyfills(),
+   
       electron({
         main: {
           // Shortcut of `build.lib.entry`
@@ -47,6 +45,7 @@ export default defineConfig(({ command }) => {
                 external: Object.keys(
                   "dependencies" in pkg ? pkg.dependencies : {}
                 ),
+
               },
             },
           },
@@ -68,13 +67,9 @@ export default defineConfig(({ command }) => {
             },
           },
         },
-        // Ployfill the Electron and Node.js API for Renderer process.
-        // If you want use Node.js in Renderer process, the `nodeIntegration` needs to be enabled in the Main process.
-        // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
-        // renderer: {},
+
       }),
-      // renderer(),
-      // requireTransform({}),
+
     ],
     server:
       process.env.VSCODE_DEBUG &&
