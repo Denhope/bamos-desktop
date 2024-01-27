@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "YourAppID",
+  appId: "Bamos",
   asar: true,
   directories: {
     output: "release/${version}",
@@ -30,6 +30,6 @@
   publish: {
     provider: "generic",
     channel: "latest",
-    url: "https://github.com/electron-vite/electron-vite-react/releases/download/v0.9.9/",
+    url: "https://github.com/Denhope/bamos-desktop/releases/download/v1.0.4/",
   },
 }

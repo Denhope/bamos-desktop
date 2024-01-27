@@ -1,5 +1,5 @@
 // import { useState } from "react";
-// import UpdateElectron from "@/components/update";
+import UpdateElectron from "@/components/update";
 import logoVite from "./assets/logo-vite.svg";
 import logoElectron from "./assets/logo-electron.svg";
 // import "./App.css";
@@ -102,6 +102,7 @@ const App: FC = () => {
       <ConfigProvider locale={language === "ru" ? ruRU : enUS}>
         <Main></Main>
         {/* MAIN */}
+    
       </ConfigProvider>
     </div>
   );
