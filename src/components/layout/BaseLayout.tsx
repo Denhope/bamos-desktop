@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Clock from "react-live-clock";
+import React, { useEffect, useState } from 'react';
+import Clock from 'react-live-clock';
+import LiveClock from 'react-live-clock';
+
 import {
   FieldTimeOutlined,
   ProjectOutlined,
@@ -7,7 +9,7 @@ import {
   UserOutlined,
   ExclamationCircleOutlined,
   ShoppingCartOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   Avatar,
   Badge,
@@ -18,26 +20,26 @@ import {
   Result,
   Select,
   Space,
-} from "antd";
-import { Layout, Menu, theme } from "antd";
+} from 'antd';
+import { Layout, Menu, theme } from 'antd';
 
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { RouteNames } from "@/router";
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { RouteNames } from '@/router';
 
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
-import MaintenanceBase from "./maintenance/base/MaintenanceBase";
-import MaterialsStore from "./store/StoresMaterials";
-import SettingsDrawer from "@/components/auth/SettingsDrawer";
-import Home from "@/components/layout/Home";
-import WPGeneration from "./planning/WPGeneration/WPGeneration";
-import MaintenanceLine from "./maintenance/base/MaintenanceLine";
-import MaintenanceMTX from "./maintenance/mtx/MaintenanceMTX";
-import { useTranslation } from "react-i18next";
-import HomeWEB from "./HomeWEB";
-import { ModalForm, ProCard, ProFormItem } from "@ant-design/pro-components";
-import { MenuItem, getItem } from "@/services/utilites";
-import APNTable from "@/components/layout/APNTable";
+import MaintenanceBase from './maintenance/base/MaintenanceBase';
+import MaterialsStore from './store/StoresMaterials';
+import SettingsDrawer from '@/components/auth/SettingsDrawer';
+import Home from '@/components/layout/Home';
+import WPGeneration from './planning/WPGeneration/WPGeneration';
+import MaintenanceLine from './maintenance/base/MaintenanceLine';
+import MaintenanceMTX from './maintenance/mtx/MaintenanceMTX';
+import { useTranslation } from 'react-i18next';
+import HomeWEB from './HomeWEB';
+import { ModalForm, ProCard, ProFormItem } from '@ant-design/pro-components';
+import { MenuItem, getItem } from '@/services/utilites';
+import APNTable from '@/components/layout/APNTable';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -51,37 +53,37 @@ const BaseLayout: React.FC = () => {
     //},
 
     {
-      APNNBR: "58",
+      APNNBR: '58',
       descriptions: `${t(`VIEW WORKPACKAGE`)}`,
       route: RouteNames.BASE,
     },
     {
-      APNNBR: "59",
+      APNNBR: '59',
       descriptions: `${t(`PART ADMINISTRATION`)}`,
       route: RouteNames.PART_ADMINISTRATIONS,
     },
     {
-      APNNBR: "100",
+      APNNBR: '100',
       descriptions: `${t(`PROJECT MANAGMENT`)}`,
       route: RouteNames.PROJECT_MANAGMENT,
     },
     {
-      APNNBR: "101",
+      APNNBR: '101',
       descriptions: `${t(`PROJECT VIEWER`)}`,
       route: RouteNames.PROJECT_VIEWER,
     },
     {
-      APNNBR: "1001",
+      APNNBR: '1001',
       descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
       route: RouteNames.MTXT,
     },
     {
-      APNNBR: "1002",
+      APNNBR: '1002',
       descriptions: `${t(`WORK PACKAGE CREATE`)}`,
       route: RouteNames.WORKPACKGEN,
     },
     {
-      APNNBR: "1198",
+      APNNBR: '1198',
       descriptions: `${t(`RECEIVING VIEWER`)}`,
       route: RouteNames.RESERVING_TRACK,
     },
@@ -92,80 +94,80 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.ORDER_CREATOR,
     // },
     {
-      APNNBR: "1201",
+      APNNBR: '1201',
       descriptions: `${t(`ORDER MANAGMENT`)}`,
       route: RouteNames.ORDER_MANAGMENT,
     },
 
     {
-      APNNBR: "2121",
+      APNNBR: '2121',
 
       descriptions: `${t(`GOODS RECEIVING`)}`,
       route: RouteNames.GOODS_RESERVING,
     },
     {
-      APNNBR: "188",
+      APNNBR: '188',
 
       descriptions: `${t(`PARTS TRACKING`)}`,
       route: RouteNames.PARTS_TRACKING,
     },
     {
-      APNNBR: "204",
+      APNNBR: '204',
 
       descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
       route: RouteNames.PARTS_FORECAST,
     },
     {
-      APNNBR: "220",
+      APNNBR: '220',
 
       descriptions: `${t(`STORE MANAGEMENT`)}`,
       route: RouteNames.STORE_MANAGMENT,
     },
     {
-      APNNBR: "221",
+      APNNBR: '221',
 
       descriptions: `${t(`STOCK INFORMATION`)}`,
       route: RouteNames.STOCK_NFORMATIONS,
     },
 
     {
-      APNNBR: "222",
+      APNNBR: '222',
 
       descriptions: `${t(`PARTS TRANSFER`)}`,
       route: RouteNames.PARTS_TRANSFER,
     },
     {
-      APNNBR: "230",
+      APNNBR: '230',
 
       descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
       route: RouteNames.PICKSLIP_CONFIRMATIONS,
     },
     {
-      APNNBR: "309",
+      APNNBR: '309',
 
       descriptions: `${t(`CANCEL PICKSLIP`)}`,
       route: RouteNames.PICKSLIP_CANCEL,
     },
     {
-      APNNBR: "334",
+      APNNBR: '334',
 
       descriptions: `${t(`SCRAP MATERIAL`)}`,
       route: RouteNames.SCRAP_MATERIAL,
     },
     {
-      APNNBR: "335",
+      APNNBR: '335',
 
       descriptions: `${t(`CANCEL RECEIVING`)}`,
       route: RouteNames.CANCEL_RESERVING,
     },
     {
-      APNNBR: "359",
+      APNNBR: '359',
 
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,
     },
     {
-      APNNBR: "375",
+      APNNBR: '375',
 
       descriptions: `${t(`PICKSLIP VIEWER`)}`,
       route: RouteNames.PICKSLIP_VIEWER,
@@ -184,77 +186,77 @@ const BaseLayout: React.FC = () => {
   const { allMaterialAplicationsCount } = useTypedSelector(
     (state) => state.materialAplication
   );
-  if (localStorage.getItem("role") === "admin") {
+  if (localStorage.getItem('role') === 'admin') {
   }
   const itemsModal: MenuItem[] = [
     getItem(
-      t("PARTS ADMINISTRATIONS"),
+      t('PARTS ADMINISTRATIONS'),
       RouteNames.WORKPACKGEN,
       <ProjectOutlined />
     ),
 
     getItem(
-      <>{t("WORKPACKAGE VIEWER")}</>,
+      <>{t('WORKPACKAGE VIEWER')}</>,
       RouteNames.BASE,
       <ProjectOutlined />
     ),
     getItem(
-      t("PLANNING FORECAST"),
+      t('PLANNING FORECAST'),
       RouteNames.PLANNINGFORECAST,
       <ProjectOutlined />
     ),
 
     // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
     getItem(
-      t("Maintenance Management (MTX)"),
+      t('Maintenance Management (MTX)'),
       RouteNames.MTXT,
       <ExclamationCircleOutlined />
     ),
 
     getItem(
-      <>{t("STORES/LOGISTICS")}</>,
+      <>{t('STORES/LOGISTICS')}</>,
       RouteNames.STORE,
       <ShoppingCartOutlined />
     ),
-    getItem(<>{t("TOOL")}</>, RouteNames.TOOLING, <ToolOutlined />),
+    getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
   ];
 
   const itemsHorisontal: MenuItem[] = [
-    getItem(<>{t("Engineering")}</>, "03"),
-    getItem(<>{t("Planing")}</>, "04", null, [
+    getItem(<>{t('Engineering')}</>, '03'),
+    getItem(<>{t('Planing')}</>, '04', null, [
       getItem(
-        t("Work Package Generation"),
+        t('Work Package Generation'),
         RouteNames.WORKPACKGEN,
         <ProjectOutlined />
       ),
       getItem(
-        t("PLANNING FORECAST"),
+        t('PLANNING FORECAST'),
         RouteNames.PLANNINGFORECAST,
         <ProjectOutlined />
       ),
     ]),
-    getItem(<>{t("Purchasing/Components")}</>, "05"),
-    getItem(<>{t("Maintenance")}</>, RouteNames.MTXT, null, [
+    getItem(<>{t('Purchasing/Components')}</>, '05'),
+    getItem(<>{t('Maintenance')}</>, RouteNames.MTXT, null, [
       getItem(
-        <>{t("Base Maintenance")}</>,
+        <>{t('Base Maintenance')}</>,
         RouteNames.BASE,
         <ProjectOutlined />
       ),
       // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
       getItem(
-        t("Maintenance Management (MTX)"),
+        t('Maintenance Management (MTX)'),
         RouteNames.MTXT,
         <ExclamationCircleOutlined />
       ),
     ]),
-    getItem(<>{t("Stores & Logistics")}</>, RouteNames.STORE, null, [
+    getItem(<>{t('Stores & Logistics')}</>, RouteNames.STORE, null, [
       getItem(
-        <>{t("Materials")}</>,
+        <>{t('Materials')}</>,
         RouteNames.STORE,
         <ShoppingCartOutlined />
       ),
-      getItem(<>{t("TOOL")}</>, RouteNames.TOOLING, <ToolOutlined />),
-      getItem(<>{t("SHELF LIFE COMPONENTS")}</>, "--", <FieldTimeOutlined />),
+      getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
+      getItem(<>{t('SHELF LIFE COMPONENTS')}</>, '--', <FieldTimeOutlined />),
     ]),
     //getItem('Engineering', RouteNames.MTXT, <DesktopOutlined />, []),
   ];
@@ -265,19 +267,19 @@ const BaseLayout: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
-  const [openKeys, setOpenKeys] = useState(["sub1"]);
+  const [openKeys, setOpenKeys] = useState(['sub1']);
   const rootSubmenuKeys = [
-    "sub1",
-    "sub4",
-    "sub9",
-    "sub12",
-    "sub16",
-    "sub90",
-    "sub20",
-    "sub21",
+    'sub1',
+    'sub4',
+    'sub9',
+    'sub12',
+    'sub16',
+    'sub90',
+    'sub20',
+    'sub21',
   ];
   const { Option } = Select;
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
@@ -287,7 +289,7 @@ const BaseLayout: React.FC = () => {
   };
 
   useEffect(() => {
-    const storedSelectedTopKeys = localStorage.getItem("selectedTopKeys");
+    const storedSelectedTopKeys = localStorage.getItem('selectedTopKeys');
     if (storedSelectedTopKeys) {
       setSelectedTopKeys(JSON.parse(storedSelectedTopKeys));
     }
@@ -295,23 +297,23 @@ const BaseLayout: React.FC = () => {
 
   const handleClick = ({ selectedKeys }: { selectedKeys: string[] }) => {
     setSelectedTopKeys(selectedKeys);
-    localStorage.setItem("selectedTopKeys", JSON.stringify(selectedKeys));
+    localStorage.setItem('selectedTopKeys', JSON.stringify(selectedKeys));
   };
   const location = useLocation();
   const [selectedAPN, setSecectedAPN] = useState<any | null>(null);
   const [selectedSingleAPN, setSecectedSingleAPN] = useState(null);
   useEffect(() => {
     const handleKeyDown = (event: any) => {
-      if (event.ctrlKey && event.key === "b") {
+      if (event.ctrlKey && event.key === 'b') {
         setIsModalOpen(true);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     // Удаляем обработчик событий при размонтировании компонента
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -341,18 +343,18 @@ const BaseLayout: React.FC = () => {
   };
   const handleSelect = () => {
     setIsFocused(false);
-    setValue("");
+    setValue('');
   };
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: '100vh' }}>
       {location.pathname === RouteNames.WEB ? (
         <Header
           className="flex justify-between "
           style={{
             // marginLeft: 'auto',
             // background: 'rgba(255, 255, 255, 0.2)',
-            background: "rgba(255, 255, 255, 0.2)",
+            background: 'rgba(255, 255, 255, 0.2)',
           }}
         >
           <Space onClick={() => navigate(RouteNames.HOME)}>
@@ -368,9 +370,9 @@ const BaseLayout: React.FC = () => {
               >
                 <Menu
                   style={{
-                    width: "100%",
+                    width: '100%',
                     // marginLeft: 'auto',
-                    background: "rgba(255, 255, 255, 0.0)",
+                    background: 'rgba(255, 255, 255, 0.0)',
                   }}
                   onClick={({ key }) => {
                     navigate(key);
@@ -383,7 +385,7 @@ const BaseLayout: React.FC = () => {
                 <Badge
                   // count={1}
                   count={
-                    (localStorage.getItem("role") === "storeMen" &&
+                    (localStorage.getItem('role') === 'storeMen' &&
                       allMaterialAplicationsCount &&
                       allMaterialAplicationsCount?.postponed) ||
                     null
@@ -398,8 +400,8 @@ const BaseLayout: React.FC = () => {
                     icon={<UserOutlined />}
                   />
                 </Badge>
-                {localStorage.getItem("firstName")}
-                {localStorage.getItem("lastName")}
+                {localStorage.getItem('firstName')}
+                {localStorage.getItem('lastName')}
               </Space>
             )}
           </Space>
@@ -410,23 +412,23 @@ const BaseLayout: React.FC = () => {
           style={{
             // marginLeft: 'auto',
             // background: 'rgba(255, 255, 255, 0.2)',
-            background: "rgba(255, 255, 255, 0.2)",
+            background: 'rgba(255, 255, 255, 0.2)',
           }}
         >
           <div
             onClick={() => navigate(RouteNames.HOME)}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: 'flex', alignItems: 'center' }}
           >
             <a className="text-xl  px-3 uppercase cursor-pointer text-gray-500">
               bamos
             </a>
             <ProFormItem
               label
-              tooltip={"DOUBLE CLICK OPEN APN BOOK"}
+              tooltip={'DOUBLE CLICK OPEN APN BOOK'}
               className="flex justify-center align-middle my-10"
             >
-              <div style={{ width: "200px" }}>
-                {" "}
+              <div style={{ width: '200px' }}>
+                {' '}
                 <Select
                   showSearch
                   placeholder="BAN"
@@ -465,7 +467,7 @@ const BaseLayout: React.FC = () => {
                   <Badge
                     // count={1}
                     count={
-                      (localStorage.getItem("role") === "storeMen" &&
+                      (localStorage.getItem('role') === 'storeMen' &&
                         allMaterialAplicationsCount &&
                         allMaterialAplicationsCount?.postponed) ||
                       null
@@ -480,8 +482,8 @@ const BaseLayout: React.FC = () => {
                       icon={<UserOutlined />}
                     />
                   </Badge>
-                  {localStorage.getItem("firstName")}
-                  {localStorage.getItem("lastName")}
+                  {localStorage.getItem('firstName')}
+                  {localStorage.getItem('lastName')}
                 </Space>
               </>
             )}
@@ -506,14 +508,14 @@ const BaseLayout: React.FC = () => {
             />
             <Route element={<HomeWEB />} path={RouteNames.WEB} />
             <Route element={<MaintenanceMTX />} path={RouteNames.MTXT} />
-            <Route element={<MaintenanceBase />} path={RouteNames.BASE} />{" "}
+            <Route element={<MaintenanceBase />} path={RouteNames.BASE} />{' '}
             <Route element={<MaintenanceLine />} path={RouteNames.LINE} />
             <Route element={<MaterialsStore />} path={RouteNames.STORE} />
             <Route element={<WPGeneration />} path={RouteNames.WORKPACKGEN} />
             <Route
               element={
                 <Result
-                  style={{ height: "65vh" }}
+                  style={{ height: '65vh' }}
                   className="flex  flex-col items-center justify-center"
                   status="404"
                   title="404"
@@ -521,7 +523,7 @@ const BaseLayout: React.FC = () => {
                   //extra={<Button type="primary">Back Home</Button>}
                 />
               }
-              path={"*"}
+              path={'*'}
             />
           </Routes>
         </Content>
@@ -535,7 +537,7 @@ const BaseLayout: React.FC = () => {
           title={`${t(`BAN BOOK`)}`}
           // placement={'bottom'}
           open={isModalOpen}
-          width={"30vw"}
+          width={'30vw'}
 
           // getContainer={false}
         >
@@ -560,21 +562,21 @@ const BaseLayout: React.FC = () => {
       <Footer
         className="mt-0 pt-0"
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          position: "sticky",
-          bottom: "0",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          position: 'sticky',
+          bottom: '0',
         }}
       >
         <div style={{ flex: 1 }}></div>
         <div>©2023 Created by Kavalchuk D.</div>
-        <div style={{ flex: 1, textAlign: "right" }}>
-          {/* <Clock
+        <div style={{ flex: 1, textAlign: 'right' }}>
+          {/* <LiveClock
             className="text-lg"
-            format={"HH:mm:ss"}
+            format={'HH:mm:ss'}
             ticking={true}
-            timezone={"utc"}
+            timezone={'utc'}
           /> */}
         </div>
       </Footer>
