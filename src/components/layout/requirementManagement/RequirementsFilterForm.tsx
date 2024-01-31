@@ -222,9 +222,8 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         initialValue={['open', 'onOrder']}
         mode="multiple"
         name="requestStatus"
-        label={`${t('REQUEST STATUS')}`}
+        label={`${t('REQUIREMENT STATUS')}`}
         width="lg"
-        tooltip={`${t('SELECT PROJECT STATUS')}`}
         options={[
           { value: 'open', label: t('NEW') },
           { value: 'closed', label: t('CLOSED') },

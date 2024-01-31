@@ -65,7 +65,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`WP GENERATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <WPGeneration />
           </div>
         ),
@@ -79,7 +79,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`WORKORDER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <WorkOrder />
           </div>
         ),
@@ -93,7 +93,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`REQUIREMENT MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <RequirementManagement />
           </div>
         ),
@@ -107,7 +107,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`ORDER MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <OrderManagment />
           </div>
         ),
@@ -121,7 +121,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`SCRAP MATERIAL`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ScrapMaterial />
           </div>
         ),
@@ -135,7 +135,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`STOCK INFORMATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <StockInformstion />
           </div>
         ),
@@ -149,7 +149,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`PARTS TRANSFER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartsTransfer />
           </div>
         ),
@@ -163,7 +163,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`PARTS TRACKING`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartsTracking />
           </div>
         ),
@@ -176,7 +176,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PARTS CONSUMPTION FORECAST`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartsForecast />
           </div>
         ),
@@ -189,7 +189,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PICKSLIP VIEWER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PickSlipViwer />
           </div>
         ),
@@ -202,7 +202,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PICKSLIP CONFIRMATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PickSlipConfirmation />
           </div>
         ),
@@ -215,7 +215,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`CANCEL PICKSLIP`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PickSlipCancel />
           </div>
         ),
@@ -228,7 +228,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`RECEIVING VIEWER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ReceivingTracking />
           </div>
         ),
@@ -241,7 +241,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`CANCEL RECEIVING `)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <CancelReceiving />
           </div>
         ),
@@ -254,7 +254,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(` PROJECT VIEWER `)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ProjectViewer />
           </div>
         ),
@@ -267,7 +267,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`STORE MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <StoreManagment></StoreManagment>
           </div>
         ),
@@ -280,7 +280,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`SHELF EXPIRY`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ShelfExpiry />
           </div>
         ),
@@ -293,7 +293,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`GOODS RECEIVING`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <GoodsReciving />
           </div>
         ),
@@ -305,7 +305,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`ORDER CREATOR`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <OrderCreator />
           </div>
         ),
@@ -317,7 +317,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PROJECT MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ProjectManagment />
           </div>
         ),
@@ -329,7 +329,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PART ADMINISTRATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartAdministration />
           </div>
         ),
@@ -342,7 +342,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`MTX`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <MaintenanceMTX />
           </div>
         ),
@@ -354,7 +354,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t('STORES/LOGISTIC')}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <MaterialsStore />
           </div>
         ),
@@ -365,7 +365,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t('WORKPACKAGE VIEWER')}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <MaintenanceBase />
           </div>
         ),
@@ -376,7 +376,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `TOOL`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <></>
           </div>
         ),
@@ -530,7 +530,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}
-          className="h-[79vh] overflow-hidden "
+          className="h-[82vh] overflow-hidden "
         >
           <Layout>
             <ProCard className="flex   justify-center align-middle ">

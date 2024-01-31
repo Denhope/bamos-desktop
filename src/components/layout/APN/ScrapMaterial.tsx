@@ -1,9 +1,9 @@
-import TabContent from "@/components/shared/Table/TabContent";
-import ScrapPartsFilteredForm from "@/components/store/scrap/scrapParts/ScrapPartsFilteredForm";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import ShowParts from "../store/storeManagment/ShowParts";
-import { Button, Modal, Space, message } from "antd";
+import TabContent from '@/components/shared/Table/TabContent';
+import ScrapPartsFilteredForm from '@/components/store/scrap/scrapParts/ScrapPartsFilteredForm';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import ShowParts from '../store/storeManagment/ShowParts';
+import { Button, Modal, Space, message } from 'antd';
 import {
   TransactionOutlined,
   EditOutlined,
@@ -11,18 +11,18 @@ import {
   PrinterOutlined,
   SaveOutlined,
   ArrowRightOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   createBookingItem,
   getFilteredShops,
   updateManyMaterialItems,
-} from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import GeneretedTransferPdf from "@/components/pdf/GeneretedTransferLabels";
-import { ModalForm, ProCard } from "@ant-design/pro-components";
-import SearchTable from "../SearchElemTable";
-import form from "antd/es/form";
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
+import { ModalForm, ProCard } from '@ant-design/pro-components';
+import SearchTable from '../SearchElemTable';
+import form from 'antd/es/form';
+import { USER_ID } from '@/utils/api/http';
 
 const ScrapMaterial: FC = () => {
   const dispatch = useAppDispatch();
@@ -47,14 +47,14 @@ const ScrapMaterial: FC = () => {
   useEffect(() => {
     if (onFilterTransferDEtails && onFilterTransferDEtails.store) {
       // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
           companyID: currentCompanyID,
           shopShortName: onFilterTransferDEtails.store,
         })
       ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.meta.requestStatus === 'fulfilled') {
           const transformedData = action.payload[0].locations.map(
             (item: any) => ({
               ...item,
@@ -76,7 +76,7 @@ const ScrapMaterial: FC = () => {
           <div className="flex flex-col gap-5">
             <ScrapPartsFilteredForm
               onSelectLocation={function (record: any): void {
-                throw new Error("Function not implemented.");
+                throw new Error('Function not implemented.');
               }}
               onReset={() => {
                 // Сброс состояний
@@ -120,27 +120,27 @@ const ScrapMaterial: FC = () => {
                 icon={<SaveOutlined />}
                 disabled={!rowKeys.length || !onFilterBookingDEtails}
                 onClick={() => {
-                  const currentCompanyID = localStorage.getItem("companyID");
+                  const currentCompanyID = localStorage.getItem('companyID');
                   Modal.confirm({
                     title: `${t(
-                      "YOU WANT TRANSFER PARTS TO SCRAP LOCATION"
+                      'YOU WANT TRANSFER PARTS TO SCRAP LOCATION'
                     )}  ${onFilterBookingDEtails?.targetLocation}`,
                     onOk: async () => {
                       Modal.confirm({
-                        title: t("CONFIRM CHANGE"),
-                        okText: "CONFIRM",
-                        cancelText: "CANCEL",
+                        title: t('CONFIRM CHANGE'),
+                        okText: 'CONFIRM',
+                        cancelText: 'CANCEL',
                         okButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         cancelButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         content: (
                           <div
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Button
@@ -172,16 +172,16 @@ const ScrapMaterial: FC = () => {
                         onOk: async () => {
                           const result = await dispatch(
                             updateManyMaterialItems({
-                              companyID: currentCompanyID || "",
+                              companyID: currentCompanyID || '',
                               ids: rowKeys,
                               // STOCK: onFilterBookingDEtails.targetStore,
                               LOCATION:
-                                onFilterBookingDEtails?.targetLocation || "",
-                              OWNER: onFilterBookingDEtails?.owner || "",
+                                onFilterBookingDEtails?.targetLocation || '',
+                              OWNER: onFilterBookingDEtails?.owner || '',
                             })
                           );
-                          if (result.meta.requestStatus === "fulfilled") {
-                            message.success(t("SCRAP PART SUCCESSFULY"));
+                          if (result.meta.requestStatus === 'fulfilled') {
+                            message.success(t('SCRAP PART SUCCESSFULY'));
                             setselectedRowKeys([]);
                           }
                         },
@@ -191,37 +191,37 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {t("SCRAP PART")}
+                {t('SCRAP PART')}
               </Button>
             </Space>
             <Space>
               <Button
                 icon={<ArrowRightOutlined />}
                 disabled={
-                  !rowKeys.length || selectedParts[0]?.SHELF_NUMBER === "SCRAP"
+                  !rowKeys.length || selectedParts[0]?.SHELF_NUMBER === 'SCRAP'
                 }
                 onClick={() => {
-                  const currentCompanyID = localStorage.getItem("companyID");
+                  const currentCompanyID = localStorage.getItem('companyID');
                   Modal.confirm({
                     title: `${t(
-                      "YOU WANT TRANSFER PARTS TO SCRAP LOCATION"
+                      'YOU WANT TRANSFER PARTS TO SCRAP LOCATION'
                     )}  `,
                     onOk: async () => {
                       Modal.confirm({
-                        title: t("CONFIRM TRANSFER"),
-                        okText: "CONFIRM",
-                        cancelText: "CANCEL",
+                        title: t('CONFIRM TRANSFER'),
+                        okText: 'CONFIRM',
+                        cancelText: 'CANCEL',
                         okButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         cancelButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         content: (
                           <div
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Button
@@ -233,7 +233,7 @@ const ScrapMaterial: FC = () => {
                                 const updatedSelectedParts = selectedParts.map(
                                   (part: any) => ({
                                     ...part,
-                                    SHELF_NUMBER: "SCRAP",
+                                    SHELF_NUMBER: 'SCRAP',
                                     STOCK: onFilterTransferDEtails.store,
                                   })
                                 );
@@ -248,14 +248,14 @@ const ScrapMaterial: FC = () => {
                         onOk: async () => {
                           const result = await dispatch(
                             updateManyMaterialItems({
-                              companyID: currentCompanyID || "",
+                              companyID: currentCompanyID || '',
                               ids: rowKeys,
                               STOCK: onFilterTransferDEtails.store,
-                              LOCATION: "SCRAP",
+                              LOCATION: 'SCRAP',
                             })
                           );
-                          if (result.meta.requestStatus === "fulfilled") {
-                            message.success(t("SCRAP PART SUCCESSFULY"));
+                          if (result.meta.requestStatus === 'fulfilled') {
+                            message.success(t('SCRAP PART SUCCESSFULY'));
                             setselectedRowKeys([]);
                             selectedParts.forEach(async (result: any) => {
                               await dispatch(
@@ -264,13 +264,13 @@ const ScrapMaterial: FC = () => {
                                   data: {
                                     companyID: result.COMPANY_ID,
                                     userSing:
-                                      localStorage.getItem("singNumber") || "",
-                                    userID: USER_ID || "",
+                                      localStorage.getItem('singNumber') || '',
+                                    userID: USER_ID || '',
                                     createDate: new Date(),
                                     partNumber: result.PART_NUMBER,
                                     station:
-                                      result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                    voucherModel: "CHANGE_LOCATION",
+                                      result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                    voucherModel: 'CHANGE_LOCATION',
                                     location: result?.SHELF_NUMBER,
                                     orderNumber: result?.ORDER_NUMBER,
                                     price: result?.PRICE,
@@ -294,13 +294,13 @@ const ScrapMaterial: FC = () => {
                                   data: {
                                     companyID: result.COMPANY_ID,
                                     userSing:
-                                      localStorage.getItem("singNumber") || "",
-                                    userID: USER_ID || "",
+                                      localStorage.getItem('singNumber') || '',
+                                    userID: USER_ID || '',
                                     createDate: new Date(),
                                     partNumber: result.PART_NUMBER,
                                     station:
-                                      result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                    voucherModel: "CHANGE_LOCATION",
+                                      result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                    voucherModel: 'CHANGE_LOCATION',
                                     location: result?.SHELF_NUMBER,
                                     orderNumber: result?.ORDER_NUMBER,
                                     price: result?.PRICE,
@@ -325,7 +325,7 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {t("MOOVE TO SCRAP LOCATION")}
+                {t('MOOVE TO SCRAP LOCATION')}
               </Button>
               <Button
                 icon={<ApartmentOutlined />}
@@ -334,7 +334,7 @@ const ScrapMaterial: FC = () => {
                   !selectedParts ||
                   !selectedParts.length ||
                   selectedParts.some(
-                    (part: any) => part.SHELF_NUMBER !== "SCRAP"
+                    (part: any) => part.SHELF_NUMBER !== 'SCRAP'
                   )
                 }
                 onClick={() => {
@@ -342,7 +342,7 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {t("REMOVE FROM SCRAP LOCATION")}
+                {t('REMOVE FROM SCRAP LOCATION')}
               </Button>
             </Space>
             <Space>
@@ -354,7 +354,7 @@ const ScrapMaterial: FC = () => {
                   !selectedParts ||
                   !selectedParts.length ||
                   selectedParts.some(
-                    (part: any) => part.SHELF_NUMBER !== "SCRAP"
+                    (part: any) => part.SHELF_NUMBER !== 'SCRAP'
                   )
                 }
                 onClick={() => {
@@ -363,14 +363,14 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {" "}
-                {t("PRINT LABELS")}
+                {' '}
+                {t('PRINT LABELS')}
               </Button>
             </Space>
             <Modal
-              title={t("PRINT LABEL")}
+              title={t('PRINT LABEL')}
               open={labelsOpenPrint}
-              width={"30%"}
+              width={'30%'}
               onCancel={() => {
                 setOpenLabelsPrint(false);
                 setSecectedLocation(null);
@@ -386,20 +386,20 @@ const ScrapMaterial: FC = () => {
             </Modal>
             <ModalForm
               onFinish={async () => {
-                const currentCompanyID = localStorage.getItem("companyID");
+                const currentCompanyID = localStorage.getItem('companyID');
                 setSecectedLocation(selectedSingleLocation);
                 if (selectedSingleLocation) {
                   const result = await dispatch(
                     updateManyMaterialItems({
-                      companyID: currentCompanyID || "",
+                      companyID: currentCompanyID || '',
                       ids: rowKeys,
                       STOCK: onFilterTransferDEtails.store,
                       LOCATION: selectedLocation.locationName,
-                      OWNER: selectedLocation?.ownerShotName || "",
+                      OWNER: selectedLocation?.ownerShotName || '',
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
-                    message.success(t("TRANSFER PART SUCCESSFULY"));
+                  if (result.meta.requestStatus === 'fulfilled') {
+                    message.success(t('TRANSFER PART SUCCESSFULY'));
                     setselectedRowKeys([]);
                     setOpenLabelsPrint(true);
                     selectedParts.forEach(async (result: any) => {
@@ -408,12 +408,12 @@ const ScrapMaterial: FC = () => {
                           companyID: result.COMPANY_ID,
                           data: {
                             companyID: result.COMPANY_ID,
-                            userSing: localStorage.getItem("singNumber") || "",
-                            userID: USER_ID || "",
+                            userSing: localStorage.getItem('singNumber') || '',
+                            userID: USER_ID || '',
                             createDate: new Date(),
                             partNumber: result.PART_NUMBER,
-                            station: result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                            voucherModel: "CHANGE_LOCATION",
+                            station: result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                            voucherModel: 'CHANGE_LOCATION',
                             location: result?.SHELF_NUMBER,
                             orderNumber: result?.ORDER_NUMBER,
                             price: result?.PRICE,
@@ -436,12 +436,12 @@ const ScrapMaterial: FC = () => {
                           companyID: result.COMPANY_ID,
                           data: {
                             companyID: result.COMPANY_ID,
-                            userSing: localStorage.getItem("singNumber") || "",
-                            userID: USER_ID || "",
+                            userSing: localStorage.getItem('singNumber') || '',
+                            userID: USER_ID || '',
                             createDate: new Date(),
                             partNumber: result.PART_NUMBER,
-                            station: result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                            voucherModel: "CHANGE_LOCATION",
+                            station: result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                            voucherModel: 'CHANGE_LOCATION',
                             location: result?.SHELF_NUMBER,
                             orderNumber: result?.ORDER_NUMBER,
                             price: result?.PRICE,
@@ -477,9 +477,9 @@ const ScrapMaterial: FC = () => {
                   setOpenLocationViewer(false);
                 }
               }}
-              title={`${t("LOCATION SEARCH")}`}
+              title={`${t('LOCATION SEARCH')}`}
               open={openLocationViewer}
-              width={"35vw"}
+              width={'35vw'}
               onOpenChange={setOpenLocationViewer}
             >
               <ProCard
@@ -507,7 +507,7 @@ const ScrapMaterial: FC = () => {
           </div>
         </div>
       ),
-      title: `${t("SCRAP PARTS")}`,
+      title: `${t('SCRAP PARTS')}`,
     },
     // {
     //   content: <></>,
@@ -515,7 +515,7 @@ const ScrapMaterial: FC = () => {
     // },
   ];
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <TabContent tabs={tabs}></TabContent>
       </div>

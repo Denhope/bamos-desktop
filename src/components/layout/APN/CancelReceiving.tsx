@@ -1,18 +1,18 @@
-import { ProForm, ProFormTextArea } from "@ant-design/pro-components";
-import { Button, Form, Modal, Space } from "antd";
-import CancelReceivingForm from "@/components/store/cancelReceiving/CancelReceivingForm";
-import ReceivingItemList from "@/components/store/receivingItems/ReceivingItemList";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
+import { ProForm, ProFormTextArea } from '@ant-design/pro-components';
+import { Button, Form, Modal, Space } from 'antd';
+import CancelReceivingForm from '@/components/store/cancelReceiving/CancelReceivingForm';
+import ReceivingItemList from '@/components/store/receivingItems/ReceivingItemList';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
 import {
   deleteMaterialStoreItemByID,
   getFilteredOrders,
   updateOrderByID,
   updateReceivingByID,
   createBookingItem,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 
 const CancelReceiving: FC = () => {
   const [form] = Form.useForm();
@@ -27,7 +27,7 @@ const CancelReceiving: FC = () => {
   }, [receivings]);
   const dispatch = useAppDispatch();
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <CancelReceivingForm
           onFilterReceiving={setReceiving}
@@ -42,11 +42,11 @@ const CancelReceiving: FC = () => {
       <div className="flex justify-between">
         <ProForm form={form} submitter={false}>
           <ProFormTextArea
-            width={"xl"}
-            fieldProps={{ style: { resize: "none" } }}
+            width={'xl'}
+            fieldProps={{ style: { resize: 'none' } }}
             rules={[{ required: true }]}
             name="reasonCancel"
-            label={t("REASON FOR CANCEL")}
+            label={t('REASON FOR CANCEL')}
           ></ProFormTextArea>
         </ProForm>
 
@@ -54,29 +54,29 @@ const CancelReceiving: FC = () => {
           <Button
             disabled={
               !(partsToPrint && partsToPrint.length === 1) ||
-              !form.getFieldValue("reasonCancel") ||
+              !form.getFieldValue('reasonCancel') ||
               partsToPrint[0].IS_CANCELLED
             }
             onClick={async (values: any) => {
               Modal.confirm({
-                title: t("CONFIRM CANCEL"),
+                title: t('CONFIRM CANCEL'),
                 onOk: async () => {
-                  const currentCompanyID = localStorage.getItem("companyID");
+                  const currentCompanyID = localStorage.getItem('companyID');
                   const result = await dispatch(
                     updateReceivingByID({
                       companyID: currentCompanyID,
                       id: partsToPrint[0]._id,
-                      state: "CANCELLED",
+                      state: 'CANCELLED',
                       IS_CANCELLED: true,
-                      reason: form.getFieldValue("reasonCancel"),
+                      reason: form.getFieldValue('reasonCancel'),
                       cancelledQTY: partsToPrint[0].QUANTITY,
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     form.setFields([
                       {
-                        name: "reasonCancel",
-                        value: "",
+                        name: 'reasonCancel',
+                        value: '',
                       },
                     ]);
                     setReceiving((prevReceivings) =>
@@ -90,20 +90,20 @@ const CancelReceiving: FC = () => {
                         id: partsToPrint[0].MATERIAL_STORE_ID,
                       })
                     );
-                    if (resultDelete.meta.requestStatus === "fulfilled") {
+                    if (resultDelete.meta.requestStatus === 'fulfilled') {
                       dispatch(
                         createBookingItem({
                           companyID: resultDelete.payload.COMPANY_ID,
                           data: {
                             companyID: resultDelete.payload.COMPANY_ID,
-                            userSing: localStorage.getItem("singNumber") || "",
-                            userID: USER_ID || "",
+                            userSing: localStorage.getItem('singNumber') || '',
+                            userID: USER_ID || '',
                             createDate: new Date(),
                             partNumber: resultDelete.payload.PART_NUMBER,
                             station:
                               resultDelete.payload?.WAREHOUSE_RECEIVED_AT ||
-                              "N/A",
-                            voucherModel: "RECEIVING_CANCELLED",
+                              'N/A',
+                            voucherModel: 'RECEIVING_CANCELLED',
                             location: resultDelete.payload?.SHELF_NUMBER,
                             orderNumber: resultDelete.payload?.ORDER_NUMBER,
                             price: resultDelete.payload?.PRICE,
@@ -129,7 +129,7 @@ const CancelReceiving: FC = () => {
                           orderNumber: partsToPrint[0].ORDER_NUMBER,
                         })
                       );
-                      if (resultADD11.meta.requestStatus === "fulfilled") {
+                      if (resultADD11.meta.requestStatus === 'fulfilled') {
                         let parts = resultADD11.payload[0].parts;
 
                         let partToUpdate = parts.find(
@@ -145,7 +145,7 @@ const CancelReceiving: FC = () => {
                         if (partToUpdate) {
                           // Обновляем поля
                           // partToUpdate.IS_CANCELLED = true;
-                          partToUpdate.state = "PARTLY_RECEIVED";
+                          partToUpdate.state = 'PARTLY_RECEIVED';
                           partToUpdate.backorder += partsToPrint[0].QUANTITY;
 
                           // Находим нужный объект RECEIVINGS и обновляем его
@@ -165,7 +165,7 @@ const CancelReceiving: FC = () => {
                           const resultUPD = await dispatch(
                             updateOrderByID({
                               id: resultADD11.payload[0]._id,
-                              companyID: currentCompanyID || "",
+                              companyID: currentCompanyID || '',
                               parts: updatedParts,
                             })
                           );
@@ -178,7 +178,7 @@ const CancelReceiving: FC = () => {
             }}
             size="small"
           >
-            {t("CANCEL RECEIVING")}
+            {t('CANCEL RECEIVING')}
           </Button>
         </Space>
       </div>

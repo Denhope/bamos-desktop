@@ -1,9 +1,9 @@
-import React, { useState, useEffect, FC } from "react";
-import { Form, Input, Layout, Menu, MenuProps, Row, Space, Tabs } from "antd";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, FC } from 'react';
+import { Form, Input, Layout, Menu, MenuProps, Row, Space, Tabs } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-import MenuItem from "antd/es/menu/MenuItem";
-import { RouteNames } from "@/router";
+import MenuItem from 'antd/es/menu/MenuItem';
+import { RouteNames } from '@/router';
 
 import {
   AppstoreOutlined,
@@ -18,42 +18,42 @@ import {
   LeftSquareOutlined,
   RetweetOutlined,
   ExclamationOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import TabPane, { TabPaneProps } from "antd/es/tabs/TabPane";
+import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
 
 import {
   getFilteredMaterialOrders,
   getFilteredAlternativePN,
   getFilteredMaterialItems,
   getFilteredItemsStockQuantity,
-} from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import MaterialOrdersList from "@/components/store/matOrders/MaterialOrders";
-import { v4 as originalUuidv4 } from "uuid";
+} from '@/utils/api/thunks';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import MaterialOrdersList from '@/components/store/matOrders/MaterialOrders';
+import { v4 as originalUuidv4 } from 'uuid';
 
-import MaterialItemStoreSearchNew from "@/components/store/search/MaterialItemStoreSearchNew";
-import MarerialOrderContent from "@/components/store/matOrders/MarerialOrderContent";
-import PickSlipsList from "@/components/store/pickSlip/PickSlips";
-import { useTranslation } from "react-i18next";
-import WOFilterForm from "@/components/store/search/PNSearchForm";
-import ReservingForm from "@/components/store/goods/ReservingForm";
-import { ProCard, ProForm, ProFormCheckbox } from "@ant-design/pro-components";
-import SearchSelect from "@/components/shared/form/SearchSelect";
-import FilterSiderForm from "@/components/shared/form/FilterSiderForm";
-import StockInfo from "@/components/store/search/stockInfo/StockInfo";
-import { setSelectedMaterial } from "@/store/reducers/StoreLogisticSlice";
+import MaterialItemStoreSearchNew from '@/components/store/search/MaterialItemStoreSearchNew';
+import MarerialOrderContent from '@/components/store/matOrders/MarerialOrderContent';
+import PickSlipsList from '@/components/store/pickSlip/PickSlips';
+import { useTranslation } from 'react-i18next';
+import WOFilterForm from '@/components/store/search/PNSearchForm';
+import ReservingForm from '@/components/store/goods/ReservingForm';
+import { ProCard, ProForm, ProFormCheckbox } from '@ant-design/pro-components';
+import SearchSelect from '@/components/shared/form/SearchSelect';
+import FilterSiderForm from '@/components/shared/form/FilterSiderForm';
+import StockInfo from '@/components/store/search/stockInfo/StockInfo';
+import { setSelectedMaterial } from '@/store/reducers/StoreLogisticSlice';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
-type MenuItem = Required<MenuProps>["items"][number];
+type MenuItem = Required<MenuProps>['items'][number];
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
   // path?: any,
-  type?: "group"
+  type?: 'group'
 ): MenuItem {
   return {
     key,
@@ -67,12 +67,12 @@ function getItem(
 
 const MaterialsStore: FC = () => {
   const [form] = Form.useForm();
-  const [activeKey, setActiveKey] = useState<string>(""); // Используйте строку вместо массива
+  const [activeKey, setActiveKey] = useState<string>(''); // Используйте строку вместо массива
   const [data, setData] = useState<any>(null);
   const { t } = useTranslation();
   const [dataPN, setDataPN] = useState<any>([]);
   const [selectedPN, setSelectedPN] = useState<any>(null);
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   const [group, setGroup] = useState<any>();
 
   const handleSearch = async (value: any) => {
@@ -108,9 +108,9 @@ const MaterialsStore: FC = () => {
     setSelectedPN(selectedOption);
   };
   const items: MenuItem[] = [
-    getItem(t("Stores & Logistics"), "06", <DesktopOutlined />, [
+    getItem(t('Stores & Logistics'), '06', <DesktopOutlined />, [
       getItem(
-        t("MATERIALS/PARTS"),
+        t('MATERIALS/PARTS'),
         RouteNames.STORES_MATERIALS_PARTS,
         <DownloadOutlined />,
         [
@@ -120,15 +120,15 @@ const MaterialsStore: FC = () => {
           //  <SearchOutlined />
           // ),
           getItem(
-            <Row justify={"space-between"}>
+            <Row justify={'space-between'}>
               <div
                 onClick={() => {
                   let key = RouteNames.GOODS_RESERVING;
                   const tab = {
                     key,
-                    title: t("GOODS RECEIVING"),
+                    title: t('GOODS RECEIVING'),
                     content: (
-                      <ProCard className="flex justify-center items-center h-[79vh]">
+                      <ProCard className="flex justify-center items-center h-[82vh]">
                         <></>
                       </ProCard>
                     ),
@@ -140,7 +140,7 @@ const MaterialsStore: FC = () => {
                   setActiveKey(tab.key);
                 }}
               >
-                {t("GOODS RECEIVING")}
+                {t('GOODS RECEIVING')}
               </div>
               ,
               <PlusCircleOutlined
@@ -151,7 +151,7 @@ const MaterialsStore: FC = () => {
                     key,
                     title: `CREATE ITEM`,
                     content: (
-                      <ProCard className="h-[79vh] overflow-hidden">
+                      <ProCard className="h-[82vh] overflow-hidden">
                         <ReservingForm />
                       </ProCard>
                     ),
@@ -170,7 +170,7 @@ const MaterialsStore: FC = () => {
           ),
 
           getItem(
-            t("GOODS REALESE"),
+            t('GOODS REALESE'),
 
             RouteNames.GOODS_REALESE,
             <LeftSquareOutlined />
@@ -181,39 +181,39 @@ const MaterialsStore: FC = () => {
           //   <ArrowsAltOutlined />
           // ),
           getItem(
-            t("GOODS RETURN"),
+            t('GOODS RETURN'),
             RouteNames.GOODS_RETURN,
             <ExclamationOutlined />
           ),
         ]
       ),
-      getItem(t("STORES"), RouteNames.STORES, <DownloadOutlined />, [
+      getItem(t('STORES'), RouteNames.STORES, <DownloadOutlined />, [
         getItem(
-          t("STORES VIEWER"),
+          t('STORES VIEWER'),
           RouteNames.STORES_VIEWER,
           <PlusCircleOutlined />
         ),
         getItem(
-          t("STORES ADMINISTRATIONS"),
+          t('STORES ADMINISTRATIONS'),
           RouteNames.MATERIAL_APLICATIONS,
           <DownloadOutlined />
         ),
       ]),
 
       getItem(
-        t("PICKSLIPS"),
+        t('PICKSLIPS'),
         RouteNames.MATERIAL_APLICATIONS,
         <DownloadOutlined />,
         [
-          getItem(t("PICKSLIP REQUEST"), "NJNNNN", <PlusCircleOutlined />),
+          getItem(t('PICKSLIP REQUEST'), 'NJNNNN', <PlusCircleOutlined />),
           getItem(
-            t("PICKSLIP VIEWER"),
+            t('PICKSLIP VIEWER'),
             RouteNames.MATERIAL_APLICATIONS,
             <DownloadOutlined />
           ),
 
           getItem(
-            t("ISSUED PISKSLIPS"),
+            t('ISSUED PISKSLIPS'),
             RouteNames.PICKSLIPS,
             <FileTextOutlined />
           ),
@@ -232,14 +232,14 @@ const MaterialsStore: FC = () => {
   ];
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const rootSubmenuKeys = ["-"];
-  const [openKeys, setOpenKeys] = useState(["06", "06-2"]);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>(["06"]);
+  const rootSubmenuKeys = ['-'];
+  const [openKeys, setOpenKeys] = useState(['06', '06-2']);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>(['06']);
 
   const { isLoading, filteredMaterialOrders, filteredPickSlips } =
     useTypedSelector((state) => state.storesLogistic);
   useEffect(() => {
-    const storedKeys = localStorage.getItem("selectedKeys");
+    const storedKeys = localStorage.getItem('selectedKeys');
     if (storedKeys) {
       setSelectedKeys(JSON.parse(storedKeys));
 
@@ -248,10 +248,10 @@ const MaterialsStore: FC = () => {
   }, []);
   const handleClick = ({ selectedKeys }: { selectedKeys: string[] }) => {
     setSelectedKeys(selectedKeys);
-    localStorage.setItem("selectedKeys", JSON.stringify(selectedKeys));
+    localStorage.setItem('selectedKeys', JSON.stringify(selectedKeys));
   };
 
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
@@ -270,7 +270,7 @@ const MaterialsStore: FC = () => {
       key: uuidv4(), // уникальный ключ для каждой вкладки
       title: `PICKSLIP: ${record.materialAplicationNumber}`,
       content: (
-        <ProCard className="flex justify-center items-center h-[79vh]">
+        <ProCard className="flex justify-center items-center h-[82vh]">
           <MarerialOrderContent order={record} />
         </ProCard>
       ),
@@ -289,10 +289,10 @@ const MaterialsStore: FC = () => {
       | string
       | React.MouseEvent<Element, MouseEvent>
       | React.KeyboardEvent<Element>,
-    action: "add" | "remove"
+    action: 'add' | 'remove'
   ) => {
-    if (typeof targetKey === "string") {
-      if (action === "remove") {
+    if (typeof targetKey === 'string') {
+      if (action === 'remove') {
         const newPanes = panes.filter((pane) => pane.key !== targetKey);
         setPanes(newPanes);
         if (newPanes.length > 0) {
@@ -311,12 +311,12 @@ const MaterialsStore: FC = () => {
         content: (
           <>
             {!selectedPN ? (
-              <ProCard className="h-[79vh] overflow-hidden">
+              <ProCard className="h-[82vh] overflow-hidden">
                 <StockInfo selectedItem={selectedPN}></StockInfo>
               </ProCard>
             ) : (
               <>
-                <ProCard className="h-[79vh] overflow-hidden">
+                <ProCard className="h-[82vh] overflow-hidden">
                   <StockInfo selectedItem={selectedPN}></StockInfo>
                 </ProCard>
               </>
@@ -335,7 +335,7 @@ const MaterialsStore: FC = () => {
         key,
         title: `PICKSLIP VIEWER`,
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <MaterialOrdersList
               data={filteredMaterialOrders}
               scroll={55}
@@ -354,14 +354,14 @@ const MaterialsStore: FC = () => {
     if (key === RouteNames.PICKSLIPS) {
       const tab = {
         key,
-        title: t("ISSUED_PICKSLIPS"),
+        title: t('ISSUED_PICKSLIPS'),
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <PickSlipsList
               data={filteredPickSlips}
               scroll={55}
               isLoading={isLoading}
-              onRowClick={() => console.log("data")}
+              onRowClick={() => console.log('data')}
             />
           </ProCard>
         ),
@@ -390,8 +390,8 @@ const MaterialsStore: FC = () => {
     setActiveKey(tab.key);
   };
   useEffect(() => {
-    if (localStorage.getItem("filteredPN")) {
-      setSelectedPN(localStorage.getItem("filteredPN"));
+    if (localStorage.getItem('filteredPN')) {
+      setSelectedPN(localStorage.getItem('filteredPN'));
     }
   }, []);
   return (
@@ -427,26 +427,26 @@ const MaterialsStore: FC = () => {
         />
         {activeKey == RouteNames.MATERIAL_STORE && !collapsed && (
           <FilterSiderForm
-            title={t("PART NUMBER SEARCH")}
+            title={t('PART NUMBER SEARCH')}
             children={
               <ProForm
                 style={{
-                  width: "100%",
-                  height: `${!collapsed ? "100%" : "35vh"}`,
+                  width: '100%',
+                  height: `${!collapsed ? '100%' : '35vh'}`,
                 }}
                 form={form}
                 onFinish={async (values: any) => {
                   dispatch(setSelectedMaterial(selectedPN));
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const result = await dispatch(
                     getFilteredItemsStockQuantity({
                       companyID: companyID,
                       PART_NUMBER: selectedPN.PART_NUMBER,
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     setDataPN(result.payload);
-                    localStorage.setItem("filteredPN", selectedPN.PART_NUMBER);
+                    localStorage.setItem('filteredPN', selectedPN.PART_NUMBER);
                   }
                 }}
               >
@@ -455,20 +455,20 @@ const MaterialsStore: FC = () => {
                   optionLabel1="PART_NUMBER"
                   optionLabel2="DESCRIPTION"
                   onSelect={handleSelect}
-                  label={`${t("PN")}`}
-                  tooltip={`${t("PARTNUMBER")}`}
+                  label={`${t('PN')}`}
+                  tooltip={`${t('PARTNUMBER')}`}
                   rules={[]}
-                  name={"PART_NUMBER"}
+                  name={'PART_NUMBER'}
                 />
                 <ProFormCheckbox.Group
                   labelAlign="left"
                   name="GROUP"
                   options={[
-                    { label: "TOOL", value: "TOOL" },
-                    { label: "ROT", value: "ROT" },
-                    { label: "CONS", value: "CONS" },
-                    { label: "GSE", value: "GSE" },
-                    { label: "CHEM", value: "CHEM" },
+                    { label: 'TOOL', value: 'TOOL' },
+                    { label: 'ROT', value: 'ROT' },
+                    { label: 'CONS', value: 'CONS' },
+                    { label: 'GSE', value: 'GSE' },
+                    { label: 'CHEM', value: 'CHEM' },
                   ]}
                   fieldProps={{
                     onChange: (value) => setGroup(value),
@@ -482,7 +482,7 @@ const MaterialsStore: FC = () => {
       <Content>
         <Tabs
           style={{
-            width: "98%",
+            width: '98%',
           }}
           className="mx-auto"
           size="small"

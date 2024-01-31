@@ -7,28 +7,28 @@ import {
   Row,
   Space,
   message,
-} from "antd";
-import Sider from "antd/es/layout/Sider";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { getItem } from "@/services/utilites";
+} from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getItem } from '@/services/utilites';
 import {
   TransactionOutlined,
   EditOutlined,
   PrinterOutlined,
   SaveOutlined,
-} from "@ant-design/icons";
-import TransferFilteredForm from "../store/transfer/TransferFilteredForm";
-import BookingDetailsForm from "../store/transfer/BookingDetailsForm";
-import ShowParts from "../store/storeManagment/ShowParts";
-import { IStore } from "@/models/IStore";
-import GeneretedCompleteLabels from "@/components/pdf/GeneretedCompleteLabels";
-import GeneretedTransferPdf from "@/components/pdf/GeneretedTransferLabels";
-import { createBookingItem, updateManyMaterialItems } from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import OriginalStoreEntry from "../store/transfer/modifyParts/OriginalStoreEntry";
-import { IMaterialStoreRequestItem } from "@/models/IMaterialStoreItem";
-import { USER_ID } from "@/utils/api/http";
+} from '@ant-design/icons';
+import TransferFilteredForm from '../store/transfer/TransferFilteredForm';
+import BookingDetailsForm from '../store/transfer/BookingDetailsForm';
+import ShowParts from '../store/storeManagment/ShowParts';
+import { IStore } from '@/models/IStore';
+import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
+import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
+import { createBookingItem, updateManyMaterialItems } from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import OriginalStoreEntry from '../store/transfer/modifyParts/OriginalStoreEntry';
+import { IMaterialStoreRequestItem } from '@/models/IMaterialStoreItem';
+import { USER_ID } from '@/utils/api/http';
 
 const PartsTransfer: FC = () => {
   const { t } = useTranslation();
@@ -44,11 +44,11 @@ const PartsTransfer: FC = () => {
   const [selectedStore, setSecectedStore] = useState<any>(null);
   const [selectedComStore, setSelectedComStore] = useState<any>(null);
   const [selectedLocation, setSecectedLocation] = useState<any>(null);
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
     getItem(
-      <>{t("PARTS TRANSFER (BAN:222)")}</>,
-      "sub1",
+      <>{t('PARTS TRANSFER (BAN:222)')}</>,
+      'sub1',
       <TransactionOutlined />
     ),
     // ]
@@ -58,7 +58,7 @@ const PartsTransfer: FC = () => {
   const [partsOpenModify, setOpenPartsModify] = useState<boolean>(false);
 
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh]  bg-white px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col">
         <div className="py-4">
           <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
@@ -85,7 +85,7 @@ const PartsTransfer: FC = () => {
                   // setselectedRowKeys([]);
                 }}
               ></TransferFilteredForm>
-            </Col>{" "}
+            </Col>{' '}
             <Col xs={32} sm={18}>
               <BookingDetailsForm
                 initialStoreName={onFilterTransferDEtails?.store}
@@ -93,7 +93,7 @@ const PartsTransfer: FC = () => {
               />
             </Col>
           </Row>
-        </div>{" "}
+        </div>{' '}
         {/* <Row className="" gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
           <Col xs={17}>
             <ShowParts
@@ -128,27 +128,27 @@ const PartsTransfer: FC = () => {
             icon={<SaveOutlined />}
             disabled={!rowKeys.length || !onFilterBookingDEtails}
             onClick={() => {
-              const currentCompanyID = localStorage.getItem("companyID");
+              const currentCompanyID = localStorage.getItem('companyID');
               Modal.confirm({
-                title: `${t("YOU WANT TRANSFER PARTS TO LOCATION")}  ${
+                title: `${t('YOU WANT TRANSFER PARTS TO LOCATION')}  ${
                   onFilterBookingDEtails?.targetLocation
                 }`,
                 onOk: async () => {
                   Modal.confirm({
-                    title: t("CONFIRM CHANGE"),
-                    okText: "CONFIRM",
-                    cancelText: "CANCEL",
+                    title: t('CONFIRM CHANGE'),
+                    okText: 'CONFIRM',
+                    cancelText: 'CANCEL',
                     okButtonProps: {
-                      style: { display: "inline-block", margin: "1 auto" },
+                      style: { display: 'inline-block', margin: '1 auto' },
                     },
                     cancelButtonProps: {
-                      style: { display: "inline-block", margin: "1 auto" },
+                      style: { display: 'inline-block', margin: '1 auto' },
                     },
                     content: (
                       <div
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Button
@@ -184,17 +184,17 @@ const PartsTransfer: FC = () => {
                     onOk: async () => {
                       const resultUpdate = await dispatch(
                         updateManyMaterialItems({
-                          companyID: currentCompanyID || "",
+                          companyID: currentCompanyID || '',
                           ids: rowKeys,
                           STOCK: onFilterBookingDEtails.targetStore,
                           LOCATION:
-                            onFilterBookingDEtails?.targetLocation || "",
-                          OWNER: onFilterBookingDEtails?.owner || "",
+                            onFilterBookingDEtails?.targetLocation || '',
+                          OWNER: onFilterBookingDEtails?.owner || '',
                         })
                       );
 
-                      if (resultUpdate.meta.requestStatus === "fulfilled") {
-                        message.success(t("LOCATION CHANGE SUCCESSFULY"));
+                      if (resultUpdate.meta.requestStatus === 'fulfilled') {
+                        message.success(t('LOCATION CHANGE SUCCESSFULY'));
                         setselectedRowKeys([]);
 
                         // Apply the dispatch to each item in the result array
@@ -205,12 +205,12 @@ const PartsTransfer: FC = () => {
                               data: {
                                 companyID: result.COMPANY_ID,
                                 userSing:
-                                  localStorage.getItem("singNumber") || "",
-                                userID: USER_ID || "",
+                                  localStorage.getItem('singNumber') || '',
+                                userID: USER_ID || '',
                                 createDate: new Date(),
                                 partNumber: result.PART_NUMBER,
-                                station: result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                voucherModel: "CHANGE_LOCATION",
+                                station: result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                voucherModel: 'CHANGE_LOCATION',
                                 location: result?.SHELF_NUMBER,
                                 orderNumber: result?.ORDER_NUMBER,
                                 price: result?.PRICE,
@@ -234,12 +234,12 @@ const PartsTransfer: FC = () => {
                               data: {
                                 companyID: result.COMPANY_ID,
                                 userSing:
-                                  localStorage.getItem("singNumber") || "",
-                                userID: USER_ID || "",
+                                  localStorage.getItem('singNumber') || '',
+                                userID: USER_ID || '',
                                 createDate: new Date(),
                                 partNumber: result.PART_NUMBER,
-                                station: result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                voucherModel: "CHANGE_LOCATION",
+                                station: result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                voucherModel: 'CHANGE_LOCATION',
                                 location: result?.SHELF_NUMBER,
                                 orderNumber: result?.ORDER_NUMBER,
                                 price: result?.PRICE,
@@ -264,11 +264,11 @@ const PartsTransfer: FC = () => {
             }}
             size="small"
           >
-            {t("BOOK")}
+            {t('BOOK')}
           </Button>
         </Space>
         <Space>
-          {" "}
+          {' '}
           <Button
             icon={<EditOutlined />}
             disabled={!rowKeys.length || rowKeys.length > 1}
@@ -278,8 +278,8 @@ const PartsTransfer: FC = () => {
             }}
             size="small"
           >
-            {" "}
-            {t("MODIFY")}
+            {' '}
+            {t('MODIFY')}
           </Button>
         </Space>
         <Space>
@@ -292,23 +292,23 @@ const PartsTransfer: FC = () => {
             }}
             size="small"
           >
-            {" "}
-            {t("PRINT LABEL")}
+            {' '}
+            {t('PRINT LABEL')}
           </Button>
         </Space>
         <Modal
-          title={t("PRINT LABEL")}
+          title={t('PRINT LABEL')}
           open={labelsOpenPrint}
-          width={"30%"}
+          width={'30%'}
           onCancel={() => setOpenLabelsPrint(false)}
           footer={null}
         >
           <GeneretedTransferPdf key={Date.now()} parts={partsToPrint} />
         </Modal>
         <Modal
-          title={t("ORIGINALS STORE ENTRY")}
+          title={t('ORIGINALS STORE ENTRY')}
           open={partsOpenModify}
-          width={"90%"}
+          width={'90%'}
           onCancel={() => setOpenPartsModify(false)}
           footer={null}
         >
@@ -322,9 +322,9 @@ const PartsTransfer: FC = () => {
           />
         </Modal>
         <Modal
-          title={t("CHANGE LOCATION")}
+          title={t('CHANGE LOCATION')}
           open={openRelese}
-          width={"0%"}
+          width={'0%'}
           onCancel={() => setOpenRelese(false)}
           footer={null}
         ></Modal>

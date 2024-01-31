@@ -1,13 +1,13 @@
-import { Button, Layout, Result, Space } from "antd";
-import { Content, Footer, Header } from "antd/es/layout/layout";
-import Auth from "@/components/auth/Auth";
+import { Button, Layout, Result, Space } from 'antd';
+import { Content, Footer, Header } from 'antd/es/layout/layout';
+import Auth from '@/components/auth/Auth';
 
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC } from "react";
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC } from 'react';
 
-import BaseLayout from "./BaseLayout";
-import { RouteNames } from "@/router";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import BaseLayout from './BaseLayout';
+import { RouteNames } from '@/router';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 const Main: FC = () => {
   const { isAuth } = useTypedSelector((state) => state.auth);
@@ -15,13 +15,15 @@ const Main: FC = () => {
   return (
     <>
       {!isAuth ? (
-        <Layout style={{ minHeight: "100vh" }}>
+        <Layout
+        // style={{ minHeight: "100vh" }}
+        >
           <Header
             className="flex justify-between my-0 px-0"
             style={{
               // marginLeft: 'auto',
 
-              background: "rgba(255, 255, 255, 0.2)",
+              background: 'rgba(255, 255, 255, 0.2)',
             }}
           >
             <Space
@@ -32,14 +34,14 @@ const Main: FC = () => {
             </Space>
           </Header>
           <Layout>
-            {" "}
+            {' '}
             <Content>
               <Routes>
                 <Route element={<Auth />} path={RouteNames.LOGIN} />
                 <Route
                   element={
                     <Result
-                      style={{ height: "75vh" }}
+                      style={{ height: '75vh' }}
                       status="403"
                       // title="403"
                       subTitle="Sorry, you are not authorized to BAMOS."
@@ -53,7 +55,7 @@ const Main: FC = () => {
                       }
                     />
                   }
-                  path={"*"}
+                  path={'*'}
                 />
               </Routes>
             </Content>
@@ -61,9 +63,9 @@ const Main: FC = () => {
 
           <Footer
             style={{
-              textAlign: "center",
-              position: "sticky",
-              bottom: "0",
+              textAlign: 'center',
+              position: 'sticky',
+              bottom: '0',
             }}
           >
             ©2023 Created by Kavalchuk D.

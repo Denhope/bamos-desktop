@@ -1,0 +1,588 @@
+import TabContent from '@/components/shared/Table/TabContent';
+
+import { Button, Col, Form, FormInstance, Row, Space } from 'antd';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { v4 as originalUuidv4 } from 'uuid';
+import {
+  EditOutlined,
+  SettingOutlined,
+  PlusOutlined,
+  FilePdfOutlined,
+  FileExcelOutlined,
+} from '@ant-design/icons';
+import {
+  ModalForm,
+  ProForm,
+  ProFormDatePicker,
+  ProFormDigit,
+  ProFormGroup,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { getFilteredProjects } from '@/utils/api/thunks';
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+import Title from 'antd/es/typography/Title';
+type RequirementsDtailsType = {
+  requierement: any;
+  onEditRequirementsDtailsEdit: (data: any) => void;
+};
+interface Option {
+  value: string;
+  label: string;
+}
+const RequirementsDtails: FC<RequirementsDtailsType> = ({
+  onEditRequirementsDtailsEdit,
+  requierement,
+}) => {
+  const [selectedRequirementState, setSelectedRequirementState] = useState<
+    any | null
+  >(null);
+  const [isEditing, setIsEditing] = useState(true);
+  const [isEditingView, setIsEditingView] = useState(false);
+  const [isCreateView, setIsCreateView] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const { t } = useTranslation();
+  const uuidv4: () => string = originalUuidv4;
+  const [form] = Form.useForm();
+  const [formAdd] = Form.useForm();
+  const [options, setOptions] = useState<Option[]>([]);
+  const dispatch = useAppDispatch();
+  const formRef = useRef<FormInstance>(null);
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
+    }
+  };
+  useEffect(() => {
+    if (requierement && isEditingView) {
+      setIsEditing(false);
+    } else {
+      setIsEditing(false);
+    }
+  }, [requierement]);
+
+  useEffect(() => {
+    if (isEditingView) {
+      setIsEditing(true);
+    } else {
+      setIsEditing(false);
+    }
+  }, [isEditingView]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const currentCompanyID = localStorage.getItem('companyID');
+      if (currentCompanyID) {
+        const result = await dispatch(
+          getFilteredProjects({ companyID: currentCompanyID || '' })
+        );
+        if (result.meta.requestStatus === 'fulfilled') {
+          const options = result.payload.map((item: any) => ({
+            value: item.projectWO, // замените на нужное поле для 'PROJECT'
+            label: `${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
+          }));
+          setOptions(options);
+        }
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const tabs = [
+    {
+      content: (
+        <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
+          <ProForm
+            submitter={{
+              render: (_, dom) =>
+                isEditing || isCreating
+                  ? [
+                      ...dom,
+                      <Button
+                        key="cancel"
+                        onClick={() => {
+                          isEditing && setIsEditingView(!isEditingView);
+                          isCreating && setIsCreating(false);
+                          selectedRequirementState(
+                            form.getFieldValue('projectState')
+                          );
+                        }}
+                      >
+                        {t('Cancel')}
+                      </Button>,
+                    ]
+                  : [],
+              submitButtonProps: {
+                children: 'Search',
+              },
+            }}
+            size="small"
+            form={form}
+            disabled={!isEditing && !isCreating}
+            layout="horizontal"
+            // labelCol={{ span: 10 }}
+            onFinish={async (values) => {}}
+          >
+            <ProFormSelect
+              // rules={[{ required: true }]}
+              showSearch
+              disabled
+              name="projectType"
+              label={t('REQUIREMENT TYPE')}
+              width="lg"
+              // valueEnum={{
+              //   MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
+              //   REPAIR_AC_PROJECT: t('REPAIR A/C '),
+              //   REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
+              //   SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
+              //   COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
+              //   PRODUCTION_PROJECT: t('PRODUCTION '),
+              //   PURCHASE_PROJECT: t('PURCHASE '),
+              //   MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
+              // }}
+              // onChange={(value: any) => setSelectedProjectType(value)}
+            />
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              name="projectState"
+              label={t('REQUIREMENT STATE')}
+              width="sm"
+              initialValue={['DRAFT']}
+              valueEnum={{
+                DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
+                OPEN: { text: t('OPEN'), status: 'Processing' },
+                inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+                PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                COMPLETED: { text: t('COMPLETED'), status: 'Default' },
+                CLOSED: { text: t('CLOSED'), status: 'Success' },
+                CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+              }}
+            />
+            <ProFormGroup>
+              <ProFormSelect
+                rules={[{ required: true }]}
+                name="projectNumbers"
+                label={`${t(`PROJECT LINK`)}`}
+                width="sm"
+                options={options}
+              />
+              <ProFormSelect
+                rules={[{ required: true }]}
+                showSearch
+                disabled
+                name="projectType"
+                label={t('PROJECT TYPE')}
+                width="lg"
+                tooltip={t('PROJECT TYPE')}
+                valueEnum={{
+                  MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
+                  REPAIR_AC_PROJECT: t('REPAIR A/C '),
+                  REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
+                  SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
+                  COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
+                  PRODUCTION_PROJECT: t('PRODUCTION '),
+                  PURCHASE_PROJECT: t('PURCHASE '),
+                  MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
+                }}
+              />
+            </ProFormGroup>
+
+            <ProFormGroup direction="horizontal">
+              <ProFormGroup>
+                <ProFormText
+                  rules={[{ required: true }]}
+                  name="partNumber"
+                  label={t('PART NUMBER')}
+                  width="sm"
+                  tooltip={t('PART NUMBER')}
+                  fieldProps={{
+                    onDoubleClick: () => {
+                      setOpenStoreFind(true);
+                    },
+                    onKeyPress: handleKeyPress,
+                  }}
+                ></ProFormText>
+                <ProFormText
+                  disabled
+                  rules={[{ required: true }]}
+                  name="description"
+                  label={t('DESCRIPTION')}
+                  width="sm"
+                  tooltip={t('DESCRIPTION')}
+                ></ProFormText>
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormDigit
+                  name="qty"
+                  disabled={!isCreating}
+                  rules={[{ required: true }]}
+                  label={t('QTY')}
+                  width="xs"
+                  tooltip={t('QTY')}
+                ></ProFormDigit>
+
+                <ProFormSelect
+                  rules={[{ required: true }]}
+                  label={t('UNIT')}
+                  disabled={!isCreating}
+                  name="unit"
+                  width="sm"
+                  valueEnum={{
+                    EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                    M: `M/${t('Meters').toUpperCase()}`,
+                    ML: `ML/${t('Milliliters').toUpperCase()}`,
+                    SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                    CM: `CM/${t('Centimeters').toUpperCase()}`,
+                    GM: `GM/${t('Grams').toUpperCase()}`,
+                    YD: `YD/${t('Yards').toUpperCase()}`,
+                    FT: `FT/${t('Feet').toUpperCase()}`,
+                    SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                    IN: `IN/${t('Inch').toUpperCase()}`,
+                    SH: `SH/${t('Sheet').toUpperCase()}`,
+                    SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                    RL: `RL/${t('Roll').toUpperCase()}`,
+                    KT: `KT/${t('Kit').toUpperCase()}`,
+                    LI: `LI/${t('Liters').toUpperCase()}`,
+                    KG: `KG/${t('Kilograms').toUpperCase()}`,
+                    JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+                  }}
+                ></ProFormSelect>
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormSelect
+                  disabled
+                  rules={[{ required: true }]}
+                  name="partGroup"
+                  label={`${t('PART SPESIAL GROUP')}`}
+                  width="sm"
+                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  options={[
+                    { value: 'CONS', label: t('CONS') },
+                    { value: 'TOOL', label: t('TOOL') },
+                    { value: 'CHEM', label: t('CHEM') },
+                    { value: 'ROT', label: t('ROT') },
+                    { value: 'GSE', label: t('GSE') },
+                  ]}
+                />
+                <ProFormSelect
+                  disabled
+                  rules={[{ required: true }]}
+                  name="partType"
+                  label={`${t('PART TYPE')}`}
+                  width="sm"
+                  tooltip={`${t('SELECT PART TYPE')}`}
+                  options={[
+                    { value: 'ROTABLE', label: t('ROTABLE') },
+                    { value: 'CONSUMABLE', label: t('CONSUMABLE') },
+                  ]}
+                />
+              </ProFormGroup>
+            </ProFormGroup>
+            <ProFormGroup>
+              <ProFormDatePicker
+                label={t('PLANNED START DATE')}
+                name="planedStartDate"
+                width="sm"
+              ></ProFormDatePicker>
+            </ProFormGroup>
+            <ModalForm
+              // title={`Search on Store`}
+              width={'70vw'}
+              // placement={'bottom'}
+              open={openStoreFindModal}
+              // submitter={false}
+              onOpenChange={setOpenStoreFind}
+              onFinish={async function (
+                record: any,
+                rowIndex?: any
+              ): Promise<void> {
+                setOpenStoreFind(false);
+                // handleSelect(selectedSinglePN);
+
+                form.setFields([
+                  { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
+                ]);
+              }}
+            >
+              <PartNumberSearch
+                initialParams={{ partNumber: '' }}
+                scroll={45}
+                onRowClick={function (record: any, rowIndex?: any): void {
+                  setOpenStoreFind(false);
+
+                  form.setFields([
+                    { name: 'partNumber', value: record.PART_NUMBER },
+                  ]);
+                  form.setFields([
+                    { name: 'description', value: record.DESCRIPTION },
+                  ]);
+                  form.setFields([
+                    { name: 'unit', value: record.UNIT_OF_MEASURE },
+                  ]);
+                  form.setFields([
+                    { name: 'addPartNumber', value: record.PART_NUMBER },
+                  ]);
+                  form.setFields([
+                    { name: 'addDescription', value: record.DESCRIPTION },
+                  ]);
+
+                  form.setFields([{ name: 'partGroup', value: record.GROUP }]);
+                  form.setFields([{ name: 'partType', value: record.TYPE }]);
+                }}
+                isLoading={false}
+                onRowSingleClick={function (record: any, rowIndex?: any): void {
+                  setSecectedSinglePN(record);
+                  form.setFields([
+                    { name: 'partNumber', value: record.PART_NUMBER },
+                  ]);
+                  form.setFields([
+                    { name: 'description', value: record.DESCRIPTION },
+                  ]);
+                  form.setFields([
+                    { name: 'unit', value: record.UNIT_OF_MEASURE },
+                  ]);
+                  form.setFields([
+                    { name: 'addPartNumber', value: record.PART_NUMBER },
+                  ]);
+                  form.setFields([
+                    { name: 'addDescription', value: record.DESCRIPTION },
+                  ]);
+                  form.setFields([
+                    { name: 'addUnit', value: record.UNIT_OF_MEASURE },
+                  ]);
+                  form.setFields([{ name: 'partGroup', value: record.GROUP }]);
+                  form.setFields([{ name: 'partType', value: record.TYPE }]);
+                }}
+              />
+            </ModalForm>
+          </ProForm>
+        </div>
+      ),
+      title: `${t(
+        `${(requierement && requierement?.orderType) || t('NEW REQUIREMENT')}`
+      )}`,
+    },
+  ];
+  useEffect(() => {
+    if (requierement && isEditingView) {
+      setIsEditing(false);
+    } else {
+      setIsEditing(false);
+    }
+  }, [requierement]);
+  useEffect(() => {
+    if (isEditingView) {
+      setIsEditing(true);
+    } else {
+      setIsEditing(false);
+    }
+  }, [isEditingView]);
+  return (
+    <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-4">
+      <Col
+        xs={5}
+        sm={6}
+        className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 "
+      >
+        <Space direction="vertical">
+          <Space
+            className={`cursor-pointer transform transition px-3 ${
+              isEditing || isCreating
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:text-blue-500'
+            }`}
+            onClick={() => {
+              if (!isEditing) {
+                setIsEditingView(!isEditingView);
+                form.resetFields();
+                formAdd.resetFields();
+                setIsCreating(true);
+                setIsEditing(false);
+                onEditRequirementsDtailsEdit(null);
+              }
+            }}
+          >
+            <SettingOutlined
+              className={`${
+                isEditing || !isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
+              }`}
+            />
+            <div
+              className={`${
+                isEditing || !isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
+              }`}
+            >
+              {t('NEW REQUIREMENT')}
+            </div>
+          </Space>
+          <Space
+            onClick={() => requierement && setIsEditingView(!isEditingView)}
+            className={`cursor-pointer transform transition px-3 ${
+              !requierement
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:text-blue-500'
+            }`}
+          >
+            <EditOutlined />
+            <>{t('EDIT')}</>
+          </Space>
+          {requierement && (
+            <>
+              <ProForm
+                className="p-3 mx-4  bg-yellow-50 "
+                disabled
+                layout="horizontal"
+                size={'small'}
+                submitter={false}
+              >
+                <ProFormGroup>
+                  <Title className="py-0 my-0" level={5}>
+                    REQUESTED
+                  </Title>
+                  <ProFormDigit
+                    name="qty"
+                    disabled={!isCreating}
+                    label={t('QTY')}
+                    width="xs"
+                  ></ProFormDigit>
+                  <ProFormSelect
+                    label={t('UNIT')}
+                    disabled={!isCreating}
+                    name="unit"
+                    width="sm"
+                    valueEnum={{
+                      EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                      M: `M/${t('Meters').toUpperCase()}`,
+                      ML: `ML/${t('Milliliters').toUpperCase()}`,
+                      SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                      CM: `CM/${t('Centimeters').toUpperCase()}`,
+                      GM: `GM/${t('Grams').toUpperCase()}`,
+                      YD: `YD/${t('Yards').toUpperCase()}`,
+                      FT: `FT/${t('Feet').toUpperCase()}`,
+                      SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                      IN: `IN/${t('Inch').toUpperCase()}`,
+                      SH: `SH/${t('Sheet').toUpperCase()}`,
+                      SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                      RL: `RL/${t('Roll').toUpperCase()}`,
+                      KT: `KT/${t('Kit').toUpperCase()}`,
+                      LI: `LI/${t('Liters').toUpperCase()}`,
+                      KG: `KG/${t('Kilograms').toUpperCase()}`,
+                      JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+                    }}
+                  ></ProFormSelect>
+                </ProFormGroup>
+              </ProForm>
+              <ProForm
+                className="p-3 mx-4 rounded-s  bg-lime-100 "
+                disabled
+                layout="horizontal"
+                size={'small'}
+                submitter={false}
+              >
+                <ProFormGroup>
+                  <Title className="py-0 my-0" level={5}>
+                    BOOKED
+                  </Title>
+                  <ProFormDigit
+                    name="qty"
+                    disabled={!isCreating}
+                    label={t('QTY')}
+                    width="xs"
+                  ></ProFormDigit>
+                  <ProFormSelect
+                    label={t('UNIT')}
+                    disabled={!isCreating}
+                    name="unit"
+                    width="sm"
+                    valueEnum={{
+                      EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                      M: `M/${t('Meters').toUpperCase()}`,
+                      ML: `ML/${t('Milliliters').toUpperCase()}`,
+                      SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                      CM: `CM/${t('Centimeters').toUpperCase()}`,
+                      GM: `GM/${t('Grams').toUpperCase()}`,
+                      YD: `YD/${t('Yards').toUpperCase()}`,
+                      FT: `FT/${t('Feet').toUpperCase()}`,
+                      SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                      IN: `IN/${t('Inch').toUpperCase()}`,
+                      SH: `SH/${t('Sheet').toUpperCase()}`,
+                      SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                      RL: `RL/${t('Roll').toUpperCase()}`,
+                      KT: `KT/${t('Kit').toUpperCase()}`,
+                      LI: `LI/${t('Liters').toUpperCase()}`,
+                      KG: `KG/${t('Kilograms').toUpperCase()}`,
+                      JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+                    }}
+                  ></ProFormSelect>
+                </ProFormGroup>
+              </ProForm>
+              <ProForm
+                className="p-3 mx-4  bg-green-200"
+                disabled
+                layout="horizontal"
+                size={'small'}
+                submitter={false}
+              >
+                <ProFormGroup>
+                  <Title className="py-0 my-0" level={5}>
+                    STOCK
+                  </Title>
+                  <ProFormDigit
+                    name="qty"
+                    disabled={!isCreating}
+                    label={t('QTY')}
+                    width="xs"
+                  ></ProFormDigit>
+                  <ProFormSelect
+                    label={t('UNIT')}
+                    disabled={!isCreating}
+                    name="unit"
+                    width="sm"
+                    valueEnum={{
+                      EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                      M: `M/${t('Meters').toUpperCase()}`,
+                      ML: `ML/${t('Milliliters').toUpperCase()}`,
+                      SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                      CM: `CM/${t('Centimeters').toUpperCase()}`,
+                      GM: `GM/${t('Grams').toUpperCase()}`,
+                      YD: `YD/${t('Yards').toUpperCase()}`,
+                      FT: `FT/${t('Feet').toUpperCase()}`,
+                      SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                      IN: `IN/${t('Inch').toUpperCase()}`,
+                      SH: `SH/${t('Sheet').toUpperCase()}`,
+                      SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                      RL: `RL/${t('Roll').toUpperCase()}`,
+                      KT: `KT/${t('Kit').toUpperCase()}`,
+                      LI: `LI/${t('Liters').toUpperCase()}`,
+                      KG: `KG/${t('Kilograms').toUpperCase()}`,
+                      JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+                    }}
+                  ></ProFormSelect>
+                </ProFormGroup>
+              </ProForm>
+            </>
+          )}
+        </Space>
+      </Col>
+
+      <Col
+        className="h-[75vh] px-4  rounded-md brequierement-gray-400"
+        xs={15}
+        sm={17}
+      >
+        <TabContent tabs={tabs}></TabContent>
+      </Col>
+    </Row>
+  );
+};
+
+export default RequirementsDtails;

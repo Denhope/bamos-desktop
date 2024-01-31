@@ -1,11 +1,11 @@
-import ReceivingItemList from "@/components/store/receivingItems/ReceivingItemList";
-import ReceivingItemsFilterorm from "@/components/store/receivingItems/ReceivingItemsFilterorm";
-import React, { FC, useEffect, useState } from "react";
-import TabContent from "@/components/shared/Table/TabContent";
-import { useTranslation } from "react-i18next";
-import { Button, Modal, Space } from "antd";
-import GeneretedTransferPdf from "@/components/pdf/GeneretedTransferLabels";
-import ModifyReceiving from "@/components/store/receivingItems/ModifyReceiving";
+import ReceivingItemList from '@/components/store/receivingItems/ReceivingItemList';
+import ReceivingItemsFilterorm from '@/components/store/receivingItems/ReceivingItemsFilterorm';
+import React, { FC, useEffect, useState } from 'react';
+import TabContent from '@/components/shared/Table/TabContent';
+import { useTranslation } from 'react-i18next';
+import { Button, Modal, Space } from 'antd';
+import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
+import ModifyReceiving from '@/components/store/receivingItems/ModifyReceiving';
 interface ReceivingTracking {
   onDoubleClick?: (record: any, rowIndex?: any) => void;
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
@@ -35,14 +35,14 @@ const ReceivingTracking: FC<ReceivingTracking> = ({
           />
         </>
       ),
-      title: `${t("RECEIVING LOG")}`,
+      title: `${t('RECEIVING LOG')}`,
     },
   ];
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
   const [modifyReceiving, setOpenModify] = useState<any>();
 
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <ReceivingItemsFilterorm onReceivingSearch={setReceiving} />
         <TabContent tabs={tabs}></TabContent>
@@ -54,7 +54,7 @@ const ReceivingTracking: FC<ReceivingTracking> = ({
             onClick={() => setOpenModify(true)}
             size="small"
           >
-            {t("MODIFY")}
+            {t('MODIFY')}
           </Button>
         </Space>
         <Space align="center">
@@ -63,13 +63,13 @@ const ReceivingTracking: FC<ReceivingTracking> = ({
             onClick={() => setOpenLabelsPrint(true)}
             size="small"
           >
-            {t("PRINT LABELS")}
+            {t('PRINT LABELS')}
           </Button>
         </Space>
         <Modal
-          title={t("PRINT LABEL")}
+          title={t('PRINT LABEL')}
           open={labelsOpenPrint}
-          width={"30%"}
+          width={'30%'}
           onCancel={() => {
             setOpenLabelsPrint(false);
             setPartsToPrint(null);
@@ -80,9 +80,9 @@ const ReceivingTracking: FC<ReceivingTracking> = ({
         </Modal>
         <Modal
           onOk={() => {}}
-          title={t("MODIFY RECEIVING")}
+          title={t('MODIFY RECEIVING')}
           open={modifyReceiving}
-          width={"80%"}
+          width={'80%'}
           onCancel={() => {
             setOpenModify(false);
           }}

@@ -4,38 +4,38 @@ import {
   PlusOutlined,
   FilePdfOutlined,
   FileExcelOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   ModalForm,
   ProFormDatePicker,
   ProFormGroup,
-} from "@ant-design/pro-components";
-import ProForm, { ProFormSelect, ProFormText } from "@ant-design/pro-form";
-import { Button, Col, Divider, Form, Modal, Row, Space, message } from "antd";
-import TabContent from "@/components/shared/Table/TabContent";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IOrder, OrderType } from "@/models/IOrder";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
+} from '@ant-design/pro-components';
+import ProForm, { ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import { Button, Col, Divider, Form, Modal, Row, Space, message } from 'antd';
+import TabContent from '@/components/shared/Table/TabContent';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IOrder, OrderType } from '@/models/IOrder';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
 import {
   getFilteredProjects,
   postNewOrder,
   updateOrderByID,
   uploadFileServer,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 
-import QuatationTree from "./OrderTree";
-import AddDetailForm from "./AddDetailForm";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
+import QuatationTree from './OrderTree';
+import AddDetailForm from './AddDetailForm';
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 
-import AddVendorsForm from "./AddVendorsForm";
-import EditDetailForm from "./EditDetailForm";
-import VendorDetailForm from "./VendorDetailForm";
-import FilesSelector from "@/components/shared/FilesSelector";
-import FileUploader, { AcceptedFileTypes } from "@/components/shared/Upload";
-import { handleFileSelect } from "@/services/utilites";
-import GeneretedQuotationOrder from "@/components/pdf/orders/quotation/GeneretedQuotationOrder";
+import AddVendorsForm from './AddVendorsForm';
+import EditDetailForm from './EditDetailForm';
+import VendorDetailForm from './VendorDetailForm';
+import FilesSelector from '@/components/shared/FilesSelector';
+import FileUploader, { AcceptedFileTypes } from '@/components/shared/Upload';
+import { handleFileSelect } from '@/services/utilites';
+import GeneretedQuotationOrder from '@/components/pdf/orders/quotation/GeneretedQuotationOrder';
 
 type ProjectDetailsFormType = {
   order: IOrder;
@@ -158,15 +158,15 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
       setCurrenEditVendor(null);
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: "orderNumber", value: order?.orderNumber },
-        { name: "orderType", value: order?.orderType },
-        { name: "orderState", value: order?.state },
-        { name: "orderName", value: order?.orderName },
-        { name: "description", value: order?.description },
-        { name: "projectNumbers", value: order?.projectNumbers },
-        { name: "startDate", value: order?.startDate },
-        { name: "finishDate", value: order?.finishDate },
-        { name: "orderText", value: order?.orderText },
+        { name: 'orderNumber', value: order?.orderNumber },
+        { name: 'orderType', value: order?.orderType },
+        { name: 'orderState', value: order?.state },
+        { name: 'orderName', value: order?.orderName },
+        { name: 'description', value: order?.description },
+        { name: 'projectNumbers', value: order?.projectNumbers },
+        { name: 'startDate', value: order?.startDate },
+        { name: 'finishDate', value: order?.finishDate },
+        { name: 'orderText', value: order?.orderText },
       ]);
 
       // onFilterTransferprojects(form.getFieldsValue());
@@ -175,8 +175,8 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
   useEffect(() => {
     if (isCreating) {
       form.setFields([
-        { name: "createBySingNew", value: localStorage.getItem("singNumber") },
-        { name: "createByNameNew", value: localStorage.getItem("name") },
+        { name: 'createBySingNew', value: localStorage.getItem('singNumber') },
+        { name: 'createByNameNew', value: localStorage.getItem('name') },
       ]);
     } else {
       setIsEditing(false);
@@ -184,13 +184,13 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
   }, [isCreating]);
 
   useEffect(() => {
-    const currentCompanyID = localStorage.getItem("companyID");
+    const currentCompanyID = localStorage.getItem('companyID');
     if (selectedProjectType) {
       let action;
       let url;
       switch (selectedProjectType) {
-        case "QUOTATION_ORDER":
-          action = getFilteredProjects({ companyID: currentCompanyID || "" });
+        case 'QUOTATION_ORDER':
+          action = getFilteredProjects({ companyID: currentCompanyID || '' });
           break;
       }
 
@@ -200,7 +200,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
             let options;
             switch (selectedProjectType) {
-              case "QUOTATION_ORDER":
+              case 'QUOTATION_ORDER':
                 options = data.map((item: any) => ({
                   value: item.projectWO, // замените на нужное поле для 'PROJECT'
                   label: `${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
@@ -216,7 +216,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             setOptions(options);
           })
           .catch((error) => {
-            console.error("Ошибка при получении данных:", error);
+            console.error('Ошибка при получении данных:', error);
           });
       }
     }
@@ -237,17 +237,17 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             layout="horizontal"
             // labelCol={{ span: 10 }}
             onFinish={async (values) => {
-              const currentCompanyID = localStorage.getItem("companyID") || "";
+              const currentCompanyID = localStorage.getItem('companyID') || '';
               if (isEditing && !isCreating) {
                 const result = await dispatch(
                   updateOrderByID({
                     id: order._id || order.id,
-                    companyID: currentCompanyID || "",
+                    companyID: currentCompanyID || '',
                     orderName: values.orderName,
                     planedDate: values.planedDate,
                     updateByID: USER_ID,
-                    updateBySing: localStorage.getItem("singNumber"),
-                    updateByName: localStorage.getItem("name"),
+                    updateBySing: localStorage.getItem('singNumber'),
+                    updateByName: localStorage.getItem('name'),
                     updateDate: new Date(),
                     startDate: values?.startDate,
                     finishDate: values?.finishDate,
@@ -258,12 +258,12 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     orderText: values?.orderText,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   onEditOrderDetailsEdit(result.payload);
-                  message.success(t("SUCCESS"));
+                  message.success(t('SUCCESS'));
                   setIsEditing(false);
                   setIsCreating(false);
-                } else message.error(t("ERROR"));
+                } else message.error(t('ERROR'));
               }
 
               if (isCreating) {
@@ -273,8 +273,8 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     orderName: values.orderName,
                     planedDate: values.planedDate,
                     createByID: USER_ID,
-                    createBySing: localStorage.getItem("singNumber"),
-                    createByName: localStorage.getItem("name"),
+                    createBySing: localStorage.getItem('singNumber'),
+                    createByName: localStorage.getItem('name'),
                     createDate: new Date(),
                     startDate: null,
                     finishDate: null,
@@ -282,12 +282,12 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     customer: values?.customer,
                     orderType: values.orderType,
                     orderText: values?.orderText,
-                    state: "DRAFT",
+                    state: 'DRAFT',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   onEditOrderDetailsEdit(result.payload);
-                  message.success(t("SUCCESS"));
+                  message.success(t('SUCCESS'));
                   setIsEditing(false);
                   setIsCreating(false);
                 }
@@ -304,16 +304,16 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                           isEditing && setIsEditingView(!isEditingView);
                           isCreating && setIsCreating(false);
                           setSelectedProjectType(
-                            form.getFieldValue("orderState")
+                            form.getFieldValue('orderState')
                           );
                         }}
                       >
-                        {t("Cancel")}
+                        {t('Cancel')}
                       </Button>,
                     ]
                   : [],
               submitButtonProps: {
-                children: "Search",
+                children: 'Search',
               },
             }}
           >
@@ -322,9 +322,9 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
               rules={[{ required: true }]}
               showSearch
               name="orderType"
-              label={t("ORDER TYPE")}
+              label={t('ORDER TYPE')}
               width="sm"
-              tooltip={t("ORDER TYPE")}
+              tooltip={t('ORDER TYPE')}
               onChange={(value: any) => setSelectedProjectType(value)}
               valueEnum={{
                 // SB_ORDER: t('SB ORDER'),
@@ -341,22 +341,22 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 // OUTGOING_REQUEST_IN_ADVANCE_ORDER: t(
                 //   'OUTGOING REQUEST IN ADVANCE ORDER'
                 // ),
-                QUOTATION_ORDER: t("QUATATION ORDER"),
-                PURCHASE_ORDER: t("PURCHASE ORDER"),
+                QUOTATION_ORDER: t('QUATATION ORDER'),
+                PURCHASE_ORDER: t('PURCHASE ORDER'),
                 // POOL_REQUEST_ORDER: t('POOL REQUEST ORDER'),
                 // POOL_REQUEST_EXCHANGE_ORDER: t('POOL REQUEST EXCHANGE ORDER'),
-                REPAIR_ORDER: t("REPAIR ORDER"),
-                CUSTOMER_REPAIR_ORDER: t("CUSTOMER REPAIR ORDER"),
+                REPAIR_ORDER: t('REPAIR ORDER'),
+                CUSTOMER_REPAIR_ORDER: t('CUSTOMER REPAIR ORDER'),
                 // CONSIGNMENT_STOCK_INCOMING_ORDER: t(
                 //   'CONSIGNMENT STOCK INCOMING ORDER'
                 // ),
                 // CONSIGNMENT_STOCK_PURCHASE_ORDER: t(
                 //   'CONSIGNMENT STOCK PURCHASE ORDER'
                 // ),
-                WARRANTY_ORDER: t("WARRANTY ORDER"),
-                EXCHANGE_ORDER: t("EXCHANGE ORDER"),
+                WARRANTY_ORDER: t('WARRANTY ORDER'),
+                EXCHANGE_ORDER: t('EXCHANGE ORDER'),
                 // EXCHANGE_IN_ADVANCE_ORDER: t('EXCHANGE IN ADVANCE ORDER'),
-                TRANSFER_ORDER: t("TRANSFER ORDER"),
+                TRANSFER_ORDER: t('TRANSFER ORDER'),
               }}
             />
             <ProFormGroup>
@@ -365,22 +365,22 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 disabled={isCreating || !isEditing}
                 rules={[{ required: true }]}
                 name="orderState"
-                label={t("ORDER STATE")}
+                label={t('ORDER STATE')}
                 width="sm"
-                initialValue={["DRAFT"]}
+                initialValue={['DRAFT']}
                 valueEnum={{
                   PARTLY_RECEIVED: {
-                    text: t("PARTLY_RECEIVED"),
-                    status: "Processing",
+                    text: t('PARTLY_RECEIVED'),
+                    status: 'Processing',
                   },
                   RECEIVED: {
-                    text: t("RECEIVED"),
-                    status: "Success",
+                    text: t('RECEIVED'),
+                    status: 'Success',
                   },
                   // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
-                  CLOSED: { text: t("CLOSED"), status: "Success" },
+                  CLOSED: { text: t('CLOSED'), status: 'Success' },
                   // MISSING: { text: t('MISSING'), status: 'Error' },
-                  OPEN: { text: t("OPEN"), status: "Processing" },
+                  OPEN: { text: t('OPEN'), status: 'Processing' },
                   // OPEN_AND_TRANSFER: {
                   //   text: t('OPEN AND TRANSFER'),
                   //   status: 'Processing',
@@ -391,9 +391,9 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                   // READY: { text: t('READY'), status: 'Success' },
                   // PARTLY_READY: { text: t('PARTLY READY'), status: 'Processing' },
                   // SENT: { text: t('SENT'), status: 'Processing' },
-                  TRANSFER: { text: t("TRANSFER"), status: "Processing" },
+                  TRANSFER: { text: t('TRANSFER'), status: 'Processing' },
                   // UNKNOWN: { text: t('UNKNOWN'), status: 'Error' },
-                  DRAFT: { text: t("DRAFT"), status: "Error" },
+                  DRAFT: { text: t('DRAFT'), status: 'Error' },
                 }}
               />
               {/* <ProFormDatePicker
@@ -404,33 +404,33 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           ></ProFormDatePicker> */}
             </ProFormGroup>
 
-            {(order?.orderType === "QUOTATION_ORDER" ||
-              selectedProjectType === "QUOTATION_ORDER") && (
+            {(order?.orderType === 'QUOTATION_ORDER' ||
+              selectedProjectType === 'QUOTATION_ORDER') && (
               <>
                 <ProFormGroup>
                   <ProFormGroup direction="vertical">
                     <ProFormText
                       rules={[{ required: true }]}
                       name="orderName"
-                      label={t("ORDER SHOT NAME")}
+                      label={t('ORDER SHOT NAME')}
                       width="sm"
-                    ></ProFormText>{" "}
+                    ></ProFormText>{' '}
                     <ProFormSelect
                       fieldProps={{
-                        style: { resize: "none", height: "3.5em" },
+                        style: { resize: 'none', height: '3.5em' },
                       }}
                       rules={[{ required: true }]}
                       name="orderText"
-                      label={t("ORDER TEXT")}
+                      label={t('ORDER TEXT')}
                       width="lg"
                       valueEnum={{
-                        "Hello team! Please provide a quota for the position:":
+                        'Hello team! Please provide a quota for the position:':
                           t(
-                            "Hello team! Please provide a quota for the position:"
+                            'Hello team! Please provide a quota for the position:'
                           ),
-                        "Здравствуйте! Просим предоставить коммерческое предложение на:":
+                        'Здравствуйте! Просим предоставить коммерческое предложение на:':
                           t(
-                            "Здравствуйте! Просим предоставить коммерческое предложение на:"
+                            'Здравствуйте! Просим предоставить коммерческое предложение на:'
                           ),
                       }}
                     ></ProFormSelect>
@@ -452,7 +452,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                   <Modal
                     title="QUATATION ORDER"
                     open={completeOpenPrint}
-                    width={"60%"}
+                    width={'60%'}
                     onCancel={() => setOpenCompletePrint(false)}
                     footer={null}
                   >
@@ -466,25 +466,25 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                   />
                 </ProFormGroup>
                 <ProFormText
-                  fieldProps={{ style: { resize: "none" } }}
+                  fieldProps={{ style: { resize: 'none' } }}
                   rules={[{ required: true }]}
                   name="description"
-                  label={t("DESCRIPTION")}
+                  label={t('DESCRIPTION')}
                   width="lg"
                 ></ProFormText>
                 <ProFormGroup>
                   <ProFormDatePicker
-                    label={t("ORDER START DATE")}
+                    label={t('ORDER START DATE')}
                     name="startDate"
                     width="sm"
                   ></ProFormDatePicker>
                   <ProFormDatePicker
-                    label={t("ORDER FINISH DATE")}
+                    label={t('ORDER FINISH DATE')}
                     name="finishDate"
                     width="sm"
                   ></ProFormDatePicker>
                 </ProFormGroup>
-                <Space size={"large"} className=" flex justify-between py-5 ">
+                <Space size={'large'} className=" flex justify-between py-5 ">
                   <FileUploader
                     onUpload={uploadFileServer}
                     acceptedFileTypes={[
@@ -497,7 +497,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                           ? [...order?.files, response]
                           : [response];
                         const currentCompanyID =
-                          localStorage.getItem("companyID") || "";
+                          localStorage.getItem('companyID') || '';
                         console.log(updatedFiles);
                         // const partToUpdate = order?.parts?.find((part) =>
                         //   part.vendors.some(
@@ -521,19 +521,19 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                         const result = await dispatch(
                           updateOrderByID({
                             id: (order && order._id) || (order && order.id),
-                            companyID: currentCompanyID || "",
+                            companyID: currentCompanyID || '',
                             updateByID: USER_ID,
-                            updateBySing: localStorage.getItem("singNumber"),
-                            updateByName: localStorage.getItem("name"),
+                            updateBySing: localStorage.getItem('singNumber'),
+                            updateByName: localStorage.getItem('name'),
                             updateDate: new Date(),
                             files: updatedFiles,
                           })
                         );
-                        if (result.meta.requestStatus === "fulfilled") {
+                        if (result.meta.requestStatus === 'fulfilled') {
                           onEditOrderDetailsEdit &&
                             onEditOrderDetailsEdit(result.payload);
-                          message.success(t("SUCCESS"));
-                        } else message.error(t("ERROR"));
+                          message.success(t('SUCCESS'));
+                        } else message.error(t('ERROR'));
                       }
                     }}
                   />
@@ -551,9 +551,9 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     <ProFormText
                       disabled
                       name="createBySingNew"
-                      label={t("CREATE BY")}
+                      label={t('CREATE BY')}
                       width="sm"
-                    ></ProFormText>{" "}
+                    ></ProFormText>{' '}
                     <ProFormText
                       disabled
                       name="createByNameNew"
@@ -566,7 +566,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           </ProForm>
         </div>
       ),
-      title: `${t(`${(order && order?.orderType) || t("NEW ORDER")}`)}`,
+      title: `${t(`${(order && order?.orderType) || t('NEW ORDER')}`)}`,
     },
     currentDetail &&
       currentDetail.index && {
@@ -581,7 +581,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             />
           </div>
         ),
-        title: `${t("POS.")} ${currentDetail && currentDetail?.index}`,
+        title: `${t('POS.')} ${currentDetail && currentDetail?.index}`,
       },
     currentEditDetail &&
       currentEditDetail && {
@@ -596,7 +596,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             />
           </div>
         ),
-        title: `${t("POS")}:${currentEditDetail.index + 1}- ${
+        title: `${t('POS')}:${currentEditDetail.index + 1}- ${
           currentEditDetail && currentEditDetail?.PART_NUMBER
         }`,
       },
@@ -617,7 +617,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           </div>
         ),
         title: `POS:${currentEditVendor && currentEditVendor?.index + 1} ${t(
-          "VENDOR"
+          'VENDOR'
         )}:${currentEditVendor && currentEditVendor?.CODE}`,
       },
   ];
@@ -627,14 +627,14 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
       <Col
         xs={2}
         sm={3}
-        className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+        className="h-[64vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
       >
         <Space direction="vertical">
           <Space
             className={`cursor-pointer transform transition px-3 ${
               isEditing || isCreating
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-blue-500"
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:text-blue-500'
             }`}
             onClick={() => {
               if (!isEditing) {
@@ -650,19 +650,19 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             }}
           >
             <SettingOutlined />
-            <div>{t("NEW ORDER")}</div>
+            <div>{t('NEW ORDER')}</div>
           </Space>
           <Space
             onClick={() => order && setIsEditingView(!isEditingView)}
             className={`cursor-pointer transform transition px-3 ${
-              !order ? "opacity-50 cursor-not-allowed" : "hover:text-blue-500"
+              !order ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-500'
             }`}
           >
             <EditOutlined />
-            <>{t("EDIT")}</>
-          </Space>{" "}
-          {(order?.orderType === "QUOTATION_ORDER" ||
-            selectedProjectType === "QUOTATION_ORDER") && (
+            <>{t('EDIT')}</>
+          </Space>{' '}
+          {(order?.orderType === 'QUOTATION_ORDER' ||
+            selectedProjectType === 'QUOTATION_ORDER') && (
             <>
               <Space
                 onClick={() =>
@@ -674,42 +674,42 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 }
                 className={`cursor-pointer transform transition px-3 ${
                   !order || !isEditing
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:text-blue-500"
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:text-blue-500'
                 }`}
               >
                 <PlusOutlined
                   className={`${
                     !isEditing || !isCreating
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
                   }`}
                 />
-                <>{t("ADD DETAIL")}</>
+                <>{t('ADD DETAIL')}</>
               </Space>
               <Space
                 onClick={() => setOpenVendorFind(true)}
                 className={`cursor-pointer transform transition px-3 ${
                   !order || !isEditing
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:text-blue-500"
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:text-blue-500'
                 }`}
               >
                 <PlusOutlined
                   className={`${
                     !isEditing || !isCreating
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
                   }`}
                 />
-                <>{t("ADD VENDORS")}</>
+                <>{t('ADD VENDORS')}</>
               </Space>
             </>
           )}
         </Space>
       </Col>
       <Col
-        className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
+        className="h-[64vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
         sm={7}
       >
         {order && (
@@ -738,12 +738,16 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           ></QuatationTree>
         )}
       </Col>
-      <Col xs={2} sm={13}>
+      <Col
+        className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
+        xs={2}
+        sm={13}
+      >
         <TabContent tabs={tabs}></TabContent>
       </Col>
       <ModalForm
         // title={`Search on Store`}
-        width={"70vw"}
+        width={'70vw'}
         // placement={'bottom'}
         open={openVendorFindModal}
         submitter={false}
@@ -753,7 +757,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           setSecectedSingleVendor(record);
 
           form.setFields([
-            { name: "vendorName", value: selectedSingleVendor.CODE },
+            { name: 'vendorName', value: selectedSingleVendor.CODE },
           ]);
         }}
       >

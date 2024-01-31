@@ -6,7 +6,7 @@ import {
   ProFormDatePicker,
   ProFormGroup,
   ProFormText,
-} from "@ant-design/pro-components";
+} from '@ant-design/pro-components';
 import {
   Button,
   Col,
@@ -17,17 +17,17 @@ import {
   Space,
   TimePicker,
   message,
-} from "antd";
-import { v4 as originalUuidv4 } from "uuid";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+} from 'antd';
+import { v4 as originalUuidv4 } from 'uuid';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   TransactionOutlined,
   EditOutlined,
   PrinterOutlined,
   SaveOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   createBookingItem,
   createPickSlip,
@@ -35,28 +35,28 @@ import {
   updateRequirementByID,
   updatedMaterialItemsById,
   updatedMaterialOrdersById,
-} from "@/utils/api/thunks";
-import PickForm from "../store/pickSlipConfarmation/PickForm";
+} from '@/utils/api/thunks';
+import PickForm from '../store/pickSlipConfarmation/PickForm';
 
-import EditableSearchTable from "@/components/shared/Table/EditableSearchTable";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import EditableTableForStore from "@/components/shared/Table/EditableTableForStore";
-import { setUpdatedMaterialOrder } from "@/store/reducers/StoreLogisticSlice";
-import GeneretedPickSlip from "@/components/pdf/GeneretedPickSlip";
-import UserSearchForm from "@/components/shared/form/UserSearchProForm";
-import { UserResponce } from "@/models/IUser";
-import GeneretedCompleteSlipPdf from "@/components/pdf/GeneretedCompleteSlip";
-import GeneretedCompleteLabels from "@/components/pdf/GeneretedCompleteLabels";
-import GeneretedWorkLabels from "@/components/pdf/GeneretedWorkLabels";
-import FilesSelector from "@/components/shared/FilesSelector";
-import { handleFileSelect } from "@/services/utilites";
-import { USER_ID } from "@/utils/api/http";
+import EditableSearchTable from '@/components/shared/Table/EditableSearchTable';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import EditableTableForStore from '@/components/shared/Table/EditableTableForStore';
+import { setUpdatedMaterialOrder } from '@/store/reducers/StoreLogisticSlice';
+import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
+import UserSearchForm from '@/components/shared/form/UserSearchProForm';
+import { UserResponce } from '@/models/IUser';
+import GeneretedCompleteSlipPdf from '@/components/pdf/GeneretedCompleteSlip';
+import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
+import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
+import FilesSelector from '@/components/shared/FilesSelector';
+import { handleFileSelect } from '@/services/utilites';
+import { USER_ID } from '@/utils/api/http';
 
 const PickSlipConfirmation: FC = () => {
   const { t } = useTranslation();
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
@@ -75,55 +75,55 @@ const PickSlipConfirmation: FC = () => {
   const [quons, setQyon] = useState<any>(0);
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("STORE")}`,
-      dataIndex: "STOCK",
-      key: "STOCK",
+      title: `${t('STORE')}`,
+      dataIndex: 'STOCK',
+      key: 'STOCK',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
     {
-      title: "LOCATION",
-      dataIndex: "SHELF_NUMBER",
-      key: "SHELF_NUMBER",
+      title: 'LOCATION',
+      dataIndex: 'SHELF_NUMBER',
+      key: 'SHELF_NUMBER',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: `${t("BATCH/SERIAL")}`,
-      dataIndex: "SERIAL_NUMBER",
-      width: "9%",
-      key: "SERIAL_NUMBER",
+      title: `${t('BATCH/SERIAL')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      width: '9%',
+      key: 'SERIAL_NUMBER',
       render: (text: any, record: any) =>
         record?.SERIAL_NUMBER || record?.SUPPLIER_BATCH_NUMBER,
       // остальные свойства...
     },
 
     {
-      title: `${t("EXPIRES")}`,
-      dataIndex: "PRODUCT_EXPIRATION_DATE",
-      key: "PRODUCT_EXPIRATION_DATE",
+      title: `${t('EXPIRES')}`,
+      dataIndex: 'PRODUCT_EXPIRATION_DATE',
+      key: 'PRODUCT_EXPIRATION_DATE',
       //tip: 'ITEM EXPIRY DATE',
       ellipsis: true,
-      width: "8%",
+      width: '8%',
       search: false,
-      valueType: "date",
+      valueType: 'date',
       formItemProps: {
-        name: "PRODUCT_EXPIRATION_DATE",
+        name: 'PRODUCT_EXPIRATION_DATE',
       },
       sorter: (a, b) => {
         if (a.PRODUCT_EXPIRATION_DATE && b.PRODUCT_EXPIRATION_DATE) {
@@ -141,12 +141,12 @@ const PickSlipConfirmation: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: "LABEL",
-      dataIndex: "LOCAL_ID",
+      title: 'LABEL',
+      dataIndex: 'LOCAL_ID',
       // valueType: 'index',
       ellipsis: true,
-      key: "LOCAL_ID",
-      width: "7%",
+      key: 'LOCAL_ID',
+      width: '7%',
 
       editable: (text, record, index) => {
         return false;
@@ -167,11 +167,11 @@ const PickSlipConfirmation: FC = () => {
       // sorter: (a, b) => (a.id || 0) - (b.id || 0),
     },
     {
-      title: `${t("QTY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      width: "5%",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      width: '5%',
+      responsive: ['sm'],
       search: false,
       render: (text, record) => {
         let backgroundColor;
@@ -179,16 +179,16 @@ const PickSlipConfirmation: FC = () => {
           record?.PRODUCT_EXPIRATION_DATE &&
           new Date(record.PRODUCT_EXPIRATION_DATE) >= new Date()
         ) {
-          backgroundColor = "#32CD32"; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
+          backgroundColor = '#32CD32'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
         } // Зеленый фон по умолчанию
-        if (record?.SHELF_NUMBER === "TRANSFER") {
-          backgroundColor = "#FFDB58"; // Желтый фон для SHELF_NUMBER 'TRANSFER'
+        if (record?.SHELF_NUMBER === 'TRANSFER') {
+          backgroundColor = '#FFDB58'; // Желтый фон для SHELF_NUMBER 'TRANSFER'
         }
         if (
           record?.PRODUCT_EXPIRATION_DATE &&
           new Date(record.PRODUCT_EXPIRATION_DATE) < new Date()
         ) {
-          backgroundColor = "#FF0000"; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
+          backgroundColor = '#FF0000'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
         }
         return <div style={{ backgroundColor }}>{text}</div>;
       },
@@ -196,62 +196,62 @@ const PickSlipConfirmation: FC = () => {
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
-      width: "20%",
+      width: '20%',
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "OWNER",
-      key: "OWNER",
-      responsive: ["sm"],
+      title: `${t('OWNER')}`,
+      dataIndex: 'OWNER',
+      key: 'OWNER',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
   ];
   const initialReleseColumns: ProColumns<any>[] = [
     {
-      title: `${t("PN")}`,
-      dataIndex: "PN",
-      key: "PN",
+      title: `${t('PN')}`,
+      dataIndex: 'PN',
+      key: 'PN',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
       editable: (text, record, index) => {
         return false;
       },
-      width: "12%",
+      width: '12%',
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("LOCATION FROM")}`,
-      dataIndex: "SHELF_NUMBER",
-      key: "SHELF_NUMBER",
+      title: `${t('LOCATION FROM')}`,
+      dataIndex: 'SHELF_NUMBER',
+      key: 'SHELF_NUMBER',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
       formItemProps: {
-        name: "SHELF_NUMBER",
+        name: 'SHELF_NUMBER',
       },
-      width: "8%",
+      width: '8%',
       render: (text: any, record: any) => {
         return (
           <div>{record.foRealese ? record.foRealese.SHELF_NUMBER : text}</div>
@@ -260,13 +260,13 @@ const PickSlipConfirmation: FC = () => {
     },
 
     {
-      title: `${t("BATCH/SERIAL")}`,
-      dataIndex: "SERIAL_NUMBER",
-      width: "9%",
+      title: `${t('BATCH/SERIAL')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      width: '9%',
       editable: (text, record, index) => {
         return false;
       },
-      key: "SERIAL_NUMBER",
+      key: 'SERIAL_NUMBER',
       render: (text: any, record: any) =>
         record?.foRealese?.SERIAL_NUMBER ||
         record?.foRealese?.SUPPLIER_BATCH_NUMBER,
@@ -274,15 +274,15 @@ const PickSlipConfirmation: FC = () => {
     },
 
     {
-      title: `${t("EXPIRES")}`,
-      dataIndex: "PRODUCT_EXPIRATION_DATE",
-      key: "PRODUCT_EXPIRATION_DATE",
+      title: `${t('EXPIRES')}`,
+      dataIndex: 'PRODUCT_EXPIRATION_DATE',
+      key: 'PRODUCT_EXPIRATION_DATE',
       //tip: 'ITEM EXPIRY DATE',
       ellipsis: true,
-      width: "6%",
-      valueType: "date",
+      width: '6%',
+      valueType: 'date',
       formItemProps: {
-        name: "PRODUCT_EXPIRATION_DATE",
+        name: 'PRODUCT_EXPIRATION_DATE',
       },
       editable: (text, record, index) => {
         return false;
@@ -302,11 +302,11 @@ const PickSlipConfirmation: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("LABEL")}`,
-      dataIndex: "LOCAL_ID",
-      key: "LOCAL_ID",
+      title: `${t('LABEL')}`,
+      dataIndex: 'LOCAL_ID',
+      key: 'LOCAL_ID',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
       render: (text: any, record: any) => {
         return <a>{record.foRealese ? record.foRealese.LOCAL_ID : text}</a>;
@@ -317,10 +317,10 @@ const PickSlipConfirmation: FC = () => {
       // width: '20%',
     },
     {
-      title: `${t("QTY REQ")}`,
-      dataIndex: "onOrderQuantity",
-      key: "onOrderQuantity",
-      responsive: ["sm"],
+      title: `${t('QTY REQ')}`,
+      dataIndex: 'onOrderQuantity',
+      key: 'onOrderQuantity',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -328,10 +328,10 @@ const PickSlipConfirmation: FC = () => {
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("QTY AVAL")}`,
-      dataIndex: "QTYAVAL",
-      key: "QTYAVAL",
-      responsive: ["sm"],
+      title: `${t('QTY AVAL')}`,
+      dataIndex: 'QTYAVAL',
+      key: 'QTYAVAL',
+      responsive: ['sm'],
       search: false,
       render: (text: any, record: any) => {
         return (
@@ -349,10 +349,10 @@ const PickSlipConfirmation: FC = () => {
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("QTY CANC")}`,
-      dataIndex: "QUANTITY_CANCELED",
-      key: "QUANTITY_CANCELED",
-      responsive: ["sm"],
+      title: `${t('QTY CANC')}`,
+      dataIndex: 'QUANTITY_CANCELED',
+      key: 'QUANTITY_CANCELED',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -360,10 +360,10 @@ const PickSlipConfirmation: FC = () => {
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("QTY BOOK")}`,
-      dataIndex: "QUANTITY_BOOK",
-      key: "QUANTITY_BOOK",
-      responsive: ["sm"],
+      title: `${t('QTY BOOK')}`,
+      dataIndex: 'QUANTITY_BOOK',
+      key: 'QUANTITY_BOOK',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return true;
@@ -382,23 +382,23 @@ const PickSlipConfirmation: FC = () => {
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "description",
-      key: "description",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'description',
+      key: 'description',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
-      width: "13%",
+      width: '13%',
       editable: (text, record, index) => {
         return false;
       },
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -407,10 +407,10 @@ const PickSlipConfirmation: FC = () => {
     },
 
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "OWNER",
-      key: "OWNER",
-      responsive: ["sm"],
+      title: `${t('OWNER')}`,
+      dataIndex: 'OWNER',
+      key: 'OWNER',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -420,12 +420,12 @@ const PickSlipConfirmation: FC = () => {
       },
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
-        currentPick?.status === "issued" && (
+        currentPick?.status === 'issued' && (
           <a
             key="editable"
             onClick={() => {
@@ -438,10 +438,10 @@ const PickSlipConfirmation: FC = () => {
       ],
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
-      width: "7%",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
+      width: '7%',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
@@ -506,7 +506,7 @@ const PickSlipConfirmation: FC = () => {
     const maxQuantity =
       selectedMaterial?.foRealese?.QUANTITY -
       (selectedMaterial?.foRealese?.ONBLOCK_QUANTITY || 0);
-    const [value, setValue] = useState(record.QUANTITY_BOOK || "");
+    const [value, setValue] = useState(record.QUANTITY_BOOK || '');
 
     const handleChange = (e: any) => {
       if (e.target.value <= maxQuantity) {
@@ -551,7 +551,7 @@ const PickSlipConfirmation: FC = () => {
     }
   };
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-2">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-2">
       <div className="h-[60%]">
         <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
           <Col xs={2} sm={6}>
@@ -559,7 +559,7 @@ const PickSlipConfirmation: FC = () => {
               updateValue={updateValue}
               onFilterPickSlip={setCurrenPick}
             ></PickForm>
-          </Col>{" "}
+          </Col>{' '}
           <Col xs={32} sm={18}>
             <EditableSearchTable
               showDefaultToolbarContent={false}
@@ -579,7 +579,7 @@ const PickSlipConfirmation: FC = () => {
               recordCreatorProps={false}
               onSelectedRowKeysChange={handleSelectedRowKeysChange}
               onRowClick={function (record: any): void {
-                if (currentPick?.status === "issued") {
+                if (currentPick?.status === 'issued') {
                   setCurrentStoreItem(record);
                   setUpdatedOrderMaterials((prevState) =>
                     prevState.map((item) =>
@@ -612,17 +612,17 @@ const PickSlipConfirmation: FC = () => {
               {/* <Button size="small">{t('TAKE')} </Button> */}
               <Button
                 disabled={
-                  currentPick?.status === "completed" ||
-                  currentPick?.status === "closed" ||
-                  currentPick?.status === "new" ||
-                  currentPick?.status === "cancelled" ||
-                  currentPick?.status === "partyCancelled" ||
+                  currentPick?.status === 'completed' ||
+                  currentPick?.status === 'closed' ||
+                  currentPick?.status === 'new' ||
+                  currentPick?.status === 'cancelled' ||
+                  currentPick?.status === 'partyCancelled' ||
                   quons == 0
                 }
                 onClick={handleButtonClick}
                 size="small"
               >
-                {t("COPY TABLE DATA and TAKE")}{" "}
+                {t('COPY TABLE DATA and TAKE')}{' '}
               </Button>
             </Space>
           </Col>
@@ -651,7 +651,7 @@ const PickSlipConfirmation: FC = () => {
                 (data?.foRealese?.ONBLOCK_QUANTITY || 0)
           ) {
             message.error(
-              "Value should not be more than  variety of available materials"
+              'Value should not be more than  variety of available materials'
             );
             data.QUANTITY_BOOK =
               data?.foRealese?.QUANTITY -
@@ -700,7 +700,7 @@ const PickSlipConfirmation: FC = () => {
         }}
         yScroll={12}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         // onTableDataChange={}
       />
@@ -710,7 +710,7 @@ const PickSlipConfirmation: FC = () => {
             icon={<PrinterOutlined />}
             disabled={!currentPick}
             onClick={() => {
-              if (currentPick?.status === "issued") {
+              if (currentPick?.status === 'issued') {
                 // console.log(updatetOrderMaterials);
                 const newData = {
                   ...currentPick,
@@ -740,7 +740,7 @@ const PickSlipConfirmation: FC = () => {
 
                 setIntermediateData(newData);
                 setOpenCompleteWorkPrint(true);
-              } else if (currentPick?.status === "completed") {
+              } else if (currentPick?.status === 'completed') {
                 setOpenCompletePrint(true);
               } else {
                 setOpenPickSlip(true);
@@ -748,21 +748,21 @@ const PickSlipConfirmation: FC = () => {
             }}
             size="small"
           >
-            {" "}
-            {t("PRINT")}
+            {' '}
+            {t('PRINT')}
           </Button>
           <Button
             disabled={
-              currentPick?.status === "completed" ||
-              currentPick?.status === "closed" ||
-              currentPick?.status === "new" ||
-              currentPick?.status === "cancelled" ||
-              currentPick?.status === "partyCancelled" ||
+              currentPick?.status === 'completed' ||
+              currentPick?.status === 'closed' ||
+              currentPick?.status === 'new' ||
+              currentPick?.status === 'cancelled' ||
+              currentPick?.status === 'partyCancelled' ||
               !currentPick
             }
             onClick={async () => {
               Modal.confirm({
-                title: t("CONFIRM COMPLETE"),
+                title: t('CONFIRM COMPLETE'),
                 onOk: async () => {
                   const newData = updatetOrderMaterials?.map((item) => {
                     return {
@@ -778,12 +778,12 @@ const PickSlipConfirmation: FC = () => {
                             Object.assign({}, item.foRealese, {
                               QUANTITY: Number(item.QUANTITY_BOOK),
                               LOCATION_TO: currentPick?.neededOn,
-                              STATUS: "completed",
+                              STATUS: 'completed',
                             }),
                           ]
                         : [],
                       // id: uuidv4(), // уникальный ключ для каждой вкладки,
-                      status: "completed",
+                      status: 'completed',
                     };
                   });
                   if (newData !== null && newData.length > 0) {
@@ -791,7 +791,7 @@ const PickSlipConfirmation: FC = () => {
                       if (item?.onBlock !== null && item?.onBlock.length > 0) {
                         dispatch(
                           updatedMaterialItemsById({
-                            companyID: localStorage.getItem("companyID") || "",
+                            companyID: localStorage.getItem('companyID') || '',
                             _id: item?.onBlock[0]?._id,
                             ONBLOCK_QUANTITY: item?.QUANTITY_BOOK,
                           })
@@ -802,12 +802,12 @@ const PickSlipConfirmation: FC = () => {
                       updatedMaterialOrdersById({
                         ...currentPick,
                         materials: newData,
-                        status: "completed",
+                        status: 'completed',
                         updateUserID: USER_ID,
                         updateDate: new Date(),
                       })
                     );
-                    if (result.meta.requestStatus === "fulfilled") {
+                    if (result.meta.requestStatus === 'fulfilled') {
                       setCurrenPick(result.payload);
                       setUpdateValue(new Date());
                       const index = filteredMaterialOrders.findIndex(
@@ -826,24 +826,24 @@ const PickSlipConfirmation: FC = () => {
             }}
             size="small"
           >
-            {" "}
-            {t("COMPLETE")}
+            {' '}
+            {t('COMPLETE')}
           </Button>
           <Button
             icon={<SaveOutlined />}
             disabled={
-              currentPick?.status === "issued" ||
-              currentPick?.status === "closed" ||
-              currentPick?.status === "new" ||
-              currentPick?.status === "cancelled" ||
-              currentPick?.status === "partyCancelled" ||
+              currentPick?.status === 'issued' ||
+              currentPick?.status === 'closed' ||
+              currentPick?.status === 'new' ||
+              currentPick?.status === 'cancelled' ||
+              currentPick?.status === 'partyCancelled' ||
               !currentPick
             }
             onClick={() => setOpenRelese(true)}
             size="small"
           >
-            {" "}
-            {t("BOOK")}
+            {' '}
+            {t('BOOK')}
           </Button>
         </Space>
         <Space>
@@ -854,7 +854,7 @@ const PickSlipConfirmation: FC = () => {
               // setOpenLabelsPrint(true);
               // setOpenLabelsWorkPrint(true)
               //     : setOpenLabelsPrint(false);
-              if (currentPick?.status === "issued") {
+              if (currentPick?.status === 'issued') {
                 const newData = {
                   ...currentPick,
                   materials: updatetOrderMaterials,
@@ -862,22 +862,22 @@ const PickSlipConfirmation: FC = () => {
 
                 setIntermediateData(newData);
                 setOpenLabelsWorkPrint(true);
-              } else if (currentPick?.status === "completed") {
+              } else if (currentPick?.status === 'completed') {
                 setOpenLabelsPrint(true);
               }
             }}
             size="small"
           >
-            {" "}
-            {t("PRINT LABEL")}
+            {' '}
+            {t('PRINT LABEL')}
           </Button>
         </Space>
       </div>
 
       <Modal
-        title={t("PICKSLIP PRINT")}
+        title={t('PICKSLIP PRINT')}
         open={openPickSlip}
-        width={"60%"}
+        width={'60%'}
         onCancel={() => setOpenPickSlip(false)}
         footer={null}
       >
@@ -886,31 +886,31 @@ const PickSlipConfirmation: FC = () => {
       <Modal
         title=""
         open={openRelese}
-        width={"60%"}
+        width={'60%'}
         onCancel={() => setOpenRelese(false)}
         footer={null}
       >
-        {" "}
+        {' '}
         <ProForm
           size="small"
           disabled={
-            currentPick?.status === "closed" ||
-            currentPick?.status === "canceled" ||
+            currentPick?.status === 'closed' ||
+            currentPick?.status === 'canceled' ||
             !currentPick
           }
           form={form}
           autoComplete="off"
           onFinish={async (values: any) => {
             Modal.confirm({
-              title: t("CONFIRM BOOK"),
+              title: t('CONFIRM BOOK'),
               onOk: async () => {
-                const currentCompanyID = localStorage.getItem("companyID");
+                const currentCompanyID = localStorage.getItem('companyID');
                 if (currentCompanyID) {
                   const result = await dispatch(
                     createPickSlip({
                       materialAplicationId:
-                        currentPick._id || currentPick.id || "",
-                      status: "closed",
+                        currentPick._id || currentPick.id || '',
+                      status: 'closed',
                       materials: updatetOrderMaterials.reduce(
                         (acc: any, item: any) => {
                           if (
@@ -927,7 +927,7 @@ const PickSlipConfirmation: FC = () => {
                       createDate: new Date(),
                       consigneeName: currentPick.createBy,
                       storeMan: selectedStoreUser?.name,
-                      storeManID: selectedStoreUser?._id || "",
+                      storeManID: selectedStoreUser?._id || '',
                       recipient: selectedСonsigneeUser?.name,
                       recipientID: selectedСonsigneeUser?._id,
                       taskNumber: currentPick.taskNumber,
@@ -944,7 +944,7 @@ const PickSlipConfirmation: FC = () => {
                     })
                   );
                   // добавитьUpdateUser;
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     result.payload.registrationNumber &&
                       result.payload?.materials &&
                       result.payload?.materials.forEach(
@@ -955,12 +955,12 @@ const PickSlipConfirmation: FC = () => {
                               data: {
                                 companyID: resultItem.COMPANY_ID,
                                 userSing: result.payload?.recipient,
-                                userID: result.payload?.recipientID || "",
+                                userID: result.payload?.recipientID || '',
                                 createDate: new Date(),
                                 partNumber: resultItem.PART_NUMBER,
                                 station:
-                                  resultItem?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                voucherModel: "STORE_TO_A/C",
+                                  resultItem?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                voucherModel: 'STORE_TO_A/C',
                                 location: resultItem?.SHELF_NUMBER,
                                 orderNumber: resultItem?.ORDER_NUMBER,
                                 price: resultItem?.PRICE,
@@ -989,7 +989,7 @@ const PickSlipConfirmation: FC = () => {
                     issuedMaterials.map((item: any) => {
                       dispatch(
                         updatedMaterialItemsById({
-                          companyID: localStorage.getItem("companyID") || "",
+                          companyID: localStorage.getItem('companyID') || '',
                           _id: item._id,
                           issuedQuantity: Number(item.QUANTITY),
                           // BATCH: item.BATCH,
@@ -1003,9 +1003,9 @@ const PickSlipConfirmation: FC = () => {
                           id: item.requirementID?._id,
                           // requestQuantity: -item.QUANTITY,
                           issuedQuantity: item.QUANTITY,
-                          updateUserID: USER_ID || "",
+                          updateUserID: USER_ID || '',
                           updateDate: new Date(),
-                          companyID: localStorage.getItem("companyID") || "",
+                          companyID: localStorage.getItem('companyID') || '',
                           projectID: result.payload.projectId,
                           // status: 'closed',
                         })
@@ -1014,7 +1014,7 @@ const PickSlipConfirmation: FC = () => {
 
                     const result1 = await dispatch(
                       updatedMaterialOrdersById({
-                        status: "closed",
+                        status: 'closed',
                         _id: currentPick._id,
                         closedDate: new Date(),
                         pickSlipNumber: result.payload.pickSlipNumber,
@@ -1024,13 +1024,13 @@ const PickSlipConfirmation: FC = () => {
                         materials: currentPick.materials.map((item: any) => {
                           // Создаем копию элемента, чтобы не изменять исходный объект
                           let newItem = { ...item };
-                          if (newItem.status === "completed") {
-                            newItem.status = "closed";
+                          if (newItem.status === 'completed') {
+                            newItem.status = 'closed';
                             if (newItem.requirementID) {
                               // Создаем копию объекта requirementID, чтобы не изменять исходный объект
                               newItem.requirementID = {
                                 ...newItem.requirementID,
-                                status: "closed",
+                                status: 'closed',
                                 issuedQuantity: newItem.QUANTITY,
                               };
                             }
@@ -1038,7 +1038,7 @@ const PickSlipConfirmation: FC = () => {
                               newItem.onBlock = newItem.onBlock.map(
                                 (block: any, index: number) => {
                                   if (index === 0) {
-                                    return { ...block, STATUS: "closed" };
+                                    return { ...block, STATUS: 'closed' };
                                   }
                                   return block;
                                 }
@@ -1051,7 +1051,7 @@ const PickSlipConfirmation: FC = () => {
                               newItem.foRealesе = newItem.foRealesе.map(
                                 (release: any, index: number) => {
                                   if (index === 0) {
-                                    return { ...release, STATUS: "closed" };
+                                    return { ...release, STATUS: 'closed' };
                                   }
                                   return release;
                                 }
@@ -1063,27 +1063,27 @@ const PickSlipConfirmation: FC = () => {
                       })
                     );
 
-                    if (result1.meta.requestStatus === "fulfilled") {
+                    if (result1.meta.requestStatus === 'fulfilled') {
                       setCurrenPick(result1.payload);
                       setUpdateValue(new Date());
                       const currentCompanyID =
-                        localStorage.getItem("companyID");
+                        localStorage.getItem('companyID');
                       if (currentCompanyID) {
                         dispatch(
                           getFilteredMaterialOrders({
                             companyID: currentCompanyID,
-                            projectId: "",
+                            projectId: '',
                           })
                         );
                       }
-                      message.success("Success");
+                      message.success('Success');
                     }
                   }
                 }
               },
             });
             if (!selectedСonsigneeUser?._id || !selectedStoreUser?._id) {
-              message.error("form is required!");
+              message.error('form is required!');
               return;
             }
             // console.log(order);
@@ -1092,17 +1092,17 @@ const PickSlipConfirmation: FC = () => {
           <div className="flex justify-between content-center h-[25vh] justify-items-center gap-2">
             <div
               style={{
-                border: "0.5px solid #ccc",
-                padding: "10px",
-                marginBottom: "5px",
-                borderRadius: "5px",
+                border: '0.5px solid #ccc',
+                padding: '10px',
+                marginBottom: '5px',
+                borderRadius: '5px',
                 // flex: 1,
               }}
             >
               {/* <>{console.log(issuedMaterials)}</> */}
 
               <h4 className="">STOREMAN</h4>
-              <ProForm.Item style={{ width: "100%" }}>
+              <ProForm.Item style={{ width: '100%' }}>
                 <UserSearchForm
                   performedName={
                     currentPick?.storeManName || currentPick?.storeMan
@@ -1118,10 +1118,10 @@ const PickSlipConfirmation: FC = () => {
             </div>
             <div
               style={{
-                border: "0.5px solid #ccc",
-                padding: "10px",
-                marginBottom: "5px",
-                borderRadius: "5px",
+                border: '0.5px solid #ccc',
+                padding: '10px',
+                marginBottom: '5px',
+                borderRadius: '5px',
                 // flex: 1,
               }}
             >
@@ -1144,18 +1144,18 @@ const PickSlipConfirmation: FC = () => {
         </ProForm>
       </Modal>
       <Modal
-        title={t("PRINT LABEL")}
+        title={t('PRINT LABEL')}
         open={labelsOpenPrint}
-        width={"30%"}
+        width={'30%'}
         onCancel={() => setOpenLabelsPrint(false)}
         footer={null}
       >
         <GeneretedCompleteLabels currentPick={currentPick} />
       </Modal>
       <Modal
-        title={t("PRINT LABEL")}
+        title={t('PRINT LABEL')}
         open={labelsOpenWorkPrint}
-        width={"30%"}
+        width={'30%'}
         onCancel={() => setOpenLabelsWorkPrint(false)}
         footer={null}
       >
@@ -1164,7 +1164,7 @@ const PickSlipConfirmation: FC = () => {
       <Modal
         title="COMPLETE PRINT"
         open={completeOpenPrint}
-        width={"60%"}
+        width={'60%'}
         onCancel={() => setOpenCompletePrint(false)}
         footer={null}
       >
@@ -1173,7 +1173,7 @@ const PickSlipConfirmation: FC = () => {
       <Modal
         title="WORK PRINT"
         open={completeWorkPrint}
-        width={"60%"}
+        width={'60%'}
         onCancel={() => setOpenCompleteWorkPrint(false)}
         footer={null}
       >

@@ -11,20 +11,20 @@ import {
   Space,
   TimePicker,
   message,
-} from "antd";
-import Sider from "antd/es/layout/Sider";
-import React, { FC, ReactNode, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { getItem } from "@/services/utilites";
-import PickSlipFiltered from "@/components/store/pickSlip/PickSlipFiltered";
-import { Content } from "antd/es/layout/layout";
-import MaterialOrdersList from "@/components/store/matOrders/MaterialOrders";
-import { ProCard, ProColumns, ProForm } from "@ant-design/pro-components";
-import EditableSelectedPickSlip from "@/components/shared/Table/EditableSelectedPickSlip";
-import UserSearchForm from "@/components/shared/form/UserSearchProForm";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { UserResponce } from "@/models/IUser";
+} from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { getItem } from '@/services/utilites';
+import PickSlipFiltered from '@/components/store/pickSlip/PickSlipFiltered';
+import { Content } from 'antd/es/layout/layout';
+import MaterialOrdersList from '@/components/store/matOrders/MaterialOrders';
+import { ProCard, ProColumns, ProForm } from '@ant-design/pro-components';
+import EditableSelectedPickSlip from '@/components/shared/Table/EditableSelectedPickSlip';
+import UserSearchForm from '@/components/shared/form/UserSearchProForm';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { UserResponce } from '@/models/IUser';
 import {
   createBookingItem,
   createReturnSlip,
@@ -32,30 +32,30 @@ import {
   postNewReceivingItem,
   postNewStoreItem,
   updatedMaterialOrdersById,
-} from "@/utils/api/thunks";
-import GeneretedPickSlip from "@/components/pdf/GeneretedPickSlip";
+} from '@/utils/api/thunks';
+import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
 import {
   setUpdatedMaterialOrder,
   setUpdatedMaterialOrderCancel,
-} from "@/store/reducers/StoreLogisticSlice";
-import GeneretedReturnSlip from "@/components/pdf/GeneretedReturnSlip";
-import DoubleClickPopover from "@/components/shared/form/DoubleClickProper";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
-import { t } from "i18next";
-import { render } from "react-dom";
-import SearchTable from "../SearchElemTable";
-import { USER_ID } from "@/utils/api/http";
+} from '@/store/reducers/StoreLogisticSlice';
+import GeneretedReturnSlip from '@/components/pdf/GeneretedReturnSlip';
+import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+import { t } from 'i18next';
+import { render } from 'react-dom';
+import SearchTable from '../SearchElemTable';
+import { USER_ID } from '@/utils/api/http';
 
 const PickSlipCancel: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { t } = useTranslation();
   const [LOCATION, setLOCATION] = useState([]); //
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
     getItem(
-      <>{t("CANCEL PICKSLIP (BAN:309)")}</>,
-      "sub1",
+      <>{t('CANCEL PICKSLIP (BAN:309)')}</>,
+      'sub1',
       <ShoppingCartOutlined />
     ),
     // ]
@@ -77,20 +77,20 @@ const PickSlipCancel: FC = () => {
       key: string;
       onBlock: any[];
       LOCATION_TO?: any;
-      getFrom?: "";
+      getFrom?: '';
     }[]
   >([]);
   useEffect(() => {
     if (tableData) {
       // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
           companyID: currentCompanyID,
           shopShortName: tableData[0]?.getFrom,
         })
       ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.meta.requestStatus === 'fulfilled') {
           const transformedData = action.payload[0].locations.map(
             (item: any) => ({
               ...item,
@@ -108,27 +108,27 @@ const PickSlipCancel: FC = () => {
   const [openPickCancel, setOpenPickCancel] = useState(false);
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
       editable: (text, record, index) => {
         return false;
       },
-      width: "10%",
+      width: '10%',
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("SN/BN")}`,
-      dataIndex: "BATCH_ID",
-      key: "BATCH_ID",
+      title: `${t('SN/BN')}`,
+      dataIndex: 'BATCH_ID',
+      key: 'BATCH_ID',
       ellipsis: true,
       formItemProps: {
-        name: "BATCH_ID",
+        name: 'BATCH_ID',
       },
       editable: (text, record, index) => {
         return false;
@@ -140,21 +140,21 @@ const PickSlipCancel: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
-      width: "10%",
+      width: '10%',
       editable: (text, record, index) => {
         return false;
       },
     },
     {
-      title: `${t("STORE")}`,
-      dataIndex: "STOCK",
-      key: "STOCK",
+      title: `${t('STORE')}`,
+      dataIndex: 'STOCK',
+      key: 'STOCK',
       // responsive: ['sm'],
 
       ellipsis: true, //
@@ -165,17 +165,17 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: `${t("LOCATION")}`,
-      dataIndex: "SHELF_NUMBER",
-      key: "SHELF_NUMBER",
+      title: `${t('LOCATION')}`,
+      dataIndex: 'SHELF_NUMBER',
+      key: 'SHELF_NUMBER',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
       formItemProps: {
-        name: "SHELF_NUMBER",
+        name: 'SHELF_NUMBER',
       },
-      width: "8%",
+      width: '8%',
       render: (text: any, record: any) => {
         return (
           <div>{record.foRealese ? record.foRealese.SHELF_NUMBER : text}</div>
@@ -183,10 +183,10 @@ const PickSlipCancel: FC = () => {
       },
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -195,12 +195,12 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: "BATCH ID",
-      dataIndex: "SUPPLIER_BATCH_NUMBER",
+      title: 'BATCH ID',
+      dataIndex: 'SUPPLIER_BATCH_NUMBER',
       // valueType: 'index',
       ellipsis: true,
-      key: "SUPPLIER_BATCH_NUMBER",
-      width: "6%",
+      key: 'SUPPLIER_BATCH_NUMBER',
+      width: '6%',
 
       editable: (text, record, index) => {
         return false;
@@ -216,15 +216,15 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: `${t("EXPIRES")}`,
-      dataIndex: "PRODUCT_EXPIRATION_DATE",
-      key: "PRODUCT_EXPIRATION_DATE",
+      title: `${t('EXPIRES')}`,
+      dataIndex: 'PRODUCT_EXPIRATION_DATE',
+      key: 'PRODUCT_EXPIRATION_DATE',
       //tip: 'ITEM EXPIRY DATE',
       ellipsis: true,
-      width: "6%",
-      valueType: "date",
+      width: '6%',
+      valueType: 'date',
       formItemProps: {
-        name: "PRODUCT_EXPIRATION_DATE",
+        name: 'PRODUCT_EXPIRATION_DATE',
       },
       editable: (text, record, index) => {
         return false;
@@ -244,11 +244,11 @@ const PickSlipCancel: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("LABEL")}`,
-      dataIndex: "LOCAL_ID",
-      key: "LOCAL_ID",
+      title: `${t('LABEL')}`,
+      dataIndex: 'LOCAL_ID',
+      key: 'LOCAL_ID',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
       render: (text: any, record: any) => {
         return <a>{record.foRealese ? record.foRealese.LOCAL_ID : text}</a>;
@@ -259,24 +259,24 @@ const PickSlipCancel: FC = () => {
       // width: '20%',
     },
     {
-      title: `${t("BOOKED")}`,
-      dataIndex: "QUANTITY_BOOK",
-      key: "QUANTITY_BOOK",
+      title: `${t('BOOKED')}`,
+      dataIndex: 'QUANTITY_BOOK',
+      key: 'QUANTITY_BOOK',
       ellipsis: true, //
-      responsive: ["sm"],
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
       },
     },
     {
-      title: `${t("CANCELLED")}`,
+      title: `${t('CANCELLED')}`,
       ellipsis: true, //
-      dataIndex: "CANCELED_QUANTITY",
-      key: "CANCELED_QUANTITY",
-      responsive: ["sm"],
+      dataIndex: 'CANCELED_QUANTITY',
+      key: 'CANCELED_QUANTITY',
+      responsive: ['sm'],
       search: false,
-      width: "7%",
+      width: '7%',
       editable: (text, record, index) => {
         return false;
       },
@@ -288,13 +288,13 @@ const PickSlipCancel: FC = () => {
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("CANCEL QTY")}`,
-      dataIndex: "QTYCANCEL",
-      key: "QTYCANCEL",
-      responsive: ["sm"],
+      title: `${t('CANCEL QTY')}`,
+      dataIndex: 'QTYCANCEL',
+      key: 'QTYCANCEL',
+      responsive: ['sm'],
       search: false,
-      width: "8%",
-      valueType: "digit",
+      width: '8%',
+      valueType: 'digit',
       render: (text: any, record: any) => {
         return <div>{record?.QTYCANCEL ? record?.QTYCANCEL : 0}</div>;
       },
@@ -326,9 +326,9 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: `${t("LOC. TO")}`,
-      dataIndex: "LOCATION_TO",
-      key: "LOCATION_TO",
+      title: `${t('LOC. TO')}`,
+      dataIndex: 'LOCATION_TO',
+      key: 'LOCATION_TO',
       ellipsis: true,
       // valueType: 'select',
       editable: (text, record, index) => {
@@ -372,7 +372,7 @@ const PickSlipCancel: FC = () => {
                 </ProCard>
               </div>
             }
-            overlayStyle={{ width: "50%" }}
+            overlayStyle={{ width: '50%' }}
           >
             <Input value={selectedLocation?.locationName} />
           </DoubleClickPopover>
@@ -382,10 +382,10 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: `${t("Status")}`,
-      key: "status",
-      width: "11%",
-      valueType: "select",
+      title: `${t('Status')}`,
+      key: 'status',
+      width: '11%',
+      valueType: 'select',
       filterSearch: true,
       filters: true,
       ellipsis: true, //
@@ -394,22 +394,22 @@ const PickSlipCancel: FC = () => {
       },
       // onFilter: true,
       valueEnum: {
-        issued: { text: t("ISSUED"), status: "Processing" },
-        open: { text: t("NEW"), status: "Error" },
-        closed: { text: t("CLOSED"), status: "Default" },
-        cancelled: { text: t("CANCELLED"), status: "Error" },
-        partyCancelled: { text: t("PARTY_CANCELLED"), status: "Error" },
-        transfer: { text: t("TRANSFER"), status: "Processing" },
-        completed: { text: t("COMPLETED"), status: "Success" },
+        issued: { text: t('ISSUED'), status: 'Processing' },
+        open: { text: t('NEW'), status: 'Error' },
+        closed: { text: t('CLOSED'), status: 'Default' },
+        cancelled: { text: t('CANCELLED'), status: 'Error' },
+        partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
+        transfer: { text: t('TRANSFER'), status: 'Processing' },
+        completed: { text: t('COMPLETED'), status: 'Success' },
       },
 
-      dataIndex: "status",
+      dataIndex: 'status',
     },
 
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -464,7 +464,7 @@ const PickSlipCancel: FC = () => {
         <div className="mx-auto px-5">
           <div
             style={{
-              display: !collapsed ? "block" : "none",
+              display: !collapsed ? 'block' : 'none',
             }}
           >
             <PickSlipFiltered
@@ -475,7 +475,7 @@ const PickSlipCancel: FC = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[79vh] overflow-hidden flex flex-col">
+        <div className="h-[82vh] overflow-hidden flex flex-col">
           <div className="h-[55%]">
             <MaterialOrdersList
               canselVoidType={true}
@@ -500,7 +500,7 @@ const PickSlipCancel: FC = () => {
                         ...blockItem,
                         status: item?.status,
                         QUANTITY_BOOK: item?.QUANTITY_BOOK,
-                        LOCATION_TO: item?.LOCATION_TO || "",
+                        LOCATION_TO: item?.LOCATION_TO || '',
                         QTYCANCEL: item?.QTYCANCEL || 0,
                         CANCELED_QUANTITY: item?.CANCELED_QUANTITY || 0,
                         materialID: item.id,
@@ -531,28 +531,28 @@ const PickSlipCancel: FC = () => {
               ) {
                 // Показать сообщение об ошибке
                 message.error(
-                  "QTYCANCEL cannot be greater than AVAILABLE QUANTITY"
+                  'QTYCANCEL cannot be greater than AVAILABLE QUANTITY'
                 );
 
                 data.QTYCANCEL =
                   Number(data.QUANTITY_BOOK) -
                   Number(data.CANCELED_QUANTITY || 0);
-                data.status = "cancelled";
+                data.status = 'cancelled';
               }
               if (
                 data.QTYCANCEL <
                 Number(data.QUANTITY_BOOK) - Number(data.CANCELED_QUANTITY || 0)
               ) {
-                data.status = "partyCancelled";
+                data.status = 'partyCancelled';
               }
               if (
                 data.QTYCANCEL ===
                 Number(data.QUANTITY_BOOK) - Number(data.CANCELED_QUANTITY || 0)
               ) {
-                data.status = "cancelled";
+                data.status = 'cancelled';
               }
               if (!data.LOCATION_TO) {
-                message.error("SELECT LOCATION");
+                message.error('SELECT LOCATION');
               }
               if (data.LOCATION_TO) {
                 // Показать сообщение об ошибке
@@ -565,14 +565,14 @@ const PickSlipCancel: FC = () => {
                   Number(data.QUANTITY_BOOK) -
                     Number(data.CANCELED_QUANTITY || 0)
                 ) {
-                  data.status = "cancelled";
+                  data.status = 'cancelled';
                 }
                 if (
                   data.QTYCANCEL <
                   Number(data.QUANTITY_BOOK) -
                     Number(data.CANCELED_QUANTITY || 0)
                 ) {
-                  data.status = "partyCancelled";
+                  data.status = 'partyCancelled';
                 }
                 data.LOCATION_TO = selectedLocation?.locationName;
               }
@@ -592,7 +592,7 @@ const PickSlipCancel: FC = () => {
             }}
             yScroll={30}
             externalReload={function () {
-              throw new Error("Function not implemented.");
+              throw new Error('Function not implemented.');
             }}
           ></EditableSelectedPickSlip>
           <div className="mt-auto">
@@ -602,14 +602,14 @@ const PickSlipCancel: FC = () => {
                 onClick={() => setOpenPickReturn(true)}
                 size="small"
               >
-                {t("PRINT")}
+                {t('PRINT')}
               </Button>
               <Button
                 disabled={!selectedRowKeys.length}
                 onClick={() => setOpenPickCancel(true)}
                 size="small"
               >
-                {t("CANCEL_PICKSLIP")}
+                {t('CANCEL_PICKSLIP')}
               </Button>
             </Space>
 
@@ -636,7 +636,7 @@ const PickSlipCancel: FC = () => {
 
             {/* {modalVisible && ( */}
             <Modal
-              width={"50%"}
+              width={'50%'}
               title="RETURN SLIP"
               open={modalVisible}
               onOk={() => setModalVisible(false)}
@@ -663,18 +663,18 @@ const PickSlipCancel: FC = () => {
       <Modal
         title=""
         open={openPickCancel}
-        width={"60%"}
+        width={'60%'}
         onCancel={() => setOpenPickCancel(false)}
         footer={null}
       >
-        {" "}
+        {' '}
         <ProForm
-          size={"small"}
+          size={'small'}
           form={form}
           autoComplete="off"
           onFinish={async (values: any) => {
             Modal.confirm({
-              title: t("CONFIRM CANCEL"),
+              title: t('CONFIRM CANCEL'),
               onOk: async () => {
                 const updatedMaterials = selectPickSlip.materials.map(
                   (item: any) => {
@@ -733,19 +733,19 @@ const PickSlipCancel: FC = () => {
                   }
                 );
 
-                let status = "closed";
+                let status = 'closed';
                 if (
                   updatedMaterials.some(
-                    (item: any) => item.status === "partyCancelled"
+                    (item: any) => item.status === 'partyCancelled'
                   )
                 ) {
-                  status = "partyCancelled";
+                  status = 'partyCancelled';
                 } else if (
                   updatedMaterials.every(
-                    (item: any) => item.status === "cancelled"
+                    (item: any) => item.status === 'cancelled'
                   )
                 ) {
-                  status = "cancelled";
+                  status = 'cancelled';
                 }
 
                 const result = await dispatch(
@@ -757,16 +757,16 @@ const PickSlipCancel: FC = () => {
                     updateDate: new Date(),
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setOpenPickCancel(false);
                   onSelectPickSlip(result.payload);
-                  const currentCompanyID = localStorage.getItem("companyID");
+                  const currentCompanyID = localStorage.getItem('companyID');
                   if (currentCompanyID) {
                     const result = await dispatch(
                       createReturnSlip({
                         materialAplicationId:
-                          selectPickSlip._id || selectPickSlip.id || "",
-                        status: "closed",
+                          selectPickSlip._id || selectPickSlip.id || '',
+                        status: 'closed',
                         materials: updatedMaterials.reduce(
                           (acc: any, item: any) => {
                             if (item?.onBlock) {
@@ -785,7 +785,7 @@ const PickSlipCancel: FC = () => {
                         createDate: new Date(),
                         consigneeName: selectPickSlip.createBy,
                         storeMan: selectedStoreUser?.name,
-                        storeManID: selectedStoreUser?._id || "",
+                        storeManID: selectedStoreUser?._id || '',
                         recipient: selectedСonsigneeUser?.name,
                         recipientID: selectedСonsigneeUser?._id,
                         taskNumber: selectPickSlip.taskNumber,
@@ -801,7 +801,7 @@ const PickSlipCancel: FC = () => {
                         companyID: currentCompanyID,
                       })
                     );
-                    if (result.meta.requestStatus === "fulfilled") {
+                    if (result.meta.requestStatus === 'fulfilled') {
                       result.payload.registrationNumber &&
                         result.payload?.materials &&
                         result.payload?.materials.forEach(
@@ -813,14 +813,14 @@ const PickSlipCancel: FC = () => {
                                   data: {
                                     companyID: resultItem.COMPANY_ID,
                                     userSing: result.payload?.storeMan,
-                                    userID: result.payload?.storeManID || "",
+                                    userID: result.payload?.storeManID || '',
                                     createDate: new Date(),
                                     partNumber: resultItem.PART_NUMBER,
                                     station:
                                       resultItem?.WAREHOUSE_RECEIVED_AT ||
-                                      "N/A",
+                                      'N/A',
                                     store: resultItem.STOCK,
-                                    voucherModel: "BACK_TO_STORE",
+                                    voucherModel: 'BACK_TO_STORE',
                                     location: resultItem?.LOCATION_TO,
                                     orderNumber: resultItem?.ORDER_NUMBER,
                                     price: resultItem?.PRICE,
@@ -872,7 +872,7 @@ const PickSlipCancel: FC = () => {
                       );
                       const result1 = await dispatch(
                         updatedMaterialOrdersById({
-                          companyID: localStorage.getItem("companyID") || "",
+                          companyID: localStorage.getItem('companyID') || '',
                           _id: selectPickSlip._id,
 
                           updateUserID: USER_ID,
@@ -926,15 +926,15 @@ const PickSlipCancel: FC = () => {
           <div className="flex justify-between content-center h-[25vh] justify-items-center gap-2">
             <div
               style={{
-                border: "0.5px solid #ccc",
-                padding: "10px",
-                marginBottom: "5px",
-                borderRadius: "5px",
+                border: '0.5px solid #ccc',
+                padding: '10px',
+                marginBottom: '5px',
+                borderRadius: '5px',
                 // flex: 1,
               }}
             >
-              <h4 className="storeman">{t("STOREMAN")}</h4>
-              <ProForm.Item style={{ width: "100%" }}>
+              <h4 className="storeman">{t('STOREMAN')}</h4>
+              <ProForm.Item style={{ width: '100%' }}>
                 <UserSearchForm
                   // performedName={localStorage.getItem('name')}
                   actionNumber={null}
@@ -948,19 +948,19 @@ const PickSlipCancel: FC = () => {
             </div>
             <div
               style={{
-                border: "0.5px solid #ccc",
-                padding: "10px",
-                marginBottom: "5px",
-                borderRadius: "5px",
+                border: '0.5px solid #ccc',
+                padding: '10px',
+                marginBottom: '5px',
+                borderRadius: '5px',
                 // flex: 1,
               }}
             >
-              <h4 className="mech">{t("MECH")}</h4>
+              <h4 className="mech">{t('MECH')}</h4>
               {/* <Form.Item style={{ width: '100%' }}> */}
               <UserSearchForm
-                performedName={""}
+                performedName={''}
                 actionNumber={null}
-                performedSing={""}
+                performedSing={''}
                 onUserSelect={(user) => {
                   setSelectedСonsigneeUser(user);
                 }}

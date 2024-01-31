@@ -7,6 +7,7 @@ import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import RequirementsFilterForm from '../requirementManagement/RequirementsFilterForm';
 import RequirementsDiscription from '../requirementManagement/RequirementsDiscription';
+import RequirementsDtails from '../requirementManagement/RequirementsDtails';
 interface RequirementManagementProps {}
 
 const RequirementManagement: FC<RequirementManagementProps> = () => {
@@ -27,7 +28,7 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
       <Sider
         className="h-[87vh] overflow-hidden"
         theme="light"
-        width={400}
+        width={350}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}
@@ -47,11 +48,15 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[81vh] overflow-hidden flex flex-col justify-between gap-5">
+        <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-5">
           <RequirementsDiscription
             onRequirementSearch={setRequirement}
             requirement={requirement}
           ></RequirementsDiscription>
+          <RequirementsDtails
+            requierement={requirement}
+            onEditRequirementsDtailsEdit={function (data: any): void {}}
+          ></RequirementsDtails>
         </div>
       </Content>
     </Layout>

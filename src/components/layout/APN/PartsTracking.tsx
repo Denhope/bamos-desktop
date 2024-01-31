@@ -1,17 +1,17 @@
-import { ProCard, ProDescriptions } from "@ant-design/pro-components";
-import { Layout, Menu, MenuProps } from "antd";
-import Sider from "antd/es/layout/Sider";
-import { Content } from "antd/es/layout/layout";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { getItem } from "@/services/utilites";
-import { SwapOutlined } from "@ant-design/icons";
-import tabs from "antd/es/tabs";
-import TabContent from "@/components/shared/Table/TabContent";
-import PartTrackingFilterForm from "@/components/store/partTracking/PartTrackingFilterForm";
-import ListOfBooking from "@/components/store/partTracking/ListOfBooking";
-import StoreView from "@/components/store/partTracking/StoreView";
-import TechnicalView from "@/components/store/partTracking/TechnicalView";
+import { ProCard, ProDescriptions } from '@ant-design/pro-components';
+import { Layout, Menu, MenuProps } from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import { Content } from 'antd/es/layout/layout';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getItem } from '@/services/utilites';
+import { SwapOutlined } from '@ant-design/icons';
+import tabs from 'antd/es/tabs';
+import TabContent from '@/components/shared/Table/TabContent';
+import PartTrackingFilterForm from '@/components/store/partTracking/PartTrackingFilterForm';
+import ListOfBooking from '@/components/store/partTracking/ListOfBooking';
+import StoreView from '@/components/store/partTracking/StoreView';
+import TechnicalView from '@/components/store/partTracking/TechnicalView';
 
 interface PartsTracking {
   onDoubleClick?: (record: any, rowIndex?: any) => void;
@@ -30,24 +30,24 @@ const PartsTracking: FC<PartsTracking> = ({
       setdata(bookings);
     }
   }, [bookings]);
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
-    getItem(<>{t("PARTS TRACKING")} (BAN:188)</>, "sub1", <SwapOutlined />),
+    getItem(<>{t('PARTS TRACKING')} (BAN:188)</>, 'sub1', <SwapOutlined />),
   ];
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null);
   const tabs = [
     {
       content: <ListOfBooking scroll={48} data={data} />,
-      title: `${t("LIST OF BOOKING")}`,
+      title: `${t('LIST OF BOOKING')}`,
     },
     {
       content: <StoreView scroll={48} data={data} />,
-      title: `${t("STORE VIEW")}`,
+      title: `${t('STORE VIEW')}`,
     },
     {
       content: <TechnicalView scroll={48} data={data} />,
-      title: `${t("TECHNICAL VIEW")}`,
+      title: `${t('TECHNICAL VIEW')}`,
     },
     // {
     //   content: <></>,
@@ -71,7 +71,7 @@ const PartsTracking: FC<PartsTracking> = ({
         <div className="mx-auto px-5">
           <div
             style={{
-              display: !collapsed ? "block" : "none",
+              display: !collapsed ? 'block' : 'none',
             }}
           >
             <PartTrackingFilterForm
@@ -86,7 +86,7 @@ const PartsTracking: FC<PartsTracking> = ({
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1 bg-white">
+        <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1 bg-white">
           <div className="flex flex-col gap-5 bg-white px-4 py-3 rounded-md border-gray-400">
             <ProDescriptions loading={false} column={5} size="small">
               <ProDescriptions.Item label="PART NUMBER" valueType="text">
@@ -103,23 +103,23 @@ const PartsTracking: FC<PartsTracking> = ({
               </ProDescriptions.Item>
 
               <ProDescriptions.Item label="GROUP" valueType="text">
-                {" "}
+                {' '}
                 <div className="font-bold">
-                  {" "}
+                  {' '}
                   {selectedMaterial && selectedMaterial?.GROUP}
                 </div>
               </ProDescriptions.Item>
 
               <ProDescriptions.Item label="TYPE" valueType="text">
                 <div className="font-bold">
-                  {" "}
+                  {' '}
                   {selectedMaterial && selectedMaterial?.TYPE}
                 </div>
               </ProDescriptions.Item>
               <ProDescriptions.Item label="MEASURE UNIT" valueType="text">
-                {" "}
+                {' '}
                 <div className="font-bold">
-                  {" "}
+                  {' '}
                   {selectedMaterial && selectedMaterial?.UNIT_OF_MEASURE}
                 </div>
               </ProDescriptions.Item>

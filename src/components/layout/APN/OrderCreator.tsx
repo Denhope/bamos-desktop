@@ -1,18 +1,18 @@
-import { ProForm } from "@ant-design/pro-components";
-import { Row, Col, message } from "antd";
-import { OrderType } from "@/models/IOrder";
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
-import OrderCratorTypesForm from "../store/order/OrderCratorTypesForm";
-import OrderCreatorDetails from "../store/order/OrderCreatorDetails";
-import OrderCreatorForm from "../store/order/OrderCreatorForm";
-import { postNewOrder } from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { USER_ID } from "@/utils/api/http";
+import { ProForm } from '@ant-design/pro-components';
+import { Row, Col, message } from 'antd';
+import { OrderType } from '@/models/IOrder';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import OrderCratorTypesForm from '../store/order/OrderCratorTypesForm';
+import OrderCreatorDetails from '../store/order/OrderCreatorDetails';
+import OrderCreatorForm from '../store/order/OrderCreatorForm';
+import { postNewOrder } from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { USER_ID } from '@/utils/api/http';
 const OrderCreator: FC = () => {
   const { t } = useTranslation();
-  const [orderType, setOrderType] = useState<OrderType>("PURCHASE_ORDER");
-  const [orderCreateDate, setOrderCreateDate] = useState("");
+  const [orderType, setOrderType] = useState<OrderType>('PURCHASE_ORDER');
+  const [orderCreateDate, setOrderCreateDate] = useState('');
   const [orderCreateParts, setOrderCreateParts] = useState<any[]>([]);
   const [orderCreateVendorForm, setOrderCreateVendorsForm] = useState<any>({});
 
@@ -25,30 +25,30 @@ const OrderCreator: FC = () => {
   };
 
   const initialValues = {
-    orderType: "PURCHASE_ORDER",
-    orderCreateDate: "",
+    orderType: 'PURCHASE_ORDER',
+    orderCreateDate: '',
     orderCreateParts: [],
     orderCreateVendorForm: {},
   };
   const dispatch = useAppDispatch();
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <ProForm
         size="small"
         onFinish={async (values: any) => {
           if (
-            orderCreateDate === "" ||
+            orderCreateDate === '' ||
             orderCreateParts.length === 0 ||
             Object.keys(orderCreateVendorForm).length === 0
           ) {
-            message.error("Some fields are empty");
+            message.error('Some fields are empty');
           } else {
-            const currentCompanyID = localStorage.getItem("companyID") || "";
+            const currentCompanyID = localStorage.getItem('companyID') || '';
             const result = dispatch(
               postNewOrder({
                 companyID: currentCompanyID,
                 createUserID: USER_ID,
-                state: "OPEN",
+                state: 'OPEN',
 
                 orderCreateDate,
                 parts: orderCreateParts,
@@ -56,9 +56,9 @@ const OrderCreator: FC = () => {
                 orderType,
               })
             );
-            if ((await result).meta.requestStatus === "fulfilled") {
+            if ((await result).meta.requestStatus === 'fulfilled') {
             } else {
-              message.error("Error");
+              message.error('Error');
             }
             // onSelectLocation(selectedLocation);
             // onFilterTransferParts(selectedFeatchStore);

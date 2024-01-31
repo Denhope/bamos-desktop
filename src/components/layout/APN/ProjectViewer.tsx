@@ -1,8 +1,8 @@
-import TabContent from "@/components/shared/Table/TabContent";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import ProjectViewerFilterForm from "../projectViewer/projectViewerFilterForm";
-import ProjectViewList from "../projectViewer/ProjectViewList";
+import TabContent from '@/components/shared/Table/TabContent';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import ProjectViewerFilterForm from '../projectViewer/projectViewerFilterForm';
+import ProjectViewList from '../projectViewer/ProjectViewList';
 interface ProjectViewer {
   onDoubleClick?: (record: any, rowIndex?: any) => void;
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
@@ -28,12 +28,12 @@ const ProjectViewer: FC<ProjectViewer> = ({
           onSelectedProjects={function (record: any): void {}}
         ></ProjectViewList>
       ),
-      title: `${t("PROJECT LOG")}`,
+      title: `${t('PROJECT LOG')}`,
     },
   ];
 
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <ProjectViewerFilterForm onProjectSearch={setReceiving} />
         <TabContent tabs={tabs}></TabContent>

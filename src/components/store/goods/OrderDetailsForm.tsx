@@ -7,21 +7,21 @@ import {
   ProFormSelect,
   ProFormText,
   ProFormTimePicker,
-} from "@ant-design/pro-components";
-import { current } from "@reduxjs/toolkit";
-import { FormInstance, Modal, message } from "antd";
-import { Button, Form, Space } from "antd";
-import ReceivingTracking from "@/components/layout/APN/ReceivingTracking";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IOrder, OrderType } from "@/models/IOrder";
-import { IReceiving } from "@/models/IReceiving";
-import moment from "moment";
+} from '@ant-design/pro-components';
+import { current } from '@reduxjs/toolkit';
+import { FormInstance, Modal, message } from 'antd';
+import { Button, Form, Space } from 'antd';
+import ReceivingTracking from '@/components/layout/APN/ReceivingTracking';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IOrder, OrderType } from '@/models/IOrder';
+import { IReceiving } from '@/models/IReceiving';
+import moment from 'moment';
 
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
-import { getFilteredOrders, postNewReceiving } from "@/utils/api/thunks";
-import VendorSearchForm from "../search/VendorSearchForm";
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
+import { getFilteredOrders, postNewReceiving } from '@/utils/api/thunks';
+import VendorSearchForm from '../search/VendorSearchForm';
 type OrderDetailsFormType = {
   order: IOrder | null;
   onReceivingType: (data: any) => void;
@@ -43,32 +43,32 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   useEffect(() => {
     if (order && !currentReceiving) {
       form.setFields([
-        { name: "order", value: order?.orderNumber },
-        { name: "SUPPLIES_CODE", value: order?.supplier },
-        { name: "WAREHOUSE_RECEIVED_AT", value: order?.shipTo || "MSQ" },
+        { name: 'order', value: order?.orderNumber },
+        { name: 'SUPPLIES_CODE', value: order?.supplier },
+        { name: 'WAREHOUSE_RECEIVED_AT', value: order?.shipTo || 'MSQ' },
       ]);
     }
     if (order && currentReceiving) {
-      form.setFields([{ name: "order", value: order?.orderNumber }]);
+      form.setFields([{ name: 'order', value: order?.orderNumber }]);
     }
   }, [order]);
   useEffect(() => {
     if (currentReceiving) {
       form.setFields([
-        { name: "receiving", value: currentReceiving?.receivingNumber },
-        { name: "receivingDate", value: currentReceiving?.receivingDate },
+        { name: 'receiving', value: currentReceiving?.receivingNumber },
+        { name: 'receivingDate', value: currentReceiving?.receivingDate },
         {
-          name: "receivingTime",
+          name: 'receivingTime',
           value: moment(currentReceiving?.receivingDate),
         },
-        { name: "awbNumber", value: currentReceiving?.awbNumber },
-        { name: "awbDate", value: currentReceiving?.awbDate },
-        { name: "awbType", value: currentReceiving?.awbType },
-        { name: "awbReference", value: currentReceiving?.awbReference },
-        { name: "SUPPLIES_CODE", value: currentReceiving?.SUPPLIES_CODE },
+        { name: 'awbNumber', value: currentReceiving?.awbNumber },
+        { name: 'awbDate', value: currentReceiving?.awbDate },
+        { name: 'awbType', value: currentReceiving?.awbType },
+        { name: 'awbReference', value: currentReceiving?.awbReference },
+        { name: 'SUPPLIES_CODE', value: currentReceiving?.SUPPLIES_CODE },
         {
-          name: "WAREHOUSE_RECEIVED_AT",
-          value: currentReceiving?.WAREHOUSE_RECEIVED_AT || "MSQ",
+          name: 'WAREHOUSE_RECEIVED_AT',
+          value: currentReceiving?.WAREHOUSE_RECEIVED_AT || 'MSQ',
         },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
@@ -77,7 +77,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   }, [currentReceiving]);
   const dispatch = useAppDispatch();
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
@@ -85,13 +85,13 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
     setCurrentReceiving({
       createDate: new Date(),
       receivingDate: new Date(),
-      state: "OPEN", // Замените это на подходящее начальное состояние
+      state: 'OPEN', // Замените это на подходящее начальное состояние
       receivingParts: [],
       orderItems: [],
       docs: [],
       supplier: {},
       shipTo: {},
-      companyID: localStorage.getItem("companyID") || "",
+      companyID: localStorage.getItem('companyID') || '',
       createUserID: USER_ID,
       // Добавьте другие базовые поля здесь
     });
@@ -110,47 +110,47 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
       >
         <ProFormGroup>
           <ProFormSelect
-            initialValue={"ORDER"}
+            initialValue={'ORDER'}
             showSearch
             name="type"
             width="sm"
             // label={t('ORDER')}
             valueEnum={{
-              ORDER: t("ORDER"),
+              ORDER: t('ORDER'),
               // SHIPMENT: t('SHIPMENT'),
-              UN_ORDER: t("SINGLE RECEIVING"),
+              UN_ORDER: t('SINGLE RECEIVING'),
             }}
           ></ProFormSelect>
           <ProFormText
             name="order"
             width="sm"
-            tooltip={t("ORDER")}
+            tooltip={t('ORDER')}
           ></ProFormText>
           <Button
             type="primary"
             // disabled={!form.getFieldValue('order')}
             onClick={async () => {
-              const currentCompanyID = localStorage.getItem("companyID") || "";
-              if (form.getFieldValue("order")) {
+              const currentCompanyID = localStorage.getItem('companyID') || '';
+              if (form.getFieldValue('order')) {
                 const result = dispatch(
                   getFilteredOrders({
                     companyID: currentCompanyID,
-                    orderNumber: form.getFieldValue("order"),
-                    vendorName: form.getFieldValue("vendorName"),
-                    partNumber: form.getFieldValue("partNumber"),
-                    orderType: form.getFieldValue("orderType"),
+                    orderNumber: form.getFieldValue('order'),
+                    vendorName: form.getFieldValue('vendorName'),
+                    partNumber: form.getFieldValue('partNumber'),
+                    orderType: form.getFieldValue('orderType'),
                   })
                 );
-                if ((await result).meta.requestStatus === "fulfilled") {
+                if ((await result).meta.requestStatus === 'fulfilled') {
                   onOrdersSearch &&
                     onOrdersSearch((await result).payload[0] || []);
                 } else {
-                  message.error("Error");
+                  message.error('Error');
                 }
               }
             }}
           >
-            {t("LOAD")}
+            {t('LOAD')}
           </Button>
         </ProFormGroup>
         <Space direction="vertical">
@@ -158,8 +158,8 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormGroup>
               <Space className="P-5">
                 <Button onClick={createNewReceiving}>
-                  {t("NEW RECEIVING")}
-                </Button>{" "}
+                  {t('NEW RECEIVING')}
+                </Button>{' '}
                 <Button
                   type="primary"
                   onClick={async () => {
@@ -167,22 +167,22 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                       const result = dispatch(
                         postNewReceiving({
                           ...currentReceiving,
-                          awbNumber: form.getFieldValue("awbNumber"),
-                          awbDate: form.getFieldValue("awbDate"),
-                          awbType: form.getFieldValue("awbType"),
-                          awbReference: form.getFieldValue("awbReference"),
-                          SUPPLIES_CODE: form.getFieldValue("SUPPLIES_CODE"),
+                          awbNumber: form.getFieldValue('awbNumber'),
+                          awbDate: form.getFieldValue('awbDate'),
+                          awbType: form.getFieldValue('awbType'),
+                          awbReference: form.getFieldValue('awbReference'),
+                          SUPPLIES_CODE: form.getFieldValue('SUPPLIES_CODE'),
                           WAREHOUSE_RECEIVED_AT: form.getFieldValue(
-                            "WAREHOUSE_RECEIVED_AT"
+                            'WAREHOUSE_RECEIVED_AT'
                           ),
                         })
                       );
-                      if ((await result).meta.requestStatus === "fulfilled") {
+                      if ((await result).meta.requestStatus === 'fulfilled') {
                         setCurrentReceiving((await result).payload || []);
                         onCurrentReceiving((await result).payload || []);
-                        onReceivingType(form.getFieldValue("type"));
+                        onReceivingType(form.getFieldValue('type'));
                       } else {
-                        message.error("Error");
+                        message.error('Error');
                       }
                     }
                   }}
@@ -197,7 +197,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                   // )
                   // }
                 >
-                  {t("SAVE RECEIVING")}
+                  {t('SAVE RECEIVING')}
                 </Button>
                 {/* <Button disabled={!currentReceiving?.receivingNumber}>
                   {t('EDIT')}
@@ -207,9 +207,9 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormText
               name="receiving"
               rules={[{ required: true }]}
-              label={t("RECEIVING No")}
+              label={t('RECEIVING No')}
               width="sm"
-              tooltip={t("ORDER")}
+              tooltip={t('ORDER')}
               fieldProps={{
                 onDoubleClick: () => setOpenPickViewer(true),
 
@@ -219,16 +219,16 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormDatePicker
               rules={[{ required: true }]}
               name="receivingDate"
-              label={t("RECEIVING DATE")}
+              label={t('RECEIVING DATE')}
               width="xs"
             ></ProFormDatePicker>
             <ProFormTimePicker
               rules={[{ required: true }]}
               name="receivingTime"
-              label={t("RECEIVING TIME")}
+              label={t('RECEIVING TIME')}
               width="xs"
               fieldProps={{
-                format: "HH:mm",
+                format: 'HH:mm',
               }}
             ></ProFormTimePicker>
           </ProFormGroup>
@@ -236,37 +236,37 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormSelect
               rules={[{ required: true }]}
               name="awbType"
-              label={t("DOC TYPE")}
+              label={t('DOC TYPE')}
               valueEnum={{
-                ТН: t("Товарная накладная"),
-                ТТН: t("Товарно-транспортная накладная"),
-                УПД: t("Универсальный передаточный документ"),
-                СФ: t("Счет-фактура"),
-                ДТ: t("Декларация на товары"),
-                Инв: t("Инвойс"),
-                АПП: t("Акт приема-передачи"),
+                ТН: t('Товарная накладная'),
+                ТТН: t('Товарно-транспортная накладная'),
+                УПД: t('Универсальный передаточный документ'),
+                СФ: t('Счет-фактура'),
+                ДТ: t('Декларация на товары'),
+                Инв: t('Инвойс'),
+                АПП: t('Акт приема-передачи'),
               }}
               width="sm"
-              tooltip={t("DOC TYPE")}
+              tooltip={t('DOC TYPE')}
             ></ProFormSelect>
             <ProFormText
               name="awbNumber"
-              label={t(" DOC No")}
+              label={t(' DOC No')}
               rules={[{ required: true }]}
               width="sm"
-              tooltip={t(" DOC NNUMBER")}
+              tooltip={t(' DOC NNUMBER')}
             ></ProFormText>
             <ProFormDatePicker
               name="awbDate"
-              label={t("DOC DATE")}
+              label={t('DOC DATE')}
               rules={[{ required: true }]}
               width="xs"
             ></ProFormDatePicker>
             <ProFormText
               name="awbReference"
-              label={t(" REFERENCE")}
+              label={t(' REFERENCE')}
               width="sm"
-              tooltip={t("REFERENCE")}
+              tooltip={t('REFERENCE')}
             ></ProFormText>
           </ProFormGroup>
         </Space>
@@ -274,7 +274,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           <ProFormText
             name="SUPPLIES_CODE"
             rules={[{ required: true }]}
-            label={`${t("SUPPLIER")}`}
+            label={`${t('SUPPLIER')}`}
             fieldProps={{
               onDoubleClick: () => {
                 setOpenVendorFind(true);
@@ -286,14 +286,14 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             // disabled
             name="WAREHOUSE_RECEIVED_AT"
             rules={[{ required: true }]}
-            label={`${t("SHIP TO")}`}
-            initialValue={"MSQ"}
+            label={`${t('SHIP TO')}`}
+            initialValue={'MSQ'}
           ></ProFormText>
         </ProFormGroup>
       </ProForm>
       <ModalForm
         // title={`Search on Store`}
-        width={"70vw"}
+        width={'70vw'}
         // placement={'bottom'}
         open={openVendorFindModal}
         // submitter={false}
@@ -303,33 +303,33 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           setSecectedSingleVendor(record);
 
           form.setFields([
-            { name: "SUPPLIES_CODE", value: selectedSingleVendor.CODE },
+            { name: 'SUPPLIES_CODE', value: selectedSingleVendor.CODE },
           ]);
         }}
       >
         <VendorSearchForm
-          initialParams={{ partNumber: "" }}
+          initialParams={{ partNumber: '' }}
           scroll={45}
           onRowClick={function (record: any, rowIndex?: any): void {
             setOpenVendorFind(false);
 
-            form.setFields([{ name: "SUPPLIES_CODE", value: record.CODE }]);
+            form.setFields([{ name: 'SUPPLIES_CODE', value: record.CODE }]);
           }}
           isLoading={false}
           onRowSingleClick={function (record: any, rowIndex?: any): void {
             setSecectedSingleVendor(record);
-            form.setFields([{ name: "SUPPLIES_CODE", value: record.CODE }]);
+            form.setFields([{ name: 'SUPPLIES_CODE', value: record.CODE }]);
           }}
         />
       </ModalForm>
       <Modal
         title=""
         open={openPickViewer}
-        width={"90%"}
+        width={'90%'}
         onCancel={() => setOpenPickViewer(false)}
         footer={null}
       >
-        <div className="h-[78vh]  overflow-hidden">
+        <div className="h-[82vh]  overflow-hidden">
           <ReceivingTracking
             onDoubleClick={(data) => {
               setCurrentReceiving({
