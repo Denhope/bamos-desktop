@@ -5,24 +5,11 @@ import {
 import { IProjectResponce } from '@/models/IProject';
 import { IProjectTask } from '@/models/IProjectTaskMTB';
 import {
-  ICreateProjectGroup,
-  createNRCMTB,
-  createProjectGroup,
-  deleteGroupsByIds,
-  getFilteredAditionalTask,
   getFilteredAditionalTasks,
-  getFilteredGroups,
-  getFilteredGroupsTasks,
-  getFilteredProjectTasks,
   getFilteredProjects,
-  getFilteredRemoverdItems,
-  getFilteredRequirements,
   updateAdditionalTask,
   updateGroupByID,
   updateProjectAdditionalTasksByIds,
-  updateProjectTask,
-  updateProjectTaskActions,
-  updateProjectTasksByIds,
 } from '@/utils/api/thunks';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 

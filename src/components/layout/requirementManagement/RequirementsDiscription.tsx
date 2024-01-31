@@ -1,41 +1,42 @@
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { getFilteredRequirementsManager } from '@/utils/api/thunks';
 import {
   ProForm,
   ProFormDatePicker,
   ProFormGroup,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Button, Divider, Form, FormInstance } from "antd";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredOrders } from "@/utils/api/thunks";
-type OrderDescriptionType = {
-  order: any | null;
-  onOrderSearch?: (orders: any | null) => void;
+} from '@ant-design/pro-components';
+import { Button, Divider, Form, FormInstance } from 'antd';
+import React, { FC, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
+type RequirementsDiscriptionType = {
+  requirement: any | null;
+  onRequirementSearch?: (orders: any | null) => void;
 };
-const OrderDescription: FC<OrderDescriptionType> = ({
-  order,
-  onOrderSearch,
+
+const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
+  requirement,
+  onRequirementSearch,
 }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const formRef = useRef<FormInstance>(null);
   useEffect(() => {
-    if (order) {
+    if (requirement) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: "orderNumber", value: order?.orderNumber },
-        { name: "lastModificateBy", value: order?.updateBySing },
-        { name: "modificationDate", value: order?.updateDate },
-        { name: "createBy", value: order.createBySing },
-        { name: "createDate", value: order.createDate },
+        { name: 'partRequestNumber', value: requirement?.partRequestNumber },
+        { name: 'lastModificateBy', value: requirement?.updateBy },
+        { name: 'modificationDate', value: requirement?.updateDate },
+        { name: 'createBy', value: requirement.createBy },
+        { name: 'createDate', value: requirement.createDate },
       ]);
 
       // onFilterTransferprojects(form.getFieldsValue());
     }
-  }, [order]);
-
+  }, [requirement]);
   return (
     <div className="flex flex-col gap-5">
       <ProForm
@@ -48,22 +49,24 @@ const OrderDescription: FC<OrderDescriptionType> = ({
       >
         <ProFormGroup>
           <ProFormText
-            name="orderSearch"
+            name="requirementSearch"
             width="sm"
-            label={t("ORDER No")}
+            label={t('REQUIREMENT No')}
             fieldProps={{
               onPressEnter: async () => {
                 const currentCompanyID =
-                  localStorage.getItem("companyID") || "";
-                if (form.getFieldValue("orderSearch")) {
+                  localStorage.getItem('companyID') || '';
+                if (form.getFieldValue('requirementSearch')) {
                   const result = await dispatch(
-                    getFilteredOrders({
+                    getFilteredRequirementsManager({
                       companyID: currentCompanyID,
-                      orderNumber: form.getFieldValue("orderSearch"),
+                      partRequestNumber:
+                        form.getFieldValue('requirementSearch'),
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
-                    onOrderSearch && onOrderSearch(result.payload[0] || {});
+                  if (result.meta.requestStatus === 'fulfilled') {
+                    onRequirementSearch &&
+                      onRequirementSearch(result.payload[0] || {});
                   } else {
                     form.resetFields();
                   }
@@ -76,42 +79,43 @@ const OrderDescription: FC<OrderDescriptionType> = ({
             type="primary"
             // disabled={!form.getFieldValue('order')}
             onClick={async () => {
-              const currentCompanyID = localStorage.getItem("companyID") || "";
-              if (form.getFieldValue("orderSearch")) {
+              const currentCompanyID = localStorage.getItem('companyID') || '';
+              if (form.getFieldValue('requirementSearch')) {
                 const result = await dispatch(
-                  getFilteredOrders({
+                  getFilteredRequirementsManager({
                     companyID: currentCompanyID,
-                    orderNumber: form.getFieldValue("orderSearch"),
+                    partRequestNumber: form.getFieldValue('requirementSearch'),
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
-                  onOrderSearch && onOrderSearch(result.payload[0] || {});
+                if (result.meta.requestStatus === 'fulfilled') {
+                  onRequirementSearch &&
+                    onRequirementSearch(result.payload[0] || {});
                 } else {
                   form.resetFields();
                 }
               }
             }}
           >
-            {t("LOAD")}
+            {t('LOAD')}
           </Button>
         </ProFormGroup>
         <Divider className="my-0 py-0 pb-5"></Divider>
         <ProFormGroup>
           <ProFormText
             disabled
-            label={t("ORDER No")}
-            name="orderNumber"
+            label={t('REQUIREMENT No')}
+            name="partRequestNumber"
             width="sm"
           ></ProFormText>
           <ProFormText
             disabled
             name="createBy"
             width="sm"
-            label={t("CREATE BY")}
+            label={t('CREATE BY')}
           ></ProFormText>
           <ProFormDatePicker
             disabled
-            label={t("CREATE DATE")}
+            label={t('CREATE DATE')}
             name="createDate"
             width="sm"
           ></ProFormDatePicker>
@@ -119,14 +123,14 @@ const OrderDescription: FC<OrderDescriptionType> = ({
         <ProFormGroup>
           <ProFormText
             disabled
-            label={t("LAST MODIFIED BY")}
+            label={t('LAST MODIFIED BY')}
             name="lastModificateBy"
             width="sm"
           ></ProFormText>
 
           <ProFormDatePicker
             disabled
-            label={t("MODIFICATION DATE")}
+            label={t('MODIFICATION DATE')}
             name="modificationDate"
             width="sm"
           ></ProFormDatePicker>
@@ -136,4 +140,4 @@ const OrderDescription: FC<OrderDescriptionType> = ({
   );
 };
 
-export default OrderDescription;
+export default RequirementsDiscription;

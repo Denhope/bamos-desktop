@@ -45,6 +45,7 @@ export enum RouteNames {
   PARTS_TRACKING = '/store/goods/tracking',
   ORDER_CREATOR = '/orders/create',
   ORDER_MANAGMENT = '/orders/managment',
+  REQUIREMENT_MANAGMENT = '/requirements/managment',
   GOODS_RETURN = '/store/goods/return',
   MATERIAL_APLICATIONS = '/store/material/aplications',
   PICKSLIPS = '/store/material/pickSlips',
