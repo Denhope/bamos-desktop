@@ -17,13 +17,20 @@ import {
   ProFormDatePicker,
   ProFormDigit,
   ProFormGroup,
+  ProFormRadio,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { getFilteredProjects } from '@/utils/api/thunks';
+import {
+  getFilteredProjectTasks,
+  getFilteredProjects,
+} from '@/utils/api/thunks';
 import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import Title from 'antd/es/typography/Title';
+import { IProjectTask, IProjectTaskAll } from '@/models/IProjectTask';
+import { IAdditionalTask } from '@/models/IAdditionalTask';
+import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 type RequirementsDtailsType = {
   requierement: any;
   onEditRequirementsDtailsEdit: (data: any) => void;
@@ -49,6 +56,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   const [form] = Form.useForm();
   const [formAdd] = Form.useForm();
   const [options, setOptions] = useState<Option[]>([]);
+  const [taskOptions, setTaskOptions] = useState<Option[]>([]);
   const dispatch = useAppDispatch();
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -90,8 +98,59 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
 
     fetchData();
   }, [dispatch]);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [selectedTask, setSelectedTask] = useState<any | null>(null);
+  const [receiverType, setReceiverType] = useState<any>('MAIN_TASK');
+  useEffect(() => {
+    const currentCompanyID = localStorage.getItem('companyID');
+    if (receiverType) {
+      let action;
+      let url;
+      switch (receiverType) {
+        case 'MAIN_TASK':
+          action = getFilteredProjectTasks({
+            projectId: receiverType._id || '',
+          });
+          break;
+      }
+
+      if (action) {
+        dispatch(action)
+          .then((action) => {
+            const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
+            let options;
+            switch (receiverType) {
+              case 'MAIN_TASK':
+                options = data.map((item: IProjectTaskAll) => ({
+                  value: item._id || item.id, // замените на нужное поле для 'PROJECT'
+                  label: `${item.projectTaskWO}}`, // замените на нужное поле для 'PROJECT'
+                }));
+                break;
+              case 'NRC':
+                options = data.map((item: IAdditionalTaskMTBCreate) => ({
+                  value: item._id || item.id, // замените на нужное поле для 'PROJECT'
+                  label: `${item.projectTaskWO}}`, // замените на нужное поле для 'PROJECT'
+                }));
+                break;
+
+              default:
+                options = data.map((item: any) => ({
+                  value: item.defaultField1, // замените на нужное поле для 'default'
+                  label: item.defaultField2, // замените на нужное поле для 'default'
+                }));
+            }
+            setSelectedTask(options);
+          })
+          .catch((error) => {
+            console.error('Ошибка при получении данных:', error);
+          });
+      }
+    }
+  }, [selectedProject, dispatch]);
+
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
+
   const tabs = [
     {
       content: (
@@ -170,6 +229,9 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 label={`${t(`PROJECT LINK`)}`}
                 width="sm"
                 options={options}
+                onChange={(value: any) => {
+                  setSelectedProject(value);
+                }}
               />
               <ProFormSelect
                 rules={[{ required: true }]}
@@ -177,7 +239,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 disabled
                 name="projectType"
                 label={t('PROJECT TYPE')}
-                width="lg"
+                width="sm"
                 tooltip={t('PROJECT TYPE')}
                 valueEnum={{
                   MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
@@ -190,6 +252,39 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
                 }}
               />
+
+              {selectedProject && (
+                <ProForm.Group>
+                  <ProFormRadio.Group
+                    name="receiverType"
+                    label={`${t('TASK TYPE')}`}
+                    options={[
+                      { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
+                      { value: 'NRC', label: 'NRC' },
+                    ]}
+                    initialValue="MAIN_TASK"
+                  />
+                  {receiverType === 'MAIN_TASK' && (
+                    <ProFormSelect
+                      mode="single"
+                      rules={[{ required: true }]}
+                      name="task"
+                      label={`${t(`TASK`)}`}
+                      width="sm"
+                      options={taskOptions}
+                    />
+                  )}
+                  {receiverType === 'NRC' && (
+                    <ProFormSelect
+                      mode="single"
+                      name="task"
+                      label={`${t(`TASK`)}`}
+                      width="sm"
+                      options={taskOptions}
+                    />
+                  )}
+                </ProForm.Group>
+              )}
             </ProFormGroup>
 
             <ProFormGroup direction="horizontal">
@@ -450,13 +545,13 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   </Title>
                   <ProFormDigit
                     name="qty"
-                    disabled={!isCreating}
+                    disabled
                     label={t('QTY')}
                     width="xs"
                   ></ProFormDigit>
                   <ProFormSelect
                     label={t('UNIT')}
-                    disabled={!isCreating}
+                    disabled
                     name="unit"
                     width="sm"
                     valueEnum={{
@@ -494,13 +589,13 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   </Title>
                   <ProFormDigit
                     name="qty"
-                    disabled={!isCreating}
+                    disabled
                     label={t('QTY')}
                     width="xs"
                   ></ProFormDigit>
                   <ProFormSelect
                     label={t('UNIT')}
-                    disabled={!isCreating}
+                    disabled
                     name="unit"
                     width="sm"
                     valueEnum={{
@@ -538,13 +633,13 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   </Title>
                   <ProFormDigit
                     name="qty"
-                    disabled={!isCreating}
+                    disabled
                     label={t('QTY')}
                     width="xs"
                   ></ProFormDigit>
                   <ProFormSelect
                     label={t('UNIT')}
-                    disabled={!isCreating}
+                    disabled
                     name="unit"
                     width="sm"
                     valueEnum={{
