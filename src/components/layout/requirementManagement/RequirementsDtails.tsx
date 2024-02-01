@@ -1,16 +1,10 @@
 import TabContent from '@/components/shared/Table/TabContent';
 
-import { Button, Col, Form, FormInstance, Row, Space } from 'antd';
+import { Button, Col, Form, FormInstance, Row, Space, message } from 'antd';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as originalUuidv4 } from 'uuid';
-import {
-  EditOutlined,
-  SettingOutlined,
-  PlusOutlined,
-  FilePdfOutlined,
-  FileExcelOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, SettingOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProForm,
@@ -23,6 +17,9 @@ import {
 } from '@ant-design/pro-components';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import {
+  createSingleRequirement,
+  fetchProjectById,
+  getFilteredAditionalTasks,
   getFilteredProjectTasks,
   getFilteredProjects,
 } from '@/utils/api/thunks';
@@ -31,6 +28,7 @@ import Title from 'antd/es/typography/Title';
 import { IProjectTask, IProjectTaskAll } from '@/models/IProjectTask';
 import { IAdditionalTask } from '@/models/IAdditionalTask';
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
+import { USER_ID } from '@/utils/api/http';
 type RequirementsDtailsType = {
   requierement: any;
   onEditRequirementsDtailsEdit: (data: any) => void;
@@ -54,6 +52,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   const { t } = useTranslation();
   const uuidv4: () => string = originalUuidv4;
   const [form] = Form.useForm();
+  const [formReq] = Form.useForm();
+  const [formBook] = Form.useForm();
   const [formAdd] = Form.useForm();
   const [options, setOptions] = useState<Option[]>([]);
   const [taskOptions, setTaskOptions] = useState<Option[]>([]);
@@ -88,7 +88,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
         );
         if (result.meta.requestStatus === 'fulfilled') {
           const options = result.payload.map((item: any) => ({
-            value: item.projectWO, // замените на нужное поле для 'PROJECT'
+            value: item._id, // замените на нужное поле для 'PROJECT'
             label: `${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
           }));
           setOptions(options);
@@ -98,7 +98,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
 
     fetchData();
   }, [dispatch]);
-  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [receiverType, setReceiverType] = useState<any>('MAIN_TASK');
   useEffect(() => {
@@ -109,8 +109,16 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
       switch (receiverType) {
         case 'MAIN_TASK':
           action = getFilteredProjectTasks({
-            projectId: receiverType._id || '',
+            projectId: selectedProjectId,
           });
+
+          break;
+        case 'NRC':
+          action = getFilteredAditionalTasks({
+            projectId: selectedProjectId,
+            companyID: currentCompanyID || '',
+          });
+
           break;
       }
 
@@ -123,13 +131,13 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
               case 'MAIN_TASK':
                 options = data.map((item: IProjectTaskAll) => ({
                   value: item._id || item.id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.projectTaskWO}}`, // замените на нужное поле для 'PROJECT'
+                  label: `${item.projectTaskWO}`, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
               case 'NRC':
                 options = data.map((item: IAdditionalTaskMTBCreate) => ({
                   value: item._id || item.id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.projectTaskWO}}`, // замените на нужное поле для 'PROJECT'
+                  label: `${item.additionalNumberId}`, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
 
@@ -139,23 +147,61 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   label: item.defaultField2, // замените на нужное поле для 'default'
                 }));
             }
-            setSelectedTask(options);
+            setTaskOptions(options);
           })
           .catch((error) => {
             console.error('Ошибка при получении данных:', error);
           });
       }
     }
-  }, [selectedProject, dispatch]);
+  }, [selectedProjectId, receiverType, dispatch]);
 
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [project, setProject] = useState<any>(null);
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  useEffect(() => {
+    if (requierement) {
+      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
+      form.setFields([
+        { name: 'projectNumber', value: requierement?.projectWO },
+        { name: 'partNumber', value: requierement?.PN },
+        { name: 'projectState', value: requierement?.status },
+
+        { name: 'department', value: requierement.department },
+        { name: 'description', value: requierement.nameOfMaterial },
+        { name: 'customer', value: requierement.customer },
+        { name: 'startDate', value: requierement.startDate },
+        { name: 'planedStartDate', value: requierement.plannedDate },
+        { name: 'unit', value: requierement?.unit },
+        { name: 'qty', value: requierement?.amout },
+        { name: 'partGroup', value: requierement?.group },
+        { name: 'partType', value: requierement?.type },
+        { name: 'task', value: requierement?.projectTaskWO },
+      ]);
+      formReq.setFields([
+        { name: 'qty', value: requierement?.issuedQuantity || 0 },
+        { name: 'unit', value: requierement?.unit },
+      ]);
+      formBook.setFields([
+        { name: 'qty', value: requierement?.requestQuantity || 0 },
+        { name: 'unit', value: requierement?.unit },
+      ]);
+
+      // onFilterTransferprojects(form.getFieldsValue());
+    }
+  }, [requierement]);
 
   const tabs = [
     {
       content: (
         <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
           <ProForm
+            onValuesChange={(changedValues, allValues) => {
+              // Handle changes in the form
+              if (changedValues.receiverType) {
+                setReceiverType(changedValues.receiverType);
+              }
+            }}
             submitter={{
               render: (_, dom) =>
                 isEditing || isCreating
@@ -184,56 +230,71 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
             disabled={!isEditing && !isCreating}
             layout="horizontal"
             // labelCol={{ span: 10 }}
-            onFinish={async (values) => {}}
+            onFinish={async (values) => {
+              const companyID = localStorage.getItem('companyID');
+              const result = await dispatch(
+                createSingleRequirement({
+                  status: values.projectState,
+                  companyID: companyID || '',
+                  createUserID: USER_ID || '',
+                  projectID: selectedProjectId || '',
+                  projectTaskID: selectedTask,
+                  quantity: values.qty,
+                  unit: values.unit,
+                  description: values.description || '',
+                  group: values.partGroup,
+                  type: values.partType,
+                  partNumber: values.partNumber || '',
+                  isNewAdded: false,
+                  createDate: new Date(),
+                  taskNumber: values.task || values.addTask,
+                  issuedQuantity: 0,
+                  plannedDate: values.planedStartDate || new Date(),
+                  registrationNumber: project?.acRegistrationNumber,
+                })
+              );
+              if (result.meta.requestStatus === 'fulfilled') {
+                onEditRequirementsDtailsEdit(result.payload);
+                message.success(t('SUCCESS'));
+                setIsEditing(false);
+                setIsCreating(false);
+              }
+            }}
           >
-            <ProFormSelect
-              // rules={[{ required: true }]}
-              showSearch
-              disabled
-              name="projectType"
-              label={t('REQUIREMENT TYPE')}
-              width="lg"
-              // valueEnum={{
-              //   MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
-              //   REPAIR_AC_PROJECT: t('REPAIR A/C '),
-              //   REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
-              //   SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
-              //   COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
-              //   PRODUCTION_PROJECT: t('PRODUCTION '),
-              //   PURCHASE_PROJECT: t('PURCHASE '),
-              //   MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
-              // }}
-              // onChange={(value: any) => setSelectedProjectType(value)}
-            />
             <ProFormSelect
               showSearch
               rules={[{ required: true }]}
               name="projectState"
               label={t('REQUIREMENT STATE')}
               width="sm"
-              initialValue={['DRAFT']}
+              initialValue={['PLANNED']}
               valueEnum={{
-                DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
-                OPEN: { text: t('OPEN'), status: 'Processing' },
-                inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
-                PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-                COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-                CLOSED: { text: t('CLOSED'), status: 'Success' },
-                CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+                // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+                planned: { text: t('PLANNED'), status: 'Default' },
+                open: { text: t('NEW'), status: 'Error' },
+                closed: { text: t('CLOSED'), status: 'Default' },
+                canceled: { text: t('CANCELLED'), status: 'Error' },
+                onOrder: { text: t('ISSUED'), status: 'Processing' },
               }}
             />
             <ProFormGroup>
               <ProFormSelect
                 rules={[{ required: true }]}
-                name="projectNumbers"
+                name="projectNumber"
                 label={`${t(`PROJECT LINK`)}`}
                 width="sm"
                 options={options}
-                onChange={(value: any) => {
-                  setSelectedProject(value);
+                onChange={async (value: any) => {
+                  setSelectedProjectId(value);
+                  const companyID = localStorage.getItem('companyID');
+                  const result = await dispatch(fetchProjectById(value));
+                  if (result.meta.requestStatus === 'fulfilled') {
+                    setProject(result.payload);
+                  }
                 }}
               />
-              <ProFormSelect
+              {/* <ProFormSelect
                 rules={[{ required: true }]}
                 showSearch
                 disabled
@@ -251,9 +312,9 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   PURCHASE_PROJECT: t('PURCHASE '),
                   MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
                 }}
-              />
+              /> */}
 
-              {selectedProject && (
+              {
                 <ProForm.Group>
                   <ProFormRadio.Group
                     name="receiverType"
@@ -266,25 +327,29 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   />
                   {receiverType === 'MAIN_TASK' && (
                     <ProFormSelect
+                      showSearch
                       mode="single"
-                      rules={[{ required: true }]}
                       name="task"
                       label={`${t(`TASK`)}`}
                       width="sm"
                       options={taskOptions}
+                      onChange={(value: any) => {
+                        setSelectedTask(value);
+                      }}
                     />
                   )}
                   {receiverType === 'NRC' && (
                     <ProFormSelect
+                      showSearch
                       mode="single"
-                      name="task"
+                      name="addTask"
                       label={`${t(`TASK`)}`}
                       width="sm"
                       options={taskOptions}
                     />
                   )}
                 </ProForm.Group>
-              )}
+              }
             </ProFormGroup>
 
             <ProFormGroup direction="horizontal">
@@ -314,7 +379,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
               <ProFormGroup>
                 <ProFormDigit
                   name="qty"
-                  disabled={!isCreating}
+                  disabled={!isCreating || !isEditing}
                   rules={[{ required: true }]}
                   label={t('QTY')}
                   width="xs"
@@ -324,7 +389,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 <ProFormSelect
                   rules={[{ required: true }]}
                   label={t('UNIT')}
-                  disabled={!isCreating}
+                  disabled
                   name="unit"
                   width="sm"
                   valueEnum={{
@@ -459,7 +524,10 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
         </div>
       ),
       title: `${t(
-        `${(requierement && requierement?.orderType) || t('NEW REQUIREMENT')}`
+        `${
+          (requierement && requierement?.partRequestNumber) ||
+          t('NEW REQUIREMENT')
+        }`
       )}`,
     },
   ];
@@ -533,6 +601,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
           {requierement && (
             <>
               <ProForm
+                form={formReq}
                 className="p-3 mx-4  bg-yellow-50 "
                 disabled
                 layout="horizontal"
@@ -577,6 +646,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 </ProFormGroup>
               </ProForm>
               <ProForm
+                form={formBook}
                 className="p-3 mx-4 rounded-s  bg-lime-100 "
                 disabled
                 layout="horizontal"

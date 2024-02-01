@@ -5,12 +5,12 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { DatePickerProps, Form, message } from 'antd';
+import { DatePickerProps, Form, FormInstance, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 
 import axios from 'axios';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   getFilteredProjects,
@@ -24,6 +24,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   onRequirementsSearch,
 }) => {
   const [form] = Form.useForm();
+  const formRef = useRef<FormInstance>(null);
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -41,6 +42,11 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     value: string;
     label: string;
   }
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
+    }
+  };
   const dispatch = useAppDispatch();
   const [receiverType, setReceiverType] = useState('PROJECT');
   const [options, setOptions] = useState<Option[]>([]); // указываем тип состояния явно
@@ -104,6 +110,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   }, [receiverType, dispatch]);
   return (
     <ProForm
+      formRef={formRef}
       onValuesChange={(changedValues, allValues) => {
         // Handle changes in the form
         if (changedValues.receiverType) {
@@ -207,6 +214,9 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           name="partRequestNumber"
           label={`${t('REQUIREMENT NBR')}`}
           width="lg"
+          fieldProps={{
+            onKeyPress: handleKeyPress,
+          }}
 
           //rules={[{ required: true }]}
         />

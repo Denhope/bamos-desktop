@@ -2,24 +2,24 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "Bamos",
+  appId: 'Bamos',
   asar: true,
   directories: {
-    output: "release/${version}",
+    output: 'release/${version}',
   },
-  files: ["dist-electron", "dist"],
+  files: ['dist-electron', 'dist'],
   mac: {
-    artifactName: "${productName}_${version}.${ext}",
-    target: ["dmg", "zip"],
+    artifactName: '${productName}_${version}.${ext}',
+    target: ['dmg', 'zip'],
   },
   win: {
     target: [
       {
-        target: "nsis",
-        arch: ["x64"],
+        target: 'nsis',
+        arch: ['x64'],
       },
     ],
-    artifactName: "${productName}_${version}.${ext}",
+    artifactName: '${productName}_${version}.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -28,8 +28,8 @@
     deleteAppDataOnUninstall: false,
   },
   publish: {
-    provider: "generic",
-    channel: "latest",
-    url: "https://github.com/Denhope/bamos-desktop/releases/download/v1.0.4/",
+    provider: 'generic',
+    channel: 'latest',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v1.0.5/',
   },
 }

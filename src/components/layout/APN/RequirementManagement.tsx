@@ -8,6 +8,7 @@ import { Content } from 'antd/es/layout/layout';
 import RequirementsFilterForm from '../requirementManagement/RequirementsFilterForm';
 import RequirementsDiscription from '../requirementManagement/RequirementsDiscription';
 import RequirementsDtails from '../requirementManagement/RequirementsDtails';
+import RequirementList from '../requirementManagement/RequirementList';
 interface RequirementManagementProps {}
 
 const RequirementManagement: FC<RequirementManagementProps> = () => {
@@ -44,6 +45,11 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
             }}
           >
             <RequirementsFilterForm onRequirementsSearch={setRequirements} />
+            <RequirementList
+              scroll={20}
+              onSelectedRequirements={setRequirement}
+              requirements={requirements}
+            ></RequirementList>
           </div>
         </div>
       </Sider>
@@ -55,7 +61,7 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
           ></RequirementsDiscription>
           <RequirementsDtails
             requierement={requirement}
-            onEditRequirementsDtailsEdit={function (data: any): void {}}
+            onEditRequirementsDtailsEdit={setRequirement}
           ></RequirementsDtails>
         </div>
       </Content>

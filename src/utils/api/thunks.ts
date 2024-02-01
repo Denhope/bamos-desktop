@@ -184,7 +184,7 @@ export const fetchProjectById = createAsyncThunk(
   'fetchAllProjectbyId',
   async (projectId: string, thunkAPI) => {
     try {
-      const response = await $authHost.get(`/projects/${projectId}`, {});
+      const response = await $authHost.get(`/projects/${projectId}`);
       return response.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
