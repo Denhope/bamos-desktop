@@ -8,16 +8,16 @@ import {
   ProFormGroup,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Form, FormInstance, Modal, Upload, message } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import SearchTable from "@/components/layout/SearchElemTable";
+} from '@ant-design/pro-components';
+import { Form, FormInstance, Modal, Upload, message } from 'antd';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import SearchTable from '@/components/layout/SearchElemTable';
 
-import UploadLink, { AcceptedFileTypes } from "@/components/shared/UploadLink";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IOrder } from "@/models/IOrder";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import UploadLink, { AcceptedFileTypes } from '@/components/shared/UploadLink';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IOrder } from '@/models/IOrder';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getFilteredShops,
   postNewReceivingItem,
@@ -26,9 +26,9 @@ import {
   createBookingItem,
   uploadFileServer,
   updateOrderByID,
-} from "@/utils/api/thunks";
-import PartNumberSearch from "../search/PartNumberSearch";
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import PartNumberSearch from '../search/PartNumberSearch';
+import { USER_ID } from '@/utils/api/http';
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
@@ -58,7 +58,7 @@ const Receiving: FC<ReceivingType> = ({
   const { t } = useTranslation();
   const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
@@ -80,7 +80,7 @@ const Receiving: FC<ReceivingType> = ({
     if (selectedStore) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: "store", value: selectedStore.APNNBR },
+        { name: 'store', value: selectedStore.APNNBR },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -90,16 +90,16 @@ const Receiving: FC<ReceivingType> = ({
   useEffect(() => {
     if (selectedLocation) {
       form.setFields([
-        { name: "location", value: selectedLocation.APNNBR },
+        { name: 'location', value: selectedLocation.APNNBR },
         {
-          name: "ownerShotName",
+          name: 'ownerShotName',
           value: selectedLocation?.ownerShotName,
         },
         {
-          name: "ownerDiscription",
+          name: 'ownerDiscription',
           value: selectedLocation?.ownerLongName,
         },
-        { name: "store", value: selectedStore.shopShortName },
+        { name: 'store', value: selectedStore.shopShortName },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -108,13 +108,13 @@ const Receiving: FC<ReceivingType> = ({
   useEffect(() => {
     if (openStoreViewer) {
       // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
           companyID: currentCompanyID,
         })
       ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.meta.requestStatus === 'fulfilled') {
           const transformedData = action.payload.map((item: any) => ({
             ...item,
             APNNBR: item.shopShortName, // Преобразуем shopShortName в APNNBR
@@ -129,19 +129,19 @@ const Receiving: FC<ReceivingType> = ({
   useEffect(() => {
     if (
       openLocationViewer &&
-      (selectedStore?.APNNBR || form.getFieldValue("store"))
+      (selectedStore?.APNNBR || form.getFieldValue('store'))
     ) {
       // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
           companyID: currentCompanyID,
           shopShortName:
             selectedStore?.APNNBR ||
-            form.getFieldValue("store").toUpperCase().trim(),
+            form.getFieldValue('store').toUpperCase().trim(),
         })
       ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.meta.requestStatus === 'fulfilled') {
           setSecectedStore(action.payload[0]);
           const transformedData = action.payload[0].locations.map(
             (item: any) => ({
@@ -162,22 +162,22 @@ const Receiving: FC<ReceivingType> = ({
     if (currentPart) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: "partNumber", value: currentPart?.PN },
-        { name: "description", value: currentPart?.nameOfMaterial },
-        { name: "serialNumber", value: currentPart?.serialNumber },
-        { name: "qty", value: currentPart.requestQuantity },
-        { name: "partGroup", value: currentPart.group },
-        { name: "partType", value: currentPart.type },
+        { name: 'partNumber', value: currentPart?.PN },
+        { name: 'description', value: currentPart?.nameOfMaterial },
+        { name: 'serialNumber', value: currentPart?.serialNumber },
+        { name: 'qty', value: currentPart.requestQuantity },
+        { name: 'partGroup', value: currentPart.group },
+        { name: 'partType', value: currentPart.type },
 
         {
-          name: "backorder",
+          name: 'backorder',
           value: currentPart?.backorder || currentPart.quantity,
         },
 
-        { name: "unit", value: currentPart.unit },
-        { name: "addPartNumber", value: currentPart?.PN },
-        { name: "addDescription", value: currentPart?.nameOfMaterial },
-        { name: "addUnit", value: currentPart.addUnit },
+        { name: 'unit', value: currentPart.unit },
+        { name: 'addPartNumber', value: currentPart?.PN },
+        { name: 'addDescription', value: currentPart?.nameOfMaterial },
+        { name: 'addUnit', value: currentPart.addUnit },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -212,9 +212,9 @@ const Receiving: FC<ReceivingType> = ({
           !currentReceiving ||
           (currentReceiving && Object.keys(currentReceiving).length === 0)
         ) {
-          message.error("Some fields are empty");
+          message.error('Some fields are empty');
         } else {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
+          const currentCompanyID = localStorage.getItem('companyID') || '';
 
           const result = dispatch(
             postNewStoreItem({
@@ -234,8 +234,8 @@ const Receiving: FC<ReceivingType> = ({
               CURRENCY: currentPart?.currency,
               COMPANY_ID: currentCompanyID,
               SUPPLIER_BATCH_NUMBER: values.batch,
-              SUPPLIES_CODE: currentReceiving?.SUPPLIES_CODE || "",
-              SUPPLIES_LOCATION: currentReceiving?.SUPPLIES_LOCATION || "",
+              SUPPLIES_CODE: currentReceiving?.SUPPLIES_CODE || '',
+              SUPPLIES_LOCATION: currentReceiving?.SUPPLIES_LOCATION || '',
               SUPPLIER_SHORT_NAME: currentReceiving?.SUPPLIER_SHORT_NAME,
               ADD_UNIT_OF_MEASURE: values?.addUnit,
               ADD_NAME_OF_MATERIAL: values?.addDescription,
@@ -245,30 +245,30 @@ const Receiving: FC<ReceivingType> = ({
               OWNER_LONG_NAME: values.ownerDiscription,
               PRODUCT_EXPIRATION_DATE: values.expiryDate,
               WAREHOUSE_RECEIVED_AT:
-                currentReceiving?.WAREHOUSE_RECEIVED_AT || "",
+                currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
               SERIAL_NUMBER: values.serialNumber,
               APPROVED_CERT: values.certificateNumber,
-              AWB_REFERENCE: currentReceiving?.awbReference || "",
-              AWB_TYPE: currentReceiving?.awbType || "",
-              AWB_NUMBER: currentReceiving?.awbNumber || "",
-              AWB_DATE: currentReceiving?.receivingDate || "",
+              AWB_REFERENCE: currentReceiving?.awbReference || '',
+              AWB_TYPE: currentReceiving?.awbType || '',
+              AWB_NUMBER: currentReceiving?.awbNumber || '',
+              AWB_DATE: currentReceiving?.receivingDate || '',
               RECEIVING_NUMBER: currentReceiving?.receivingNumber,
               CERTIFICATE_NUMBER: values?.certificateNumber,
               CERTIFICATE_TYPE: values?.certificateType,
             })
           );
-          if ((await result).meta.requestStatus === "fulfilled") {
+          if ((await result).meta.requestStatus === 'fulfilled') {
             dispatch(
               createBookingItem({
                 companyID: currentCompanyID,
                 data: {
                   companyID: currentCompanyID,
-                  userSing: localStorage.getItem("singNumber") || "",
-                  userID: USER_ID || "",
+                  userSing: localStorage.getItem('singNumber') || '',
+                  userID: USER_ID || '',
                   createDate: new Date(),
                   partNumber: values.partNumber,
-                  station: currentReceiving?.WAREHOUSE_RECEIVED_AT || "",
-                  voucherModel: "RECEIVING_GOODS",
+                  station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
+                  voucherModel: 'RECEIVING_GOODS',
                   location: values.location,
                   orderNumber: currenOrder?.orderNumber,
                   price: currentPart?.price,
@@ -287,22 +287,22 @@ const Receiving: FC<ReceivingType> = ({
 
             setAddedMaterialItem((await result).payload);
             onReceivingPart && onReceivingPart([(await result).payload]);
-            message.success("SUCCESS");
+            message.success('SUCCESS');
 
             const resultUp = await dispatch(
               postNewReceivingItem({
                 ...(await result).payload,
-                companyID: currentCompanyID || "",
+                companyID: currentCompanyID || '',
                 createDate: new Date(),
                 createUserID: USER_ID,
-                state: "RECEIVED",
+                state: 'RECEIVED',
                 ORDER_TYPE: currenOrder && currenOrder?.orderType,
                 ORDER_ID: (currenOrder && currenOrder?.id) || currenOrder?._id,
                 MATERIAL_STORE_ID:
                   (await result).payload?._id || (await result).payload?.id,
               })
             );
-            if (resultUp.meta.requestStatus === "fulfilled") {
+            if (resultUp.meta.requestStatus === 'fulfilled') {
               setisUpload(true);
               if (currentPart && currenOrder?.parts) {
                 const updatedParts = currenOrder?.parts.map((part) => {
@@ -311,7 +311,7 @@ const Receiving: FC<ReceivingType> = ({
                       Number(part.backorder) -
                       Number(resultUp.payload.QUANTITY);
                     const updatedState =
-                      updatedBarcorder > 0 ? "PARTLY_RECEIVED" : "RECEIVED";
+                      updatedBarcorder > 0 ? 'PARTLY_RECEIVED' : 'RECEIVED';
                     const updatedReceivings = part.RECEIVINGS
                       ? [
                           ...part.RECEIVINGS,
@@ -342,44 +342,44 @@ const Receiving: FC<ReceivingType> = ({
                 });
                 let stateNew;
                 if (
-                  updatedParts.some((part) => part.state === "PARTLY_RECEIVED")
+                  updatedParts.some((part) => part.state === 'PARTLY_RECEIVED')
                 ) {
-                  stateNew = "PARTLY_RECEIVED";
+                  stateNew = 'PARTLY_RECEIVED';
                 } else if (
-                  updatedParts.every((part) => part.state === "CANCELLED")
+                  updatedParts.every((part) => part.state === 'CANCELLED')
                 ) {
-                  stateNew = "CANCELLED";
+                  stateNew = 'CANCELLED';
                 } else if (
-                  updatedParts.every((part) => part.state === "RECEIVED")
+                  updatedParts.every((part) => part.state === 'RECEIVED')
                 ) {
-                  stateNew = "RECEIVED";
+                  stateNew = 'RECEIVED';
                 } else if (
                   updatedParts.every(
-                    (part) => part.state === "PARTLY_CANCELLED"
+                    (part) => part.state === 'PARTLY_CANCELLED'
                   )
                 ) {
-                  stateNew = "PARTLY_CANCELLED";
+                  stateNew = 'PARTLY_CANCELLED';
                 } else if (
-                  updatedParts.some((part) => part.state === "PARTLY_CANCELLED")
+                  updatedParts.some((part) => part.state === 'PARTLY_CANCELLED')
                 ) {
-                  stateNew = "PARTLY_CANCELLED";
+                  stateNew = 'PARTLY_CANCELLED';
                 }
                 const result = await dispatch(
                   updateOrderByID({
                     id: currenOrder._id,
-                    companyID: currentCompanyID || "",
+                    companyID: currentCompanyID || '',
                     parts: updatedParts,
                     state: stateNew,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   onUpdateOrder(result.payload);
                   // setOpenLabelsPrint(true);
                 }
               }
             }
           } else {
-            message.error("Error");
+            message.error('Error');
           }
         }
       }}
@@ -388,9 +388,9 @@ const Receiving: FC<ReceivingType> = ({
       layout="horizontal"
     >
       <Modal
-        title={t("PRINT LABEL")}
+        title={t('PRINT LABEL')}
         open={labelsOpenPrint}
-        width={"30%"}
+        width={'30%'}
         onCancel={() => setOpenLabelsPrint(false)}
         footer={null}
       >
@@ -403,34 +403,34 @@ const Receiving: FC<ReceivingType> = ({
             <ProFormDigit
               name="qty"
               rules={[{ required: true }]}
-              label={t("QTY/BACKORDER")}
+              label={t('QTY/BACKORDER')}
               width="xs"
-              tooltip={t("QTY")}
+              tooltip={t('QTY')}
             ></ProFormDigit>
             /<ProFormDigit disabled name="backorder" width="xs"></ProFormDigit>
             <ProFormSelect
               rules={[{ required: true }]}
-              label={t("UNIT")}
+              label={t('UNIT')}
               name="unit"
               width="sm"
               valueEnum={{
-                EA: `EA/${t("EA/EACH").toUpperCase()}`,
-                M: `M/${t("Meters").toUpperCase()}`,
-                ML: `ML/${t("Milliliters").toUpperCase()}`,
-                SI: `SI/${t("Sq Inch").toUpperCase()}`,
-                CM: `CM/${t("Centimeters").toUpperCase()}`,
-                GM: `GM/${t("Grams").toUpperCase()}`,
-                YD: `YD/${t("Yards").toUpperCase()}`,
-                FT: `FT/${t("Feet").toUpperCase()}`,
-                SC: `SC/${t("Sq Centimeters").toUpperCase()}`,
-                IN: `IN/${t("Inch").toUpperCase()}`,
-                SH: `SH/${t("Sheet").toUpperCase()}`,
-                SM: `SM/${t("Sq Meters").toUpperCase()}`,
-                RL: `RL/${t("Roll").toUpperCase()}`,
-                KT: `KT/${t("Kit").toUpperCase()}`,
-                LI: `LI/${t("Liters").toUpperCase()}`,
-                KG: `KG/${t("Kilograms").toUpperCase()}`,
-                JR: `JR/${t("Jar/Bottle").toUpperCase()}`,
+                EA: `EA/${t('EACH').toUpperCase()}`,
+                M: `M/${t('Meters').toUpperCase()}`,
+                ML: `ML/${t('Milliliters').toUpperCase()}`,
+                SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                CM: `CM/${t('Centimeters').toUpperCase()}`,
+                GM: `GM/${t('Grams').toUpperCase()}`,
+                YD: `YD/${t('Yards').toUpperCase()}`,
+                FT: `FT/${t('Feet').toUpperCase()}`,
+                SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                IN: `IN/${t('Inch').toUpperCase()}`,
+                SH: `SH/${t('Sheet').toUpperCase()}`,
+                SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                RL: `RL/${t('Roll').toUpperCase()}`,
+                KT: `KT/${t('Kit').toUpperCase()}`,
+                LI: `LI/${t('Liters').toUpperCase()}`,
+                KG: `KG/${t('Kilograms').toUpperCase()}`,
+                JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
               }}
             ></ProFormSelect>
             <ProFormCheckbox
@@ -441,33 +441,33 @@ const Receiving: FC<ReceivingType> = ({
                 },
               }}
             >
-              {t("PRINT LABELS")}
+              {t('PRINT LABELS')}
             </ProFormCheckbox>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
               rules={[{ required: true }]}
               name="partGroup"
-              label={`${t("PART SPESIAL GROUP")}`}
+              label={`${t('PART SPESIAL GROUP')}`}
               width="sm"
-              tooltip={`${t("SELECT SPESIAL GROUP")}`}
+              tooltip={`${t('SELECT SPESIAL GROUP')}`}
               options={[
-                { value: "CONS", label: t("CONS") },
-                { value: "TOOL", label: t("TOOL") },
-                { value: "CHEM", label: t("CHEM") },
-                { value: "ROT", label: t("ROT") },
-                { value: "GSE", label: t("GSE") },
+                { value: 'CONS', label: t('CONS') },
+                { value: 'TOOL', label: t('TOOL') },
+                { value: 'CHEM', label: t('CHEM') },
+                { value: 'ROT', label: t('ROT') },
+                { value: 'GSE', label: t('GSE') },
               ]}
             />
             <ProFormSelect
               rules={[{ required: true }]}
               name="partType"
-              label={`${t("PART TYPE")}`}
+              label={`${t('PART TYPE')}`}
               width="sm"
-              tooltip={`${t("SELECT PART TYPE")}`}
+              tooltip={`${t('SELECT PART TYPE')}`}
               options={[
-                { value: "ROTABLE", label: t("ROTABLE") },
-                { value: "CONSUMABLE", label: t("CONSUMABLE") },
+                { value: 'ROTABLE', label: t('ROTABLE') },
+                { value: 'CONSUMABLE', label: t('CONSUMABLE') },
               ]}
             />
           </ProFormGroup>
@@ -476,9 +476,9 @@ const Receiving: FC<ReceivingType> = ({
               <ProFormText
                 rules={[{ required: true }]}
                 name="partNumber"
-                label={t("PART NUMBER")}
+                label={t('PART NUMBER')}
                 width="sm"
-                tooltip={t("PART NUMBER")}
+                tooltip={t('PART NUMBER')}
                 fieldProps={{
                   onDoubleClick: () => {
                     setOpenStoreFind(true);
@@ -489,9 +489,9 @@ const Receiving: FC<ReceivingType> = ({
               <ProFormText
                 rules={[{ required: true }]}
                 name="description"
-                label={t("DESCRIPTION")}
+                label={t('DESCRIPTION')}
                 width="sm"
-                tooltip={t("DESCRIPTION")}
+                tooltip={t('DESCRIPTION')}
               ></ProFormText>
             </ProFormGroup>
           </ProFormGroup>
@@ -499,45 +499,45 @@ const Receiving: FC<ReceivingType> = ({
           <ProFormGroup>
             <ProFormText
               name="batch"
-              label={t("BATCH NUMBER")}
+              label={t('BATCH NUMBER')}
               width="sm"
-              tooltip={t("BATCH NUMBER")}
+              tooltip={t('BATCH NUMBER')}
             ></ProFormText>
             <ProFormText
               name="serialNumber"
-              label={t("SERIAL NUMBER")}
+              label={t('SERIAL NUMBER')}
               width="sm"
-              tooltip={t("SERIAL NUMBER")}
+              tooltip={t('SERIAL NUMBER')}
             ></ProFormText>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
               rules={[{ required: true }]}
               name="certificateType"
-              label={`${t("CERTIFICATE TYPE")}`}
+              label={`${t('CERTIFICATE TYPE')}`}
               width="sm"
               options={[
-                { value: "B1", label: t("BCAA SRC FORM 2.2.2 V2") },
-                { value: "B2", label: t("BCAA FORM (CONTRACTED AMO)") },
-                { value: "C1", label: t("CERTIFICATE OF CONFORMANCE") },
+                { value: 'B1', label: t('BCAA SRC FORM 2.2.2 V2') },
+                { value: 'B2', label: t('BCAA FORM (CONTRACTED AMO)') },
+                { value: 'C1', label: t('CERTIFICATE OF CONFORMANCE') },
                 {
-                  value: "CAAC",
-                  label: t("CHINA AUTHORIZED RELEASE CERTIFICATE"),
+                  value: 'CAAC',
+                  label: t('CHINA AUTHORIZED RELEASE CERTIFICATE'),
                 },
-                { value: "E1", label: t("EASA-145 APPROVAL") },
-                { value: "F100", label: t("ANAC BRAZIL FORM F-100-01") },
-                { value: "JAA", label: t(" JAA FORM ONE") },
-                { value: "T1", label: t("TCCA FORM ONE CANADA") },
-                { value: "UK1", label: t("CAA UK FORM 1") },
-                { value: "Ф-1", label: t("ТАЛОН ГОДНОСТИ КОМПОНЕНТА ФАВТ") },
+                { value: 'E1', label: t('EASA-145 APPROVAL') },
+                { value: 'F100', label: t('ANAC BRAZIL FORM F-100-01') },
+                { value: 'JAA', label: t(' JAA FORM ONE') },
+                { value: 'T1', label: t('TCCA FORM ONE CANADA') },
+                { value: 'UK1', label: t('CAA UK FORM 1') },
+                { value: 'Ф-1', label: t('ТАЛОН ГОДНОСТИ КОМПОНЕНТА ФАВТ') },
               ]}
             />
             <ProFormText
               rules={[{ required: true }]}
               name="certificateNumber"
-              label={t("CERTIFICATE NUMBER")}
+              label={t('CERTIFICATE NUMBER')}
               width="sm"
-              tooltip={t("CERTIFICATE NUMBER")}
+              tooltip={t('CERTIFICATE NUMBER')}
             ></ProFormText>
             <UploadLink
               isUploadTrue={isUpload}
@@ -550,10 +550,10 @@ const Receiving: FC<ReceivingType> = ({
                     : [response];
 
                   const currentCompanyID =
-                    localStorage.getItem("companyID") || "";
+                    localStorage.getItem('companyID') || '';
                   const result = await dispatch(
                     updateManyMaterialItems({
-                      companyID: currentCompanyID || "",
+                      companyID: currentCompanyID || '',
                       ids: [addedMaterialItem.id],
                       FILES: updatedFiles,
                     })
@@ -568,20 +568,20 @@ const Receiving: FC<ReceivingType> = ({
               showSearch
               rules={[{ required: true }]}
               name="condition"
-              label={t("CONDITION")}
+              label={t('CONDITION')}
               width="sm"
-              tooltip={t("CONDITION")}
+              tooltip={t('CONDITION')}
               valueEnum={{
-                "/NEW": t("NEW"),
-                "/INSPECTED": t("INSPECTED"),
-                "/REPAIRED": t("REPAIRED / ТЕКУЩИЙ РЕМОНТ"),
-                "/SERVICABLE": t("SERVICABLE / ИСПРАВНО"),
-                "/UNSERVICABLE": t("UNSERVICABLE / НЕИСПРАВНО"),
+                '/NEW': t('NEW'),
+                '/INSPECTED': t('INSPECTED'),
+                '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
+                '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
+                '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),
               }}
             />
             <ProFormDatePicker
               name="expiryDate"
-              label={t("EXPIRY DATE")}
+              label={t('EXPIRY DATE')}
               width="xs"
             ></ProFormDatePicker>
           </ProFormGroup>
@@ -590,9 +590,9 @@ const Receiving: FC<ReceivingType> = ({
             <ProFormText
               name="store"
               rules={[{ required: true }]}
-              label={`${t("STORE")}`}
+              label={`${t('STORE')}`}
               width="xs"
-              tooltip={`${t("STORE CODE")}`}
+              tooltip={`${t('STORE CODE')}`}
               //rules={[{ required: true }]}
               fieldProps={{
                 onDoubleClick: () => setOpenStoreViewer(true),
@@ -608,9 +608,9 @@ const Receiving: FC<ReceivingType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="location"
-              label={`${t("RECEIVED LOCATION")}`}
+              label={`${t('RECEIVED LOCATION')}`}
               width="sm"
-              tooltip={`${t("LOCATION")}`}
+              tooltip={`${t('LOCATION')}`}
               fieldProps={{
                 onDoubleClick: () => setOpenLocationViewer(true),
                 // onKeyPress: handleKeyPress,
@@ -626,12 +626,12 @@ const Receiving: FC<ReceivingType> = ({
             <ProFormText
               name="ownerShotName"
               rules={[{ required: true }]}
-              label={t("OWNER")}
+              label={t('OWNER')}
               width="sm"
-              tooltip={t("OWNER")}
+              tooltip={t('OWNER')}
             ></ProFormText>
             <ProFormText
-              label={t("OWNER DESCRIPTION")}
+              label={t('OWNER DESCRIPTION')}
               name="ownerDiscription"
               width="sm"
             ></ProFormText>
@@ -640,55 +640,55 @@ const Receiving: FC<ReceivingType> = ({
 
         <ProFormGroup
           style={{
-            background: "#F0F0F0",
+            background: '#F0F0F0',
             padding: 10,
             borderRadius: 5,
           }}
-          size={"large"}
+          size={'large'}
           direction="vertical"
         >
           <ProFormText
             rules={[{ required: true }]}
             name="addPartNumber"
-            label={t("1C/PART NUMBER")}
+            label={t('1C/PART NUMBER')}
             width="sm"
-            tooltip={t("PART NUMBER")}
+            tooltip={t('PART NUMBER')}
           ></ProFormText>
           <ProFormText
             rules={[{ required: true }]}
             name="addDescription"
-            label={t("1C/DESCRIPTION")}
+            label={t('1C/DESCRIPTION')}
             width="sm"
-            tooltip={t("DESCRIPTION")}
+            tooltip={t('DESCRIPTION')}
           ></ProFormText>
           <ProFormDigit
             name="addQty"
             rules={[{ required: true }]}
-            label={t("1C/QUANTITY")}
+            label={t('1C/QUANTITY')}
             width="xs"
-            tooltip={t("QTY")}
+            tooltip={t('QTY')}
           ></ProFormDigit>
           <ProFormSelect
             showSearch
             rules={[{ required: true }]}
-            label={t("ADD UNIT")}
+            label={t('ADD UNIT')}
             name="addUnit"
             width="sm"
             valueEnum={{
-              шт: `${t("шт").toUpperCase()}`,
-              м: `${t("м").toUpperCase()}`,
-              мл: `${t("мл").toUpperCase()}`,
-              дюйм2: `${t("дюйм2").toUpperCase()}`,
-              см: `${t("см").toUpperCase()}`,
-              г: `${t("г").toUpperCase()}`,
-              ярд: `${t("ярд").toUpperCase()}`,
-              фут: `${t("фут").toUpperCase()}`,
-              см2: `${t("см2").toUpperCase()}`,
-              дюйм: `${t("дюйм").toUpperCase()}`,
-              м2: `${t("м2").toUpperCase()}`,
-              рул: `${t("рул").toUpperCase()}`,
-              л: `${t("л").toUpperCase()}`,
-              кг: `${t("кг").toUpperCase()}`,
+              шт: `${t('шт').toUpperCase()}`,
+              м: `${t('м').toUpperCase()}`,
+              мл: `${t('мл').toUpperCase()}`,
+              дюйм2: `${t('дюйм2').toUpperCase()}`,
+              см: `${t('см').toUpperCase()}`,
+              г: `${t('г').toUpperCase()}`,
+              ярд: `${t('ярд').toUpperCase()}`,
+              фут: `${t('фут').toUpperCase()}`,
+              см2: `${t('см2').toUpperCase()}`,
+              дюйм: `${t('дюйм').toUpperCase()}`,
+              м2: `${t('м2').toUpperCase()}`,
+              рул: `${t('рул').toUpperCase()}`,
+              л: `${t('л').toUpperCase()}`,
+              кг: `${t('кг').toUpperCase()}`,
             }}
           ></ProFormSelect>
         </ProFormGroup>
@@ -699,9 +699,9 @@ const Receiving: FC<ReceivingType> = ({
           setSecectedStore(selectedSingleStore);
           setOpenStoreViewer(false);
         }}
-        title={`${t("STORE SEARCH")}`}
+        title={`${t('STORE SEARCH')}`}
         open={openStoreViewer}
-        width={"35vw"}
+        width={'35vw'}
         onOpenChange={setOpenStoreViewer}
       >
         <ProCard
@@ -727,9 +727,9 @@ const Receiving: FC<ReceivingType> = ({
           setSecectedLocation(selectedSingleLocation);
           setOpenLocationViewer(false);
         }}
-        title={`${t("LOCATION SEARCH")}`}
+        title={`${t('LOCATION SEARCH')}`}
         open={openLocationViewer}
-        width={"35vw"}
+        width={'35vw'}
         onOpenChange={setOpenLocationViewer}
       >
         <ProCard
@@ -752,7 +752,7 @@ const Receiving: FC<ReceivingType> = ({
       </ModalForm>
       <ModalForm
         // title={`Search on Store`}
-        width={"70vw"}
+        width={'70vw'}
         // placement={'bottom'}
         open={openStoreFindModal}
         // submitter={false}
@@ -762,50 +762,50 @@ const Receiving: FC<ReceivingType> = ({
           // handleSelect(selectedSinglePN);
 
           form.setFields([
-            { name: "partNumber", value: selectedSinglePN.PART_NUMBER },
+            { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
           ]);
         }}
       >
         <PartNumberSearch
-          initialParams={{ partNumber: "" }}
+          initialParams={{ partNumber: '' }}
           scroll={45}
           onRowClick={function (record: any, rowIndex?: any): void {
             setOpenStoreFind(false);
 
-            form.setFields([{ name: "partNumber", value: record.PART_NUMBER }]);
+            form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
             form.setFields([
-              { name: "description", value: record.DESCRIPTION },
+              { name: 'description', value: record.DESCRIPTION },
             ]);
-            form.setFields([{ name: "unit", value: record.UNIT_OF_MEASURE }]);
+            form.setFields([{ name: 'unit', value: record.UNIT_OF_MEASURE }]);
             form.setFields([
-              { name: "addPartNumber", value: record.PART_NUMBER },
+              { name: 'addPartNumber', value: record.PART_NUMBER },
             ]);
             form.setFields([
-              { name: "addDescription", value: record.DESCRIPTION },
+              { name: 'addDescription', value: record.DESCRIPTION },
             ]);
 
-            form.setFields([{ name: "partGroup", value: record.GROUP }]);
-            form.setFields([{ name: "partType", value: record.TYPE }]);
+            form.setFields([{ name: 'partGroup', value: record.GROUP }]);
+            form.setFields([{ name: 'partType', value: record.TYPE }]);
           }}
           isLoading={false}
           onRowSingleClick={function (record: any, rowIndex?: any): void {
             setSecectedSinglePN(record);
-            form.setFields([{ name: "partNumber", value: record.PART_NUMBER }]);
+            form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
             form.setFields([
-              { name: "description", value: record.DESCRIPTION },
+              { name: 'description', value: record.DESCRIPTION },
             ]);
-            form.setFields([{ name: "unit", value: record.UNIT_OF_MEASURE }]);
+            form.setFields([{ name: 'unit', value: record.UNIT_OF_MEASURE }]);
             form.setFields([
-              { name: "addPartNumber", value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: "addDescription", value: record.DESCRIPTION },
+              { name: 'addPartNumber', value: record.PART_NUMBER },
             ]);
             form.setFields([
-              { name: "addUnit", value: record.UNIT_OF_MEASURE },
+              { name: 'addDescription', value: record.DESCRIPTION },
             ]);
-            form.setFields([{ name: "partGroup", value: record.GROUP }]);
-            form.setFields([{ name: "partType", value: record.TYPE }]);
+            form.setFields([
+              { name: 'addUnit', value: record.UNIT_OF_MEASURE },
+            ]);
+            form.setFields([{ name: 'partGroup', value: record.GROUP }]);
+            form.setFields([{ name: 'partType', value: record.TYPE }]);
           }}
         />
       </ModalForm>

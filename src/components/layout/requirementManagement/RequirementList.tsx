@@ -108,8 +108,9 @@ const RequirementList: FC<showProjectListType> = ({
     },
   ];
   return (
-    <div className="flex w-[100%] my-0 mx-auto flex-col  h-[78vh] relative overflow-hidden">
+    <div className="flex w-[100%] my-3 mx-auto flex-col  h-[78vh] relative overflow-hidden">
       <EditableTable
+        isOptionsNone={false}
         showSearchInput={false}
         data={requirements}
         initialColumns={initialColumns}

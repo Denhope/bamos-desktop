@@ -400,7 +400,7 @@ const ShelfExpiry: FC = () => {
                 );
               }}
               onSave={function (rowKey: any, data: any, row: any): void {}}
-              yScroll={62}
+              yScroll={60}
               externalReload={function () {}}
             />
           </div>

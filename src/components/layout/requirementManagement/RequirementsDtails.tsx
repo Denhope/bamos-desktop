@@ -23,12 +23,13 @@ import {
   getFilteredProjectTasks,
   getFilteredProjects,
 } from '@/utils/api/thunks';
-import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+
 import Title from 'antd/es/typography/Title';
-import { IProjectTask, IProjectTaskAll } from '@/models/IProjectTask';
-import { IAdditionalTask } from '@/models/IAdditionalTask';
+import { IProjectTaskAll } from '@/models/IProjectTask';
+
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 import { USER_ID } from '@/utils/api/http';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 type RequirementsDtailsType = {
   requierement: any;
   onEditRequirementsDtailsEdit: (data: any) => void;
@@ -46,11 +47,11 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   >(null);
   const [isEditing, setIsEditing] = useState(true);
   const [isEditingView, setIsEditingView] = useState(false);
-  const [isCreateView, setIsCreateView] = useState(false);
+
   const [isCreating, setIsCreating] = useState(false);
 
   const { t } = useTranslation();
-  const uuidv4: () => string = originalUuidv4;
+
   const [form] = Form.useForm();
   const [formReq] = Form.useForm();
   const [formBook] = Form.useForm();
@@ -156,11 +157,13 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
     }
   }, [selectedProjectId, receiverType, dispatch]);
 
-  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [project, setProject] = useState<any>(null);
-  const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [initialFormPN, setinitialFormPN] = useState<any>('');
+
   useEffect(() => {
     if (requierement) {
+      setinitialFormPN(requierement.PN);
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
         { name: 'projectNumber', value: requierement?.projectWO },
@@ -194,8 +197,12 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   const tabs = [
     {
       content: (
-        <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
+        <div className="h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
           <ProForm
+            onReset={() => {
+              setIsResetForm(true);
+              setinitialFormPN('');
+            }}
             onValuesChange={(changedValues, allValues) => {
               // Handle changes in the form
               if (changedValues.receiverType) {
@@ -267,7 +274,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
               name="projectState"
               label={t('REQUIREMENT STATE')}
               width="sm"
-              initialValue={['PLANNED']}
+              // initialValue={planned}
               valueEnum={{
                 // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
                 //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
@@ -294,25 +301,6 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   }
                 }}
               />
-              {/* <ProFormSelect
-                rules={[{ required: true }]}
-                showSearch
-                disabled
-                name="projectType"
-                label={t('PROJECT TYPE')}
-                width="sm"
-                tooltip={t('PROJECT TYPE')}
-                valueEnum={{
-                  MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
-                  REPAIR_AC_PROJECT: t('REPAIR A/C '),
-                  REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
-                  SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
-                  COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
-                  PRODUCTION_PROJECT: t('PRODUCTION '),
-                  PURCHASE_PROJECT: t('PURCHASE '),
-                  MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
-                }}
-              /> */}
 
               {
                 <ProForm.Group>
@@ -354,19 +342,32 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
 
             <ProFormGroup direction="horizontal">
               <ProFormGroup>
-                <ProFormText
+                <ContextMenuPNSearchSelect
+                  isResetForm={isResetForm}
                   rules={[{ required: true }]}
-                  name="partNumber"
-                  label={t('PART NUMBER')}
-                  width="sm"
-                  tooltip={t('PART NUMBER')}
-                  fieldProps={{
-                    onDoubleClick: () => {
-                      setOpenStoreFind(true);
-                    },
-                    onKeyPress: handleKeyPress,
+                  onSelectedPN={function (PN: any): void {
+                    form.setFields([
+                      { name: 'partNumber', value: PN.PART_NUMBER },
+                    ]);
+                    form.setFields([
+                      { name: 'description', value: PN.DESCRIPTION },
+                    ]);
+                    form.setFields([
+                      { name: 'unit', value: PN.UNIT_OF_MEASURE },
+                    ]);
+                    form.setFields([
+                      { name: 'addPartNumber', value: PN.PART_NUMBER },
+                    ]);
+                    form.setFields([
+                      { name: 'addDescription', value: PN.DESCRIPTION },
+                    ]);
+
+                    form.setFields([{ name: 'partGroup', value: PN.GROUP }]);
+                    form.setFields([{ name: 'partType', value: PN.TYPE }]);
                   }}
-                ></ProFormText>
+                  name={'partNumber'}
+                  initialFormPN={initialFormPN}
+                ></ContextMenuPNSearchSelect>
                 <ProFormText
                   disabled
                   rules={[{ required: true }]}
@@ -393,7 +394,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   name="unit"
                   width="sm"
                   valueEnum={{
-                    EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                    EA: `EA/${t('EACH').toUpperCase()}`,
                     M: `M/${t('Meters').toUpperCase()}`,
                     ML: `ML/${t('Milliliters').toUpperCase()}`,
                     SI: `SI/${t('Sq Inch').toUpperCase()}`,
@@ -450,76 +451,6 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 width="sm"
               ></ProFormDatePicker>
             </ProFormGroup>
-            <ModalForm
-              // title={`Search on Store`}
-              width={'70vw'}
-              // placement={'bottom'}
-              open={openStoreFindModal}
-              // submitter={false}
-              onOpenChange={setOpenStoreFind}
-              onFinish={async function (
-                record: any,
-                rowIndex?: any
-              ): Promise<void> {
-                setOpenStoreFind(false);
-                // handleSelect(selectedSinglePN);
-
-                form.setFields([
-                  { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
-                ]);
-              }}
-            >
-              <PartNumberSearch
-                initialParams={{ partNumber: '' }}
-                scroll={45}
-                onRowClick={function (record: any, rowIndex?: any): void {
-                  setOpenStoreFind(false);
-
-                  form.setFields([
-                    { name: 'partNumber', value: record.PART_NUMBER },
-                  ]);
-                  form.setFields([
-                    { name: 'description', value: record.DESCRIPTION },
-                  ]);
-                  form.setFields([
-                    { name: 'unit', value: record.UNIT_OF_MEASURE },
-                  ]);
-                  form.setFields([
-                    { name: 'addPartNumber', value: record.PART_NUMBER },
-                  ]);
-                  form.setFields([
-                    { name: 'addDescription', value: record.DESCRIPTION },
-                  ]);
-
-                  form.setFields([{ name: 'partGroup', value: record.GROUP }]);
-                  form.setFields([{ name: 'partType', value: record.TYPE }]);
-                }}
-                isLoading={false}
-                onRowSingleClick={function (record: any, rowIndex?: any): void {
-                  setSecectedSinglePN(record);
-                  form.setFields([
-                    { name: 'partNumber', value: record.PART_NUMBER },
-                  ]);
-                  form.setFields([
-                    { name: 'description', value: record.DESCRIPTION },
-                  ]);
-                  form.setFields([
-                    { name: 'unit', value: record.UNIT_OF_MEASURE },
-                  ]);
-                  form.setFields([
-                    { name: 'addPartNumber', value: record.PART_NUMBER },
-                  ]);
-                  form.setFields([
-                    { name: 'addDescription', value: record.DESCRIPTION },
-                  ]);
-                  form.setFields([
-                    { name: 'addUnit', value: record.UNIT_OF_MEASURE },
-                  ]);
-                  form.setFields([{ name: 'partGroup', value: record.GROUP }]);
-                  form.setFields([{ name: 'partType', value: record.TYPE }]);
-                }}
-              />
-            </ModalForm>
           </ProForm>
         </div>
       ),
@@ -531,20 +462,20 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
       )}`,
     },
   ];
-  useEffect(() => {
-    if (requierement && isEditingView) {
-      setIsEditing(false);
-    } else {
-      setIsEditing(false);
-    }
-  }, [requierement]);
-  useEffect(() => {
-    if (isEditingView) {
-      setIsEditing(true);
-    } else {
-      setIsEditing(false);
-    }
-  }, [isEditingView]);
+  // useEffect(() => {
+  //   if (requierement && isEditingView) {
+  //     setIsEditing(false);
+  //   } else {
+  //     setIsEditing(false);
+  //   }
+  // }, [requierement]);
+  // useEffect(() => {
+  //   if (isEditingView) {
+  //     setIsEditing(true);
+  //   } else {
+  //     setIsEditing(false);
+  //   }
+  // }, [isEditingView]);
   return (
     <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-4">
       <Col
@@ -588,9 +519,13 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
             </div>
           </Space>
           <Space
-            onClick={() => requierement && setIsEditingView(!isEditingView)}
+            onClick={() =>
+              requierement &&
+              requierement._id &&
+              setIsEditingView(!isEditingView)
+            }
             className={`cursor-pointer transform transition px-3 ${
-              !requierement
+              !requierement || !requierement._id
                 ? 'opacity-50 cursor-not-allowed'
                 : 'hover:text-blue-500'
             }`}
@@ -624,7 +559,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                     name="unit"
                     width="sm"
                     valueEnum={{
-                      EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                      EA: `EA/${t('EACH').toUpperCase()}`,
                       M: `M/${t('Meters').toUpperCase()}`,
                       ML: `ML/${t('Milliliters').toUpperCase()}`,
                       SI: `SI/${t('Sq Inch').toUpperCase()}`,
@@ -669,7 +604,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                     name="unit"
                     width="sm"
                     valueEnum={{
-                      EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                      EA: `EA/${t('EACH').toUpperCase()}`,
                       M: `M/${t('Meters').toUpperCase()}`,
                       ML: `ML/${t('Milliliters').toUpperCase()}`,
                       SI: `SI/${t('Sq Inch').toUpperCase()}`,
@@ -713,7 +648,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                     name="unit"
                     width="sm"
                     valueEnum={{
-                      EA: `EA/${t('EA/EACH').toUpperCase()}`,
+                      EA: `EA/${t('EACH').toUpperCase()}`,
                       M: `M/${t('Meters').toUpperCase()}`,
                       ML: `ML/${t('Milliliters').toUpperCase()}`,
                       SI: `SI/${t('Sq Inch').toUpperCase()}`,
@@ -740,7 +675,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
       </Col>
 
       <Col
-        className="h-[75vh] px-4  rounded-md brequierement-gray-400"
+        className="h-[82vh] px-4  rounded-md brequierement-gray-400"
         xs={15}
         sm={17}
       >

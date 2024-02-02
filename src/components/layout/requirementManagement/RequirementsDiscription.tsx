@@ -6,7 +6,7 @@ import {
   ProFormGroup,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Divider, Form, FormInstance } from 'antd';
+import { Button, Divider, Form, FormInstance, message } from 'antd';
 import React, { FC, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -66,7 +66,7 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
                   );
                   if (result.meta.requestStatus === 'fulfilled') {
                     onRequirementSearch &&
-                      onRequirementSearch(result.payload[0] || {});
+                      onRequirementSearch(result.payload[0] || null);
                   } else {
                     form.resetFields();
                   }
@@ -89,8 +89,13 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
                 );
                 if (result.meta.requestStatus === 'fulfilled') {
                   onRequirementSearch &&
-                    onRequirementSearch(result.payload[0] || {});
+                    onRequirementSearch(result.payload[0] || null);
+                  if (!result.payload.length) {
+                    form.resetFields();
+                    onRequirementSearch && onRequirementSearch({});
+                  }
                 } else {
+                  message.error('ERROR');
                   form.resetFields();
                 }
               }

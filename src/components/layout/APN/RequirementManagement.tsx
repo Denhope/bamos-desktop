@@ -38,7 +38,7 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
         }
       >
         <Menu theme="light" mode="inline" items={items} />
-        <div className="mx-auto px-5">
+        <div className="mx-auto px-5 ">
           <div
             style={{
               display: !collapsed ? 'block' : 'none',
