@@ -3845,6 +3845,7 @@ export interface IUpdateRequirementByID {
   rewiewStatus?: string;
   projectID: string;
   projectTaskID?: string;
+  additionalTaskID?: string;
   createDate?: string;
   createUserID?: string;
   optional?: any;
@@ -3865,6 +3866,8 @@ export interface IUpdateRequirementByID {
   requestQuantity?: number;
   issuedQuantity?: number;
   plannedDate?: any;
+  group?: any;
+  type?: any;
 }
 export const updateRequirementByID = createAsyncThunk(
   'mtb/updateRequirementByID',
@@ -3872,6 +3875,7 @@ export const updateRequirementByID = createAsyncThunk(
     const {
       id,
       projectID,
+      additionalTaskID,
       projectTaskID,
       updateUserID,
       createUserID,
@@ -3899,6 +3903,8 @@ export const updateRequirementByID = createAsyncThunk(
 
       projectTaskWO,
       plannedDate,
+      type,
+      group,
     } = data;
 
     try {
@@ -3907,6 +3913,7 @@ export const updateRequirementByID = createAsyncThunk(
         {
           id,
           projectID,
+          additionalTaskID,
           projectTaskID,
           updateUserID,
           createUserID,
@@ -3933,6 +3940,8 @@ export const updateRequirementByID = createAsyncThunk(
           issuedQuantity,
           requestQuantity,
           plannedDate,
+          type,
+          group,
         }
       );
 

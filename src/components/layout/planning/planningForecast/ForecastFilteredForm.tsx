@@ -4,26 +4,26 @@ import {
   ProFormRadio,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
-import { DatePickerProps, Form } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
+} from '@ant-design/pro-components';
+import { DatePickerProps, Form } from 'antd';
+import { RangePickerProps } from 'antd/es/date-picker';
 
-import axios from "axios";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import axios from 'axios';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getFilteredProjects,
   getFilteredRequirementsForecast,
   getFilteredShops,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 
 const ForecastFilteredForm: FC = () => {
   const [form] = Form.useForm();
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {
     setSelectedEndDate(dateString[1]);
@@ -38,26 +38,26 @@ const ForecastFilteredForm: FC = () => {
     label: string;
   }
   const dispatch = useAppDispatch();
-  const [receiverType, setReceiverType] = useState("PROJECT");
+  const [receiverType, setReceiverType] = useState('PROJECT');
   const [options, setOptions] = useState<Option[]>([]); // указываем тип состояния явно
   const { t } = useTranslation();
-  const currentCompanyID = localStorage.getItem("companyID");
+  const currentCompanyID = localStorage.getItem('companyID');
   useEffect(() => {
     if (receiverType) {
       let action;
       let url;
       switch (receiverType) {
-        case "PROJECT":
-          action = getFilteredProjects({ companyID: currentCompanyID || "" });
+        case 'PROJECT':
+          action = getFilteredProjects({ companyID: currentCompanyID || '' });
           break;
-        case "AC":
-          url = "/api/ac";
+        case 'AC':
+          url = '/api/ac';
           break;
-        case "SHOP":
-          action = getFilteredShops({ companyID: currentCompanyID || "" });
+        case 'SHOP':
+          action = getFilteredShops({ companyID: currentCompanyID || '' });
           break;
         default:
-          url = "/api/default";
+          url = '/api/default';
       }
 
       if (action) {
@@ -66,19 +66,19 @@ const ForecastFilteredForm: FC = () => {
             const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
             let options;
             switch (receiverType) {
-              case "PROJECT":
+              case 'PROJECT':
                 options = data.map((item: any) => ({
                   value: item._id, // замените на нужное поле для 'PROJECT'
                   label: item.projectWO, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
-              case "AC":
+              case 'AC':
                 options = data.map((item: any) => ({
                   value: item.acField1, // замените на нужное поле для 'AC'
                   label: item.acField2, // замените на нужное поле для 'AC'
                 }));
                 break;
-              case "SHOP":
+              case 'SHOP':
                 options = data.map((item: any) => ({
                   value: item.shopShortName, // замените на нужное поле для 'SHOP'
                   label: item.shopShortName, // замените на нужное поле для 'SHOP'
@@ -93,7 +93,7 @@ const ForecastFilteredForm: FC = () => {
             setOptions(options);
           })
           .catch((error) => {
-            console.error("Ошибка при получении данных:", error);
+            console.error('Ошибка при получении данных:', error);
           });
       }
     }
@@ -116,23 +116,23 @@ const ForecastFilteredForm: FC = () => {
       onFinish={async (values) => {
         const result = dispatch(
           getFilteredRequirementsForecast({
-            regNbr: form.getFieldValue("planeNumber"),
+            regNbr: form.getFieldValue('planeNumber'),
             startDate: selectedStartDate,
-            group: form.getFieldValue("partGroup"),
-            type: form.getFieldValue("partType"),
-            status: form.getFieldValue("requestStatus"),
-            partRequestNumber: form.getFieldValue("partRequestNumber"),
+            group: form.getFieldValue('partGroup'),
+            type: form.getFieldValue('partType'),
+            status: form.getFieldValue('requestStatus'),
+            partRequestNumber: form.getFieldValue('partRequestNumber'),
             endDate: selectedEndDate,
-            companyID: currentCompanyID || "",
+            companyID: currentCompanyID || '',
             foForecast: true,
             projectIds:
-              receiverType && receiverType === "PROJECT"
-                ? form.getFieldValue("additionalSelectProject")
-                : "",
+              receiverType && receiverType === 'PROJECT'
+                ? form.getFieldValue('additionalSelectProject')
+                : '',
             needOnLocationShop:
-              receiverType && receiverType === "SHOP"
-                ? form.getFieldValue("additionalSelectShop")
-                : "",
+              receiverType && receiverType === 'SHOP'
+                ? form.getFieldValue('additionalSelectShop')
+                : '',
           })
         );
       }}
@@ -140,16 +140,16 @@ const ForecastFilteredForm: FC = () => {
       <ProForm.Group>
         <ProFormRadio.Group
           name="receiverType"
-          label={`${t("RECEIVER TYPE")}`}
+          label={`${t('RECEIVER TYPE')}`}
           tooltip="ENTER TYPE "
           options={[
-            { value: "PROJECT", label: `${t(`PROJECT`)}` },
-            { value: "AC", label: "AIRCRAFT" },
-            { value: "SHOP", label: `${t(`SHOP/STORE`)}` },
+            { value: 'PROJECT', label: `${t(`PROJECT`)}` },
+            { value: 'AC', label: 'AIRCRAFT' },
+            { value: 'SHOP', label: `${t(`SHOP/STORE`)}` },
           ]}
           initialValue="PROJECT"
         />
-        {receiverType === "PROJECT" && (
+        {receiverType === 'PROJECT' && (
           <ProFormSelect
             mode="multiple"
             name="additionalSelectProject"
@@ -158,7 +158,7 @@ const ForecastFilteredForm: FC = () => {
             options={options}
           />
         )}
-        {receiverType === "AC" && (
+        {receiverType === 'AC' && (
           <ProFormText
             name="planeNumber"
             label="A/C REGISTRATION"
@@ -166,7 +166,7 @@ const ForecastFilteredForm: FC = () => {
             // options={options}
           />
         )}
-        {receiverType === "SHOP" && (
+        {receiverType === 'SHOP' && (
           <ProFormSelect
             name="additionalSelectShop"
             label={`${t(`SHOP/STORE SELECT`)}`}
@@ -192,7 +192,7 @@ const ForecastFilteredForm: FC = () => {
       <ProForm.Group>
         <ProFormText
           name="partRequestNumber"
-          label={`${t("PART REQUEST NBR")}`}
+          label={`${t('PART REQUEST NBR')}`}
           width="lg"
           tooltip="PART REQUEST NBR"
           //rules={[{ required: true }]}
@@ -206,48 +206,49 @@ const ForecastFilteredForm: FC = () => {
         /> */}
       </ProForm.Group>
       <ProFormSelect
-        initialValue={["open", "onOrder"]}
+        initialValue={['open', 'planned']}
         mode="multiple"
         name="requestStatus"
-        label={`${t("REQUEST STATUS")}`}
+        label={`${t('REQUEST STATUS')}`}
         width="lg"
-        tooltip={`${t("SELECT PROJECT STATUS")}`}
+        tooltip={`${t('SELECT PROJECT STATUS')}`}
         options={[
-          { value: "open", label: t("NEW") },
-          { value: "closed", label: t("CLOSED") },
-          { value: "canceled", label: t("CANCELED") },
-          { value: "onOrder", label: t("ISSUED") },
-          { value: "transfer", label: t("TRANSFER") },
+          { value: 'planned', label: t('PLANNED') },
+          { value: 'open', label: t('NEW') },
+          { value: 'closed', label: t('CLOSED') },
+          { value: 'canceled', label: t('CANCELED') },
+          { value: 'onOrder', label: t('ISSUED') },
+          { value: 'transfer', label: t('TRANSFER') },
         ]}
       />
       <ProFormSelect
         mode="multiple"
         name="partGroup"
-        label={`${t("PART SPESIAL GROUP")}`}
+        label={`${t('PART SPESIAL GROUP')}`}
         width="lg"
-        tooltip={`${t("SELECT SPESIAL GROUP")}`}
+        tooltip={`${t('SELECT SPESIAL GROUP')}`}
         options={[
-          { value: "CONS", label: t("CONS") },
-          { value: "TOOL", label: t("TOOL") },
-          { value: "CHEM", label: t("CHEM") },
-          { value: "ROT", label: t("ROT") },
-          { value: "GSE", label: t("GSE") },
+          { value: 'CONS', label: t('CONS') },
+          { value: 'TOOL', label: t('TOOL') },
+          { value: 'CHEM', label: t('CHEM') },
+          { value: 'ROT', label: t('ROT') },
+          { value: 'GSE', label: t('GSE') },
         ]}
       />
       <ProFormSelect
         mode="multiple"
         name="partType"
-        label={`${t("PART TYPE")}`}
+        label={`${t('PART TYPE')}`}
         width="lg"
-        tooltip={`${t("SELECT PART TYPE")}`}
+        tooltip={`${t('SELECT PART TYPE')}`}
         options={[
-          { value: "ROTABLE", label: t("ROTABLE") },
-          { value: "CONSUMABLE", label: t("CONSUMABLE") },
+          { value: 'ROTABLE', label: t('ROTABLE') },
+          { value: 'CONSUMABLE', label: t('CONSUMABLE') },
         ]}
       />
       <ProFormDateRangePicker
         name="plannedDate"
-        label={`${t("PLANNED DATE")}`}
+        label={`${t('PLANNED DATE')}`}
         width="lg"
         tooltip="PLANNED DATE"
         fieldProps={{

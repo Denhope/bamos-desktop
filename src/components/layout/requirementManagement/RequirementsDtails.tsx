@@ -22,6 +22,7 @@ import {
   getFilteredAditionalTasks,
   getFilteredProjectTasks,
   getFilteredProjects,
+  updateRequirementByID,
 } from '@/utils/api/thunks';
 
 import Title from 'antd/es/typography/Title';
@@ -80,6 +81,11 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
       setIsEditing(false);
     }
   }, [isEditingView]);
+  useEffect(() => {
+    if (isCreating) {
+      form.setFields([{ name: 'partNumber', value: '' }]);
+    }
+  }, [isCreating]);
   useEffect(() => {
     const fetchData = async () => {
       const currentCompanyID = localStorage.getItem('companyID');
@@ -219,7 +225,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                         onClick={() => {
                           isEditing && setIsEditingView(!isEditingView);
                           isCreating && setIsCreating(false);
-                          selectedRequirementState(
+                          setSelectedRequirementState(
                             form.getFieldValue('projectState')
                           );
                         }}
@@ -234,59 +240,140 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
             }}
             size="small"
             form={form}
-            disabled={!isEditing && !isCreating}
+            disabled={
+              (!isEditing && !isCreating) ||
+              requierement?.status === 'closed' ||
+              requierement?.status === 'canceled'
+            }
             layout="horizontal"
             // labelCol={{ span: 10 }}
             onFinish={async (values) => {
               const companyID = localStorage.getItem('companyID');
-              const result = await dispatch(
-                createSingleRequirement({
-                  status: values.projectState,
-                  companyID: companyID || '',
-                  createUserID: USER_ID || '',
-                  projectID: selectedProjectId || '',
-                  projectTaskID: selectedTask,
-                  quantity: values.qty,
-                  unit: values.unit,
-                  description: values.description || '',
-                  group: values.partGroup,
-                  type: values.partType,
-                  partNumber: values.partNumber || '',
-                  isNewAdded: false,
-                  createDate: new Date(),
-                  taskNumber: values.task || values.addTask,
-                  issuedQuantity: 0,
-                  plannedDate: values.planedStartDate || new Date(),
-                  registrationNumber: project?.acRegistrationNumber,
-                })
-              );
-              if (result.meta.requestStatus === 'fulfilled') {
-                onEditRequirementsDtailsEdit(result.payload);
-                message.success(t('SUCCESS'));
-                setIsEditing(false);
-                setIsCreating(false);
+              if (isEditing && !isCreating) {
+                // console.log(selectedTask);
+                const result = await dispatch(
+                  updateRequirementByID({
+                    id: requierement.id || requierement._id,
+                    updateUserID: USER_ID || '',
+                    updateDate: new Date(),
+                    companyID: companyID || '',
+                    projectID: requierement?.projectID,
+                    status: values.projectState,
+                    // amout: values.qty,
+                    // unit: values.unit,
+                    // nameOfMaterial: values.description || '',
+                    // group: values.partGroup,
+                    // type: values.partType,
+                    // PN: form.getFieldValue('partNumber'),
+                    // projectTaskID:
+                    //   receiverType === 'MAIN_TASK'
+                    //     ? selectedTask
+                    //     : requierement?.projectTaskID,
+                    // additionalTaskID:
+                    //   receiverType === 'NRC'
+                    //     ? selectedTask
+                    //     : requierement?.additionalTaskID,
+                    // projectTaskWO:
+                    //   Number(form.getFieldValue('task')) ||
+                    //   Number(form.getFieldValue('addTask')),
+                  })
+                );
+                if (result.meta.requestStatus === 'fulfilled') {
+                  onEditRequirementsDtailsEdit(result.payload);
+                  message.success(t('SUCCESS'));
+                  setIsEditing(false);
+                  setIsCreating(false);
+                }
+              }
+              if (isCreating) {
+                const result = await dispatch(
+                  createSingleRequirement({
+                    status: values.projectState,
+                    companyID: companyID || '',
+                    createUserID: USER_ID || '',
+                    projectID: selectedProjectId || '',
+                    projectTaskID: selectedTask,
+                    quantity: values.qty,
+                    unit: values.unit,
+                    description: values.description || '',
+                    group: values.partGroup,
+                    type: values.partType,
+                    partNumber: form.getFieldValue('partNumber'),
+                    isNewAdded: false,
+                    createDate: new Date(),
+                    taskNumber: values.task || values.addTask,
+                    issuedQuantity: 0,
+                    plannedDate: values.planedStartDate || new Date(),
+                    registrationNumber: project?.acRegistrationNumber,
+                  })
+                );
+                if (result.meta.requestStatus === 'fulfilled') {
+                  onEditRequirementsDtailsEdit(result.payload);
+                  message.success(t('SUCCESS'));
+                  setIsEditing(false);
+                  setIsCreating(false);
+                }
               }
             }}
           >
-            <ProFormSelect
-              showSearch
-              rules={[{ required: true }]}
-              name="projectState"
-              label={t('REQUIREMENT STATE')}
-              width="sm"
-              // initialValue={planned}
-              valueEnum={{
-                // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
-                //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
-                planned: { text: t('PLANNED'), status: 'Default' },
-                open: { text: t('NEW'), status: 'Error' },
-                closed: { text: t('CLOSED'), status: 'Default' },
-                canceled: { text: t('CANCELLED'), status: 'Error' },
-                onOrder: { text: t('ISSUED'), status: 'Processing' },
-              }}
-            />
+            {isEditing && !isCreating && (
+              <ProFormSelect
+                showSearch
+                rules={[{ required: true }]}
+                name="projectState"
+                label={t('REQUIREMENT STATE')}
+                width="sm"
+                // initialValue={planned}
+                valueEnum={{
+                  // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                  //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+                  planned: { text: t('PLANNED'), status: 'Default' },
+                  open: { text: t('NEW'), status: 'Error' },
+                  closed: { text: t('CLOSED'), status: 'Default' },
+                  canceled: { text: t('CANCELLED'), status: 'Error' },
+                  onOrder: { text: t('ISSUED'), status: 'Processing' },
+                }}
+              />
+            )}
+            {isCreating && (
+              <ProFormSelect
+                showSearch
+                rules={[{ required: true }]}
+                name="projectState"
+                label={t('REQUIREMENT STATE')}
+                width="sm"
+                // initialValue={planned}
+                valueEnum={{
+                  // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                  //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+                  planned: { text: t('PLANNED'), status: 'Default' },
+                  open: { text: t('NEW'), status: 'Error' },
+                }}
+              />
+            )}
+            {!isCreating && !isEditing && (
+              <ProFormSelect
+                disabled
+                showSearch
+                rules={[{ required: true }]}
+                name="projectState"
+                label={t('REQUIREMENT STATE')}
+                width="sm"
+                // initialValue={planned}
+                valueEnum={{
+                  // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                  //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+                  planned: { text: t('PLANNED'), status: 'Default' },
+                  open: { text: t('NEW'), status: 'Error' },
+                  closed: { text: t('CLOSED'), status: 'Default' },
+                  canceled: { text: t('CANCELLED'), status: 'Error' },
+                  onOrder: { text: t('ISSUED'), status: 'Processing' },
+                }}
+              />
+            )}
             <ProFormGroup>
               <ProFormSelect
+                disabled={!isCreating}
                 rules={[{ required: true }]}
                 name="projectNumber"
                 label={`${t(`PROJECT LINK`)}`}
@@ -306,6 +393,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 <ProForm.Group>
                   <ProFormRadio.Group
                     name="receiverType"
+                    disabled={!isCreating}
                     label={`${t('TASK TYPE')}`}
                     options={[
                       { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
@@ -316,6 +404,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   {receiverType === 'MAIN_TASK' && (
                     <ProFormSelect
                       showSearch
+                      disabled={!isCreating}
                       mode="single"
                       name="task"
                       label={`${t(`TASK`)}`}
@@ -329,11 +418,15 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   {receiverType === 'NRC' && (
                     <ProFormSelect
                       showSearch
+                      disabled={!isCreating}
                       mode="single"
                       name="addTask"
                       label={`${t(`TASK`)}`}
                       width="sm"
                       options={taskOptions}
+                      onChange={(value: any) => {
+                        setSelectedTask(value);
+                      }}
                     />
                   )}
                 </ProForm.Group>
@@ -491,7 +584,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 : 'hover:text-blue-500'
             }`}
             onClick={() => {
-              if (!isEditing) {
+              if (!isEditing || !isCreating) {
                 setIsEditingView(!isEditingView);
                 form.resetFields();
                 formAdd.resetFields();

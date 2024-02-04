@@ -31,6 +31,13 @@ const RequirementList: FC<showProjectListType> = ({
       // width: '13%',
 
       // responsive: ['sm'],
+      sorter: (a, b) => {
+        if (a.partRequestNumber && b.partRequestNumber) {
+          return a.partRequestNumber - b.partRequestNumber;
+        } else {
+          return 0; // default value
+        }
+      },
     },
 
     {

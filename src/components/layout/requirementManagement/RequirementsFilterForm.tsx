@@ -229,12 +229,13 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         /> */}
       </ProForm.Group>
       <ProFormSelect
-        initialValue={['open', 'onOrder']}
+        initialValue={['open', 'planned']}
         mode="multiple"
         name="requestStatus"
         label={`${t('REQUIREMENT STATUS')}`}
         width="lg"
         options={[
+          { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
           { value: 'closed', label: t('CLOSED') },
           { value: 'canceled', label: t('CANCELED') },
