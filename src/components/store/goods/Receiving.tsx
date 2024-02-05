@@ -162,22 +162,46 @@ const Receiving: FC<ReceivingType> = ({
     if (currentPart) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: 'partNumber', value: currentPart?.PN },
-        { name: 'description', value: currentPart?.nameOfMaterial },
+        {
+          name: 'partNumber',
+          value: currentPart?.PART_NUMBER || currentPart?.PN,
+        },
+        {
+          name: 'description',
+          value: currentPart?.DESCRIPTION || currentPart?.nameOfMaterial,
+        },
         { name: 'serialNumber', value: currentPart?.serialNumber },
         { name: 'qty', value: currentPart.requestQuantity },
-        { name: 'partGroup', value: currentPart.group },
-        { name: 'partType', value: currentPart.type },
+        { name: 'partGroup', value: currentPart?.GROUP || currentPart?.group },
+        { name: 'partType', value: currentPart?.TYPE || currentPart?.type },
 
         {
           name: 'backorder',
-          value: currentPart?.backorder || currentPart.quantity,
+          value: currentPart?.backorder || currentPart?.quantity,
         },
 
-        { name: 'unit', value: currentPart.unit },
-        { name: 'addPartNumber', value: currentPart?.PN },
-        { name: 'addDescription', value: currentPart?.nameOfMaterial },
-        { name: 'addUnit', value: currentPart.addUnit },
+        {
+          name: 'unit',
+          value: currentPart?.UNIT_OF_MEASURE || currentPart?.unit,
+        },
+        {
+          name: 'addPartNumber',
+          value: currentPart?.PART_NUMBER || currentPart?.PN,
+        },
+        {
+          name: 'addDescription',
+          value:
+            currentPart?.ADD_DESCRIPTION ||
+            currentPart?.DESCRIPTION ||
+            currentPart?.nameOfMaterial,
+        },
+        {
+          name: 'addUnit',
+          value:
+            currentPart.ADD_UNIT_OF_MEASURE ||
+            currentPart?.UNIT_OF_MEASURE ||
+            currentPart?.unit,
+        },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -255,35 +279,36 @@ const Receiving: FC<ReceivingType> = ({
               RECEIVING_NUMBER: currentReceiving?.receivingNumber,
               CERTIFICATE_NUMBER: values?.certificateNumber,
               CERTIFICATE_TYPE: values?.certificateType,
+              REVISION: 'C',
             })
           );
           if ((await result).meta.requestStatus === 'fulfilled') {
-            dispatch(
-              createBookingItem({
-                companyID: currentCompanyID,
-                data: {
-                  companyID: currentCompanyID,
-                  userSing: localStorage.getItem('singNumber') || '',
-                  userID: USER_ID || '',
-                  createDate: new Date(),
-                  partNumber: values.partNumber,
-                  station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
-                  voucherModel: 'RECEIVING_GOODS',
-                  location: values.location,
-                  orderNumber: currenOrder?.orderNumber,
-                  price: currentPart?.price,
-                  currency: currentPart?.currency,
-                  quantity: values.qty,
-                  owner: values.ownerShotName,
-                  batchNumber: values.batch,
-                  serialNumber: values.serialNumber,
-                  partGroup: values.partGroup,
-                  partType: values.partType,
-                  condition: values.condition,
-                  description: values.description,
-                },
-              })
-            );
+            // dispatch(
+            //   createBookingItem({
+            //     companyID: currentCompanyID,
+            //     data: {
+            //       companyID: currentCompanyID,
+            //       userSing: localStorage.getItem('singNumber') || '',
+            //       userID: USER_ID || '',
+            //       createDate: new Date(),
+            //       partNumber: values.partNumber,
+            //       station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
+            //       voucherModel: 'RECEIVING_GOODS',
+            //       location: values.location,
+            //       orderNumber: currenOrder?.orderNumber,
+            //       price: currentPart?.price,
+            //       currency: currentPart?.currency,
+            //       quantity: values.qty,
+            //       owner: values.ownerShotName,
+            //       batchNumber: values.batch,
+            //       serialNumber: values.serialNumber,
+            //       partGroup: values.partGroup,
+            //       partType: values.partType,
+            //       condition: values.condition,
+            //       description: values.description,
+            //     },
+            //   })
+            // );
 
             setAddedMaterialItem((await result).payload);
             onReceivingPart && onReceivingPart([(await result).payload]);
@@ -296,6 +321,7 @@ const Receiving: FC<ReceivingType> = ({
                 createDate: new Date(),
                 createUserID: USER_ID,
                 state: 'RECEIVED',
+                voucherModel: 'RECEIVING_GOODS',
                 ORDER_TYPE: currenOrder && currenOrder?.orderType,
                 ORDER_ID: (currenOrder && currenOrder?.id) || currenOrder?._id,
                 MATERIAL_STORE_ID:
@@ -304,6 +330,36 @@ const Receiving: FC<ReceivingType> = ({
             );
             if (resultUp.meta.requestStatus === 'fulfilled') {
               setisUpload(true);
+              dispatch(
+                createBookingItem({
+                  companyID: currentCompanyID,
+                  data: {
+                    userSing: localStorage.getItem('singNumber') || '',
+                    partNumber: values.partNumber,
+                    station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
+                    voucherModel: 'RECEIVING_GOODS',
+                    location: values.location,
+                    orderNumber: currenOrder?.orderNumber,
+                    price: currentPart?.price,
+                    currency: currentPart?.currency,
+                    quantity: values.qty,
+                    owner: values.ownerShotName,
+                    batchNumber: values.batch,
+                    serialNumber: values.serialNumber,
+                    partGroup: values.partGroup,
+                    partType: values.partType,
+                    condition: values.condition,
+                    description: values.description,
+                    receivingNumber: resultUp.payload.RECEIVING_NUMBER,
+                    receivingItemNumber: resultUp.payload.RECEIVING_ITEM_NUMBER,
+                    label: resultUp.payload.LOCAL_ID,
+                    companyID: currentCompanyID || '',
+                    createDate: new Date(),
+                    userID: USER_ID || '',
+                  },
+                })
+              );
+
               if (currentPart && currenOrder?.parts) {
                 const updatedParts = currenOrder?.parts.map((part) => {
                   if (part.id === currentPart.id) {
@@ -781,7 +837,16 @@ const Receiving: FC<ReceivingType> = ({
               { name: 'addPartNumber', value: record.PART_NUMBER },
             ]);
             form.setFields([
-              { name: 'addDescription', value: record.DESCRIPTION },
+              {
+                name: 'addDescription',
+                value: record?.ADD_DESCRIPTION || record?.DESCRIPTION,
+              },
+            ]);
+            form.setFields([
+              {
+                name: 'addUnit',
+                value: record?.ADD_UNIT_OF_MEASURE || record?.UNIT_OF_MEASURE,
+              },
             ]);
 
             form.setFields([{ name: 'partGroup', value: record.GROUP }]);
@@ -799,10 +864,16 @@ const Receiving: FC<ReceivingType> = ({
               { name: 'addPartNumber', value: record.PART_NUMBER },
             ]);
             form.setFields([
-              { name: 'addDescription', value: record.DESCRIPTION },
+              {
+                name: 'addDescription',
+                value: record?.ADD_DESCRIPTION || record?.DESCRIPTION,
+              },
             ]);
             form.setFields([
-              { name: 'addUnit', value: record.UNIT_OF_MEASURE },
+              {
+                name: 'addUnit',
+                value: record?.ADD_UNIT_OF_MEASURE || record?.UNIT_OF_MEASURE,
+              },
             ]);
             form.setFields([{ name: 'partGroup', value: record.GROUP }]);
             form.setFields([{ name: 'partType', value: record.TYPE }]);

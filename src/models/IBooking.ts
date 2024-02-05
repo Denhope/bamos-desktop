@@ -29,6 +29,8 @@ export interface IBookingItem {
   additionalTaskID?: string;
   projectTaskWO?: string;
   label?: any;
+  receivingNumber?: any;
+  receivingItemNumber?: any;
 }
 type VaucherModelType =
   | 'ADD_NEW_PART'
