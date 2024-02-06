@@ -8,8 +8,6 @@ import { getFilteredPartNumber } from '@/utils/api/thunks';
 import { useTranslation } from 'react-i18next';
 
 interface ContextMenuSearchSelectProps {
-  // handleSearch: (searchTerm: string) => void;
-
   rules: Array<any>;
   name: string;
   isResetForm?: boolean;
@@ -17,11 +15,9 @@ interface ContextMenuSearchSelectProps {
   initialFormPN: string;
 }
 const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
-  // handleSearch,
-
   rules,
   name,
-  isResetForm = false,
+  isResetForm,
   initialFormPN,
 
   onSelectedPN,
@@ -42,7 +38,6 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
         })
       );
 
-      // Удаление дубликатов
       const uniqueResults = result.payload.reduce(
         (acc: any[], current: any) => {
           const x = acc.find(
@@ -72,12 +67,10 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
 
   const handleAdd = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    // console.log('Добавить:', value);
   };
 
   const handleAddPick = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    // console.log('Добавить Pick:', value);
   };
 
   const [initialPN, setInitialPN] = useState(initialFormPN);
@@ -85,10 +78,7 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   const { t } = useTranslation();
   useEffect(() => {
     if (initialFormPN) {
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
-
       setInitialPN(initialFormPN);
-      // onFilterTransferprojects(form.getFieldsValue());
     }
   }, [initialFormPN]);
   return (

@@ -4,7 +4,8 @@ import { Form } from 'antd';
 
 interface SearchSelectProps<T> {
   name: string;
-  onSearch: (searchValue: string) => Promise<any>;
+  onSearch?: (searchValue: string) => Promise<any> | T[];
+  data?: T[];
   optionLabel1?: keyof T;
   optionLabel2?: keyof T;
   onSelect: (selectedValue: any) => void;
@@ -12,12 +13,13 @@ interface SearchSelectProps<T> {
   tooltip: string;
   rules: any[];
   isReset?: boolean;
-  onDoubleClick?: () => void; // новый пропс
-  initialValue?: string; // новый пропс
+  onDoubleClick?: () => void;
+  initialValue?: string;
   width?: 'lg' | 'sm' | 'xs';
 }
 
 const SearchSelect: FC<SearchSelectProps<any>> = ({
+  data,
   name,
   onSearch,
   optionLabel1,
@@ -28,12 +30,13 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
   rules,
   isReset,
   onDoubleClick,
-  initialValue, // новый пропс
+  initialValue,
   width,
 }) => {
   const [form] = Form.useForm();
-  const [options, setOptions] = useState<any[]>([]);
+  const [options, setOptions] = useState<any[]>(data || []);
   const [value, setValue] = useState<string>(initialValue || '');
+
   useEffect(() => {
     if (isReset) {
       setValue('');
@@ -42,21 +45,44 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
     }
   }, [isReset]);
 
+  useEffect(() => {
+    // Обновляем options при изменении onSearch или data
+    if (Array.isArray(onSearch)) {
+      setOptions(onSearch);
+    } else if (onSearch) {
+      const searchPromise = onSearch('');
+      if (searchPromise instanceof Promise) {
+        searchPromise.then((results) => {
+          if (results && typeof results === 'object' && 'payload' in results) {
+            setOptions(results.payload);
+          } else if (Array.isArray(results)) {
+            setOptions(results);
+          }
+        });
+      }
+    } else if (data) {
+      setOptions(data);
+    } else {
+      setOptions([]); // Если data не предоставлен, устанавливаем пустой массив
+    }
+  }, [onSearch, data]);
+
   const handleSearch = async (value: string) => {
-    const results = await onSearch(value);
-    if (results && typeof results === 'object' && 'payload' in results) {
-      setOptions(results.payload);
-    } else if (Array.isArray(results)) {
-      setOptions(results);
+    // Фильтруем options на основе введенного значения
+    if (onSearch) {
+      const searchResults = await onSearch(value);
+      if (Array.isArray(searchResults)) {
+        setOptions(searchResults);
+      }
     }
   };
 
   const handleChange = (value: string) => {
     const selectedOption = options.find((option) => {
       if (optionLabel1 && optionLabel2) {
-        return option[optionLabel1] + ' - ' + option[optionLabel2] === value;
+        return `${option[optionLabel1]} - ${option[optionLabel2]}` === value;
       } else if (optionLabel1) {
-        return option[optionLabel1] === value;
+        return `${option[optionLabel1]}` === value;
       }
     });
     if (selectedOption) {
@@ -64,6 +90,7 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
       setValue(optionLabel1 ? selectedOption[optionLabel1] : '');
     }
   };
+
   useEffect(() => {
     setValue(initialValue || ''); // обновляем value при изменении initialValue
   }, [initialValue, isReset]);

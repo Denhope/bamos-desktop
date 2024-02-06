@@ -27,12 +27,16 @@ import {
   uploadFileServer,
   updateOrderByID,
 } from '@/utils/api/thunks';
-import PartNumberSearch from '../search/PartNumberSearch';
+
 import { USER_ID } from '@/utils/api/http';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
+import ContextMenuLocationSearchSelect from '@/components/shared/form/ContextMenuLocationSearchSelect';
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
   currentReceiving: any | null;
+  onCurrentPart?: (data: any) => void;
   onUpdateOrder: (data: any) => void;
   onReceivingPart?: (data: any) => void;
 };
@@ -44,16 +48,13 @@ const Receiving: FC<ReceivingType> = ({
   onReceivingPart,
 }) => {
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
-  const [openStoreFindModal, setOpenStoreFind] = useState(false);
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
-  const [partsToPrint, setPartsToPrint] = useState<any>(null);
   const formRef = useRef<FormInstance>(null);
   const [selectedStore, setSecectedStore] = useState<any>(null);
   const [selectedSingleStore, setSecectedSingleStore] = useState<any>(null);
   const [addedMaterialItem, setAddedMaterialItem] = useState<any>(null);
   const [openLocationViewer, setOpenLocationViewer] = useState<boolean>(false);
   const [isUpload, setisUpload] = useState<boolean>(false);
-  const [isUploadSert, setisUploadSert] = useState<boolean>(false);
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
@@ -62,29 +63,28 @@ const Receiving: FC<ReceivingType> = ({
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
-  const [APN, setAPN] = useState([]);
 
   const dispatch = useAppDispatch();
+  const [isCustomerGoods, setIsCustomerGoods] = useState(false);
   const [LOCATION, setLOCATION] = useState([]); //
   const [selectedLocation, setSecectedLocation] = useState<any>(null);
   const [selectedSingleLocation, setSecectedSingleLocation] =
     useState<any>(null);
-  const [openStoreViewer, setOpenStoreViewer] = useState<boolean>(false);
+
   useEffect(() => {
     if (isUpload) {
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       setisUpload(isUpload);
     }
   }, [isUpload]);
   useEffect(() => {
     if (selectedStore) {
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
-      form.setFields([
-        { name: 'store', value: selectedStore.APNNBR },
+      form.setFields([{ name: 'store', value: selectedStore.APNNBR }]);
+      const transformedData = selectedStore?.locations.map((item: any) => ({
+        ...item,
+        APNNBR: item.locationName, // Преобразуем shopShortName в APNNBR
+      }));
 
-        // Добавьте здесь другие поля, которые вы хотите обновить
-      ]);
-      // onFilterTransferParts(form.getFieldsValue());
+      setLOCATION(transformedData);
     }
   }, [selectedStore]);
   useEffect(() => {
@@ -100,67 +100,12 @@ const Receiving: FC<ReceivingType> = ({
           value: selectedLocation?.ownerLongName,
         },
         { name: 'store', value: selectedStore.shopShortName },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
     }
   }, [selectedLocation]);
-  useEffect(() => {
-    if (openStoreViewer) {
-      // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem('companyID') || '';
-      dispatch(
-        getFilteredShops({
-          companyID: currentCompanyID,
-        })
-      ).then((action) => {
-        if (action.meta.requestStatus === 'fulfilled') {
-          const transformedData = action.payload.map((item: any) => ({
-            ...item,
-            APNNBR: item.shopShortName, // Преобразуем shopShortName в APNNBR
-          }));
-          setAPN(transformedData);
-          // Обновляем состояние с преобразованными данными
-        }
-      });
-    }
-  }, [openStoreViewer, dispatch]);
 
   useEffect(() => {
-    if (
-      openLocationViewer &&
-      (selectedStore?.APNNBR || form.getFieldValue('store'))
-    ) {
-      // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem('companyID') || '';
-      dispatch(
-        getFilteredShops({
-          companyID: currentCompanyID,
-          shopShortName:
-            selectedStore?.APNNBR ||
-            form.getFieldValue('store').toUpperCase().trim(),
-        })
-      ).then((action) => {
-        if (action.meta.requestStatus === 'fulfilled') {
-          setSecectedStore(action.payload[0]);
-          const transformedData = action.payload[0].locations.map(
-            (item: any) => ({
-              ...item,
-              APNNBR: item.locationName, // Преобразуем shopShortName в APNNBR
-            })
-          );
-
-          setLOCATION(transformedData);
-          // Обновляем состояние с преобразованными данными
-        }
-      });
-    }
-  }, [openLocationViewer, dispatch]);
-  useEffect(() => {
-    // console.log(currentPart);
-
     if (currentPart) {
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
         {
           name: 'partNumber',
@@ -174,7 +119,6 @@ const Receiving: FC<ReceivingType> = ({
         { name: 'qty', value: currentPart.requestQuantity },
         { name: 'partGroup', value: currentPart?.GROUP || currentPart?.group },
         { name: 'partType', value: currentPart?.TYPE || currentPart?.type },
-
         {
           name: 'backorder',
           value: currentPart?.backorder || currentPart?.quantity,
@@ -202,27 +146,21 @@ const Receiving: FC<ReceivingType> = ({
             currentPart?.UNIT_OF_MEASURE ||
             currentPart?.unit,
         },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
-      // onFilterTransferParts(form.getFieldsValue());
     }
   }, [currentPart]);
-  const [updatedPart, setUpdatedParts] = useState<any | null>(null);
-  const handleCanvasReady = (url: string | null) => {
-    if (url) {
-      setUpdatedParts((prevTasks: any) => {
-        let newTasks = prevTasks;
-        newTasks = {
-          newTasks,
-          QRCodeLink: url,
-        };
-        return newTasks;
-      });
-    }
-  };
+
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [initialForm, setinitialForm] = useState<any>('');
   return (
     <ProForm
+      onReset={() => {
+        setIsResetForm(true);
+        setinitialForm('');
+        setSecectedSinglePN(null);
+        setSecectedSingleStore({ shopShortName: '' });
+        setSecectedSingleLocation({ locationName: '' });
+      }}
       submitter={{
         submitButtonProps: {
           disabled: !!(
@@ -251,16 +189,20 @@ const Receiving: FC<ReceivingType> = ({
               SHELF_NUMBER: values.location,
               STOCK: values.store,
               OWNER: values?.owner,
-              PRICE: currentPart?.price,
+              PRICE: 1000,
               RECEIVED_DATE: currentReceiving?.receivingDate,
               ORDER_NUMBER: currenOrder?.orderNumber,
               UNIT_OF_MEASURE: values.unit,
-              CURRENCY: currentPart?.currency,
+              CURRENCY: 'USD',
               COMPANY_ID: currentCompanyID,
               SUPPLIER_BATCH_NUMBER: values.batch,
               SUPPLIES_CODE: currentReceiving?.SUPPLIES_CODE || '',
               SUPPLIES_LOCATION: currentReceiving?.SUPPLIES_LOCATION || '',
+              SUPPLIER_NAME: currentReceiving?.SUPPLIER_NAME,
               SUPPLIER_SHORT_NAME: currentReceiving?.SUPPLIER_SHORT_NAME,
+              SUPPLIER_UNP: currentReceiving?.SUPPLIER_UNP,
+              SUPPLIES_ID: currentReceiving?.SUPPLIES_ID,
+              IS_RESIDENT: currentReceiving?.IS_RESIDENT,
               ADD_UNIT_OF_MEASURE: values?.addUnit,
               ADD_NAME_OF_MATERIAL: values?.addDescription,
               ADD_PART_NUMBER: values?.addPartNumber,
@@ -280,36 +222,10 @@ const Receiving: FC<ReceivingType> = ({
               CERTIFICATE_NUMBER: values?.certificateNumber,
               CERTIFICATE_TYPE: values?.certificateType,
               REVISION: 'C',
+              IS_CUSTOMER_GOODS: isCustomerGoods,
             })
           );
           if ((await result).meta.requestStatus === 'fulfilled') {
-            // dispatch(
-            //   createBookingItem({
-            //     companyID: currentCompanyID,
-            //     data: {
-            //       companyID: currentCompanyID,
-            //       userSing: localStorage.getItem('singNumber') || '',
-            //       userID: USER_ID || '',
-            //       createDate: new Date(),
-            //       partNumber: values.partNumber,
-            //       station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
-            //       voucherModel: 'RECEIVING_GOODS',
-            //       location: values.location,
-            //       orderNumber: currenOrder?.orderNumber,
-            //       price: currentPart?.price,
-            //       currency: currentPart?.currency,
-            //       quantity: values.qty,
-            //       owner: values.ownerShotName,
-            //       batchNumber: values.batch,
-            //       serialNumber: values.serialNumber,
-            //       partGroup: values.partGroup,
-            //       partType: values.partType,
-            //       condition: values.condition,
-            //       description: values.description,
-            //     },
-            //   })
-            // );
-
             setAddedMaterialItem((await result).payload);
             onReceivingPart && onReceivingPart([(await result).payload]);
             message.success('SUCCESS');
@@ -337,6 +253,8 @@ const Receiving: FC<ReceivingType> = ({
                     userSing: localStorage.getItem('singNumber') || '',
                     partNumber: values.partNumber,
                     station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
+                    suppliesCode: currentReceiving?.SUPPLIES_CODE || '',
+                    suppliesId: currentReceiving?.SUPPLIES_ID || '',
                     voucherModel: 'RECEIVING_GOODS',
                     location: values.location,
                     orderNumber: currenOrder?.orderNumber,
@@ -356,6 +274,7 @@ const Receiving: FC<ReceivingType> = ({
                     companyID: currentCompanyID || '',
                     createDate: new Date(),
                     userID: USER_ID || '',
+                    IS_CUSTOMER_GOODS: isCustomerGoods,
                   },
                 })
               );
@@ -529,19 +448,44 @@ const Receiving: FC<ReceivingType> = ({
           </ProFormGroup>
           <ProFormGroup direction="horizontal">
             <ProFormGroup>
-              <ProFormText
+              <ContextMenuPNSearchSelect
+                isResetForm={isResetForm}
                 rules={[{ required: true }]}
-                name="partNumber"
-                label={t('PART NUMBER')}
-                width="sm"
-                tooltip={t('PART NUMBER')}
-                fieldProps={{
-                  onDoubleClick: () => {
-                    setOpenStoreFind(true);
-                  },
-                  onKeyPress: handleKeyPress,
+                onSelectedPN={function (PN: any): void {
+                  setSecectedSinglePN(PN);
+                  form.setFields([
+                    { name: 'description', value: PN?.DESCRIPTION },
+                  ]);
+                  form.setFields([
+                    { name: 'unit', value: PN?.UNIT_OF_MEASURE },
+                  ]);
+                  form.setFields([
+                    { name: 'addPartNumber', value: PN?.PART_NUMBER },
+                  ]);
+                  form.setFields([
+                    {
+                      name: 'addDescription',
+                      value: PN?.ADD_DESCRIPTION || PN?.DESCRIPTION,
+                    },
+                  ]);
+                  form.setFields([
+                    {
+                      name: 'addUnit',
+                      value: PN?.ADD_UNIT_OF_MEASURE || PN?.UNIT_OF_MEASURE,
+                    },
+                  ]);
+                  form.setFields([{ name: 'partGroup', value: PN?.GROUP }]);
+                  form.setFields([{ name: 'partType', value: PN?.TYPE }]);
                 }}
-              ></ProFormText>
+                name={'partNumber'}
+                initialFormPN={
+                  selectedSinglePN?.PART_NUMBER ||
+                  initialForm ||
+                  (currentPart && currentPart?.PART_NUMBER) ||
+                  (currentPart && currentPart?.PN)
+                }
+              ></ContextMenuPNSearchSelect>
+
               <ProFormText
                 rules={[{ required: true }]}
                 name="description"
@@ -643,43 +587,34 @@ const Receiving: FC<ReceivingType> = ({
           </ProFormGroup>
 
           <ProFormGroup>
-            <ProFormText
-              name="store"
+            <ContextMenuStoreSearchSelect
               rules={[{ required: true }]}
-              label={`${t('STORE')}`}
-              width="xs"
-              tooltip={`${t('STORE CODE')}`}
-              //rules={[{ required: true }]}
-              fieldProps={{
-                onDoubleClick: () => setOpenStoreViewer(true),
-                // onKeyPress: handleKeyPress, onKeyPress: handleKeyPress,
-                autoFocus: true,
-                onKeyPress: handleKeyPress,
-                onChange: (e) => {
-                  // Преобразование введенного текста в верхний регистр и удаление пробелов по краям
-                  e.target.value = e.target.value.toUpperCase().trim();
-                },
+              name={'store'}
+              onSelectedStore={function (record: any): void {
+                setSecectedSingleStore(record);
+                setSecectedStore(record);
               }}
+              initialFormStore={
+                selectedSingleStore?.shopShortName || initialForm
+              }
             />
-            <ProFormText
+
+            <ContextMenuLocationSearchSelect
               rules={[{ required: true }]}
-              name="location"
-              label={`${t('RECEIVED LOCATION')}`}
-              width="sm"
-              tooltip={`${t('LOCATION')}`}
-              fieldProps={{
-                onDoubleClick: () => setOpenLocationViewer(true),
-                // onKeyPress: handleKeyPress,
-                onKeyPress: handleKeyPress,
-                onChange: (e) => {
-                  // Преобразование введенного текста в верхний регистр и удаление пробелов по краям
-                  e.target.value = e.target.value.toUpperCase().trim();
-                },
+              name={'location'}
+              onSelectedLocation={function (record: any): void {
+                setSecectedLocation(record);
+                setSecectedSingleLocation(record);
               }}
+              initialFormStore={
+                selectedSingleLocation?.locationName || initialForm
+              }
+              locations={LOCATION}
             />
           </ProFormGroup>
           <ProFormGroup>
             <ProFormText
+              disabled
               name="ownerShotName"
               rules={[{ required: true }]}
               label={t('OWNER')}
@@ -687,6 +622,7 @@ const Receiving: FC<ReceivingType> = ({
               tooltip={t('OWNER')}
             ></ProFormText>
             <ProFormText
+              disabled
               label={t('OWNER DESCRIPTION')}
               name="ownerDiscription"
               width="sm"
@@ -747,38 +683,20 @@ const Receiving: FC<ReceivingType> = ({
               кг: `${t('кг').toUpperCase()}`,
             }}
           ></ProFormSelect>
+          <ProFormCheckbox
+            fieldProps={{
+              checked: isCustomerGoods,
+              onChange: (e: CheckboxChangeEvent) => {
+                setIsCustomerGoods(e.target.checked);
+              },
+            }}
+          >
+            {t('CUSTOMER GOODS')}
+          </ProFormCheckbox>
         </ProFormGroup>
       </ProFormGroup>
 
-      <ModalForm
-        onFinish={async () => {
-          setSecectedStore(selectedSingleStore);
-          setOpenStoreViewer(false);
-        }}
-        title={`${t('STORE SEARCH')}`}
-        open={openStoreViewer}
-        width={'35vw'}
-        onOpenChange={setOpenStoreViewer}
-      >
-        <ProCard
-          className="flex mx-auto justify-center align-middle"
-          style={{}}
-        >
-          {APN && (
-            <SearchTable
-              data={APN}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSecectedStore(record);
-                setOpenStoreViewer(false);
-              }}
-              onRowSingleClick={function (record: any, rowIndex?: any): void {
-                setSecectedSingleStore(record);
-              }}
-            ></SearchTable>
-          )}
-        </ProCard>
-      </ModalForm>
-      <ModalForm
+      {/* <ModalForm
         onFinish={async () => {
           setSecectedLocation(selectedSingleLocation);
           setOpenLocationViewer(false);
@@ -805,81 +723,7 @@ const Receiving: FC<ReceivingType> = ({
             ></SearchTable>
           )}
         </ProCard>
-      </ModalForm>
-      <ModalForm
-        // title={`Search on Store`}
-        width={'70vw'}
-        // placement={'bottom'}
-        open={openStoreFindModal}
-        // submitter={false}
-        onOpenChange={setOpenStoreFind}
-        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
-          setOpenStoreFind(false);
-          // handleSelect(selectedSinglePN);
-
-          form.setFields([
-            { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
-          ]);
-        }}
-      >
-        <PartNumberSearch
-          initialParams={{ partNumber: '' }}
-          scroll={45}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            setOpenStoreFind(false);
-
-            form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
-            form.setFields([
-              { name: 'description', value: record.DESCRIPTION },
-            ]);
-            form.setFields([{ name: 'unit', value: record.UNIT_OF_MEASURE }]);
-            form.setFields([
-              { name: 'addPartNumber', value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              {
-                name: 'addDescription',
-                value: record?.ADD_DESCRIPTION || record?.DESCRIPTION,
-              },
-            ]);
-            form.setFields([
-              {
-                name: 'addUnit',
-                value: record?.ADD_UNIT_OF_MEASURE || record?.UNIT_OF_MEASURE,
-              },
-            ]);
-
-            form.setFields([{ name: 'partGroup', value: record.GROUP }]);
-            form.setFields([{ name: 'partType', value: record.TYPE }]);
-          }}
-          isLoading={false}
-          onRowSingleClick={function (record: any, rowIndex?: any): void {
-            setSecectedSinglePN(record);
-            form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
-            form.setFields([
-              { name: 'description', value: record.DESCRIPTION },
-            ]);
-            form.setFields([{ name: 'unit', value: record.UNIT_OF_MEASURE }]);
-            form.setFields([
-              { name: 'addPartNumber', value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              {
-                name: 'addDescription',
-                value: record?.ADD_DESCRIPTION || record?.DESCRIPTION,
-              },
-            ]);
-            form.setFields([
-              {
-                name: 'addUnit',
-                value: record?.ADD_UNIT_OF_MEASURE || record?.UNIT_OF_MEASURE,
-              },
-            ]);
-            form.setFields([{ name: 'partGroup', value: record.GROUP }]);
-            form.setFields([{ name: 'partType', value: record.TYPE }]);
-          }}
-        />
-      </ModalForm>
+      </ModalForm> */}
     </ProForm>
   );
 };

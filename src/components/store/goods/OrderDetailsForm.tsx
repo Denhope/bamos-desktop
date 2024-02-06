@@ -4,12 +4,13 @@ import {
   ProForm,
   ProFormDatePicker,
   ProFormGroup,
+  ProFormRadio,
   ProFormSelect,
   ProFormText,
   ProFormTimePicker,
 } from '@ant-design/pro-components';
 import { current } from '@reduxjs/toolkit';
-import { FormInstance, Modal, message } from 'antd';
+import { FormInstance, Modal, RadioChangeEvent, message } from 'antd';
 import { Button, Form, Space } from 'antd';
 import ReceivingTracking from '@/components/layout/APN/ReceivingTracking';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
@@ -98,9 +99,36 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   };
   const formRef = useRef<FormInstance>(null);
   const [selectedSingleVendor, setSecectedSingleVendor] = useState<any>();
+  const [selectedType, setSelectedType] = useState('ORDER');
+
+  const handleTypeChange = (e: RadioChangeEvent) => {
+    setSelectedType(e.target.value);
+    onOrdersSearch?.(null);
+    setCurrentReceiving(null);
+    onReceivingType(form.getFieldValue('type'));
+  };
+
+  const handleLoadClick = async () => {
+    const currentCompanyID = localStorage.getItem('companyID') || '';
+    const result = await dispatch(
+      getFilteredOrders({
+        companyID: currentCompanyID,
+        orderNumber: formRef.current?.getFieldValue('order'),
+        vendorName: formRef.current?.getFieldValue('vendorName'),
+        partNumber: formRef.current?.getFieldValue('partNumber'),
+        orderType: formRef.current?.getFieldValue('orderType'),
+      })
+    );
+    if (result.meta.requestStatus === 'fulfilled') {
+      onOrdersSearch?.(result.payload[0] || null);
+    } else {
+      message.error('Error');
+    }
+  };
   return (
     <div className="flex flex-col">
       <ProForm
+        initialValues={{ type: 'ORDER' }}
         formRef={formRef}
         submitter={false}
         form={form}
@@ -109,49 +137,36 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
         className="bg-white px-4 py-3 rounded-md border-gray-400"
       >
         <ProFormGroup>
-          <ProFormSelect
-            initialValue={'ORDER'}
-            showSearch
+          <ProFormRadio.Group
+            fieldProps={{
+              // initialValue: 'ORDER',
+              onChange: handleTypeChange,
+            }}
+            options={[
+              {
+                label: t('ORDER'),
+                value: 'ORDER',
+              },
+              // {
+              //   label: t('SHIPMENT'),
+              //   value: 'SHIPMENT',
+              // },
+              {
+                label: t('SINGLE RECEIVING'),
+                value: 'UN_ORDER',
+              },
+            ]}
             name="type"
             width="sm"
-            // label={t('ORDER')}
-            valueEnum={{
-              ORDER: t('ORDER'),
-              // SHIPMENT: t('SHIPMENT'),
-              UN_ORDER: t('SINGLE RECEIVING'),
-            }}
-          ></ProFormSelect>
-          <ProFormText
-            name="order"
-            width="sm"
-            tooltip={t('ORDER')}
-          ></ProFormText>
-          <Button
-            type="primary"
-            // disabled={!form.getFieldValue('order')}
-            onClick={async () => {
-              const currentCompanyID = localStorage.getItem('companyID') || '';
-              if (form.getFieldValue('order')) {
-                const result = dispatch(
-                  getFilteredOrders({
-                    companyID: currentCompanyID,
-                    orderNumber: form.getFieldValue('order'),
-                    vendorName: form.getFieldValue('vendorName'),
-                    partNumber: form.getFieldValue('partNumber'),
-                    orderType: form.getFieldValue('orderType'),
-                  })
-                );
-                if ((await result).meta.requestStatus === 'fulfilled') {
-                  onOrdersSearch &&
-                    onOrdersSearch((await result).payload[0] || []);
-                } else {
-                  message.error('Error');
-                }
-              }
-            }}
-          >
-            {t('LOAD')}
-          </Button>
+          />
+          {selectedType === 'ORDER' && (
+            <>
+              <ProFormText name="order" width="sm" tooltip={t('ORDER')} />
+              <Button type="primary" onClick={handleLoadClick}>
+                {t('LOAD')}
+              </Button>
+            </>
+          )}
         </ProFormGroup>
         <Space direction="vertical">
           <ProFormGroup>
@@ -171,7 +186,15 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                           awbDate: form.getFieldValue('awbDate'),
                           awbType: form.getFieldValue('awbType'),
                           awbReference: form.getFieldValue('awbReference'),
-                          SUPPLIES_CODE: form.getFieldValue('SUPPLIES_CODE'),
+                          SUPPLIES_CODE: selectedSingleVendor?.CODE,
+                          SUPPLIER_SHORT_NAME: selectedSingleVendor?.SHORT_NAME,
+                          SUPPLIER_NAME: selectedSingleVendor?.NAME,
+                          SUPPLIER_UNP: selectedSingleVendor?.UNP,
+                          IS_RESIDENT: selectedSingleVendor?.IS_RESIDENT,
+                          SUPPLIER_ADRESS: selectedSingleVendor?.ADRESS,
+                          SUPPLIER_COUNTRY: selectedSingleVendor?.COUNTRY,
+                          SUPPLIES_ID:
+                            selectedSingleVendor._id || selectedSingleVendor.id,
                           WAREHOUSE_RECEIVED_AT: form.getFieldValue(
                             'WAREHOUSE_RECEIVED_AT'
                           ),
@@ -332,6 +355,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
         <div className="h-[82vh]  overflow-hidden">
           <ReceivingTracking
             onDoubleClick={(data) => {
+              onReceivingType(form.getFieldValue('type'));
               setCurrentReceiving({
                 SUPPLIES_CODE: data?.SUPPLIES_CODE,
                 awbReference: data?.AWB_REFERENCE,
@@ -342,6 +366,13 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 awbDate: data?.AWB_DATE,
                 awbType: data?.AWB_TYPE,
                 WAREHOUSE_RECEIVED_AT: data?.WAREHOUSE_RECEIVED_AT,
+                SUPPLIER_SHORT_NAME: data?.SHORT_NAME,
+                SUPPLIER_NAME: data?.NAME,
+                SUPPLIER_UNP: data?.UNP,
+                IS_RESIDENT: data?.IS_RESIDENT,
+                SUPPLIER_ADRESS: data?.ADRESS,
+                SUPPLIER_COUNTRY: data?.COUNTRY,
+                SUPPLIES_ID: data._id || data.id,
               });
               onCurrentReceiving({
                 SUPPLIES_CODE: data?.SUPPLIES_CODE,
@@ -353,6 +384,13 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 awbDate: data?.AWB_DATE,
                 awbType: data?.AWB_TYPE,
                 WAREHOUSE_RECEIVED_AT: data?.WAREHOUSE_RECEIVED_AT,
+                SUPPLIER_SHORT_NAME: data?.SHORT_NAME,
+                SUPPLIER_NAME: data?.NAME,
+                SUPPLIER_UNP: data?.UNP,
+                IS_RESIDENT: data?.IS_RESIDENT,
+                SUPPLIER_ADRESS: data?.ADRESS,
+                SUPPLIER_COUNTRY: data?.COUNTRY,
+                SUPPLIES_ID: data._id || data.id,
               });
 
               setOpenPickViewer(false);
