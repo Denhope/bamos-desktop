@@ -47,6 +47,8 @@ import ProjectManagment from './APN/ProjectManagment';
 import ProjectViewer from './APN/ProjectViewer';
 import OrderManagment from './APN/OrderManagment';
 import RequirementManagement from './APN/RequirementManagement';
+import Title from 'antd/lib/typography/Title';
+
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -546,7 +548,8 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
               />
             </ProCard>
           </Layout>
-          <img
+          <Title className="ml-auto">LOGO</Title>
+          {/* <img
             className="ml-auto"
             src={logoImage} // замените на URL вашего логотипа
             style={{
@@ -558,7 +561,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
               height: '40px', // измените размер по желанию
               // // borderRadius: '50%', // делает изображение круглым
             }}
-          />
+          /> */}
         </div>
       ),
       closable: false,
