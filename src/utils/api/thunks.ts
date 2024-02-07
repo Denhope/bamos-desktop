@@ -5046,6 +5046,33 @@ export const getFilteredPartNumber = createAsyncThunk(
     }
   }
 );
+export type getFilteredVendorsProps = {
+  companyID: string;
+  code?: string;
+  name?: string;
+};
+export const getFilteredVendors = createAsyncThunk(
+  'vendors/getFilteredVendors',
+  async (params: getFilteredVendorsProps, { rejectWithValue }) => {
+    const url = new URL(
+      `vendors/getFilteredVendors/company/${params.companyID}`,
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+
+    if (params.code) searchParams.append('code', params.code);
+    if (params.name) searchParams.append('name', params.name);
+
+    url.search = searchParams.toString();
+
+    try {
+      const response = await $authHost.get(url.toString());
+      return response.data;
+    } catch (error) {
+      return 'Не удалось загрузить VENDORS';
+    }
+  }
+);
 
 export interface IfeatchFilteredShops {
   shopShortName?: string;
@@ -5274,8 +5301,8 @@ export const getFilteredOrders = createAsyncThunk(
       API_URL
     );
     const searchParams = new URLSearchParams();
-
     if (params.vendorName) searchParams.append('vendorName', params.vendorName);
+    if (params.customer) searchParams.append('customer', params.customer);
 
     if (params.orderType) searchParams.append('orderType', params.orderType);
 

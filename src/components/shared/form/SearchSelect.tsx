@@ -115,7 +115,7 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
               (optionLabel1 ? option[optionLabel1] : '') +
               (optionLabel2 ? ' - ' + option[optionLabel2] : ''),
             label:
-              (optionLabel1 ? option[optionLabel1] : '') +
+              (optionLabel1 ? option[optionLabel1].toUpperCase() : '') +
               (optionLabel2 ? ' - ' + option[optionLabel2] : ''),
           }))}
         />

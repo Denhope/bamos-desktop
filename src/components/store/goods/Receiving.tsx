@@ -180,14 +180,14 @@ const Receiving: FC<ReceivingType> = ({
 
           const result = dispatch(
             postNewStoreItem({
-              PART_NUMBER: values.partNumber,
+              PART_NUMBER: selectedSinglePN?.PART_NUMBER,
               NAME_OF_MATERIAL: values.description,
               QUANTITY: values.qty,
               GROUP: values.partGroup,
               TYPE: values.partType,
               CONDITION: values.condition,
-              SHELF_NUMBER: values.location,
-              STOCK: values.store,
+              SHELF_NUMBER: selectedLocation.locationName,
+              STOCK: selectedSingleStore?.shopShortName,
               OWNER: values?.owner,
               PRICE: 1000,
               RECEIVED_DATE: currentReceiving?.receivingDate,
@@ -205,7 +205,7 @@ const Receiving: FC<ReceivingType> = ({
               IS_RESIDENT: currentReceiving?.IS_RESIDENT,
               ADD_UNIT_OF_MEASURE: values?.addUnit,
               ADD_NAME_OF_MATERIAL: values?.addDescription,
-              ADD_PART_NUMBER: values?.addPartNumber,
+              ADD_PART_NUMBER: selectedSinglePN?.addPartNumber,
               ADD_QUANTITY: values.addQty,
               OWNER_SHORT_NAME: values.ownerShotName,
               OWNER_LONG_NAME: values.ownerDiscription,

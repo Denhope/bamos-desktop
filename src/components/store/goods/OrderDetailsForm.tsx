@@ -9,6 +9,7 @@ import {
   ProFormText,
   ProFormTimePicker,
 } from '@ant-design/pro-components';
+import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
 import { current } from '@reduxjs/toolkit';
 import { FormInstance, Modal, RadioChangeEvent, message } from 'antd';
 import { Button, Form, Space } from 'antd';
@@ -82,6 +83,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
+  const [selectedSingleVendor, setSecectedSingleVendor] = useState<any>();
   const createNewReceiving = () => {
     setCurrentReceiving({
       createDate: new Date(),
@@ -94,13 +96,13 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
       shipTo: {},
       companyID: localStorage.getItem('companyID') || '',
       createUserID: USER_ID,
+
       // Добавьте другие базовые поля здесь
     });
+    setSecectedSingleVendor({});
   };
   const formRef = useRef<FormInstance>(null);
-  const [selectedSingleVendor, setSecectedSingleVendor] = useState<any>();
   const [selectedType, setSelectedType] = useState('ORDER');
-
   const handleTypeChange = (e: RadioChangeEvent) => {
     setSelectedType(e.target.value);
     onOrdersSearch?.(null);
@@ -125,6 +127,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
       message.error('Error');
     }
   };
+  const [initialForm, setinitialForm] = useState<any>('');
   return (
     <div className="flex flex-col">
       <ProForm
@@ -147,10 +150,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 label: t('ORDER'),
                 value: 'ORDER',
               },
-              // {
-              //   label: t('SHIPMENT'),
-              //   value: 'SHIPMENT',
-              // },
+
               {
                 label: t('SINGLE RECEIVING'),
                 value: 'UN_ORDER',
@@ -210,21 +210,18 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                     }
                   }}
                   disabled={
-                    !currentReceiving || currentReceiving?.receivingNumber
+                    !currentReceiving ||
+                    currentReceiving?.receivingNumber ||
+                    !selectedSingleVendor?.CODE
+                    // ||
+                    // // ||
+                    // // !currentReceiving?.awbDate ||
+                    // // !currentReceiving?.awbNumber
+                    // !form.getFieldValue('awbNumber')
                   }
-                  // !!(
-                  //   !currentReceiving ||
-                  //   currentReceiving.receivingNumber.length ||
-                  //   (currentReceiving &&
-                  //     Object.keys(currentReceiving).length === 0)
-                  // )
-                  // }
                 >
                   {t('SAVE RECEIVING')}
                 </Button>
-                {/* <Button disabled={!currentReceiving?.receivingNumber}>
-                  {t('EDIT')}
-                </Button>{' '} */}
               </Space>
             </ProFormGroup>
             <ProFormText
@@ -294,17 +291,17 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           </ProFormGroup>
         </Space>
         <ProFormGroup>
-          <ProFormText
-            name="SUPPLIES_CODE"
+          <ContextMenuVendorsSearchSelect
+            width="lg"
             rules={[{ required: true }]}
-            label={`${t('SUPPLIER')}`}
-            fieldProps={{
-              onDoubleClick: () => {
-                setOpenVendorFind(true);
-              },
-              onKeyPress: handleKeyPress,
+            name={'SUPPLIES_CODE'}
+            onSelectedVendor={function (record: any, rowIndex?: any): void {
+              setOpenVendorFind(false);
+              setSecectedSingleVendor(record);
             }}
-          ></ProFormText>
+            initialForm={selectedSingleVendor?.CODE || initialForm}
+            label={'SUPPLIES CODE'}
+          />
           <ProFormText
             // disabled
             name="WAREHOUSE_RECEIVED_AT"
@@ -314,37 +311,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           ></ProFormText>
         </ProFormGroup>
       </ProForm>
-      <ModalForm
-        // title={`Search on Store`}
-        width={'70vw'}
-        // placement={'bottom'}
-        open={openVendorFindModal}
-        // submitter={false}
-        onOpenChange={setOpenVendorFind}
-        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
-          setOpenVendorFind(false);
-          setSecectedSingleVendor(record);
 
-          form.setFields([
-            { name: 'SUPPLIES_CODE', value: selectedSingleVendor.CODE },
-          ]);
-        }}
-      >
-        <VendorSearchForm
-          initialParams={{ partNumber: '' }}
-          scroll={45}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            setOpenVendorFind(false);
-
-            form.setFields([{ name: 'SUPPLIES_CODE', value: record.CODE }]);
-          }}
-          isLoading={false}
-          onRowSingleClick={function (record: any, rowIndex?: any): void {
-            setSecectedSingleVendor(record);
-            form.setFields([{ name: 'SUPPLIES_CODE', value: record.CODE }]);
-          }}
-        />
-      </ModalForm>
       <Modal
         title=""
         open={openPickViewer}
