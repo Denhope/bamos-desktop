@@ -212,7 +212,9 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                   disabled={
                     !currentReceiving ||
                     currentReceiving?.receivingNumber ||
-                    !selectedSingleVendor?.CODE
+                    !selectedSingleVendor?.CODE ||
+                    !form.getFieldValue('awbNumber')
+
                     // ||
                     // // ||
                     // // !currentReceiving?.awbDate ||
