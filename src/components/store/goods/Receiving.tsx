@@ -172,7 +172,7 @@ const Receiving: FC<ReceivingType> = ({
       onFinish={async (values) => {
         if (
           !currentReceiving ||
-          (currentReceiving && Object.keys(currentReceiving).length === 0)
+          (currentReceiving && Object.keys(currentReceiving)?.length === 0)
         ) {
           message.error('Some fields are empty');
         } else {

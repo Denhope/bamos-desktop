@@ -109,6 +109,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
     onOrdersSearch?.(null);
     setCurrentReceiving(null);
     onReceivingType(form.getFieldValue('type'));
+    onCurrentReceiving(null);
   };
 
   const handleLoadClick = async () => {
@@ -263,7 +264,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                     form.resetFields();
                     createNewReceiving();
                     setIsCreating(true);
-                    onCurrentReceiving(null);
                   }}
                 >
                   {t('NEW RECEIVING')}

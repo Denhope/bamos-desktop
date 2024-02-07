@@ -90,7 +90,9 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                         (selectedOrder && selectedOrder?.state === 'CLOSED') ||
                         (selectedOrder &&
                           selectedOrder?.state === 'CANCELLED') ||
-                        (selectedOrder && selectedOrder?.state === 'RECEIVED')
+                        (selectedOrder &&
+                          selectedOrder?.state === 'RECEIVED') ||
+                        !selecteReceiving
                       )
                     }
                   >
