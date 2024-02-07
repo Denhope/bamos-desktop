@@ -16,6 +16,7 @@ interface ContextMenuVendorsSelectProps {
   initialForm: string;
   width: 'lg' | 'sm' | 'xs';
   label: string;
+  disabled?: boolean;
 }
 const ContextMenuVendorsSearchSelect: FC<ContextMenuVendorsSelectProps> = ({
   rules,
@@ -24,6 +25,7 @@ const ContextMenuVendorsSearchSelect: FC<ContextMenuVendorsSelectProps> = ({
   initialForm,
   width,
   label,
+  disabled,
 
   onSelectedVendor,
 }) => {
@@ -75,6 +77,7 @@ const ContextMenuVendorsSearchSelect: FC<ContextMenuVendorsSelectProps> = ({
         ]}
       >
         <SearchSelect
+          disabled={disabled}
           width={width}
           initialValue={initialForm}
           onDoubleClick={() => {

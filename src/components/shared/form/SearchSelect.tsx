@@ -16,6 +16,7 @@ interface SearchSelectProps<T> {
   onDoubleClick?: () => void;
   initialValue?: string;
   width?: 'lg' | 'sm' | 'xs';
+  disabled?: boolean;
 }
 
 const SearchSelect: FC<SearchSelectProps<any>> = ({
@@ -32,6 +33,7 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
   onDoubleClick,
   initialValue,
   width,
+  disabled,
 }) => {
   const [form] = Form.useForm();
   const [options, setOptions] = useState<any[]>(data || []);
@@ -99,6 +101,7 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
     <div style={{ cursor: 'pointer' }} onDoubleClick={onDoubleClick}>
       <ProForm layout="horizontal" submitter={false}>
         <ProFormSelect
+          disabled={disabled}
           width={width}
           name={name}
           label={label}

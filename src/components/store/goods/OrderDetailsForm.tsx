@@ -36,12 +36,13 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   onCurrentReceiving,
   onReceivingType,
 }) => {
-  const [form] = Form.useForm();
+  const [form] = ProForm.useForm();
   const { t } = useTranslation();
   const [currentReceiving, setCurrentReceiving] = useState<any | null>(null);
 
-  const [openVendorFindModal, setOpenVendorFind] = useState(false);
   const [openPickViewer, setOpenPickViewer] = useState<boolean>(false);
+  const [isCreating, setIsCreating] = useState(false);
+
   useEffect(() => {
     if (order && !currentReceiving) {
       form.setFields([
@@ -128,12 +129,94 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
     }
   };
   const [initialForm, setinitialForm] = useState<any>('');
+  const [canSave, setCanSave] = useState(false);
+  const validateAndSetCanSave = async () => {
+    try {
+      // Validate all fields
+      const values = await form.validateFields();
+      // If validation is successful, set canSave to true
+      setCanSave(true);
+    } catch (error) {
+      // If there's an error during validation, set canSave to false
+      setCanSave(false);
+    }
+  };
+
+  // Function to handle form field changes
+  const handleFormFieldChange = () => {
+    validateAndSetCanSave();
+  };
+
   return (
     <div className="flex flex-col">
       <ProForm
+        onFinish={async (values) => {
+          const result = dispatch(
+            postNewReceiving({
+              ...currentReceiving,
+              awbNumber: form.getFieldValue('awbNumber'),
+              awbDate: form.getFieldValue('awbDate'),
+              awbType: form.getFieldValue('awbType'),
+              awbReference: form.getFieldValue('awbReference'),
+              SUPPLIES_CODE: selectedSingleVendor?.CODE,
+              SUPPLIER_SHORT_NAME: selectedSingleVendor?.SHORT_NAME,
+              SUPPLIER_NAME: selectedSingleVendor?.NAME,
+              SUPPLIER_UNP: selectedSingleVendor?.UNP,
+              IS_RESIDENT: selectedSingleVendor?.IS_RESIDENT,
+              SUPPLIER_ADRESS: selectedSingleVendor?.ADRESS,
+              SUPPLIER_COUNTRY: selectedSingleVendor?.COUNTRY,
+              SUPPLIES_ID: selectedSingleVendor._id || selectedSingleVendor.id,
+              WAREHOUSE_RECEIVED_AT: form.getFieldValue(
+                'WAREHOUSE_RECEIVED_AT'
+              ),
+            })
+          );
+          if ((await result).meta.requestStatus === 'fulfilled') {
+            setCurrentReceiving((await result).payload || []);
+            onCurrentReceiving((await result).payload || []);
+            onReceivingType(form.getFieldValue('type'));
+            setIsCreating(false);
+          } else {
+            message.error('Error');
+          }
+        }}
+        // onValuesChange={handleFormFieldChange}
         initialValues={{ type: 'ORDER' }}
         formRef={formRef}
-        submitter={false}
+        submitter={{
+          submitButtonProps: {
+            disabled:
+              !!(
+                // !currentReceiving ||
+                (currentReceiving && Object.keys(currentReceiving).length === 0)
+              ) || !selectedSingleVendor?.CODE,
+          },
+          render: (_, dom) =>
+            isCreating
+              ? [
+                  ...dom,
+                  <Button
+                    key="cancel"
+                    onClick={() => {
+                      isCreating && setIsCreating(false);
+                      onCurrentReceiving(null);
+                      // setSelectedProjectType(
+                      //   form.getFieldValue('projectState')
+                      // );
+                    }}
+                  >
+                    {t('Cancel')}
+                  </Button>,
+                ]
+              : [],
+        }}
+        onReset={() => {
+          setinitialForm('');
+          // setSecectedSinglePN(null);
+          setSecectedSingleVendor({ CODE: '' });
+          // setSecectedSingleStore({ shopShortName: '' });
+          // setSecectedSingleLocation({ locationName: '' });
+        }}
         form={form}
         size="small"
         layout="horizontal"
@@ -172,13 +255,23 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           <ProFormGroup>
             <ProFormGroup>
               <Space className="P-5">
-                <Button onClick={createNewReceiving}>
-                  {t('NEW RECEIVING')}
-                </Button>{' '}
                 <Button
                   type="primary"
+                  disabled={isCreating}
+                  onClick={() => {
+                    onCurrentReceiving(null);
+                    form.resetFields();
+                    createNewReceiving();
+                    setIsCreating(true);
+                    onCurrentReceiving(null);
+                  }}
+                >
+                  {t('NEW RECEIVING')}
+                </Button>{' '}
+                {/* <Button
+                  type="primary"
                   onClick={async () => {
-                    if (!currentReceiving?.receivingNumber) {
+                    if (isCreating) {
                       const result = dispatch(
                         postNewReceiving({
                           ...currentReceiving,
@@ -209,26 +302,28 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                       }
                     }
                   }}
-                  disabled={
-                    !currentReceiving ||
-                    currentReceiving?.receivingNumber ||
-                    !selectedSingleVendor?.CODE ||
-                    !form.getFieldValue('awbNumber')
+                  // disabled={
+                  //   !currentReceiving ||
+                  //   currentReceiving?.receivingNumber ||
+                  //   !selectedSingleVendor?.CODE ||
+                  //   !form.getFieldValue('awbNumber')
 
-                    // ||
-                    // // ||
-                    // // !currentReceiving?.awbDate ||
-                    // // !currentReceiving?.awbNumber
-                    // !form.getFieldValue('awbNumber')
-                  }
+                  //   // ||
+                  //   // // ||
+                  //   // // !currentReceiving?.awbDate ||
+                  //   // // !currentReceiving?.awbNumber
+                  //   // !form.getFieldValue('awbNumber')
+                  // }
+                  disabled={!canSave}
                 >
                   {t('SAVE RECEIVING')}
-                </Button>
+                </Button> */}
               </Space>
             </ProFormGroup>
             <ProFormText
+              disabled={isCreating}
               name="receiving"
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
               label={t('RECEIVING No')}
               width="sm"
               tooltip={t('ORDER')}
@@ -239,12 +334,14 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               }}
             ></ProFormText>
             <ProFormDatePicker
+              disabled={!isCreating}
               rules={[{ required: true }]}
               name="receivingDate"
               label={t('RECEIVING DATE')}
               width="xs"
             ></ProFormDatePicker>
             <ProFormTimePicker
+              disabled={!isCreating}
               rules={[{ required: true }]}
               name="receivingTime"
               label={t('RECEIVING TIME')}
@@ -256,6 +353,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
+              disabled={!isCreating}
               rules={[{ required: true }]}
               name="awbType"
               label={t('DOC TYPE')}
@@ -272,6 +370,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               tooltip={t('DOC TYPE')}
             ></ProFormSelect>
             <ProFormText
+              disabled={!isCreating}
               name="awbNumber"
               label={t(' DOC No')}
               rules={[{ required: true }]}
@@ -279,12 +378,14 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               tooltip={t(' DOC NNUMBER')}
             ></ProFormText>
             <ProFormDatePicker
+              disabled={!isCreating}
               name="awbDate"
               label={t('DOC DATE')}
               rules={[{ required: true }]}
               width="xs"
             ></ProFormDatePicker>
             <ProFormText
+              disabled={!isCreating}
               name="awbReference"
               label={t(' REFERENCE')}
               width="sm"
@@ -294,18 +395,22 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
         </Space>
         <ProFormGroup>
           <ContextMenuVendorsSearchSelect
+            disabled={!isCreating}
             width="lg"
             rules={[{ required: true }]}
             name={'SUPPLIES_CODE'}
             onSelectedVendor={function (record: any, rowIndex?: any): void {
-              setOpenVendorFind(false);
               setSecectedSingleVendor(record);
             }}
-            initialForm={selectedSingleVendor?.CODE || initialForm}
+            initialForm={
+              selectedSingleVendor?.CODE ||
+              initialForm ||
+              currentReceiving?.SUPPLIES_CODE
+            }
             label={'SUPPLIES CODE'}
           />
           <ProFormText
-            // disabled
+            disabled={!isCreating}
             name="WAREHOUSE_RECEIVED_AT"
             rules={[{ required: true }]}
             label={`${t('SHIP TO')}`}
