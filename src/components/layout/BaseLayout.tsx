@@ -123,6 +123,12 @@ const BaseLayout: React.FC = () => {
       route: RouteNames.PARTS_FORECAST,
     },
     {
+      APNNBR: '205',
+
+      descriptions: `${t(`REQUIREMENT VIEWER`)}`,
+      route: RouteNames.REQUIREMENT_VIEWER,
+    },
+    {
       APNNBR: '220',
 
       descriptions: `${t(`STORE MANAGEMENT`)}`,

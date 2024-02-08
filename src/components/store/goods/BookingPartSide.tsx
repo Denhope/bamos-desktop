@@ -68,7 +68,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
         selectedOrderType &&
           selectedOrderType === 'ORDER' && {
             content: (
-              <div className="flex h-[51vh] flex-col justify-between">
+              <div className="flex h-[48vh] flex-col justify-between">
                 <div className="flex">
                   <BookingOrderPartsList
                     onSelectedPart={handleSelectedPart}

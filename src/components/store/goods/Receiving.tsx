@@ -251,12 +251,12 @@ const Receiving: FC<ReceivingType> = ({
                   companyID: currentCompanyID,
                   data: {
                     userSing: localStorage.getItem('singNumber') || '',
-                    partNumber: values.partNumber,
+                    partNumber: selectedSinglePN?.PART_NUMBER,
                     station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
                     suppliesCode: currentReceiving?.SUPPLIES_CODE || '',
                     suppliesId: currentReceiving?.SUPPLIES_ID || '',
                     voucherModel: 'RECEIVING_GOODS',
-                    location: values.location,
+                    location: selectedLocation.locationName,
                     orderNumber: currenOrder?.orderNumber,
                     price: currentPart?.price,
                     currency: currentPart?.currency,
@@ -275,6 +275,8 @@ const Receiving: FC<ReceivingType> = ({
                     createDate: new Date(),
                     userID: USER_ID || '',
                     IS_CUSTOMER_GOODS: isCustomerGoods,
+                    receivingGoodsId:
+                      resultUp.payload?._id || resultUp.payload?.id,
                   },
                 })
               );

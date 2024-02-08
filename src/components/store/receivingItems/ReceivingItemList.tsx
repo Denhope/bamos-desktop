@@ -1,9 +1,9 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { TimePicker } from "antd";
-import ContextMenuWrapper from "@/components/shared/ContextMenuWrapperProps";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import { TimePicker } from 'antd';
+import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 type ReceivingItemList = {
   scroll: number;
   data: any[];
@@ -33,23 +33,23 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
   };
   const handleAdd = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    console.log("Добавить:", value);
+    console.log('Добавить:', value);
   };
 
   const handleAddPick = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    console.log("Добавить Pick:", value);
+    console.log('Добавить Pick:', value);
   };
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("RECEIVING No")}`,
-      dataIndex: "RECEIVING_NUMBER",
-      key: "RECEIVING_NUMBER",
+      title: `${t('RECEIVING No')}`,
+      dataIndex: 'RECEIVING_NUMBER',
+      key: 'RECEIVING_NUMBER',
       // tip: 'LOCAL_ID',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "RECEIVING_NUMBER",
+        name: 'RECEIVING_NUMBER',
       },
       sorter: (a: any, b: any) => a.RECEIVING_NUMBER - b.RECEIVING_NUMBER, //
 
@@ -57,21 +57,21 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     },
 
     {
-      title: `${t("RECEIVING ITEM No")}`,
-      dataIndex: "RECEIVING_ITEM_NUMBER",
-      key: "RECEIVING_ITEM_NUMBER",
+      title: `${t('RECEIVING ITEM No')}`,
+      dataIndex: 'RECEIVING_ITEM_NUMBER',
+      key: 'RECEIVING_ITEM_NUMBER',
       //tip: 'ITEM PART_NUMBER',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "RECEIVING_ITEM_NUMBER",
+        name: 'RECEIVING_ITEM_NUMBER',
       },
       render: (text: any, record: any) => {
         return (
           <ContextMenuWrapper
             items={[
               {
-                label: "Copy",
+                label: 'Copy',
                 action: handleCopy,
               },
               // {
@@ -101,43 +101,43 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     },
 
     {
-      title: `${t("ORDER No")}`,
-      dataIndex: "ORDER_NUMBER",
-      key: "ORDER_NUMBER",
+      title: `${t('ORDER No')}`,
+      dataIndex: 'ORDER_NUMBER',
+      key: 'ORDER_NUMBER',
       // tip: 'ITEM STORE',
       ellipsis: true,
       // width: '8%',
       formItemProps: {
-        name: "ORDER_NUMBER",
+        name: 'ORDER_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("PART No")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PART No')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       //tip: 'ITEM PART_NUMBER',
       // ellipsis: true,
-      width: "10%",
+      width: '10%',
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
       render: (text: any, record: any) => {
         return (
           <ContextMenuWrapper
             items={[
               {
-                label: "Copy",
+                label: 'Copy',
                 action: handleCopy,
               },
               {
-                label: "Open with",
+                label: 'Open with',
                 action: () => {},
                 submenu: [
-                  { label: "Part Tracking", action: handleAdd },
-                  { label: "PickSlip Request", action: handleAddPick },
+                  { label: 'Part Tracking', action: handleAdd },
+                  { label: 'PickSlip Request', action: handleAddPick },
                 ],
               },
             ]}
@@ -158,36 +158,36 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("B/SERIAL")}`,
-      dataIndex: "SERIAL_NUMBER",
-      key: "SERIAL_NUMBER",
+      title: `${t('B/SERIAL')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      key: 'SERIAL_NUMBER',
       ellipsis: true,
       render: (text: any, record: any) =>
         record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
       // остальные свойства...
     },
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // tip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
-        name: "NAME_OF_MATERIAL",
+        name: 'NAME_OF_MATERIAL',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("CONDITION")}`,
-      dataIndex: "CONDITION",
-      key: "CONDITION",
+      title: `${t('CONDITION')}`,
+      dataIndex: 'CONDITION',
+      key: 'CONDITION',
       //tip: 'CONDITION',
       ellipsis: true,
 
       formItemProps: {
-        name: "CONDITION",
+        name: 'CONDITION',
       },
       render: (text: any, record: any) => {
         return (
@@ -206,42 +206,42 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("LABEL")}`,
-      dataIndex: "LOCAL_ID",
-      key: "LOCAL_ID",
+      title: `${t('LABEL')}`,
+      dataIndex: 'LOCAL_ID',
+      key: 'LOCAL_ID',
       // tip: 'LOCAL_ID',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "LOCAL_ID",
+        name: 'LOCAL_ID',
       },
       sorter: (a: any, b: any) => a.LOCAL_ID - b.LOCAL_ID, //
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("AWB No")}`,
-      dataIndex: "AWB_NUMBER",
-      key: "AWB_NUMBER",
+      title: `${t('AWB No')}`,
+      dataIndex: 'AWB_NUMBER',
+      key: 'AWB_NUMBER',
       //tip: 'ITEM ORDER_NUMBER',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "AWB_NUMBER",
+        name: 'AWB_NUMBER',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("STORE")}`,
-      dataIndex: "STOCK",
-      key: "STOCK",
+      title: `${t('STORE')}`,
+      dataIndex: 'STOCK',
+      key: 'STOCK',
       // tip: 'ITEM STORE',
       ellipsis: true,
-      width: "4%",
+      width: '4%',
       formItemProps: {
-        name: "STOCK",
+        name: 'STOCK',
       },
       render: (text: any, record: any) => {
         return (
@@ -261,29 +261,29 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     },
 
     {
-      title: `${t("LOCATION")}`,
-      dataIndex: "SHELF_NUMBER",
-      key: "SHELF_NUMBER",
+      title: `${t('LOCATION')}`,
+      dataIndex: 'SHELF_NUMBER',
+      key: 'SHELF_NUMBER',
       //tip: 'ITEM LOCATION',
       ellipsis: true,
-      width: "5%",
+      width: '5%',
       formItemProps: {
-        name: "SHELF_NUMBER",
+        name: 'SHELF_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("REC DATE")}`,
-      dataIndex: "RECEIVED_DATE",
-      width: "7%",
-      key: "RECEIVED_DATE",
+      title: `${t('REC DATE')}`,
+      dataIndex: 'RECEIVED_DATE',
+      width: '7%',
+      key: 'RECEIVED_DATE',
       //tip: 'ITEM EXPIRY DATE',
       ellipsis: true,
-      valueType: "date",
+      valueType: 'date',
 
       formItemProps: {
-        name: "RECEIVED_DATE",
+        name: 'RECEIVED_DATE',
       },
       sorter: (a, b) => {
         if (a.PRODUCT_EXPIRATION_DATE && b.RECEIVED_DATE) {
@@ -302,21 +302,21 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     },
 
     {
-      title: `${t("QTY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      width: "5%",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      width: '5%',
+      responsive: ['sm'],
       search: false,
 
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
-      width: "5%",
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
+      width: '5%',
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
@@ -334,9 +334,9 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     // },
 
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "OWNER_SHORT_NAME",
-      key: "OWNER_SHORT_NAME",
+      title: `${t('OWNER')}`,
+      dataIndex: 'OWNER_SHORT_NAME',
+      key: 'OWNER_SHORT_NAME',
 
       ellipsis: true,
       editable: (text, record, index) => {
@@ -345,9 +345,9 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       search: false,
     },
     {
-      title: `${t("VENDOR")}`,
-      dataIndex: "SUPPLIES_CODE",
-      key: "SUPPLIES_CODE",
+      title: `${t('VENDOR')}`,
+      dataIndex: 'SUPPLIES_CODE',
+      key: 'SUPPLIES_CODE',
 
       ellipsis: true,
       editable: (text, record, index) => {
@@ -356,9 +356,9 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       search: false,
     },
     {
-      title: `${t("PRICE")}`,
-      dataIndex: "PRICE",
-      key: "PRICE",
+      title: `${t('PRICE')}`,
+      dataIndex: 'PRICE',
+      key: 'PRICE',
 
       ellipsis: true,
       editable: (text, record, index) => {
@@ -367,20 +367,20 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       search: false,
     },
     {
-      title: `${t("STATE")}`,
-      key: "state",
+      title: `${t('STATE')}`,
+      key: 'state',
 
-      valueType: "select",
+      valueType: 'select',
       filterSearch: true,
       filters: true,
       ellipsis: true,
       onFilter: true,
       valueEnum: {
-        RECEIVED: { text: t("RECEIVED"), status: "Success" },
-        CANCELLED: { text: t("CANCELLED"), status: "Error" },
+        RECEIVED: { text: t('RECEIVED'), status: 'Success' },
+        CANCELLED: { text: t('CANCELLED'), status: 'Error' },
       },
 
-      dataIndex: "state",
+      dataIndex: 'state',
       editable: (text, record, index) => {
         return false;
       },
@@ -404,6 +404,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         // onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onRowClick={function (record: any, rowIndex?: any): void {
+          onSingleRowClick && onSingleRowClick(record);
           setSelectedMaterials((prevSelectedItems: (string | undefined)[]) =>
             prevSelectedItems && prevSelectedItems.includes(record._id)
               ? []
@@ -420,7 +421,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
         onSave={function (rowKey: any, data: any, row: any): void {}}
         yScroll={scroll}
         externalReload={function () {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
     </div>

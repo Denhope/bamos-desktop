@@ -34,6 +34,7 @@ export interface IBookingItem {
   suppliesCode?: any;
   suppliesId?: any;
   IS_CUSTOMER_GOODS?: boolean;
+  receivingGoodsId?: string;
 }
 type VaucherModelType =
   | 'ADD_NEW_PART'

@@ -17,6 +17,7 @@ export enum RouteNames {
   PICKSLIP_CONFIRMATIONS = '/materialManagment/stores/pickslipConfirmation',
   PICKSLIP_VIEWER = '/materialManagment/stores/pickslipViewer',
   PARTS_FORECAST = '/materialManagment/parts/forecast',
+  REQUIREMENT_VIEWER = '/materialManagment/parts/requirement',
   PICKSLIP_CANCEL = '/materialManagment/stores/pickslipCancel',
   SCRAP_MATERIAL = '/materialManagment/stores/scrap',
   PROJECT_MANAGMENT = 'project/projectManagment',

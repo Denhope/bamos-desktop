@@ -8,7 +8,7 @@ import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
 import ModifyReceiving from '@/components/store/receivingItems/ModifyReceiving';
 interface ReceivingTracking {
   onDoubleClick?: (record: any, rowIndex?: any) => void;
-  onSingleRowClick?: (record: any, rowIndex?: any) => void;
+  onSingleRowClick?: (record: any) => void;
 }
 const ReceivingTracking: FC<ReceivingTracking> = ({
   onSingleRowClick,
@@ -32,6 +32,7 @@ const ReceivingTracking: FC<ReceivingTracking> = ({
             onDoubleClick={onDoubleClick}
             scroll={25}
             data={data}
+            onSingleRowClick={onSingleRowClick}
           />
         </>
       ),

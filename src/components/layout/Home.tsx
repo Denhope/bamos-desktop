@@ -48,6 +48,7 @@ import ProjectViewer from './APN/ProjectViewer';
 import OrderManagment from './APN/OrderManagment';
 import RequirementManagement from './APN/RequirementManagement';
 import Title from 'antd/lib/typography/Title';
+import RequirementViewer from './APN/RequirementViewer';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -180,6 +181,19 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <PartsForecast />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.REQUIREMENT_VIEWER) {
+      tab = {
+        key,
+        title: `${t(`REQUIREMENT VIEWER`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <RequirementViewer />
           </div>
         ),
 

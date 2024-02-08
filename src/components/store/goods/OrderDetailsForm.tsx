@@ -1,6 +1,4 @@
 import {
-  ModalForm,
-  ProDescriptions,
   ProForm,
   ProFormDatePicker,
   ProFormGroup,
@@ -10,12 +8,12 @@ import {
   ProFormTimePicker,
 } from '@ant-design/pro-components';
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
-import { current } from '@reduxjs/toolkit';
-import { FormInstance, Modal, RadioChangeEvent, message } from 'antd';
-import { Button, Form, Space } from 'antd';
+
+import { FormInstance, RadioChangeEvent, message } from 'antd';
+import { Button, Space } from 'antd';
 import ReceivingTracking from '@/components/layout/APN/ReceivingTracking';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { IOrder, OrderType } from '@/models/IOrder';
+import { IOrder } from '@/models/IOrder';
 import { IReceiving } from '@/models/IReceiving';
 import moment from 'moment';
 
@@ -24,11 +22,13 @@ import { useTranslation } from 'react-i18next';
 import { USER_ID } from '@/utils/api/http';
 import { getFilteredOrders, postNewReceiving } from '@/utils/api/thunks';
 import VendorSearchForm from '../search/VendorSearchForm';
+import ContextMenuReceivingsSearchSelect from '@/components/shared/form/ContextMenuReceivingsSearchSelect';
+
 type OrderDetailsFormType = {
   order: IOrder | null;
   onReceivingType: (data: any) => void;
   onOrdersSearch?: (data: any) => void;
-  onCurrentReceiving: (data: any) => void;
+  onCurrentReceiving: (data: IReceiving | null) => void;
 };
 const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   order,
@@ -40,7 +40,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   const { t } = useTranslation();
   const [currentReceiving, setCurrentReceiving] = useState<any | null>(null);
 
-  const [openPickViewer, setOpenPickViewer] = useState<boolean>(false);
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
@@ -73,8 +72,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           name: 'WAREHOUSE_RECEIVED_AT',
           value: currentReceiving?.WAREHOUSE_RECEIVED_AT || 'MSQ',
         },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
     }
   }, [currentReceiving]);
@@ -85,6 +82,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
     }
   };
   const [selectedSingleVendor, setSecectedSingleVendor] = useState<any>();
+  const [selectedSingleReceiving, setSecectedSingleReceiving] = useState<any>();
   const createNewReceiving = () => {
     setCurrentReceiving({
       createDate: new Date(),
@@ -101,15 +99,17 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
       // Добавьте другие базовые поля здесь
     });
     setSecectedSingleVendor({});
+    setSecectedSingleReceiving({});
   };
   const formRef = useRef<FormInstance>(null);
   const [selectedType, setSelectedType] = useState('ORDER');
   const handleTypeChange = (e: RadioChangeEvent) => {
     setSelectedType(e.target.value);
     onOrdersSearch?.(null);
-    setCurrentReceiving(null);
+    // setCurrentReceiving(null);
     onReceivingType(form.getFieldValue('type'));
-    onCurrentReceiving(null);
+    // onCurrentReceiving(null);
+    // setSecectedSingleReceiving(null);
   };
 
   const handleLoadClick = async () => {
@@ -130,23 +130,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
     }
   };
   const [initialForm, setinitialForm] = useState<any>('');
-  const [canSave, setCanSave] = useState(false);
-  const validateAndSetCanSave = async () => {
-    try {
-      // Validate all fields
-      const values = await form.validateFields();
-      // If validation is successful, set canSave to true
-      setCanSave(true);
-    } catch (error) {
-      // If there's an error during validation, set canSave to false
-      setCanSave(false);
-    }
-  };
-
-  // Function to handle form field changes
-  const handleFormFieldChange = () => {
-    validateAndSetCanSave();
-  };
 
   return (
     <div className="flex flex-col">
@@ -173,15 +156,14 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             })
           );
           if ((await result).meta.requestStatus === 'fulfilled') {
-            setCurrentReceiving((await result).payload || []);
-            onCurrentReceiving((await result).payload || []);
+            setCurrentReceiving((await result).payload || null);
+            onCurrentReceiving((await result).payload || null);
             onReceivingType(form.getFieldValue('type'));
             setIsCreating(false);
           } else {
             message.error('Error');
           }
         }}
-        // onValuesChange={handleFormFieldChange}
         initialValues={{ type: 'ORDER' }}
         formRef={formRef}
         submitter={{
@@ -201,9 +183,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                     onClick={() => {
                       isCreating && setIsCreating(false);
                       onCurrentReceiving(null);
-                      // setSelectedProjectType(
-                      //   form.getFieldValue('projectState')
-                      // );
                     }}
                   >
                     {t('Cancel')}
@@ -213,10 +192,8 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
         }}
         onReset={() => {
           setinitialForm('');
-          // setSecectedSinglePN(null);
           setSecectedSingleVendor({ CODE: '' });
-          // setSecectedSingleStore({ shopShortName: '' });
-          // setSecectedSingleLocation({ locationName: '' });
+          selectedSingleReceiving({ receivingNumber: '' });
         }}
         form={form}
         size="small"
@@ -236,7 +213,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               },
 
               {
-                label: t('SINGLE RECEIVING'),
+                label: t('SINGLE RECEIVING GOODS'),
                 value: 'UN_ORDER',
               },
             ]}
@@ -245,7 +222,16 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           />
           {selectedType === 'ORDER' && (
             <>
-              <ProFormText name="order" width="sm" tooltip={t('ORDER')} />
+              <ProFormText
+                label={t('ORDER No')}
+                name="order"
+                width="sm"
+                tooltip={t('ORDER')}
+                fieldProps={{
+                  // onKeyPress: handleKeyPress,
+                  autoFocus: true,
+                }}
+              />
               <Button type="primary" onClick={handleLoadClick}>
                 {t('LOAD')}
               </Button>
@@ -268,71 +254,26 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 >
                   {t('NEW RECEIVING')}
                 </Button>{' '}
-                {/* <Button
-                  type="primary"
-                  onClick={async () => {
-                    if (isCreating) {
-                      const result = dispatch(
-                        postNewReceiving({
-                          ...currentReceiving,
-                          awbNumber: form.getFieldValue('awbNumber'),
-                          awbDate: form.getFieldValue('awbDate'),
-                          awbType: form.getFieldValue('awbType'),
-                          awbReference: form.getFieldValue('awbReference'),
-                          SUPPLIES_CODE: selectedSingleVendor?.CODE,
-                          SUPPLIER_SHORT_NAME: selectedSingleVendor?.SHORT_NAME,
-                          SUPPLIER_NAME: selectedSingleVendor?.NAME,
-                          SUPPLIER_UNP: selectedSingleVendor?.UNP,
-                          IS_RESIDENT: selectedSingleVendor?.IS_RESIDENT,
-                          SUPPLIER_ADRESS: selectedSingleVendor?.ADRESS,
-                          SUPPLIER_COUNTRY: selectedSingleVendor?.COUNTRY,
-                          SUPPLIES_ID:
-                            selectedSingleVendor._id || selectedSingleVendor.id,
-                          WAREHOUSE_RECEIVED_AT: form.getFieldValue(
-                            'WAREHOUSE_RECEIVED_AT'
-                          ),
-                        })
-                      );
-                      if ((await result).meta.requestStatus === 'fulfilled') {
-                        setCurrentReceiving((await result).payload || []);
-                        onCurrentReceiving((await result).payload || []);
-                        onReceivingType(form.getFieldValue('type'));
-                      } else {
-                        message.error('Error');
-                      }
-                    }
-                  }}
-                  // disabled={
-                  //   !currentReceiving ||
-                  //   currentReceiving?.receivingNumber ||
-                  //   !selectedSingleVendor?.CODE ||
-                  //   !form.getFieldValue('awbNumber')
-
-                  //   // ||
-                  //   // // ||
-                  //   // // !currentReceiving?.awbDate ||
-                  //   // // !currentReceiving?.awbNumber
-                  //   // !form.getFieldValue('awbNumber')
-                  // }
-                  disabled={!canSave}
-                >
-                  {t('SAVE RECEIVING')}
-                </Button> */}
               </Space>
             </ProFormGroup>
-            <ProFormText
-              disabled={isCreating}
-              name="receiving"
-              // rules={[{ required: true }]}
-              label={t('RECEIVING No')}
-              width="sm"
-              tooltip={t('ORDER')}
-              fieldProps={{
-                onDoubleClick: () => setOpenPickViewer(true),
-
-                autoFocus: true,
+            <ContextMenuReceivingsSearchSelect
+              rules={[{ required: false }]}
+              name={'receiving'}
+              onSelectedReceiving={function (receiving: any): void {
+                setSecectedSingleReceiving(receiving);
+                onCurrentReceiving(receiving);
+                setCurrentReceiving(receiving);
+                onReceivingType(form.getFieldValue('type'));
               }}
-            ></ProFormText>
+              initialForm={
+                selectedSingleReceiving?.receivingNumber ||
+                initialForm ||
+                currentReceiving?.receivingNumber
+              }
+              width={'sm'}
+              label={'RECEIVING No'}
+            />
+
             <ProFormDatePicker
               disabled={!isCreating}
               rules={[{ required: true }]}
@@ -418,60 +359,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           ></ProFormText>
         </ProFormGroup>
       </ProForm>
-
-      <Modal
-        title=""
-        open={openPickViewer}
-        width={'90%'}
-        onCancel={() => setOpenPickViewer(false)}
-        footer={null}
-      >
-        <div className="h-[82vh]  overflow-hidden">
-          <ReceivingTracking
-            onDoubleClick={(data) => {
-              onReceivingType(form.getFieldValue('type'));
-              setCurrentReceiving({
-                SUPPLIES_CODE: data?.SUPPLIES_CODE,
-                awbReference: data?.AWB_REFERENCE,
-                receivingNumber: data?.RECEIVING_NUMBER,
-                receivingDate: data?.RECEIVED_DATE,
-                receivingTime: data?.RECEIVED_DATE,
-                awbNumber: data?.AWB_NUMBER,
-                awbDate: data?.AWB_DATE,
-                awbType: data?.AWB_TYPE,
-                WAREHOUSE_RECEIVED_AT: data?.WAREHOUSE_RECEIVED_AT,
-                SUPPLIER_SHORT_NAME: data?.SHORT_NAME,
-                SUPPLIER_NAME: data?.NAME,
-                SUPPLIER_UNP: data?.UNP,
-                IS_RESIDENT: data?.IS_RESIDENT,
-                SUPPLIER_ADRESS: data?.ADRESS,
-                SUPPLIER_COUNTRY: data?.COUNTRY,
-                SUPPLIES_ID: data._id || data.id,
-              });
-              onCurrentReceiving({
-                SUPPLIES_CODE: data?.SUPPLIES_CODE,
-                awbReference: data?.AWB_REFERENCE,
-                receivingNumber: data?.RECEIVING_NUMBER,
-                receivingDate: data?.RECEIVED_DATE,
-                receivingTime: data?.RECEIVED_DATE,
-                awbNumber: data?.AWB_NUMBER,
-                awbDate: data?.AWB_DATE,
-                awbType: data?.AWB_TYPE,
-                WAREHOUSE_RECEIVED_AT: data?.WAREHOUSE_RECEIVED_AT,
-                SUPPLIER_SHORT_NAME: data?.SHORT_NAME,
-                SUPPLIER_NAME: data?.NAME,
-                SUPPLIER_UNP: data?.UNP,
-                IS_RESIDENT: data?.IS_RESIDENT,
-                SUPPLIER_ADRESS: data?.ADRESS,
-                SUPPLIER_COUNTRY: data?.COUNTRY,
-                SUPPLIES_ID: data._id || data.id,
-              });
-
-              setOpenPickViewer(false);
-            }}
-          ></ReceivingTracking>
-        </div>
-      </Modal>
     </div>
   );
 };

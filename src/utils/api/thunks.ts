@@ -5439,6 +5439,31 @@ export const getFilteredReceivingItems = createAsyncThunk(
   }
 );
 
+export const getFilteredReceiving = createAsyncThunk(
+  'common/ getFilteredReceiving',
+  async (params: any, { rejectWithValue }) => {
+    const url = new URL(
+      `receiving/getFilteredReceiving/companyID/${params.companyID}`,
+
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+
+    if (params.receivingNumber)
+      searchParams.append('receivingNumber', params.receivingNumber);
+
+    url.search = searchParams.toString();
+
+    try {
+      const response = await $authHost.get(url.toString());
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось загрузить заказы');
+    }
+  }
+);
+
 export const postNewReceivingItem = createAsyncThunk(
   'common/postNewReceiving',
   async (data: any, thunkAPI) => {
