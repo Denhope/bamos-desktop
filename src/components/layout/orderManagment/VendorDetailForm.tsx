@@ -8,30 +8,30 @@ import {
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
-} from "@ant-design/pro-components";
-import { Button, Form, FormInstance, Space, message } from "antd";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
-import { t } from "i18next";
-import { IOrder } from "@/models/IOrder";
+} from '@ant-design/pro-components';
+import { Button, Form, FormInstance, Space, message } from 'antd';
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+import { t } from 'i18next';
+import { IOrder } from '@/models/IOrder';
 
-import React, { FC, useEffect, useRef, useState } from "react";
-import Alternates from "../partAdministration/tabs/mainView/Alternates";
-import AlternativeTable from "../AlternativeTable";
+import React, { FC, useEffect, useRef, useState } from 'react';
+import Alternates from '../partAdministration/tabs/mainView/Alternates';
+import AlternativeTable from '../AlternativeTable';
 import {
   getFilteredAlternativePN,
   getFilteredRequirements,
   updateOrderByID,
   updatedMaterialItemsById,
   uploadFileServer,
-} from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import PartsForecast from "../APN/PartsForecast";
-import RequirementItemsQuatation from "./RequirementItemsQuatation";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
-import { USER_ID } from "@/utils/api/http";
-import FileUploader, { AcceptedFileTypes } from "@/components/shared/Upload";
-import FilesSelector from "@/components/shared/FilesSelector";
-import { handleFileSelect } from "@/services/utilites";
+} from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import PartsForecast from '../APN/PartsForecast';
+import RequirementItemsQuatation from './RequirementItemsQuatation';
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
+import { USER_ID } from '@/utils/api/http';
+import FileUploader, { AcceptedFileTypes } from '@/components/shared/Upload';
+import FilesSelector from '@/components/shared/FilesSelector';
+import { handleFileSelect } from '@/services/utilites';
 type AddDetailFormType = {
   currentVendor?: any;
   currentDetail?: any;
@@ -68,16 +68,16 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
   const formRef = useRef<FormInstance>(null);
   const dispatch = useAppDispatch();
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
   const uuidv4: () => string = originalUuidv4;
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   useEffect(() => {
     if (requariment) {
       form.setFields([
-        { name: "requariment", value: requariment.partRequestNumber },
+        { name: 'requariment', value: requariment.partRequestNumber },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -86,7 +86,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
   useEffect(() => {
     if (selectedSinglePN) {
       const fetchData = async () => {
-        const storedKeys = localStorage.getItem("selectedKeys");
+        const storedKeys = localStorage.getItem('selectedKeys');
         const result = await dispatch(
           getFilteredAlternativePN({
             companyID: companyID,
@@ -94,7 +94,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
           })
         );
 
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           setAlternates(result.payload);
           onSearchItems && onSearchItems(result.payload);
         }
@@ -108,14 +108,14 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
           getFilteredRequirements({
             companyID: companyID,
             partNumbers: partNumbers,
-            status: ["open", "onOrder"],
+            status: ['open', 'onOrder'],
           })
         );
 
-        if (resultReq.meta.requestStatus === "fulfilled") {
-          if (resultReq.meta.requestStatus === "fulfilled") {
+        if (resultReq.meta.requestStatus === 'fulfilled') {
+          if (resultReq.meta.requestStatus === 'fulfilled') {
             const filteredPayload = resultReq.payload.filter(
-              (record: any) => record.readyStatus === "not Ready"
+              (record: any) => record.readyStatus === 'not Ready'
             );
 
             const sum = filteredPayload.reduce((acc: any, record: any) => {
@@ -137,7 +137,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
               UNIT_OF_MEASURE:
                 selectedSinglePN?.UNIT_OF_MEASURE || selectedSinglePN?.unit,
-              QUANTITY: form.getFieldValue("quantity"),
+              QUANTITY: form.getFieldValue('quantity'),
               REQUIREMENTS: (filteredPayload || []).map(
                 (part: any) => part.partRequestNumber
               ),
@@ -161,7 +161,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
     if (quantitySum) {
       form.setFields([
         {
-          name: "quantity",
+          name: 'quantity',
           value: quantitySum,
         },
       ]);
@@ -173,19 +173,22 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
       setIsLocalEditing(isEditing);
 
       form.setFields([
-        { name: "PART_NUMBER", value: currentVendor.partNumber },
+        { name: 'PART_NUMBER', value: currentVendor.partNumber },
       ]);
       form.setFields([
-        { name: "DESCRIPTION", value: currentVendor.description },
+        { name: 'DESCRIPTION', value: currentVendor.description },
       ]);
-      form.setFields([{ name: "UNIT_OF_MEASURE", value: currentVendor.unit }]);
+      form.setFields([{ name: 'UNIT_OF_MEASURE', value: currentVendor.unit }]);
 
-      form.setFields([{ name: "quantity", value: currentVendor.quantity }]);
-      form.setFields([{ name: "price", value: currentVendor.price }]);
-      form.setFields([{ name: "currency", value: currentVendor.currency }]);
-      form.setFields([{ name: "discount", value: currentVendor.discount }]);
-      form.setFields([{ name: "condition", value: currentVendor.condition }]);
-      form.setFields([{ name: "leadTime", value: currentVendor.leadTime }]);
+      form.setFields([
+        { name: 'quantityQuoted', value: currentVendor.qtyQuoted },
+      ]);
+      form.setFields([{ name: 'price', value: currentVendor.price }]);
+      form.setFields([{ name: 'currency', value: currentVendor.currency }]);
+      form.setFields([{ name: 'discount', value: currentVendor.discount }]);
+      form.setFields([{ name: 'condition', value: currentVendor.condition }]);
+      form.setFields([{ name: 'leadTime', value: currentVendor.leadTime }]);
+      form.setFields([{ name: 'remarks', value: currentVendor.remarks }]);
 
       // const fetchData = async () => {
       //   const result = await dispatch(
@@ -236,17 +239,17 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
                     onEdit(false);
                   }}
                 >
-                  {t("Cancel")}
+                  {t('Cancel')}
                 </Button>,
               ]
             : [],
         submitButtonProps: {
-          children: "Search",
+          children: 'Search',
         },
       }}
       onFinish={async (values) => {
         if (currenOrder) {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
+          const currentCompanyID = localStorage.getItem('companyID') || '';
 
           const partToUpdate = currenOrder?.parts?.find((part) =>
             part.vendors.some(
@@ -262,17 +265,17 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               vendorToUpdate.description = values?.DESCRIPTION;
               vendorToUpdate.price = values?.price;
               vendorToUpdate.currency = values?.currency;
-              vendorToUpdate.quantity = form.getFieldValue("quantity");
+              vendorToUpdate.quantity = form.getFieldValue('quantity');
               // partToUpdate.alternates = (alternates || []).map(
               //   (part: any) => part.ALTERNATIVE
               // );
-              vendorToUpdate.discount = values?.discount || "";
+              vendorToUpdate.discount = values?.discount || '';
               vendorToUpdate.condition = values?.condition;
               vendorToUpdate.leadTime = values?.leadTime;
               vendorToUpdate.unit = values?.UNIT_OF_MEASURE;
               vendorToUpdate.state = values?.state;
               vendorToUpdate.remarks = values?.remarks;
-              vendorToUpdate.qtyQuoted = values?.quantityQuoted || "";
+              vendorToUpdate.qtyQuoted = values?.quantityQuoted || '';
               vendorToUpdate.files = values?.files;
             }
           }
@@ -285,21 +288,21 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
           const result = await dispatch(
             updateOrderByID({
               id: currenOrder._id || currenOrder.id,
-              companyID: currentCompanyID || "",
+              companyID: currentCompanyID || '',
               updateByID: USER_ID,
-              updateBySing: localStorage.getItem("singNumber"),
-              updateByName: localStorage.getItem("name"),
+              updateBySing: localStorage.getItem('singNumber'),
+              updateByName: localStorage.getItem('name'),
               updateDate: new Date(),
               parts: updatedParts,
             })
           );
 
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             onUpdateOrder && onUpdateOrder(result.payload);
-            message.success(t("SUCCESS"));
+            message.success(t('SUCCESS'));
             setIsLocalCreating(false);
             setIsLocalEditing(false);
-          } else message.error(t("ERROR"));
+          } else message.error(t('ERROR'));
         }
       }}
       size="small"
@@ -311,9 +314,9 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="PART_NUMBER"
-              label={t("PART NUMBER")}
+              label={t('PART NUMBER')}
               width="sm"
-              tooltip={t("PART NUMBER")}
+              tooltip={t('PART NUMBER')}
               fieldProps={{
                 onDoubleClick: () => {
                   setOpenStoreFind(true);
@@ -324,87 +327,87 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="DESCRIPTION"
-              label={t("DESCRIPTION")}
+              label={t('DESCRIPTION')}
               width="sm"
-              tooltip={t("DESCRIPTION")}
+              tooltip={t('DESCRIPTION')}
             ></ProFormText>
           </ProFormGroup>
         </ProFormGroup>
         <ProFormGroup>
           <ProFormDigit
             name="leadTime"
-            label={t("LEAD TIME")}
+            label={t('LEAD TIME')}
             width="xs"
           ></ProFormDigit>
-          {t("MOS")}
+          {t('MOS')}
         </ProFormGroup>
         <ProFormGroup>
           <ProFormDigit
             rules={[{ required: true }]}
             name="price"
-            label={t("PURSHASE PRICE")}
+            label={t('PURSHASE PRICE')}
             width="sm"
           ></ProFormDigit>
           <ProFormSelect
             showSearch
             name="currency"
             rules={[{ required: true }]}
-            label={t("CURRENCY")}
+            label={t('CURRENCY')}
             width="sm"
             valueEnum={{
-              BYN: `BYN/${t("Belarussian Ruble").toUpperCase()}`,
-              RUB: `RUB/${t("Russian Ruble").toUpperCase()}`,
-              USD: `USD/${t("US Dollar").toUpperCase()}`,
-              EUR: `EUR/${t("Euro").toUpperCase()}`,
-              GBP: `GBP/${t("British Pound").toUpperCase()}`,
-              JPY: `JPY/${t("Japanese Yen").toUpperCase()}`,
-              AUD: `AUD/${t("Australian Dollar").toUpperCase()}`,
-              CAD: `CAD/${t("Canadian Dollar").toUpperCase()}`,
-              CHF: `CHF/${t("Swiss Franc").toUpperCase()}`,
-              CNY: `CNY/${t("Chinese Yuan").toUpperCase()}`,
-              HKD: `HKD/${t("Hong Kong Dollar").toUpperCase()}`,
-              NZD: `NZD/${t("New Zealand Dollar").toUpperCase()}`,
-              SEK: `SEK/${t("Swedish Krona").toUpperCase()}`,
-              KRW: `KRW/${t("South Korean Won").toUpperCase()}`,
-              SGD: `SGD/${t("Singapore Dollar").toUpperCase()}`,
-              NOK: `NOK/${t("Norwegian Krone").toUpperCase()}`,
-              MXN: `MXN/${t("Mexican Peso").toUpperCase()}`,
-              INR: `INR/${t("Indian Rupee").toUpperCase()}`,
-              ZAR: `ZAR/${t("South African Rand").toUpperCase()}`,
-              BRL: `BRL/${t("Brazilian Real").toUpperCase()}`,
-              TWD: `TWD/${t("New Taiwan Dollar").toUpperCase()}`,
+              BYN: `BYN/${t('Belarussian Ruble').toUpperCase()}`,
+              RUB: `RUB/${t('Russian Ruble').toUpperCase()}`,
+              USD: `USD/${t('US Dollar').toUpperCase()}`,
+              EUR: `EUR/${t('Euro').toUpperCase()}`,
+              GBP: `GBP/${t('British Pound').toUpperCase()}`,
+              JPY: `JPY/${t('Japanese Yen').toUpperCase()}`,
+              AUD: `AUD/${t('Australian Dollar').toUpperCase()}`,
+              CAD: `CAD/${t('Canadian Dollar').toUpperCase()}`,
+              CHF: `CHF/${t('Swiss Franc').toUpperCase()}`,
+              CNY: `CNY/${t('Chinese Yuan').toUpperCase()}`,
+              HKD: `HKD/${t('Hong Kong Dollar').toUpperCase()}`,
+              NZD: `NZD/${t('New Zealand Dollar').toUpperCase()}`,
+              SEK: `SEK/${t('Swedish Krona').toUpperCase()}`,
+              KRW: `KRW/${t('South Korean Won').toUpperCase()}`,
+              SGD: `SGD/${t('Singapore Dollar').toUpperCase()}`,
+              NOK: `NOK/${t('Norwegian Krone').toUpperCase()}`,
+              MXN: `MXN/${t('Mexican Peso').toUpperCase()}`,
+              INR: `INR/${t('Indian Rupee').toUpperCase()}`,
+              ZAR: `ZAR/${t('South African Rand').toUpperCase()}`,
+              BRL: `BRL/${t('Brazilian Real').toUpperCase()}`,
+              TWD: `TWD/${t('New Taiwan Dollar').toUpperCase()}`,
             }}
           ></ProFormSelect>
 
           <ProFormSelect
             showSearch
             rules={[{ required: true }]}
-            label={t("UNIT")}
+            label={t('UNIT')}
             name="UNIT_OF_MEASURE"
             width="sm"
             valueEnum={{
-              EA: `EA/${t("EACH").toUpperCase()}`,
-              M: `M/${t("Meters").toUpperCase()}`,
-              ML: `ML/${t("Milliliters").toUpperCase()}`,
-              SI: `SI/${t("Sq Inch").toUpperCase()}`,
-              CM: `CM/${t("Centimeters").toUpperCase()}`,
-              GM: `GM/${t("Grams").toUpperCase()}`,
-              YD: `YD/${t("Yards").toUpperCase()}`,
-              FT: `FT/${t("Feet").toUpperCase()}`,
-              SC: `SC/${t("Sq Centimeters").toUpperCase()}`,
-              IN: `IN/${t("Inch").toUpperCase()}`,
-              SH: `SH/${t("Sheet").toUpperCase()}`,
-              SM: `SM/${t("Sq Meters").toUpperCase()}`,
-              RL: `RL/${t("Roll").toUpperCase()}`,
-              KT: `KT/${t("Kit").toUpperCase()}`,
-              LI: `LI/${t("Liters").toUpperCase()}`,
-              KG: `KG/${t("Kilograms").toUpperCase()}`,
-              JR: `JR/${t("Jar/Bottle").toUpperCase()}`,
+              EA: `EA/${t('EACH').toUpperCase()}`,
+              M: `M/${t('Meters').toUpperCase()}`,
+              ML: `ML/${t('Milliliters').toUpperCase()}`,
+              SI: `SI/${t('Sq Inch').toUpperCase()}`,
+              CM: `CM/${t('Centimeters').toUpperCase()}`,
+              GM: `GM/${t('Grams').toUpperCase()}`,
+              YD: `YD/${t('Yards').toUpperCase()}`,
+              FT: `FT/${t('Feet').toUpperCase()}`,
+              SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+              IN: `IN/${t('Inch').toUpperCase()}`,
+              SH: `SH/${t('Sheet').toUpperCase()}`,
+              SM: `SM/${t('Sq Meters').toUpperCase()}`,
+              RL: `RL/${t('Roll').toUpperCase()}`,
+              KT: `KT/${t('Kit').toUpperCase()}`,
+              LI: `LI/${t('Liters').toUpperCase()}`,
+              KG: `KG/${t('Kilograms').toUpperCase()}`,
+              JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
             }}
           ></ProFormSelect>
           <ProFormText
             name="discount"
-            label={t("DISCOUNT")}
+            label={t('DISCOUNT')}
             width="sm"
           ></ProFormText>
         </ProFormGroup>
@@ -413,33 +416,33 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
           showSearch
           rules={[{ required: true }]}
           name="condition"
-          label={t("CONDITION")}
+          label={t('CONDITION')}
           width="sm"
           valueEnum={{
-            "/NEW": t("NEW"),
-            "/INSPECTED": t("INSPECTED"),
-            "/REPAIRED": t("REPAIRED / ТЕКУЩИЙ РЕМОНТ"),
-            "/SERVICABLE": t("SERVICABLE / ИСПРАВНО"),
-            "/UNSERVICABLE": t("UNSERVICABLE / НЕИСПРАВНО"),
+            '/NEW': t('NEW'),
+            '/INSPECTED': t('INSPECTED'),
+            '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
+            '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
+            '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),
           }}
         />
       </ProFormGroup>
       <ProFormGroup>
         <ProFormDigit
           name="quantityQuoted"
-          label={t("QUANTITY QUOTED")}
+          label={t('QUANTITY QUOTED')}
           width="xs"
-        ></ProFormDigit>{" "}
+        ></ProFormDigit>{' '}
         <ProFormGroup>
           <ProFormTextArea
-            fieldProps={{ style: { resize: "none" } }}
+            fieldProps={{ style: { resize: 'none' } }}
             name="remarks"
             colSize={1}
-            label={t("REMARKS")}
+            label={t('REMARKS')}
             width="sm"
           ></ProFormTextArea>
         </ProFormGroup>
-        <Space size={"large"} className=" flex justify-between py-5 ">
+        <Space size={'large'} className=" flex justify-between py-5 ">
           <FileUploader
             onUpload={uploadFileServer}
             acceptedFileTypes={[AcceptedFileTypes.JPG, AcceptedFileTypes.PDF]}
@@ -449,7 +452,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
                   ? [...currentVendor?.files, response]
                   : [response];
                 const currentCompanyID =
-                  localStorage.getItem("companyID") || "";
+                  localStorage.getItem('companyID') || '';
                 console.log(updatedFiles);
                 const partToUpdate = currenOrder?.parts?.find((part) =>
                   part.vendors.some(
@@ -475,20 +478,20 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
                     id:
                       (currenOrder && currenOrder._id) ||
                       (currenOrder && currenOrder.id),
-                    companyID: currentCompanyID || "",
+                    companyID: currentCompanyID || '',
                     updateByID: USER_ID,
-                    updateBySing: localStorage.getItem("singNumber"),
-                    updateByName: localStorage.getItem("name"),
+                    updateBySing: localStorage.getItem('singNumber'),
+                    updateByName: localStorage.getItem('name'),
                     updateDate: new Date(),
                     parts: updatedParts,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   onUpdateOrder && onUpdateOrder(result.payload);
-                  message.success(t("SUCCESS"));
+                  message.success(t('SUCCESS'));
                   setIsLocalCreating(false);
                   setIsLocalEditing(false);
-                } else message.error(t("ERROR"));
+                } else message.error(t('ERROR'));
               }
             }}
           />
@@ -506,7 +509,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
       <ModalForm
         title=""
         open={openPickViewer}
-        width={"90%"}
+        width={'90%'}
         onOpenChange={setOpenPickViewer}
       >
         <div className="h-[78vh]  overflow-hidden">
@@ -515,14 +518,14 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               setRequariment(record);
               setSecectedSinglePN(record);
               setOpenPickViewer(false);
-              form.setFields([{ name: "PART_NUMBER", value: record.PN }]);
+              form.setFields([{ name: 'PART_NUMBER', value: record.PN }]);
               form.setFields([
-                { name: "DESCRIPTION", value: record.nameOfMaterial },
+                { name: 'DESCRIPTION', value: record.nameOfMaterial },
               ]);
-              form.setFields([{ name: "UNIT_OF_MEASURE", value: record.unit }]);
+              form.setFields([{ name: 'UNIT_OF_MEASURE', value: record.unit }]);
 
-              form.setFields([{ name: "GROUP", value: record.group }]);
-              form.setFields([{ name: "TYPE", value: record.type }]);
+              form.setFields([{ name: 'GROUP', value: record.group }]);
+              form.setFields([{ name: 'TYPE', value: record.type }]);
             }}
           ></PartsForecast>
         </div>

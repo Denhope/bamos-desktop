@@ -101,14 +101,14 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
           >
             <SettingOutlined
               className={`${
-                isEditing || !isCreating
+                isEditing || isCreating
                   ? 'cursor-not-allowed'
                   : 'cursor-pointer'
               }`}
             />
             <div
               className={`${
-                isEditing || !isCreating
+                isEditing || isCreating
                   ? 'cursor-not-allowed'
                   : 'cursor-pointer'
               }`}
@@ -120,13 +120,19 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             onClick={() =>
               project && project._id && setIsEditingView(!isEditingView)
             }
-            className={`cursor-pointer transform transition px-3 ${
-              !project || !project.id || !project._id
+            className={`transform transition px-3 ${
+              isEditing || isCreating
                 ? 'opacity-50 cursor-not-allowed'
-                : 'hover:text-blue-500'
+                : 'hover:text-blue-500 cursor-pointer '
             }`}
           >
-            <EditOutlined />
+            <EditOutlined
+              className={`${
+                isEditing || !isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer '
+              }`}
+            />
             <>{t('EDIT')}</>
           </Space>
         </Space>

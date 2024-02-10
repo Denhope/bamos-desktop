@@ -2,6 +2,7 @@ import {
   EditOutlined,
   SettingOutlined,
   PlusOutlined,
+  MinusOutlined,
   FilePdfOutlined,
   FileExcelOutlined,
 } from '@ant-design/icons';
@@ -171,7 +172,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
 
       // onFilterTransferprojects(form.getFieldsValue());
     }
-  }, [order && order?.orderName]);
+  }, [order && order?.orderName, order && order?.parts]);
   useEffect(() => {
     if (isCreating) {
       form.setFields([
@@ -578,6 +579,13 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
               isEditing={isEditing}
               isCreating={isCreating}
               onUpdateOrder={onEditOrderDetailsEdit}
+              onSave={function (data: any): void {
+                setCurrentDetail(null);
+                setOrderDetails(data.parts);
+              }}
+              onCancel={function (data: any): void {
+                setCurrentDetail(null);
+              }}
             />
           </div>
         ),
@@ -593,6 +601,12 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
               isEditing={isEditing}
               isCreating={isCreating}
               onUpdateOrder={onEditOrderDetailsEdit}
+              onSave={function (data: any): void {
+                setCurrenEditDetail(null);
+              }}
+              onCancel={function (data: any): void {
+                setCurrenEditDetail(null);
+              }}
             />
           </div>
         ),
@@ -654,11 +668,19 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           </Space>
           <Space
             onClick={() => order && setIsEditingView(!isEditingView)}
-            className={`cursor-pointer transform transition px-3 ${
-              !order ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-500'
+            className={`transform transition px-3 ${
+              isEditing || isCreating
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:text-blue-500 cursor-pointer '
             }`}
           >
-            <EditOutlined />
+            <EditOutlined
+              className={`${
+                isEditing || !isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer '
+              }`}
+            />
             <>{t('EDIT')}</>
           </Space>{' '}
           {(order?.orderType === 'QUOTATION_ORDER' ||
@@ -667,20 +689,21 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
               <Space
                 onClick={() =>
                   order &&
+                  isEditing &&
                   setCurrentDetail({
                     index: orderDetails.length + 1,
                     key: uuidv4(),
                   })
                 }
                 className={`cursor-pointer transform transition px-3 ${
-                  !order || !isEditing
+                  !order || !isEditing || isCreating
                     ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:text-blue-500'
+                    : ` ${currentDetail ? 'hover:text-blue-500' : ''} `
                 }`}
               >
                 <PlusOutlined
                   className={`${
-                    !isEditing || !isCreating
+                    !isEditing || isCreating
                       ? 'cursor-not-allowed'
                       : 'cursor-pointer'
                   }`}
@@ -688,21 +711,145 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 <>{t('ADD DETAIL')}</>
               </Space>
               <Space
-                onClick={() => setOpenVendorFind(true)}
+                onClick={async () => {
+                  if (order && isEditing && currentEditDetail && order.parts) {
+                    // Show confirmation dialog
+                    Modal.confirm({
+                      title: t('CONFIRM DELETE'),
+                      content: t(
+                        'ARE YOU SURE YOU WANT TO DELETE THIS_POSITION'
+                      ),
+                      okText: t('YES'),
+                      cancelText: t('NO'),
+                      onOk: async () => {
+                        const currentCompanyID =
+                          localStorage.getItem('companyID') || '';
+
+                        const updatedParts =
+                          order.parts &&
+                          order.parts.filter(
+                            (part) => part.id !== currentEditDetail.id
+                          );
+
+                        const result = await dispatch(
+                          updateOrderByID({
+                            id: order._id || order.id,
+                            companyID: currentCompanyID || '',
+                            updateByID: USER_ID,
+                            updateBySing: localStorage.getItem('singNumber'),
+                            updateByName: localStorage.getItem('name'),
+                            updateDate: new Date(),
+                            parts: updatedParts,
+                          })
+                        );
+
+                        if (result.meta.requestStatus === 'fulfilled') {
+                          onEditOrderDetailsEdit &&
+                            onEditOrderDetailsEdit(result.payload);
+                          message.success(t('SUCCESS'));
+                        } else {
+                          message.error(t('ERROR'));
+                        }
+                      },
+                    });
+                  }
+                }}
+                className={` ${
+                  order && isEditing && currentEditDetail && !isCreating
+                    ? 'hover:text-blue-500 cursor-pointer  px-3'
+                    : 'opacity-50 cursor-not-allowed  px-3'
+                }`}
+              >
+                <MinusOutlined
+                // className={`${
+                //   !isEditing || isCreating
+                //     ? 'cursor-not-allowed'
+                //     : 'cursor-pointer'
+                // }`}
+                />
+                <>{t('DELETE DETAIL')}</>
+              </Space>
+              <Space
+                onClick={() => order && isEditing && setOpenVendorFind(true)}
                 className={`cursor-pointer transform transition px-3 ${
-                  !order || !isEditing
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:text-blue-500'
+                  !order || !isEditing || isCreating
+                    ? 'opacity-50 cursor-not-allowed  px-3'
+                    : 'hover:text-blue-500  px-3'
                 }`}
               >
                 <PlusOutlined
                   className={`${
-                    !isEditing || !isCreating
+                    !isEditing || isCreating
                       ? 'cursor-not-allowed'
                       : 'cursor-pointer'
                   }`}
                 />
                 <>{t('ADD VENDORS')}</>
+              </Space>
+              <Space
+                onClick={async () => {
+                  if (order && isEditing && currentEditVendor && order.parts) {
+                    // Show confirmation dialog
+                    Modal.confirm({
+                      title: t('CONFIRM DELETE'),
+                      content: t('ARE YOU SURE YOU WANT TO DELETE THIS VENDOR'),
+                      okText: t('YES'),
+                      cancelText: t('NO'),
+                      onOk: async () => {
+                        const currentCompanyID =
+                          localStorage.getItem('companyID') || '';
+
+                        const updatedParts =
+                          order.parts &&
+                          order.parts.map((part) => {
+                            if (part.vendors) {
+                              const updatedVendors = part.vendors.filter(
+                                (vendor: { id: any }) =>
+                                  vendor.id !== currentEditVendor.id
+                              );
+
+                              return { ...part, vendors: updatedVendors };
+                            }
+
+                            return part;
+                          });
+                        const result = await dispatch(
+                          updateOrderByID({
+                            id: order._id || order.id,
+                            companyID: currentCompanyID || '',
+                            updateByID: USER_ID,
+                            updateBySing: localStorage.getItem('singNumber'),
+                            updateByName: localStorage.getItem('name'),
+                            updateDate: new Date(),
+                            parts: updatedParts,
+                          })
+                        );
+
+                        if (result.meta.requestStatus === 'fulfilled') {
+                          onEditOrderDetailsEdit &&
+                            onEditOrderDetailsEdit(result.payload);
+                          message.success(t('SUCCESS'));
+                        } else {
+                          message.error(t('ERROR'));
+                        }
+                      },
+                    });
+                  }
+                }}
+                className={` ${
+                  order && isEditing && currentEditVendor && !isCreating
+                    ? 'hover:text-blue-500 cursor-pointer  px-3'
+                    : 'opacity-50 cursor-not-allowed  px-3'
+                }`}
+              >
+                <MinusOutlined
+                // className={`${
+                //   !isEditing || isCreating
+                //     ? 'cursor-not-allowed'
+                //     : 'cursor-pointer'
+                // }`}
+                />
+                <>{t('DELETE VENDOR')}</>
               </Space>
             </>
           )}
@@ -710,7 +857,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
       </Col>
       <Col
         className="h-[64vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
-        sm={7}
+        sm={8}
       >
         {order && (
           <QuatationTree
@@ -741,7 +888,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
       <Col
         className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
         xs={2}
-        sm={13}
+        sm={12}
       >
         <TabContent tabs={tabs}></TabContent>
       </Col>

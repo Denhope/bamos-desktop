@@ -1,16 +1,17 @@
-import { DownOutlined, HomeOutlined } from "@ant-design/icons";
-import { Space, Tree } from "antd";
-import type { DataNode, TreeProps } from "antd/es/tree";
-import { IOrder } from "@/models/IOrder";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
+import React, { useState, useMemo } from 'react';
+import { Input, Tree } from 'antd';
+import type { DataNode } from 'antd/es/tree';
+import { IOrder } from '@/models/IOrder';
+import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 import {
   SettingOutlined,
   DollarOutlined,
+  HomeOutlined,
+  DownOutlined,
   DownloadOutlined,
-} from "@ant-design/icons";
-import { handleFileSelect } from "@/services/utilites";
+} from '@ant-design/icons';
+import { handleFileSelect } from '@/services/utilites';
 
 type ProjectDetailsFormType = {
   order: IOrder;
@@ -18,6 +19,7 @@ type ProjectDetailsFormType = {
   onSelectedPart: (id: any) => void;
   onSelectedPartVendor?: (record: any) => void;
 };
+
 type ColoredTextProps = {
   text: string;
   backgroundColor: string;
@@ -26,348 +28,368 @@ type ColoredTextProps = {
 const ColoredText: React.FC<ColoredTextProps> = ({ text, backgroundColor }) => (
   <span style={{ color: backgroundColor }}>{text}</span>
 );
+
 const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
   ({ order, onSelectedPartVendor, onSelectedPart }) => {
-    // const [expandedKeys, setExpandedKeys] = useState<any>();
-
-    const getAllKeys = (treeData: any[]) => {
-      let keys: any[] = [];
-
-      const traverse = (node: { key: any; children: any[] }) => {
-        keys.push(node.key);
-        if (node.children) {
-          node.children.forEach(traverse);
-        }
-      };
-
-      treeData.forEach(traverse);
-
-      return keys;
-    };
     const { t } = useTranslation();
-    const uuidv4: () => string = originalUuidv4;
-    let treeData: DataNode[] | undefined;
+    const [searchValue, setSearchValue] = useState('');
+    const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+    const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
 
-    let backgroundColor: string;
-    if (order.state === "CLOSED") {
-      backgroundColor = "#62d156";
-    } else if (order.state === "OPEN") {
-      backgroundColor = "red";
-    } else if (order.state === "RECEIVED") {
-      backgroundColor = "#62d156";
-    } else if (order.state === "PARTLY_RECEIVED") {
-      backgroundColor = "#f0be37";
-    } else {
-      backgroundColor = "#f0be37";
-    }
+    const getTreeData = (order: IOrder): DataNode[] => {
+      let backgroundColor: string;
+      switch (order.state) {
+        case 'CLOSED':
+          backgroundColor = '#62d156';
+          break;
+        case 'OPEN':
+          backgroundColor = 'red';
+          break;
+        case 'RECEIVED':
+          backgroundColor = '#62d156';
+          break;
+        case 'PARTLY_RECEIVED':
+          backgroundColor = '#f0be37';
+          break;
+        default:
+          backgroundColor = '#f0be37';
+          break;
+      }
 
-    switch (order.orderType) {
-      case "QUOTATION_ORDER":
-        treeData = [
+      if (order.orderType === 'QUOTATION_ORDER') {
+        return [
           {
-            title: t("ORDERS"),
-            key: "0-0-0",
+            title: (
+              <div>
+                {`${t('ORDER NUMBER')}: `}
+                <ColoredText
+                  text={order?.orderNumber || ''}
+                  backgroundColor={backgroundColor}
+                />
+              </div>
+            ),
+            key: uuidv4(),
+            children:
+              order.parts &&
+              order?.parts.map((part, index) => {
+                return {
+                  title: (
+                    <div>
+                      <SettingOutlined /> {`${t('POS')}:${index + 1} `}
+                      <ColoredText
+                        text={`${part?.PART_NUMBER || part?.PN}`}
+                        backgroundColor={backgroundColor}
+                      />
+                      ({part?.DESCRIPTION || part?.nameOfMaterial}){' '}
+                      {part?.QUANTITY || part?.quantity}/{' '}
+                      {part?.UNIT_OF_MEASURE || part?.unit}
+                    </div>
+                  ),
+                  key: part.id,
+                  children: part?.vendors?.map((vendor: any, index: any) => {
+                    return {
+                      title: (
+                        <div className="flex gap-1">
+                          <HomeOutlined />
+                          {`${t('VENDOR')}:  ${vendor.CODE}-${vendor.NAME}`}
+                        </div>
+                      ),
+                      key: vendor.id,
+                      children: [
+                        {
+                          title: `${t('PART NUMBER')}:${vendor.partNumber}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `${t('DESCRIPTION')}:${vendor.description}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: (
+                            <div className="flex gap-1">
+                              <DollarOutlined />{' '}
+                              {`${t('PURCHASE PRICE')}:${vendor.price}` || ''}
+                            </div>
+                          ),
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `${t('CURRENCY')}:${vendor.currency}` || '',
+                          key: uuidv4(),
+                        },
+                        {
+                          title:
+                            `${t('QUANTITY QUOTED')}:${vendor.qtyQuoted}` || '',
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `${t('UNIT OF MEASURE')}:${vendor.unit}` || '',
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `DISCOUNT:${vendor.discount}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `CONDITION:${vendor.condition}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `${t('LEAD TIME')}:${vendor.leadTime}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: (
+                            <span style={{ color: backgroundColor }}>
+                              {`${t('STATE')}: ${order?.state}`}
+                            </span>
+                          ),
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `${t('FILES')}:`,
+                          key: uuidv4(),
+                          children: [
+                            ...(vendor?.files?.map((file: any, index: any) => {
+                              return {
+                                title: (
+                                  <div className="flex gap-1">
+                                    <DownloadOutlined />
+                                    {`FILE/${''}${index + 1}:${file.name}`}
+                                  </div>
+                                ),
+                                key: file.id,
+                              };
+                            }) || []),
+                          ],
+                        },
+                      ],
+                    };
+                  }),
+                };
+              }),
+          },
+          {
+            title: `${t('FILES')}:`,
+            key: uuidv4(),
+            children: [
+              ...(order?.files?.map((file: any, index: any) => {
+                return {
+                  title: (
+                    <div className="flex gap-1">
+                      <DownloadOutlined />
+                      {`FILE/${''}${index + 1}:${file.name}`}
+                    </div>
+                  ),
+                  key: file.id,
+                };
+              }) || []),
+            ],
+          },
+        ];
+      }
+      if (order.orderType === 'PURCHASE_ORDER') {
+        return [
+          // {
+          //   title: t('ORDERS'),
+          //   key: '0-0-0',
+          //   children: [
+          {
+            title: (
+              <div>
+                {`${t('ORDER NUMBER')}: `}
+                <ColoredText
+                  text={order?.orderNumber || ''}
+                  backgroundColor={backgroundColor}
+                />
+              </div>
+            ),
+            key: uuidv4(),
+
             children: [
               {
                 title: (
                   <div>
-                    {`${t("ORDER NUMBER")}: `}
+                    {`${t('STATE')}: `}
                     <ColoredText
-                      text={order?.orderNumber || ""}
+                      text={order?.state || ''}
                       backgroundColor={backgroundColor}
                     />
                   </div>
                 ),
-
                 key: uuidv4(),
-
+              },
+              {
+                title: `${t('VENDOR')}:`,
+                key: uuidv4(),
+                children: [
+                  {
+                    title: `NAME:${
+                      order?.vendors && order?.vendors[0].supplier
+                    }`,
+                    key: uuidv4(),
+                  },
+                  {
+                    title: `ADRESS:${
+                      order?.vendors && order?.vendors[0].adress
+                    }`,
+                    key: uuidv4(),
+                  },
+                  {
+                    title: `SHIP TO:${
+                      order?.vendors && order?.vendors[0].shipTo
+                    }`,
+                    key: uuidv4(),
+                  },
+                  {
+                    title: `PLANED DATE
+                    :${order?.vendors && order?.vendors[0].planedDate}`,
+                    key: uuidv4(),
+                  },
+                ],
+              },
+              {
+                title: `${t('PARTS')}:`,
+                key: uuidv4(),
                 children:
                   order.parts &&
                   order?.parts.map((part, index) => {
                     return {
-                      title: (
-                        <div>
-                          <SettingOutlined /> {`${t("POS")}:${index + 1} `}
-                          <ColoredText
-                            text={`${part?.PART_NUMBER || part?.PN}`}
-                            backgroundColor={backgroundColor}
-                          />
-                          ({part?.DESCRIPTION || part?.nameOfMaterial}){" "}
-                          {part?.QUANTITY || part?.quantity}/{" "}
-                          {part?.UNIT_OF_MEASURE || part?.unit}
-                        </div>
-                      ),
-                      key: part.id,
+                      title: `POS${index + 1}: ${part.PART_NUMBER || part.PN}(${
+                        part.DESCRIPTION || part.nameOfMaterial
+                      }) `,
+                      key: uuidv4(),
                       children: [
-                        ...(part?.vendors?.map((vendor: any, index: any) => {
-                          return {
-                            title: (
-                              <div className="flex gap-1">
-                                <HomeOutlined />
+                        {
+                          title: `QUANTITY:${
+                            part.QUANTITY || part.quantity
+                          } / ${part.UNIT_OF_MEASURE || part.unit}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `PURSHASE PRICE:${part.price}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `CURRENCY:${part.currency}`,
+                          key: uuidv4(),
+                        },
 
-                                {`${`VENDOR:  ${vendor.CODE}-${vendor.NAME}`}`}
-                              </div>
-                            ),
-                            key: vendor.id,
-                            children: [
-                              {
-                                title: `PART NUMBER:${vendor.partNumber}`,
-                                key: uuidv4(),
-                              },
-                              {
-                                title: `DESCRIPTION:${vendor.description}`,
-                                key: uuidv4(),
-                              },
-                              {
-                                title: (
-                                  <div className="flex gap-1">
-                                    <DollarOutlined />{" "}
-                                    {`${
-                                      `PURSHASE PRICE:${vendor.price}` || ""
-                                    }`}
-                                  </div>
-                                ),
-                                key: uuidv4(),
-                              },
-                              {
-                                title: `CURRENCY:${vendor.currency}` || "",
-                                key: uuidv4(),
-                              },
-                              {
-                                title:
-                                  `QUANTITY QUOTED:${vendor.quantity}` || "",
-                                key: uuidv4(),
-                              },
-                              {
-                                title: `DISCOUNT:${vendor.discount}`,
-                                key: uuidv4(),
-                              },
-                              {
-                                title: `CONDITION:${vendor.condition}`,
-                                key: uuidv4(),
-                              },
-                              {
-                                title: `${t("LEAD TIME")}:${vendor.leadTime}`,
-                                key: uuidv4(),
-                              },
-                              {
-                                title: (
-                                  <span style={{ color: backgroundColor }}>
-                                    {`${t("STATE")}: ${order?.state}`}
-                                  </span>
-                                ),
-                                key: uuidv4(),
-                              },
-                              {
-                                title: `${t("FILES")}:`,
-                                key: uuidv4(),
-                                children: [
-                                  ...(vendor?.files?.map(
-                                    (file: any, index: any) => {
-                                      return {
-                                        title: (
-                                          <div className="flex gap-1">
-                                            <DownloadOutlined />
-                                            {`FILE/${""}${index + 1}:${
-                                              file.name
-                                            }`}
-                                          </div>
-                                        ),
-                                        key: file.id,
-                                      };
-                                    }
-                                  ) || []),
-                                ],
-                              },
-                            ],
-                          };
-                        }) || []),
+                        {
+                          title: `CONDITION:${part.condition}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: `${t('RECEIVINGS')}:${part.leadTime}`,
+                          key: uuidv4(),
+                        },
+                        {
+                          title: (
+                            <div>
+                              {`${t('STATE')}: `}
+                              <ColoredText
+                                text={part?.state || ''}
+                                backgroundColor={backgroundColor}
+                              />
+                            </div>
+                          ),
+                          key: uuidv4(),
+                        },
                       ],
                     };
                   }),
               },
-              {
-                title: `${t("FILES")}:`,
-                key: uuidv4(),
-                children: [
-                  ...(order?.files?.map((file: any, index: any) => {
-                    return {
-                      title: (
-                        <div className="flex gap-1">
-                          <DownloadOutlined />
-                          {`FILE/${""}${index + 1}:${file.name}`}
-                        </div>
-                      ),
-                      key: file.id,
-                    };
-                  }) || []),
-                ],
-              },
             ],
           },
+          //   ],
+          // },
         ];
+      }
 
-        break;
-      case "PURCHASE_ORDER":
-        treeData = [
-          {
-            title: t("ORDERS"),
-            key: "0-0-0",
-            children: [
-              {
-                title: (
-                  <div>
-                    {`${t("ORDER NUMBER")}: `}
-                    <ColoredText
-                      text={order?.orderNumber || ""}
-                      backgroundColor={backgroundColor}
-                    />
-                  </div>
-                ),
-                key: uuidv4(),
+      return [];
+    };
 
-                children: [
-                  {
-                    title: (
-                      <div>
-                        {`${t("STATE")}: `}
-                        <ColoredText
-                          text={order?.state || ""}
-                          backgroundColor={backgroundColor}
-                        />
-                      </div>
-                    ),
-                    key: uuidv4(),
-                  },
-                  {
-                    title: `${t("VENDOR")}:`,
-                    key: uuidv4(),
-                    children: [
-                      {
-                        title: `NAME:${
-                          order?.vendors && order?.vendors[0].supplier
-                        }`,
-                        key: uuidv4(),
-                      },
-                      {
-                        title: `ADRESS:${
-                          order?.vendors && order?.vendors[0].adress
-                        }`,
-                        key: uuidv4(),
-                      },
-                      {
-                        title: `SHIP TO:${
-                          order?.vendors && order?.vendors[0].shipTo
-                        }`,
-                        key: uuidv4(),
-                      },
-                      {
-                        title: `PLANED DATE
-                      :${order?.vendors && order?.vendors[0].planedDate}`,
-                        key: uuidv4(),
-                      },
-                    ],
-                  },
-                  {
-                    title: `${t("PARTS")}:`,
-                    key: uuidv4(),
-                    children:
-                      order.parts &&
-                      order?.parts.map((part, index) => {
-                        return {
-                          title: `POS${index + 1}: ${
-                            part.PART_NUMBER || part.PN
-                          }(${part.DESCRIPTION || part.nameOfMaterial}) `,
-                          key: uuidv4(),
-                          children: [
-                            {
-                              title: `QUANTITY:${
-                                part.QUANTITY || part.quantity
-                              } / ${part.UNIT_OF_MEASURE || part.unit}`,
-                              key: uuidv4(),
-                            },
-                            {
-                              title: `PURSHASE PRICE:${part.price}`,
-                              key: uuidv4(),
-                            },
-                            {
-                              title: `CURRENCY:${part.currency}`,
-                              key: uuidv4(),
-                            },
+    const treeData = useMemo(() => getTreeData(order), [order]);
 
-                            {
-                              title: `CONDITION:${part.condition}`,
-                              key: uuidv4(),
-                            },
-                            {
-                              title: `${t("RECEIVING TIME")}:${part.leadTime}`,
-                              key: uuidv4(),
-                            },
-                            {
-                              title: (
-                                <div>
-                                  {`${t("STATE")}: `}
-                                  <ColoredText
-                                    text={part?.state || ""}
-                                    backgroundColor={backgroundColor}
-                                  />
-                                </div>
-                              ),
-                              key: uuidv4(),
-                            },
-                          ],
-                        };
-                      }),
-                  },
-                ],
-              },
-            ],
-          },
-        ];
-        break;
+    const onExpand = (expandedKeysValue: React.Key[]) => {
+      setExpandedKeys(expandedKeysValue);
+      setAutoExpandParent(false);
+    };
 
-      default:
-        treeData = [];
-    }
+    const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(e.target.value);
+    };
 
+    const filterTreeData = (data: DataNode[], search: string): DataNode[] => {
+      return data.reduce((acc: DataNode[], item: DataNode) => {
+        const index =
+          item?.title &&
+          item?.title.toString().toLowerCase().indexOf(search.toLowerCase());
+        if (index !== -1) {
+          acc.push({
+            ...item,
+            children: item.children
+              ? filterTreeData(item.children, search)
+              : [],
+          });
+        } else if (item.children) {
+          const children = filterTreeData(item.children, search);
+          if (children.length > 0) {
+            acc.push({ ...item, children });
+          }
+        }
+        return acc;
+      }, []);
+    };
+
+    const filteredTreeData = useMemo(
+      () => filterTreeData(treeData, searchValue),
+      [treeData, searchValue]
+    );
     const onSelect = (selectedKeys: React.Key[], info: any) => {
       let title;
-      if (typeof info.node.title === "string") {
+      if (typeof info.node.title === 'string') {
         title = info.node.title;
       } else if (
-        typeof info.node.title === "object" &&
+        typeof info.node.title === 'object' &&
         info.node.title.props.children
       ) {
-        title = info.node.title.props.children.join("");
+        title = info.node.title.props.children.join('');
       }
 
       if (title) {
-        title = title.replace(/\[object Object\]/g, "");
-        if (title.includes(t("VENDOR:"))) {
+        title = title.replace(/\[object Object\]/g, '');
+        if (title.includes(t('VENDOR:'))) {
           onSelectedPartVendor && onSelectedPartVendor(info.node.key);
         }
-        if (title.includes(t("POS"))) {
+        if (title.includes(t('POS'))) {
           onSelectedPart && onSelectedPart(info.node.key);
         }
-        if (title.includes(t("FILE/"))) {
+        if (title.includes(t('FILE/'))) {
           handleFileSelect({ id: info.node.key, name: title });
         }
       }
     };
-
     return (
-      <Tree
-        showLine
-        switcherIcon={<DownOutlined />}
-        height={500}
-        defaultExpandAll
-        onSelect={onSelect}
-        treeData={treeData}
-      />
+      <div>
+        <Input.Search
+          style={{ marginBottom: 8 }}
+          placeholder={t('SEARCH')}
+          onChange={onSearch}
+          value={searchValue}
+        />
+        <Tree
+          onSelect={onSelect}
+          showLine
+          height={550}
+          switcherIcon={<DownOutlined />}
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          autoExpandParent={autoExpandParent}
+          treeData={filteredTreeData}
+        />
+      </div>
     );
-  },
-  (prevProps, nextProps) => {
-    return prevProps.order === nextProps.order;
   }
 );
 
