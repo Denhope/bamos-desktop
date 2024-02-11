@@ -26,6 +26,7 @@ import PartsForecast from '../APN/PartsForecast';
 import RequirementItemsQuatation from './RequirementItemsQuatation';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 import { USER_ID } from '@/utils/api/http';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 type AddDetailFormType = {
   currentDetail?: any;
   currenOrder?: IOrder | null;
@@ -57,8 +58,10 @@ const EditDetailForm: FC<AddDetailFormType> = ({
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [editedPart, setEditedPart] = useState<any>(currentDetail);
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
   const formRef = useRef<FormInstance>(null);
   const dispatch = useAppDispatch();
+  const [initialFormPN, setinitialFormPN] = useState<any>('');
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
@@ -161,6 +164,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
   }, [quantitySum]);
   useEffect(() => {
     if (currentDetail) {
+      setinitialFormPN(currentDetail.PART_NUMBER);
       setIsLocalCreating(isCreating);
       setIsLocalEditing(isEditing);
       console.log(currentDetail);
@@ -210,6 +214,11 @@ const EditDetailForm: FC<AddDetailFormType> = ({
   }, [currentDetail]);
   return (
     <ProForm
+      onReset={() => {
+        setinitialFormPN('');
+        setIsResetForm(true);
+        setSecectedSinglePN({ PART_NUMBER: '' });
+      }}
       disabled={!isEditing}
       layout="horizontal"
       submitter={{
@@ -240,7 +249,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
             if (part.id === currentDetail.id) {
               return {
                 ...part,
-                PART_NUMBER: values?.PART_NUMBER,
+                PART_NUMBER: selectedSinglePN?.PART_NUMBER,
                 DESCRIPTION: values?.DESCRIPTION,
                 GROUP: values?.GROUP,
                 TYPE: values?.GROUP,
@@ -286,19 +295,32 @@ const EditDetailForm: FC<AddDetailFormType> = ({
       <ProFormGroup direction="horizontal">
         <ProFormGroup direction="vertical">
           <ProFormGroup direction="horizontal">
-            <ProFormText
+            <ContextMenuPNSearchSelect
+              isResetForm={isResetForm}
               rules={[{ required: true }]}
-              name="PART_NUMBER"
-              label={t('PART NUMBER')}
-              width="sm"
-              tooltip={t('PART NUMBER')}
-              fieldProps={{
-                onDoubleClick: () => {
-                  setOpenStoreFind(true);
-                },
-                onKeyPress: handleKeyPress,
+              onSelectedPN={function (PN: any): void {
+                setSecectedSinglePN(PN),
+                  form.setFields([
+                    { name: 'partNumber', value: PN.PART_NUMBER },
+                  ]);
+                form.setFields([
+                  { name: 'DESCRIPTION', value: PN.DESCRIPTION },
+                ]);
+                form.setFields([{ name: 'UNIT', value: PN.UNIT_OF_MEASURE }]);
+                form.setFields([
+                  { name: 'addPartNumber', value: PN.PART_NUMBER },
+                ]);
+                form.setFields([
+                  { name: 'addDescription', value: PN.DESCRIPTION },
+                ]);
+
+                form.setFields([{ name: 'GROUP', value: PN.GROUP }]);
+                form.setFields([{ name: 'TYPE', value: PN.TYPE }]);
               }}
-            ></ProFormText>
+              name={'partNumber'}
+              initialFormPN={initialFormPN}
+              width={'sm'}
+            ></ContextMenuPNSearchSelect>
             <ProFormText
               rules={[{ required: true }]}
               name="DESCRIPTION"
@@ -325,7 +347,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
                 rules={[{ required: true }]}
                 name="TYPE"
                 label={`${t('PART TYPE')}`}
-                width="sm"
+                width="xs"
                 tooltip={`${t('SELECT PART TYPE')}`}
                 options={[
                   { value: 'ROTABLE', label: t('ROTABLE') },

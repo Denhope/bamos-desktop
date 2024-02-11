@@ -127,14 +127,14 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
 
     {
       title: `${t('PART No')}`,
-      dataIndex: 'PART_NUMBER',
-      key: 'PART_NUMBER',
+      dataIndex: 'PN',
+      key: 'PN',
       ellipsis: true,
       //tip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       width: '10%',
       formItemProps: {
-        name: 'PART_NUMBER',
+        name: 'PN',
       },
       render: (text: any, record: any) => {
         return (
@@ -161,7 +161,7 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
                 // onReqClick(record);
               }}
             >
-              {record.PART_NUMBER}
+              {record.PN}
             </a>
           </ContextMenuWrapper>
         );

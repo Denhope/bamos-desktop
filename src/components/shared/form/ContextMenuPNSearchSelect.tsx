@@ -13,13 +13,14 @@ interface ContextMenuSearchSelectProps {
   isResetForm?: boolean;
   onSelectedPN: (PN: any) => void;
   initialFormPN: string;
+  width: 'lg' | 'sm' | 'xs';
 }
 const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   rules,
   name,
   isResetForm,
   initialFormPN,
-
+  width,
   onSelectedPN,
 }) => {
   const companyID = localStorage.getItem('companyID') || '';
@@ -100,7 +101,7 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
         ]}
       >
         <SearchSelect
-          width="lg"
+          width={width}
           initialValue={initialFormPN}
           onDoubleClick={() => {
             setOpenStoreFind(true);

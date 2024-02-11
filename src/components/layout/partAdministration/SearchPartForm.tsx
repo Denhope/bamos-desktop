@@ -5,13 +5,14 @@ import {
   ProFormGroup,
   ProFormText,
   ProFormTextArea,
-} from "@ant-design/pro-components";
-import { Form } from "antd";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredPartNumber } from "@/utils/api/thunks";
+} from '@ant-design/pro-components';
+import { Form } from 'antd';
+
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getFilteredPartNumber } from '@/utils/api/thunks';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 type SearchPartFormFormType = {
   onPartSearch: (part?: any) => void;
   currentPart?: any;
@@ -21,42 +22,41 @@ const SearchPartForm: FC<SearchPartFormFormType> = ({
   onPartSearch,
 }) => {
   const formRef = useRef<FormInstance>(null);
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
-    }
-  };
-  const [openStoreFindModal, setOpenStoreFind] = useState(false);
+
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   useEffect(() => {
-    // console.log(currentPart);
-
     if (currentPart) {
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
+      setSecectedSinglePN(currentPart);
       form.setFields([
-        { name: "partNumber", value: currentPart?.PART_NUMBER },
-        { name: "description", value: currentPart?.DESCRIPTION },
-        { name: "remarks", value: currentPart?.PART_REMARKS },
+        { name: 'partNumber', value: currentPart?.PART_NUMBER },
+        { name: 'description', value: currentPart?.DESCRIPTION },
+        { name: 'remarks', value: currentPart?.PART_REMARKS },
       ]);
-
-      // onFilterTransferParts(form.getFieldsValue());
     }
   }, [currentPart]);
+  const [initialFormPN, setinitialFormPN] = useState<any>('');
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
   return (
     <ProForm
+      onReset={() => {
+        onPartSearch(null);
+        setinitialFormPN('');
+        setIsResetForm(true);
+        setSecectedSinglePN({ PART_NUMBER: '' });
+      }}
       onFinish={async (values: any) => {
-        if (values.partNumber) {
+        if (selectedSinglePN) {
           const result = await dispatch(
             getFilteredPartNumber({
               companyID: companyID,
-              partNumber: values.partNumber,
+              partNumber: selectedSinglePN.PART_NUMBER,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             onPartSearch(result.payload[0]);
           }
         }
@@ -68,75 +68,37 @@ const SearchPartForm: FC<SearchPartFormFormType> = ({
       form={form}
     >
       <ProFormGroup direction="horizontal">
-        <ProFormText
-          name="partNumber"
-          label={`${t("PART No")}`}
-          width="sm"
-          tooltip={`${t("PART NUMBER")}`}
-          //rules={[{ required: true }]}
-          fieldProps={{
-            onDoubleClick: () => {
-              setOpenStoreFind(true);
-            },
-            onKeyPress: handleKeyPress,
+        <ContextMenuPNSearchSelect
+          isResetForm={isResetForm}
+          rules={[{ required: true }]}
+          onSelectedPN={function (PN: any): void {
+            setSecectedSinglePN(PN), onPartSearch(PN);
+            // form.setFields([{ name: 'partNumber', value: PN.PART_NUMBER }]);
+            form.setFields([{ name: 'description', value: PN.DESCRIPTION }]);
+            form.setFields([{ name: 'UNIT', value: PN.UNIT_OF_MEASURE }]);
+            form.setFields([{ name: 'remarks', value: PN.PART_REMARKS }]);
           }}
-        />
+          name={'partNumber'}
+          initialFormPN={selectedSinglePN?.PART_NUMBER || initialFormPN}
+          width={'lg'}
+        ></ContextMenuPNSearchSelect>
         <ProFormText
           disabled
           name="description"
-          label={t("DESCRIPTION")}
+          label={t('DESCRIPTION')}
           width="xl"
-          tooltip={t("PART DESCRIPTION")}
+          tooltip={t('PART DESCRIPTION')}
         ></ProFormText>
         <ProFormTextArea
           disabled
-          fieldProps={{ style: { resize: "none" } }}
+          fieldProps={{ style: { resize: 'none' } }}
           // colSize={5}
           name="remarks"
-          label={t("REMARKS")}
+          label={t('REMARKS')}
           width="lg"
-          tooltip={t("PART REMARKS")}
+          tooltip={t('PART REMARKS')}
         ></ProFormTextArea>
       </ProFormGroup>
-
-      <ModalForm
-        // title={`Search on Store`}
-        width={"70vw"}
-        // placement={'bottom'}
-        open={openStoreFindModal}
-        // submitter={false}
-        onOpenChange={setOpenStoreFind}
-        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
-          setOpenStoreFind(false);
-
-          form.setFields([
-            { name: "partNumber", value: selectedSinglePN.PART_NUMBER },
-            { name: "description", value: record.DESCRIPTION },
-          ]);
-        }}
-      >
-        <PartNumberSearch
-          initialParams={{ partNumber: "" }}
-          scroll={45}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            setOpenStoreFind(false);
-
-            form.setFields([{ name: "partNumber", value: record.PART_NUMBER }]);
-            form.setFields([
-              { name: "description", value: record.DESCRIPTION },
-            ]);
-          }}
-          isLoading={false}
-          onRowSingleClick={function (record: any, rowIndex?: any): void {
-            setSecectedSinglePN(record);
-            onPartSearch(record);
-            form.setFields([{ name: "partNumber", value: record.PART_NUMBER }]);
-            form.setFields([
-              { name: "description", value: record.DESCRIPTION },
-            ]);
-          }}
-        />
-      </ModalForm>
     </ProForm>
   );
 };

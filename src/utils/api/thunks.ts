@@ -3611,7 +3611,7 @@ export interface IfeatchFilteredRequirements {
   foForecast?: any;
   group?: string[];
   type?: string[];
-  partNumbers?: string[];
+  partNumbers?: any[];
   isAlternatine?: any;
   partRequestNumbers?: number[];
 }
@@ -3743,6 +3743,8 @@ export const getFilteredRequirementsManager = createAsyncThunk(
         'partRequestNumber',
         String(params.partRequestNumber)
       );
+    if (params.partNumbers)
+      searchParams.append('partNumbers', params.partNumbers.join(','));
     if (params.foForecast) searchParams.append('foForecast', params.foForecast);
     if (params.projectGroprojectGroupID)
       searchParams.append(
@@ -3750,6 +3752,7 @@ export const getFilteredRequirementsManager = createAsyncThunk(
         params.projectGroprojectGroupID
       );
     if (params.startDate) searchParams.append('startDate', params.startDate);
+
     if (params.endDate) searchParams.append('endDate', params.endDate);
     if (params.needOnLocationShop)
       searchParams.append('needOnLocationShop', params.needOnLocationShop);

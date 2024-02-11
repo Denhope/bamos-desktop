@@ -174,20 +174,6 @@ const ForecastFilteredForm: FC = () => {
             options={options}
           />
         )}
-        {/* <ProFormSelect
-          mode="multiple"
-          name="status"
-          label={`${t('PROJECT STATUS')}`}
-          width="lg"
-          tooltip="SELECT PROJECT STATUS "
-          options={[
-            { value: 'planning', label: 'PLANNING' },
-            { value: 'closed', label: 'CLOSED' },
-            { value: 'canceled', label: 'CANCELED' },
-            { value: 'inProgress', label: `${t('IN PROGRESS')}` },
-          ]}
-          //rules={[{ required: true }]}
-        /> */}
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText
@@ -197,13 +183,6 @@ const ForecastFilteredForm: FC = () => {
           tooltip="PART REQUEST NBR"
           //rules={[{ required: true }]}
         />
-        {/* <ProFormText
-          name="taskNumber"
-          label={`${t('EVENT')}`}
-          width="xs"
-          tooltip="EVENT NUMBER"
-          //rules={[{ required: true }]}
-        /> */}
       </ProForm.Group>
       <ProFormSelect
         initialValue={['open', 'planned']}

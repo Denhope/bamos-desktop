@@ -1,14 +1,17 @@
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { getFilteredRequirementsManager } from '@/utils/api/thunks';
 import {
+  ModalForm,
   ProForm,
   ProFormDatePicker,
   ProFormGroup,
   ProFormText,
 } from '@ant-design/pro-components';
 import { Button, Divider, Form, FormInstance, message } from 'antd';
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import RequirementViewer from '../APN/RequirementViewer';
 
 type RequirementsDiscriptionType = {
   requirement: any | null;
@@ -36,7 +39,9 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
 
       // onFilterTransferprojects(form.getFieldsValue());
     }
-  }, [requirement]);
+  }, [requirement, requirement?.partRequestNumber]);
+  const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const [selectedRequirement, setRequariment] = useState<any | null>(null);
   return (
     <div className="flex flex-col gap-5">
       <ProForm
@@ -53,6 +58,9 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
             width="sm"
             label={t('REQUIREMENT No')}
             fieldProps={{
+              onDoubleClick: () => {
+                setOpenStoreFind(true);
+              },
               onPressEnter: async () => {
                 const currentCompanyID =
                   localStorage.getItem('companyID') || '';
@@ -141,6 +149,51 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
           ></ProFormDatePicker>
         </ProFormGroup>
       </ProForm>
+      <ModalForm
+        // title={`Search on Store`}
+        width={'90vw'}
+        // placement={'bottom'}
+        open={openStoreFindModal}
+        // submitter={false}
+        onOpenChange={setOpenStoreFind}
+        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
+          setOpenStoreFind(false);
+
+          // form.setFields([
+          //   {
+          //     name: 'partNumber',
+          //     value: selectedSingleRequirement.partRequestNumber,
+          //   },
+          //   { name: 'description', value: record.DESCRIPTION },
+          // ]);
+        }}
+      >
+        <RequirementViewer
+          // onRowClick={function (record: any, rowIndex?: any): void {
+          //   setOpenStoreFind(false);
+
+          //   form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
+          //   form.setFields([
+          //     { name: 'description', value: record.DESCRIPTION },
+          //   ]);
+          // }}
+          // isLoading={false}
+          onDoubleClick={function (record: any, rowIndex?: any): void {
+            setRequariment(record);
+            onRequirementSearch?.(record);
+            form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
+            form.setFields([
+              { name: 'description', value: record.DESCRIPTION },
+              {
+                name: 'requirementSearch',
+                value: record?.partRequestNumber,
+              },
+            ]);
+
+            setOpenStoreFind(false);
+          }}
+        />
+      </ModalForm>
     </div>
   );
 };

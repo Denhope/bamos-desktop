@@ -99,6 +99,7 @@ const RequirementViewer: FC<RequirementViewerProps> = ({
       <ApartmentOutlined />
     ),
   ];
+  const [requirements, setRequirements] = useState<any[] | []>([]);
   return (
     <Layout>
       <Sider
@@ -137,7 +138,7 @@ const RequirementViewer: FC<RequirementViewerProps> = ({
           >
             <RequirementsFilteredForm
               onRequirementsSearch={function (orders: any[] | []): void {
-                throw new Error('Function not implemented.');
+                setRequirements(orders);
               }} //onFilterWO={onFilterWO}
             ></RequirementsFilteredForm>
           </div>
@@ -149,7 +150,7 @@ const RequirementViewer: FC<RequirementViewerProps> = ({
             onDoubleRowClick={(record) => {
               onDoubleClick && onDoubleClick(record);
             }}
-            data={[]}
+            data={requirements}
             isLoading={false}
             scroll={60}
             scrollX={2500}

@@ -46,7 +46,7 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
           >
             <RequirementsFilterForm onRequirementsSearch={setRequirements} />
             <RequirementList
-              scroll={20}
+              scroll={12}
               onSelectedRequirements={setRequirement}
               requirements={requirements}
             ></RequirementList>

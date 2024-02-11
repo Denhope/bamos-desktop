@@ -13,10 +13,15 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  getFilteredAditionalTasks,
+  getFilteredProjectTasks,
   getFilteredProjects,
   getFilteredRequirementsManager,
   getFilteredShops,
 } from '@/utils/api/thunks';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import { IProjectTaskAll } from '@/models/IProjectTask';
+import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (orders: any[] | []) => void;
 };
@@ -49,6 +54,8 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   };
   const dispatch = useAppDispatch();
   const [receiverType, setReceiverType] = useState('PROJECT');
+  const [receiverTaskType, setReceiverTaskType] = useState('MAIN_TASK');
+  const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [options, setOptions] = useState<Option[]>([]); // указываем тип состояния явно
   const { t } = useTranslation();
   const currentCompanyID = localStorage.getItem('companyID');
@@ -108,6 +115,65 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       }
     }
   }, [receiverType, dispatch]);
+  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [initialForm, setinitialForm] = useState<any>('');
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [taskOptions, setTaskOptions] = useState<Option[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
+  useEffect(() => {
+    const currentCompanyID = localStorage.getItem('companyID');
+    if (receiverTaskType) {
+      let action;
+      let url;
+      switch (receiverTaskType) {
+        case 'MAIN_TASK':
+          action = getFilteredProjectTasks({
+            projectId: selectedProjectId,
+          });
+
+          break;
+        case 'NRC':
+          action = getFilteredAditionalTasks({
+            projectId: selectedProjectId,
+            companyID: currentCompanyID || '',
+          });
+
+          break;
+      }
+
+      if (action) {
+        dispatch(action)
+          .then((action) => {
+            const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
+            let options;
+            switch (receiverTaskType) {
+              case 'MAIN_TASK':
+                options = data.map((item: IProjectTaskAll) => ({
+                  value: item.id || item._id, // замените на нужное поле для 'PROJECT'
+                  label: `${item.projectTaskWO}`, // замените на нужное поле для 'PROJECT'
+                }));
+                break;
+              case 'NRC':
+                options = data.map((item: IAdditionalTaskMTBCreate) => ({
+                  value: item._id || item.id, // замените на нужное поле для 'PROJECT'
+                  label: `${item.additionalNumberId}`, // замените на нужное поле для 'PROJECT'
+                }));
+                break;
+
+              default:
+                options = data.map((item: any) => ({
+                  value: item.defaultField1, // замените на нужное поле для 'default'
+                  label: item.defaultField2, // замените на нужное поле для 'default'
+                }));
+            }
+            setTaskOptions(options);
+          })
+          .catch((error) => {
+            console.error('Ошибка при получении данных:', error);
+          });
+      }
+    }
+  }, [selectedProjectId, receiverTaskType, dispatch]);
   return (
     <ProForm
       formRef={formRef}
@@ -116,12 +182,20 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         if (changedValues.receiverType) {
           setReceiverType(changedValues.receiverType);
         }
+        if (changedValues.receiverTaskType) {
+          setReceiverTaskType(changedValues.receiverTaskType);
+        }
       }}
       layout="horizontal"
       size="small"
       onReset={() => {
+        setSelectedProjectId(null);
+        setIsResetForm(true);
+        setinitialForm('');
+        setSecectedSinglePN(null);
         setSelectedEndDate(null);
         setSelectedStartDate(null);
+        setSelectedTask(null);
       }}
       form={form}
       onFinish={async (values: any) => {
@@ -135,11 +209,19 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
               group: form.getFieldValue('partGroup'),
               type: form.getFieldValue('partType'),
               status: form.getFieldValue('requestStatus'),
+              projectTaskID: selectedTask,
               partRequestNumber: form.getFieldValue('partRequestNumber'),
+              foForecast: true,
+              partNumbers: [selectedSinglePN?.PART_NUMBER] || [],
               endDate: selectedEndDate,
               companyID: currentCompanyID || '',
-              foForecast: true,
-              projectIds:
+
+              // projectIds: [
+              //   receiverType && receiverType === 'PROJECT'
+              //     ? form.getFieldValue('additionalSelectProject')
+              //     : '',
+              // ],
+              projectId:
                 receiverType && receiverType === 'PROJECT'
                   ? form.getFieldValue('additionalSelectProject')
                   : '',
@@ -159,9 +241,10 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     >
       <ProForm.Group>
         <ProFormRadio.Group
+          layout="horizontal"
           name="receiverType"
           label={`${t('RECEIVER TYPE')}`}
-          tooltip="ENTER TYPE "
+          tooltip="ENTER TYPE"
           options={[
             { value: 'PROJECT', label: `${t(`PROJECT`)}` },
             { value: 'AC', label: 'AIRCRAFT' },
@@ -171,11 +254,14 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         />
         {receiverType === 'PROJECT' && (
           <ProFormSelect
-            mode="multiple"
+            // mode="multiple"
             name="additionalSelectProject"
             label={`${t(`PROJECT SELECT`)}`}
             width="lg"
             options={options}
+            onChange={async (value: any) => {
+              setSelectedProjectId(value);
+            }}
           />
         )}
         {receiverType === 'AC' && (
@@ -194,25 +280,11 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
             options={options}
           />
         )}
-        {/* <ProFormSelect
-          mode="multiple"
-          name="status"
-          label={`${t('PROJECT STATUS')}`}
-          width="lg"
-          tooltip="SELECT PROJECT STATUS "
-          options={[
-            { value: 'planning', label: 'PLANNING' },
-            { value: 'closed', label: 'CLOSED' },
-            { value: 'canceled', label: 'CANCELED' },
-            { value: 'inProgress', label: `${t('IN PROGRESS')}` },
-          ]}
-          //rules={[{ required: true }]}
-        /> */}
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText
           name="partRequestNumber"
-          label={`${t('REQUIREMENT NBR')}`}
+          label={`${t('REQUIREMENT No')}`}
           width="lg"
           fieldProps={{
             onKeyPress: handleKeyPress,
@@ -220,13 +292,59 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
 
           //rules={[{ required: true }]}
         />
-        {/* <ProFormText
-          name="taskNumber"
-          label={`${t('EVENT')}`}
-          width="xs"
-          tooltip="EVENT NUMBER"
-          //rules={[{ required: true }]}
-        /> */}
+        <ContextMenuPNSearchSelect
+          isResetForm={isResetForm}
+          rules={[{ required: false }]}
+          onSelectedPN={function (PN: any): void {
+            setSecectedSinglePN(PN);
+          }}
+          name={'partNumber'}
+          initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
+          width={'sm'}
+        ></ContextMenuPNSearchSelect>
+
+        {receiverType === 'PROJECT' && (
+          <ProForm.Group>
+            <ProFormRadio.Group
+              disabled={!selectedProjectId}
+              name="receiverTaskType"
+              label={`${t('TASK TYPE')}`}
+              options={[
+                { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
+                { value: 'NRC', label: 'NRC' },
+              ]}
+              initialValue="MAIN_TASK"
+            />
+            {receiverTaskType === 'MAIN_TASK' && (
+              <ProFormSelect
+                disabled={!selectedProjectId}
+                showSearch
+                mode="single"
+                name="task"
+                label={`${t(`TASK`)}`}
+                width="sm"
+                options={taskOptions}
+                onChange={(value: any) => {
+                  setSelectedTask(value);
+                }}
+              />
+            )}
+            {receiverTaskType === 'NRC' && (
+              <ProFormSelect
+                disabled={!selectedProjectId}
+                showSearch
+                mode="single"
+                name="addTask"
+                label={`${t(`TASK`)}`}
+                width="sm"
+                options={taskOptions}
+                onChange={(value: any) => {
+                  setSelectedTask(value);
+                }}
+              />
+            )}
+          </ProForm.Group>
+        )}
       </ProForm.Group>
       <ProFormSelect
         initialValue={['open', 'planned']}

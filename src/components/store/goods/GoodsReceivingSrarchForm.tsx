@@ -103,6 +103,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           }}
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
+          width={'sm'}
         ></ContextMenuPNSearchSelect>
 
         <ProFormText

@@ -397,12 +397,6 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                   DRAFT: { text: t('DRAFT'), status: 'Error' },
                 }}
               />
-              {/* <ProFormDatePicker
-            label={t('ORDER DATE')}
-            name="createDate"
-            width="sm"
-            rules={[{ required: true }]}
-          ></ProFormDatePicker> */}
             </ProFormGroup>
 
             {(order?.orderType === 'QUOTATION_ORDER' ||
@@ -499,26 +493,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                           : [response];
                         const currentCompanyID =
                           localStorage.getItem('companyID') || '';
-                        console.log(updatedFiles);
-                        // const partToUpdate = order?.parts?.find((part) =>
-                        //   part.vendors.some(
-                        //     (vendor: { id: string }) => vendor.id === currentVendor.id
-                        //   )
-                        // );
-                        // if (partToUpdate) {
-                        //   const vendorToUpdate = partToUpdate.vendors.find(
-                        //     (vendor: { id: any }) => vendor.id === currentVendor.id
-                        //   );
-                        //   if (vendorToUpdate) {
-                        //     vendorToUpdate.files = updatedFiles;
-                        //   }
-                        // }
-                        // const updatedParts = currenOrder?.parts?.map((part) => {
-                        //   if (part.id === partToUpdate.id) {
-                        //     return partToUpdate;
-                        //   }
-                        //   return part;
-                        // });
+
                         const result = await dispatch(
                           updateOrderByID({
                             id: (order && order._id) || (order && order.id),
@@ -713,7 +688,6 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
               <Space
                 onClick={async () => {
                   if (order && isEditing && currentEditDetail && order.parts) {
-                    // Show confirmation dialog
                     Modal.confirm({
                       title: t('CONFIRM DELETE'),
                       content: t(
@@ -760,13 +734,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     : 'opacity-50 cursor-not-allowed  px-3'
                 }`}
               >
-                <MinusOutlined
-                // className={`${
-                //   !isEditing || isCreating
-                //     ? 'cursor-not-allowed'
-                //     : 'cursor-pointer'
-                // }`}
-                />
+                <MinusOutlined />
                 <>{t('DELETE DETAIL')}</>
               </Space>
               <Space
@@ -857,7 +825,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
       </Col>
       <Col
         className="h-[64vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
-        sm={8}
+        sm={7}
       >
         {order && (
           <QuatationTree
@@ -888,7 +856,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
       <Col
         className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
         xs={2}
-        sm={12}
+        sm={13}
       >
         <TabContent tabs={tabs}></TabContent>
       </Col>
