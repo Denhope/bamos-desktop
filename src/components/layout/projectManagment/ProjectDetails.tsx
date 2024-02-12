@@ -12,6 +12,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { USER_ID } from '@/utils/api/http';
 import { createProject, updateProject } from '@/utils/api/thunks';
+import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
 
 type ProjectDetailsFormType = {
   project: any;
@@ -24,8 +25,10 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(true);
+  const [selectedSingleCustomer, setSecectedSingleCustomer] = useState<any>();
   const [isEditingView, setIsEditingView] = useState(false);
-  const [isCreateView, setIsCreateView] = useState(false);
+
+  const [initialForm, setinitialForm] = useState<any>('');
   const [isCreating, setIsCreating] = useState(false);
   const [form] = Form.useForm();
   const [formAdd] = Form.useForm();
@@ -143,6 +146,12 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
         className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
       >
         <ProForm
+          onReset={() => {
+            setinitialForm('');
+
+            setSecectedSingleCustomer({ CODE: '' });
+            // setSecectedSingleLocation({ locationName: '' });
+          }}
           size="small"
           form={form}
           disabled={!isEditing && !isCreating}
@@ -169,7 +178,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                       : values.startDate,
                   finishDate: values.finishDate,
                   description: values?.description,
-                  customer: values?.customer,
+                  customer: selectedSingleCustomer?.CODE,
                   acRegistrationNumber: values?.acRegistrationNumber,
                   manufactureNumber: values?.manufactureNumber,
                   acType: values?.acType,
@@ -204,7 +213,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                   startDate: null,
                   finishDate: null,
                   description: values?.description,
-                  customer: values?.customer,
+                  customer: selectedSingleCustomer?.CODE,
                   acRegistrationNumber: values?.acRegistrationNumber,
                   manufactureNumber: values?.manufactureNumber,
                   acType: values?.acType,
@@ -330,13 +339,16 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
               name="startDate"
               width="sm"
             ></ProFormDatePicker>
-            <ProFormText
-              fieldProps={{ style: { resize: 'none' } }}
-              // rules={[{ required: true }]}
-              name="customer"
-              label={t('CUSTOMER')}
+            <ContextMenuVendorsSearchSelect
               width="sm"
-            ></ProFormText>
+              rules={[{ required: false }]}
+              name={'customer'}
+              onSelectedVendor={function (record: any, rowIndex?: any): void {
+                setSecectedSingleCustomer(record);
+              }}
+              initialForm={selectedSingleCustomer?.CODE || initialForm}
+              label={t('CUSTOMER')}
+            />
           </ProFormGroup>
           <ProFormGroup>
             <ProFormDatePicker

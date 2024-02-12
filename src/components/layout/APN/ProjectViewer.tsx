@@ -23,9 +23,10 @@ const ProjectViewer: FC<ProjectViewer> = ({
     {
       content: (
         <ProjectViewList
+          onDoubleRowClick={onDoubleClick}
+          onSingleRowClick={onSingleRowClick}
           scroll={30}
           projects={data}
-          onSelectedProjects={function (record: any): void {}}
         ></ProjectViewList>
       ),
       title: `${t('PROJECT LOG')}`,

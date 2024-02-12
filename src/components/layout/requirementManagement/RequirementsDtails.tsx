@@ -31,6 +31,7 @@ import { IProjectTaskAll } from '@/models/IProjectTask';
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 import { USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenuProjectSearchSelect';
 type RequirementsDtailsType = {
   requierement: any;
   onEditRequirementsDtailsEdit: (data: any) => void;
@@ -106,6 +107,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
     fetchData();
   }, [dispatch]);
   const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
+
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [receiverType, setReceiverType] = useState<any>('MAIN_TASK');
   useEffect(() => {
@@ -166,10 +168,14 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   const [project, setProject] = useState<any>(null);
   const [isResetForm, setIsResetForm] = useState<boolean>(false);
   const [initialFormPN, setinitialFormPN] = useState<any>('');
+  const [initialFormProject, setinitialFormProject] = useState<any>('');
+  const [selectedSingleProject, setSecectedSingleProject] = useState<any>();
 
   useEffect(() => {
     if (requierement) {
       setinitialFormPN(requierement.PN);
+      setinitialFormProject(requierement.projectWO);
+
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
         { name: 'projectNumber', value: requierement?.projectWO },
@@ -206,8 +212,12 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
         <div className="h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
           <ProForm
             onReset={() => {
-              setIsResetForm(true);
+              // setIsResetForm(true);
               setinitialFormPN('');
+              setProject(null);
+              setSecectedSingleProject(null);
+              setinitialFormProject('');
+              setSecectedSingleProject({ projectWO: '' });
             }}
             onValuesChange={(changedValues, allValues) => {
               // Handle changes in the form
@@ -228,6 +238,11 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                           setSelectedRequirementState(
                             form.getFieldValue('projectState')
                           );
+                          setSecectedSingleProject(null);
+
+                          setinitialFormPN('');
+                          setinitialFormProject('');
+                          setProject(null);
                         }}
                       >
                         {t('Cancel')}
@@ -372,7 +387,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
               />
             )}
             <ProFormGroup>
-              <ProFormSelect
+              {/* <ProFormSelect
                 disabled={!isCreating}
                 rules={[{ required: true }]}
                 name="projectNumber"
@@ -387,13 +402,30 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                     setProject(result.payload);
                   }
                 }}
-              />
+              /> */}
+
+              <ContextMenuProjectSearchSelect
+                disabled={!isCreating}
+                isResetForm={isResetForm}
+                rules={[{ required: true }]}
+                onSelectedProject={function (project: any): void {
+                  setSelectedProjectId(project._id || project.id);
+                  setProject(project);
+                  setSecectedSingleProject(project);
+                }}
+                name={'projectNumber'}
+                initialForm={
+                  selectedSingleProject?.projectWO || initialFormProject
+                }
+                width={'lg'}
+                label={`${t(`PROJECT LINK`)}`}
+              ></ContextMenuProjectSearchSelect>
 
               {
                 <ProForm.Group>
                   <ProFormRadio.Group
                     name="receiverType"
-                    disabled={!isCreating}
+                    disabled={!isCreating || !project}
                     label={`${t('TASK TYPE')}`}
                     options={[
                       { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
@@ -404,7 +436,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   {receiverType === 'MAIN_TASK' && (
                     <ProFormSelect
                       showSearch
-                      disabled={!isCreating}
+                      disabled={!isCreating || !project}
                       mode="single"
                       name="task"
                       label={`${t(`TASK`)}`}
@@ -418,7 +450,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   {receiverType === 'NRC' && (
                     <ProFormSelect
                       showSearch
-                      disabled={!isCreating}
+                      disabled={!isCreating || !project}
                       mode="single"
                       name="addTask"
                       label={`${t(`TASK`)}`}
@@ -436,6 +468,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
             <ProFormGroup direction="horizontal">
               <ProFormGroup>
                 <ContextMenuPNSearchSelect
+                  disabled={!isCreating}
                   isResetForm={isResetForm}
                   rules={[{ required: true }]}
                   onSelectedPN={function (PN: any): void {

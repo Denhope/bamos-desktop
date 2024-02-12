@@ -14,6 +14,7 @@ interface ContextMenuSearchSelectProps {
   onSelectedPN: (PN: any) => void;
   initialFormPN: string;
   width: 'lg' | 'sm' | 'xs';
+  disabled?: boolean;
 }
 const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   rules,
@@ -22,6 +23,7 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   initialFormPN,
   width,
   onSelectedPN,
+  disabled,
 }) => {
   const companyID = localStorage.getItem('companyID') || '';
   const dispatch = useAppDispatch();
@@ -101,6 +103,7 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
         ]}
       >
         <SearchSelect
+          disabled={disabled}
           width={width}
           initialValue={initialFormPN}
           onDoubleClick={() => {
