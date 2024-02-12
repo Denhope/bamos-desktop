@@ -549,7 +549,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
           className="h-[82vh] overflow-hidden "
         >
           <Layout>
-            <ProCard className="flex   justify-center align-middle ">
+            <ProCard className="flex  justify-center align-middle ">
               <Menu
                 style={{
                   width: '100%',
@@ -562,7 +562,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
               />
             </ProCard>
           </Layout>
-          <Title className="ml-auto">LOGO</Title>
+          <Title className="ml-auto pr-10">LOGO</Title>
           {/* <img
             className="ml-auto"
             src={logoImage} // замените на URL вашего логотипа

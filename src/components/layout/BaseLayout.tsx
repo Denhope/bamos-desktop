@@ -40,6 +40,7 @@ import HomeWEB from './HomeWEB';
 import { ModalForm, ProCard, ProFormItem } from '@ant-design/pro-components';
 import { MenuItem, getItem } from '@/services/utilites';
 import APNTable from '@/components/layout/APNTable';
+import UTCClock from '../shared/UTCClock';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -438,8 +439,7 @@ const BaseLayout: React.FC = () => {
               tooltip={'DOUBLE CLICK OPEN APN BOOK'}
               className="flex justify-center align-middle my-10"
             >
-              <div style={{ width: '200px' }}>
-                {' '}
+              <div style={{ width: '300px' }}>
                 <Select
                   showSearch
                   placeholder="BAN"
@@ -583,12 +583,7 @@ const BaseLayout: React.FC = () => {
         <div style={{ flex: 1 }}></div>
         <div>©2023 Created by Kavalchuk D.</div>
         <div style={{ flex: 1, textAlign: 'right' }}>
-          {/* <LiveClock
-            className="text-lg"
-            format={'HH:mm:ss'}
-            ticking={true}
-            timezone={'utc'}
-          /> */}
+          <UTCClock />
         </div>
       </Footer>
 

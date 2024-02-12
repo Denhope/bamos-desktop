@@ -212,7 +212,6 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
         <div className="h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
           <ProForm
             onReset={() => {
-              // setIsResetForm(true);
               setinitialFormPN('');
               setProject(null);
               setSecectedSingleProject(null);
