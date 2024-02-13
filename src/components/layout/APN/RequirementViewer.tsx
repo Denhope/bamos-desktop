@@ -137,6 +137,8 @@ const RequirementViewer: FC<RequirementViewerProps> = ({
             }}
           >
             <RequirementsFilteredForm
+              foForecact={true}
+              nonCalculate={false}
               onRequirementsSearch={function (orders: any[] | []): void {
                 setRequirements(orders);
               }} //onFilterWO={onFilterWO}

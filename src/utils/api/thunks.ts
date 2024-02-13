@@ -3614,6 +3614,8 @@ export interface IfeatchFilteredRequirements {
   partNumbers?: any[];
   isAlternatine?: any;
   partRequestNumbers?: number[];
+  nonColculate?: any;
+  includeAlternative?: any;
 }
 export const getFilteredRequirements = createAsyncThunk(
   'mtb/getFilteredRequirements',
@@ -3634,6 +3636,7 @@ export const getFilteredRequirements = createAsyncThunk(
         'partRequestNumbers',
         params.partRequestNumbers.join(',')
       );
+
     if (params.partNumbers)
       searchParams.append('partNumbers', params.partNumbers.join(','));
     if (params.additionalTaskID)
@@ -3644,6 +3647,8 @@ export const getFilteredRequirements = createAsyncThunk(
       searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
       searchParams.append('projectTaskWO', params.projectTaskWO);
+    if (params.nonColculate)
+      searchParams.append('nonColculate', params.nonColculate);
 
     if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
@@ -3746,6 +3751,10 @@ export const getFilteredRequirementsManager = createAsyncThunk(
     if (params.partNumbers)
       searchParams.append('partNumbers', params.partNumbers.join(','));
     if (params.foForecast) searchParams.append('foForecast', params.foForecast);
+    if (params.includeAlternative)
+      searchParams.append('includeAlternative', params.includeAlternative);
+    if (params.nonColculate)
+      searchParams.append('nonColculate', params.nonColculate);
     if (params.projectGroprojectGroupID)
       searchParams.append(
         'projectGroprojectGroupID',

@@ -158,26 +158,9 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
         onOpenChange={setOpenStoreFind}
         onFinish={async function (record: any, rowIndex?: any): Promise<void> {
           setOpenStoreFind(false);
-
-          // form.setFields([
-          //   {
-          //     name: 'partNumber',
-          //     value: selectedSingleRequirement.partRequestNumber,
-          //   },
-          //   { name: 'description', value: record.DESCRIPTION },
-          // ]);
         }}
       >
         <RequirementViewer
-          // onRowClick={function (record: any, rowIndex?: any): void {
-          //   setOpenStoreFind(false);
-
-          //   form.setFields([{ name: 'partNumber', value: record.PART_NUMBER }]);
-          //   form.setFields([
-          //     { name: 'description', value: record.DESCRIPTION },
-          //   ]);
-          // }}
-          // isLoading={false}
           onDoubleClick={function (record: any, rowIndex?: any): void {
             setRequariment(record);
             onRequirementSearch?.(record);

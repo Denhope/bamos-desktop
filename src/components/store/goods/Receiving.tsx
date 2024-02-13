@@ -486,6 +486,7 @@ const Receiving: FC<ReceivingType> = ({
                   (currentPart && currentPart?.PART_NUMBER) ||
                   (currentPart && currentPart?.PN)
                 }
+                width={'sm'}
               ></ContextMenuPNSearchSelect>
 
               <ProFormText

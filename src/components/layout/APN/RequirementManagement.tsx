@@ -29,7 +29,7 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
       <Sider
         className="h-[87vh] overflow-hidden"
         theme="light"
-        width={350}
+        width={450}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}
@@ -44,7 +44,11 @@ const RequirementManagement: FC<RequirementManagementProps> = () => {
               display: !collapsed ? 'block' : 'none',
             }}
           >
-            <RequirementsFilterForm onRequirementsSearch={setRequirements} />
+            <RequirementsFilterForm
+              foForecact={false}
+              nonCalculate={true}
+              onRequirementsSearch={setRequirements}
+            />
             <RequirementList
               scroll={12}
               onSelectedRequirements={setRequirement}

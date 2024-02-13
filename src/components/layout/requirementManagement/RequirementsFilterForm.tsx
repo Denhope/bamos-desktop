@@ -1,5 +1,6 @@
 import {
   ProForm,
+  ProFormCheckbox,
   ProFormDateRangePicker,
   ProFormRadio,
   ProFormSelect,
@@ -24,9 +25,13 @@ import { IProjectTaskAll } from '@/models/IProjectTask';
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (orders: any[] | []) => void;
+  nonCalculate: boolean;
+  foForecact: boolean;
 };
 const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   onRequirementsSearch,
+  nonCalculate,
+  foForecact,
 }) => {
   const [form] = Form.useForm();
   const formRef = useRef<FormInstance>(null);
@@ -174,6 +179,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       }
     }
   }, [selectedProjectId, receiverTaskType, dispatch]);
+  const [isAltertative, setIsAltertative] = useState<any>(true);
   return (
     <ProForm
       formRef={formRef}
@@ -211,10 +217,13 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
               status: form.getFieldValue('requestStatus'),
               projectTaskID: selectedTask,
               partRequestNumber: form.getFieldValue('partRequestNumber'),
-              foForecast: true,
+              foForecast: foForecact,
               partNumbers: [selectedSinglePN?.PART_NUMBER] || [],
               endDate: selectedEndDate,
               companyID: currentCompanyID || '',
+              isAlternatine: isAltertative,
+              nonColculate: nonCalculate,
+              includeAlternative: isAltertative,
 
               // projectIds: [
               //   receiverType && receiverType === 'PROJECT'
@@ -292,16 +301,35 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
 
           //rules={[{ required: true }]}
         />
-        <ContextMenuPNSearchSelect
-          isResetForm={isResetForm}
-          rules={[{ required: false }]}
-          onSelectedPN={function (PN: any): void {
-            setSecectedSinglePN(PN);
-          }}
-          name={'partNumber'}
-          initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
-          width={'sm'}
-        ></ContextMenuPNSearchSelect>
+        <ProForm.Group>
+          <ContextMenuPNSearchSelect
+            isResetForm={isResetForm}
+            rules={[{ required: false }]}
+            onSelectedPN={function (PN: any): void {
+              setSecectedSinglePN(PN);
+            }}
+            name={'partNumber'}
+            initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
+            width={'sm'}
+          ></ContextMenuPNSearchSelect>
+          <ProFormCheckbox.Group
+            className="my-0 py-0"
+            disabled={!selectedSinglePN?.PART_NUMBER}
+            initialValue={['true']}
+            labelAlign="left"
+            name="isAlternative"
+            fieldProps={{
+              onChange: (value) => setIsAltertative(value),
+            }}
+            options={[
+              { label: `${t('Altern.')}`, value: 'true' },
+              // { label: 'Load all Exp. Dates', value: 'allDate' },
+            ].map((option) => ({
+              ...option,
+              style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+            }))}
+          />
+        </ProForm.Group>
 
         {receiverType === 'PROJECT' && (
           <ProForm.Group>

@@ -1,6 +1,7 @@
 import {
   ModalForm,
   ProForm,
+  ProFormCheckbox,
   ProFormDigit,
   ProFormGroup,
   ProFormItem,
@@ -26,6 +27,8 @@ import PartsForecast from '../APN/PartsForecast';
 import RequirementItemsQuatation from './RequirementItemsQuatation';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 import { USER_ID } from '@/utils/api/http';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import RequirementViewer from '../APN/RequirementViewer';
 type AddDetailFormType = {
   currentDetail?: any;
   currenOrder?: IOrder | null;
@@ -57,6 +60,9 @@ const AddDetailForm: FC<AddDetailFormType> = ({
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [newPart, setnewPart] = useState<any>(currentDetail);
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const [isAltertative, setIsAltertative] = useState<any>(true);
+  const [initialForm, setinitialForm] = useState<any>('');
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
   const formRef = useRef<FormInstance>(null);
   const dispatch = useAppDispatch();
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -92,6 +98,12 @@ const AddDetailForm: FC<AddDetailFormType> = ({
         }
       };
       const fetchReq = async () => {
+        // const partNumbers = isAltertative
+        //   ? [
+        //       selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
+        //       ...(alternates || []).map((alternate) => alternate.ALTERNATIVE),
+        //     ]
+        //   : [selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN];
         const partNumbers = [
           selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
           ...(alternates || []).map((alternate) => alternate.ALTERNATIVE),
@@ -152,7 +164,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       fetchData();
       fetchReq();
     }
-  }, [selectedSinglePN]);
+  }, [selectedSinglePN, isAltertative]);
 
   useEffect(() => {
     if (quantitySum) {
@@ -170,8 +182,16 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       setIsLocalEditing(isEditing);
     }
   }, [currentDetail]);
+
   return (
     <ProForm
+      onReset={() => {
+        setIsResetForm(true);
+        setinitialForm('');
+        setSecectedSinglePN(null);
+        setAlternates([]);
+        setRequirements([]);
+      }}
       layout="horizontal"
       submitter={{
         render: (_, dom) =>
@@ -252,7 +272,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       <ProFormGroup direction="horizontal">
         <ProFormGroup direction="vertical">
           <ProFormGroup direction="horizontal">
-            <ProFormText
+            {/* <ProFormText
               rules={[{ required: true }]}
               name="PART_NUMBER"
               label={t('PART NUMBER')}
@@ -264,16 +284,61 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                 },
                 onKeyPress: handleKeyPress,
               }}
-            ></ProFormText>
+            ></ProFormText> */}
+            <ProForm.Group>
+              <ContextMenuPNSearchSelect
+                isResetForm={isResetForm}
+                rules={[{ required: false }]}
+                onSelectedPN={function (PN: any): void {
+                  setSecectedSinglePN(PN);
+                  form.setFields([
+                    { name: 'DESCRIPTION', value: PN.DESCRIPTION },
+                  ]);
+                  form.setFields([
+                    { name: 'UNIT_OF_MEASURE', value: PN.UNIT_OF_MEASURE },
+                  ]);
+
+                  form.setFields([{ name: 'GROUP', value: PN.GROUP }]);
+                  form.setFields([{ name: 'TYPE', value: PN.TYPE }]);
+                }}
+                name={'partNumber'}
+                initialFormPN={
+                  selectedSinglePN?.PART_NUMBER ||
+                  selectedSinglePN?.PN ||
+                  initialForm
+                }
+                width={'sm'}
+              ></ContextMenuPNSearchSelect>
+              {/* <ProFormCheckbox.Group
+                className="my-0 py-0"
+                disabled={!selectedSinglePN?.PART_NUMBER}
+                initialValue={['true']}
+                labelAlign="left"
+                name="isAlternative"
+                fieldProps={{
+                  onChange: (value) => setIsAltertative(value),
+                }}
+                options={[
+                  { label: `${t('Altern.')}`, value: 'true' },
+                  // { label: 'Load all Exp. Dates', value: 'allDate' },
+                ].map((option) => ({
+                  ...option,
+                  style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+                }))}
+              /> */}
+            </ProForm.Group>
+
             <ProFormText
               rules={[{ required: true }]}
               name="DESCRIPTION"
+              disabled
               label={t('DESCRIPTION')}
               width="sm"
               tooltip={t('DESCRIPTION')}
             ></ProFormText>
             <ProFormGroup>
               <ProFormSelect
+                disabled
                 rules={[{ required: true }]}
                 name="GROUP"
                 label={`${t('PART SPESIAL GROUP')}`}
@@ -288,6 +353,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                 ]}
               />
               <ProFormSelect
+                disabled
                 rules={[{ required: true }]}
                 name="TYPE"
                 label={`${t('PART TYPE')}`}
@@ -340,66 +406,16 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       </ProFormGroup>
 
       <ModalForm
-        // title={`Search on Store`}
-        width={'70vw'}
-        // placement={'bottom'}
-        open={openStoreFindModal}
-        // submitter={false}
-        onOpenChange={setOpenStoreFind}
-        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
-          setOpenStoreFind(false);
-          setSecectedSinglePN(record);
-
-          form.setFields([
-            { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
-          ]);
-        }}
-      >
-        <PartNumberSearch
-          initialParams={{ partNumber: '' }}
-          scroll={45}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            setOpenStoreFind(false);
-            setSecectedSinglePN(record);
-
-            form.setFields([
-              { name: 'PART_NUMBER', value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: 'DESCRIPTION', value: record.DESCRIPTION },
-            ]);
-            form.setFields([
-              { name: 'UNIT_OF_MEASURE', value: record.UNIT_OF_MEASURE },
-            ]);
-
-            form.setFields([{ name: 'GROUP', value: record.GROUP }]);
-            form.setFields([{ name: 'TYPE', value: record.TYPE }]);
-          }}
-          isLoading={false}
-          onRowSingleClick={function (record: any, rowIndex?: any): void {
-            form.setFields([
-              { name: 'PART_NUMBER', value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: 'DESCRIPTION', value: record.DESCRIPTION },
-            ]);
-            form.setFields([
-              { name: 'UNIT_OF_MEASURE', value: record.UNIT_OF_MEASURE },
-            ]);
-
-            form.setFields([{ name: 'GROUP', value: record.GROUP }]);
-            form.setFields([{ name: 'TYPE', value: record.TYPE }]);
-          }}
-        />
-      </ModalForm>
-      <ModalForm
         title=""
         open={openPickViewer}
         width={'90%'}
         onOpenChange={setOpenPickViewer}
+        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
+          setOpenPickViewer(false);
+        }}
       >
         <div className="h-[78vh]  overflow-hidden">
-          <PartsForecast
+          <RequirementViewer
             onDoubleClick={(record) => {
               setRequariment(record);
               setSecectedSinglePN(record);
@@ -413,7 +429,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
               form.setFields([{ name: 'GROUP', value: record.group }]);
               form.setFields([{ name: 'TYPE', value: record.type }]);
             }}
-          ></PartsForecast>
+          ></RequirementViewer>
         </div>
       </ModalForm>
     </ProForm>

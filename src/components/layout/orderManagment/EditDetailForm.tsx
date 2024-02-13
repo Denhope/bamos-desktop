@@ -324,12 +324,14 @@ const EditDetailForm: FC<AddDetailFormType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="DESCRIPTION"
+              disabled
               label={t('DESCRIPTION')}
               width="sm"
               tooltip={t('DESCRIPTION')}
             ></ProFormText>
             <ProFormGroup>
               <ProFormSelect
+                disabled
                 rules={[{ required: true }]}
                 name="GROUP"
                 label={`${t('PART SPESIAL GROUP')}`}
@@ -344,6 +346,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
                 ]}
               />
               <ProFormSelect
+                disabled
                 rules={[{ required: true }]}
                 name="TYPE"
                 label={`${t('PART TYPE')}`}
@@ -395,7 +398,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
         ></ProFormText>
       </ProFormGroup>
 
-      <ModalForm
+      {/* <ModalForm
         // title={`Search on Store`}
         width={'70vw'}
         // placement={'bottom'}
@@ -447,7 +450,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
             form.setFields([{ name: 'TYPE', value: record.TYPE }]);
           }}
         />
-      </ModalForm>
+      </ModalForm> */}
       <ModalForm
         title=""
         open={openPickViewer}
