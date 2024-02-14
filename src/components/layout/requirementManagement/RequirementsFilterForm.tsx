@@ -197,6 +197,10 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       onReset={() => {
         setSelectedProjectId(null);
         setIsResetForm(true);
+
+        setTimeout(() => {
+          setIsResetForm(false);
+        }, 0);
         setinitialForm('');
         setSecectedSinglePN(null);
         setSelectedEndDate(null);

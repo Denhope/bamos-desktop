@@ -106,6 +106,8 @@ const Receiving: FC<ReceivingType> = ({
 
   useEffect(() => {
     if (currentPart) {
+      setSecectedSinglePN(currentPart);
+      setinitialForm(currentPart?.PART_NUMBER || currentPart?.PN);
       form.setFields([
         {
           name: 'partNumber',
@@ -156,6 +158,9 @@ const Receiving: FC<ReceivingType> = ({
     <ProForm
       onReset={() => {
         setIsResetForm(true);
+        setTimeout(() => {
+          setIsResetForm(false);
+        }, 0);
         setinitialForm('');
         setSecectedSinglePN(null);
         setSecectedSingleStore({ shopShortName: '' });
@@ -180,7 +185,8 @@ const Receiving: FC<ReceivingType> = ({
 
           const result = dispatch(
             postNewStoreItem({
-              PART_NUMBER: selectedSinglePN?.PART_NUMBER,
+              PART_NUMBER:
+                selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
               NAME_OF_MATERIAL: values.description,
               QUANTITY: values.qty,
               GROUP: values.partGroup,
@@ -251,7 +257,8 @@ const Receiving: FC<ReceivingType> = ({
                   companyID: currentCompanyID,
                   data: {
                     userSing: localStorage.getItem('singNumber') || '',
-                    partNumber: selectedSinglePN?.PART_NUMBER,
+                    partNumber:
+                      selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
                     station: currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
                     suppliesCode: currentReceiving?.SUPPLIES_CODE || '',
                     suppliesId: currentReceiving?.SUPPLIES_ID || '',
@@ -343,7 +350,7 @@ const Receiving: FC<ReceivingType> = ({
                 }
                 const result = await dispatch(
                   updateOrderByID({
-                    id: currenOrder._id,
+                    id: currenOrder._id || currenOrder.id,
                     companyID: currentCompanyID || '',
                     parts: updatedParts,
                     state: stateNew,
@@ -481,10 +488,11 @@ const Receiving: FC<ReceivingType> = ({
                 }}
                 name={'partNumber'}
                 initialFormPN={
-                  selectedSinglePN?.PART_NUMBER ||
-                  initialForm ||
-                  (currentPart && currentPart?.PART_NUMBER) ||
-                  (currentPart && currentPart?.PN)
+                  // selectedSinglePN?.PART_NUMBER ||
+                  // initialForm ||
+                  // (currentPart && currentPart?.PART_NUMBER) ||
+                  // (currentPart && currentPart?.PN) ||
+                  initialForm
                 }
                 width={'sm'}
               ></ContextMenuPNSearchSelect>
@@ -597,9 +605,7 @@ const Receiving: FC<ReceivingType> = ({
                 setSecectedSingleStore(record);
                 setSecectedStore(record);
               }}
-              initialFormStore={
-                selectedSingleStore?.shopShortName || initialForm
-              }
+              initialFormStore={selectedSingleStore?.shopShortName || ''}
             />
 
             <ContextMenuLocationSearchSelect
@@ -609,9 +615,7 @@ const Receiving: FC<ReceivingType> = ({
                 setSecectedLocation(record);
                 setSecectedSingleLocation(record);
               }}
-              initialFormStore={
-                selectedSingleLocation?.locationName || initialForm
-              }
+              initialFormStore={selectedSingleLocation?.locationName || ''}
               locations={LOCATION}
             />
           </ProFormGroup>

@@ -1,6 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import { Form } from 'antd';
+
+import { CloseOutlined } from '@ant-design/icons';
 
 interface SearchSelectProps<T> {
   name: string;
@@ -9,6 +11,8 @@ interface SearchSelectProps<T> {
   optionLabel1?: keyof T;
   optionLabel2?: keyof T;
   onSelect: (selectedValue: any) => void;
+  onReset?: () => void;
+
   label: string;
   tooltip: string;
   rules: any[];
@@ -34,6 +38,7 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
   initialValue,
   width,
   disabled,
+  onReset,
 }) => {
   const [form] = Form.useForm();
   const [options, setOptions] = useState<any[]>(data || []);
@@ -93,14 +98,30 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
     }
   };
 
+  const handleClear = () => {
+    setValue('');
+    onSelect({});
+    onSelect(null);
+  };
+
+  // const handleClear = useCallback(() => {
+  //   setValue('');
+  //   onSelect({});
+  //   //   onSelect(null);
+  //   if (onReset) {
+  //     onReset();
+  //   }
+  // }, [onReset]);
+
   useEffect(() => {
     setValue(initialValue || ''); // обновляем value при изменении initialValue
-  }, [initialValue, isReset]);
+  }, [initialValue]);
 
   return (
     <div style={{ cursor: 'pointer' }} onDoubleClick={onDoubleClick}>
       <ProForm layout="horizontal" submitter={false}>
         <ProFormSelect
+          allowClear={true}
           disabled={disabled}
           width={width}
           name={name}
@@ -109,6 +130,7 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
           rules={rules}
           showSearch
           fieldProps={{
+            onClear: handleClear,
             onSearch: handleSearch,
             onChange: handleChange,
             value: value,

@@ -14,7 +14,7 @@ import { t } from 'i18next';
 import { IOrder } from '@/models/IOrder';
 
 import React, { FC, useEffect, useRef, useState } from 'react';
-import Alternates from '../partAdministration/tabs/mainView/Alternates';
+
 import AlternativeTable from '../AlternativeTable';
 import {
   getFilteredAlternativePN,
@@ -27,6 +27,7 @@ import RequirementItemsQuatation from './RequirementItemsQuatation';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 import { USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import RequirementViewer from '../APN/RequirementViewer';
 type AddDetailFormType = {
   currentDetail?: any;
   currenOrder?: IOrder | null;
@@ -217,6 +218,9 @@ const EditDetailForm: FC<AddDetailFormType> = ({
       onReset={() => {
         setinitialFormPN('');
         setIsResetForm(true);
+        setTimeout(() => {
+          setIsResetForm(false);
+        }, 0);
         setSecectedSinglePN({ PART_NUMBER: '' });
       }}
       disabled={!isEditing}
@@ -398,59 +402,6 @@ const EditDetailForm: FC<AddDetailFormType> = ({
         ></ProFormText>
       </ProFormGroup>
 
-      {/* <ModalForm
-        // title={`Search on Store`}
-        width={'70vw'}
-        // placement={'bottom'}
-        open={openStoreFindModal}
-        // submitter={false}
-        onOpenChange={setOpenStoreFind}
-        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
-          setOpenStoreFind(false);
-          setSecectedSinglePN(record);
-
-          form.setFields([
-            { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
-          ]);
-        }}
-      >
-        <PartNumberSearch
-          initialParams={{ partNumber: '' }}
-          scroll={45}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            setOpenStoreFind(false);
-            setSecectedSinglePN(record);
-
-            form.setFields([
-              { name: 'PART_NUMBER', value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: 'DESCRIPTION', value: record.DESCRIPTION },
-            ]);
-            form.setFields([
-              { name: 'UNIT_OF_MEASURE', value: record.UNIT_OF_MEASURE },
-            ]);
-
-            form.setFields([{ name: 'GROUP', value: record.GROUP }]);
-            form.setFields([{ name: 'TYPE', value: record.TYPE }]);
-          }}
-          isLoading={false}
-          onRowSingleClick={function (record: any, rowIndex?: any): void {
-            form.setFields([
-              { name: 'PART_NUMBER', value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: 'DESCRIPTION', value: record.DESCRIPTION },
-            ]);
-            form.setFields([
-              { name: 'UNIT_OF_MEASURE', value: record.UNIT_OF_MEASURE },
-            ]);
-
-            form.setFields([{ name: 'GROUP', value: record.GROUP }]);
-            form.setFields([{ name: 'TYPE', value: record.TYPE }]);
-          }}
-        />
-      </ModalForm> */}
       <ModalForm
         title=""
         open={openPickViewer}
@@ -458,7 +409,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
         onOpenChange={setOpenPickViewer}
       >
         <div className="h-[78vh]  overflow-hidden">
-          <PartsForecast
+          <RequirementViewer
             onDoubleClick={(record) => {
               setRequariment(record);
               setSecectedSinglePN(record);
@@ -472,7 +423,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
               form.setFields([{ name: 'GROUP', value: record.group }]);
               form.setFields([{ name: 'TYPE', value: record.type }]);
             }}
-          ></PartsForecast>
+          ></RequirementViewer>
         </div>
       </ModalForm>
     </ProForm>

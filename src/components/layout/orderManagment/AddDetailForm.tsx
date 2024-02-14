@@ -187,6 +187,9 @@ const AddDetailForm: FC<AddDetailFormType> = ({
     <ProForm
       onReset={() => {
         setIsResetForm(true);
+        setTimeout(() => {
+          setIsResetForm(false);
+        }, 0);
         setinitialForm('');
         setSecectedSinglePN(null);
         setAlternates([]);

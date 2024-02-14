@@ -46,6 +46,9 @@ const SearchPartForm: FC<SearchPartFormFormType> = ({
         onPartSearch(null);
         setinitialFormPN('');
         setIsResetForm(true);
+        setTimeout(() => {
+          setIsResetForm(false);
+        }, 0);
         setSecectedSinglePN({ PART_NUMBER: '' });
       }}
       onFinish={async (values: any) => {
@@ -74,9 +77,9 @@ const SearchPartForm: FC<SearchPartFormFormType> = ({
           onSelectedPN={function (PN: any): void {
             setSecectedSinglePN(PN), onPartSearch(PN);
             // form.setFields([{ name: 'partNumber', value: PN.PART_NUMBER }]);
-            form.setFields([{ name: 'description', value: PN.DESCRIPTION }]);
-            form.setFields([{ name: 'UNIT', value: PN.UNIT_OF_MEASURE }]);
-            form.setFields([{ name: 'remarks', value: PN.PART_REMARKS }]);
+            form.setFields([{ name: 'description', value: PN?.DESCRIPTION }]);
+            form.setFields([{ name: 'UNIT', value: PN?.UNIT_OF_MEASURE }]);
+            form.setFields([{ name: 'remarks', value: PN?.PART_REMARKS }]);
           }}
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialFormPN}

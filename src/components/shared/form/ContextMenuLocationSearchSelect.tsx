@@ -1,5 +1,5 @@
 import { ModalForm } from '@ant-design/pro-form';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import ContextMenuWrapper from '../ContextMenuWrapperProps';
 import SearchSelect from './SearchSelect';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
@@ -32,11 +32,15 @@ const ContextMenuLocationSearchSelect: FC<
 
   const [isReset, setIsReset] = useState(isResetForm || false);
 
-  const handleSelect = (selectedOption: any) => {
-    onSelectedLocation(selectedOption);
-    setIsReset(true); // затем обратно в true
-    setIsReset(false); // сначала установите в false
-  };
+  const handleSelect = useCallback(
+    (selectedOption: any) => {
+      onSelectedLocation(selectedOption);
+      setSecectedSingleLocation(selectedOption);
+      // setIsReset(true);
+      // setTimeout(() => setIsReset(false), 0);
+    },
+    [onSelectedLocation]
+  );
   const handleCopy = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
     navigator.clipboard.writeText(value);
@@ -51,6 +55,16 @@ const ContextMenuLocationSearchSelect: FC<
       // onFilterTransferprojects(form.getFieldsValue());
     }
   }, [initialFormStore]);
+  useEffect(() => {
+    if (isResetForm) {
+      setIsReset(true);
+
+      setTimeout(() => {
+        setIsReset(false);
+      }, 0);
+    }
+    setInitialStore('');
+  }, [isResetForm]);
 
   return (
     <div>
@@ -64,7 +78,7 @@ const ContextMenuLocationSearchSelect: FC<
       >
         <SearchSelect
           width="sm"
-          initialValue={initialFormStore}
+          initialValue={initialStore}
           onDoubleClick={() => {
             setOpenLocationFind(true);
           }}

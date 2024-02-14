@@ -47,6 +47,9 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
       <ProForm
         onReset={() => {
           setIsResetForm(true);
+          setTimeout(() => {
+            setIsResetForm(false);
+          }, 0);
           setinitialForm('');
           setSecectedSinglePN(null);
           setSecectedSingleVendor({ vendorName: '' });
@@ -82,7 +85,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
         className="bg-white px-4 py-3 rounded-md border-gray-400"
         size="small"
         layout="horizontal"
-        labelCol={{ span: 8 }}
+        // labelCol={{ span: 8 }}
       >
         <ProFormText
           name="order"
