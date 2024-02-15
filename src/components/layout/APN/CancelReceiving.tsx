@@ -170,7 +170,7 @@ const CancelReceiving: FC = () => {
                               resultDelete.payload?.CERTIFICATE_NUMBER,
                             CERTIFICATE_TYPE:
                               resultDelete.payload?.CERTIFICATE_TYPE,
-                            REVISION: resultDelete?.REVISION,
+                            REVISION: resultDelete.payload?.REVISION,
                             IS_CUSTOMER_GOODS:
                               resultDelete.payload?.IS_CUSTOMER_GOODS,
                             LOCAL_ID: resultDelete.payload?.LOCAL_ID,
