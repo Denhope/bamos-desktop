@@ -99,24 +99,81 @@ const CancelReceiving: FC = () => {
                             userSing: localStorage.getItem('singNumber') || '',
                             userID: USER_ID || '',
                             createDate: new Date(),
-                            partNumber: resultDelete.payload.PART_NUMBER,
+                            PART_NUMBER: resultDelete.payload.PART_NUMBER,
                             station:
                               resultDelete.payload?.WAREHOUSE_RECEIVED_AT ||
                               'N/A',
+                            WAREHOUSE_RECEIVED_AT:
+                              resultDelete.payload?.WAREHOUSE_RECEIVED_AT ||
+                              'N/A',
                             voucherModel: 'RECEIVING_CANCELLED',
-                            location: resultDelete.payload?.SHELF_NUMBER,
-                            orderNumber: resultDelete.payload?.ORDER_NUMBER,
-                            price: resultDelete.payload?.PRICE,
-                            currency: resultDelete.payload?.CURRENCY,
-                            quantity: -resultDelete.payload?.QUANTITY,
-                            owner: resultDelete.payload?.OWNER_SHORT_NAME,
+                            SHELF_NUMBER: resultDelete.payload?.SHELF_NUMBER,
+                            ORDER_NUMBER: resultDelete.payload?.ORDER_NUMBER,
+                            PRICE: resultDelete.payload?.PRICE,
+                            CURRENCY: resultDelete.payload?.CURRENCY,
+                            QUANTITY: -resultDelete.payload?.QUANTITY,
+                            SUPPLIER_BATCH_NUMBER:
+                              resultDelete.payload?.SUPPLIER_BATCH_NUMBER,
+                            OWNER: resultDelete.payload?.OWNER_SHORT_NAME,
                             batchNumber:
                               resultDelete.payload?.SUPPLIER_BATCH_NUMBER,
                             serialNumber: resultDelete.payload?.SERIAL_NUMBER,
-                            partGroup: resultDelete.payload?.GROUP,
-                            partType: resultDelete.payload?.TYPE,
-                            condition: resultDelete.payload?.CONDITION,
-                            description: resultDelete.payload?.NAME_OF_MATERIAL,
+                            GROUP: resultDelete.payload?.GROUP,
+                            TYPE: resultDelete.payload?.TYPE,
+                            CONDITION: resultDelete.payload?.CONDITION,
+                            NAME_OF_MATERIAL:
+                              resultDelete.payload?.NAME_OF_MATERIAL,
+
+                            STOCK: resultDelete.payload?.STOCK,
+
+                            RECEIVED_DATE: resultDelete.payload?.RECEIVED_DATE,
+
+                            UNIT_OF_MEASURE:
+                              resultDelete.payload.UNIT_OF_MEASURE,
+
+                            SUPPLIES_CODE:
+                              resultDelete.payload?.SUPPLIES_CODE || '',
+                            SUPPLIES_LOCATION:
+                              resultDelete.payload?.SUPPLIES_LOCATION || '',
+                            SUPPLIER_NAME: resultDelete.payload?.SUPPLIER_NAME,
+                            SUPPLIER_SHORT_NAME:
+                              resultDelete.payload?.SUPPLIER_SHORT_NAME,
+                            SUPPLIER_UNP: resultDelete.payload?.SUPPLIER_UNP,
+                            SUPPLIES_ID: resultDelete.payload?.SUPPLIES_ID,
+                            IS_RESIDENT: resultDelete.payload?.IS_RESIDENT,
+                            ADD_UNIT_OF_MEASURE:
+                              resultDelete.payload?.ADD_UNIT_OF_MEASURE,
+                            ADD_NAME_OF_MATERIAL:
+                              resultDelete.payload?.ADD_NAME_OF_MATERIAL,
+                            ADD_PART_NUMBER:
+                              resultDelete.payload?.ADD_PART_NUMBER,
+                            ADD_QUANTITY: resultDelete.payload?.ADD_QUANTITY,
+                            OWNER_SHORT_NAME:
+                              resultDelete.payload?.OWNER_SHORT_NAME,
+                            OWNER_LONG_NAME:
+                              resultDelete.payload?.OWNER_LONG_NAME,
+                            PRODUCT_EXPIRATION_DATE:
+                              resultDelete.payload?.PRODUCT_EXPIRATION_DATE,
+
+                            SERIAL_NUMBER: resultDelete.payload.SERIAL_NUMBER,
+                            APPROVED_CERT: resultDelete.payload?.APPROVED_CERT,
+                            AWB_REFERENCE:
+                              resultDelete.payload?.AWB_REFERENCE || '',
+                            AWB_TYPE: resultDelete.payload?.AWB_TYPE || '',
+                            AWB_NUMBER: resultDelete.payload?.AWB_NUMBER || '',
+                            AWB_DATE: resultDelete.payload?.AWB_DATE || '',
+                            RECEIVING_NUMBER:
+                              resultDelete.payload?.RECEIVING_NUMBER,
+                            RECEIVING_ITEM_NUMBER:
+                              resultDelete.payload.RECEIVING_ITEM_NUMBER,
+                            CERTIFICATE_NUMBER:
+                              resultDelete.payload?.CERTIFICATE_NUMBER,
+                            CERTIFICATE_TYPE:
+                              resultDelete.payload?.CERTIFICATE_TYPE,
+                            REVISION: resultDelete?.REVISION,
+                            IS_CUSTOMER_GOODS:
+                              resultDelete.payload?.IS_CUSTOMER_GOODS,
+                            LOCAL_ID: resultDelete.payload?.LOCAL_ID,
                           },
                         })
                       );

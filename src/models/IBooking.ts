@@ -1,7 +1,9 @@
 export interface IBookingItem {
-  createDate: Date;
   voucherModel: VaucherModelType;
-  partNumber: string;
+  createDate?: any;
+  createUserID?: any;
+  state?: any;
+  partNumber?: string;
   serialNumber?: string | number;
   batchNumber?: string | number;
   owner?: string;
@@ -24,7 +26,9 @@ export interface IBookingItem {
   addDescription?: string;
   registrationNumber?: any;
   planeType?: any;
+  customer?: any;
   projectWO?: any;
+
   workshop?: any;
   additionalTaskID?: string;
   projectTaskWO?: string;
@@ -33,7 +37,54 @@ export interface IBookingItem {
   receivingItemNumber?: any;
   suppliesCode?: any;
   suppliesId?: any;
+  orderId?: string;
+  orderType?: string;
   IS_CUSTOMER_GOODS?: boolean;
+  PART_NUMBER?: string | number;
+  NAME_OF_MATERIAL?: string;
+  QUANTITY?: any;
+  GROUP?: string;
+  TYPE?: string;
+  CONDITION?: string;
+  SHELF_NUMBER?: string;
+  STOCK?: string;
+  OWNER?: string;
+  PRICE?: any;
+  RECEIVED_DATE?: Date;
+  ORDER_NUMBER?: any;
+  UNIT_OF_MEASURE?: string;
+  CURRENCY?: any;
+  COMPANY_ID?: any;
+  SUPPLIER_BATCH_NUMBER?: any;
+  SUPPLIES_CODE?: string;
+  SUPPLIES_LOCATION?: string;
+  SUPPLIER_NAME?: string;
+  SUPPLIER_SHORT_NAME?: string;
+  SUPPLIER_UNP?: any;
+  SUPPLIES_ID?: any;
+  IS_RESIDENT?: boolean;
+  ADD_UNIT_OF_MEASURE?: string;
+  ADD_NAME_OF_MATERIAL?: string;
+  ADD_PART_NUMBER?: any;
+  ADD_QUANTITY?: any;
+  OWNER_SHORT_NAME?: string;
+  OWNER_LONG_NAME?: string;
+  PRODUCT_EXPIRATION_DATE?: Date;
+  WAREHOUSE_RECEIVED_AT?: any;
+  SERIAL_NUMBER?: any;
+  APPROVED_CERT?: any;
+  AWB_REFERENCE?: any;
+  AWB_TYPE?: any;
+  AWB_NUMBER?: any;
+  AWB_DATE?: Date;
+  RECEIVING_NUMBER?: any;
+  RECEIVING_ITEM_NUMBER?: any;
+  CERTIFICATE_NUMBER?: any;
+  CERTIFICATE_TYPE?: string;
+  REVISION: 'C' | 'B' | 'A';
+  LOCAL_ID?: string;
+  ORDER_ID?: string;
+  ORDER_TYPE?: string;
   receivingGoodsId?: string;
 }
 type VaucherModelType =

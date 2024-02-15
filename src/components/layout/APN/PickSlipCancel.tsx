@@ -815,25 +815,73 @@ const PickSlipCancel: FC = () => {
                                     userSing: result.payload?.storeMan,
                                     userID: result.payload?.storeManID || '',
                                     createDate: new Date(),
-                                    partNumber: resultItem.PART_NUMBER,
+                                    PART_NUMBER: resultItem.PART_NUMBER,
                                     station:
                                       resultItem?.WAREHOUSE_RECEIVED_AT ||
                                       'N/A',
                                     store: resultItem.STOCK,
                                     voucherModel: 'BACK_TO_STORE',
-                                    location: resultItem?.LOCATION_TO,
-                                    orderNumber: resultItem?.ORDER_NUMBER,
-                                    price: resultItem?.PRICE,
-                                    currency: resultItem?.CURRENCY,
-                                    quantity: resultItem?.QTYCANCEL,
-                                    owner: resultItem?.OWNER_SHORT_NAME,
+                                    SHELF_NUMBER: resultItem?.SHELF_NUMBER,
+                                    ORDER_NUMBER: resultItem?.ORDER_NUMBER,
+                                    PRICE: resultItem?.PRICE,
+                                    CURRENCY: resultItem?.CURRENCY,
+                                    QUANTITY: resultItem?.QUANTITY,
+                                    SUPPLIER_BATCH_NUMBER:
+                                      resultItem?.SUPPLIER_BATCH_NUMBER,
+                                    OWNER: resultItem?.OWNER_SHORT_NAME,
                                     batchNumber:
                                       resultItem?.SUPPLIER_BATCH_NUMBER,
                                     serialNumber: resultItem?.SERIAL_NUMBER,
-                                    partGroup: resultItem?.GROUP,
-                                    partType: resultItem?.TYPE,
-                                    condition: resultItem?.CONDITION,
-                                    description: resultItem?.NAME_OF_MATERIAL,
+                                    GROUP: resultItem?.GROUP,
+                                    TYPE: resultItem?.TYPE,
+                                    CONDITION: resultItem?.CONDITION,
+                                    NAME_OF_MATERIAL:
+                                      resultItem?.NAME_OF_MATERIAL,
+                                    STOCK: resultItem?.STOCK,
+                                    RECEIVED_DATE: resultItem?.RECEIVED_DATE,
+                                    UNIT_OF_MEASURE: resultItem.UNIT_OF_MEASURE,
+                                    SUPPLIES_CODE:
+                                      resultItem?.SUPPLIES_CODE || '',
+                                    SUPPLIES_LOCATION:
+                                      resultItem?.SUPPLIES_LOCATION || '',
+                                    SUPPLIER_NAME: resultItem?.SUPPLIER_NAME,
+                                    SUPPLIER_SHORT_NAME:
+                                      resultItem?.SUPPLIER_SHORT_NAME,
+                                    SUPPLIER_UNP: resultItem?.SUPPLIER_UNP,
+                                    SUPPLIES_ID: resultItem?.SUPPLIES_ID,
+                                    IS_RESIDENT: resultItem?.IS_RESIDENT,
+                                    ADD_UNIT_OF_MEASURE:
+                                      resultItem?.ADD_UNIT_OF_MEASURE,
+                                    ADD_NAME_OF_MATERIAL:
+                                      resultItem?.ADD_NAME_OF_MATERIAL,
+                                    ADD_PART_NUMBER:
+                                      resultItem?.ADD_PART_NUMBER,
+                                    ADD_QUANTITY: resultItem?.ADD_QUANTITY,
+                                    OWNER_SHORT_NAME:
+                                      resultItem?.OWNER_SHORT_NAME,
+                                    OWNER_LONG_NAME:
+                                      resultItem?.OWNER_LONG_NAME,
+                                    PRODUCT_EXPIRATION_DATE:
+                                      resultItem?.PRODUCT_EXPIRATION_DATE,
+                                    SERIAL_NUMBER: resultItem?.SERIAL_NUMBER,
+                                    APPROVED_CERT: resultItem?.APPROVED_CERT,
+                                    AWB_REFERENCE:
+                                      resultItem?.AWB_REFERENCE || '',
+                                    AWB_TYPE: resultItem?.AWB_TYPE || '',
+                                    AWB_NUMBER: resultItem?.AWB_NUMBER || '',
+                                    AWB_DATE: resultItem?.AWB_DATE || '',
+                                    RECEIVING_NUMBER:
+                                      resultItem?.RECEIVING_NUMBER,
+                                    RECEIVING_ITEM_NUMBER:
+                                      resultItem.RECEIVING_ITEM_NUMBER,
+                                    CERTIFICATE_NUMBER:
+                                      resultItem?.CERTIFICATE_NUMBER,
+                                    CERTIFICATE_TYPE:
+                                      resultItem?.CERTIFICATE_TYPE,
+                                    REVISION: resultItem?.REVISION,
+                                    LOCAL_ID: resultItem?.LOCAL_ID,
+                                    IS_CUSTOMER_GOODS:
+                                      resultItem?.IS_CUSTOMER_GOODS,
                                     registrationNumber:
                                       result.payload?.registrationNumber,
                                     planeType:
@@ -844,7 +892,6 @@ const PickSlipCancel: FC = () => {
                                       result.payload?.projectTaskWO,
                                     additionalTaskID:
                                       result.payload?.additionalTaskID,
-                                    label: resultItem?.LOCAL_ID,
                                   },
                                 })
                               ));
