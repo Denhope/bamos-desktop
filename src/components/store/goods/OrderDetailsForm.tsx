@@ -258,6 +258,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             </ProFormGroup>
             <ContextMenuReceivingsSearchSelect
               rules={[{ required: false }]}
+              disabled={isCreating}
               name={'receiving'}
               onSelectedReceiving={function (receiving: any): void {
                 setSecectedSingleReceiving(receiving);

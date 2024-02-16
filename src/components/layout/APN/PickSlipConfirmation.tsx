@@ -961,6 +961,8 @@ const PickSlipConfirmation: FC = () => {
                                 station:
                                   resultItem?.WAREHOUSE_RECEIVED_AT || 'N/A',
                                 voucherModel: 'STORE_TO_A/C',
+                                WAREHOUSE_RECEIVED_AT:
+                                  resultItem?.WAREHOUSE_RECEIVED_AT || 'N/A',
                                 SHELF_NUMBER: resultItem?.SHELF_NUMBER,
                                 ORDER_NUMBER: resultItem?.ORDER_NUMBER,
                                 PRICE: resultItem?.PRICE,
@@ -969,8 +971,8 @@ const PickSlipConfirmation: FC = () => {
                                 SUPPLIER_BATCH_NUMBER:
                                   resultItem?.SUPPLIER_BATCH_NUMBER,
                                 OWNER: resultItem?.OWNER_SHORT_NAME,
-                                batchNumber: resultItem?.SUPPLIER_BATCH_NUMBER,
-                                serialNumber: resultItem?.SERIAL_NUMBER,
+
+                                SERIAL_NUMBER: resultItem?.SERIAL_NUMBER,
                                 GROUP: resultItem?.GROUP,
                                 TYPE: resultItem?.TYPE,
                                 CONDITION: resultItem?.CONDITION,
@@ -1003,7 +1005,6 @@ const PickSlipConfirmation: FC = () => {
                                 PRODUCT_EXPIRATION_DATE:
                                   resultItem?.PRODUCT_EXPIRATION_DATE,
 
-                                SERIAL_NUMBER: resultItem.SERIAL_NUMBER,
                                 APPROVED_CERT: resultItem?.APPROVED_CERT,
                                 AWB_REFERENCE: resultItem?.AWB_REFERENCE || '',
                                 AWB_TYPE: resultItem?.AWB_TYPE || '',

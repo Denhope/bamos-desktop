@@ -38,7 +38,15 @@ const PartsTracking: FC<PartsTracking> = ({
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null);
   const tabs = [
     {
-      content: <ListOfBooking scroll={48} data={data} />,
+      content: (
+        <ListOfBooking
+          scroll={48}
+          data={data}
+          onSingleRowClick={function (part?: any): void {
+            setSelectedMaterial(part);
+          }}
+        />
+      ),
       title: `${t('LIST OF BOOKING')}`,
     },
     {
@@ -91,14 +99,12 @@ const PartsTracking: FC<PartsTracking> = ({
             <ProDescriptions loading={false} column={5} size="small">
               <ProDescriptions.Item label="PART NUMBER" valueType="text">
                 <div className="font-bold">
-                  {selectedMaterial &&
-                    selectedMaterial?.PART_NUMBER.toUpperCase()}
+                  {selectedMaterial && selectedMaterial?.PART_NUMBER}
                 </div>
               </ProDescriptions.Item>
               <ProDescriptions.Item label="DESCRIPTIONS" valueType="text">
                 <div className="font-bold">
-                  {selectedMaterial &&
-                    selectedMaterial?.DESCRIPTION.toUpperCase()}
+                  {selectedMaterial && selectedMaterial?.NAME_OF_MATERIAL}
                 </div>
               </ProDescriptions.Item>
 

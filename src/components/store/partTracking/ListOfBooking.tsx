@@ -1,8 +1,9 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { TimePicker } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import { TimePicker } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { IBookingItem } from '@/models/IBooking';
 type ListOfBookingType = {
   scroll: number;
   data: any[];
@@ -15,18 +16,18 @@ const ListOfBooking: FC<ListOfBookingType> = ({
 }) => {
   const { t } = useTranslation();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const initialColumns: ProColumns<any>[] = [
+  const initialColumns: ProColumns<IBookingItem>[] = [
     {
-      title: `${t("DATE")}`,
-      dataIndex: "createDate",
+      title: `${t('DATE')}`,
+      dataIndex: 'createDate',
 
-      key: "createDate",
+      key: 'createDate',
       //tip: 'ITEM EXPIRY DATE',
       ellipsis: true,
-      valueType: "date",
+      valueType: 'date',
 
       formItemProps: {
-        name: "createDate",
+        name: 'createDate',
       },
       sorter: (a, b) => {
         if (a.createDate && b.createDate) {
@@ -44,91 +45,91 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("BOOKING")}`,
-      dataIndex: "voucherModel",
-      key: "voucherModel",
+      title: `${t('BOOKING')}`,
+      dataIndex: 'voucherModel',
+      key: 'voucherModel',
       // tip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("PART No")}`,
-      dataIndex: "partNumber",
-      key: "partNumber",
+      title: `${t('PART No')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       //tip: 'ITEM PART_NUMBER',
       // ellipsis: true,
 
       formItemProps: {
-        name: "partNumber",
+        name: 'PART_NUMBER',
       },
     },
     {
-      title: `${t("B/SERIAL")}`,
-      dataIndex: "serialNumber",
-      key: "serialNumber",
+      title: `${t('B/SERIAL')}`,
+      dataIndex: 'SUPPLIER_BATCH_NUMBER',
+      key: 'SUPPLIER_BATCH_NUMBER',
       ellipsis: true,
       render: (text: any, record: any) =>
-        record.serialNumber || record.batchNumber,
+        record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
     },
     {
-      title: `${t("CONDITION")}`,
-      dataIndex: "condition",
-      key: "condition",
+      title: `${t('CONDITION')}`,
+      dataIndex: 'CONDITION',
+      key: 'CONDITION',
       //tip: 'CONDITION',
       ellipsis: true,
 
       formItemProps: {
-        name: "condition",
+        name: 'CONDITION',
       },
       render: (text: any, record: any) => {
-        return <div onClick={() => {}}>{record.condition}</div>;
+        return <div onClick={() => {}}>{record.CONDITION}</div>;
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("A/C")}`,
-      dataIndex: "registrationNumber",
-      key: "registrationNumber",
+      title: `${t('A/C')}`,
+      dataIndex: 'registrationNumber',
+      key: 'registrationNumber',
       // tip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("QTY")}`,
-      dataIndex: "quantity",
-      key: "quantity",
-      width: "5%",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      width: '5%',
+      responsive: ['sm'],
       search: false,
 
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("ORDER No")}`,
-      dataIndex: "orderNumber",
-      key: "orderNumber",
+      title: `${t('ORDER No')}`,
+      dataIndex: 'ORDER_NUMBER',
+      key: 'ORDER_NUMBER',
       // tip: 'ITEM STORE',
       ellipsis: true,
       // width: '8%',
       formItemProps: {
-        name: "orderNumber",
+        name: 'ORDER_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "description",
-      key: "description",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // tip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
-        name: "description",
+        name: 'description',
       },
 
       // responsive: ['sm'],
@@ -150,17 +151,12 @@ const ListOfBooking: FC<ListOfBookingType> = ({
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         // onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onRowClick={function (record: any, rowIndex?: any): void {
-          onSingleRowClick &&
-            onSingleRowClick((prevSelectedItems: (string | undefined)[]) =>
-              prevSelectedItems && prevSelectedItems.includes(record._id)
-                ? []
-                : [record]
-            );
+          onSingleRowClick && onSingleRowClick(record);
         }}
         onSave={function (rowKey: any, data: any, row: any): void {}}
         yScroll={scroll}
         externalReload={function () {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
     </div>

@@ -15,7 +15,7 @@ export interface IBookingItem {
   projectID?: string;
   orderNumber?: any;
   location?: string;
-  station: string;
+  station?: string;
   userID: string;
   userSing: any;
   companyID: string;
@@ -28,7 +28,6 @@ export interface IBookingItem {
   planeType?: any;
   customer?: any;
   projectWO?: any;
-
   workshop?: any;
   additionalTaskID?: string;
   projectTaskWO?: string;
@@ -51,6 +50,7 @@ export interface IBookingItem {
   OWNER?: string;
   PRICE?: any;
   RECEIVED_DATE?: Date;
+  PART_REMARKS?: any;
   ORDER_NUMBER?: any;
   UNIT_OF_MEASURE?: string;
   CURRENCY?: any;
@@ -81,11 +81,16 @@ export interface IBookingItem {
   RECEIVING_ITEM_NUMBER?: any;
   CERTIFICATE_NUMBER?: any;
   CERTIFICATE_TYPE?: string;
-  REVISION: 'C' | 'B' | 'A';
+  REVISION?: 'C' | 'B' | 'A';
   LOCAL_ID?: string;
   ORDER_ID?: string;
   ORDER_TYPE?: string;
   receivingGoodsId?: string;
+  STATUS?: string;
+  PART_RECEIVING_REMARKS?: string;
+  PART_PICKSLIP_REMARKS?: string;
+  PART_REPARE_REMARKS?: string;
+  PART_PURCHASE_REMARKS?: string;
 }
 type VaucherModelType =
   | 'ADD_NEW_PART'
