@@ -4,6 +4,7 @@ import {
   ProFormDatePicker,
   ProFormGroup,
   ProFormText,
+  ProFormTextArea,
 } from '@ant-design/pro-components';
 import { Form, Modal, message } from 'antd';
 import PickSlipViwer from '@/components/layout/APN/PickSlipViwer';
@@ -173,13 +174,14 @@ const PickForm: FC<PickSlipFilterFormType> = ({
             label={`${t('PROJECT')}`}
             width="xs"
           />{' '}
-          <ProFormText
-            disabled
-            name="remarks"
-            label={`${t('REMARKS')}`}
-            width="xs"
-          />
         </ProFormGroup>
+        <ProFormTextArea
+          disabled
+          fieldProps={{ style: { resize: 'none' } }}
+          name="remarks"
+          label={`${t('REMARKS')}`}
+          width="lg"
+        />
       </ProForm>
       <Modal
         title=""

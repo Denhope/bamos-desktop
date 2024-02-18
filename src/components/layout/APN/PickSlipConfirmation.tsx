@@ -640,7 +640,7 @@ const PickSlipConfirmation: FC = () => {
               onSave={function (rowKey: any, data: any, row: any): void {
                 console.log(rowKey);
               }}
-              yScroll={10}
+              yScroll={16}
               setQyon={setQyon} // externalReload={function (): Promise<void> {
               //   throw new Error('Function not implemented.');
               // }}
