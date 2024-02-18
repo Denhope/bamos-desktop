@@ -19,7 +19,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { MenuProps } from 'antd';
 import { getFileFromServer } from '@/utils/api/thunks';
-
+// import { fileTypeFromBuffer } from 'file-type';
 export const includeTasks = (
   arrayOfAllObjectsData: ITaskType[],
   arrayOfCheakObjectData: IDTO[]
@@ -617,8 +617,8 @@ export async function handleFileSelect(file: {
     const companyID = localStorage.getItem('companyID') || '';
     const fileData = await getFileFromServer(companyID, file.id);
 
-    // Определите MIME-тип на основе расширения файла
-    const extension = file.name.split('.').pop();
+    const extensionMatch = file.name.match(/\.([^.]+)$/);
+    const extension = extensionMatch ? extensionMatch[1] : '';
     let type = '';
     switch (extension) {
       case 'pdf':
@@ -655,9 +655,9 @@ export async function handleFileSelect(file: {
       case 'rar':
         type = 'application/x-rar-compressed';
         break;
-      // добавьте больше случаев для других типов файлов...
+
       default:
-        type = 'application/octet-stream'; // общий тип для двоичных файлов
+        type = 'application/octet-stream';
     }
 
     // Создайте Blob из файла
@@ -676,6 +676,57 @@ export async function handleFileSelect(file: {
     link.click();
   } catch (error) {
     console.error('Не удалось получить файл', error);
+  }
+}
+
+// export async function handleFileOpen(file: any): Promise<void> {
+//   try {
+//     const companyID = localStorage.getItem('companyID') || '';
+//     const fileData = await getFileFromServer(companyID, file.id);
+
+//     // Создайте Blob из файла
+//     const blob = new Blob([fileData], { type: file.type });
+
+//     // Создайте временный URL для Blob
+//     const fileURL = window.URL.createObjectURL(blob);
+
+//     // Откройте файл в новой вкладке или окне
+//     window.open(fileURL, '_blank');
+//     console.log(fileURL);
+//   } catch (error) {
+//     console.error('Не удалось открыть файл', error);
+//   }
+// }
+
+export async function handleFileOpen(file: any): Promise<void> {
+  try {
+    const companyID = localStorage.getItem('companyID') || '';
+    const fileData = await getFileFromServer(companyID, file.id);
+
+    // Создайте Blob из файла
+    const blob = new Blob([fileData], { type: file.type });
+
+    // Создайте временный URL для Blob
+    const fileURL = window.URL.createObjectURL(blob);
+
+    // Откройте файл в новом окне или вкладке браузера
+    const newWindow = window.open(fileURL, '_blank');
+
+    // Если браузер блокирует открытие файла, предложите сохранить его
+    if (
+      !newWindow ||
+      newWindow.closed ||
+      typeof newWindow.closed === 'undefined'
+    ) {
+      alert('Заблокировано открытие файла. Пожалуйста загрузите файл.');
+    } else {
+      newWindow.focus();
+    }
+
+    // Не забывайте очищать URL после открытия файла
+    window.URL.revokeObjectURL(fileURL);
+  } catch (error) {
+    console.error('Не удалось открыть файл', error);
   }
 }
 

@@ -1,5 +1,5 @@
 import { ProColumns } from '@ant-design/pro-components';
-import { DatePicker, TimePicker } from 'antd';
+import { DatePicker, Modal, TimePicker } from 'antd';
 import EditableTable from '@/components/shared/Table/EditableTable';
 import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
 import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
@@ -8,6 +8,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MaterialOrder } from '@/store/reducers/StoreLogisticSlice';
 import { getFilteredMaterialOrders } from '@/utils/api/thunks';
+import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
 export interface MaterialOrdersListPrors {
   data: MaterialOrder[] | [];
   scroll: number;
@@ -27,6 +28,8 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
   const dispatch = useAppDispatch();
   const { filteredMaterialOrders, filteredPickSlipsForCancel, isLoading } =
     useTypedSelector((state) => state.storesLogistic);
+  const [openPickSlip, setOpenPickSlip] = useState(false);
+  const [currentPick, setCurrenPick] = useState<any>();
   // useEffect(() => {
   //   const currentCompanyID = localStorage.getItem('companyID');
   //   if (currentCompanyID) {
@@ -107,6 +110,8 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
               // dispatch(setCurrentProjectTask(record));
               // setOpenRequirementDrawer(true);
               onRowClick(record);
+              setOpenPickSlip(true);
+              setCurrenPick(record);
             }}
           >
             {record.materialAplicationNumber}
@@ -181,7 +186,7 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
     },
 
     {
-      title: `${t('WORKORDER')}`,
+      title: `${t('WO No')}`,
       dataIndex: 'projectTaskWO',
       key: 'projectTaskWO',
       // responsive: ['sm'],
@@ -397,6 +402,15 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
           throw new Error('Function not implemented.');
         }}
       />
+      <Modal
+        title={t('PICKSLIP PRINT')}
+        open={openPickSlip}
+        width={'60%'}
+        onCancel={() => setOpenPickSlip(false)}
+        footer={null}
+      >
+        <GeneretedPickSlip currentPickSlipID={currentPick?.pickSlipID} />
+      </Modal>
     </div>
   );
 };

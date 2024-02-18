@@ -4,6 +4,8 @@ import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
 import EditableTable from '@/components/shared/Table/EditableTable';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import FileModalList from '@/components/shared/FileModalList';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 type ReceivingItemList = {
   scroll: number;
   data: any[];
@@ -321,17 +323,34 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
-    // {
-    //   title: `${t('DOC')}`,
-    //   dataIndex: 'DOC',
-    //   key: 'DOC',
-    //   width: '4%',
-    //   ellipsis: true,
-    //   editable: (text, record, index) => {
-    //     return false;
-    //   },
-    //   search: false,
-    // },
+    {
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
+      width: '4%',
+      ellipsis: true,
+      editable: (text, record, index) => {
+        return false;
+      },
+      render: (text, record, index) => {
+        return record?.FILES && record?.FILES.length > 0 ? (
+          <FileModalList
+            files={record.foRealese?.FILES || []}
+            onFileSelect={function (file: any): void {
+              handleFileSelect({
+                id: file?.id,
+                name: file?.name,
+              });
+            }}
+            onFileOpen={function (file: any): void {
+              handleFileOpen(file);
+            }}
+          />
+        ) : (
+          <></>
+        );
+      },
+    },
 
     {
       title: `${t('OWNER')}`,

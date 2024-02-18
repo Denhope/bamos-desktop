@@ -4,13 +4,13 @@ import {
   ProFormDatePicker,
   ProFormGroup,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Form, Modal, message } from "antd";
-import PickSlipViwer from "@/components/layout/APN/PickSlipViwer";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredPickSlip } from "@/utils/api/thunks";
+} from '@ant-design/pro-components';
+import { Form, Modal, message } from 'antd';
+import PickSlipViwer from '@/components/layout/APN/PickSlipViwer';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getFilteredPickSlip } from '@/utils/api/thunks';
 type PickSlipFilterFormType = {
   onFilterPickSlip: (record: any) => void;
   pickSlipNumber?: string;
@@ -24,7 +24,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
   const { t } = useTranslation();
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
@@ -36,18 +36,18 @@ const PickForm: FC<PickSlipFilterFormType> = ({
   useEffect(() => {
     if (pickData) {
       form.setFields([
-        { name: "remarks", value: pickData.remarks },
-        { name: "status", value: pickData?.status.toUpperCase() },
-        { name: "woNumber", value: pickData.projectTaskWO },
-        { name: "project", value: pickData.projectWO },
-        { name: "reciver", value: pickData.registrationNumber },
-        { name: "neededOn", value: pickData.neededOn },
-        { name: "getFrom", value: pickData.getFrom },
-        { name: "mechSing", value: pickData.createBy },
-        { name: "bookingDate", value: pickData?.closedDate || new Date() },
+        { name: 'remarks', value: pickData.remarks },
+        { name: 'status', value: pickData?.status.toUpperCase() },
+        { name: 'woNumber', value: pickData.projectTaskWO },
+        { name: 'project', value: pickData.projectWO },
+        { name: 'reciver', value: pickData.registrationNumber },
+        { name: 'neededOn', value: pickData.neededOn },
+        { name: 'getFrom', value: pickData.getFrom },
+        { name: 'mechSing', value: pickData.createBy },
+        { name: 'bookingDate', value: pickData?.closedDate || new Date() },
         {
-          name: "storeman",
-          value: pickData?.storeMan || localStorage.getItem("name"),
+          name: 'storeman',
+          value: pickData?.storeMan || localStorage.getItem('name'),
         },
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -56,7 +56,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
   useEffect(() => {
     if (pickSlipNumber) {
       form.setFields([
-        { name: "materialAplicationNumber", value: pickSlipNumber },
+        { name: 'materialAplicationNumber', value: pickSlipNumber },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -64,7 +64,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
     if (pickDataNumber) {
       form.setFields([
         {
-          name: "materialAplicationNumber",
+          name: 'materialAplicationNumber',
           value: pickDataNumber.materialAplicationNumber,
         },
 
@@ -81,26 +81,26 @@ const PickForm: FC<PickSlipFilterFormType> = ({
         form={form}
         // size="middle"
         onFinish={async (values) => {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
+          const currentCompanyID = localStorage.getItem('companyID') || '';
           const result = dispatch(
             getFilteredPickSlip({
               companyID: currentCompanyID,
               materialAplicationNumber: values.materialAplicationNumber,
             })
           );
-          if ((await result).meta.requestStatus === "fulfilled") {
+          if ((await result).meta.requestStatus === 'fulfilled') {
             onFilterPickSlip((await result).payload[0]);
             setPickData((await result).payload[0]);
           } else {
-            message.error("NO ITEMS");
+            message.error('NO ITEMS');
           }
         }}
         title="PICKSLIP DATA"
       >
-        <ProFormGroup size={"small"}>
+        <ProFormGroup size={'small'}>
           <ProFormText
             name="materialAplicationNumber"
-            label={`${t("PICKSLIP")}`}
+            label={`${t('PICKSLIP')}`}
             width="xs"
             tooltip="PICKSLIP NUMBER"
             //rules={[{ required: true }]}
@@ -113,7 +113,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
           <ProFormText
             disabled
             name="status"
-            label={`${t("STATUS")}`}
+            label={`${t('STATUS')}`}
             width="xs"
             // tooltip="PICKSLIP NUMBER"
             //rules={[{ required: true }]}
@@ -121,42 +121,42 @@ const PickForm: FC<PickSlipFilterFormType> = ({
           <ProFormText
             disabled
             name="woNumber"
-            label={`${t("WO NUMBER")}`}
+            label={`${t('WO No')}`}
             width="xs"
           />
         </ProFormGroup>
-        <ProFormGroup size={"small"}>
+        <ProFormGroup size={'small'}>
           <ProFormText
             disabled
             name="storeman"
-            label={`${t("STOREMAN")}`}
+            label={`${t('STOREMAN')}`}
             width="sm"
             // tooltip="PICKSLIP NUMBER"
             //rules={[{ required: true }]}
           />
           <ProFormDatePicker
-            disabled={pickData?.status != "issued"}
+            disabled={pickData?.status != 'issued'}
             name="bookingDate"
-            label={`${t("BOOKING DATE")}`}
+            label={`${t('BOOKING DATE')}`}
           />
         </ProFormGroup>
-        <ProFormGroup size={"small"}>
+        <ProFormGroup size={'small'}>
           <ProFormText
             disabled
             name="mechSing"
-            label={`${t("MECH.SING")}`}
+            label={`${t('MECH.SING')}`}
             width="xs"
           />
           <ProFormText
             disabled
             name="getFrom"
-            label={`${t("GET FROM")}`}
+            label={`${t('GET FROM')}`}
             width="xs"
           />
           <ProFormText
             disabled
             name="neededOn"
-            label={`${t("NEEDED ON")}`}
+            label={`${t('NEEDED ON')}`}
             width="xs"
           />
         </ProFormGroup>
@@ -164,19 +164,19 @@ const PickForm: FC<PickSlipFilterFormType> = ({
           <ProFormText
             disabled
             name="reciver"
-            label={`${t("RECIVER")}`}
+            label={`${t('RECIVER')}`}
             width="xs"
           />
           <ProFormText
             disabled
             name="project"
-            label={`${t("PROJECT")}`}
+            label={`${t('PROJECT')}`}
             width="xs"
-          />{" "}
+          />{' '}
           <ProFormText
             disabled
             name="remarks"
-            label={`${t("REMARKS")}`}
+            label={`${t('REMARKS')}`}
             width="xs"
           />
         </ProFormGroup>
@@ -184,7 +184,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
       <Modal
         title=""
         open={openPickViewer}
-        width={"90%"}
+        width={'90%'}
         onCancel={() => setOpenPickViewer(false)}
         footer={null}
       >

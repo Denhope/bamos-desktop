@@ -4,20 +4,20 @@ import {
   ProFormDateRangePicker,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
-import { DatePickerProps, Form } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
-import SearchSelect from "@/components/shared/form/SearchSelect";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import moment from "moment";
-import React, { FC, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@ant-design/pro-components';
+import { DatePickerProps, Form } from 'antd';
+import { RangePickerProps } from 'antd/es/date-picker';
+import SearchSelect from '@/components/shared/form/SearchSelect';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import moment from 'moment';
+import React, { FC, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getFilteredCancelMaterialOrders,
   getFilteredMaterialOrders,
   getFilteredPartNumber,
   getFilteredProjects,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 type PickSlipFilterFormType = {
   onFilterPickSlip?: (record: any) => void;
   canselVoidType?: boolean;
@@ -28,7 +28,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
 }) => {
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
@@ -37,10 +37,10 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
-  const [initialPN, setInitialPN] = useState("");
-  const [initialWO, setInitialWO] = useState("");
+  const [initialPN, setInitialPN] = useState('');
+  const [initialWO, setInitialWO] = useState('');
   const [isReset, setIsReset] = useState(false);
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   const dispatch = useAppDispatch();
   const [selectedPN, setSelectedPN] = useState<any>(null);
   const [selectedWO, setSelectedWO] = useState<any>(null);
@@ -57,7 +57,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
   };
   //co
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {
     setSelectedEndDate(dateString[1]);
@@ -105,32 +105,32 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
       size="small"
       formRef={formRef}
       initialValues={{
-        createDate: [moment().subtract(1, "months"), moment()],
+        createDate: [moment().subtract(1, 'months'), moment()],
       }}
       onReset={() => {
         setSelectedPN(null);
-        setInitialPN("");
+        setInitialPN('');
         setSelectedWO(null);
-        setInitialWO("");
+        setInitialWO('');
         setIsReset(true);
       }}
       form={form}
       layout="horizontal"
       onFinish={async (values) => {
-        const currentCompanyID = localStorage.getItem("companyID") || "";
+        const currentCompanyID = localStorage.getItem('companyID') || '';
 
         if (canselVoidType) {
           const result = dispatch(
             getFilteredCancelMaterialOrders({
               companyID: currentCompanyID,
-              projectId: form.getFieldValue("projectWO"),
-              status: form.getFieldValue("status"),
-              projectTaskWO: form.getFieldValue("taskWO"),
-              regNbr: form.getFieldValue("receiver"),
+              projectId: form.getFieldValue('projectWO'),
+              status: form.getFieldValue('status'),
+              projectTaskWO: form.getFieldValue('taskWO'),
+              regNbr: form.getFieldValue('receiver'),
               startDate: selectedStartDate,
               endDate: selectedEndDate,
               materialAplicationNumber: form.getFieldValue(
-                "materialAplicationNumber"
+                'materialAplicationNumber'
               ),
               partNumber: selectedPN?.PART_NUMBER,
             })
@@ -139,14 +139,14 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           const result = dispatch(
             getFilteredMaterialOrders({
               companyID: currentCompanyID,
-              projectId: form.getFieldValue("projectWO"),
-              status: form.getFieldValue("status"),
-              projectTaskWO: form.getFieldValue("taskWO"),
-              regNbr: form.getFieldValue("receiver"),
+              projectId: form.getFieldValue('projectWO'),
+              status: form.getFieldValue('status'),
+              projectTaskWO: form.getFieldValue('taskWO'),
+              regNbr: form.getFieldValue('receiver'),
               startDate: selectedStartDate,
               endDate: selectedEndDate,
               materialAplicationNumber: form.getFieldValue(
-                "materialAplicationNumber"
+                'materialAplicationNumber'
               ),
               partNumber: selectedPN?.PART_NUMBER,
             })
@@ -156,7 +156,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
     >
       <ProFormText
         name="materialAplicationNumber"
-        label={`${t("PICKSLIP NUMBER")}`}
+        label={`${t('PICKSLIP NUMBER')}`}
         width="lg"
         tooltip="PICKSLIP NUMBER"
         //rules={[{ required: true }]}
@@ -168,7 +168,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
       <ProForm.Group>
         <ProFormSelect
           name="sendFrom"
-          label={`${t("SEND FROM")}`}
+          label={`${t('SEND FROM')}`}
           width="lg"
           disabled
           tooltip="ENTER STORE "
@@ -177,7 +177,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         <ProFormSelect
           name="sendTO"
           disabled
-          label={`${t("SEND TO")}`}
+          label={`${t('SEND TO')}`}
           width="lg"
           tooltip="ENTER STORE "
           //rules={[{ required: true }]}
@@ -186,7 +186,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
       <ProForm.Group>
         <ProFormText
           name="receiver"
-          label={`${t("RECEIVER")}`}
+          label={`${t('RECEIVER')}`}
           width="lg"
           tooltip="ENTER A/C NUMBER "
           //rules={[{ required: true }]}
@@ -198,16 +198,16 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           optionLabel1="projectWO"
           optionLabel2="projectName"
           onSelect={handleSelectWO}
-          label={`${t("PROJECT")}`}
-          tooltip={`${t("PROJECT")}`}
+          label={`${t('PROJECT')}`}
+          tooltip={`${t('PROJECT')}`}
           rules={[]}
-          name={"projectWO"}
+          name={'projectWO'}
           width="lg"
         />
       </ProForm.Group>
       <ProFormText
         name="taskWO"
-        label={`${t("WO NUMBER")}`}
+        label={`${t('WO No')}`}
         width="lg"
         tooltip="SERIAL OR BATCH NUMBER"
         //rules={[{ required: true }]}
@@ -222,10 +222,10 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         onSearch={handleSearch}
         optionLabel1="PART_NUMBER"
         onSelect={handleSelect}
-        label={`${t("PART NUMBER")}`}
-        tooltip={`${t("DOUBE CLICK OPEN PART NUMBER BOOK")}`}
+        label={`${t('PART NUMBER')}`}
+        tooltip={`${t('DOUBE CLICK OPEN PART NUMBER BOOK')}`}
         rules={[]}
-        name={"PART_NUMBER"}
+        name={'PART_NUMBER'}
       />
       {/* <ProFormText
         name="BATCH_ID"
@@ -236,7 +236,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
       /> */}
       <ProFormDateRangePicker
         name="createDate"
-        label={`${t("CREATE DATE")}`}
+        label={`${t('CREATE DATE')}`}
         width="lg"
         tooltip="CREATE DATE"
         fieldProps={{
@@ -249,17 +249,17 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           // initialValue={['issued']}
           mode="multiple"
           name="status"
-          label={`${t("STATUS")}`}
+          label={`${t('STATUS')}`}
           width="lg"
           tooltip="SELECT STATUS "
           options={[
-            { value: "open", label: t("NEW") },
-            { value: "closed", label: t("CLOSED") },
-            { value: "cancelled", label: t("CANCELLED") },
-            { value: "partyCancelled", label: t("PARTY_CANCELLED") },
-            { value: "deleted", label: t("DELETED") },
-            { value: "issued", label: t("ISSUED") },
-            { value: "transfer", label: t("TRANSFER") },
+            { value: 'open', label: t('NEW') },
+            { value: 'closed', label: t('CLOSED') },
+            { value: 'cancelled', label: t('CANCELLED') },
+            { value: 'partyCancelled', label: t('PARTY_CANCELLED') },
+            { value: 'deleted', label: t('DELETED') },
+            { value: 'issued', label: t('ISSUED') },
+            { value: 'transfer', label: t('TRANSFER') },
           ]}
 
           //rules={[{ required: true }]}

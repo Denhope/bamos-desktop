@@ -15,7 +15,7 @@ import RequirementItems from '@/components/store/RequirementItems';
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RouteNames } from '@/router';
-import { getItem, handleFileSelect } from '@/services/utilites';
+import { getItem, handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { WarningOutlined } from '@ant-design/icons';
 import ShelfExpiryFilterForm from '../shelfExpiry/ShelfExpiryFilterForm';
 import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
@@ -33,6 +33,7 @@ import {
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
 import { USER_ID } from '@/utils/api/http';
+import FileModalList from '@/components/shared/FileModalList';
 
 const ShelfExpiry: FC = () => {
   const { t } = useTranslation();
@@ -313,9 +314,17 @@ const ShelfExpiry: FC = () => {
       },
       render: (text, record, index) => {
         return record.FILES && record.FILES.length > 0 ? (
-          <FilesSelector
-            files={record.FILES || []}
-            onFileSelect={handleFileSelect}
+          <FileModalList
+            files={record?.FILES}
+            onFileSelect={function (file: any): void {
+              handleFileSelect({
+                id: file?.id,
+                name: file?.name,
+              });
+            }}
+            onFileOpen={function (file: any): void {
+              handleFileOpen(file);
+            }}
           />
         ) : (
           <></>

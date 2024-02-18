@@ -49,8 +49,9 @@ import GeneretedCompleteSlipPdf from '@/components/pdf/GeneretedCompleteSlip';
 import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
 import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
 import FilesSelector from '@/components/shared/FilesSelector';
-import { handleFileSelect } from '@/services/utilites';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { USER_ID } from '@/utils/api/http';
+import FileModalList from '@/components/shared/FileModalList';
 
 const PickSlipConfirmation: FC = () => {
   const { t } = useTranslation();
@@ -221,6 +222,34 @@ const PickSlipConfirmation: FC = () => {
       responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
+    },
+    {
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
+      width: '7%',
+      ellipsis: true,
+      editable: (text, record, index) => {
+        return false;
+      },
+      render: (text, record, index) => {
+        return record?.FILES && record?.FILES.length > 0 ? (
+          <FileModalList
+            files={record?.FILES}
+            onFileSelect={function (file: any): void {
+              handleFileSelect({
+                id: file?.id,
+                name: file?.name,
+              });
+            }}
+            onFileOpen={function (file: any): void {
+              handleFileOpen(file);
+            }}
+          />
+        ) : (
+          <></>
+        );
+      },
     },
   ];
   const initialReleseColumns: ProColumns<any>[] = [
@@ -448,9 +477,17 @@ const PickSlipConfirmation: FC = () => {
       },
       render: (text, record, index) => {
         return record.foRealese?.FILES && record.foRealese?.FILES.length > 0 ? (
-          <FilesSelector
-            files={record?.foRealese?.FILES || []}
-            onFileSelect={handleFileSelect}
+          <FileModalList
+            files={record.foRealese?.FILES}
+            onFileSelect={function (file: any): void {
+              handleFileSelect({
+                id: file?.id,
+                name: file?.name,
+              });
+            }}
+            onFileOpen={function (file: any): void {
+              handleFileOpen(file);
+            }}
           />
         ) : (
           <></>
