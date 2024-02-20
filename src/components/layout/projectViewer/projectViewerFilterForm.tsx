@@ -14,6 +14,7 @@ import { t } from 'i18next';
 import React, { FC, useRef, useState } from 'react';
 import { getFilteredProjects } from '@/utils/api/thunks';
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
+import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenuProjectSearchSelect';
 type ProjectViewerFilterFormType = {
   onProjectSearch: (orders: any[] | []) => void;
 };
@@ -29,6 +30,8 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
   const [selectedPlanedStartDate, setSelectedPlanedStartDate] = useState<any>();
   const [selectedPlanedFinishDate, setSelectedPlanedFinishDate] =
     useState<any>();
+  const [selectedSingleProject, setSecectedSingleProject] = useState<any>();
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
@@ -63,7 +66,12 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
       <ProForm
         onReset={() => {
           setinitialForm('');
-          setSecectedSingleCustomer({ CODE: '' });
+          setSecectedSingleCustomer(null);
+          setSecectedSingleProject(null);
+          setIsResetForm(true);
+          setTimeout(() => {
+            setIsResetForm(false);
+          }, 0);
           // setSecectedSingleLocation({ locationName: '' });
         }}
         className="bg-white px-4 py-3 rounded-md border-gray-400"
@@ -79,7 +87,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
               planeNumber: values.planeNumber,
               status: values.projectState,
               projectType: values.projectType,
-              projectWO: form.getFieldValue('projectNumber'),
+              projectWO: selectedSingleProject?.projectWO,
               customer: selectedSingleCustomer?.CODE,
               startDate: selectedStartDate,
               endDate: selectedEndDate,
@@ -96,17 +104,17 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
       >
         <ProFormGroup>
           <ProFormGroup direction="vertical" size={'small'}>
-            <ProFormText
-              name="projectNumber"
-              label={`${t('PROJECT No')}`}
-              width="sm"
-              tooltip="PROJECT NUMBER"
-              //rules={[{ required: true }]}
-              fieldProps={{
-                onKeyPress: handleKeyPress,
-                autoFocus: true,
+            <ContextMenuProjectSearchSelect
+              isResetForm={isResetForm}
+              rules={[{ required: false }]}
+              onSelectedProject={function (project: any): void {
+                setSecectedSingleProject(project);
               }}
-            />
+              name={'projectNumber'}
+              initialForm={selectedSingleProject?.projectWO || initialForm}
+              width={'sm'}
+              label={`${t(`PROJECT`)}`}
+            ></ContextMenuProjectSearchSelect>
             <ProFormSelect
               showSearch
               mode="multiple"
@@ -173,6 +181,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
           </ProFormGroup>
           <ProFormGroup direction="vertical" size={'small'}>
             <ContextMenuVendorsSearchSelect
+              isResetForm={isResetForm}
               width="sm"
               rules={[{ required: false }]}
               name={'customer'}
