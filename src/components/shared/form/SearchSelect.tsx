@@ -119,32 +119,32 @@ const SearchSelect: FC<SearchSelectProps<any>> = ({
 
   return (
     <div style={{ cursor: 'pointer' }} onDoubleClick={onDoubleClick}>
-      <ProForm layout="horizontal" submitter={false}>
-        <ProFormSelect
-          allowClear={true}
-          disabled={disabled}
-          width={width}
-          name={name}
-          label={label}
-          tooltip={tooltip}
-          rules={rules}
-          showSearch
-          fieldProps={{
-            onClear: handleClear,
-            onSearch: handleSearch,
-            onChange: handleChange,
-            value: value,
-          }}
-          options={options.map((option) => ({
-            value:
-              (optionLabel1 ? option[optionLabel1] : '') +
-              (optionLabel2 ? ' - ' + option[optionLabel2] : ''),
-            label:
-              (optionLabel1 ? String(option[optionLabel1]).toUpperCase() : '') +
-              (optionLabel2 ? ' - ' + option[optionLabel2] : ''),
-          }))}
-        />
-      </ProForm>
+      {/* <ProForm layout="horizontal" submitter={false}> */}
+      <ProFormSelect
+        allowClear={true}
+        disabled={disabled}
+        width={width}
+        name={name}
+        label={label}
+        tooltip={tooltip}
+        rules={rules}
+        showSearch
+        fieldProps={{
+          onClear: handleClear,
+          onSearch: handleSearch,
+          onChange: handleChange,
+          value: value,
+        }}
+        options={options.map((option) => ({
+          value:
+            (optionLabel1 ? option[optionLabel1] : '') +
+            (optionLabel2 ? ' - ' + option[optionLabel2] : ''),
+          label:
+            (optionLabel1 ? String(option[optionLabel1]).toUpperCase() : '') +
+            (optionLabel2 ? ' - ' + option[optionLabel2] : ''),
+        }))}
+      />
+      {/* </ProForm> */}
     </div>
   );
 };

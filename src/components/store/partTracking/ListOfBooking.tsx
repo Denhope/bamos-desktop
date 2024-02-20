@@ -134,6 +134,19 @@ const ListOfBooking: FC<ListOfBookingType> = ({
 
       // responsive: ['sm'],
     },
+    {
+      title: `${t('USER SING')}`,
+      dataIndex: 'userSing',
+      key: 'userSing',
+      // tip: 'ITEM STORE',
+      ellipsis: true,
+
+      formItemProps: {
+        name: 'description',
+      },
+
+      // responsive: ['sm'],
+    },
   ];
   const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);

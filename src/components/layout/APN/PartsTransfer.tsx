@@ -62,7 +62,7 @@ const PartsTransfer: FC = () => {
       <div className="flex flex-col">
         <div className="py-4">
           <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
-            <Col xs={2} sm={6}>
+            <Col xs={2} sm={7}>
               <TransferFilteredForm
                 onReset={() => {
                   // Сброс состояний
@@ -78,22 +78,26 @@ const PartsTransfer: FC = () => {
                   // setselectedRowKeys([]);
                   setSecectedLocation(record);
                 }}
-                onSelectSelectedStore={setSelectedComStore}
-                onFilterTransferParts={function (record: any): void {
+                onSelectSelectedStore={function (record: any): void {
                   setSecectedStore(record);
+                  setSelectedComStore(record);
 
                   // setselectedRowKeys([]);
                 }}
+                onFilterTransferParts={function (record: any): void {
+                  // setSecectedStore(record);
+                  // setselectedRowKeys([]);
+                }}
               ></TransferFilteredForm>
-            </Col>{' '}
-            <Col xs={32} sm={18}>
+            </Col>
+            <Col sm={17}>
               <BookingDetailsForm
-                initialStoreName={onFilterTransferDEtails?.store}
                 onFilterBookingDEtails={setOnFilterBookingDEtails}
+                initialStore={selectedStore}
               />
             </Col>
           </Row>
-        </div>{' '}
+        </div>
         {/* <Row className="" gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
           <Col xs={17}>
             <ShowParts

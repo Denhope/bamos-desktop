@@ -15,6 +15,8 @@ interface ContextMenuLocationSearchSelectProps {
   onSelectedLocation: (record: any) => void;
   initialFormStore: string;
   locations: any;
+  width: 'lg' | 'sm' | 'xs';
+  disabled?: boolean;
 }
 const ContextMenuLocationSearchSelect: FC<
   ContextMenuLocationSearchSelectProps
@@ -24,7 +26,8 @@ const ContextMenuLocationSearchSelect: FC<
   isResetForm,
   initialFormStore,
   locations,
-
+  width,
+  disabled,
   onSelectedLocation,
 }) => {
   const [openLocationFind, setOpenLocationFind] = useState(false);
@@ -77,7 +80,8 @@ const ContextMenuLocationSearchSelect: FC<
         ]}
       >
         <SearchSelect
-          width="sm"
+          disabled={disabled}
+          width={width}
           initialValue={initialStore}
           onDoubleClick={() => {
             setOpenLocationFind(true);

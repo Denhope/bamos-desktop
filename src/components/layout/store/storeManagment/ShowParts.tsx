@@ -59,7 +59,7 @@ const ShowParts: FC<showPartType> = ({
     }
     // Проверяем, существует ли store
     else if (
-      store ||
+      // store ||
       selectedPN ||
       selectedLabel ||
       storeName ||

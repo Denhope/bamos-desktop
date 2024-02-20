@@ -14,13 +14,16 @@ interface ContextMenuSearchSelectProps {
   isResetForm?: boolean;
   onSelectedStore: (record: any) => void;
   initialFormStore: string;
+  width: 'lg' | 'sm' | 'xs';
+  disabled?: boolean;
 }
 const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   rules,
   name,
   isResetForm,
   initialFormStore,
-
+  width,
+  disabled,
   onSelectedStore,
 }) => {
   const companyID = localStorage.getItem('companyID') || '';
@@ -94,7 +97,8 @@ const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
         ]}
       >
         <SearchSelect
-          width="sm"
+          disabled={disabled}
+          width={width}
           initialValue={initialFormStore}
           onDoubleClick={() => {
             setOpenStoreFind(true);

@@ -122,7 +122,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t('WO')}`,
+      title: `${t('PROJECT No')}`,
       dataIndex: 'projectWO',
       key: 'projectWO',
       // tip: 'LOCAL_ID',
@@ -136,7 +136,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t('TASK')}`,
+      title: `${t('WO No')}`,
       dataIndex: 'projectTaskWO',
       key: 'projectTaskWO',
       // tip: 'LOCAL_ID',
