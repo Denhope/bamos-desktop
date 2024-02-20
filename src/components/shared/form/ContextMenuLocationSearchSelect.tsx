@@ -2,8 +2,7 @@ import { ModalForm } from '@ant-design/pro-form';
 import { FC, useCallback, useEffect, useState } from 'react';
 import ContextMenuWrapper from '../ContextMenuWrapperProps';
 import SearchSelect from './SearchSelect';
-import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { getFilteredShops } from '@/utils/api/thunks';
+
 import { useTranslation } from 'react-i18next';
 import SearchTable from '@/components/layout/SearchElemTable';
 import { ProCard } from '@ant-design/pro-components';
@@ -39,8 +38,6 @@ const ContextMenuLocationSearchSelect: FC<
     (selectedOption: any) => {
       onSelectedLocation(selectedOption);
       setSecectedSingleLocation(selectedOption);
-      // setIsReset(true);
-      // setTimeout(() => setIsReset(false), 0);
     },
     [onSelectedLocation]
   );
@@ -55,13 +52,11 @@ const ContextMenuLocationSearchSelect: FC<
   useEffect(() => {
     if (initialFormStore) {
       setInitialStore(initialFormStore);
-      // onFilterTransferprojects(form.getFieldsValue());
     }
   }, [initialFormStore]);
   useEffect(() => {
     if (isResetForm) {
       setIsReset(true);
-
       setTimeout(() => {
         setIsReset(false);
       }, 0);
@@ -88,7 +83,6 @@ const ContextMenuLocationSearchSelect: FC<
           }}
           isReset={isReset}
           onSearch={locations}
-          // data={locations}
           optionLabel1="locationName"
           onSelect={handleSelect}
           label={`${t('LOCATION')}`}

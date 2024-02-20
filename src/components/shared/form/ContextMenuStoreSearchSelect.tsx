@@ -60,6 +60,16 @@ const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
 
   const { t } = useTranslation();
   useEffect(() => {
+    if (isResetForm) {
+      setIsReset(true);
+
+      setTimeout(() => {
+        setIsReset(false);
+      }, 0);
+    }
+    setInitialStore('');
+  }, [isResetForm]);
+  useEffect(() => {
     if (initialFormStore) {
       setInitialStore(initialFormStore);
       // onFilterTransferprojects(form.getFieldsValue());
@@ -99,7 +109,7 @@ const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
         <SearchSelect
           disabled={disabled}
           width={width}
-          initialValue={initialFormStore}
+          initialValue={initialStore}
           onDoubleClick={() => {
             setOpenStoreFind(true);
             setOpenStoreViewer(true);

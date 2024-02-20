@@ -30,7 +30,7 @@ const ReceivingTracking: FC<ReceivingTracking> = ({
           <ReceivingItemList
             onSelectedParts={setPartsToPrint}
             onDoubleClick={onDoubleClick}
-            scroll={25}
+            scroll={30}
             data={data}
             onSingleRowClick={onSingleRowClick}
           />

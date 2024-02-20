@@ -66,6 +66,15 @@ const ContextMenuVendorsSearchSelect: FC<ContextMenuVendorsSelectProps> = ({
       setInitialPN(initialForm);
     }
   }, [initialForm]);
+  useEffect(() => {
+    if (isResetForm) {
+      setIsReset(true);
+      setTimeout(() => {
+        setIsReset(false);
+      }, 0);
+    }
+    setInitialPN('');
+  }, [isResetForm]);
   return (
     <div>
       <ContextMenuWrapper
@@ -79,7 +88,7 @@ const ContextMenuVendorsSearchSelect: FC<ContextMenuVendorsSelectProps> = ({
         <SearchSelect
           disabled={disabled}
           width={width}
-          initialValue={initialForm}
+          initialValue={initialPN}
           onDoubleClick={() => {
             setOpenVendorFind(true);
           }}

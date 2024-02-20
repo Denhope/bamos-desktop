@@ -1,6 +1,4 @@
 import {
-  ModalForm,
-  ProCard,
   ProForm,
   ProFormCheckbox,
   ProFormDatePicker,
@@ -9,9 +7,8 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Form, FormInstance, Modal, Upload, message } from 'antd';
+import { Form, FormInstance, Modal, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import SearchTable from '@/components/layout/SearchElemTable';
 
 import UploadLink, { AcceptedFileTypes } from '@/components/shared/UploadLink';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
@@ -19,7 +16,6 @@ import { IOrder } from '@/models/IOrder';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  getFilteredShops,
   postNewReceivingItem,
   postNewStoreItem,
   updateManyMaterialItems,
@@ -53,16 +49,11 @@ const Receiving: FC<ReceivingType> = ({
   const [selectedStore, setSecectedStore] = useState<any>(null);
   const [selectedSingleStore, setSecectedSingleStore] = useState<any>(null);
   const [addedMaterialItem, setAddedMaterialItem] = useState<any>(null);
-  const [openLocationViewer, setOpenLocationViewer] = useState<boolean>(false);
+
   const [isUpload, setisUpload] = useState<boolean>(false);
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
-    }
-  };
 
   const dispatch = useAppDispatch();
   const [isCustomerGoods, setIsCustomerGoods] = useState(false);
@@ -519,13 +510,7 @@ const Receiving: FC<ReceivingType> = ({
                   form.setFields([{ name: 'partType', value: PN?.TYPE }]);
                 }}
                 name={'partNumber'}
-                initialFormPN={
-                  // selectedSinglePN?.PART_NUMBER ||
-                  // initialForm ||
-                  // (currentPart && currentPart?.PART_NUMBER) ||
-                  // (currentPart && currentPart?.PN) ||
-                  initialForm
-                }
+                initialFormPN={initialForm}
                 width={'sm'}
               ></ContextMenuPNSearchSelect>
 
@@ -638,10 +623,12 @@ const Receiving: FC<ReceivingType> = ({
                 setSecectedStore(record);
               }}
               initialFormStore={selectedSingleStore?.shopShortName || ''}
+              width={'xs'}
             />
 
             <ContextMenuLocationSearchSelect
-              rules={[{ required: true }]}
+              isResetForm={isResetForm}
+              rules={[{ required: false }]}
               name={'location'}
               onSelectedLocation={function (record: any): void {
                 setSecectedLocation(record);
@@ -649,6 +636,7 @@ const Receiving: FC<ReceivingType> = ({
               }}
               initialFormStore={selectedSingleLocation?.locationName || ''}
               locations={LOCATION}
+              width={'sm'}
             />
           </ProFormGroup>
           <ProFormGroup>
@@ -734,35 +722,6 @@ const Receiving: FC<ReceivingType> = ({
           </ProFormCheckbox>
         </ProFormGroup>
       </ProFormGroup>
-
-      {/* <ModalForm
-        onFinish={async () => {
-          setSecectedLocation(selectedSingleLocation);
-          setOpenLocationViewer(false);
-        }}
-        title={`${t('LOCATION SEARCH')}`}
-        open={openLocationViewer}
-        width={'35vw'}
-        onOpenChange={setOpenLocationViewer}
-      >
-        <ProCard
-          className="flex mx-auto justify-center align-middle"
-          style={{}}
-        >
-          {LOCATION && (
-            <SearchTable
-              data={LOCATION}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSecectedLocation(record);
-                setOpenLocationViewer(false);
-              }}
-              onRowSingleClick={function (record: any, rowIndex?: any): void {
-                setSecectedSingleLocation(record);
-              }}
-            ></SearchTable>
-          )}
-        </ProCard>
-      </ModalForm> */}
     </ProForm>
   );
 };

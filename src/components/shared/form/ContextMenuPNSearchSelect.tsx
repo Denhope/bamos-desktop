@@ -42,7 +42,6 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   useEffect(() => {
     if (isResetForm) {
       setIsReset(true);
-
       setTimeout(() => {
         setIsReset(false);
       }, 0);

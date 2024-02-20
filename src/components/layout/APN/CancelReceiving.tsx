@@ -35,7 +35,7 @@ const CancelReceiving: FC = () => {
         <ReceivingItemList
           onSelectedParts={setPartsToPrint}
           // onDoubleClick={onDoubleClick}
-          scroll={35}
+          scroll={40}
           data={data}
         />
       </div>

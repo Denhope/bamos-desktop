@@ -11,7 +11,7 @@ import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenu
 
 import { FormInstance, RadioChangeEvent, message } from 'antd';
 import { Button, Space } from 'antd';
-import ReceivingTracking from '@/components/layout/APN/ReceivingTracking';
+
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder } from '@/models/IOrder';
 import { IReceiving } from '@/models/IReceiving';
@@ -21,7 +21,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { USER_ID } from '@/utils/api/http';
 import { getFilteredOrders, postNewReceiving } from '@/utils/api/thunks';
-import VendorSearchForm from '../search/VendorSearchForm';
+
 import ContextMenuReceivingsSearchSelect from '@/components/shared/form/ContextMenuReceivingsSearchSelect';
 
 type OrderDetailsFormType = {
@@ -170,8 +170,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           submitButtonProps: {
             disabled:
               !!(
-                // !currentReceiving ||
-                (currentReceiving && Object.keys(currentReceiving).length === 0)
+                currentReceiving && Object.keys(currentReceiving).length === 0
               ) || !selectedSingleVendor?.CODE,
           },
           render: (_, dom) =>

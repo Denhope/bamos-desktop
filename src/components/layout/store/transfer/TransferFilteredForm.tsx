@@ -7,12 +7,11 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { Form, FormInstance } from 'antd';
-import SearchTable from '@/components/layout/SearchElemTable';
-import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getFilteredShops } from '@/utils/api/thunks';
+
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
 import ContextMenuLocationSearchSelect from '@/components/shared/form/ContextMenuLocationSearchSelect';
@@ -33,17 +32,14 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  // const [selectedFeatchStore, setSecectedFeatchStore] = useState<any>(null);
-  // const [selectedStore, setSecectedStore] = useState<any>(null);
+
   const [selectedSingleStore, setSecectedSingleStore] = useState<any>(null);
-  const dispatch = useAppDispatch();
-  const [openStoreViewer, setOpenStoreViewer] = useState<boolean>(false);
-  const [APN, setAPN] = useState([]);
+
   const [LOCATION, setLOCATION] = useState([]); //
-  // const [selectedLocation, setSecectedLocation] = useState<any>(null);
+
   const [selectedSingleLocation, setSecectedSingleLocation] =
     useState<any>(null);
-  // const [openLocationViewer, setOpenLocationViewer] = useState<boolean>(false);
+
   useEffect(() => {
     if (selectedSingleStore) {
       // form.setFields([{ name: 'store', value: selectedStore.APNNBR }]);
@@ -57,66 +53,7 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
       setLOCATION(transformedData);
     }
   }, [selectedSingleStore]);
-  // useEffect(() => {
-  //   if (selectedLocation) {
-  //     form.setFields([
-  //       { name: 'location', value: selectedLocation.APNNBR },
 
-  //       // Добавьте здесь другие поля, которые вы хотите обновить
-  //     ]);
-  //   }
-  // }, [selectedLocation]);
-  // useEffect(() => {
-  //   if (openStoreViewer) {
-  //     // Если модальное окно открыто
-  //     const currentCompanyID = localStorage.getItem('companyID') || '';
-  //     dispatch(
-  //       getFilteredShops({
-  //         companyID: currentCompanyID,
-  //       })
-  //     ).then((action) => {
-  //       if (action.meta.requestStatus === 'fulfilled') {
-  //         const transformedData = action.payload.map((item: any) => ({
-  //           ...item,
-  //           APNNBR: item.shopShortName, // Преобразуем shopShortName в APNNBR
-  //         }));
-  //         setAPN(transformedData);
-  //         // Обновляем состояние с преобразованными данными
-  //       }
-  //     });
-  //   }
-  // }, [openStoreViewer, dispatch]);
-
-  // useEffect(() => {
-  //   if (
-  //     openLocationViewer &&
-  //     (selectedStore?.APNNBR || form.getFieldValue('store'))
-  //   ) {
-  //     // Если модальное окно открыто
-  //     const currentCompanyID = localStorage.getItem('companyID') || '';
-  //     dispatch(
-  //       getFilteredShops({
-  //         companyID: currentCompanyID,
-  //         shopShortName:
-  //           selectedStore?.APNNBR ||
-  //           form.getFieldValue('store').toUpperCase().trim(),
-  //       })
-  //     ).then((action) => {
-  //       if (action.meta.requestStatus === 'fulfilled') {
-  //         setSecectedFeatchStore(action.payload[0]);
-  //         const transformedData = action.payload[0].locations.map(
-  //           (item: any) => ({
-  //             ...item,
-  //             APNNBR: item.locationName, // Преобразуем shopShortName в APNNBR
-  //           })
-  //         );
-
-  //         setLOCATION(transformedData);
-  //         // Обновляем состояние с преобразованными данными
-  //       }
-  //     });
-  //   }
-  // }, [openLocationViewer, dispatch]);
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -194,40 +131,7 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
             }
             locations={LOCATION}
           />
-          {/* </ProFormGroup> */}
-          {/* </ProFormGroup> */}
-          {/* <ProFormText
-            name="store"
-            label={`${t('STORE')}`}
-            width="xs"
-            tooltip={`${t('STORE CODE')}`}
-            //rules={[{ required: true }]}
-            fieldProps={{
-              onDoubleClick: () => setOpenStoreViewer(true),
-              // onKeyPress: handleKeyPress, onKeyPress: handleKeyPress,
-              autoFocus: true,
-              onKeyPress: handleKeyPress,
-              onChange: (e) => {
-                // Преобразование введенного текста в верхний регистр и удаление пробелов по краям
-                e.target.value = e.target.value.toUpperCase().trim();
-              },
-            }}
-          />
-          <ProFormText
-            name="location"
-            label={`${t('LOCATION')}`}
-            width="xs"
-            tooltip={`${t('LOCATION')}`}
-            fieldProps={{
-              onDoubleClick: () => setOpenLocationViewer(true),
-              // onKeyPress: handleKeyPress,
-              onKeyPress: handleKeyPress,
-              onChange: (e) => {
-                // Преобразование введенного текста в верхний регистр и удаление пробелов по краям
-                e.target.value = e.target.value.toUpperCase().trim();
-              },
-            }}
-          /> */}
+
           <ProFormText
             name="label"
             label={`${t('LABEL')}`}
