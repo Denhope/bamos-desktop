@@ -1,10 +1,9 @@
-import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { ModalForm } from '@ant-design/pro-form';
 import { FC, useEffect, useState } from 'react';
 import ContextMenuWrapper from '../ContextMenuWrapperProps';
 import SearchSelect from './SearchSelect';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { getFilteredProjects, getFilteredVendors } from '@/utils/api/thunks';
+import { getFilteredProjects } from '@/utils/api/thunks';
 import { useTranslation } from 'react-i18next';
 
 import ProjectViewer from '@/components/layout/APN/ProjectViewer';

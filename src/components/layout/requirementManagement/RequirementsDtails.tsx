@@ -212,6 +212,11 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
         <div className="h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400  ">
           <ProForm
             onReset={() => {
+              setIsResetForm(true);
+
+              setTimeout(() => {
+                setIsResetForm(false);
+              }, 0);
               setinitialFormPN('');
               setProject(null);
               setSecectedSingleProject(null);
@@ -386,23 +391,6 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
               />
             )}
             <ProFormGroup>
-              {/* <ProFormSelect
-                disabled={!isCreating}
-                rules={[{ required: true }]}
-                name="projectNumber"
-                label={`${t(`PROJECT LINK`)}`}
-                width="sm"
-                options={options}
-                onChange={async (value: any) => {
-                  setSelectedProjectId(value);
-                  const companyID = localStorage.getItem('companyID');
-                  const result = await dispatch(fetchProjectById(value));
-                  if (result.meta.requestStatus === 'fulfilled') {
-                    setProject(result.payload);
-                  }
-                }}
-              /> */}
-
               <ContextMenuProjectSearchSelect
                 disabled={!isCreating}
                 isResetForm={isResetForm}

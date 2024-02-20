@@ -12,7 +12,7 @@ import ProjectDetails from '../projectManagment/ProjectDetails';
 
 const ProjectManagment: FC = () => {
   const [project, setProject] = useState<any | null>(null);
-  const [onUpdateOrder, setUpdateOrder] = useState<any | null>(null);
+
   const [collapsed, setCollapsed] = useState(false);
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
@@ -35,7 +35,7 @@ const ProjectManagment: FC = () => {
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={350}
+        width={400}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}
