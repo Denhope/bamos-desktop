@@ -5,16 +5,17 @@ import {
   ProFormGroup,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Button, Form, FormInstance, message } from "antd";
-import SearchTable from "@/components/layout/SearchElemTable";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import CreateStoreForm from "./CreateStoreForm";
-import { IStore } from "@/models/IStore";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { getFilteredShops, postNewStoreShop } from "@/utils/api/thunks";
-import { PlusOutlined } from "@ant-design/icons";
+} from '@ant-design/pro-components';
+import { Button, Form, FormInstance, message } from 'antd';
+import SearchTable from '@/components/layout/SearchElemTable';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CreateStoreForm from './CreateStoreForm';
+import { IStore } from '@/models/IStore';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { getFilteredShops, postNewStoreShop } from '@/utils/api/thunks';
+import { PlusOutlined } from '@ant-design/icons';
+import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
 type StoreFilterFormType = {
   onFilterSrore: (record: any) => void;
   storeCode?: string;
@@ -37,7 +38,7 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
   useEffect(() => {
     if (selectedStore) {
       form.setFields([
-        { name: "store", value: selectedStore.APNNBR },
+        { name: 'store', value: selectedStore.APNNBR },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -51,13 +52,13 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
   useEffect(() => {
     if (openStoreViewer) {
       // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
           companyID: currentCompanyID,
         })
       ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.meta.requestStatus === 'fulfilled') {
           const transformedData = action.payload.map((item: any) => ({
             ...item,
             APNNBR: item.shopShortName, // Преобразуем shopShortName в APNNBR
@@ -70,40 +71,44 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
   }, [openStoreViewer, dispatch]);
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [initialForm, setinitialForm] = useState<any>('');
   return (
     <ProForm
       formRef={formRef}
       initialValues={{}}
-      onReset={() => {}}
+      onReset={() => {
+        setIsResetForm(true);
+      }}
       form={form}
       size="small"
       onFinish={async (values) => {
-        const currentCompanyID = localStorage.getItem("companyID") || "";
+        const currentCompanyID = localStorage.getItem('companyID') || '';
         const result = dispatch(
           getFilteredShops({
             companyID: currentCompanyID,
-            shopShortName: form.getFieldValue("store")?.toUpperCase(),
+            shopShortName: form.getFieldValue('store')?.toUpperCase(),
           })
         );
-        if ((await result).meta.requestStatus === "fulfilled") {
+        if ((await result).meta.requestStatus === 'fulfilled') {
           onFilterSrore((await result).payload[0]);
           // setPickData((await result).payload[0]);
         } else {
-          message.error("NO ITEMS");
+          message.error('NO ITEMS');
         }
       }}
     >
       <ProFormText
-        initialValue={"MSQ"}
+        initialValue={'MSQ'}
         disabled
         name="station"
-        label={`${t("STATION")}`}
+        label={`${t('STATION')}`}
         width="sm"
-        tooltip={`${t("STATION CODE")}`}
+        tooltip={`${t('STATION CODE')}`}
         //rules={[{ required: true }]}
         fieldProps={{
           // onKeyPress: handleKeyPress,
@@ -111,7 +116,7 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
         }}
       />
       <ProFormGroup align="center">
-        <ProFormText
+        {/* <ProFormText
           name="store"
           label={`${t("STORE")}`}
           width="xs"
@@ -122,8 +127,20 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
             onKeyPress: handleKeyPress,
             autoFocus: true,
           }}
+        /> */}
+        <ContextMenuStoreSearchSelect
+          isResetForm={isResetForm}
+          rules={[{ required: true }]}
+          name={'store'}
+          width={'xs'}
+          onSelectedStore={function (record: any): void {
+            setSecectedSingleStore(record);
+            // onSelectSelectedStore?.(record);
+          }}
+          initialFormStore={selectedSingleStore?.shopShortName || initialForm}
         />
-        <ProForm.Item labelAlign="right" label={`${t("NEW STORE")}`}>
+
+        <ProForm.Item labelAlign="right" label={`${t('NEW STORE')}`}>
           <Button
             icon={<PlusOutlined />}
             className="hover:scale-110 transition-transform"
@@ -139,9 +156,9 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
           setSecectedStore(selectedSingleStore);
           setOpenStoreViewer(false);
         }}
-        title={`${t("STORE SEARCH")}`}
+        title={`${t('STORE SEARCH')}`}
         open={openStoreViewer}
-        width={"35vw"}
+        width={'35vw'}
         onOpenChange={setOpenStoreViewer}
       >
         <ProCard
@@ -166,9 +183,9 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
       <ModalForm
         submitter={false}
         onFinish={async () => {}}
-        title={`${t("CREATE NEW STORE ")}`}
+        title={`${t('CREATE NEW STORE ')}`}
         open={openNewStoreViewer}
-        width={"70vw"}
+        width={'70vw'}
         onOpenChange={setNewOpenStoreViewer}
       >
         <ProForm
@@ -177,12 +194,12 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
               postNewStoreShop({
                 ...createStoreData,
                 createDate: new Date(),
-                companyID: localStorage.getItem("companyID") || "",
+                companyID: localStorage.getItem('companyID') || '',
               })
             );
-            if (result.meta.requestStatus === "fulfilled") {
-              message.success("Success");
-            } else message.error("Error");
+            if (result.meta.requestStatus === 'fulfilled') {
+              message.success('Success');
+            } else message.error('Error');
 
             setNewOpenStoreViewer(false);
             oncreateStoreData(values as IStore);
@@ -191,63 +208,63 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
           <ProFormGroup>
             <ProFormText
               name="shopLongName"
-              label={`${t("STORE LONG NAME")}`}
+              label={`${t('STORE LONG NAME')}`}
               width="lg"
-              tooltip={`${t("STORE LONG NAME")}`}
+              tooltip={`${t('STORE LONG NAME')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormText
               name="shopShortName"
-              label={`${t("STORE SHORT NAME")}`}
+              label={`${t('STORE SHORT NAME')}`}
               width="sm"
-              tooltip={`${t("STORE SHORT NAME")}`}
+              tooltip={`${t('STORE SHORT NAME')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormSelect
-              label={`${t("STATUS")}`}
+              label={`${t('STATUS')}`}
               width="sm"
               name="status"
-              tooltip={`${t("ENTER STATUS")}`}
+              tooltip={`${t('ENTER STATUS')}`}
               rules={[{ required: true }]}
               valueEnum={{
-                active: { text: "ACTIVE" },
-                unActive: { text: "UN ACTIVE" },
+                active: { text: 'ACTIVE' },
+                unActive: { text: 'UN ACTIVE' },
               }}
             ></ProFormSelect>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormText
               name="description"
-              label={`${t("STORE DESCRIPTION")}`}
+              label={`${t('STORE DESCRIPTION')}`}
               width="xl"
-              tooltip={`${t("STORE ADRESS")}`}
+              tooltip={`${t('STORE ADRESS')}`}
               rules={[{ required: true }]}
             />
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
-              label={`${t("STATION")}`}
+              label={`${t('STATION')}`}
               width="sm"
               name="station"
-              tooltip={`${t("ENTER STATION")}`}
+              tooltip={`${t('ENTER STATION')}`}
               rules={[{ required: true }]}
               valueEnum={{
-                MSQ: { text: "MINSK-2" },
-                SMQ: { text: "SMOLEVICHI" },
+                MSQ: { text: 'MINSK-2' },
+                SMQ: { text: 'SMOLEVICHI' },
               }}
             ></ProFormSelect>
             <ProFormText
               name="adress"
-              label={`${t("STORE ADRESS")}`}
+              label={`${t('STORE ADRESS')}`}
               width="lg"
-              tooltip={`${t("STORE ADRESS")}`}
+              tooltip={`${t('STORE ADRESS')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormText
               name="ownerShotName"
-              label={`${t("OWNER SHORT NAME")}`}
+              label={`${t('OWNER SHORT NAME')}`}
               width="sm"
-              tooltip={`${t("OWNER SHORT NAME")}`}
+              tooltip={`${t('OWNER SHORT NAME')}`}
               rules={[{ required: true }]}
             ></ProFormText>
           </ProFormGroup>
