@@ -59,7 +59,7 @@ const ShowParts: FC<showPartType> = ({
     }
     // Проверяем, существует ли store
     else if (
-      // store ||
+      store ||
       selectedPN ||
       selectedLabel ||
       storeName ||
@@ -73,7 +73,6 @@ const ShowParts: FC<showPartType> = ({
             companyID: companyID,
             location: selectedLocations,
             STOCK: storeName,
-            // store?.shopShortName,
             PART_NUMBER: selectedPN,
             GROUP: partGroup,
             localID: '' || selectedLabel,
@@ -86,7 +85,7 @@ const ShowParts: FC<showPartType> = ({
         }
       };
 
-      fetchData();
+      store && fetchData();
     }
   }, [selectedLocations, store]);
   const [data, setData] = useState<any>([]);

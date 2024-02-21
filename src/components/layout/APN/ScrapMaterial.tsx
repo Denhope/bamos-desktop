@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import ShowParts from '../store/storeManagment/ShowParts';
 import { Button, Modal, Space, message } from 'antd';
 import {
-  TransactionOutlined,
-  EditOutlined,
   ApartmentOutlined,
   PrinterOutlined,
   SaveOutlined,
@@ -21,7 +19,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
 import { ModalForm, ProCard } from '@ant-design/pro-components';
 import SearchTable from '../SearchElemTable';
-import form from 'antd/es/form';
+
 import { USER_ID } from '@/utils/api/http';
 
 const ScrapMaterial: FC = () => {
@@ -40,13 +38,12 @@ const ScrapMaterial: FC = () => {
   const [onFilterTransferDEtails, setOnFilterTransferDEtails] =
     useState<any>(null);
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
-  const [partsOpenModify, setOpenPartsModify] = useState<boolean>(false);
+
   const { t } = useTranslation();
   const [selectedSingleLocation, setSecectedSingleLocation] =
     useState<any>(null);
   useEffect(() => {
     if (onFilterTransferDEtails && onFilterTransferDEtails.store) {
-      // Если модальное окно открыто
       const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
@@ -63,20 +60,19 @@ const ScrapMaterial: FC = () => {
           );
 
           setLOCATION(transformedData);
-          // Обновляем состояние с преобразованными данными
         }
       });
     }
   }, [onFilterTransferDEtails, dispatch]);
-  const [isScrap, setIsOnlyScrap] = useState<any>(false);
+
   const tabs = [
     {
       content: (
-        <div className="h-[73vh] overflow-hidden flex flex-col justify-between gap-1">
+        <div className="h-[76vh] overflow-hidden flex flex-col justify-between gap-1">
           <div className="flex flex-col gap-5">
             <ScrapPartsFilteredForm
               onSelectLocation={function (record: any): void {
-                throw new Error('Function not implemented.');
+                setSecectedLocation(record);
               }}
               onReset={() => {
                 // Сброс состояний
@@ -87,19 +83,30 @@ const ScrapMaterial: FC = () => {
                 setSelectedComStore(null);
                 setSecectedLocation(null);
               }}
-              onSelectedValues={setOnFilterTransferDEtails}
+              onSelectedValues={function (record: any): void {
+                setOnFilterTransferDEtails(record);
+              }}
+              onSelectSelectedStore={function (record: any): void {
+                setSecectedStore(record);
+                setSelectedComStore(record);
+              }}
             />
             {/* {onFilterTransferDEtails &&
               onFilterTransferDEtails?.isAllSCPAPPED && ( */}
             <ShowParts
               serialNumber={onFilterTransferDEtails?.serialNumber}
               isOnlyScrapped={onFilterTransferDEtails?.isAllSCPAPPED[0]}
-              storeName={onFilterTransferDEtails?.store?.toUpperCase().trim()}
+              storeName={
+                // onFilterTransferDEtails &&
+                // onFilterTransferDEtails.store &&
+                onFilterTransferDEtails?.store?.toUpperCase().trim()
+                // console.log(onFilterTransferDEtails)
+              }
               store={selectedStore || selectedComStore}
               partGroup={onFilterTransferDEtails?.partGroup}
-              selectedPN={onFilterTransferDEtails?.partNumber
-                ?.toUpperCase()
-                .trim()}
+              selectedPN={[
+                onFilterTransferDEtails?.partNumber?.toUpperCase().trim(),
+              ]}
               selectedLabel={onFilterTransferDEtails?.label}
               selectedLocations={[
                 onFilterTransferDEtails?.location?.toUpperCase().trim(),
@@ -110,7 +117,7 @@ const ScrapMaterial: FC = () => {
               onSelectedParts={(record: any): void => {
                 setSecectedParts(record);
               }}
-              scroll={35}
+              scroll={40}
             />
             {/* )} */}
           </div>
@@ -198,7 +205,8 @@ const ScrapMaterial: FC = () => {
               <Button
                 icon={<ArrowRightOutlined />}
                 disabled={
-                  !rowKeys.length || selectedParts[0]?.SHELF_NUMBER === 'SCRAP'
+                  !rowKeys.length ||
+                  (selectedParts && selectedParts[0]?.SHELF_NUMBER === 'SCRAP')
                 }
                 onClick={() => {
                   const currentCompanyID = localStorage.getItem('companyID');
@@ -234,7 +242,7 @@ const ScrapMaterial: FC = () => {
                                   (part: any) => ({
                                     ...part,
                                     SHELF_NUMBER: 'SCRAP',
-                                    STOCK: onFilterTransferDEtails.store,
+                                    STOCK: onFilterTransferDEtails?.store,
                                   })
                                 );
 
@@ -250,7 +258,7 @@ const ScrapMaterial: FC = () => {
                             updateManyMaterialItems({
                               companyID: currentCompanyID || '',
                               ids: rowKeys,
-                              STOCK: onFilterTransferDEtails.store,
+                              STOCK: onFilterTransferDEtails?.store,
                               LOCATION: 'SCRAP',
                             })
                           );
@@ -473,8 +481,8 @@ const ScrapMaterial: FC = () => {
                     updateManyMaterialItems({
                       companyID: currentCompanyID || '',
                       ids: rowKeys,
-                      STOCK: onFilterTransferDEtails.store,
-                      LOCATION: selectedLocation.locationName,
+                      STOCK: onFilterTransferDEtails?.store,
+                      LOCATION: selectedLocation?.locationName,
                       OWNER: selectedLocation?.ownerShotName || '',
                     })
                   );
@@ -611,9 +619,9 @@ const ScrapMaterial: FC = () => {
                         ...part,
                         SHELF_NUMBER: selectedLocation.locationName,
                         // onFilterTransferDEtails.targetLocation,
-                        STOCK: onFilterTransferDEtails.store,
-                        OWNER_LONG_NAME: selectedLocation.ownerLongName,
-                        OWNER_SHORT_NAME: selectedLocation.ownerShotName,
+                        STOCK: onFilterTransferDEtails?.store,
+                        OWNER_LONG_NAME: selectedLocation?.ownerLongName,
+                        OWNER_SHORT_NAME: selectedLocation?.ownerShotName,
                       })
                     );
 

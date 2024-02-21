@@ -74,7 +74,10 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
           setSecectedSinglePN(null);
           setinitialForm('');
           setIsResetForm(true);
-          // Сброс значений формы
+          setTimeout(() => {
+            setIsResetForm(false);
+          }, 0);
+          onReset && onReset();
           onSelectSelectedStore && onSelectSelectedStore(null);
           onSelectedValues(null);
           onSelectLocation(null);
@@ -108,17 +111,18 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
           </ProFormGroup>
 
           <ContextMenuStoreSearchSelect
+            isResetForm={isResetForm}
             rules={[{ required: true }]}
             name={'store'}
             width={'xs'}
             onSelectedStore={function (record: any): void {
               setSecectedSingleStore(record);
-              // setSecectedStore(record);
               onSelectSelectedStore?.(record);
             }}
             initialFormStore={selectedSingleStore?.shopShortName || initialForm}
           />
           <ContextMenuLocationSearchSelect
+            isResetForm={isResetForm}
             rules={[{ required: false }]}
             width={'xs'}
             name={'location'}
@@ -154,63 +158,6 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
           ></ContextMenuPNSearchSelect>
         </ProFormGroup>
       </ProForm>
-
-      {/* <ModalForm
-        onFinish={async () => {
-          setSecectedStore(selectedSingleStore);
-          setOpenStoreViewer(false);
-        }}
-        title={`${t('STORE SEARCH')}`}
-        open={openStoreViewer}
-        width={'35vw'}
-        onOpenChange={setOpenStoreViewer}
-      >
-        <ProCard
-          className="flex mx-auto justify-center align-middle"
-          style={{}}
-        >
-          {APN && (
-            <SearchTable
-              data={APN}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSecectedStore(record);
-                setOpenStoreViewer(false);
-              }}
-              onRowSingleClick={function (record: any, rowIndex?: any): void {
-                setSecectedSingleStore(record);
-              }}
-            ></SearchTable>
-          )}
-        </ProCard>
-      </ModalForm> */}
-      {/* <ModalForm
-        onFinish={async () => {
-          setSecectedLocation(selectedSingleLocation);
-          setOpenLocationViewer(false);
-        }}
-        title={`${t('LOCATION SEARCH')}`}
-        open={openLocationViewer}
-        width={'35vw'}
-        onOpenChange={setOpenLocationViewer}
-      >
-        <ProCard
-          className="flex mx-auto justify-center align-middle"
-          style={{}}
-        >
-          {LOCATION && (
-            <SearchTable
-              data={LOCATION}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSecectedLocation(record);
-                setOpenLocationViewer(false);
-              }}
-              onRowSingleClick={function (record: any, rowIndex?: any): void {
-                setSecectedSingleLocation(record);
-              }}
-            ></SearchTable>
-          )}
-        </ProCard>
-      </ModalForm> */}
     </>
   );
 };

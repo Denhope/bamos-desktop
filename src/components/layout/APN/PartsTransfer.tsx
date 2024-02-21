@@ -98,16 +98,7 @@ const PartsTransfer: FC = () => {
             </Col>
           </Row>
         </div>
-        {/* <Row className="" gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
-          <Col xs={17}>
-            <ShowParts
-              store={selectedStore}
-              selectedLocations={[selectedLocation?.locationName]}
-              scroll={32}
-            ></ShowParts>
-          </Col>
-          <Col xs={32} sm={18}></Col>
-        </Row> */}
+
         <ShowParts
           storeName={onFilterTransferDEtails?.store?.toUpperCase().trim()}
           store={selectedStore || selectedComStore}
@@ -122,7 +113,7 @@ const PartsTransfer: FC = () => {
           onSelectedParts={function (record: any): void {
             setSecectedParts(record);
           }}
-          scroll={32}
+          scroll={35}
         ></ShowParts>
       </div>
 

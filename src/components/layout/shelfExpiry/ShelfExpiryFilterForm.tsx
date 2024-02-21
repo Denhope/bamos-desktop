@@ -35,18 +35,11 @@ const { Option } = Select;
 type ShelfExpiryFilterFormType = {
   onFilteredParts: (record: any) => void;
 };
-function parseCWHRS(cwhrs: string) {
-  const [hours, minutes] = cwhrs.split(':').map(Number);
-  return hours + minutes / 60;
-}
+
 const { RangePicker } = DatePicker;
 
 // Функция для преобразования числа в формат часы:минуты
-function formatCWHRS(cwhrs: any) {
-  const hours = Math.floor(cwhrs);
-  const minutes = Math.round((cwhrs - hours) * 60);
-  return `${hours}:${minutes.toString().padStart(2, '0')}`;
-}
+
 const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
   onFilteredParts,
 }) => {
@@ -56,7 +49,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
   const [form] = Form.useForm();
   const [isAllDate, setIsAllDAte] = useState<any>(false);
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
-  const [openStoreFindModal, setOpenStoreFind] = useState(false);
+
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
@@ -148,8 +141,6 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
           }, 0);
 
           setSecectedSinglePN(null);
-          setSelectedEndDate(null);
-          setSelectedStartDate(null);
         }}
         onFinish={async (values) => {
           const companyID = localStorage.getItem('companyID') || '';
