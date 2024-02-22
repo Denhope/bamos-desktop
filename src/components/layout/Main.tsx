@@ -41,7 +41,7 @@ const Main: FC = () => {
                 <Route
                   element={
                     <Result
-                      style={{ height: '75vh' }}
+                      style={{ height: '90vh' }}
                       status="403"
                       // title="403"
                       subTitle="Sorry, you are not authorized to BAMOS."
