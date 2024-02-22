@@ -645,7 +645,7 @@ const ScrapMaterial: FC = () => {
                     data={LOCATION}
                     onRowClick={function (record: any, rowIndex?: any): void {
                       setSecectedLocation(record);
-
+                      setSecectedSingleLocation(record);
                       setOpenLocationViewer(false);
                     }}
                     onRowSingleClick={function (
@@ -653,6 +653,7 @@ const ScrapMaterial: FC = () => {
                       rowIndex?: any
                     ): void {
                       setSecectedSingleLocation(record);
+                      setSecectedLocation(record);
                     }}
                   ></SearchTable>
                 )}
@@ -669,7 +670,7 @@ const ScrapMaterial: FC = () => {
     // },
   ];
   return (
-    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh]  bg-white overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <TabContent tabs={tabs}></TabContent>
       </div>

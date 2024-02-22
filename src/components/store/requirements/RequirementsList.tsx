@@ -148,8 +148,8 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
                 label: 'Open with',
                 action: () => {},
                 submenu: [
-                  // { label: 'Part Tracking', action: handleAdd },
-                  { label: 'PickSlip Request', action: handleAddPick },
+                  // { label: 'PART TRACKING', action: handleAdd },
+                  { label: 'PICKSLIP REQUEST', action: handleAddPick },
                 ],
               },
             ]}
