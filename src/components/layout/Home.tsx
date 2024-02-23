@@ -49,6 +49,7 @@ import OrderManagment from './APN/OrderManagment';
 import RequirementManagement from './APN/RequirementManagement';
 import Title from 'antd/lib/typography/Title';
 import RequirementViewer from './APN/RequirementViewer';
+import OrderViewer from './APN/OrderViewer';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -187,6 +188,20 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         closable: true,
       };
     }
+    if (key == RouteNames.ORDER_VIEWER) {
+      tab = {
+        key,
+        title: `${t(`ORDER VIEWER`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <OrderViewer />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+
     if (key == RouteNames.REQUIREMENT_VIEWER) {
       tab = {
         key,

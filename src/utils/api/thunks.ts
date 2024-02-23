@@ -5381,6 +5381,83 @@ export const getFilteredOrders = createAsyncThunk(
     }
   }
 );
+export const getFilteredOrdersParts = createAsyncThunk(
+  'common/getFilteredOrdersParts',
+  async (params: any, { rejectWithValue }) => {
+    const url = new URL(
+      `orders/getFilteredOrdersParts/companyID/${params.companyID}`,
+
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+    if (params.vendorName) searchParams.append('vendorName', params.vendorName);
+    if (params.customer) searchParams.append('customer', params.customer);
+
+    if (params.orderType) searchParams.append('orderType', params.orderType);
+
+    if (params.orderCreateDate)
+      searchParams.append('orderCreateDate', params.orderCreateDate);
+
+    if (params.orderItems)
+      searchParams.append('orderItems', params.orderItems.join(','));
+    if (params.state) searchParams.append('state', params.state.join(','));
+
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
+
+    if (params.costType) searchParams.append('costType', params.costType);
+
+    if (params.updateUserID)
+      searchParams.append('updateUserID', params.updateUserID);
+
+    if (params.address) searchParams.append('address', params.address);
+
+    if (params.updateDate) searchParams.append('updateDate', params.updateDate);
+
+    if (params.createUserID)
+      searchParams.append('createUserID', params.createUserID);
+
+    if (params.shippingAddress)
+      searchParams.append('shippingAddress', params.shippingAddress);
+
+    if (params.paymentMethod)
+      searchParams.append('paymentMethod', params.paymentMethod);
+
+    if (params.paymentResult)
+      searchParams.append('paymentResult', params.paymentResult);
+
+    if (params.taxPrice)
+      searchParams.append('taxPrice', params.taxPrice.toString());
+
+    if (params.shippingPrice)
+      searchParams.append('shippingPrice', params.shippingPrice.toString());
+
+    if (params.totalPrice)
+      searchParams.append('totalPrice', params.totalPrice.toString());
+
+    if (params.isPaid) searchParams.append('isPaid', params.isPaid.toString());
+
+    if (params.paidAt) searchParams.append('paidAt', params.paidAt);
+
+    if (params.isDelivered)
+      searchParams.append('isDelivered', params.isDelivered.toString());
+
+    if (params.deliveredAt)
+      searchParams.append('deliveredAt', params.deliveredAt);
+
+    if (params.orderNumber)
+      searchParams.append('orderNumber', params.orderNumber.toString());
+
+    url.search = searchParams.toString();
+
+    try {
+      const response = await $authHost.get(url.toString());
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось загрузить заказы');
+    }
+  }
+);
 
 export const postNewReceiving = createAsyncThunk(
   'common/postNewReceiving',

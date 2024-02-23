@@ -22,7 +22,7 @@ export enum RouteNames {
   SCRAP_MATERIAL = '/materialManagment/stores/scrap',
   PROJECT_MANAGMENT = 'project/projectManagment',
   PROJECT_VIEWER = 'project/projectViewer',
-
+  ORDER_VIEWER = 'order/orderViewer',
   LOGIN = '/login',
   REGISTRATION = '/registration',
   USER = '/user',
