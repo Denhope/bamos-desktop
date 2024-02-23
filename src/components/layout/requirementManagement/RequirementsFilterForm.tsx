@@ -45,8 +45,8 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     setSelectedStartDate(dateString[0]);
   };
   interface Item {
-    field1: string; // замените на тип вашего поля
-    field2: string; // замените на тип вашего поля
+    field1: string;
+    field2: string;
   }
   interface Option {
     value: string;

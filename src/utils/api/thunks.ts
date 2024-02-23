@@ -5390,11 +5390,18 @@ export const getFilteredOrdersParts = createAsyncThunk(
       API_URL
     );
     const searchParams = new URLSearchParams();
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.createBySing)
+      searchParams.append('createBySing', params.createBySing);
     if (params.vendorName) searchParams.append('vendorName', params.vendorName);
     if (params.customer) searchParams.append('customer', params.customer);
 
     if (params.orderType) searchParams.append('orderType', params.orderType);
-
+    if (params.partGroup)
+      searchParams.append('partGroup', params.partGroup.join(','));
+    if (params.partType)
+      searchParams.append('partType', params.partType.join(','));
     if (params.orderCreateDate)
       searchParams.append('orderCreateDate', params.orderCreateDate);
 

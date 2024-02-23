@@ -117,10 +117,11 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 partGroup: form.getFieldValue('partGroup'),
                 partType: form.getFieldValue('partType'),
                 location: selectedSingleLocation?.locationName,
-                receivedBy: form.getFieldValue('receivedBy'),
+                createBySing: form.getFieldValue('createBySing'),
                 label: form.getFieldValue('label'),
                 startDate: selectedStartDate,
                 endDate: selectedEndDate,
+                state: form.getFieldValue('orderState'),
               })
             );
             if ((await result).meta.requestStatus === 'fulfilled') {
@@ -168,19 +169,9 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 autoFocus: true,
               }}
             ></ProFormText>
-            <ProFormText
-              name="batchNumber"
-              label={t('BATCH No')}
-              width="sm"
-              tooltip={t('BATCH No')}
-              fieldProps={{
-                onKeyPress: handleKeyPress,
-                autoFocus: true,
-              }}
-            ></ProFormText>
           </ProFormGroup>
           <ProFormGroup direction="vertical" size={'small'}>
-            <ContextMenuReceivingsSearchSelect
+            {/* <ContextMenuReceivingsSearchSelect
               rules={[{ required: false }]}
               isResetForm={isResetForm}
               name={'receiving'}
@@ -190,9 +181,9 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               initialForm={selectedSinglePN?.receivingNumber || initialForm}
               width={'sm'}
               label={'RECEIVING No'}
-            />
+            /> */}
 
-            <ProFormText
+            {/* <ProFormText
               name="receiningItemNumber"
               label={`${t('RECEIVING ITEM No')}`}
               width="sm"
@@ -201,7 +192,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 onKeyPress: handleKeyPress,
                 autoFocus: true,
               }}
-            />
+            /> */}
             <ProFormSelect
               showSearch
               mode="multiple"
@@ -225,6 +216,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 //   'OUTGOING REQUEST IN ADVANCE ORDER'
                 // ),
                 PURCHASE_ORDER: t('PURCHASE ORDER'),
+                QUOTATION_ORDER: t('QUATATION ORDER'),
                 // POOL_REQUEST_ORDER: t('POOL REQUEST ORDER'),
                 // POOL_REQUEST_EXCHANGE_ORDER: t('POOL REQUEST EXCHANGE ORDER'),
                 REPAIR_ORDER: t('REPAIR ORDER'),
@@ -243,13 +235,23 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
             />
             <ProFormDateRangePicker
               name="receivingDate"
-              label={`${t('RECEIVING DATE')}`}
+              label={`${t('CREATE DATE')}`}
               width="sm"
-              tooltip="RECEIVING DATE"
+              tooltip="CREATE DATE"
               fieldProps={{
                 onChange: onChange,
               }}
             />
+            <ProFormText
+              name="batchNumber"
+              label={t('BATCH No')}
+              width="sm"
+              tooltip={t('BATCH No')}
+              fieldProps={{
+                onKeyPress: handleKeyPress,
+                autoFocus: true,
+              }}
+            ></ProFormText>
           </ProFormGroup>
           <ProFormGroup direction="vertical" size={'small'}>
             <ContextMenuVendorsSearchSelect
@@ -264,18 +266,43 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               label={'VENDOR'}
             />
 
-            <ProFormText
-              disabled
-              name="station"
-              label={`${t('STATION')}`}
-              tooltip="STATION"
-              //rules={[{ required: true }]}
-              fieldProps={{
-                autoFocus: true,
-                onKeyPress: handleKeyPress,
+            <ProFormSelect
+              showSearch
+              mode="multiple"
+              name="orderState"
+              label={t('ORDER STATE')}
+              width="sm"
+              tooltip={t('ORDER STATE')}
+              // initialValue={['PARTLY_RECEIVED', 'OPEN']}
+              valueEnum={{
+                PARTLY_RECEIVED: {
+                  text: t('PARTLY_RECEIVED'),
+                  status: 'Processing',
+                },
+                RECEIVED: {
+                  text: t('RECEIVED'),
+                  status: 'Success',
+                },
+                // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
+                CLOSED: { text: t('CLOSED'), status: 'Success' },
+                // MISSING: { text: t('MISSING'), status: 'Error' },
+                OPEN: { text: t('OPEN'), status: 'Processing' },
+                // OPEN_AND_TRANSFER: {
+                //   text: t('OPEN AND TRANSFER'),
+                //   status: 'Processing',
+                // },
+                // PARTLY_ARRIVED: { text: t('PARTLY ARRIVED'), status: 'Processing' },
+                // PARTLY_MISSING: { text: t('PARTLY MISSING'), status: 'Error' },
+                // PARTLY_SENT: { text: t('PARTLY SENT'), status: 'Processing' },
+                // READY: { text: t('READY'), status: 'Success' },
+                // PARTLY_READY: { text: t('PARTLY READY'), status: 'Processing' },
+                // SENT: { text: t('SENT'), status: 'Processing' },
+                TRANSFER: { text: t('TRANSFER'), status: 'Processing' },
+                DRAFT: { text: t('DRAFT'), status: 'Error' },
+                // UNKNOWN: { text: t('UNKNOWN'), status: 'Error' },
               }}
             />
-            <ContextMenuStoreSearchSelect
+            {/* <ContextMenuStoreSearchSelect
               rules={[{ required: false }]}
               isResetForm={isResetForm}
               name={'store'}
@@ -287,8 +314,8 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               initialFormStore={
                 selectedSingleStore?.shopShortName || initialForm
               }
-            />
-            <ProFormText
+            /> */}
+            {/* <ProFormText
               name="label"
               label={`${t('LABEL')}`}
               width="sm"
@@ -300,7 +327,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                   e.target.value = e.target.value.toUpperCase().trim();
                 },
               }}
-            />
+            /> */}
           </ProFormGroup>
           <ProFormGroup direction="vertical" size={'small'}>
             <ProFormSelect
@@ -328,7 +355,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 { value: 'CONSUMABLE', label: t('CONSUMABLE') },
               ]}
             />
-            <ContextMenuLocationSearchSelect
+            {/* <ContextMenuLocationSearchSelect
               rules={[{ required: false }]}
               isResetForm={isResetForm}
               width={'sm'}
@@ -340,12 +367,12 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 selectedSingleLocation?.locationName || initialForm
               }
               locations={LOCATION}
-            />
+            /> */}
             <ProFormText
-              name="receivedBy"
-              label={`${t('RECEIVED BY')}`}
+              name="createBySing"
+              label={`${t('CREATED BY')}`}
               width="sm"
-              tooltip={`${t('RECEIVED BY')}`}
+              tooltip={`${t('CREATED BY')}`}
               fieldProps={{
                 onKeyPress: handleKeyPress,
                 onChange: (e) => {

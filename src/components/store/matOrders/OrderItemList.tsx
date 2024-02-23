@@ -98,7 +98,7 @@ const OrderItemList: FC<ReceivingItemList> = ({
         name: 'orderNumber',
       },
 
-      // responsive: ['sm'],
+      sorter: (a: any, b: any) => a.orderNumber - b.orderNumber, //
     },
     {
       title: `${t('ORDER TYPE')}`,
@@ -113,72 +113,73 @@ const OrderItemList: FC<ReceivingItemList> = ({
 
       // responsive: ['sm'],
     },
-    // {
-    //   title: `${t('PART No')}`,
-    //   dataIndex: 'PART_NUMBER',
-    //   key: 'PART_NUMBER',
-    //   ellipsis: true,
-    //   //tip: 'ITEM PART_NUMBER',
-    //   // ellipsis: true,
-    //   width: '10%',
-    //   formItemProps: {
-    //     name: 'PART_NUMBER',
-    //   },
-    //   render: (text: any, record: any) => {
-    //     return (
-    //       <ContextMenuWrapper
-    //         items={[
-    //           {
-    //             label: 'Copy',
-    //             action: handleCopy,
-    //           },
-    //           {
-    //             label: 'Open with',
-    //             action: () => {},
-    //             submenu: [
-    //               { label: 'PART TRACKING', action: handleAdd },
-    //               { label: 'PICKSLIP REQUEST', action: handleAddPick },
-    //             ],
-    //           },
-    //         ]}
-    //       >
-    //         <a
-    //           onClick={() => {
-    //             // dispatch(setCurrentProjectTask(record));
-    //             // setOpenRequirementDrawer(true);
-    //             // onReqClick(record);
-    //           }}
-    //         >
-    //           {record.PART_NUMBER}
-    //         </a>
-    //       </ContextMenuWrapper>
-    //     );
-    //   },
+    {
+      title: `${t('POS')}`,
+      dataIndex: 'POS',
+      key: 'POS',
+      width: '3%',
+      ellipsis: true,
+      render: (text: any, record: any) => record?.POS + 1,
+      // остальные свойства...
+    },
+    {
+      title: `${t('PART No')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
+      ellipsis: true,
+      //tip: 'ITEM PART_NUMBER',
+      // ellipsis: true,
+      width: '12%',
+      formItemProps: {
+        name: 'PART_NUMBER',
+      },
+      render: (text: any, record: any) => {
+        return (
+          <ContextMenuWrapper
+            items={[
+              {
+                label: 'Copy',
+                action: handleCopy,
+              },
+              {
+                label: 'Open with',
+                action: () => {},
+                submenu: [
+                  { label: 'PART TRACKING', action: handleAdd },
+                  { label: 'PICKSLIP REQUEST', action: handleAddPick },
+                ],
+              },
+            ]}
+          >
+            <a
+              onClick={() => {
+                // dispatch(setCurrentProjectTask(record));
+                // setOpenRequirementDrawer(true);
+                // onReqClick(record);
+              }}
+            >
+              {record.PART_NUMBER}
+            </a>
+          </ContextMenuWrapper>
+        );
+      },
 
-    //   // responsive: ['sm'],
-    // },
-    // {
-    //   title: `${t('B/SERIAL')}`,
-    //   dataIndex: 'SERIAL_NUMBER',
-    //   key: 'SERIAL_NUMBER',
-    //   ellipsis: true,
-    //   render: (text: any, record: any) =>
-    //     record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
-    //   // остальные свойства...
-    // },
-    // {
-    //   title: `${t('DESCRIPTION')}`,
-    //   dataIndex: 'NAME_OF_MATERIAL',
-    //   key: 'NAME_OF_MATERIAL',
-    //   // tip: 'ITEM STORE',
-    //   ellipsis: true,
+      // responsive: ['sm'],
+    },
 
-    //   formItemProps: {
-    //     name: 'NAME_OF_MATERIAL',
-    //   },
+    {
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'DESCRIPTION',
+      key: 'DESCRIPTION',
+      // tip: 'ITEM STORE',
+      ellipsis: true,
+      width: '13%',
+      formItemProps: {
+        name: 'DESCRIPTION',
+      },
 
-    //   // responsive: ['sm'],
-    // },
+      // responsive: ['sm'],
+    },
     // {
     //   title: `${t('CONDITION')}`,
     //   dataIndex: 'CONDITION',
@@ -234,78 +235,20 @@ const OrderItemList: FC<ReceivingItemList> = ({
     // },
 
     {
-      title: `${t('STORE')}`,
-      dataIndex: 'STOCK',
-      key: 'STOCK',
-      // tip: 'ITEM STORE',
-      ellipsis: true,
-      width: '4%',
-      formItemProps: {
-        name: 'STOCK',
-      },
-      render: (text: any, record: any) => {
-        return (
-          <div
-            onClick={() => {
-              // dispatch(setCurrentProjectTask(record));
-              // setOpenRequirementDrawer(true);
-              // onReqClick(record);
-            }}
-          >
-            {record.STOCK}
-          </div>
-        );
-      },
-
-      // responsive: ['sm'],
-    },
-
-    {
-      title: `${t('LOCATION')}`,
-      dataIndex: 'SHELF_NUMBER',
-      key: 'SHELF_NUMBER',
-      //tip: 'ITEM LOCATION',
-      ellipsis: true,
-      width: '5%',
-      formItemProps: {
-        name: 'SHELF_NUMBER',
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('REC DATE')}`,
-      dataIndex: 'RECEIVED_DATE',
-      width: '7%',
-      key: 'RECEIVED_DATE',
-      //tip: 'ITEM EXPIRY DATE',
-      ellipsis: true,
-      valueType: 'date',
-
-      formItemProps: {
-        name: 'RECEIVED_DATE',
-      },
-      sorter: (a, b) => {
-        if (a.PRODUCT_EXPIRATION_DATE && b.RECEIVED_DATE) {
-          const aFinishDate = new Date(a.RECEIVED_DATE);
-          const bFinishDate = new Date(b.RECEIVED_DATE);
-          return aFinishDate.getTime() - bFinishDate.getTime();
-        } else {
-          return 0; // default value
-        }
-      },
-      renderFormItem: () => {
-        return <TimePicker />;
-      },
-
-      // responsive: ['sm'],
-    },
-
-    {
       title: `${t('QTY')}`,
       dataIndex: 'QUANTITY',
       key: 'QUANTITY',
       width: '5%',
+      responsive: ['sm'],
+      search: false,
+
+      // sorter: (a, b) => a.unit.length - b.unit.length,
+    },
+    {
+      title: `${t('QTY QUOTED')}`,
+      dataIndex: 'qtyQuoted',
+      key: 'qtyQuoted',
+
       responsive: ['sm'],
       search: false,
 
@@ -322,63 +265,34 @@ const OrderItemList: FC<ReceivingItemList> = ({
     },
 
     {
-      title: `${t('DOC')}`,
-      dataIndex: 'DOC',
-      key: 'DOC',
-      width: '4%',
-      ellipsis: true,
-      editable: (text, record, index) => {
-        return false;
-      },
-      render: (text, record, index) => {
-        return record?.FILES && record?.FILES.length > 0 ? (
-          <FileModalList
-            files={record.foRealese?.FILES || []}
-            onFileSelect={function (file: any): void {
-              handleFileSelect({
-                id: file?.id,
-                name: file?.name,
-              });
-            }}
-            onFileOpen={function (file: any): void {
-              handleFileOpen(file);
-            }}
-          />
-        ) : (
-          <></>
-        );
-      },
-    },
-
-    {
-      title: `${t('CREATE BY')}`,
-      dataIndex: 'createBySing',
-      key: 'createBySing',
-
-      ellipsis: true,
-      editable: (text, record, index) => {
-        return false;
-      },
-      search: false,
-    },
-    {
       title: `${t('VENDOR')}`,
-      dataIndex: 'vendors',
-      key: 'vendors',
+      dataIndex: 'CODE',
+      key: 'CODE',
+      // tip: 'ITEM STORE',
+      ellipsis: true,
+      // width: '4%',
 
-      search: false,
       render: (text: any, record: any) => {
-        return (
-          <div>
-            {record?.vendors && record?.vendors[0] && record?.vendors[0]?.CODE}
-          </div>
-        );
+        return <div>{record.CODE}</div>;
       },
+
+      // responsive: ['sm'],
     },
     {
       title: `${t('PRICE')}`,
-      dataIndex: 'PRICE',
-      key: 'PRICE',
+      dataIndex: 'price',
+      key: 'price',
+
+      ellipsis: true,
+      editable: (text, record, index) => {
+        return false;
+      },
+      search: false,
+    },
+    {
+      title: `${t('CURRENCY')}`,
+      dataIndex: 'currency',
+      key: 'currency',
 
       ellipsis: true,
       editable: (text, record, index) => {
@@ -394,15 +308,76 @@ const OrderItemList: FC<ReceivingItemList> = ({
       filterSearch: true,
       filters: true,
       ellipsis: true,
-      onFilter: true,
-      valueEnum: {
-        RECEIVED: { text: t('RECEIVED'), status: 'Success' },
-        CANCELLED: { text: t('CANCELLED'), status: 'Error' },
-      },
 
       dataIndex: 'state',
       editable: (text, record, index) => {
         return false;
+      },
+    },
+    {
+      title: `${t('CREATE BY')}`,
+      dataIndex: 'createBySing',
+      key: 'createBySing',
+
+      ellipsis: true,
+      editable: (text, record, index) => {
+        return false;
+      },
+      search: false,
+    },
+    {
+      title: `${t('CREATE DATE')}`,
+      dataIndex: 'createDate',
+      width: '7%',
+      key: 'createDate',
+      //tip: 'ITEM EXPIRY DATE',
+      ellipsis: true,
+      valueType: 'date',
+
+      formItemProps: {
+        name: 'createDate',
+      },
+      sorter: (a, b) => {
+        if (a.createDate && b.createDate) {
+          const aFinishDate = new Date(a.createDate);
+          const bFinishDate = new Date(b.createDate);
+          return aFinishDate.getTime() - bFinishDate.getTime();
+        } else {
+          return 0; // default value
+        }
+      },
+      renderFormItem: () => {
+        return <TimePicker />;
+      },
+
+      // responsive: ['sm'],
+    },
+    {
+      title: `${t('DOC')}`,
+      dataIndex: 'filesVendor',
+      key: 'filesVendor',
+      width: '4%',
+      ellipsis: true,
+      editable: (text, record, index) => {
+        return false;
+      },
+      render: (text, record, index) => {
+        return record?.files && record?.files.length > 0 ? (
+          <FileModalList
+            files={record?.files || []}
+            onFileSelect={function (file: any): void {
+              handleFileSelect({
+                id: file?.id,
+                name: file?.name,
+              });
+            }}
+            onFileOpen={function (file: any): void {
+              handleFileOpen(file);
+            }}
+          />
+        ) : (
+          <></>
+        );
       },
     },
   ];

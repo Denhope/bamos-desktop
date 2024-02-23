@@ -32,7 +32,7 @@ const OrderViewer: FC<ReceivingTracking> = ({
           <OrderItemList
             onSelectedParts={setPartsToPrint}
             onDoubleClick={onDoubleClick}
-            scroll={30}
+            scroll={40}
             data={data}
             onSingleRowClick={onSingleRowClick}
           />
