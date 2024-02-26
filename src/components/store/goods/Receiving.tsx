@@ -567,30 +567,38 @@ const Receiving: FC<ReceivingType> = ({
               width="sm"
               tooltip={t('CERTIFICATE NUMBER')}
             ></ProFormText>
-            <UploadLink
-              isUploadTrue={isUpload}
-              onUpload={uploadFileServer}
-              onSuccess={async function (response: any): Promise<void> {
-                if (response) {
-                  setisUpload(false);
-                  const updatedFiles = addedMaterialItem.FILES
-                    ? [...addedMaterialItem.FILES, response]
-                    : [response];
-
-                  const currentCompanyID =
-                    localStorage.getItem('companyID') || '';
-                  const result = await dispatch(
-                    updateManyMaterialItems({
-                      companyID: currentCompanyID || '',
-                      ids: [addedMaterialItem.id],
-                      FILES: updatedFiles,
-                    })
-                  );
-                }
-              }}
-              acceptedFileTypes={[AcceptedFileTypes.JPG, AcceptedFileTypes.PDF]}
-            ></UploadLink>
           </ProFormGroup>
+          <ProFormGroup>
+            <div className="mb-5">
+              <UploadLink
+                isUploadTrue={isUpload}
+                onUpload={uploadFileServer}
+                onSuccess={async function (response: any): Promise<void> {
+                  if (response) {
+                    setisUpload(false);
+                    const updatedFiles = addedMaterialItem.FILES
+                      ? [...addedMaterialItem.FILES, response]
+                      : [response];
+
+                    const currentCompanyID =
+                      localStorage.getItem('companyID') || '';
+                    const result = await dispatch(
+                      updateManyMaterialItems({
+                        companyID: currentCompanyID || '',
+                        ids: [addedMaterialItem.id],
+                        FILES: updatedFiles,
+                      })
+                    );
+                  }
+                }}
+                acceptedFileTypes={[
+                  AcceptedFileTypes.JPG,
+                  AcceptedFileTypes.PDF,
+                ]}
+              ></UploadLink>
+            </div>
+          </ProFormGroup>
+
           <ProFormGroup>
             <ProFormSelect
               showSearch
