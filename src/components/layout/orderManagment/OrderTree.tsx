@@ -91,13 +91,13 @@ const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
                       title: (
                         <div className="flex gap-1">
                           <HomeOutlined />
-                          {`${t('VENDOR')}:  ${vendor.CODE}-${vendor.NAME}`}
+                          {`${t('VENDOR')}:  ${vendor?.CODE}-${vendor?.NAME}`}
                         </div>
                       ),
                       key: vendor.id,
                       children: [
                         {
-                          title: `${t('PART NUMBER')}:${vendor.partNumber}`,
+                          title: `${t('PART NUMBER')}:${vendor?.partNumber}`,
                           key: uuidv4(),
                         },
                         {
@@ -224,26 +224,30 @@ const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
                 key: uuidv4(),
                 children: [
                   {
-                    title: `NAME:${
-                      order?.vendors && order?.vendors[0].supplier
+                    title: `CODE:${
+                      (order?.vendors &&
+                        String(order?.vendors[0]?.CODE).toUpperCase()) ||
+                      ''
                     }`,
                     key: uuidv4(),
                   },
                   {
                     title: `ADRESS:${
-                      order?.vendors && order?.vendors[0].adress
+                      String(
+                        order?.vendors && order?.vendors[0]?.ADRESS
+                      ).toUpperCase() || ''
                     }`,
                     key: uuidv4(),
                   },
                   {
                     title: `SHIP TO:${
-                      order?.vendors && order?.vendors[0].shipTo
+                      (order?.vendors && order?.vendors[0]?.shipTo) || ''
                     }`,
                     key: uuidv4(),
                   },
                   {
                     title: `PLANED DATE
-                    :${order?.vendors && order?.vendors[0].planedDate}`,
+                    :${(order?.vendors && order?.finishDate) || ''}`,
                     key: uuidv4(),
                   },
                 ],
@@ -255,32 +259,42 @@ const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
                   order.parts &&
                   order?.parts.map((part, index) => {
                     return {
-                      title: `POS${index + 1}: ${part.PART_NUMBER || part.PN}(${
-                        part.DESCRIPTION || part.nameOfMaterial
-                      }) `,
-                      key: uuidv4(),
+                      title: (
+                        <div>
+                          <SettingOutlined /> {`${t('POS')}:${index + 1} `}
+                          <ColoredText
+                            text={`${part?.PART_NUMBER || part?.PN}`}
+                            backgroundColor={backgroundColor}
+                          />
+                          ({part?.DESCRIPTION || part?.nameOfMaterial}){' '}
+                          {part?.QUANTITY || part?.quantity}/{' '}
+                          {part?.UNIT_OF_MEASURE || part?.unit}
+                        </div>
+                      ),
+                      key: part.id,
                       children: [
                         {
-                          title: `QUANTITY:${
-                            part.QUANTITY || part.quantity
-                          } / ${part.UNIT_OF_MEASURE || part.unit}`,
+                          title:
+                            `QUANTITY:${part?.QUANTITY || part?.quantity} / ${
+                              part?.UNIT_OF_MEASURE || part?.unit
+                            }` || '',
                           key: uuidv4(),
                         },
                         {
-                          title: `PURSHASE PRICE:${part.price}`,
+                          title: `PURSHASE PRICE:${part?.price || ''}`,
                           key: uuidv4(),
                         },
                         {
-                          title: `CURRENCY:${part.currency}`,
+                          title: `CURRENCY:${part.currency || ''}`,
                           key: uuidv4(),
                         },
 
                         {
-                          title: `CONDITION:${part.condition}`,
+                          title: `CONDITION:${part.condition || ''}`,
                           key: uuidv4(),
                         },
                         {
-                          title: `${t('RECEIVINGS')}:${part.leadTime}`,
+                          title: `${t('RECEIVINGS')}:${part.leadTime || ''}`,
                           key: uuidv4(),
                         },
                         {
@@ -362,8 +376,13 @@ const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
         if (title.includes(t('VENDOR:'))) {
           onSelectedPartVendor && onSelectedPartVendor(info.node.key);
         }
-        if (title.includes(t('POS'))) {
+        if (title.includes(t('POS')) && order.orderType === 'QUOTATION_ORDER') {
           onSelectedPart && onSelectedPart(info.node.key);
+        }
+        if (title.includes(t('POS')) && order.orderType === 'PURCHASE_ORDER') {
+          onSelectedPartVendor && onSelectedPartVendor(info.node.key);
+          // onSelectedPart && onSelectedPart(info.node.key);
+          // console.log(info.node.key);
         }
         if (title.includes(t('FILE/'))) {
           handleFileSelect({ id: info.node.key, name: title });

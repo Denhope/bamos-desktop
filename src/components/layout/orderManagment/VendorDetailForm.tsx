@@ -173,12 +173,23 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
       setIsLocalEditing(isEditing);
 
       form.setFields([
-        { name: 'PART_NUMBER', value: currentVendor.partNumber },
+        {
+          name: 'PART_NUMBER',
+          value: currentVendor.partNumber || currentVendor.PART_NUMBER,
+        },
       ]);
       form.setFields([
-        { name: 'DESCRIPTION', value: currentVendor.description },
+        {
+          name: 'DESCRIPTION',
+          value: currentVendor.description || currentVendor.DESCRIPTION,
+        },
       ]);
-      form.setFields([{ name: 'UNIT_OF_MEASURE', value: currentVendor.unit }]);
+      form.setFields([
+        {
+          name: 'UNIT_OF_MEASURE',
+          value: currentVendor.unit || currentVendor.UNIT_OF_MEASURE,
+        },
+      ]);
 
       form.setFields([
         { name: 'quantityQuoted', value: currentVendor.qtyQuoted },
@@ -189,6 +200,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
       form.setFields([{ name: 'condition', value: currentVendor.condition }]);
       form.setFields([{ name: 'leadTime', value: currentVendor.leadTime }]);
       form.setFields([{ name: 'remarks', value: currentVendor.remarks }]);
+      form.setFields([{ name: 'quantity', value: currentVendor.quantity }]);
 
       // const fetchData = async () => {
       //   const result = await dispatch(
@@ -248,9 +260,9 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
         },
       }}
       onFinish={async (values) => {
-        if (currenOrder) {
+        console.log(currenOrder);
+        if (currenOrder && currenOrder?.orderType === 'QUOTATION_ORDER') {
           const currentCompanyID = localStorage.getItem('companyID') || '';
-
           const partToUpdate = currenOrder?.parts?.find((part) =>
             part.vendors.some(
               (vendor: { id: string }) => vendor.id === currentVendor.id
@@ -277,6 +289,56 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               vendorToUpdate.remarks = values?.remarks;
               vendorToUpdate.qtyQuoted = values?.quantityQuoted || '';
               vendorToUpdate.files = values?.files;
+            }
+          }
+          const updatedParts = currenOrder?.parts?.map((part) => {
+            if (part.id === partToUpdate.id) {
+              return partToUpdate;
+            }
+            return part;
+          });
+          const result = await dispatch(
+            updateOrderByID({
+              id: currenOrder._id || currenOrder.id,
+              companyID: currentCompanyID || '',
+              updateByID: USER_ID,
+              updateBySing: localStorage.getItem('singNumber'),
+              updateByName: localStorage.getItem('name'),
+              updateDate: new Date(),
+              parts: updatedParts,
+            })
+          );
+
+          if (result.meta.requestStatus === 'fulfilled') {
+            onUpdateOrder && onUpdateOrder(result.payload);
+            message.success(t('SUCCESS'));
+            setIsLocalCreating(false);
+            setIsLocalEditing(false);
+          } else message.error(t('ERROR'));
+        } else if (currenOrder && currenOrder?.orderType === 'PURCHASE_ORDER') {
+          const currentCompanyID = localStorage.getItem('companyID') || '';
+          const partToUpdate = currenOrder?.parts?.find((part) => {
+            return part.id === currentVendor.id;
+          });
+          if (partToUpdate) {
+            // const vendorToUpdate = partToUpdate.vendors.find(
+
+            if (partToUpdate) {
+              // partToUpdate.partNumber = values?.PART_NUMBER;
+              // partToUpdate.description = values?.DESCRIPTION;
+              partToUpdate.price = values?.price;
+              partToUpdate.currency = values?.currency;
+              partToUpdate.quantity = form.getFieldValue('quantity');
+              // partToUpdate.alternates = (alternates || []).map(
+              //   (part: any) => part.ALTERNATIVE
+              // );
+              // partToUpdate.discount = values?.discount || '';
+              partToUpdate.condition = values?.condition;
+              partToUpdate.leadTime = values?.leadTime;
+              partToUpdate.unit = values?.UNIT_OF_MEASURE;
+              partToUpdate.remarks = values?.remarks;
+              partToUpdate.qtyQuoted = values?.quantityQuoted || '';
+              // partToUpdate.files = values?.files;
             }
           }
           const updatedParts = currenOrder?.parts?.map((part) => {
@@ -378,6 +440,13 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               TWD: `TWD/${t('New Taiwan Dollar').toUpperCase()}`,
             }}
           ></ProFormSelect>
+          {currenOrder && currenOrder?.orderType === 'PURCHASE_ORDER' && (
+            <ProFormDigit
+              name="quantity"
+              label={t('QUANTITY')}
+              width="xs"
+            ></ProFormDigit>
+          )}
 
           <ProFormSelect
             showSearch
@@ -405,11 +474,11 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
             }}
           ></ProFormSelect>
-          <ProFormText
+          {/* <ProFormText
             name="discount"
             label={t('DISCOUNT')}
             width="sm"
-          ></ProFormText>
+          ></ProFormText> */}
         </ProFormGroup>
 
         <ProFormSelect
@@ -428,82 +497,86 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
         />
       </ProFormGroup>
       <ProFormGroup>
-        <ProFormDigit
-          name="quantityQuoted"
-          label={t('QUANTITY QUOTED')}
-          width="xs"
-        ></ProFormDigit>{' '}
+        {currenOrder && currenOrder?.orderType === 'QUOTATION_ORDER' && (
+          <ProFormDigit
+            name="quantityQuoted"
+            label={t('QUANTITY QUOTED')}
+            width="xs"
+          ></ProFormDigit>
+        )}
         <ProFormGroup>
           <ProFormTextArea
             fieldProps={{ style: { resize: 'none' } }}
             name="remarks"
             colSize={1}
             label={t('REMARKS')}
-            width="sm"
+            width="lg"
           ></ProFormTextArea>
         </ProFormGroup>
-        <Space size={'large'} className=" flex justify-between py-5 ">
-          <FileUploader
-            onUpload={uploadFileServer}
-            acceptedFileTypes={[AcceptedFileTypes.JPG, AcceptedFileTypes.PDF]}
-            onSuccess={async function (response: any): Promise<void> {
-              if (response) {
-                const updatedFiles = currentVendor?.files
-                  ? [...currentVendor?.files, response]
-                  : [response];
-                const currentCompanyID =
-                  localStorage.getItem('companyID') || '';
-                console.log(updatedFiles);
-                const partToUpdate = currenOrder?.parts?.find((part) =>
-                  part.vendors.some(
-                    (vendor: { id: string }) => vendor.id === currentVendor.id
-                  )
-                );
-                if (partToUpdate) {
-                  const vendorToUpdate = partToUpdate.vendors.find(
-                    (vendor: { id: any }) => vendor.id === currentVendor.id
+        {currenOrder && currenOrder?.orderType === 'QUOTATION_ORDER' && (
+          <Space size={'large'} className=" flex justify-between py-5 ">
+            <FileUploader
+              onUpload={uploadFileServer}
+              acceptedFileTypes={[AcceptedFileTypes.JPG, AcceptedFileTypes.PDF]}
+              onSuccess={async function (response: any): Promise<void> {
+                if (response) {
+                  const updatedFiles = currentVendor?.files
+                    ? [...currentVendor?.files, response]
+                    : [response];
+                  const currentCompanyID =
+                    localStorage.getItem('companyID') || '';
+                  // console.log(updatedFiles);
+                  const partToUpdate = currenOrder?.parts?.find((part) =>
+                    part.vendors.some(
+                      (vendor: { id: string }) => vendor.id === currentVendor.id
+                    )
                   );
-                  if (vendorToUpdate) {
-                    vendorToUpdate.files = updatedFiles;
+                  if (partToUpdate) {
+                    const vendorToUpdate = partToUpdate.vendors.find(
+                      (vendor: { id: any }) => vendor.id === currentVendor.id
+                    );
+                    if (vendorToUpdate) {
+                      vendorToUpdate.files = updatedFiles;
+                    }
                   }
+                  const updatedParts = currenOrder?.parts?.map((part) => {
+                    if (part.id === partToUpdate.id) {
+                      return partToUpdate;
+                    }
+                    return part;
+                  });
+                  const result = await dispatch(
+                    updateOrderByID({
+                      id:
+                        (currenOrder && currenOrder._id) ||
+                        (currenOrder && currenOrder.id),
+                      companyID: currentCompanyID || '',
+                      updateByID: USER_ID,
+                      updateBySing: localStorage.getItem('singNumber'),
+                      updateByName: localStorage.getItem('name'),
+                      updateDate: new Date(),
+                      parts: updatedParts,
+                    })
+                  );
+                  if (result.meta.requestStatus === 'fulfilled') {
+                    onUpdateOrder && onUpdateOrder(result.payload);
+                    message.success(t('SUCCESS'));
+                    setIsLocalCreating(false);
+                    setIsLocalEditing(false);
+                  } else message.error(t('ERROR'));
                 }
-                const updatedParts = currenOrder?.parts?.map((part) => {
-                  if (part.id === partToUpdate.id) {
-                    return partToUpdate;
-                  }
-                  return part;
-                });
-                const result = await dispatch(
-                  updateOrderByID({
-                    id:
-                      (currenOrder && currenOrder._id) ||
-                      (currenOrder && currenOrder.id),
-                    companyID: currentCompanyID || '',
-                    updateByID: USER_ID,
-                    updateBySing: localStorage.getItem('singNumber'),
-                    updateByName: localStorage.getItem('name'),
-                    updateDate: new Date(),
-                    parts: updatedParts,
-                  })
-                );
-                if (result.meta.requestStatus === 'fulfilled') {
-                  onUpdateOrder && onUpdateOrder(result.payload);
-                  message.success(t('SUCCESS'));
-                  setIsLocalCreating(false);
-                  setIsLocalEditing(false);
-                } else message.error(t('ERROR'));
-              }
-            }}
-          />
-
-          {currentVendor?.files && currentVendor?.files.length > 0 && (
-            <FilesSelector
-              isWide
-              files={currentVendor.files || []}
-              onFileSelect={handleFileSelect}
+              }}
             />
-          )}
-        </Space>
+
+            {currentVendor?.files && currentVendor?.files.length > 0 && (
+              <FilesSelector
+                isWide
+                files={currentVendor.files || []}
+                onFileSelect={handleFileSelect}
+              />
+            )}
+          </Space>
+        )}
       </ProFormGroup>
 
       <ModalForm

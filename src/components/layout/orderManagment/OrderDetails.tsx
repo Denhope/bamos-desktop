@@ -194,6 +194,11 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
           action = getFilteredProjects({ companyID: currentCompanyID || '' });
           break;
       }
+      switch (selectedProjectType) {
+        case 'PURCHASE_ORDER':
+          action = getFilteredProjects({ companyID: currentCompanyID || '' });
+          break;
+      }
 
       if (action) {
         dispatch(action)
@@ -202,6 +207,12 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             let options;
             switch (selectedProjectType) {
               case 'QUOTATION_ORDER':
+                options = data.map((item: any) => ({
+                  value: item.projectWO, // замените на нужное поле для 'PROJECT'
+                  label: `${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
+                }));
+                break;
+              case 'PURCHASE_ORDER':
                 options = data.map((item: any) => ({
                   value: item.projectWO, // замените на нужное поле для 'PROJECT'
                   label: `${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
@@ -253,7 +264,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     startDate: values?.startDate,
                     finishDate: values?.finishDate,
                     description: values?.description,
-                    orderType: values.orderType,
+                    orderType: values?.orderType,
                     state: values.orderState,
                     projectNumbers: values.projectNumbers,
                     orderText: values?.orderText,
@@ -273,6 +284,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     companyID: currentCompanyID,
                     orderName: values.orderName,
                     planedDate: values.planedDate,
+                    projectNumbers: values.projectNumbers,
                     createByID: USER_ID,
                     createBySing: localStorage.getItem('singNumber'),
                     createByName: localStorage.getItem('name'),
@@ -281,8 +293,8 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     finishDate: null,
                     description: values?.description,
                     customer: values?.customer,
-                    orderType: values.orderType,
-                    orderText: values?.orderText,
+                    orderType: values?.orderType,
+                    orderText: values?.orderText || '',
                     state: 'DRAFT',
                   })
                 );
@@ -539,6 +551,146 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 )}
               </>
             )}
+            {(order?.orderType === 'PURCHASE_ORDER' ||
+              selectedProjectType === 'PURCHASE_ORDER') && (
+              <>
+                <ProFormGroup>
+                  <ProFormGroup direction="vertical">
+                    <ProFormText
+                      rules={[{ required: true }]}
+                      name="orderName"
+                      label={t('ORDER SHOT NAME')}
+                      width="sm"
+                    ></ProFormText>{' '}
+                    {/* <ProFormSelect
+                      fieldProps={{
+                        style: { resize: 'none', height: '3.5em' },
+                      }}
+                      rules={[{ required: true }]}
+                      name="orderText"
+                      label={t('ORDER TEXT')}
+                      width="lg"
+                      valueEnum={{
+                        'Hello team! Please provide a quota for the position:':
+                          t(
+                            'Hello team! Please provide a quota for the position:'
+                          ),
+                        'Здравствуйте! Просим предоставить коммерческое предложение на:':
+                          t(
+                            'Здравствуйте! Просим предоставить коммерческое предложение на:'
+                          ),
+                      }}
+                    ></ProFormSelect> */}
+                    <ProFormSelect
+                      mode="multiple"
+                      rules={[{ required: true }]}
+                      name="projectNumbers"
+                      label={`${t(`PROJECT LINK`)}`}
+                      width="sm"
+                      options={options}
+                    />
+                  </ProFormGroup>
+                  {/* <FileExcelOutlined
+                    onClick={() => {
+                      // saveExls(order, `QUATATION ORDER-${order?.orderNumber}`);
+                    }}
+                    className="text-3xl cursor-pointer hover:text-blue-500"
+                  /> */}
+                  <Modal
+                    title="QUATATION ORDER"
+                    open={completeOpenPrint}
+                    width={'60%'}
+                    onCancel={() => setOpenCompletePrint(false)}
+                    footer={null}
+                  >
+                    {order && <GeneretedQuotationOrder order={order} />}
+                  </Modal>
+                  {/* <FilePdfOutlined
+                    onClick={() => {
+                      setOpenCompletePrint(true);
+                    }}
+                    className="text-3xl cursor-pointer hover:text-blue-500"
+                  /> */}
+                </ProFormGroup>
+                <ProFormText
+                  fieldProps={{ style: { resize: 'none' } }}
+                  rules={[{ required: true }]}
+                  name="description"
+                  label={t('DESCRIPTION')}
+                  width="lg"
+                ></ProFormText>
+                <ProFormGroup>
+                  <ProFormDatePicker
+                    label={t('ORDER START DATE')}
+                    name="startDate"
+                    width="sm"
+                  ></ProFormDatePicker>
+                  <ProFormDatePicker
+                    label={t('ORDER FINISH DATE')}
+                    name="finishDate"
+                    width="sm"
+                  ></ProFormDatePicker>
+                </ProFormGroup>
+                {/* <Space size={'large'} className=" flex justify-between py-5 ">
+                  <FileUploader
+                    onUpload={uploadFileServer}
+                    acceptedFileTypes={[
+                      AcceptedFileTypes.JPG,
+                      AcceptedFileTypes.PDF,
+                    ]}
+                    onSuccess={async function (response: any): Promise<void> {
+                      if (response) {
+                        const updatedFiles = order?.files
+                          ? [...order?.files, response]
+                          : [response];
+                        const currentCompanyID =
+                          localStorage.getItem('companyID') || '';
+
+                        const result = await dispatch(
+                          updateOrderByID({
+                            id: (order && order._id) || (order && order.id),
+                            companyID: currentCompanyID || '',
+                            updateByID: USER_ID,
+                            updateBySing: localStorage.getItem('singNumber'),
+                            updateByName: localStorage.getItem('name'),
+                            updateDate: new Date(),
+                            files: updatedFiles,
+                          })
+                        );
+                        if (result.meta.requestStatus === 'fulfilled') {
+                          onEditOrderDetailsEdit &&
+                            onEditOrderDetailsEdit(result.payload);
+                          message.success(t('SUCCESS'));
+                        } else message.error(t('ERROR'));
+                      }
+                    }}
+                  />
+
+                  {order?.files && order?.files.length > 0 && (
+                    <FilesSelector
+                      isWide
+                      files={order.files || []}
+                      onFileSelect={handleFileSelect}
+                    />
+                  )}
+                </Space> */}
+                {isCreating && (
+                  <ProFormGroup>
+                    <ProFormText
+                      disabled
+                      name="createBySingNew"
+                      label={t('CREATE BY')}
+                      width="sm"
+                    ></ProFormText>{' '}
+                    <ProFormText
+                      disabled
+                      name="createByNameNew"
+                      width="sm"
+                    ></ProFormText>
+                  </ProFormGroup>
+                )}
+              </>
+            )}
           </ProForm>
         </div>
       ),
@@ -607,7 +759,10 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
         ),
         title: `POS:${currentEditVendor && currentEditVendor?.index + 1} ${t(
           'VENDOR'
-        )}:${currentEditVendor && currentEditVendor?.CODE}`,
+        )}:${
+          (currentEditVendor && currentEditVendor?.CODE) ||
+          (order?.vendors && order?.vendors[0]?.CODE)
+        }`,
       },
   ];
   const uuidv4: () => string = originalUuidv4;
@@ -821,6 +976,169 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
               </Space>
             </>
           )}
+          {(order?.orderType === 'PURCHASE_ORDER' ||
+            selectedProjectType === 'PURCHASE_ORDER') && (
+            <>
+              <Space
+                onClick={() =>
+                  order &&
+                  isEditing &&
+                  setCurrentDetail({
+                    index: orderDetails.length + 1,
+                    key: uuidv4(),
+                  })
+                }
+                className={`cursor-pointer transform transition px-3 ${
+                  !order || !isEditing || isCreating
+                    ? 'opacity-50 cursor-not-allowed'
+                    : ` ${currentDetail ? 'hover:text-blue-500' : ''} `
+                }`}
+              >
+                <PlusOutlined
+                  className={`${
+                    !isEditing || isCreating
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
+                />
+                <>{t('ADD DETAIL')}</>
+              </Space>
+              <Space
+                onClick={async () => {
+                  if (order && isEditing && currentEditDetail && order.parts) {
+                    Modal.confirm({
+                      title: t('CONFIRM DELETE'),
+                      content: t(
+                        'ARE YOU SURE YOU WANT TO DELETE THIS_POSITION'
+                      ),
+                      okText: t('YES'),
+                      cancelText: t('NO'),
+                      onOk: async () => {
+                        const currentCompanyID =
+                          localStorage.getItem('companyID') || '';
+
+                        const updatedParts =
+                          order.parts &&
+                          order.parts.filter(
+                            (part) => part.id !== currentEditDetail.id
+                          );
+
+                        const result = await dispatch(
+                          updateOrderByID({
+                            id: order._id || order.id,
+                            companyID: currentCompanyID || '',
+                            updateByID: USER_ID,
+                            updateBySing: localStorage.getItem('singNumber'),
+                            updateByName: localStorage.getItem('name'),
+                            updateDate: new Date(),
+                            parts: updatedParts,
+                          })
+                        );
+
+                        if (result.meta.requestStatus === 'fulfilled') {
+                          onEditOrderDetailsEdit &&
+                            onEditOrderDetailsEdit(result.payload);
+                          message.success(t('SUCCESS'));
+                        } else {
+                          message.error(t('ERROR'));
+                        }
+                      },
+                    });
+                  }
+                }}
+                className={` ${
+                  order && isEditing && currentEditDetail && !isCreating
+                    ? 'hover:text-blue-500 cursor-pointer  px-3'
+                    : 'opacity-50 cursor-not-allowed  px-3'
+                }`}
+              >
+                <MinusOutlined />
+                <>{t('DELETE DETAIL')}</>
+              </Space>
+              <Space
+                onClick={() => order && isEditing && setOpenVendorFind(true)}
+                className={`cursor-pointer transform transition px-3 ${
+                  !order || !isEditing || isCreating
+                    ? 'opacity-50 cursor-not-allowed  px-3'
+                    : 'hover:text-blue-500  px-3'
+                }`}
+              >
+                <PlusOutlined
+                  className={`${
+                    !isEditing || isCreating
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
+                  }`}
+                />
+                <>{t('ADD VENDOR')}</>
+              </Space>
+              {/* <Space
+                onClick={async () => {
+                  if (order && isEditing && currentEditVendor && order.parts) {
+                    // Show confirmation dialog
+                    Modal.confirm({
+                      title: t('CONFIRM DELETE'),
+                      content: t('ARE YOU SURE YOU WANT TO DELETE THIS VENDOR'),
+                      okText: t('YES'),
+                      cancelText: t('NO'),
+                      onOk: async () => {
+                        const currentCompanyID =
+                          localStorage.getItem('companyID') || '';
+
+                        const updatedParts =
+                          order.parts &&
+                          order.parts.map((part) => {
+                            if (part.vendors) {
+                              const updatedVendors = part.vendors.filter(
+                                (vendor: { id: any }) =>
+                                  vendor.id !== currentEditVendor.id
+                              );
+
+                              return { ...part, vendors: updatedVendors };
+                            }
+
+                            return part;
+                          });
+                        const result = await dispatch(
+                          updateOrderByID({
+                            id: order._id || order.id,
+                            companyID: currentCompanyID || '',
+                            updateByID: USER_ID,
+                            updateBySing: localStorage.getItem('singNumber'),
+                            updateByName: localStorage.getItem('name'),
+                            updateDate: new Date(),
+                            parts: updatedParts,
+                          })
+                        );
+
+                        if (result.meta.requestStatus === 'fulfilled') {
+                          onEditOrderDetailsEdit &&
+                            onEditOrderDetailsEdit(result.payload);
+                          message.success(t('SUCCESS'));
+                        } else {
+                          message.error(t('ERROR'));
+                        }
+                      },
+                    });
+                  }
+                }}
+                className={` ${
+                  order && isEditing && currentEditVendor && !isCreating
+                    ? 'hover:text-blue-500 cursor-pointer  px-3'
+                    : 'opacity-50 cursor-not-allowed  px-3'
+                }`}
+              >
+                <MinusOutlined
+                // className={`${
+                //   !isEditing || isCreating
+                //     ? 'cursor-not-allowed'
+                //     : 'cursor-pointer'
+                // }`}
+                />
+                <>{t('DELETE VENDOR')}</>
+              </Space> */}
+            </>
+          )}
         </Space>
       </Col>
       <Col
@@ -849,6 +1167,13 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                   return;
                 }
               });
+              if (order.orderType === 'PURCHASE_ORDER') {
+                const part = order.parts?.find((part) => part.id === id);
+                const index = order.parts?.findIndex((part) => part.id === id);
+                if (part && index !== -1) {
+                  setCurrenEditVendor({ ...part, index: index });
+                }
+              }
             }}
           ></QuatationTree>
         )}

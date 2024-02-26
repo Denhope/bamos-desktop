@@ -16,10 +16,11 @@ import { USER_ID } from '@/utils/api/http';
 import { getFilteredOrders, updateOrderByID } from '@/utils/api/thunks';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
+import { IOrder } from '@/models/IOrder';
 type AddVendorsFormPropsType = {
   scroll: number;
   scrollX?: number;
-  currenOrder?: any;
+  currenOrder?: IOrder;
   onOrderEdit: (order?: any) => void;
 };
 const AddVendorsForm: FC<AddVendorsFormPropsType> = ({
@@ -124,41 +125,62 @@ const AddVendorsForm: FC<AddVendorsFormPropsType> = ({
             message.error('Some fields are empty');
           } else {
             const currentCompanyID = localStorage.getItem('companyID') || '';
-            const result = await dispatch(
-              updateOrderByID({
-                id: currenOrder._id || currenOrder.id,
-                companyID: currentCompanyID || '',
-                updateByID: USER_ID,
-                updateBySing: localStorage.getItem('singNumber'),
-                updateByName: localStorage.getItem('name'),
-                updateDate: new Date(),
+            if (currenOrder?.orderType === 'QUOTATION_ORDER') {
+              const result = await dispatch(
+                updateOrderByID({
+                  id: currenOrder._id || currenOrder.id,
+                  companyID: currentCompanyID || '',
+                  updateByID: USER_ID,
+                  updateBySing: localStorage.getItem('singNumber'),
+                  updateByName: localStorage.getItem('name'),
+                  updateDate: new Date(),
 
-                parts: (currenOrder.parts || []).map((part: any) => ({
-                  ...part,
-                  vendors: data.map((item: any) => ({
-                    ...item,
-                    id: uuidv4(),
-                    partNumber: part.PART_NUMBER || part.PN,
-                    description: part.DESCRIPTION || part.nameOfMaterial,
-                    price: null,
-                    currency: null,
-                    quantity: null,
-                    alternates: [],
-                    discount: null,
-                    condition: null,
-                    leadTime: null,
-                    state: 'DRAFT',
-                    files: [],
+                  parts: (currenOrder.parts || []).map((part: any) => ({
+                    ...part,
+                    vendors: data.map((item: any) => ({
+                      ...item,
+                      id: uuidv4(),
+                      partNumber: part.PART_NUMBER || part.PN,
+                      description: part.DESCRIPTION || part.nameOfMaterial,
+                      price: null,
+                      currency: null,
+                      quantity: null,
+                      alternates: [],
+                      discount: null,
+                      condition: null,
+                      leadTime: null,
+                      state: 'DRAFT',
+                      files: [],
+                    })),
                   })),
-                })),
-              })
-            );
-            if ((await result).meta.requestStatus === 'fulfilled') {
-              onOrderEdit((await result).payload || []);
-              message.success('SECCUESS');
-            } else {
-              message.error('ERROR');
+                })
+              );
+              if ((await result).meta.requestStatus === 'fulfilled') {
+                onOrderEdit((await result).payload || []);
+                message.success('SUCCESS');
+              } else {
+                message.error('ERROR');
+              }
+            } else if (currenOrder?.orderType === 'PURCHASE_ORDER') {
+              const result = await dispatch(
+                updateOrderByID({
+                  id: currenOrder._id || currenOrder.id,
+                  companyID: currentCompanyID || '',
+                  updateByID: USER_ID,
+                  updateBySing: localStorage.getItem('singNumber'),
+                  updateByName: localStorage.getItem('name'),
+                  updateDate: new Date(),
+                  vendors: [selectedSingleVendor],
+                })
+              );
+              if ((await result).meta.requestStatus === 'fulfilled') {
+                onOrderEdit((await result).payload || []);
+                message.success('SUCCESS');
+              } else {
+                message.error('ERROR');
+              }
             }
+
             // onSelectLocation(selectedLocation);
             // onFilterTransferParts(selectedFeatchStore);
           }

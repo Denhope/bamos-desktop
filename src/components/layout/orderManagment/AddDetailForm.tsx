@@ -220,53 +220,106 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       onFinish={async (values) => {
         if (currenOrder && newPart) {
           const currentCompanyID = localStorage.getItem('companyID') || '';
-          const result = await dispatch(
-            updateOrderByID({
-              id: currenOrder._id || currenOrder.id,
-              companyID: currentCompanyID || '',
-              updateByID: USER_ID,
-              updateBySing: localStorage.getItem('singNumber'),
-              updateByName: localStorage.getItem('name'),
-              updateDate: new Date(),
+          if (currenOrder?.orderType === 'QUOTATION_ORDER') {
+            const result = await dispatch(
+              updateOrderByID({
+                id: currenOrder._id || currenOrder.id,
+                companyID: currentCompanyID || '',
+                updateByID: USER_ID,
+                updateBySing: localStorage.getItem('singNumber'),
+                updateByName: localStorage.getItem('name'),
+                updateDate: new Date(),
 
-              parts: [
-                ...(currenOrder.parts || []),
-                {
-                  id: uuidv4(),
-                  PART_NUMBER:
-                    selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
-                  DESCRIPTION:
-                    selectedSinglePN?.nameOfMaterial ||
-                    selectedSinglePN?.DESCRIPTION,
-                  GROUP: selectedSinglePN?.GROUP || selectedSinglePN?.group,
-                  TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
-                  UNIT_OF_MEASURE:
-                    selectedSinglePN?.UNIT_OF_MEASURE || selectedSinglePN?.unit,
-                  QUANTITY: form.getFieldValue('quantity'),
-                  ADD_DESCRIPTION:
-                    selectedSinglePN?.ADD_DESCRIPTION ||
-                    selectedSinglePN?.nameOfMaterial,
-                  ADD_UNIT_OF_MEASURE:
-                    selectedSinglePN?.ADD_UNIT_OF_MEASURE ||
-                    selectedSinglePN?.unit,
-                  REQUIREMENTS: (requirements || []).map(
-                    (part: any) => part.partRequestNumber
-                  ),
-                  ALTERNATES: (alternates || []).map(
-                    (part: any) => part.ALTERNATIVE
-                  ),
-                  VENDORS: [],
-                },
-              ],
-            })
-          );
-          if (result.meta.requestStatus === 'fulfilled') {
-            onUpdateOrder && onUpdateOrder(result.payload);
-            message.success(t('SUCCESS'));
-            setIsLocalCreating(false);
-            setIsLocalEditing(false);
-            onSave(null);
-          } else message.error(t('ERROR'));
+                parts: [
+                  ...(currenOrder.parts || []),
+                  {
+                    id: uuidv4(),
+                    PART_NUMBER:
+                      selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
+                    DESCRIPTION:
+                      selectedSinglePN?.nameOfMaterial ||
+                      selectedSinglePN?.DESCRIPTION,
+                    GROUP: selectedSinglePN?.GROUP || selectedSinglePN?.group,
+                    TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
+                    UNIT_OF_MEASURE:
+                      selectedSinglePN?.UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    QUANTITY: form.getFieldValue('quantity'),
+                    ADD_DESCRIPTION:
+                      selectedSinglePN?.ADD_DESCRIPTION ||
+                      selectedSinglePN?.nameOfMaterial,
+                    ADD_UNIT_OF_MEASURE:
+                      selectedSinglePN?.ADD_UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    REQUIREMENTS: (requirements || []).map(
+                      (part: any) => part.partRequestNumber
+                    ),
+                    ALTERNATES: (alternates || []).map(
+                      (part: any) => part.ALTERNATIVE
+                    ),
+                    VENDORS: [],
+                  },
+                ],
+              })
+            );
+            if (result.meta.requestStatus === 'fulfilled') {
+              onUpdateOrder && onUpdateOrder(result.payload);
+              message.success(t('SUCCESS'));
+              setIsLocalCreating(false);
+              setIsLocalEditing(false);
+              onSave(null);
+            } else message.error(t('ERROR'));
+          } else if (currenOrder?.orderType === 'PURCHASE_ORDER') {
+            const result = await dispatch(
+              updateOrderByID({
+                id: currenOrder._id || currenOrder.id,
+                companyID: currentCompanyID || '',
+                updateByID: USER_ID,
+                updateBySing: localStorage.getItem('singNumber'),
+                updateByName: localStorage.getItem('name'),
+                updateDate: new Date(),
+
+                parts: [
+                  ...(currenOrder.parts || []),
+                  {
+                    id: uuidv4(),
+                    PART_NUMBER:
+                      selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
+                    DESCRIPTION:
+                      selectedSinglePN?.nameOfMaterial ||
+                      selectedSinglePN?.DESCRIPTION,
+                    GROUP: selectedSinglePN?.GROUP || selectedSinglePN?.group,
+                    TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
+                    UNIT_OF_MEASURE:
+                      selectedSinglePN?.UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    quantity: form.getFieldValue('quantity'),
+                    ADD_DESCRIPTION:
+                      selectedSinglePN?.ADD_DESCRIPTION ||
+                      selectedSinglePN?.nameOfMaterial,
+                    ADD_UNIT_OF_MEASURE:
+                      selectedSinglePN?.ADD_UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    REQUIREMENTS: (requirements || []).map(
+                      (part: any) => part.partRequestNumber
+                    ),
+                    ALTERNATES: (alternates || []).map(
+                      (part: any) => part.ALTERNATIVE
+                    ),
+                    state: 'OPEN',
+                    backorder: form.getFieldValue('quantity'),
+                  },
+                ],
+              })
+            );
+            if (result.meta.requestStatus === 'fulfilled') {
+              onUpdateOrder && onUpdateOrder(result.payload);
+              message.success(t('SUCCESS'));
+              setIsLocalCreating(false);
+              setIsLocalEditing(false);
+              onSave(null);
+            } else message.error(t('ERROR'));
+          }
         }
       }}
       size="small"

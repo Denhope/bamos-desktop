@@ -245,10 +245,20 @@ const OrderItemList: FC<ReceivingItemList> = ({
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t('QTY QUOTED')}`,
+      title: `${t('QUOTED')}`,
       dataIndex: 'qtyQuoted',
       key: 'qtyQuoted',
 
+      responsive: ['sm'],
+      search: false,
+
+      // sorter: (a, b) => a.unit.length - b.unit.length,
+    },
+    {
+      title: `${t('BACKORDER')}`,
+      dataIndex: 'backorder',
+      key: 'backorder',
+      width: '6%',
       responsive: ['sm'],
       search: false,
 
@@ -312,6 +322,20 @@ const OrderItemList: FC<ReceivingItemList> = ({
       dataIndex: 'state',
       editable: (text, record, index) => {
         return false;
+      },
+      render: (text: any, record: any) => {
+        // Определяем цвет фона в зависимости от условия
+        let backgroundColor;
+        if (record.state === 'RECEIVED') {
+          backgroundColor = '#62d156';
+        } else if (record.state === 'OPEN' || record.state === 'open') {
+          backgroundColor = 'red';
+        } else {
+          backgroundColor = '#f0be37';
+        }
+        return (
+          <div style={{ backgroundColor }}>{record.state && record.state}</div>
+        );
       },
     },
     {
