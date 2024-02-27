@@ -101,6 +101,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
 
       // Добавьте другие базовые поля здесь
     });
+    setinitialFormNeed('');
+    setinitialFormGet('');
     form.setFields([{ name: 'materialAplicationNumber', value: 'TEMP' }]);
     form.setFields([
       { name: 'mechSing', value: localStorage.getItem('name') || '' },
@@ -124,22 +126,20 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       setinitialFormProject((await result).payload[0]?.projectID?.projectWO);
       setinitialFormNeed((await result).payload[0]?.neededOn);
       setinitialFormGet((await result).payload[0]?.getFrom);
-      // message.error('NO ITEMS');
+    } else if (!!(await result).payload.length[0]) {
+      message.error('Error');
+      setIsResetForm(true);
+      // setinitialFormNeed('');
+      // setinitialFormGet('');
+
+      setTimeout(() => {
+        setIsResetForm(false);
+      }, 0);
+
+      setSecectedSingleProject(null);
+      setinitialFormProject('');
+      setSecectedSingleProject({ projectWO: '' });
     }
-    // const result = await dispatch(
-    //   getFilteredOrders({
-    //     companyID: currentCompanyID,
-    //     orderNumber: formRef.current?.getFieldValue('order'),
-    //     vendorName: formRef.current?.getFieldValue('vendorName'),
-    //     partNumber: formRef.current?.getFieldValue('partNumber'),
-    //     orderType: formRef.current?.getFieldValue('orderType'),
-    //   })
-    // );
-    // if (result.meta.requestStatus === 'fulfilled') {
-    //   onOrdersSearch?.(result.payload[0] || null);
-    // } else {
-    //   message.error('Error');
-    // }
   };
   const [selectedSingleProject, setSecectedSingleProject] = useState<any>();
   const [isResetForm, setIsResetForm] = useState<boolean>(false);
@@ -225,8 +225,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       <ProForm
         onReset={() => {
           setIsResetForm(true);
-          setinitialFormNeed('');
-          setinitialFormGet('');
+          // setinitialFormNeed('');
+          // setinitialFormGet('');
 
           setTimeout(() => {
             setIsResetForm(false);
@@ -250,7 +250,6 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           render: (_, dom) =>
             isCreating
               ? [
-                  ...dom,
                   <Button
                     key="cancel"
                     onClick={() => {
@@ -258,10 +257,15 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                       onCurrentPickSlip(null);
                       setCurrentPickSlip(null);
                       form.resetFields();
+                      setIsResetForm(true);
+
+                      setTimeout(() => {
+                        setIsResetForm(false);
+                      }, 0);
 
                       setinitialFormProject('');
-                      setinitialFormNeed('');
-                      setinitialFormGet('');
+                      // setinitialFormNeed('');
+                      // setinitialFormGet('');
                     }}
                   >
                     {t('Cancel')}
@@ -328,8 +332,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                 setTimeout(() => {
                   setIsResetForm(false);
                 }, 0);
-                setinitialFormNeed('');
-                setinitialFormGet('');
+                // setinitialFormNeed('');
+                // setinitialFormGet('');
 
                 setSecectedSingleProject(null);
                 setinitialFormProject('');
@@ -372,6 +376,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           /> */}
           <ContextMenuStoreSearchSelect
             disabled={!isCreating}
+            isResetForm={isResetForm}
             rules={[{ required: true }]}
             name={'getFrom'}
             label={`${t('GET FROM')}`}
@@ -385,6 +390,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             }
           />
           <ContextMenuStoreSearchSelect
+            isResetForm={isResetForm}
             disabled={!isCreating}
             rules={[{ required: true }]}
             name={'neededOn'}
