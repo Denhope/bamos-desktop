@@ -138,6 +138,7 @@ import {
 import { Input } from 'antd';
 import React, { FC, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -217,11 +218,10 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
                   isLoading={false}
                   onRowSingleClick={(record1) => {
                     setSelectedPN(record1);
-
                     setDataSource((prevDataSource) =>
                       prevDataSource.map((item) =>
                         item.id === record?.id
-                          ? { ...item, PN: selectedPN?.PART_NUMBER }
+                          ? { ...item, PN: record1.PART_NUMBER } // Assuming record1.PART_NUMBER contains the correct part number
                           : item
                       )
                     );
@@ -241,16 +241,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
                 });
                 if (onChange) {
                   onChange(e.target.value);
-                  // setSelectedPN(null);
                 }
-                // setDataSource((prevDataSource) =>
-                //   prevDataSource.map((item) =>
-                //     item.id === record?.id
-                //       ? { ...item, PN: selectedPN?.PART_NUMBER }
-                //       : item
-                //   )
-                // );
-                // Update the dataSource state with the new value
               }}
             />
           </DoubleClickPopover>
@@ -327,17 +318,17 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       ],
     },
   ];
-  const handleSave = (rowKey: any, data: any, row: any) => {
-    // Обновляем dataSource
+  const handleSave = (rowKey: RecordKey, newData: any, row: any) => {
+    // Update the dataSource with the new data
     setDataSource((prevDataSource) =>
       prevDataSource.map((item) =>
-        item.id === rowKey ? { ...item, ...data } : item
+        item.id === rowKey ? { ...item, ...newData } : item
       )
     );
-    setSelectedPN(null);
-    // Вызываем функцию onSave, если она была передана
+
+    // Call the onSave prop if it exists
     if (onSave) {
-      onSave(rowKey, data, row);
+      onSave(rowKey, newData, row);
     }
   };
 
