@@ -154,6 +154,12 @@ const BaseLayout: React.FC = () => {
       route: RouteNames.PARTS_TRANSFER,
     },
     {
+      APNNBR: '225',
+
+      descriptions: `${t(`PICKSLIP REQUEST`)}`,
+      route: RouteNames.PICKSLIP_REQUEST,
+    },
+    {
       APNNBR: '230',
 
       descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,

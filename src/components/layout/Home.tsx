@@ -50,6 +50,7 @@ import RequirementManagement from './APN/RequirementManagement';
 import Title from 'antd/lib/typography/Title';
 import RequirementViewer from './APN/RequirementViewer';
 import OrderViewer from './APN/OrderViewer';
+import PickslipRequest from './APN/PickslipRequest';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -378,6 +379,17 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
           </div>
         ),
 
+        closable: true,
+      };
+    } else if (key === RouteNames.PICKSLIP_REQUEST) {
+      tab = {
+        key,
+        title: `${t('PICKSLIP REQUEST')}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <PickslipRequest />
+          </div>
+        ),
         closable: true,
       };
     } else if (key === RouteNames.STORE) {

@@ -632,6 +632,7 @@ const Receiving: FC<ReceivingType> = ({
               }}
               initialFormStore={selectedSingleStore?.shopShortName || ''}
               width={'xs'}
+              label={t('STORE')}
             />
 
             <ContextMenuLocationSearchSelect

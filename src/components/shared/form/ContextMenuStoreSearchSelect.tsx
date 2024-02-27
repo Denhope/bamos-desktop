@@ -16,6 +16,7 @@ interface ContextMenuSearchSelectProps {
   initialFormStore: string;
   width: 'lg' | 'sm' | 'xs';
   disabled?: boolean;
+  label: string;
 }
 const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   rules,
@@ -25,6 +26,7 @@ const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   width,
   disabled,
   onSelectedStore,
+  label,
 }) => {
   const companyID = localStorage.getItem('companyID') || '';
   const dispatch = useAppDispatch();
@@ -118,7 +120,7 @@ const ContextMenuStoreSearchSelect: FC<ContextMenuSearchSelectProps> = ({
           onSearch={handleSearch}
           optionLabel1="shopShortName"
           onSelect={handleSelect}
-          label={`${t('STORE')}`}
+          label={label}
           tooltip={`${t('DOUBE CLICK OPEN STORE BOOK')}`}
           rules={rules}
           name={name}

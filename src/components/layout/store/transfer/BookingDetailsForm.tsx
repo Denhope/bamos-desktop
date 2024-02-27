@@ -118,6 +118,7 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
               initialFormStore={
                 selectedSingleStore?.shopShortName || initialForm
               }
+              label={t('TARGET STORE')}
             />
 
             <ContextMenuLocationSearchSelect
