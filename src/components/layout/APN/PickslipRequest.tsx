@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 const PickslipRequest: FC = () => {
   const { t } = useTranslation();
   const [selectedPN, setSelectedPN] = React.useState<any>();
+  const [currentPickData, setCurrentPickData] = React.useState<any>();
   const initialColumns: ProColumns<any>[] = [
     {
       title: `${t('PART NUMBER')}`,
@@ -126,7 +127,9 @@ const PickslipRequest: FC = () => {
             <Col sm={18}>
               <PickslipRequestForm
                 onFilterPickSlip={function (record: any): void {}}
-                onCurrentPickSlip={function (data: any): void {}}
+                onCurrentPickSlip={function (data: any): void {
+                  setCurrentPickData(data);
+                }}
               />
             </Col>
             <Col sm={6}>
@@ -137,7 +140,7 @@ const PickslipRequest: FC = () => {
           </Row>
         </div>
         <PickSlipRequestPartList
-          data={[]}
+          data={currentPickData?.parts || null}
           isLoading={false}
           onRowClick={function (record: any, rowIndex?: any): void {
             throw new Error('Function not implemented.');

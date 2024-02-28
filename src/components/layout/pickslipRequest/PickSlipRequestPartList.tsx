@@ -24,7 +24,6 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   yScroll,
   xScroll,
   onSave,
-
   data,
 }) => {
   const { t } = useTranslation();
@@ -51,7 +50,8 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
                 selectedPN.PART_NUMBER,
                 selectedPN.DESCRIPTION,
                 selectedPN.GROUP,
-                selectedPN.TYPE
+                selectedPN.TYPE,
+                selectedPN.UNIT_OF_MEASURE
               );
               // Вызываем onSave для сохранения изменений
               handleSave(
@@ -61,6 +61,8 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
                   description: selectedPN.DESCRIPTION,
                   group: selectedPN.GROUP,
                   type: selectedPN.TYPE,
+                  unit: selectedPN.UNIT_OF_MEASURE,
+                  amout: record.amout,
                 },
                 record
               );
@@ -73,8 +75,16 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
     {
       title: `${t('QTY REQ ')}`,
       dataIndex: 'amout',
+      valueType: 'digit',
       key: 'amout',
       width: '7%',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
     },
     {
       title: `${t('REQUESTED SERIAL')}`,
@@ -83,6 +93,9 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       width: '10%',
     },
     {
+      editable: (text, record, index) => {
+        return false;
+      },
       title: `${t('AVAIL QTY')}`,
       dataIndex: 'availableQTY',
       key: 'availableQTY',
@@ -98,6 +111,9 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
 
       ellipsis: true, //
       width: '14%',
+      editable: (text, record, index) => {
+        return false;
+      },
     },
     {
       title: `${t('UNIT')}`,
@@ -106,12 +122,18 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       width: '4%',
       responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
+      editable: (text, record, index) => {
+        return false;
+      },
     },
     {
       title: `${t('GROUP')}`,
       dataIndex: 'group',
       key: 'group',
       // responsive: ['sm'],
+      editable: (text, record, index) => {
+        return false;
+      },
 
       ellipsis: true, //
       width: '6%',
@@ -124,6 +146,9 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
 
       ellipsis: true, //
       width: '6%',
+      editable: (text, record, index) => {
+        return false;
+      },
     },
     {
       title: 'OPTION',
@@ -151,18 +176,8 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   ];
 
   const actionRef = useRef<ActionType>();
-  // Обработчик для добавления новой строки
-  // const handleAdd = () => {
-  //   const newRow = {
-  //     id: uuidv4(),
-  //     createDate: new Date(),
-  //     createUserID: USER_ID || '',
-  //     status: 'open',
-  //     // ... (Инициализация других полей новой строки)
-  //   };
-  //   setDataSource([...dataSource, newRow]);
-  // };
-  const defaultData: DataSourceType[] = new Array(5).fill(1).map((_, index) => {
+
+  const defaultData: DataSourceType[] = new Array(1).fill(1).map((_, index) => {
     return {
       id: (Date.now() + index).toString(),
       createUserID: USER_ID || '',
@@ -176,7 +191,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
     defaultData.map((item) => item?.id)
   );
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
-    () => defaultData
+    () => data || defaultData
   );
 
   type DataSourceType = {
@@ -205,7 +220,8 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
     newPN: any,
     description: string,
     group: string,
-    type: string
+    type: string,
+    unit: string
   ) => {
     setDataSource((prevDataSource) =>
       prevDataSource.map((item: DataSourceType) =>
@@ -216,45 +232,35 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
               description: description,
               group: group,
               type: type,
+              unit: unit,
             }
           : item
       )
     );
-    // console.log(dataSource);
-    // console.log(dataSource);
   };
-  // Обработчик для сохранения изменений в строке
-  const handleSave = (rowKey: React.Key, newData: any, row: any) => {
-    // Обновляем dataSource с новыми данными
-    setDataSource((prevDataSource) =>
-      prevDataSource.map((item) =>
-        item.id === rowKey ? { ...item, ...newData } : item
-      )
-    );
+
+  const handleSave = (rowKey: any, newData: any, row: any) => {
+    // setDataSource((prevDataSource) =>
+    //   prevDataSource.map((item) =>
+    //     item.id === rowKey ? { ...item, ...newData } : item
+    //   )
+    // );
+    const index = dataSource.findIndex((item) => item.id === rowKey);
+    if (index !== -1) {
+      // Создайте новый массив с обновленной записью
+      const newDataSource = [...dataSource];
+      // Обновите только измененное поле 'amout'
+      newDataSource[index] = { ...newDataSource[index], ...newData };
+      // Установите новый массив в состояние
+      setDataSource(newDataSource);
+    }
   };
-  // const handleSave = (rowKey: React.Key, data: any, row: any) => {
-  //   setDataSource((prevDataSource) =>
-  //     prevDataSource.map((item: DataSourceType) =>
-  //       item.id === rowKey
-  //         ? {
-  //             ...item,
-  //             ...data, // Обновляем только измененные поля
-  //             description: data.description || item.description,
-  //             group: data.group || item.group,
-  //             type: data.type || item.type,
-  //           }
-  //         : item
-  //     )
-  //   );
-  //   // Вызываем функцию onSave, передавая необходимые параметры
-  //   onSave(rowKey, data, row);
-  // };
+
   const [selectedPN, setSelectedPN] = useState<DataSourceType>();
   const onValuesChange = (
     changedValues: Record<string, any>,
     allValues: Record<string, any>
   ) => {
-    // Обновляем dataSource с новыми данными
     setDataSource((prevDataSource) =>
       prevDataSource.map((item: any) => {
         if (changedValues[item?.id]) {
@@ -279,8 +285,13 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         recordCreatorProps={{
           creatorButtonText: 'ADD NEW PART',
           newRecordType: 'dataSource',
-          record: () => ({
-            id: Date.now(),
+          record: (record: any) => ({
+            id: Date.now().toString(),
+            createUserID: USER_ID || '',
+            status: 'open',
+            createDate: new Date(),
+            isNew: true,
+            issuedQuantity: 0,
           }),
         }}
         loading={false}
@@ -298,21 +309,17 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
             </Button>,
           ];
         }}
-        // request={async () => ({
-        //   data: data,
-        //   // total: 3,
-        //   success: true,
-        // })}
         onChange={setDataSource}
         editable={{
           type: 'multiple',
           editableKeys,
-          actionRender: (row, config, defaultDoms) => {
-            return [defaultDoms.delete];
+          actionRender: (row, config, dom) => [dom.save, dom.cancel],
+
+          onSave: async (rowKey, data, row) => {
+            handleSave(rowKey, data, row);
           },
-          onValuesChange: onValuesChange,
+
           onChange: setEditableRowKeys,
-          // onSave: handleSave,
         }}
       />
     </>
