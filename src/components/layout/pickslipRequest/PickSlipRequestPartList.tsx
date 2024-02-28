@@ -1,163 +1,12 @@
-// import EditableTable from '@/components/shared/Table/EditableTable';
-// import { USER_ID } from '@/utils/api/http';
-// import { EditableProTable, ProColumns } from '@ant-design/pro-components';
-// import React, { FC, useCallback, useRef, useState } from 'react';
-
-// type EditableTablerops = {
-//   data: any;
-//   isLoading: boolean;
-//   onRowClick: (record: any, rowIndex?: any) => void;
-//   onDoubleRowClick?: (record: any, rowIndex?: any) => void;
-//   onSave: (rowKey: any, data: any, row: any) => void;
-//   yScroll: number;
-//   xScroll?: number;
-//   onSelectRowIndex?: (rowIndex: number) => void;
-//   isNoneRowSelection?: boolean;
-//   initialColumns: ProColumns<any>[];
-// };
-
-// const PickSlipRequestPartList: FC<EditableTablerops> = ({
-//   yScroll,
-//   xScroll,
-//   initialColumns,
-//   data,
-// }) => {
-//   const [dataSource, setDataSource] = useState<readonly any[]>([]);
-//   const [selectedRowKey, setSelectedRowKey] = useState<any[] | any>(null);
-//   const rowClassName = (record: any) => {
-//     if (
-//       record.id === selectedRowKey ||
-//       record._id === selectedRowKey ||
-//       record.actionNumber === selectedRowKey
-//     ) {
-//       return 'cursor-pointer text-transform: uppercase bg-blue-100 py-0 my-0';
-//     } else {
-//       return 'cursor-pointer  text-transform: uppercase  py-0 my-0';
-//     }
-//   };
-
-//   return (
-//     <div>
-//       {/* <EditableProTable
-//         columns={initialColumns}
-//         scroll={{ x: xScroll, y: `calc(${yScroll}vh)` }}
-//         options={false}
-//         tableAlertRender={false}
-//         onRow={(record: any, rowIndex) => {
-//           return {
-//             onClick: async (event) => {
-//               console.log(record);
-//               setSelectedRowKey([record?.id || record?._id]);
-//             },
-//           };
-//         }}
-//         rowClassName={rowClassName}
-//         recordCreatorProps={{
-//           position: 'bottom',
-//           record: createNewRecord,
-//           creatorButtonText: 'ADD NEW PART',
-//         }}
-//         editable={{
-//           actionRender: (row, config, dom) => {
-//             return [dom.save, dom.cancel, dom.delete];
-//           },
-//           type: 'multiple',
-//           onSave: async (rowKey, data, row) => {
-//             console.log(data);
-//             // onSave(rowKey, data, row);
-//           },
-//         }}
-//         dataSource={dataSource}
-//       ></EditableProTable> */}
-//       <EditableProTable
-//         columns={initialColumns}
-//         scroll={{ x: xScroll, y: `calc(${yScroll}vh)` }}
-//         options={false}
-//         tableAlertRender={false}
-//         rowClassName={rowClassName}
-//         onRow={(record: any, rowIndex) => {
-//           return {
-//             onClick: async (event) => {
-//               console.log(record);
-//               setSelectedRowKey([record?.id || record?._id]);
-//             },
-//           };
-//         }}
-//         recordCreatorProps={{
-//           position: 'bottom',
-//           record: () => {
-//             const id = Date.now(); // Generate a unique key using the current timestamp
-//             return {
-//               key: id, // Use 'key' as the unique key for the record
-//               id: id, // You can also include other properties as needed
-//               createDate: new Date(),
-//               createUserID: USER_ID || '',
-//               status: 'open',
-//               isNew: true,
-//             };
-//           },
-//           creatorButtonText: 'ADD NEW PART',
-//         }}
-//         editable={{
-//           actionRender: (row, config, dom) => {
-//             return [dom.save, dom.cancel, dom.delete];
-//           },
-//           type: 'multiple',
-//           onSave: async (rowKey, data, row) => {
-//             console.log(data);
-
-//             // onSave(rowKey, data, row);
-//           },
-//         }}
-//         // dataSource={dataSource}
-//         request={async () => ({
-//           data: data,
-//           total: 3,
-//           success: true,
-//         })}
-//         value={dataSource}
-//         onChange={setDataSource}
-//       />
-//     </div>
-//   );
-// };
-
-// export default PickSlipRequestPartList;
-
-import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
-import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { USER_ID } from '@/utils/api/http';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { v4 as originalUuidv4 } from 'uuid';
-import {
-  EditableProTable,
-  ProCard,
-  ProFormField,
-  ProFormRadio,
-} from '@ant-design/pro-components';
-import { Input } from 'antd';
+
+import { EditableProTable } from '@ant-design/pro-components';
+import { Button, Input } from 'antd';
 import React, { FC, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
-const uuidv4: () => string = originalUuidv4;
-type DataSourceType = {
-  id: React.Key;
-  title?: string;
-  readonly?: string;
-  decs?: string;
-  state?: string;
-  created_at?: number;
-  update_at?: number;
-  children?: DataSourceType[];
-};
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 
 type EditableTablerops = {
   data: any;
@@ -178,13 +27,6 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
 
   data,
 }) => {
-  const [selectedPN, setSelectedPN] = React.useState<any>();
-  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
-  const [dataSource, setDataSource] = useState<readonly any[]>([]);
-  const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>(
-    'bottom'
-  );
-
   const { t } = useTranslation();
   const columns: ProColumns<any>[] = [
     {
@@ -193,58 +35,38 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       key: 'PN',
       tip: ' Click open Store search',
       ellipsis: true,
-
-      formItemProps: (form, { rowIndex }) => {
-        return {
-          rules: rowIndex > 1 ? [{ required: true }] : [],
-        };
-      },
-
-      editable: (text, record, index) => {
-        return true;
-      },
       width: '15%',
-      renderFormItem: (item2, { onChange, record }) => {
+      renderFormItem: (item, { onChange, record }) => {
         return (
-          <DoubleClickPopover
-            content={
-              <div className="flex my-0 mx-auto  h-[44vh] flex-col relative overflow-hidden">
-                <PartNumberSearch
-                  initialParams={{ partNumber: '' }}
-                  scroll={18}
-                  onRowClick={(record1) => {
-                    setSelectedPN(record1);
-                  }}
-                  isLoading={false}
-                  onRowSingleClick={(record1) => {
-                    setSelectedPN(record1);
-                    setDataSource((prevDataSource) =>
-                      prevDataSource.map((item) =>
-                        item.id === record?.id
-                          ? { ...item, PN: record1.PART_NUMBER } // Assuming record1.PART_NUMBER contains the correct part number
-                          : item
-                      )
-                    );
-                    console.log(dataSource);
-                  }}
-                />
-              </div>
-            }
-            overlayStyle={{ width: '70%' }}
-          >
-            <Input
-              value={selectedPN?.PART_NUMBER}
-              onChange={(e) => {
-                setSelectedPN({
-                  ...selectedPN,
-                  PART_NUMBER: e.target.value,
-                });
-                if (onChange) {
-                  onChange(e.target.value);
-                }
-              }}
-            />
-          </DoubleClickPopover>
+          <ContextMenuPNSearchSelect
+            rules={[{ required: true }]}
+            name="PN"
+            initialFormPN={record.PN}
+            width="lg"
+            onSelectedPN={(selectedPN) => {
+              setSelectedPN(selectedPN);
+              // Обновляем значение PN в dataSource
+              handlePNChange(
+                record.id,
+                selectedPN.PART_NUMBER,
+                selectedPN.DESCRIPTION,
+                selectedPN.GROUP,
+                selectedPN.TYPE
+              );
+              // Вызываем onSave для сохранения изменений
+              handleSave(
+                record.id,
+                {
+                  PN: selectedPN.PART_NUMBER,
+                  description: selectedPN.DESCRIPTION,
+                  group: selectedPN.GROUP,
+                  type: selectedPN.TYPE,
+                },
+                record
+              );
+            }}
+            label={`PN`}
+          />
         );
       },
     },
@@ -270,8 +92,8 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
     },
     {
       title: `${t('DESCRIPTION')}`,
-      dataIndex: 'nameOfMaterial',
-      key: 'nameOfMaterial',
+      dataIndex: 'description',
+      key: 'description',
       // responsive: ['sm'],
 
       ellipsis: true, //
@@ -295,6 +117,15 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       width: '6%',
     },
     {
+      title: `${t('Type')}`,
+      dataIndex: 'type',
+      key: 'type',
+      // responsive: ['sm'],
+
+      ellipsis: true, //
+      width: '6%',
+    },
+    {
       title: 'OPTION',
       valueType: 'option',
       width: 200,
@@ -310,7 +141,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         <a
           key="delete"
           onClick={() => {
-            setDataSource(dataSource.filter((item) => item.id !== record.id));
+            setDataSource(dataSource.filter((item) => item?.id !== record?.id));
           }}
         >
           DELETE
@@ -318,21 +149,125 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       ],
     },
   ];
-  const handleSave = (rowKey: RecordKey, newData: any, row: any) => {
-    // Update the dataSource with the new data
+
+  const actionRef = useRef<ActionType>();
+  // Обработчик для добавления новой строки
+  // const handleAdd = () => {
+  //   const newRow = {
+  //     id: uuidv4(),
+  //     createDate: new Date(),
+  //     createUserID: USER_ID || '',
+  //     status: 'open',
+  //     // ... (Инициализация других полей новой строки)
+  //   };
+  //   setDataSource([...dataSource, newRow]);
+  // };
+  const defaultData: DataSourceType[] = new Array(5).fill(1).map((_, index) => {
+    return {
+      id: (Date.now() + index).toString(),
+      createUserID: USER_ID || '',
+      status: 'open',
+      createDate: new Date(),
+      isNew: true,
+      issuedQuantity: 0,
+    };
+  });
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
+    defaultData.map((item) => item?.id)
+  );
+  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
+    () => defaultData
+  );
+
+  type DataSourceType = {
+    id: React.Key;
+    PN?: string;
+    status: 'open';
+    projectID?: string;
+    unit?: string;
+    projectTaskID?: string;
+    description?: string;
+    issuedQuantity: number;
+    plannedDate?: any;
+    registrationNumber?: string;
+    taskNumber?: string;
+    createDate?: any;
+    type?: string;
+    group?: string;
+    alternative?: any;
+    quantity?: number;
+    companyID?: string;
+    isNew?: boolean;
+  };
+
+  const handlePNChange = (
+    recordId: any,
+    newPN: any,
+    description: string,
+    group: string,
+    type: string
+  ) => {
+    setDataSource((prevDataSource) =>
+      prevDataSource.map((item: DataSourceType) =>
+        item.id === recordId
+          ? {
+              ...item,
+              PN: newPN,
+              description: description,
+              group: group,
+              type: type,
+            }
+          : item
+      )
+    );
+    // console.log(dataSource);
+    // console.log(dataSource);
+  };
+  // Обработчик для сохранения изменений в строке
+  const handleSave = (rowKey: React.Key, newData: any, row: any) => {
+    // Обновляем dataSource с новыми данными
     setDataSource((prevDataSource) =>
       prevDataSource.map((item) =>
         item.id === rowKey ? { ...item, ...newData } : item
       )
     );
-
-    // Call the onSave prop if it exists
-    if (onSave) {
-      onSave(rowKey, newData, row);
-    }
   };
-
-  const actionRef = useRef<ActionType>();
+  // const handleSave = (rowKey: React.Key, data: any, row: any) => {
+  //   setDataSource((prevDataSource) =>
+  //     prevDataSource.map((item: DataSourceType) =>
+  //       item.id === rowKey
+  //         ? {
+  //             ...item,
+  //             ...data, // Обновляем только измененные поля
+  //             description: data.description || item.description,
+  //             group: data.group || item.group,
+  //             type: data.type || item.type,
+  //           }
+  //         : item
+  //     )
+  //   );
+  //   // Вызываем функцию onSave, передавая необходимые параметры
+  //   onSave(rowKey, data, row);
+  // };
+  const [selectedPN, setSelectedPN] = useState<DataSourceType>();
+  const onValuesChange = (
+    changedValues: Record<string, any>,
+    allValues: Record<string, any>
+  ) => {
+    // Обновляем dataSource с новыми данными
+    setDataSource((prevDataSource) =>
+      prevDataSource.map((item: any) => {
+        if (changedValues[item?.id]) {
+          return {
+            ...item,
+            ...changedValues[item?.id],
+            description: selectedPN?.description,
+          };
+        }
+        return item;
+      })
+    );
+  };
   return (
     <>
       <EditableProTable<any>
@@ -340,41 +275,44 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         rowKey={(record) => record?.id || record?._id}
         maxLength={5}
         scroll={{ x: xScroll, y: `calc(${yScroll}vh)` }}
-        recordCreatorProps={
-          position !== 'hidden'
-            ? {
-                position: position as 'top',
-                record: () => {
-                  const id = Date.now(); // Generate a unique key using the current timestamp
-                  return {
-                    key: uuidv4(), // Use 'key' as the unique key for the record
-                    id: uuidv4(),
-                    createDate: new Date(),
-                    createUserID: USER_ID || '',
-                    status: 'open',
-                    isNew: true,
-                  };
-                },
-                creatorButtonText: 'ADD NEW PART',
-              }
-            : false
-        }
+        value={dataSource}
+        recordCreatorProps={{
+          creatorButtonText: 'ADD NEW PART',
+          newRecordType: 'dataSource',
+          record: () => ({
+            id: Date.now(),
+          }),
+        }}
         loading={false}
         columns={columns}
-        request={async () => ({
-          data: data,
-          // total: 3,
-          success: true,
-        })}
-        value={dataSource}
+        toolBarRender={() => {
+          return [
+            <Button
+              type="primary"
+              key="save"
+              onClick={() => {
+                console.log(dataSource);
+              }}
+            >
+              SAVE
+            </Button>,
+          ];
+        }}
+        // request={async () => ({
+        //   data: data,
+        //   // total: 3,
+        //   success: true,
+        // })}
         onChange={setDataSource}
         editable={{
           type: 'multiple',
           editableKeys,
-          onSave: async (rowKey, data, row) => {
-            handleSave(rowKey, data, row);
+          actionRender: (row, config, defaultDoms) => {
+            return [defaultDoms.delete];
           },
+          onValuesChange: onValuesChange,
           onChange: setEditableRowKeys,
+          // onSave: handleSave,
         }}
       />
     </>

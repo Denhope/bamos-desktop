@@ -481,6 +481,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   name={'partNumber'}
                   initialFormPN={initialFormPN}
                   width={'lg'}
+                  label={`${t('PART No')}`}
                 ></ContextMenuPNSearchSelect>
                 <ProFormText
                   disabled

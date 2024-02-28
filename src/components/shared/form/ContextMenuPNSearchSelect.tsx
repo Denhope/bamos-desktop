@@ -15,6 +15,7 @@ interface ContextMenuSearchSelectProps {
   initialFormPN: string;
   width: 'lg' | 'sm' | 'xs';
   disabled?: boolean;
+  label: string;
 }
 
 const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
@@ -25,6 +26,7 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
   width,
   onSelectedPN,
   disabled,
+  label,
 }) => {
   const companyID = localStorage.getItem('companyID') || '';
   const dispatch = useAppDispatch();
@@ -134,7 +136,8 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
           optionLabel1="PART_NUMBER"
           optionLabel2="DESCRIPTION"
           onSelect={handleSelect}
-          label={`${t('PART No')}`}
+          label={label}
+          //
           tooltip={`${t('DOUBE CLICK OPEN PART NUMBER BOOK')}`}
           rules={rules}
           name={name}
