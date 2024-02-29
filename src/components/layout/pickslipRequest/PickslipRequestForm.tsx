@@ -28,9 +28,11 @@ type PickSlipFilterFormType = {
   pickSlipNumber?: string;
   updateValue?: any;
   onCurrentPickSlip: (data: any) => void;
+  setCancel: boolean;
 };
 const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   onFilterPickSlip,
+  setCancel,
   pickSlipNumber,
   updateValue,
   onCurrentPickSlip,

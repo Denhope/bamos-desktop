@@ -13,7 +13,7 @@ type EditableTablerops = {
   isLoading: boolean;
   onRowClick: (record: any, rowIndex?: any) => void;
   onDoubleRowClick?: (record: any, rowIndex?: any) => void;
-  onSave: (rowKey: any, data: any, row: any) => void;
+  onSave: (data: any) => void;
   yScroll: number;
   xScroll?: number;
   onSelectRowIndex?: (rowIndex: number) => void;
@@ -34,7 +34,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       key: 'PN',
       tip: ' Click open Store search',
       ellipsis: true,
-      width: '15%',
+      // width: '15%',
       renderFormItem: (item, { onChange, record }) => {
         return (
           <ContextMenuPNSearchSelect
@@ -110,7 +110,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       // responsive: ['sm'],
 
       ellipsis: true, //
-      width: '14%',
+      // width: '14%',
       editable: (text, record, index) => {
         return false;
       },
@@ -253,6 +253,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       newDataSource[index] = { ...newDataSource[index], ...newData };
       // Установите новый массив в состояние
       setDataSource(newDataSource);
+      onSave(newDataSource);
     }
   };
 
@@ -274,9 +275,23 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       })
     );
   };
+  const [selectedRowKey, setSelectedRowKey] = useState<string | null | number>(
+    null
+  );
+  const rowClassName = (record: any) => {
+    if (record?._id) {
+      return record?._id === selectedRowKey
+        ? 'cursor-pointer text-xs text-transform: uppercase bg-blue-100 py-0 my-0 '
+        : 'cursor-pointer  text-xs text-transform: uppercase  py-0 my-0';
+    } else {
+      return 'cursor-pointer  text-xs text-transform: uppercase py-0 my-0';
+    }
+  };
   return (
-    <>
+    <div className="">
       <EditableProTable<any>
+        rowClassName={rowClassName}
+        bordered
         actionRef={actionRef}
         rowKey={(record) => record?.id || record?._id}
         maxLength={5}
@@ -296,19 +311,19 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         }}
         loading={false}
         columns={columns}
-        toolBarRender={() => {
-          return [
-            <Button
-              type="primary"
-              key="save"
-              onClick={() => {
-                console.log(dataSource);
-              }}
-            >
-              SAVE
-            </Button>,
-          ];
-        }}
+        // toolBarRender={() => {
+        //   return [
+        //     <Button
+        //       type="primary"
+        //       key="save"
+        //       onClick={() => {
+        //         console.log(dataSource);
+        //       }}
+        //     >
+        //       SAVE
+        //     </Button>,
+        //   ];
+        // }}
         onChange={setDataSource}
         editable={{
           type: 'multiple',
@@ -322,7 +337,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
           onChange: setEditableRowKeys,
         }}
       />
-    </>
+    </div>
   );
 };
 export default PickSlipRequestPartList;

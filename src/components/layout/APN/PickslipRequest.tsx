@@ -1,16 +1,27 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import PickslipRequestForm from '../pickslipRequest/PickslipRequestForm';
-import { Button, Col, Input, Row } from 'antd';
+import { Button, Col, Input, Row, Space } from 'antd';
 import PickSlipRequestPartList from '../pickslipRequest/PickSlipRequestPartList';
 import { ProColumns } from '@ant-design/pro-components';
 import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
 import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { useTranslation } from 'react-i18next';
+import {
+  TransactionOutlined,
+  EditOutlined,
+  PrinterOutlined,
+  CloseCircleOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
 
 const PickslipRequest: FC = () => {
   const { t } = useTranslation();
   const [selectedPN, setSelectedPN] = React.useState<any>();
   const [currentPickData, setCurrentPickData] = React.useState<any>();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isCancel, setCancel] = useState(false);
+  const [partData, setPartData] = useState(false);
   const initialColumns: ProColumns<any>[] = [
     {
       title: `${t('PART NUMBER')}`,
@@ -130,6 +141,7 @@ const PickslipRequest: FC = () => {
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
                 }}
+                setCancel={isCancel}
               />
             </Col>
             <Col sm={6}>
@@ -145,11 +157,35 @@ const PickslipRequest: FC = () => {
           onRowClick={function (record: any, rowIndex?: any): void {
             throw new Error('Function not implemented.');
           }}
-          onSave={function (rowKey: any, data: any, row: any): void {
-            console.log(data);
+          onSave={function (data: any): void {
+            setPartData(data);
           }}
           yScroll={40}
         />
+      </div>
+      <div className="flex justify-between">
+        <Space align="center">
+          <Button
+            disabled={!isEditing && !isCreating}
+            onClick={() => {}}
+            size="small"
+            icon={<SaveOutlined />}
+          >
+            {t('SAVE')}
+          </Button>
+        </Space>
+        <Space>
+          <Button
+            // disabled={!isEditing && !isCreating}
+            icon={<CloseCircleOutlined />}
+            onClick={() => {
+              setCancel(true);
+            }}
+            size="small"
+          >
+            {t('CANCEL')}
+          </Button>
+        </Space>
       </div>
     </div>
   );
