@@ -13,6 +13,7 @@ import {
   CloseCircleOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
+import { USER_ID } from '@/utils/api/http';
 
 const PickslipRequest: FC = () => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ const PickslipRequest: FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isCancel, setCancel] = useState(false);
-  const [partData, setPartData] = useState(false);
+  const [partData, setPartData] = useState<any>(null);
   const initialColumns: ProColumns<any>[] = [
     {
       title: `${t('PART NUMBER')}`,
@@ -130,6 +131,14 @@ const PickslipRequest: FC = () => {
       width: '6%',
     },
   ];
+  const isAmountUndefined = () => {
+    if (partData) {
+      return Object.values(partData).some(
+        (value: any) => value && value?.amount === undefined
+      );
+    }
+    return false; // Если data не определено, вернуть false
+  };
   return (
     <div className="h-[82vh]  bg-white px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col">
@@ -142,10 +151,18 @@ const PickslipRequest: FC = () => {
                   setCurrentPickData(data);
                 }}
                 setCancel={isCancel}
+                onCreate={function (data: boolean): void {
+                  setIsCreating(data);
+                }}
               />
             </Col>
             <Col sm={6}>
-              <Button type="primary" className="w-11/12" size="large">
+              <Button
+                disabled={(!isEditing && !isCreating) || isAmountUndefined()}
+                type="primary"
+                className="w-11/12"
+                size="large"
+              >
                 SEND TO STORE (ISSUE)
               </Button>
             </Col>
@@ -161,6 +178,8 @@ const PickslipRequest: FC = () => {
             setPartData(data);
           }}
           yScroll={40}
+          setCancel={isCancel}
+          setCreating={isCreating}
         />
       </div>
       <div className="flex justify-between">
@@ -176,10 +195,16 @@ const PickslipRequest: FC = () => {
         </Space>
         <Space>
           <Button
-            // disabled={!isEditing && !isCreating}
+            disabled={!isEditing && !isCreating}
             icon={<CloseCircleOutlined />}
             onClick={() => {
               setCancel(true);
+              setTimeout(() => {
+                setCancel(false);
+              }, 0);
+              setIsCreating(false);
+              setIsEditing(false);
+              setPartData(null);
             }}
             size="small"
           >

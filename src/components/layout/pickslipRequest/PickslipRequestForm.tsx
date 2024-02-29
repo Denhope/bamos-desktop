@@ -29,6 +29,7 @@ type PickSlipFilterFormType = {
   updateValue?: any;
   onCurrentPickSlip: (data: any) => void;
   setCancel: boolean;
+  onCreate: (data: boolean) => void;
 };
 const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   onFilterPickSlip,
@@ -36,6 +37,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   pickSlipNumber,
   updateValue,
   onCurrentPickSlip,
+  onCreate,
 }) => {
   const { t } = useTranslation();
   const formRef = useRef<FormInstance>(null);
@@ -89,6 +91,21 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       ]);
     }
   }, [pickDataNumber]);
+  useEffect(() => {
+    if (setCancel) {
+      isCreating && setIsCreating(false);
+      onCurrentPickSlip(null);
+      setCurrentPickSlip(null);
+      form.resetFields();
+      setIsResetForm(true);
+
+      setTimeout(() => {
+        setIsResetForm(false);
+      }, 0);
+
+      setinitialFormProject('');
+    }
+  }, [setCancel]);
   const [currentPickSlip, setCurrentPickSlip] = useState<any | null>(null);
 
   const [isCreating, setIsCreating] = useState(false);
@@ -249,31 +266,31 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
               currentPickSlip && Object.keys(currentPickSlip).length === 0
             ),
           },
-          render: (_, dom) =>
-            isCreating
-              ? [
-                  <Button
-                    key="cancel"
-                    onClick={() => {
-                      isCreating && setIsCreating(false);
-                      onCurrentPickSlip(null);
-                      setCurrentPickSlip(null);
-                      form.resetFields();
-                      setIsResetForm(true);
+          render: (_, dom) => [],
+          // isCreating
+          //   ? [
+          //       <Button
+          //         key="cancel"
+          //         onClick={() => {
+          //           isCreating && setIsCreating(false);
+          //           onCurrentPickSlip(null);
+          //           setCurrentPickSlip(null);
+          //           form.resetFields();
+          //           setIsResetForm(true);
 
-                      setTimeout(() => {
-                        setIsResetForm(false);
-                      }, 0);
+          //           setTimeout(() => {
+          //             setIsResetForm(false);
+          //           }, 0);
 
-                      setinitialFormProject('');
-                      // setinitialFormNeed('');
-                      // setinitialFormGet('');
-                    }}
-                  >
-                    {t('Cancel')}
-                  </Button>,
-                ]
-              : [],
+          //           setinitialFormProject('');
+          //           // setinitialFormNeed('');
+          //           // setinitialFormGet('');
+          //         }}
+          //       >
+          //         {t('Cancel')}
+          //       </Button>,
+          //     ]
+          //   : [],
         }}
         // size="middle"
         onValuesChange={(changedValues, allValues) => {
@@ -330,6 +347,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                 createNewPickSlip();
                 setIsCreating(true);
                 setIsResetForm(true);
+                onCreate(true);
 
                 setTimeout(() => {
                   setIsResetForm(false);

@@ -3,7 +3,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 
 import { EditableProTable } from '@ant-design/pro-components';
 import { Button, Input } from 'antd';
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
@@ -18,6 +18,8 @@ type EditableTablerops = {
   xScroll?: number;
   onSelectRowIndex?: (rowIndex: number) => void;
   isNoneRowSelection?: boolean;
+  setCancel: boolean;
+  setCreating: boolean;
 };
 
 const PickSlipRequestPartList: FC<EditableTablerops> = ({
@@ -25,6 +27,8 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   xScroll,
   onSave,
   data,
+  setCancel,
+  setCreating,
 }) => {
   const { t } = useTranslation();
   const columns: ProColumns<any>[] = [
@@ -139,7 +143,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       width: '6%',
     },
     {
-      title: `${t('Type')}`,
+      title: `${t('TYPE')}`,
       dataIndex: 'type',
       key: 'type',
       // responsive: ['sm'],
@@ -177,7 +181,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
 
   const actionRef = useRef<ActionType>();
 
-  const defaultData: DataSourceType[] = new Array(1).fill(1).map((_, index) => {
+  const defaultData: DataSourceType[] = new Array(0).fill(1).map((_, index) => {
     return {
       id: (Date.now() + index).toString(),
       createUserID: USER_ID || '',
@@ -190,9 +194,24 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     defaultData.map((item) => item?.id)
   );
+
+  const [isCreating, setIsCreating] = useState(false);
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
     () => data || defaultData
   );
+  useEffect(() => {
+    if (setCancel) {
+      setDataSource([]);
+      setTimeout(() => {
+        setIsCreating(false);
+      }, 0);
+    }
+  }, [setCancel]);
+  useEffect(() => {
+    if (setCreating) {
+      setIsCreating(true);
+    }
+  }, [setCreating]);
 
   type DataSourceType = {
     id: React.Key;
@@ -297,18 +316,20 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         maxLength={5}
         scroll={{ x: xScroll, y: `calc(${yScroll}vh)` }}
         value={dataSource}
-        recordCreatorProps={{
-          creatorButtonText: 'ADD NEW PART',
-          newRecordType: 'dataSource',
-          record: (record: any) => ({
-            id: Date.now().toString(),
-            createUserID: USER_ID || '',
-            status: 'open',
-            createDate: new Date(),
-            isNew: true,
-            issuedQuantity: 0,
-          }),
-        }}
+        recordCreatorProps={
+          isCreating && {
+            creatorButtonText: 'ADD NEW PART',
+            newRecordType: 'dataSource',
+            record: (record: any) => ({
+              id: Date.now().toString(),
+              createUserID: USER_ID || '',
+              status: 'open',
+              createDate: new Date(),
+              isNew: true,
+              issuedQuantity: 0,
+            }),
+          }
+        }
         loading={false}
         columns={columns}
         // toolBarRender={() => {
