@@ -156,6 +156,7 @@ const EditableTable: FC<EditableTablerops> = ({
   useEffect(() => {
     // Создайте новый массив из dataSource перед передачей его в функцию
     onTableDataChange?.([...dataSource]);
+    console.log(dataSource);
   }, [dataSource]);
 
   const rowClassName = (record: any) => {

@@ -2,13 +2,14 @@ import {
   FormInstance,
   ProForm,
   ProFormDatePicker,
+  ProFormDateRangePicker,
   ProFormGroup,
   ProFormRadio,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Button, Form, Modal, Space, message } from 'antd';
+import { Button, DatePickerProps, Form, Modal, Space, message } from 'antd';
 import PickSlipViwer from '@/components/layout/APN/PickSlipViwer';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
@@ -23,6 +24,7 @@ import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenu
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 import { IProjectTaskAll } from '@/models/IProjectTask';
 import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
+import { RangePickerProps } from 'antd/es/date-picker';
 type PickSlipFilterFormType = {
   onFilterPickSlip: (record: any) => void;
   pickSlipNumber?: string;
@@ -39,7 +41,29 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   onCurrentPickSlip,
   onCreate,
 }) => {
+  const handleFormChange = () => {
+    const formValues = form.getFieldsValue();
+    // Добавьте поле projectId в объект значений полей формы
+    const updatedFormValues = {
+      ...formValues,
+      projectId: selectedProjectId,
+      getFrom: selectedSingleStore?.shopShortName,
+      neededOn: selectedSingleStoreNeeded?.shopShortName,
+      taskId: selectedTask,
+    };
+    onCurrentPickSlip(updatedFormValues);
+  };
+
   const { t } = useTranslation();
+  const [selectedStartDate, setSelectedStartDate] = useState<any>();
+  const [selectedEndDate, setSelectedEndDate] = useState<any>();
+  const onChange = (
+    value: DatePickerProps['value'] | RangePickerProps['value'],
+    dateString: [string, string] | string
+  ) => {
+    setSelectedEndDate(dateString[1]);
+    setSelectedStartDate(dateString[0]);
+  };
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -98,7 +122,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       setCurrentPickSlip(null);
       form.resetFields();
       setIsResetForm(true);
-
+      setSelectedTask(null);
       setTimeout(() => {
         setIsResetForm(false);
       }, 0);
@@ -235,10 +259,17 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       form.setFields([
         { name: 'reciver', value: selectedSingleProject?.acRegistrationNumber },
       ]);
-
-      // onFilterTransferprojects(form.getFieldsValue());
+      handleFormChange();
     }
-  }, [selectedProjectId]);
+  }, [
+    selectedProjectId,
+    selectedSingleStoreNeeded,
+    selectedSingleStore,
+    selectedTask,
+    receiverType,
+    selectedStartDate,
+    selectedEndDate,
+  ]);
   return (
     <div>
       <ProForm
@@ -299,6 +330,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             setReceiverType(changedValues.receiverType);
           }
         }}
+        onChange={handleFormChange}
         onFinish={async (values) => {
           const currentCompanyID = localStorage.getItem('companyID') || '';
           const result = dispatch(
@@ -494,6 +526,15 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           name="remarks"
           label={`${t('REMARKS')}`}
           width="lg"
+        />
+        <ProFormDatePicker
+          name="plannedDate"
+          label={`${t('PLANNED DATE')}`}
+          width="lg"
+          tooltip="PLANNED DATE"
+          fieldProps={{
+            onChange: onChange,
+          }}
         />
       </ProForm>
       <Modal

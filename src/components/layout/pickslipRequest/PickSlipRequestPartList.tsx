@@ -313,7 +313,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         bordered
         actionRef={actionRef}
         rowKey={(record) => record?.id || record?._id}
-        maxLength={5}
+        maxLength={6}
         scroll={{ x: xScroll, y: `calc(${yScroll}vh)` }}
         value={dataSource}
         recordCreatorProps={

@@ -1,11 +1,12 @@
 import React, { FC, useState } from 'react';
 import PickslipRequestForm from '../pickslipRequest/PickslipRequestForm';
-import { Button, Col, Input, Row, Space } from 'antd';
+import { Button, Col, Input, Row, Space, message } from 'antd';
 import PickSlipRequestPartList from '../pickslipRequest/PickSlipRequestPartList';
 import { ProColumns } from '@ant-design/pro-components';
 import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
 import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { useTranslation } from 'react-i18next';
+import { v4 as originalUuidv4 } from 'uuid';
 import {
   TransactionOutlined,
   EditOutlined,
@@ -14,6 +15,12 @@ import {
   SaveOutlined,
 } from '@ant-design/icons';
 import { USER_ID } from '@/utils/api/http';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import {
+  createProjectTaskMaterialAplication,
+  createSingleRequirement,
+  updateRequirementsByBody,
+} from '@/utils/api/thunks';
 
 const PickslipRequest: FC = () => {
   const { t } = useTranslation();
@@ -139,6 +146,8 @@ const PickslipRequest: FC = () => {
     }
     return false; // Если data не определено, вернуть false
   };
+  const dispatch = useAppDispatch();
+  const uuidv4: () => string = originalUuidv4;
   return (
     <div className="h-[82vh]  bg-white px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col">
@@ -149,6 +158,7 @@ const PickslipRequest: FC = () => {
                 onFilterPickSlip={function (record: any): void {}}
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
+                  // console.log(data);
                 }}
                 setCancel={isCancel}
                 onCreate={function (data: boolean): void {
@@ -171,13 +181,11 @@ const PickslipRequest: FC = () => {
         <PickSlipRequestPartList
           data={currentPickData?.parts || null}
           isLoading={false}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            throw new Error('Function not implemented.');
-          }}
+          onRowClick={function (record: any, rowIndex?: any): void {}}
           onSave={function (data: any): void {
             setPartData(data);
           }}
-          yScroll={40}
+          yScroll={48}
           setCancel={isCancel}
           setCreating={isCreating}
         />
@@ -186,7 +194,138 @@ const PickslipRequest: FC = () => {
         <Space align="center">
           <Button
             disabled={!isEditing && !isCreating}
-            onClick={() => {}}
+            onClick={async () => {
+              console.log(currentPickData, partData);
+              const companyID = localStorage.getItem('companyID');
+              if (
+                partData &&
+                currentPickData?.projectId &&
+                currentPickData?.getFrom &&
+                currentPickData?.neededOn
+              ) {
+                // Отфильтруйте partData, чтобы исключить элементы, у которых нет PN или amout
+                const filteredPartData = partData.filter(
+                  (part: { PN: any; amout: any }) => part.PN && part.amout
+                );
+
+                const promises = filteredPartData.map(
+                  (part: {
+                    amout: any;
+                    alternative: any;
+                    unit: any;
+                    description: any;
+                    group: any;
+                    type: any;
+                    PN: any;
+                    taskNumber: any;
+                  }) =>
+                    dispatch(
+                      createSingleRequirement({
+                        status: currentPickData.status,
+                        companyID: companyID || '',
+                        createUserID: USER_ID || '',
+                        projectID: currentPickData.projectId,
+                        quantity: part.amout,
+                        alternative: part.alternative,
+                        unit: part.unit,
+                        description: part.description || '',
+                        group: part.group,
+                        type: part.type,
+                        partNumber: part.PN || '',
+                        isNewAdded: false,
+                        createDate: new Date(),
+                        taskNumber: part?.taskNumber,
+                        issuedQuantity: 0,
+                        projectTaskID: currentPickData?.taskId,
+                        registrationNumber: currentPickData?.reciver,
+                        plannedDate: currentPickData?.plannedDate,
+                      })
+                    )
+                );
+                try {
+                  const results = await Promise.all(promises);
+                  // Все промисы успешно разрешены
+                  console.log('Все промисы успешно разрешены:', results);
+                  const updatedRequirements = results.map((result) => {
+                    const { payload } = result; // Доступ к данным из payload
+                    return {
+                      id: uuidv4(), // уникальный ключ для каждой вкладки
+                      requirementID: payload._id,
+                      onOrderQuantity:
+                        payload.amout - (payload.issuedQuantity || 0),
+                      required: payload.amout,
+                      PN: payload.PN,
+                      description: payload.nameOfMaterial,
+                      unit: payload.unit,
+                      issuedQuantity: payload.issuedQuantity,
+                      status: 'issued',
+                      onBlock: [],
+                    };
+                  });
+                  // console.log(updatedRequirements);
+                  const result = await dispatch(
+                    createProjectTaskMaterialAplication({
+                      materials: updatedRequirements,
+                      createDate: new Date(),
+                      createUserId: USER_ID || '',
+                      projectTaskId: currentPickData?.taskId,
+                      projectId: currentPickData?.projectId || '',
+                      projectWO: currentPickData?.projectWO,
+                      projectTaskWO: currentPickData?.projectTaskWO,
+                      planeType: currentPickData?.type,
+                      registrationNumber: currentPickData?.reciver,
+                      status: 'issued',
+                      companyID: companyID || '',
+                      taskNumber: currentPickData?.taskNumber,
+                      plannedDate:
+                        currentPickData && currentPickData?.plannedDate,
+                      getFrom: currentPickData && currentPickData?.getFrom,
+                      remarks: currentPickData && currentPickData?.remarks,
+                      neededOn: currentPickData && currentPickData?.neededOn,
+                    })
+                  );
+
+                  if (result.meta.requestStatus === 'fulfilled') {
+                    const updatedMaterialsData = result.payload.materials.map(
+                      (item: any) => {
+                        if (typeof item === 'object' && item !== null) {
+                          return {
+                            ...(item as object), // Явно указываем, что item является объектом
+                            materialOrderID:
+                              result.payload.id || result.payload._id,
+                            // status: 'onOrder',
+
+                            // requestQuantity: item?.amout,
+                          };
+                        }
+                        return item;
+                      }
+                    );
+
+                    const result1 = await dispatch(
+                      updateRequirementsByBody({
+                        companyID: companyID || '',
+                        newData: {
+                          updatedMaterialsData,
+                        },
+                        status: 'onOrder',
+                      })
+                    );
+                  }
+
+                  // Обработка массива результатов, если это необходимо
+                } catch (error) {
+                  // Одна или несколько промисов были отклонены
+                  console.error(
+                    'Ошибка при выполнении одного или нескольких промисов:',
+                    error
+                  );
+                  // Обработка ошибки, если это необходимо
+                }
+              } else {
+                message.error('ERROR');
+              }
+            }}
             size="small"
             icon={<SaveOutlined />}
           >
