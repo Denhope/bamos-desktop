@@ -196,9 +196,9 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   );
 
   const [isCreating, setIsCreating] = useState(false);
-  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
-    () => data || defaultData
-  );
+  const [dataSource, setDataSource] = useState<
+    readonly DataSourceType[] | any[]
+  >(() => data || defaultData);
   useEffect(() => {
     if (setCancel) {
       setDataSource([]);
@@ -207,6 +207,18 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       }, 0);
     }
   }, [setCancel]);
+  useEffect(() => {
+    if (setCreating) {
+      setIsCreating(true);
+    }
+  }, [setCreating]);
+
+  // useEffect(() => {
+  //   if (data) {
+  //     setDataSource(data);
+  //     console.log(data);
+  //   } else console.log(dataSource);
+  // }, [data]);
   useEffect(() => {
     if (setCreating) {
       setIsCreating(true);
@@ -259,11 +271,6 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   };
 
   const handleSave = (rowKey: any, newData: any, row: any) => {
-    // setDataSource((prevDataSource) =>
-    //   prevDataSource.map((item) =>
-    //     item.id === rowKey ? { ...item, ...newData } : item
-    //   )
-    // );
     const index = dataSource.findIndex((item) => item.id === rowKey);
     if (index !== -1) {
       // Создайте новый массив с обновленной записью

@@ -155,10 +155,10 @@ const PickslipRequest: FC = () => {
           <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
             <Col sm={18}>
               <PickslipRequestForm
+                data={currentPickData}
                 onFilterPickSlip={function (record: any): void {}}
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
-                  // console.log(data);
                 }}
                 setCancel={isCancel}
                 onCreate={function (data: boolean): void {
@@ -179,7 +179,7 @@ const PickslipRequest: FC = () => {
           </Row>
         </div>
         <PickSlipRequestPartList
-          data={currentPickData?.parts || null}
+          data={currentPickData?.[0]?.materials || null}
           isLoading={false}
           onRowClick={function (record: any, rowIndex?: any): void {}}
           onSave={function (data: any): void {
@@ -234,7 +234,7 @@ const PickslipRequest: FC = () => {
                         partNumber: part.PN || '',
                         isNewAdded: false,
                         createDate: new Date(),
-                        taskNumber: part?.taskNumber,
+                        taskNumber: currentPickData?.selectedTask?.taskNumber,
                         issuedQuantity: 0,
                         projectTaskID: currentPickData?.taskId,
                         registrationNumber: currentPickData?.reciver,
@@ -258,7 +258,7 @@ const PickslipRequest: FC = () => {
                       description: payload.nameOfMaterial,
                       unit: payload.unit,
                       issuedQuantity: payload.issuedQuantity,
-                      status: 'issued',
+                      status: 'open',
                       onBlock: [],
                     };
                   });
@@ -271,12 +271,13 @@ const PickslipRequest: FC = () => {
                       projectTaskId: currentPickData?.taskId,
                       projectId: currentPickData?.projectId || '',
                       projectWO: currentPickData?.projectWO,
-                      projectTaskWO: currentPickData?.projectTaskWO,
+                      projectTaskWO:
+                        currentPickData?.selectedTask?.projectTaskWO,
                       planeType: currentPickData?.type,
                       registrationNumber: currentPickData?.reciver,
-                      status: 'issued',
+                      status: 'open',
                       companyID: companyID || '',
-                      taskNumber: currentPickData?.taskNumber,
+                      taskNumber: currentPickData?.selectedTask?.taskNumber,
                       plannedDate:
                         currentPickData && currentPickData?.plannedDate,
                       getFrom: currentPickData && currentPickData?.getFrom,
@@ -286,6 +287,12 @@ const PickslipRequest: FC = () => {
                   );
 
                   if (result.meta.requestStatus === 'fulfilled') {
+                    setCurrentPickData(result.payload);
+                    setIsCreating(false);
+                    setCancel(true);
+                    setTimeout(() => {
+                      setCancel(false);
+                    }, 0);
                     const updatedMaterialsData = result.payload.materials.map(
                       (item: any) => {
                         if (typeof item === 'object' && item !== null) {
@@ -308,7 +315,7 @@ const PickslipRequest: FC = () => {
                         newData: {
                           updatedMaterialsData,
                         },
-                        status: 'onOrder',
+                        // status: 'onOrder',
                       })
                     );
                   }

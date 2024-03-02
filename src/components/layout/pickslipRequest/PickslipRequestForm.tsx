@@ -32,9 +32,11 @@ type PickSlipFilterFormType = {
   onCurrentPickSlip: (data: any) => void;
   setCancel: boolean;
   onCreate: (data: boolean) => void;
+  data?: any;
 };
 const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   onFilterPickSlip,
+  data,
   setCancel,
   pickSlipNumber,
   updateValue,
@@ -49,7 +51,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       projectId: selectedProjectId,
       getFrom: selectedSingleStore?.shopShortName,
       neededOn: selectedSingleStoreNeeded?.shopShortName,
-      taskId: selectedTask,
+      taskId: selectedTaskId,
+      selectedTask: selectedTask,
     };
     onCurrentPickSlip(updatedFormValues);
   };
@@ -78,15 +81,15 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   useEffect(() => {
     if (pickData) {
       form.setFields([
-        { name: 'remarks', value: pickData.remarks },
-        { name: 'status', value: pickData?.status.toUpperCase() },
-        { name: 'woNumber', value: pickData.projectTaskWO },
-        { name: 'project', value: pickData.projectWO },
-        { name: 'reciver', value: pickData.registrationNumber },
-        { name: 'neededOn', value: pickData.neededOn },
-        { name: 'getFrom', value: pickData.getFrom },
-        { name: 'mechSing', value: pickData.createBy },
-        { name: 'bookingDate', value: pickData?.closedDate || new Date() },
+        { name: 'remarks', value: pickData?.remarks },
+        { name: 'status', value: pickData?.status?.toUpperCase() },
+        { name: 'woNumber', value: pickData?.projectTaskWO },
+        { name: 'project', value: pickData?.projectWO },
+        { name: 'reciver', value: pickData?.registrationNumber },
+        { name: 'neededOn', value: pickData?.neededOn },
+        { name: 'getFrom', value: pickData?.getFrom },
+        { name: 'mechSing', value: pickData?.createBy },
+        { name: 'plannedDate', value: pickData?.plannedDate },
         {
           name: 'storeman',
           value: pickData?.storeMan || localStorage.getItem('name'),
@@ -97,12 +100,13 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     }
   }, [pickData, updateValue]);
   useEffect(() => {
+    if (data && data?.materialAplicationNumber) {
+      handleLoadClick(data?.materialAplicationNumber);
+    }
+  }, [data?.materialAplicationNumber]);
+  useEffect(() => {
     if (pickSlipNumber) {
-      form.setFields([
-        { name: 'materialAplicationNumber', value: pickSlipNumber },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
-      ]);
+      form.setFields([]);
     }
     if (pickDataNumber) {
       form.setFields([
@@ -110,8 +114,6 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           name: 'materialAplicationNumber',
           value: pickDataNumber.materialAplicationNumber,
         },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
     }
   }, [pickDataNumber]);
@@ -152,17 +154,18 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     ]);
     form.setFields([{ name: 'status', value: 'open' }]);
   };
-  const handleLoadClick = async () => {
+  const handleLoadClick = async (materialAplicationNumber: any) => {
     const currentCompanyID = localStorage.getItem('companyID') || '';
     const result = dispatch(
       getFilteredPickSlip({
         companyID: currentCompanyID,
-        materialAplicationNumber: form.getFieldValue(
-          'materialAplicationNumber'
-        ),
+        materialAplicationNumber: materialAplicationNumber,
       })
     );
     if ((await result).meta.requestStatus === 'fulfilled') {
+      form.setFields([
+        { name: 'materialAplicationNumber', value: materialAplicationNumber },
+      ]);
       onFilterPickSlip((await result).payload[0]);
       setPickData((await result).payload[0]);
       setSelectedProjectId((await result).payload[0]?.projectID?._id);
@@ -172,8 +175,6 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     } else if (!!(await result).payload.length[0]) {
       message.error('Error');
       setIsResetForm(true);
-      // setinitialFormNeed('');
-      // setinitialFormGet('');
 
       setTimeout(() => {
         setIsResetForm(false);
@@ -190,7 +191,9 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   interface Option {
     value: string;
     label: string;
+    data: any;
   }
+  const [selectedTaskId, setSelectedTaskId] = useState<any | null>(null);
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [taskOptions, setTaskOptions] = useState<Option[]>([]);
   const [receiverType, setReceiverType] = useState<any>('MAIN_TASK');
@@ -224,20 +227,23 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
               case 'MAIN_TASK':
                 options = data.map((item: IProjectTaskAll) => ({
                   value: item._id || item.id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.projectTaskWO}`, // замените на нужное поле для 'PROJECT'
+                  label: `${item.projectTaskWO}`,
+                  data: item, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
               case 'NRC':
                 options = data.map((item: IAdditionalTaskMTBCreate) => ({
                   value: item._id || item.id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.additionalNumberId}`, // замените на нужное поле для 'PROJECT'
+                  label: `${item.additionalNumberId}`,
+                  data: item, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
 
               default:
                 options = data.map((item: any) => ({
                   value: item.defaultField1, // замените на нужное поле для 'default'
-                  label: item.defaultField2, // замените на нужное поле для 'default'
+                  label: item.defaultField2,
+                  data: item, // замените на нужное поле для 'default'
                 }));
             }
             setTaskOptions(options);
@@ -265,7 +271,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     selectedProjectId,
     selectedSingleStoreNeeded,
     selectedSingleStore,
-    selectedTask,
+    selectedTaskId,
     receiverType,
     selectedStartDate,
     selectedEndDate,
@@ -298,32 +304,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             ),
           },
           render: (_, dom) => [],
-          // isCreating
-          //   ? [
-          //       <Button
-          //         key="cancel"
-          //         onClick={() => {
-          //           isCreating && setIsCreating(false);
-          //           onCurrentPickSlip(null);
-          //           setCurrentPickSlip(null);
-          //           form.resetFields();
-          //           setIsResetForm(true);
-
-          //           setTimeout(() => {
-          //             setIsResetForm(false);
-          //           }, 0);
-
-          //           setinitialFormProject('');
-          //           // setinitialFormNeed('');
-          //           // setinitialFormGet('');
-          //         }}
-          //       >
-          //         {t('Cancel')}
-          //       </Button>,
-          //     ]
-          //   : [],
         }}
-        // size="middle"
         onValuesChange={(changedValues, allValues) => {
           // Handle changes in the form
           if (changedValues.receiverType) {
@@ -331,21 +312,21 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           }
         }}
         onChange={handleFormChange}
-        onFinish={async (values) => {
-          const currentCompanyID = localStorage.getItem('companyID') || '';
-          const result = dispatch(
-            getFilteredPickSlip({
-              companyID: currentCompanyID,
-              materialAplicationNumber: values.materialAplicationNumber,
-            })
-          );
-          if ((await result).meta.requestStatus === 'fulfilled') {
-            onFilterPickSlip((await result).payload[0]);
-            setPickData((await result).payload[0]);
-          } else {
-            message.error('NO ITEMS');
-          }
-        }}
+        // onFinish={async (values) => {
+        //   const currentCompanyID = localStorage.getItem('companyID') || '';
+        //   const result = dispatch(
+        //     getFilteredPickSlip({
+        //       companyID: currentCompanyID,
+        //       materialAplicationNumber: values.materialAplicationNumber,
+        //     })
+        //   );
+        //   if ((await result).meta.requestStatus === 'fulfilled') {
+        //     onFilterPickSlip((await result).payload[0]);
+        //     setPickData((await result).payload[0]);
+        //   } else {
+        //     message.error('NO ITEMS');
+        //   }
+        // }}
         title="PICKSLIP DATA"
       >
         <ProFormGroup size={'small'}>
@@ -364,7 +345,9 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           />
           <Button
             // type="primary"
-            onClick={handleLoadClick}
+            onClick={() =>
+              handleLoadClick(form.getFieldValue('materialAplicationNumber'))
+            }
             disabled={isCreating}
           >
             {t('SEARCH')}
@@ -498,8 +481,10 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                   label={`${t(`TASK`)}`}
                   width="sm"
                   options={taskOptions}
-                  onChange={(value: any) => {
-                    setSelectedTask(value);
+                  onChange={(value: any, data: any) => {
+                    setSelectedTask(data?.data);
+                    setSelectedTaskId(value);
+                    // console.log(data);
                   }}
                 />
               )}
@@ -528,6 +513,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           width="lg"
         />
         <ProFormDatePicker
+          disabled={!isCreating}
           name="plannedDate"
           label={`${t('PLANNED DATE')}`}
           width="lg"
