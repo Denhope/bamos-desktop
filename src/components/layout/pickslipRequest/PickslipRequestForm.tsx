@@ -82,7 +82,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     if (pickData) {
       form.setFields([
         { name: 'remarks', value: pickData?.remarks },
-        { name: 'status', value: pickData?.status?.toUpperCase() },
+        { name: 'status', value: pickData?.status },
         { name: 'woNumber', value: pickData?.projectTaskWO },
         { name: 'project', value: pickData?.projectWO },
         { name: 'reciver', value: pickData?.registrationNumber },
@@ -339,7 +339,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             //rules={[{ required: true }]}
             fieldProps={{
               onDoubleClick: () => setOpenPickViewer(true),
-              onKeyPress: handleKeyPress,
+              // onKeyPress: handleKeyPress,
               autoFocus: true,
             }}
           />
@@ -403,12 +403,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             label={`${t('MECH.SING')}`}
             width="sm"
           />
-          {/* <ProFormText
-            disabled={!isCreating}
-            name="getFrom"
-            label={`${t('GET FROM')}`}
-            width="xs"
-          /> */}
+
           <ContextMenuStoreSearchSelect
             disabled={!isCreating}
             isResetForm={isResetForm}
@@ -441,12 +436,6 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           />
         </ProFormGroup>
         <ProFormGroup>
-          <ProFormText
-            disabled={!isCreating}
-            name="reciver"
-            label={`${t('RECIVER')}`}
-            width="xs"
-          />
           <ContextMenuProjectSearchSelect
             disabled={!isCreating}
             isResetForm={isResetForm}
@@ -459,7 +448,13 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             initialForm={selectedSingleProject?.projectWO || initialFormProject}
             width={'sm'}
             label={`${t(`PROJECT LINK`)}`}
-          ></ContextMenuProjectSearchSelect>
+          ></ContextMenuProjectSearchSelect>{' '}
+          <ProFormText
+            disabled={!isCreating}
+            name="reciver"
+            label={`${t('RECIVER')}`}
+            width="xs"
+          />
           {
             <ProForm.Group>
               <ProFormRadio.Group

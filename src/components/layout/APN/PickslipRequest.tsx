@@ -19,7 +19,9 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import {
   createProjectTaskMaterialAplication,
   createSingleRequirement,
+  updateProjectTask,
   updateRequirementsByBody,
+  updatedMaterialOrdersById,
 } from '@/utils/api/thunks';
 
 const PickslipRequest: FC = () => {
@@ -156,7 +158,9 @@ const PickslipRequest: FC = () => {
             <Col sm={18}>
               <PickslipRequestForm
                 data={currentPickData}
-                onFilterPickSlip={function (record: any): void {}}
+                onFilterPickSlip={function (record: any): void {
+                  setCurrentPickData(record);
+                }}
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
                 }}
@@ -168,7 +172,52 @@ const PickslipRequest: FC = () => {
             </Col>
             <Col sm={6}>
               <Button
-                disabled={(!isEditing && !isCreating) || isAmountUndefined()}
+                onClick={async () => {
+                  const companyID = localStorage.getItem('companyID');
+                  const result1 = await dispatch(
+                    updatedMaterialOrdersById({
+                      status: 'issued',
+                      _id: currentPickData._id || currentPickData.id,
+                      updateUserID: USER_ID,
+                      updateDate: new Date(),
+                    })
+                  );
+                  if (result1.meta.requestStatus === 'fulfilled') {
+                    setCurrentPickData(result1.payload);
+
+                    const updatedMaterialsData = result1.payload.materials.map(
+                      (item: any) => {
+                        if (typeof item === 'object' && item !== null) {
+                          return {
+                            ...(item as object), // Явно указываем, что item является объектом
+                            materialOrderID:
+                              result1.payload.id || result1.payload._id,
+                            status: 'onOrder',
+
+                            // requestQuantity: item?.amout,
+                          };
+                        }
+                        return item;
+                      }
+                    );
+                    console.log(updatedMaterialsData);
+
+                    const result2 = await dispatch(
+                      updateRequirementsByBody({
+                        companyID: companyID || '',
+                        newData: {
+                          updatedMaterialsData,
+                        },
+                        neededOn: result1?.payload?.neededOn,
+                        status: 'onOrder',
+                      })
+                    );
+                  }
+                }}
+                disabled={
+                  !currentPickData ||
+                  (currentPickData && currentPickData?.status !== 'open')
+                }
                 type="primary"
                 className="w-11/12"
                 size="large"
@@ -179,7 +228,7 @@ const PickslipRequest: FC = () => {
           </Row>
         </div>
         <PickSlipRequestPartList
-          data={currentPickData?.[0]?.materials || null}
+          data={currentPickData?.materials || null}
           isLoading={false}
           onRowClick={function (record: any, rowIndex?: any): void {}}
           onSave={function (data: any): void {
@@ -195,7 +244,7 @@ const PickslipRequest: FC = () => {
           <Button
             disabled={!isEditing && !isCreating}
             onClick={async () => {
-              console.log(currentPickData, partData);
+              // console.log(currentPickData, partData);
               const companyID = localStorage.getItem('companyID');
               if (
                 partData &&
@@ -218,6 +267,7 @@ const PickslipRequest: FC = () => {
                     type: any;
                     PN: any;
                     taskNumber: any;
+                    serialNumber?: any;
                   }) =>
                     dispatch(
                       createSingleRequirement({
@@ -226,6 +276,7 @@ const PickslipRequest: FC = () => {
                         createUserID: USER_ID || '',
                         projectID: currentPickData.projectId,
                         quantity: part.amout,
+                        serialNumber: part?.serialNumber,
                         alternative: part.alternative,
                         unit: part.unit,
                         description: part.description || '',
@@ -244,13 +295,28 @@ const PickslipRequest: FC = () => {
                 );
                 try {
                   const results = await Promise.all(promises);
+                  // const resultTask = await dispatch(
+                  //   updateProjectTask({
+                  //     id: currentPickData?.taskId,
+                  //     requirementItemsIds: [
+                  //       ...(projectTaskData &&
+                  //       Array.isArray(projectTaskData.requirementItemsIds)
+                  //         ? projectTaskData.requirementItemsIds
+                  //         : []),
+                  //       result.payload._id,
+                  //     ],
+                  //   })
+                  // );
                   // Все промисы успешно разрешены
-                  console.log('Все промисы успешно разрешены:', results);
+                  // console.log('Все промисы успешно разрешены:', results);
                   const updatedRequirements = results.map((result) => {
                     const { payload } = result; // Доступ к данным из payload
                     return {
                       id: uuidv4(), // уникальный ключ для каждой вкладки
                       requirementID: payload._id,
+                      group: payload.group,
+                      type: payload.type,
+                      serialNumber: payload.serialNumber,
                       onOrderQuantity:
                         payload.amout - (payload.issuedQuantity || 0),
                       required: payload.amout,
@@ -300,9 +366,6 @@ const PickslipRequest: FC = () => {
                             ...(item as object), // Явно указываем, что item является объектом
                             materialOrderID:
                               result.payload.id || result.payload._id,
-                            // status: 'onOrder',
-
-                            // requestQuantity: item?.amout,
                           };
                         }
                         return item;
@@ -315,7 +378,7 @@ const PickslipRequest: FC = () => {
                         newData: {
                           updatedMaterialsData,
                         },
-                        // status: 'onOrder',
+                        status: 'open',
                       })
                     );
                   }
@@ -331,6 +394,7 @@ const PickslipRequest: FC = () => {
                 }
               } else {
                 message.error('ERROR');
+                // console.log(*)
               }
             }}
             size="small"

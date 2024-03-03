@@ -67,6 +67,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
                   type: selectedPN.TYPE,
                   unit: selectedPN.UNIT_OF_MEASURE,
                   amout: record.amout,
+                  serialNumber: record?.serialNumber,
                 },
                 record
               );
@@ -88,6 +89,9 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
             required: true,
           },
         ],
+      },
+      render: (text: any, record: any) => {
+        return <a>{isCreating ? record?.amout : record?.required}</a>;
       },
     },
     {
@@ -159,22 +163,28 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       valueType: 'option',
       width: 200,
       render: (text, record, _, action) => [
-        <a
-          key="editable"
-          onClick={() => {
-            action?.startEditable?.(record.id);
-          }}
-        >
-          EDIT
-        </a>,
-        <a
-          key="delete"
-          onClick={() => {
-            setDataSource(dataSource.filter((item) => item?.id !== record?.id));
-          }}
-        >
-          DELETE
-        </a>,
+        isCreating && (
+          <a
+            key="editable"
+            onClick={() => {
+              action?.startEditable?.(record.id);
+            }}
+          >
+            EDIT
+          </a>
+        ),
+        isCreating && (
+          <a
+            key="delete"
+            onClick={() => {
+              setDataSource(
+                dataSource.filter((item) => item?.id !== record?.id)
+              );
+            }}
+          >
+            DELETE
+          </a>
+        ),
       ],
     },
   ];
@@ -207,21 +217,17 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       }, 0);
     }
   }, [setCancel]);
-  useEffect(() => {
-    if (setCreating) {
-      setIsCreating(true);
-    }
-  }, [setCreating]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setDataSource(data);
-  //     console.log(data);
-  //   } else console.log(dataSource);
-  // }, [data]);
+  useEffect(() => {
+    if (data) {
+      setDataSource(data);
+      console.log(data);
+    }
+  }, [data]);
   useEffect(() => {
     if (setCreating) {
       setIsCreating(true);
+      setDataSource([]);
     }
   }, [setCreating]);
 
@@ -280,6 +286,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       // Установите новый массив в состояние
       setDataSource(newDataSource);
       onSave(newDataSource);
+      console.log(newDataSource);
     }
   };
 
@@ -317,7 +324,11 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
     <div className="">
       <EditableProTable<any>
         rowClassName={rowClassName}
-        bordered
+        // request={async () => ({
+        //   data: data,
+        //   // total: 3,
+        //   // success: true,
+        // })}
         actionRef={actionRef}
         rowKey={(record) => record?.id || record?._id}
         maxLength={6}

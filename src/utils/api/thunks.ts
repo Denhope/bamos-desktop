@@ -3558,6 +3558,7 @@ export interface ICreateSingleRequirement {
   description: string;
   quantity: number;
   alternative?: string;
+  serialNumber?: any;
   unit: string;
   isNewAdded: boolean;
   issuedQuantity: any;
@@ -4008,6 +4009,7 @@ export const updateRequirementsByBody = createAsyncThunk(
           newData,
           plannedDate,
           neededOn,
+          status,
         }
       );
       return response.data;
