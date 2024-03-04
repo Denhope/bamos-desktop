@@ -314,6 +314,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
             name={'partNumber'}
             initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
             width={'sm'}
+            label={t('PART No')}
           ></ContextMenuPNSearchSelect>
           <ProFormCheckbox.Group
             className="my-0 py-0"
