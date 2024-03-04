@@ -138,6 +138,7 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
             // onSelectSelectedStore?.(record);
           }}
           initialFormStore={selectedSingleStore?.shopShortName || initialForm}
+          label={t('STORE')}
         />
 
         <ProForm.Item labelAlign="right" label={`${t('NEW STORE')}`}>

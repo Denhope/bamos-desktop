@@ -150,6 +150,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               }}
             />
             <ContextMenuPNSearchSelect
+              label={t('PART NO')}
               isResetForm={isResetForm}
               rules={[{ required: false }]}
               onSelectedPN={function (PN: any): void {

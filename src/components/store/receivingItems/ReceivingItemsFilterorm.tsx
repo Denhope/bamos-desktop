@@ -147,6 +147,7 @@ const ReceivingItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               }}
             />
             <ContextMenuPNSearchSelect
+              label={t('PART No')}
               isResetForm={isResetForm}
               rules={[{ required: false }]}
               onSelectedPN={function (PN: any): void {
@@ -285,6 +286,7 @@ const ReceivingItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               initialFormStore={
                 selectedSingleStore?.shopShortName || initialForm
               }
+              label={t('STORE')}
             />
             <ProFormText
               name="label"

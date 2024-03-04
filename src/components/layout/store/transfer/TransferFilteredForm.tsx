@@ -111,6 +111,7 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
           </ProFormGroup>
 
           <ContextMenuStoreSearchSelect
+            label={t('STORE')}
             isResetForm={isResetForm}
             rules={[{ required: true }]}
             name={'store'}
@@ -155,6 +156,7 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
             name={'partNumber'}
             initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
             width={'sm'}
+            label={t('PART No')}
           ></ContextMenuPNSearchSelect>
         </ProFormGroup>
       </ProForm>

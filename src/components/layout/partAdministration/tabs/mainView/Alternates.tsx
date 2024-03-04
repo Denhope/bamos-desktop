@@ -447,6 +447,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
             }}
           ></ProFormText> */}
           <ContextMenuPNSearchSelect
+            label={t('PART NO')}
             // isResetForm={isResetForm}
             rules={[{ required: true }]}
             onSelectedPN={function (PN: any): void {

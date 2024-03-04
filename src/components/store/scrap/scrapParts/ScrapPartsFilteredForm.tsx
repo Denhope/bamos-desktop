@@ -130,9 +130,11 @@ const ScrapPartsFilteredForm: FC<ScrapPartsFilteredFormType> = ({
               name={'partNumber'}
               initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
               width={'sm'}
+              label={t('PART No')}
             ></ContextMenuPNSearchSelect>
 
             <ContextMenuStoreSearchSelect
+              label={t('STORE')}
               isResetForm={isResetForm}
               // disabled={isOnlyScrapped}
               rules={[{ required: true }]}

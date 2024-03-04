@@ -104,6 +104,7 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
           }}
         />
         <ContextMenuPNSearchSelect
+          label={t('PART NO')}
           isResetForm={isResetForm}
           rules={[{ required: false }]}
           onSelectedPN={function (PN: any): void {

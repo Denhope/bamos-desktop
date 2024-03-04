@@ -72,6 +72,7 @@ const SearchPartForm: FC<SearchPartFormFormType> = ({
     >
       <ProFormGroup direction="horizontal">
         <ContextMenuPNSearchSelect
+          label={t('PART NO')}
           isResetForm={isResetForm}
           rules={[{ required: true }]}
           onSelectedPN={function (PN: any): void {

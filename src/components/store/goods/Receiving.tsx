@@ -481,6 +481,7 @@ const Receiving: FC<ReceivingType> = ({
           <ProFormGroup direction="horizontal">
             <ProFormGroup>
               <ContextMenuPNSearchSelect
+                label={t('PART No')}
                 isResetForm={isResetForm}
                 rules={[{ required: true }]}
                 onSelectedPN={function (PN: any): void {

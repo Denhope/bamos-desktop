@@ -129,6 +129,7 @@ const CancelReceivingForm: FC<CancelReceivingFormType> = ({
           />
 
           <ContextMenuPNSearchSelect
+            label={t('PART NO')}
             isResetForm={isResetForm}
             rules={[{ required: false }]}
             onSelectedPN={function (PN: any): void {
