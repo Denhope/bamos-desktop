@@ -53,6 +53,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       neededOn: selectedSingleStoreNeeded?.shopShortName,
       taskId: selectedTaskId,
       selectedTask: selectedTask,
+      plannedDate: selectedStartDate,
     };
     onCurrentPickSlip(updatedFormValues);
   };
@@ -122,6 +123,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       isCreating && setIsCreating(false);
       onCurrentPickSlip(null);
       setCurrentPickSlip(null);
+      setSelectedStartDate(null);
       form.resetFields();
       setIsResetForm(true);
       setSelectedTask(null);
@@ -139,7 +141,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   const createNewPickSlip = () => {
     setCurrentPickSlip({
       createDate: new Date(),
-      state: 'OPEN',
+      state: 'open',
       shipTo: {},
       companyID: localStorage.getItem('companyID') || '',
       createUserID: USER_ID,

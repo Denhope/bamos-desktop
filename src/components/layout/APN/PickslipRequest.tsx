@@ -210,6 +210,7 @@ const PickslipRequest: FC = () => {
                         },
                         neededOn: result1?.payload?.neededOn,
                         status: 'onOrder',
+                        plannedDate: result1?.payload?.plannedDate,
                       })
                     );
                   }

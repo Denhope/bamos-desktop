@@ -228,6 +228,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
           width={'sm'}
+          label={t('PART NUMBER')}
         ></ContextMenuPNSearchSelect>
         <ProFormText
           name="serialNumber"

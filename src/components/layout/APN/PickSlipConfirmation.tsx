@@ -792,6 +792,7 @@ const PickSlipConfirmation: FC = () => {
             disabled={
               currentPick?.status === 'completed' ||
               currentPick?.status === 'closed' ||
+              currentPick?.status === 'open' ||
               currentPick?.status === 'new' ||
               currentPick?.status === 'cancelled' ||
               currentPick?.status === 'partyCancelled' ||
@@ -870,6 +871,7 @@ const PickSlipConfirmation: FC = () => {
             icon={<SaveOutlined />}
             disabled={
               currentPick?.status === 'issued' ||
+              currentPick?.status === 'open' ||
               currentPick?.status === 'closed' ||
               currentPick?.status === 'new' ||
               currentPick?.status === 'cancelled' ||
