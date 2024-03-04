@@ -337,7 +337,7 @@ const PickslipRequest: FC = () => {
                       createUserId: USER_ID || '',
                       projectTaskId: currentPickData?.taskId,
                       projectId: currentPickData?.projectId || '',
-                      projectWO: currentPickData?.projectWO,
+                      projectWO: currentPickData?.selectedProject?.projectWO,
                       projectTaskWO:
                         currentPickData?.selectedTask?.projectTaskWO,
                       planeType: currentPickData?.type,
@@ -380,6 +380,10 @@ const PickslipRequest: FC = () => {
                           updatedMaterialsData,
                         },
                         status: 'open',
+                        neededOn: currentPickData && currentPickData?.neededOn,
+
+                        plannedDate:
+                          currentPickData && currentPickData?.plannedDate,
                       })
                     );
                   }

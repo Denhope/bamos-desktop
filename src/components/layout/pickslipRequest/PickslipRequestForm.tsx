@@ -54,6 +54,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       taskId: selectedTaskId,
       selectedTask: selectedTask,
       plannedDate: selectedStartDate,
+      selectedProject: selectedSingleProject,
     };
     onCurrentPickSlip(updatedFormValues);
   };
@@ -197,6 +198,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   }
   const [selectedTaskId, setSelectedTaskId] = useState<any | null>(null);
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
+
   const [taskOptions, setTaskOptions] = useState<Option[]>([]);
   const [receiverType, setReceiverType] = useState<any>('MAIN_TASK');
   useEffect(() => {
@@ -494,7 +496,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                   label={`${t(`TASK`)}`}
                   width="sm"
                   options={taskOptions}
-                  onChange={(value: any) => {
+                  onChange={(value: any, data: any) => {
                     setSelectedTask(value);
                   }}
                 />

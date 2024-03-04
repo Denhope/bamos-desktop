@@ -101,7 +101,7 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       dataIndex: 'status',
     },
     {
-      title: `${t('TASK')}`,
+      title: `${t('WO No')}`,
       dataIndex: 'taskWO',
       key: 'taskWO',
       width: '7%',
