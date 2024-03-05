@@ -213,6 +213,7 @@ const PickslipRequest: FC = () => {
                         plannedDate: result1?.payload?.plannedDate,
                       })
                     );
+                    message.success(t('SECCUESS'));
                   }
                 }}
                 disabled={
@@ -223,7 +224,7 @@ const PickslipRequest: FC = () => {
                 className="w-11/12"
                 size="large"
               >
-                SEND TO STORE (ISSUE)
+                {t(`SEND TO STORE (ISSUE)`)}
               </Button>
             </Col>
           </Row>
@@ -389,6 +390,7 @@ const PickslipRequest: FC = () => {
                   }
 
                   // Обработка массива результатов, если это необходимо
+                  message.success(t('SECCUESS'));
                 } catch (error) {
                   // Одна или несколько промисов были отклонены
                   console.error(
@@ -398,7 +400,7 @@ const PickslipRequest: FC = () => {
                   // Обработка ошибки, если это необходимо
                 }
               } else {
-                message.error('ERROR');
+                message.error(t('ERROR'));
                 // console.log(*)
               }
             }}

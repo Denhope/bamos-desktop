@@ -88,8 +88,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
         { name: 'woNumber', value: pickData?.projectTaskWO },
         { name: 'project', value: pickData?.projectWO },
         { name: 'reciver', value: pickData?.registrationNumber },
-        { name: 'neededOn', value: pickData?.neededOn },
-        { name: 'getFrom', value: pickData?.getFrom },
+        // { name: 'neededOn', value: pickData?.neededOn },
+        // { name: 'getFrom', value: pickData?.getFrom },
         { name: 'mechSing', value: pickData?.createBy },
         { name: 'plannedDate', value: pickData?.plannedDate },
         {
@@ -142,7 +142,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   const createNewPickSlip = () => {
     setCurrentPickSlip({
       createDate: new Date(),
-      state: 'open',
+      state: 'draft',
       shipTo: {},
       companyID: localStorage.getItem('companyID') || '',
       createUserID: USER_ID,
@@ -155,7 +155,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     form.setFields([
       { name: 'mechSing', value: localStorage.getItem('name') || '' },
     ]);
-    form.setFields([{ name: 'status', value: 'open' }]);
+    form.setFields([{ name: 'status', value: 'draft' }]);
   };
   const handleLoadClick = async (materialAplicationNumber: any) => {
     const currentCompanyID = localStorage.getItem('companyID') || '';
@@ -169,6 +169,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       form.setFields([
         { name: 'materialAplicationNumber', value: materialAplicationNumber },
       ]);
+
       onFilterPickSlip((await result).payload[0]);
       setPickData((await result).payload[0]);
       setSelectedProjectId((await result).payload[0]?.projectID?._id);
@@ -184,8 +185,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       }, 0);
 
       setSecectedSingleProject(null);
-      setinitialFormProject('');
-      setSecectedSingleProject({ projectWO: '' });
+      // setinitialFormProject('');
+      // setSecectedSingleProject({ projectWO: '' });
     }
   };
   const [selectedSingleProject, setSecectedSingleProject] = useState<any>();
@@ -396,6 +397,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
               { value: 'deleted', label: t('DELETED') },
               { value: 'issued', label: t('ISSUED') },
               { value: 'transfer', label: t('TRANSFER') },
+              { value: 'draft', label: t('DRAFT') },
             ]}
           />
         </ProFormGroup>
@@ -433,6 +435,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             onSelectedStore={function (record: any): void {
               setSecectedSingleStoreNeeded(record);
               // setSecectedStore(record);
+              setSecectedSingleStoreNeeded(record);
             }}
             initialFormStore={
               selectedSingleStoreNeeded?.shopShortName || initialFormNeed
