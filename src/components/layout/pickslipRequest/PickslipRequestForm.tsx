@@ -500,7 +500,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                   width="sm"
                   options={taskOptions}
                   onChange={(value: any, data: any) => {
-                    setSelectedTask(value);
+                    setSelectedTaskId(value);
+                    setSelectedTask(data?.data);
                   }}
                 />
               )}

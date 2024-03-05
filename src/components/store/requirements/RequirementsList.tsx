@@ -108,6 +108,15 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       editable: (text, record, index) => {
         return false;
       },
+      render: (text: any, record: any) => {
+        return (
+          <>
+            {record?.additionalTaskWO
+              ? record?.additionalTaskWO
+              : record?.taskWO}
+          </>
+        );
+      },
     },
     {
       title: `${t('PROJECT')}`,

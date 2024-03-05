@@ -163,6 +163,7 @@ const PickslipRequest: FC = () => {
                 }}
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
+                  console.log(data);
                 }}
                 setCancel={isCancel}
                 onCreate={function (data: boolean): void {
@@ -289,7 +290,18 @@ const PickslipRequest: FC = () => {
                         createDate: new Date(),
                         taskNumber: currentPickData?.selectedTask?.taskNumber,
                         issuedQuantity: 0,
-                        projectTaskID: currentPickData?.taskId,
+                        projectTaskID:
+                          currentPickData?.receiverType === 'MAIN_TASK'
+                            ? currentPickData?.taskId
+                            : null,
+                        additionalTaskID:
+                          currentPickData?.receiverType === 'NRC'
+                            ? currentPickData?.taskId
+                            : null,
+                        additionalTaskWO:
+                          currentPickData?.receiverType === 'NRC'
+                            ? currentPickData?.selectedTask?.additionalNumberId
+                            : null,
                         registrationNumber: currentPickData?.reciver,
                         plannedDate: currentPickData?.plannedDate,
                       })
@@ -330,17 +342,30 @@ const PickslipRequest: FC = () => {
                       onBlock: [],
                     };
                   });
-                  // console.log(updatedRequirements);
+                  console.log(currentPickData);
                   const result = await dispatch(
                     createProjectTaskMaterialAplication({
                       materials: updatedRequirements,
                       createDate: new Date(),
                       createUserId: USER_ID || '',
-                      projectTaskId: currentPickData?.taskId,
+                      additionalTaskID:
+                        currentPickData?.receiverType === 'NRC'
+                          ? currentPickData?.taskId
+                          : null,
+
+                      projectTaskId:
+                        currentPickData?.receiverType === 'MAIN_TASK'
+                          ? currentPickData?.taskId
+                          : null,
                       projectId: currentPickData?.projectId || '',
                       projectWO: currentPickData?.selectedProject?.projectWO,
                       projectTaskWO:
-                        currentPickData?.selectedTask?.projectTaskWO,
+                        currentPickData?.receiverType === 'MAIN_TASK'
+                          ? currentPickData?.selectedTask?.projectTaskWO
+                          : null
+                          ? currentPickData?.receiverType === 'NRC' ||
+                            currentPickData?.selectedTask?.additionalNumberId
+                          : null,
                       planeType: currentPickData?.type,
                       registrationNumber: currentPickData?.reciver,
                       status: 'open',
