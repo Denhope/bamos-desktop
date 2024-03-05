@@ -4044,6 +4044,7 @@ export interface getFilteredMaterialOrders {
   materialOrders?: any[];
   materialAplicationNumber?: any;
   partNumber?: string;
+  additionalNumberId?: string;
 }
 
 export const getFilteredMaterialOrders = createAsyncThunk(
@@ -4066,6 +4067,9 @@ export const getFilteredMaterialOrders = createAsyncThunk(
         'materialAplicationNumber',
         params.materialAplicationNumber
       );
+
+    if (params.additionalNumberId)
+      searchParams.append('additionalNumberId', params.additionalNumberId);
     if (params.projectTaskID)
       searchParams.append('projectTaskID', params.projectTaskID);
     if (params.startDate) searchParams.append('startDate', params.startDate);
@@ -4113,6 +4117,9 @@ export const getFilteredCancelMaterialOrders = createAsyncThunk(
         'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
+
+    if (params.additionalNumberId)
+      searchParams.append('additionalNumberId', params.additionalNumberId);
     if (params.partNumber) searchParams.append('partNumber', params.partNumber);
     if (params.materialAplicationNumber)
       searchParams.append(

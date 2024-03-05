@@ -362,9 +362,8 @@ const PickslipRequest: FC = () => {
                       projectTaskWO:
                         currentPickData?.receiverType === 'MAIN_TASK'
                           ? currentPickData?.selectedTask?.projectTaskWO
-                          : null
-                          ? currentPickData?.receiverType === 'NRC' ||
-                            currentPickData?.selectedTask?.additionalNumberId
+                          : currentPickData?.receiverType === 'NRC'
+                          ? currentPickData?.selectedTask?.additionalNumberId
                           : null,
                       planeType: currentPickData?.type,
                       registrationNumber: currentPickData?.reciver,
