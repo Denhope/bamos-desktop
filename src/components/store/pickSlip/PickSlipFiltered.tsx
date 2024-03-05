@@ -255,6 +255,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         setTimeout(() => {
           setIsReset(false);
         }, 0);
+        setTaskOptions([]);
 
         setSelectedEndDate(null);
         setSelectedStartDate(null);

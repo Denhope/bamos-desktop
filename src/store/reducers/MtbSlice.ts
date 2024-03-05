@@ -6,6 +6,8 @@ import { IProjectResponce } from '@/models/IProject';
 import { IProjectTask } from '@/models/IProjectTaskMTB';
 import {
   getFilteredAditionalTasks,
+  getFilteredGroups,
+  getFilteredGroupsTasks,
   getFilteredProjects,
   updateAdditionalTask,
   updateGroupByID,
@@ -187,6 +189,24 @@ export const PlaneSlice = createSlice({
         state.planesFetchError = action.error.message || 'An error occurred';
         console.error(action.error);
       })
+
+      .addCase(getFilteredGroups.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        getFilteredGroups.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.isLoading = false;
+          state.projectGroups = action.payload || [];
+          // Handle the fulfilled action as needed
+        }
+      )
+      .addCase(getFilteredGroups.rejected, (state, action) => {
+        state.isLoading = false;
+        state.planesFetchError = action.error.message || 'An error occurred';
+        console.error(action.error);
+      })
+
       // ... (other cases for updateGroupByID, deleteGroupsByIds, getFilteredGroupsTasks, getFilteredRemoverdItems, getFilteredGroups, createProjectGroup, updateProjectTasksByIds, and getFilteredAditionalTasks)
       .addCase(getFilteredAditionalTasks.pending, (state) => {
         state.isLoading = true;
