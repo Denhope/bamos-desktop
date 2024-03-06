@@ -94,7 +94,7 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
           });
         }}
         form={form}
-        className="bg-gray-200 px-4 py-5 rounded-md border-gray-400"
+        className="bg-white px-4 py-5 rounded-md border-gray-400"
       >
         <ProFormGroup align="center">
           <ProFormGroup>

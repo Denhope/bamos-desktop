@@ -261,7 +261,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
 
         <Divider />
         <ContextMenuPNSearchSelect
-          label={t('PART NO')}
+          label={t('PART No')}
           isResetForm={isResetForm}
           rules={[{ required: false }]}
           onSelectedPN={function (PN: any): void {

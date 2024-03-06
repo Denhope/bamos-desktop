@@ -326,24 +326,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           autoFocus: true,
         }}
       />
-      <ProForm.Group>
-        {/* <ProFormSelect
-          name="sendFrom"
-          label={`${t('SEND FROM')}`}
-          width="lg"
-          disabled
-          tooltip="ENTER STORE "
-          //rules={[{ required: true }]}
-        />
-        <ProFormSelect
-          name="sendTO"
-          disabled
-          label={`${t('SEND TO')}`}
-          width="lg"
-          tooltip="ENTER STORE "
-          //rules={[{ required: true }]}
-        /> */}
-      </ProForm.Group>
+      <ProForm.Group></ProForm.Group>
       <ProForm.Group>
         <ProFormRadio.Group
           layout="horizontal"
@@ -395,26 +378,6 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         )}
       </ProForm.Group>
       <ProForm.Group>
-        {/* <ProFormText
-          name="receiver"
-          label={`${t('RECEIVER')}`}
-          width="lg"
-          tooltip="ENTER A/C NUMBER "
-          //rules={[{ required: true }]}
-        />
-        <SearchSelect
-          initialValue={initialWO}
-          isReset={isReset}
-          onSearch={handleSearchWO}
-          optionLabel1="projectWO"
-          optionLabel2="projectName"
-          onSelect={handleSelectWO}
-          label={`${t('PROJECT')}`}
-          tooltip={`${t('PROJECT')}`}
-          rules={[]}
-          name={'projectWO'}
-          width="lg"
-        /> */}
         {receiverType === 'PROJECT' && (
           <ProForm.Group>
             <ProFormRadio.Group
@@ -479,13 +442,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         rules={[]}
         name={'PART_NUMBER'}
       />
-      {/* <ProFormText
-        name="BATCH_ID"
-        label={`${t('SN or BN')}`}
-        width="lg"
-        tooltip="SERIAL OR BATCH NUMBER"
-        //rules={[{ required: true }]}
-      /> */}
+
       <ProFormDateRangePicker
         name="createDate"
         label={`${t(' DATE')}`}

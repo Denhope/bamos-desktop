@@ -1257,7 +1257,7 @@ const PickSlipConfirmation: FC = () => {
         <GeneretedCompleteSlipPdf currentPick={currentPick} />
       </Modal>
       <Modal
-        title="WORK PRINT"
+        title="PRINT"
         open={completeWorkPrint}
         width={'60%'}
         onCancel={() => setOpenCompleteWorkPrint(false)}

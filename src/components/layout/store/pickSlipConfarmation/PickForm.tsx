@@ -3,6 +3,7 @@ import {
   ProForm,
   ProFormDatePicker,
   ProFormGroup,
+  ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
@@ -111,13 +112,23 @@ const PickForm: FC<PickSlipFilterFormType> = ({
               autoFocus: true,
             }}
           />
-          <ProFormText
+          <ProFormSelect
             disabled
             name="status"
             label={`${t('STATUS')}`}
             width="xs"
-            // tooltip="PICKSLIP No"
-            //rules={[{ required: true }]}
+            tooltip="SELECT STATUS "
+            options={[
+              { value: 'open', label: t('NEW') },
+              { value: 'OPEN', label: t('NEW') },
+              { value: 'closed', label: t('CLOSED') },
+              { value: 'cancelled', label: t('CANCELLED') },
+              { value: 'partyCancelled', label: t('PARTY_CANCELLED') },
+              { value: 'deleted', label: t('DELETED') },
+              { value: 'issued', label: t('ISSUED') },
+              { value: 'transfer', label: t('TRANSFER') },
+              { value: 'draft', label: t('DRAFT') },
+            ]}
           />
           <ProFormText
             disabled

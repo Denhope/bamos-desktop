@@ -300,7 +300,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
         <ProFormGroup direction="vertical">
           <ProFormGroup direction="horizontal">
             <ContextMenuPNSearchSelect
-              label={t('PART NO')}
+              label={t('PART No')}
               isResetForm={isResetForm}
               rules={[{ required: true }]}
               onSelectedPN={function (PN: any): void {

@@ -343,7 +343,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
             ></ProFormText> */}
             <ProForm.Group>
               <ContextMenuPNSearchSelect
-                label={t('PART NO')}
+                label={t('PART No')}
                 isResetForm={isResetForm}
                 rules={[{ required: false }]}
                 onSelectedPN={function (PN: any): void {

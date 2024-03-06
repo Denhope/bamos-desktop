@@ -99,7 +99,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           }}
         ></ProFormText>
         <ContextMenuPNSearchSelect
-          label={t('PART NO')}
+          label={t('PART No')}
           isResetForm={isResetForm}
           rules={[{ required: false }]}
           onSelectedPN={function (PN: any): void {

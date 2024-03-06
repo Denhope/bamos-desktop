@@ -58,7 +58,7 @@ const PartsTransfer: FC = () => {
   const [partsOpenModify, setOpenPartsModify] = useState<boolean>(false);
 
   return (
-    <div className="h-[82vh]  bg-white px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh]   px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col">
         <div className="py-4">
           <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>

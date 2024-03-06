@@ -242,7 +242,7 @@ const OrderItemList: FC<ReceivingItemList> = ({
       responsive: ['sm'],
       search: false,
 
-      // sorter: (a, b) => a.unit.length - b.unit.length,
+      sorter: (a: any, b: any) => a.QUANTITY - b.QUANTITY, //
     },
     {
       title: `${t('QUOTED')}`,
@@ -297,6 +297,8 @@ const OrderItemList: FC<ReceivingItemList> = ({
       editable: (text, record, index) => {
         return false;
       },
+
+      sorter: (a: any, b: any) => a.price - b.price, //
       search: false,
     },
     {

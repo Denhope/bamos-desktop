@@ -212,7 +212,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               },
 
               {
-                label: t('SINGLE RECEIVING GOODS'),
+                label: t('SINGLE RECEIVING'),
                 value: 'UN_ORDER',
               },
             ]}

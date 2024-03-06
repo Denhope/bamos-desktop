@@ -286,8 +286,6 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       <ProForm
         onReset={() => {
           setIsResetForm(true);
-          // setinitialFormNeed('');
-          // setinitialFormGet('');
 
           setTimeout(() => {
             setIsResetForm(false);
@@ -317,21 +315,6 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
           }
         }}
         onChange={handleFormChange}
-        // onFinish={async (values) => {
-        //   const currentCompanyID = localStorage.getItem('companyID') || '';
-        //   const result = dispatch(
-        //     getFilteredPickSlip({
-        //       companyID: currentCompanyID,
-        //       materialAplicationNumber: values.materialAplicationNumber,
-        //     })
-        //   );
-        //   if ((await result).meta.requestStatus === 'fulfilled') {
-        //     onFilterPickSlip((await result).payload[0]);
-        //     setPickData((await result).payload[0]);
-        //   } else {
-        //     message.error('NO ITEMS');
-        //   }
-        // }}
         title="PICKSLIP DATA"
       >
         <ProFormGroup size={'small'}>
@@ -391,6 +374,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             tooltip="SELECT STATUS "
             options={[
               { value: 'open', label: t('NEW') },
+              { value: 'OPEN', label: t('NEW') },
               { value: 'closed', label: t('CLOSED') },
               { value: 'cancelled', label: t('CANCELLED') },
               { value: 'partyCancelled', label: t('PARTY_CANCELLED') },

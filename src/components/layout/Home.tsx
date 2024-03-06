@@ -653,7 +653,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
             style={{
               width: '98%',
             }}
-            className="mx-auto"
+            className="mx-auto "
             size="small"
             hideAdd
             onChange={setActiveKey}

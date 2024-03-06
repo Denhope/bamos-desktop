@@ -561,7 +561,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
   ];
   const initialBlockColumns: ProColumns<any>[] = [
     {
-      title: 'LOCAL ID',
+      title: 'LABEL',
       dataIndex: 'LOCAL_ID',
       // valueType: 'index',
       ellipsis: true,
