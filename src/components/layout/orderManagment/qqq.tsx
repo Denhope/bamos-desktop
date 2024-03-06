@@ -95,7 +95,7 @@ const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
                       key: vendor.id,
                       children: [
                         {
-                          title: `${t('PART NUMBER')}:${vendor.partNumber}`,
+                          title: `${t('PART No')}:${vendor.partNumber}`,
                           key: uuidv4(),
                         },
                         {

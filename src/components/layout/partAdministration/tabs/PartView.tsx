@@ -29,10 +29,10 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
     string,
     {
       text: string;
-      status: 'default' | 'success' | 'processing' | 'error' | 'warning';
+      status: 'default' | 'SUCCESS' | 'processing' | 'error' | 'warning';
     }
   > = {
-    ACTIVE: { text: t('ACTIVE'), status: 'success' },
+    ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
     NO_ACTIVE: { text: t('NO ACTIVE'), status: 'error' },
   };
   const [isEditing, setIsEditing] = useState(true);
@@ -302,9 +302,9 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                   disabled={!isCreating}
                   rules={[{ required: true }]}
                   name="partNumber"
-                  label={t('PART NUMBER')}
+                  label={t('PART No')}
                   width="lg"
-                  tooltip={t('PART NUMBER')}
+                  tooltip={t('PART No')}
                 ></ProFormText>
                 <ProFormText
                   fieldProps={{ style: { resize: 'none' } }}
@@ -338,7 +338,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
             <ProFormSelect
               rules={[{ required: true }]}
               name="partGroup"
-              label={`${t('PART SPESIAL GROUP')}`}
+              label={`${t('PART GROUP')}`}
               width="lg"
               tooltip={`${t('SELECT SPESIAL GROUP')}`}
               options={[

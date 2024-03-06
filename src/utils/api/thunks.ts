@@ -4025,6 +4025,8 @@ export const updateRequirementsByBody = createAsyncThunk(
 export interface getFilteredMaterialOrders {
   taskNumber?: string;
   description?: string;
+  neededOn?: string;
+  getFrom?: string;
   regNbr?: string;
   startDate?: any;
   endDate?: any;
@@ -4067,7 +4069,8 @@ export const getFilteredMaterialOrders = createAsyncThunk(
         'materialAplicationNumber',
         params.materialAplicationNumber
       );
-
+    if (params.getFrom) searchParams.append('getFrom', params.getFrom);
+    if (params.neededOn) searchParams.append('neededOn', params.neededOn);
     if (params.additionalNumberId)
       searchParams.append('additionalNumberId', params.additionalNumberId);
     if (params.projectTaskID)

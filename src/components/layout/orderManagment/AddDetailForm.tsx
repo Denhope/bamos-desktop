@@ -331,9 +331,9 @@ const AddDetailForm: FC<AddDetailFormType> = ({
             {/* <ProFormText
               rules={[{ required: true }]}
               name="PART_NUMBER"
-              label={t('PART NUMBER')}
+              label={t('PART No')}
               width="sm"
-              tooltip={t('PART NUMBER')}
+              tooltip={t('PART No')}
               fieldProps={{
                 onDoubleClick: () => {
                   setOpenStoreFind(true);
@@ -398,7 +398,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                 disabled
                 rules={[{ required: true }]}
                 name="GROUP"
-                label={`${t('PART SPESIAL GROUP')}`}
+                label={`${t('PART GROUP')}`}
                 width="sm"
                 tooltip={`${t('SELECT SPESIAL GROUP')}`}
                 options={[

@@ -153,7 +153,7 @@ const ForecastFilteredForm: FC = () => {
           <ProFormSelect
             mode="multiple"
             name="additionalSelectProject"
-            label={`${t(`PROJECT SELECT`)}`}
+            label={`${t(`PROJECT`)}`}
             width="lg"
             options={options}
           />
@@ -203,7 +203,7 @@ const ForecastFilteredForm: FC = () => {
       <ProFormSelect
         mode="multiple"
         name="partGroup"
-        label={`${t('PART SPESIAL GROUP')}`}
+        label={`${t('PART GROUP')}`}
         width="lg"
         tooltip={`${t('SELECT SPESIAL GROUP')}`}
         options={[

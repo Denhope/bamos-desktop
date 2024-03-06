@@ -302,7 +302,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
               inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
               PLANNED: { text: t('PLANNED'), status: 'Waiting' },
               COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-              CLOSED: { text: t('CLOSED'), status: 'Success' },
+              CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
               CANCELLED: { text: t('CANCELLED'), status: 'Error' },
             }}
           />
@@ -433,7 +433,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                   label={t('CLASSIFICATION')}
                   width="sm"
                   valueEnum={{
-                    SCHEDULED: { text: t('SCHEDULED'), status: 'Success' },
+                    SCHEDULED: { text: t('SCHEDULED'), status: 'SUCCESS' },
                     UNSCHEDULED: {
                       text: t('UNSCHEDULED'),
                       status: 'Processing',

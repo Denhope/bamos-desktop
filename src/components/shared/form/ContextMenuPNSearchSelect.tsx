@@ -138,7 +138,7 @@ const ContextMenuPNSearchSelect: FC<ContextMenuSearchSelectProps> = ({
           onSelect={handleSelect}
           label={label}
           //
-          tooltip={`${t('DOUBE CLICK OPEN PART NUMBER BOOK')}`}
+          tooltip={`${t('DOUBE CLICK OPEN PART No BOOK')}`}
           rules={rules}
           name={name}
         />

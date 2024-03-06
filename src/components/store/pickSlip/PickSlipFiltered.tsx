@@ -173,7 +173,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
     }
   }, [receiverType, dispatch]);
   useEffect(() => {
-    console.log(selectedTask);
+    // console.log(selectedTask);
     const currentCompanyID = localStorage.getItem('companyID');
     if (receiverTaskType) {
       let action;
@@ -294,6 +294,8 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
               companyID: currentCompanyID,
               projectId: selectedProjectId,
               status: form.getFieldValue('status'),
+              getFrom: form.getFieldValue('getFrom'),
+              neededOn: form.getFieldValue('neededOn'),
 
               projectTaskWO:
                 receiverTaskType === 'MAIN_TASK'
@@ -315,9 +317,9 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
     >
       <ProFormText
         name="materialAplicationNumber"
-        label={`${t('PICKSLIP NUMBER')}`}
+        label={`${t('PICKSLIP No')}`}
         width="lg"
-        tooltip="PICKSLIP NUMBER"
+        tooltip="PICKSLIP No"
         //rules={[{ required: true }]}
         fieldProps={{
           onKeyPress: handleKeyPress,
@@ -325,7 +327,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         }}
       />
       <ProForm.Group>
-        <ProFormSelect
+        {/* <ProFormSelect
           name="sendFrom"
           label={`${t('SEND FROM')}`}
           width="lg"
@@ -340,7 +342,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           width="lg"
           tooltip="ENTER STORE "
           //rules={[{ required: true }]}
-        />
+        /> */}
       </ProForm.Group>
       <ProForm.Group>
         <ProFormRadio.Group
@@ -359,7 +361,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           <ProFormSelect
             // mode="multiple"
             name="additionalSelectProject"
-            label={`${t(`PROJECT SELECT`)}`}
+            label={`${t(`PROJECT`)}`}
             width="lg"
             options={options}
             onChange={async (value: any) => {
@@ -376,12 +378,20 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           />
         )}
         {receiverType === 'SHOP' && (
-          <ProFormSelect
-            name="additionalSelectShop"
-            label={`${t(`SHOP/STORE SELECT`)}`}
-            width="lg"
-            options={options}
-          />
+          <>
+            <ProFormSelect
+              name="getFrom"
+              label={`${t(`GET FROM`)}`}
+              width="sm"
+              options={options}
+            />
+            <ProFormSelect
+              name="neededOn"
+              label={`${t(`SEND TO`)}`}
+              width="sm"
+              options={options}
+            />
+          </>
         )}
       </ProForm.Group>
       <ProForm.Group>
@@ -429,7 +439,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
                 onChange={(value: any, data: any) => {
                   setSelectedTask(data?.data);
                   setSelectedTaskId(value);
-                  console.log(data);
+                  // console.log(data);
                   // console.log(data);
                 }}
               />
@@ -446,7 +456,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
                 onChange={(value: any, data: any) => {
                   setSelectedTask(data?.data);
                   setSelectedTaskId(value);
-                  console.log(data);
+                  // console.log(data);
                 }}
               />
             )}
@@ -464,8 +474,8 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
         onSearch={handleSearch}
         optionLabel1="PART_NUMBER"
         onSelect={handleSelect}
-        label={`${t('PART NUMBER')}`}
-        tooltip={`${t('DOUBE CLICK OPEN PART NUMBER BOOK')}`}
+        label={`${t('PART No')}`}
+        tooltip={`${t('DOUBE CLICK OPEN PART No BOOK')}`}
         rules={[]}
         name={'PART_NUMBER'}
       />
@@ -478,7 +488,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
       /> */}
       <ProFormDateRangePicker
         name="createDate"
-        label={`${t('CREATE DATE')}`}
+        label={`${t(' DATE')}`}
         width="lg"
         tooltip="CREATE DATE"
         fieldProps={{

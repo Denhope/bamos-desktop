@@ -339,7 +339,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
                 disabled
                 rules={[{ required: true }]}
                 name="GROUP"
-                label={`${t('PART SPESIAL GROUP')}`}
+                label={`${t('PART GROUP')}`}
                 width="sm"
                 tooltip={`${t('SELECT SPESIAL GROUP')}`}
                 options={[

@@ -59,7 +59,7 @@ const RequirementList: FC<showProjectListType> = ({
         return false;
       },
       valueEnum: {
-        inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+        inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
         //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },

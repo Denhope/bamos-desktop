@@ -421,9 +421,9 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
             disabled
             rules={[{ required: true }]}
             name="partNumber"
-            label={t('PART NUMBER')}
+            label={t('PART No')}
             width="sm"
-            tooltip={t('PART NUMBER')}
+            tooltip={t('PART No')}
           ></ProFormText>
           <ProFormSelect
             // initialValue={['A']}

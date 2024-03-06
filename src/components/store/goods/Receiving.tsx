@@ -455,7 +455,7 @@ const Receiving: FC<ReceivingType> = ({
             <ProFormSelect
               rules={[{ required: true }]}
               name="partGroup"
-              label={`${t('PART SPESIAL GROUP')}`}
+              label={`${t('PART GROUP')}`}
               width="sm"
               tooltip={`${t('SELECT SPESIAL GROUP')}`}
               options={[
@@ -679,9 +679,9 @@ const Receiving: FC<ReceivingType> = ({
           <ProFormText
             rules={[{ required: true }]}
             name="addPartNumber"
-            label={t('1C/PART NUMBER')}
+            label={t('1C/PART No')}
             width="sm"
-            tooltip={t('PART NUMBER')}
+            tooltip={t('PART No')}
           ></ProFormText>
           <ProFormText
             rules={[{ required: true }]}

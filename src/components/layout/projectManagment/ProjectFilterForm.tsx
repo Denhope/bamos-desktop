@@ -137,7 +137,7 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
             inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
             PLANNED: { text: t('PLANNED'), status: 'Waiting' },
             COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-            CLOSED: { text: t('CLOSED'), status: 'Success' },
+            CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
             CANCELLED: { text: t('CANCELLED'), status: 'Error' },
           }}
         />

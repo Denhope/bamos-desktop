@@ -33,7 +33,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
   const { t } = useTranslation();
   const columns: ProColumns<any>[] = [
     {
-      title: `${t('PART NUMBER')}`,
+      title: `${t('PART No')}`,
       dataIndex: 'PN',
       key: 'PN',
       tip: ' Click open Store search',

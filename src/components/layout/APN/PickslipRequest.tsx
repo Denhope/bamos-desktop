@@ -34,7 +34,7 @@ const PickslipRequest: FC = () => {
   const [partData, setPartData] = useState<any>(null);
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t('PART NUMBER')}`,
+      title: `${t('PART No')}`,
       dataIndex: 'PN',
       key: 'PN',
       tip: ' Click open Store search',
@@ -214,7 +214,7 @@ const PickslipRequest: FC = () => {
                         plannedDate: result1?.payload?.plannedDate,
                       })
                     );
-                    message.success(t('SECCUESS'));
+                    message.success(t('SUCCESS'));
                   }
                 }}
                 disabled={
@@ -414,7 +414,7 @@ const PickslipRequest: FC = () => {
                   }
 
                   // Обработка массива результатов, если это необходимо
-                  message.success(t('SECCUESS'));
+                  message.success(t('SUCCESS'));
                 } catch (error) {
                   // Одна или несколько промисов были отклонены
                   console.error(

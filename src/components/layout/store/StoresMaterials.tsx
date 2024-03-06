@@ -427,7 +427,7 @@ const MaterialsStore: FC = () => {
         />
         {activeKey == RouteNames.MATERIAL_STORE && !collapsed && (
           <FilterSiderForm
-            title={t('PART NUMBER SEARCH')}
+            title={t('PART No SEARCH')}
             children={
               <ProForm
                 style={{

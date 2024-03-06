@@ -6,22 +6,22 @@ import {
   ProFormDatePicker,
   ProFormDigit,
   ProColumns,
-} from "@ant-design/pro-components";
+} from '@ant-design/pro-components';
 
-import { Form, DatePicker, Space } from "antd";
-import FilesSelector from "@/components/shared/FilesSelector";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import FileUploader, { AcceptedFileTypes } from "@/components/shared/Upload";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { handleFileSelect } from "@/services/utilites";
+import { Form, DatePicker, Space } from 'antd';
+import FilesSelector from '@/components/shared/FilesSelector';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import FileUploader, { AcceptedFileTypes } from '@/components/shared/Upload';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { handleFileSelect } from '@/services/utilites';
 import {
   uploadFileServer,
   updateStoreByID,
   updateManyMaterialItems,
   updatedMaterialItemsById,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 type OriginalStoreEntryType = {
   currentPart: any;
   scroll?: any;
@@ -49,30 +49,30 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
   useEffect(() => {
     if (currentPart) {
       form.setFields([
-        { name: "partNumber", value: currentPart.PART_NUMBER },
+        { name: 'partNumber', value: currentPart.PART_NUMBER },
         {
-          name: "partGroup",
+          name: 'partGroup',
           value: currentPart?.GROUP,
         },
-        { name: "store", value: currentPart.STOCK },
+        { name: 'store', value: currentPart.STOCK },
         {
-          name: "unit",
+          name: 'unit',
           value: currentPart?.UNIT_OF_MEASURE,
         },
         {
-          name: "description",
+          name: 'description',
           value: currentPart?.NAME_OF_MATERIAL,
         },
-        { name: "location", value: currentPart.SHELF_NUMBER },
-        { name: "condition", value: currentPart.CONDITION },
+        { name: 'location', value: currentPart.SHELF_NUMBER },
+        { name: 'condition', value: currentPart.CONDITION },
         {
-          name: "batchNumber",
-          value: currentPart.SUPPLIER_BATCH_NUMBER || "N/A",
+          name: 'batchNumber',
+          value: currentPart.SUPPLIER_BATCH_NUMBER || 'N/A',
         },
-        { name: "serialNumber", value: currentPart.SERIAL_NUMBER || "N/A" },
-        { name: "expiryDate", value: currentPart.PRODUCT_EXPIRATION_DATE },
-        { name: "ownerShotName", value: currentPart.OWNER_SHORT_NAME },
-        { name: "qty", value: currentPart.QUANTITY },
+        { name: 'serialNumber', value: currentPart.SERIAL_NUMBER || 'N/A' },
+        { name: 'expiryDate', value: currentPart.PRODUCT_EXPIRATION_DATE },
+        { name: 'ownerShotName', value: currentPart.OWNER_SHORT_NAME },
+        { name: 'qty', value: currentPart.QUANTITY },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -85,27 +85,27 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
   // }, [dispatch, currentPart]);
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("BATCH")}`,
-      dataIndex: "SUPPLIER_BATCH_NUMBER",
-      key: "SUPPLIER_BATCH_NUMBER",
+      title: `${t('BATCH')}`,
+      dataIndex: 'SUPPLIER_BATCH_NUMBER',
+      key: 'SUPPLIER_BATCH_NUMBER',
       ellipsis: true,
       render: (text: any, record: any) => record.SUPPLIER_BATCH_NUMBER,
       // остальные свойства...
     },
     {
-      title: `${t("SERIAL NUMBER")}`,
-      dataIndex: "SERIAL_NUMBER",
-      key: "SERIAL_NUMBER",
+      title: `${t('SERIAL NUMBER')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      key: 'SERIAL_NUMBER',
       ellipsis: true,
       render: (text: any, record: any) => record.SERIAL_NUMBER,
       // остальные свойства...
     },
     {
-      title: `${t("EXPIRES")}`,
-      dataIndex: "PRODUCT_EXPIRATION_DATE",
-      key: "PRODUCT_EXPIRATION_DATE",
+      title: `${t('EXPIRES')}`,
+      dataIndex: 'PRODUCT_EXPIRATION_DATE',
+      key: 'PRODUCT_EXPIRATION_DATE',
       ellipsis: false,
-      valueType: "date",
+      valueType: 'date',
       editable: (text, record, index) => {
         return false;
       },
@@ -117,10 +117,10 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
       // },
     },
     {
-      title: `${t("M.CLASS")}`,
-      dataIndex: "GROUP",
-      key: "GROUP",
-      responsive: ["sm"],
+      title: `${t('M.CLASS')}`,
+      dataIndex: 'GROUP',
+      key: 'GROUP',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -141,10 +141,10 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
     //   // sorter: (a, b) => a.unit.length - b.unit.length,
     // },
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "OWNER_SHORT_NAME",
-      key: "OWNER_SHORT_NAME",
-      responsive: ["sm"],
+      title: `${t('OWNER')}`,
+      dataIndex: 'OWNER_SHORT_NAME',
+      key: 'OWNER_SHORT_NAME',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -152,10 +152,10 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      responsive: ["sm"],
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      responsive: ['sm'],
       search: false,
       // width: '10%',
       editable: (text, record, index) => {
@@ -164,25 +164,25 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("RECEIVING No")}`,
-      dataIndex: "RECEIVING_NUMBER",
-      key: "RECEIVING_NUMBER",
+      title: `${t('RECEIVING No')}`,
+      dataIndex: 'RECEIVING_NUMBER',
+      key: 'RECEIVING_NUMBER',
       editable: (text, record, index) => {
         return false;
       },
       ellipsis: true,
       // width: '7%',
       formItemProps: {
-        name: "RECEIVING_NUMBER",
+        name: 'RECEIVING_NUMBER',
       },
       sorter: (a: any, b: any) => a.RECEIVING_NUMBER - b.RECEIVING_NUMBER, //
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -204,17 +204,17 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
         formRef={formRef}
         form={form}
         onFinish={async (values: any) => {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
+          const currentCompanyID = localStorage.getItem('companyID') || '';
           const result = await dispatch(
             updatedMaterialItemsById({
-              companyID: currentCompanyID || "",
+              companyID: currentCompanyID || '',
               _id: currentPart?.id || currentPart?._id,
               BATCH: dataPart?.SUPPLIER_BATCH_NUMBER,
               SERIAL_NUMBER: dataPart?.SERIAL_NUMBER,
               PRODUCT_EXPIRATION_DATE: dataPart?.PRODUCT_EXPIRATION_DATE,
             })
           );
-          if (result.meta.requestStatus === "fulfilled" && onUpdatePart) {
+          if (result.meta.requestStatus === 'fulfilled' && onUpdatePart) {
             onUpdatePart(result.payload);
           }
         }}
@@ -223,88 +223,88 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           <ProFormText
             disabled
             name="partNumber"
-            label={t("PART NUMBER")}
+            label={t('PART No')}
             width="sm"
           ></ProFormText>
           <ProFormText disabled name="description" width="lg"></ProFormText>
           <ProFormText
             disabled
             name="partGroup"
-            label={`${t("PART SPESIAL GROUP")}`}
+            label={`${t('PART SPESIAL GROUP')}`}
             width="sm"
           ></ProFormText>
           <ProFormText
             disabled
-            label={t("UNIT")}
+            label={t('UNIT')}
             name="unit"
             width="xs"
           ></ProFormText>
         </ProFormGroup>
         <ProFormGroup>
           <ProFormText
-            initialValue={"MSQ"}
+            initialValue={'MSQ'}
             disabled
             name="station"
-            label={`${t("STATION")}`}
+            label={`${t('STATION')}`}
             width="xs"
           />
           <ProFormText
             name="store"
             disabled
-            label={`${t("STORE")}`}
+            label={`${t('STORE')}`}
             width="xs"
-            tooltip={`${t("STORE CODE")}`}
+            tooltip={`${t('STORE CODE')}`}
             //rules={[{ required: true }]}
           />
           <ProFormText
             name="location"
             disabled
-            label={`${t("LOCATION")}`}
+            label={`${t('LOCATION')}`}
             width="sm"
-            tooltip={`${t("LOCATION")}`}
+            tooltip={`${t('LOCATION')}`}
           />
           <ProFormText
             name="condition"
             disabled
-            label={`${t("CONDITION")}`}
+            label={`${t('CONDITION')}`}
             width="sm"
-            tooltip={`${t("CONDITION")}`}
+            tooltip={`${t('CONDITION')}`}
           />
         </ProFormGroup>
         <ProFormGroup>
           <ProFormText
             disabled
             name="batchNumber"
-            label={`${t("BATCH NUMBER")}`}
+            label={`${t('BATCH NUMBER')}`}
             width="sm"
-            tooltip={`${t("BATCH NUMBER")}`}
+            tooltip={`${t('BATCH NUMBER')}`}
           />
           <ProFormText
             name="serialNumber"
             disabled
-            label={`${t("SERIAL NUMBER")}`}
+            label={`${t('SERIAL NUMBER')}`}
             width="sm"
-            tooltip={`${t("SERIAL NUMBER")}`}
+            tooltip={`${t('SERIAL NUMBER')}`}
           />
           <ProFormDatePicker
             name="expiryDate"
             disabled
-            label={t("EXPIRES")}
+            label={t('EXPIRES')}
             width="xs"
           ></ProFormDatePicker>
           <ProFormText
             name="ownerShotName"
             disabled
-            label={t("OWNER")}
+            label={t('OWNER')}
             width="sm"
-            tooltip={t("OWNER")}
+            tooltip={t('OWNER')}
           ></ProFormText>
           <ProFormDigit
             name="qty"
             disabled
-            label={t("QUANTITY")}
+            label={t('QUANTITY')}
             width="xs"
-            tooltip={t("QTY")}
+            tooltip={t('QTY')}
           ></ProFormDigit>
         </ProFormGroup>
         <ProForm.Item>
@@ -323,14 +323,14 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
               onSave={handleSave}
               yScroll={scroll}
               externalReload={function (): Promise<void> {
-                throw new Error("Function not implemented.");
+                throw new Error('Function not implemented.');
               }}
               isLoading={false}
             />
           </div>
         </ProForm.Item>
         <ProFormGroup>
-          <Space size={"large"} className=" flex justify-between py-5 ">
+          <Space size={'large'} className=" flex justify-between py-5 ">
             <FileUploader
               onUpload={uploadFileServer}
               acceptedFileTypes={[AcceptedFileTypes.JPG, AcceptedFileTypes.PDF]}
@@ -340,16 +340,16 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
                     ? [...currentPart.FILES, response]
                     : [response];
                   const currentCompanyID =
-                    localStorage.getItem("companyID") || "";
+                    localStorage.getItem('companyID') || '';
                   const result = await dispatch(
                     updatedMaterialItemsById({
-                      companyID: currentCompanyID || "",
+                      companyID: currentCompanyID || '',
                       _id: currentPart?.id || currentPart?._id,
                       FILES: updatedFiles,
                     })
                   );
                   if (
-                    result.meta.requestStatus === "fulfilled" &&
+                    result.meta.requestStatus === 'fulfilled' &&
                     onUpdatePart
                   ) {
                     onUpdatePart(result.payload);

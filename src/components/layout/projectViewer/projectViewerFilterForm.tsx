@@ -128,7 +128,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
                 inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
                 PLANNED: { text: t('PLANNED'), status: 'Waiting' },
                 COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-                CLOSED: { text: t('CLOSED'), status: 'Success' },
+                CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
                 CANCELLED: { text: t('CANCELLED'), status: 'Error' },
               }}
             />
@@ -195,7 +195,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
               name="partNumber"
               label={`${t('PART No')}`}
               width="sm"
-              tooltip={`${t('PART NUMBER')}`}
+              tooltip={`${t('PART No')}`}
               //rules={[{ required: true }]}
               fieldProps={{
                 onKeyPress: handleKeyPress,

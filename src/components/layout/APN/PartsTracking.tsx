@@ -97,7 +97,7 @@ const PartsTracking: FC<PartsTracking> = ({
         <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1 bg-white">
           <div className="flex flex-col gap-5 bg-white px-4 py-3 rounded-md border-gray-400">
             <ProDescriptions loading={false} column={5} size="small">
-              <ProDescriptions.Item label="PART NUMBER" valueType="text">
+              <ProDescriptions.Item label="PART No" valueType="text">
                 <div className="font-bold">
                   {selectedMaterial && selectedMaterial?.PART_NUMBER}
                 </div>

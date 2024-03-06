@@ -9,19 +9,19 @@ import {
   Tag,
   Tooltip,
   message,
-} from "antd";
+} from 'antd';
 
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from 'react';
 
 import {
   getFilteredAditionalTasks,
   updateAdditionalTask,
   updateProjectAdditionalTasksByIds,
   updateProjectTask,
-} from "@/utils/api/thunks";
-import { DatePicker } from "antd";
+} from '@/utils/api/thunks';
+import { DatePicker } from 'antd';
 
 import {
   DownloadOutlined,
@@ -30,17 +30,17 @@ import {
   PlusOutlined,
   PrinterOutlined,
   EditOutlined,
-} from "@ant-design/icons";
-import { TDifficulty } from "@/models/IAdditionalTask";
-import { exportToExcel, tagInfo } from "@/services/utilites";
-import React from "react";
+} from '@ant-design/icons';
+import { TDifficulty } from '@/models/IAdditionalTask';
+import { exportToExcel, tagInfo } from '@/services/utilites';
+import React from 'react';
 
-import moment from "moment";
+import moment from 'moment';
 
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import NavigationPanel from "@/components/shared/NavigationPanel";
-import DrawerPanel from "@/components/shared/DrawerPanel";
-import WOEditForm from "@/components/mantainance/mtx/wo/WOEditForm";
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import NavigationPanel from '@/components/shared/NavigationPanel';
+import DrawerPanel from '@/components/shared/DrawerPanel';
+import WOEditForm from '@/components/mantainance/mtx/wo/WOEditForm';
 import {
   setCurrentActionIndexMtb,
   setCurrentAdditionalAction,
@@ -49,29 +49,29 @@ import {
   setCurrentProjectTask,
   setUpdatedProjectAdditionalTask,
   setUpdatedProjectTask,
-} from "@/store/reducers/MtbSlice";
-import TabContent from "@/components/shared/Table/TabContent";
-import TaskDetails from "./activeTask/Details";
+} from '@/store/reducers/MtbSlice';
+import TabContent from '@/components/shared/Table/TabContent';
+import TaskDetails from './activeTask/Details';
 
 import {
   ActionType,
   ColumnsState,
   ProColumns,
-} from "@ant-design/pro-components";
-import { IPlaneTask } from "@/models/ITask";
-import ProjectDescription from "./ProjectDescription";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import { IProjectResponce } from "@/models/IProject";
+} from '@ant-design/pro-components';
+import { IPlaneTask } from '@/models/ITask';
+import ProjectDescription from './ProjectDescription';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import { IProjectResponce } from '@/models/IProject';
 
-import StepsContent from "./activeNRC/steps/NRCStepsContent";
-import CloseContent from "./activeNRC/close/NRCCloseContent";
-import { setCurrentAdditionalTask } from "@/store/reducers/AdditionalTaskSlice";
-import { DefaultOptionType } from "antd/es/cascader";
-import RequirementItems from "./activeTask/addNRC/RequirementItems";
-import GeneretedNRCPdf from "@/components/pdf/GeneretedNRCPdf";
-import { useTranslation } from "react-i18next";
-import Details from "./activeNRC/Details";
+import StepsContent from './activeNRC/steps/NRCStepsContent';
+import CloseContent from './activeNRC/close/NRCCloseContent';
+import { setCurrentAdditionalTask } from '@/store/reducers/AdditionalTaskSlice';
+import { DefaultOptionType } from 'antd/es/cascader';
+import RequirementItems from './activeTask/addNRC/RequirementItems';
+import GeneretedNRCPdf from '@/components/pdf/GeneretedNRCPdf';
+import { useTranslation } from 'react-i18next';
+import Details from './activeNRC/Details';
 
 // import Store from '@/components/pages/Store';
 
@@ -97,157 +97,157 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
   const { t } = useTranslation();
   const optionsRewiew = [
     {
-      label: "BLANC",
-      value: "blanc",
+      label: 'BLANC',
+      value: 'blanc',
     },
 
     {
-      label: "READY FOR PERFORM",
-      value: "readyForPer",
+      label: 'READY FOR PERFORM',
+      value: 'readyForPer',
     },
     {
-      label: "TO WAIT",
-      value: "waiting",
+      label: 'TO WAIT',
+      value: 'waiting',
     },
     {
-      label: "IN PROGRESS",
-      value: "inProgress",
+      label: 'IN PROGRESS',
+      value: 'inProgress',
     },
     {
-      label: "COMPLETED",
-      value: "completed",
+      label: 'COMPLETED',
+      value: 'completed',
     },
     {
-      label: "CANCELED",
-      value: "canceled",
+      label: 'CANCELED',
+      value: 'canceled',
     },
   ];
   const cascaderOptions = [
     {
-      field: "MEC",
-      value: "mec",
+      field: 'MEC',
+      value: 'mec',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
 
     {
-      field: "CAB",
-      value: "cab",
+      field: 'CAB',
+      value: 'cab',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "AVI",
-      value: "avi",
+      field: 'AVI',
+      value: 'avi',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "SRS",
-      value: "srs",
+      field: 'SRS',
+      value: 'srs',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "NDT",
-      value: "ndt",
+      field: 'NDT',
+      value: 'ndt',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
 
     {
-      field: "PNT",
-      value: "pnt",
+      field: 'PNT',
+      value: 'pnt',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "ED",
-      value: "ed",
+      field: 'ED',
+      value: 'ed',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "QI",
-      value: "qi",
+      field: 'QI',
+      value: 'qi',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "OUT A/C",
-      value: "out",
+      field: 'OUT A/C',
+      value: 'out',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
@@ -272,12 +272,12 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
           getFilteredAditionalTasks({
-            projectId: currentProject?._id || "",
+            projectId: currentProject?._id || '',
             companyID: companyID,
           })
         );
@@ -296,142 +296,142 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
   }
   const options: Option[] = [
     {
-      value: "mec",
-      label: "MEC",
+      value: 'mec',
+      label: 'MEC',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "cab",
-      label: "CAB",
+      value: 'cab',
+      label: 'CAB',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "avi",
-      label: "AVI",
+      value: 'avi',
+      label: 'AVI',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "srs",
-      label: "SRS",
+      value: 'srs',
+      label: 'SRS',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "ndt",
-      label: "NDT",
+      value: 'ndt',
+      label: 'NDT',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
-        },
-      ],
-    },
-
-    {
-      value: "pnt",
-      label: "PNT",
-      children: [
-        {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
-        },
-        {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
 
     {
-      value: "ED",
-      label: "ED",
+      value: 'pnt',
+      label: 'PNT',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
+        },
+      ],
+    },
+
+    {
+      value: 'ED',
+      label: 'ED',
+      children: [
+        {
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
+        },
+        {
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "QI",
-      label: "QI",
+      value: 'QI',
+      label: 'QI',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "OUT A/C",
-      label: "OUT A/C",
+      value: 'OUT A/C',
+      label: 'OUT A/C',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
   ];
 
-  const onChange: any["props"]["onChange"] = async (
+  const onChange: any['props']['onChange'] = async (
     value: any,
     selectedOptions: any
   ) => {
     const selectedCount = selectedRowKeys && selectedRowKeys.length;
     if (selectedCount < 1) {
-      message.error("Please select Items.");
+      message.error('Please select Items.');
       return;
     }
     const result = await dispatch(
@@ -441,7 +441,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         projectId: currentProject?._id,
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       selectedRowKeys.forEach((rowKey) => {
         const index = projectAdditionalTasks.findIndex(
           (task) => task._id === rowKey
@@ -490,57 +490,57 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
 
   const initialColumns: ProColumns<any>[] = [
     {
-      title: "",
-      dataIndex: ["readyStatus", "status"],
-      key: "readyStatus",
-      width: "3%",
+      title: '',
+      dataIndex: ['readyStatus', 'status'],
+      key: 'readyStatus',
+      width: '3%',
       editable: (text, record, index) => {
         return false;
       },
-      valueType: "select",
+      valueType: 'select',
 
       filters: true,
       onFilter: true,
       valueEnum: {
-        "not Ready": { text: "NOT AVAILABLE" },
-        Ready: { text: "AVAILABLE" },
+        'not Ready': { text: 'NOT AVAILABLE' },
+        Ready: { text: 'AVAILABLE' },
       },
       render: (text: any, record: any) => {
         let color =
-          record?.readyStatus && record.readyStatus.status === "not Ready"
-            ? "red"
-            : "green";
+          record?.readyStatus && record.readyStatus.status === 'not Ready'
+            ? 'red'
+            : 'green';
         return (
           <>
             <Tooltip
               title={
                 <>
                   <div>
-                    material Status:{" "}
+                    material Status:{' '}
                     {record?.readyStatus && record.readyStatus.materialStatus}
                   </div>
                   <div>
-                    access Status:{" "}
+                    access Status:{' '}
                     {record?.readyStatus && record.readyStatus.accessStatus}
                   </div>
                 </>
               }
             >
-              {" "}
+              {' '}
               <Tag
                 color={color}
-                style={{ borderRadius: "50%", width: "16px", height: "16px" }}
-              />{" "}
+                style={{ borderRadius: '50%', width: '16px', height: '16px' }}
+              />{' '}
             </Tooltip>
           </>
         );
       },
     },
     {
-      title: `${t("W/O")}`,
-      dataIndex: "additionalNumberId",
-      key: "additionalNumberId",
-      width: "5%",
+      title: `${t('W/O')}`,
+      dataIndex: 'additionalNumberId',
+      key: 'additionalNumberId',
+      width: '5%',
       editable: (text, record, index) => {
         return false;
       },
@@ -548,9 +548,9 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         (a.additionalNumberId || 0) - (b.additionalNumberId || 0),
       render: (text: any, record: any) => {
         let color =
-          record?.readyStatus && record?.readyStatus?.status === "not Ready"
-            ? "red"
-            : "green";
+          record?.readyStatus && record?.readyStatus?.status === 'not Ready'
+            ? 'red'
+            : 'green';
         return (
           <a
             onClick={() => {
@@ -563,7 +563,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         );
       },
       ...useColumnSearchProps({
-        dataIndex: "additionalNumberId",
+        dataIndex: 'additionalNumberId',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -584,18 +584,18 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       }),
     },
     {
-      title: `${t("TASK")}`,
+      title: `${t('TASK')}`,
 
-      dataIndex: "taskHeadLine",
-      key: "taskHeadLine",
+      dataIndex: 'taskHeadLine',
+      key: 'taskHeadLine',
       editable: (text, record, index) => {
         return false;
       },
       // responsive: ['lg'],
-      width: "10%",
+      width: '10%',
       onFilter: true,
       ...useColumnSearchProps({
-        dataIndex: "taskHeadLine",
+        dataIndex: 'taskHeadLine',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -616,19 +616,19 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       }),
     },
     {
-      title: `${t("DESCRIPTIONS")}`,
-      dataIndex: "taskDescription",
-      key: "taskDescription",
+      title: `${t('DESCRIPTIONS')}`,
+      dataIndex: 'taskDescription',
+      key: 'taskDescription',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
-      tip: "Text Show",
+      tip: 'Text Show',
 
-      responsive: ["lg"],
+      responsive: ['lg'],
 
       ...useColumnSearchProps({
-        dataIndex: "taskDescription",
+        dataIndex: 'taskDescription',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -649,11 +649,11 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       }),
     },
     {
-      title: `${t("NRC TYPE")}`,
-      dataIndex: "nrcType",
-      key: "nrcType",
+      title: `${t('NRC TYPE')}`,
+      dataIndex: 'nrcType',
+      key: 'nrcType',
       // responsive: ['lg'],
-      width: "6%",
+      width: '6%',
 
       editable: (text, record, index) => {
         return false;
@@ -661,7 +661,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       render: (_, record) => (
         <Space>
           {record.nrcType && (
-            <Tag color={"red"} key={record.nrcType}>
+            <Tag color={'red'} key={record.nrcType}>
               {record.nrcType}
             </Tag>
           )}
@@ -730,12 +730,12 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   }),
     // },
     {
-      title: `${t("SKILL")}`,
-      dataIndex: "skill",
-      key: "skill",
+      title: `${t('SKILL')}`,
+      dataIndex: 'skill',
+      key: 'skill',
       // ellipsis: true,
-      width: "4%",
-      responsive: ["lg"],
+      width: '4%',
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
@@ -750,7 +750,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       // ),
 
       // onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       // filters: [
       //   { text: 'MEC', value: 'MEC' },
       //   { text: 'CAB', value: 'CAB' },
@@ -776,17 +776,17 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       filterSearch: true,
     },
     {
-      title: `${t("ZONE")}`,
-      dataIndex: "area",
-      key: "area",
-      width: "5%",
-      responsive: ["lg"],
+      title: `${t('ZONE')}`,
+      dataIndex: 'area',
+      key: 'area',
+      width: '5%',
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
 
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       filters: Array.from(
         new Set(
           // Проверьте, что dataSource существует и является массивом
@@ -809,14 +809,14 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       // ],
     },
     {
-      title: `${t("SUB ZONE")}`,
-      dataIndex: "zone",
+      title: `${t('SUB ZONE')}`,
+      dataIndex: 'zone',
 
-      key: "zone",
-      width: "7%",
-      tip: "Text Show",
+      key: 'zone',
+      width: '7%',
+      tip: 'Text Show',
       ellipsis: true,
-      responsive: ["lg"],
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
@@ -894,37 +894,37 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     // },
 
     {
-      title: `${t("PROGRESS")}`,
-      dataIndex: "status",
+      title: `${t('PROGRESS')}`,
+      dataIndex: 'status',
 
-      key: "status",
-      width: "7%",
+      key: 'status',
+      width: '7%',
       editable: (text, record, index) => {
         return false;
       },
 
       filters: true,
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       filterSearch: true,
       valueEnum: {
-        open: { text: t("OPEN"), status: "Default" },
-        inProgress: { text: t("IN_PROGRESS"), status: "Processing" },
-        closed: { text: t("CLOSED"), status: "Success" },
-        canceled: { text: t("CANCELED"), status: "Error" },
+        open: { text: t('OPEN'), status: 'Default' },
+        inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
+        closed: { text: t('CLOSED'), status: 'Success' },
+        canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },
 
     {
-      title: `${t("TAGS")}`,
-      dataIndex: "restrictionArr",
+      title: `${t('TAGS')}`,
+      dataIndex: 'restrictionArr',
       search: false,
       editable: (text, record, index) => {
         return false;
       },
-      width: "8%",
+      width: '8%',
 
-      valueType: "select",
+      valueType: 'select',
       filters: Array.from(
         new Set(
           dataSource.flatMap((item) =>
@@ -939,7 +939,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         <>
           {record.ТResources && record.ТResources.length > 0
             ? record.ТResources.map((tag: any) => {
-                const info = tagInfo[tag] || { color: "yellow" };
+                const info = tagInfo[tag] || { color: 'yellow' };
                 return (
                   <Tooltip title={tag}>
                     <Tag className="text-xs" color={info.color} key={tag}>
@@ -990,48 +990,48 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   width: '12%',
     // },
     {
-      title: `${t("NEXT SKILL")}`,
-      key: "cascader",
-      dataIndex: "cascader",
+      title: `${t('NEXT SKILL')}`,
+      key: 'cascader',
+      dataIndex: 'cascader',
       // tip: 'Text Show',
       ellipsis: true,
-      valueType: "treeSelect",
-      width: "7%",
+      valueType: 'treeSelect',
+      width: '7%',
       valueEnum: {
-        AF: { text: "AF" },
-        AV: { text: "AV" },
-        CA: { text: "CA" },
-        EL: { text: "EL" },
-        EN: { text: "EN" },
-        RA: { text: "RA" },
-        UT: { text: "UT" },
-        SRC: { text: "SRC" },
-        NDT: { text: "NDT" },
-        PNT: { text: "PNT" },
-        ED: { text: "ED" },
-        QI: { text: "QI" },
-        OUT: { text: "QUT A/C" },
+        AF: { text: 'AF' },
+        AV: { text: 'AV' },
+        CA: { text: 'CA' },
+        EL: { text: 'EL' },
+        EN: { text: 'EN' },
+        RA: { text: 'RA' },
+        UT: { text: 'UT' },
+        SRC: { text: 'SRC' },
+        NDT: { text: 'NDT' },
+        PNT: { text: 'PNT' },
+        ED: { text: 'ED' },
+        QI: { text: 'QI' },
+        OUT: { text: 'QUT A/C' },
       },
       filters: true,
       filterSearch: true,
       onFilter: true,
     },
     {
-      title: `${t("WAIT STATUS")}`,
-      dataIndex: ["readyStatus", "commonRestrStatus"],
-      key: "commonRestrStatus",
-      width: "8%",
-      valueType: "select",
+      title: `${t('WAIT STATUS')}`,
+      dataIndex: ['readyStatus', 'commonRestrStatus'],
+      key: 'commonRestrStatus',
+      width: '8%',
+      valueType: 'select',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
       filters: [
-        { text: "ACCESS", value: "A" },
-        { text: "MATERIAL", value: "M" },
-        { text: "TOOL", value: "T" },
-        { text: "CONDITION A/C", value: "C" },
-        { text: "READY TO PERF", value: "ready" },
+        { text: 'ACCESS', value: 'A' },
+        { text: 'MATERIAL', value: 'M' },
+        { text: 'TOOL', value: 'T' },
+        { text: 'CONDITION A/C', value: 'C' },
+        { text: 'READY TO PERF', value: 'ready' },
       ],
       onFilter: (value, record) =>
         record.readyStatus.commonRestrStatus.includes(value),
@@ -1042,48 +1042,48 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           record?.readyStatus?.commonRestrStatus.length > 0 ? (
             record?.readyStatus?.commonRestrStatus.map((tag: any) => {
               let color;
-              if (tag === "M") {
-                color = "volcano";
-              } else if (tag === "A") {
-                color = "geekblue";
-              } else if (tag === "TR") {
-                color = "orange";
+              if (tag === 'M') {
+                color = 'volcano';
+              } else if (tag === 'A') {
+                color = 'geekblue';
+              } else if (tag === 'TR') {
+                color = 'orange';
               } else {
-                color = "green";
+                color = 'green';
               }
               return (
                 <Tooltip
                   title={
-                    tag === "A" && record?.removeInslallItemsIds
+                    tag === 'A' && record?.removeInslallItemsIds
                       ? record?.removeInslallItemsIds
                           .filter(
                             (item: { status: string }) =>
-                              item.status === "closed"
+                              item.status === 'closed'
                           )
                           .map(
                             (item: { accessItemID: any }) =>
                               item.accessItemID.panel
                           )
-                          .join(", ")
-                      : tag === "M" && record?.requirementItemsIds
+                          .join(', ')
+                      : tag === 'M' && record?.requirementItemsIds
                       ? record?.requirementItemsIds
                           .filter(
                             (item: { status: string }) =>
-                              item.status === "open" ||
-                              item.status === "onCheack" ||
-                              item.status === "onPush"
+                              item.status === 'open' ||
+                              item.status === 'onCheack' ||
+                              item.status === 'onPush'
                           )
                           .map(
                             (item: any) =>
                               `${item.PN} - ${item.nameOfMaterial}   ${item.amout}${item.unit};`
                           )
-                          .join("\n")
-                      : tag === "TR" && record?.ТResources
+                          .join('\n')
+                      : tag === 'TR' && record?.ТResources
                       ? record?.ТResources
 
                           .map((item: any) => `${item};`)
-                          .join("\n")
-                      : ""
+                          .join('\n')
+                      : ''
                   }
                 >
                   <Tag color={color} key={tag}>
@@ -1100,22 +1100,22 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     },
 
     {
-      title: `${t("NOTE")}`,
-      dataIndex: "note",
-      key: "note",
+      title: `${t('NOTE')}`,
+      dataIndex: 'note',
+      key: 'note',
       render: (text) => {
-        if (typeof text === "string" && text.length > 1) {
+        if (typeof text === 'string' && text.length > 1) {
           return (
             <Tooltip placement="top" title={text}>
-              <Tag color={"red"}>{"note"}</Tag>
+              <Tag color={'red'}>{'note'}</Tag>
             </Tooltip>
           );
         } else {
-          return "-";
+          return '-';
         }
       },
-      width: "4%",
-      filters: [{ text: "Note", value: true }],
+      width: '4%',
+      filters: [{ text: 'Note', value: true }],
       onFilter: (value, record) => {
         if (value) {
           return !!record.note;
@@ -1143,15 +1143,15 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //     readyForPer: { text: 'READY FOR PERFORM', status: 'Default' },
     //     waiting: { text: 'TO WAIT', status: 'Warning' },
     //     inProgress: { text: 'IN PROGRESS', status: 'Processing' },
-    //     completed: { text: 'COMPLETED', status: 'Success' },
+    //     completed: { text: 'COMPLETED', status: 'SUCCESS' },
     //     canceled: { text: 'CANCELED', status: 'Error' },
     //   },
     // },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
-      width: "5%",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
+      width: '5%',
       render: (text, record, _, action) => [
         <a
           key="editable"
@@ -1167,8 +1167,8 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
 
   const rowClassName = (record: IProjectTask) => {
     return record._id === selectedRowKey
-      ? "cursor-pointer text-sm text-transform: uppercase bg-blue-100 "
-      : "cursor-pointer  text-sm text-transform: uppercase ";
+      ? 'cursor-pointer text-sm text-transform: uppercase bg-blue-100 '
+      : 'cursor-pointer  text-sm text-transform: uppercase ';
   };
   const [columns, setColumns] = useState(initialColumns);
 
@@ -1176,13 +1176,13 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     columns.map((column: any) => column.key)
   );
 
-  const onChangeRewiew: any["props"]["onChange"] = async (
+  const onChangeRewiew: any['props']['onChange'] = async (
     value: any,
     selectedOptions: any
   ) => {
     const selectedCount = selectedRowKeys && selectedRowKeys.length;
     if (selectedCount < 1) {
-      message.error("Please select Items.");
+      message.error('Please select Items.');
       return;
     }
     const result = await dispatch(
@@ -1192,7 +1192,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         projectId: currentProject?._id,
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       selectedRowKeys.forEach((rowKey) => {
         const index = projectAdditionalTasks.findIndex(
           (task) => task._id === rowKey
@@ -1233,10 +1233,10 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
   const newMenuItems = projectGroups.map(
     (group) =>
       group.status &&
-      group.status == "open" &&
+      group.status == 'open' &&
       selectedRowKeys.length > 0 &&
       getItem(
-        group.status == "open" && (
+        group.status == 'open' && (
           <div
             onClick={async () => {
               const result = await dispatch(
@@ -1245,8 +1245,8 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                   ids: selectedRowKeys,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
-                message.success("Task upload");
+              if (result.meta.requestStatus === 'fulfilled') {
+                message.success('Task upload');
               }
             }}
           >
@@ -1262,13 +1262,13 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
   const [openEditWOForm, setOpenEditWOForm] = useState(false);
   // const [openEditTaskForm, setOpenEditTaskForm] = useState(false);
   const [openTaskDrawer, setOpenTaskDrawer] = useState(false);
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -1278,7 +1278,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       type,
     } as MenuItem;
   }
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     // {
     //   label: 'Add New Task',
     //   key: 'add',
@@ -1289,20 +1289,20 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     // },
 
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
         // getItem('Print Status Report', 'sub4', <PrinterOutlined />, [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
           getItem(
             <div
@@ -1310,17 +1310,17 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             >
               <PrinterOutlined /> MJSS
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
                 exportToExcel(
@@ -1334,7 +1334,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -1351,7 +1351,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             >
               <DownloadOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -1359,18 +1359,18 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     },
 
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
-        getItem("Add Selected Task to Group", "sub09", "", [
+        getItem('Add Selected Task to Group', 'sub09', '', [
           getItem(
             <>
               <div onClick={() => setOpenAddGroupForm(true)}>
                 <PlusOutlined /> New Group<Divider></Divider>
               </div>
             </>,
-            "9ss"
+            '9ss'
           ),
 
           ...newMenuItems,
@@ -1381,9 +1381,9 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           >
             <EditOutlined /> Edit selected Item
           </div>,
-          "9sshsssswishhxs"
+          '9sshsssswishhxs'
         ),
-        getItem(<div>Update Skill selected Item</div>, "updateSkill", "", [
+        getItem(<div>Update Skill selected Item</div>, 'updateSkill', '', [
           getItem(
             <div
               onClick={(e) => {
@@ -1392,19 +1392,19 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             >
               <Select
                 options={[
-                  { value: "AF", label: "AF" },
-                  { value: "AV", label: "AV" },
-                  { value: "CA", label: "CA" },
-                  { value: "EL", label: "EL" },
-                  { value: "EN", label: "EN" },
-                  { value: "RA", label: "RA" },
-                  { value: "UT", label: "UT" },
-                  { value: "SRC", label: "SRC" },
-                  { value: "NDT", label: "NDT" },
-                  { value: "PNT", label: "PNT" },
-                  { value: "ED", label: "ED" },
-                  { value: "QI", label: "QI" },
-                  { value: "OUT", label: "QUT A/C" },
+                  { value: 'AF', label: 'AF' },
+                  { value: 'AV', label: 'AV' },
+                  { value: 'CA', label: 'CA' },
+                  { value: 'EL', label: 'EL' },
+                  { value: 'EN', label: 'EN' },
+                  { value: 'RA', label: 'RA' },
+                  { value: 'UT', label: 'UT' },
+                  { value: 'SRC', label: 'SRC' },
+                  { value: 'NDT', label: 'NDT' },
+                  { value: 'PNT', label: 'PNT' },
+                  { value: 'ED', label: 'ED' },
+                  { value: 'QI', label: 'QI' },
+                  { value: 'OUT', label: 'QUT A/C' },
                 ]}
                 onChange={onChange}
                 placeholder="Please select"
@@ -1431,24 +1431,24 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         //     </div>
         //   ),
         // ]),
-        getItem("Update Status selected items", "subydd09", "", [
+        getItem('Update Status selected items', 'subydd09', '', [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectAdditionalTasksByIds({
-                    status: "inProgress",
+                    status: 'inProgress',
                     ids: selectedRowKeys,
                     projectId: currentProject?._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   selectedRowKeys.forEach((rowKey) => {
                     const index = projectAdditionalTasks.findIndex(
                       (task) => task._id === rowKey
@@ -1463,7 +1463,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                             index: index,
                             task: {
                               ...projectAdditionalTasks[index],
-                              status: "inProgress",
+                              status: 'inProgress',
                             },
                           })
                         );
@@ -1475,7 +1475,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             >
               In Progress
             </div>,
-            "9sasyhqss"
+            '9sasyhqss'
           ),
 
           getItem(
@@ -1483,18 +1483,18 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select Items.");
+                  message.error('Please select Items.');
                   return;
                 }
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectAdditionalTasksByIds({
-                    status: "canceled",
+                    status: 'canceled',
                     ids: selectedRowKeys,
                     projectId: currentProject?._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   selectedRowKeys.forEach((rowKey) => {
                     const index = projectAdditionalTasks.findIndex(
                       (task) => task._id === rowKey
@@ -1509,7 +1509,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                             index: index,
                             task: {
                               ...projectAdditionalTasks[index],
-                              status: "canceled",
+                              status: 'canceled',
                             },
                           })
                         );
@@ -1521,7 +1521,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             >
               Canceled
             </div>,
-            "9saqs46ms"
+            '9saqs46ms'
           ),
         ]),
         getItem(
@@ -1529,18 +1529,18 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             onClick={async () => {
               const selectedCount = selectedRowKeys && selectedRowKeys.length;
               if (selectedCount < 1) {
-                message.error("Please select Items.");
+                message.error('Please select Items.');
                 return;
               }
               // console.log(selectedRowKeys);
               const result = await dispatch(
                 updateProjectAdditionalTasksByIds({
-                  status: "open",
+                  status: 'open',
                   ids: selectedRowKeys,
                   projectId: currentProject?._id,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 selectedRowKeys.forEach((rowKey) => {
                   const index = projectAdditionalTasks.findIndex(
                     (task) => task._id === rowKey
@@ -1555,7 +1555,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                           index: index,
                           task: {
                             ...projectAdditionalTasks[index],
-                            status: "open",
+                            status: 'open',
                           },
                         })
                       );
@@ -1567,14 +1567,14 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           >
             <StopOutlined /> Reopen selected items
           </div>,
-          "9ss2hhhxs"
+          '9ss2hhhxs'
         ),
       ],
     },
 
     {
-      label: `${t("Print")}`,
-      key: "printAction",
+      label: `${t('Print')}`,
+      key: 'printAction',
       icon: null,
       children: [
         getItem(
@@ -1583,7 +1583,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           >
             Quick Print Work Card
           </div>,
-          "9sstsssishhxs"
+          '9sstsssishhxs'
         ),
         getItem(
           <div
@@ -1591,7 +1591,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           >
             Print Work Card with options
           </div>,
-          "9sshsssswishhxs"
+          '9sshsssswishhxs'
         ),
       ],
     },
@@ -1635,15 +1635,15 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   ],
     // },
   ];
-  const taskItems: MenuProps["items"] = [
+  const taskItems: MenuProps['items'] = [
     {
-      label: `${t("Settings")}`,
-      key: "actions",
+      label: `${t('Settings')}`,
+      key: 'actions',
       icon: <SettingOutlined />,
       children: [
         {
-          label: `${"Print"}`,
-          key: "printAction",
+          label: `${'Print'}`,
+          key: 'printAction',
           icon: null,
           children: [
             getItem(
@@ -1652,7 +1652,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
               >
                 Print Work Card with options
               </div>,
-              "9sshsssswishhxs"
+              '9sshsssswishhxs'
             ),
             getItem(
               <div
@@ -1660,32 +1660,32 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
               >
                 Print Material list
               </div>,
-              "9sshsssswishhxs"
+              '9sshsssswishhxs'
             ),
           ],
         },
         getItem(
-          <div onClick={() => console.log("New Work Order open Form")}>
+          <div onClick={() => console.log('New Work Order open Form')}>
             <EditOutlined /> Edit in Data
           </div>,
-          "9sssxxss"
+          '9sssxxss'
         ),
 
-        getItem("Update Status", "subydd09", "", [
+        getItem('Update Status', 'subydd09', '', [
           getItem(
             <div
               onClick={async () => {
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateAdditionalTask({
-                    status: "inProgress",
+                    status: 'inProgress',
                     _id: currentProjectAdditionalTask?._id,
                     projectId: currentProject?._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setCurrentProjectAdditionalTask(result.payload);
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const index = projectAdditionalTasks.findIndex(
                     (task) => task._id === currentProjectAdditionalTask?._id
                   );
@@ -1697,15 +1697,15 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                       })
                     );
                   }
-                  message.success("Task successfully updated ");
+                  message.success('Task successfully updated ');
                 } else {
-                  message.error("Task not updated");
+                  message.error('Task not updated');
                 }
               }}
             >
               In Progress
             </div>,
-            "9saqss"
+            '9saqss'
           ),
           getItem(
             <div
@@ -1713,14 +1713,14 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateAdditionalTask({
-                    status: "open",
+                    status: 'open',
                     _id: currentProjectAdditionalTask?._id,
                     projectId: currentProject?._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setCurrentProjectAdditionalTask(result.payload);
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const index = projectAdditionalTasks.findIndex(
                     (task) => task._id === currentProjectAdditionalTask?._id
                   );
@@ -1732,15 +1732,15 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                       })
                     );
                   }
-                  message.success("Task successfully updated ");
+                  message.success('Task successfully updated ');
                 } else {
-                  message.error("Task not updated");
+                  message.error('Task not updated');
                 }
               }}
             >
               Open
             </div>,
-            "open"
+            'open'
           ),
         ]),
       ],
@@ -1748,15 +1748,15 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
   ];
   const actionRef = useRef<ActionType>();
   const [selectedObject, setSelectedObject] = useState({
-    PART_NUMBER: "",
+    PART_NUMBER: '',
     QUANTITY: 0,
-    NAME_OF_MATERIAL: "",
+    NAME_OF_MATERIAL: '',
   });
 
   return (
     // <div className="flex my-0 mx-auto flex-col  relative overflow-hidden">
     <div className="flex my-0 mx-auto flex-col  h-[78vh] relative overflow-hidden">
-      <Row justify={"space-between"}>
+      <Row justify={'space-between'}>
         <Space className="">
           <EditOutlined
             onClick={() => setOpenEditWOForm(true)}
@@ -1765,19 +1765,19 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           <Tooltip placement="top" title={currentProject?.planeNumber}>
             <a onClick={showDrawer}>{currentProject?.projectName}</a>
           </Tooltip>
-        </Space>{" "}
+        </Space>{' '}
         <Space>
           <>
-            {t("Date In")}:{" "}
+            {t('Date In')}:{' '}
             {currentProject &&
-              moment(currentProject?.startDate).format("DD-MMM-YYYY")}
+              moment(currentProject?.startDate).format('DD-MMM-YYYY')}
           </>
         </Space>
         <Space>
           <>
-            {t("Date Out")}:{" "}
+            {t('Date Out')}:{' '}
             {currentProject &&
-              moment(currentProject?.finishDate).format("DD-MMM-YYYY")}
+              moment(currentProject?.finishDate).format('DD-MMM-YYYY')}
           </>
         </Space>
       </Row>
@@ -1803,7 +1803,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
               note: data.note,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             const index = projectAdditionalTasks.findIndex(
               (task) => task._id === rowKey
             );
@@ -1826,7 +1826,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
         onVisibleColumnsChange={handleVisibleColumnsChange}
         recordCreatorProps={false}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       <Drawer
@@ -1841,42 +1841,42 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       </Drawer>
       <DrawerPanel
         title={`${currentProjectAdditionalTask?.taskHeadLine?.toUpperCase()} ###${
-          currentProjectAdditionalTask?.taskDescription || ""
+          currentProjectAdditionalTask?.taskDescription || ''
           // steps &&
           // currentProjectAdditionalTask?.steps[0]
           //   ? currentProjectAdditionalTask?.steps[0].stepDescription?.toUpperCase()
           //   : ''
         }`}
-        size={"large"}
-        placement={"bottom"}
+        size={'large'}
+        placement={'bottom'}
         onClose={() => {
           setOpenTaskDrawer(false);
           dispatch(setCurrentProjectAdditionalTask(null));
           dispatch(setCurrentAdditionalActionIndexMtb(0));
           dispatch(setCurrentAdditionalAction(null));
           setSelectedObject({
-            PART_NUMBER: "",
+            PART_NUMBER: '',
             QUANTITY: 0,
-            NAME_OF_MATERIAL: "",
+            NAME_OF_MATERIAL: '',
           });
         }}
         open={openTaskDrawer}
         getContainer={false}
         extra={
-          <Row align={"middle"}>
+          <Row align={'middle'}>
             <Tag
               color={
-                currentProjectAdditionalTask?.status === "closed"
-                  ? "green"
-                  : "red"
+                currentProjectAdditionalTask?.status === 'closed'
+                  ? 'green'
+                  : 'red'
               }
             >
               {String(
                 currentProjectAdditionalTask?.status
                   ? currentProjectAdditionalTask?.status
-                  : ""
+                  : ''
               ).toUpperCase()}
-            </Tag>{" "}
+            </Tag>{' '}
             <div className=" ml-auto w-40">
               <NavigationPanel
                 onMenuClick={handleMenuClick}
@@ -1897,7 +1897,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
           tabs={[
             {
               content: <StepsContent task={currentProjectAdditionalTask} />,
-              title: `${t("PRODUCTION")}`,
+              title: `${t('PRODUCTION')}`,
             },
 
             {
@@ -1913,14 +1913,14 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
                       onIssuedClick={onIssuedClick}
                       selectedObjectParent={selectedObject}
                     />
-                  </div>{" "}
+                  </div>{' '}
                 </>
               ),
-              title: `${t("Requests/Parts")}`,
+              title: `${t('Requests/Parts')}`,
             },
             {
               content: <Details task={currentProjectAdditionalTask} />,
-              title: `${t("Details")}`,
+              title: `${t('Details')}`,
             },
 
             // {
@@ -1928,7 +1928,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
             //   title: `${t('Close Work Order')}`,
             // },
 
-            { content: <GeneretedNRCPdf />, title: `${t("Work Card")}` },
+            { content: <GeneretedNRCPdf />, title: `${t('Work Card')}` },
           ]}
         />
       </DrawerPanel>

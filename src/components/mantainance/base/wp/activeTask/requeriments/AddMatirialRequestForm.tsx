@@ -1,10 +1,10 @@
-import { ConfigProvider, Form, Input, InputNumber, MenuProps } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IProjectTask } from "@/models/IProjectTask";
-import React, { FC, useEffect, useState } from "react";
-import { getFilteredRequirements } from "@/utils/api/thunks";
-import { v4 as originalUuidv4 } from "uuid";
+import { ConfigProvider, Form, Input, InputNumber, MenuProps } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IProjectTask } from '@/models/IProjectTask';
+import React, { FC, useEffect, useState } from 'react';
+import { getFilteredRequirements } from '@/utils/api/thunks';
+import { v4 as originalUuidv4 } from 'uuid';
 
 import {
   ProColumns,
@@ -13,9 +13,9 @@ import {
   ProFormGroup,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
-import { useTranslation } from "react-i18next";
-import Title from "antd/es/typography/Title";
+} from '@ant-design/pro-components';
+import { useTranslation } from 'react-i18next';
+import Title from 'antd/es/typography/Title';
 type FilteredRequirementItemsListPropsType = {
   projectTaskData: any | null;
   scroll: number;
@@ -41,7 +41,7 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
   const [form] = Form.useForm();
   const [updaredMaterialsRequirements, setUpdatedRequirements] =
     useState<any>();
-  const items: MenuProps["items"] = [];
+  const items: MenuProps['items'] = [];
   const initialColumns: ProColumns<any>[] = [
     // {
     //   title: `${t('REQUIREMENT NUMBER')}`,
@@ -70,10 +70,10 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     // },
 
     {
-      title: `${t("PART NUMBER")}`,
-      dataIndex: "PN",
-      key: "PN",
-      width: "14%",
+      title: `${t('PART No')}`,
+      dataIndex: 'PN',
+      key: 'PN',
+      width: '14%',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
@@ -83,13 +83,13 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "description",
-      key: "desctiption",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'description',
+      key: 'desctiption',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
-      width: "15%",
+      width: '15%',
       editable: (text, record, index) => {
         return false;
       },
@@ -101,10 +101,10 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     //   responsive: ['sm'],
     // },
     {
-      title: `${t("QWERALL REQUIRED")}`,
-      dataIndex: "required",
-      key: "required",
-      width: "13%",
+      title: `${t('QWERALL REQUIRED')}`,
+      dataIndex: 'required',
+      key: 'required',
+      width: '13%',
       editable: (text, record, index) => {
         return false;
       },
@@ -112,9 +112,9 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("ALREADY ISSUED")}`,
-      dataIndex: "issuedQuantity",
-      key: "issuedQuantity",
+      title: `${t('ALREADY ISSUED')}`,
+      dataIndex: 'issuedQuantity',
+      key: 'issuedQuantity',
       editable: (text, record, index) => {
         return false;
       },
@@ -133,29 +133,29 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     },
 
     {
-      title: `${t("TO BE BOOKED")}`,
-      dataIndex: "onOrderQuantity",
-      key: "onOrderQuantity",
+      title: `${t('TO BE BOOKED')}`,
+      dataIndex: 'onOrderQuantity',
+      key: 'onOrderQuantity',
       render: (text: any, record: any) => record.onOrderQuantity,
 
       formItemProps: (record) => ({
-        validateTrigger: "onChange", // Добавьте это свойство
+        validateTrigger: 'onChange', // Добавьте это свойство
         rules: [
           {
             required: true,
-            message: "Это поле обязательно для заполнения",
+            message: 'Это поле обязательно для заполнения',
           },
           {
             pattern: /^\d+(\.\d+)?$/,
-            message: "Пожалуйста, введите только числа",
+            message: 'Пожалуйста, введите только числа',
           },
           {
             validator: (_, value) => {
-              const amoutValue = form.getFieldValue("amout");
+              const amoutValue = form.getFieldValue('amout');
 
-              if (value > record.getFieldValue("amout")) {
+              if (value > record.getFieldValue('amout')) {
                 return Promise.reject(
-                  new Error("Значение не может быть больше чем amout")
+                  new Error('Значение не может быть больше чем amout')
                 );
               }
               return Promise.resolve();
@@ -176,13 +176,13 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     //   // responsive: ['sm'],
     // },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
       editable: (text, record, index) => {
         return false;
       },
-      responsive: ["sm"],
+      responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     // {
@@ -205,9 +205,9 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     // },
 
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -224,17 +224,17 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
   const uuidv4: () => string = originalUuidv4;
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
           getFilteredRequirements({
             companyID: companyID,
-            projectId: projectTaskData?.projectId?.id || "",
+            projectId: projectTaskData?.projectId?.id || '',
             ids: ids,
           })
         );
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           if (result.payload.length) {
             // Изменяем каждый элемент в массиве, устанавливая requestQuantity равным нулю
             const updatedRequirements = result.payload.map(
@@ -250,7 +250,7 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
                 description: requirement.nameOfMaterial,
                 unit: requirement.unit,
                 issuedQuantity: requirement?.issuedQuantity,
-                status: "issued",
+                status: 'issued',
                 onBlock: [],
               })
             );
@@ -266,9 +266,9 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
     fetchData();
   }, [dispatch, projectTaskData?._id, ids]);
   const [fields, setFields] = useState({
-    getFrom: "",
-    neededOn: "",
-    remarks: "",
+    getFrom: '',
+    neededOn: '',
+    remarks: '',
     plannedDate: null,
   });
 
@@ -300,43 +300,43 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
         <ProFormSelect
           rules={[{ required: true }]}
           name="getFrom"
-          tooltip={`${t("SELECT STORE")}`}
+          tooltip={`${t('SELECT STORE')}`}
           options={[
-            { value: "MSQ", label: "MSQ" },
-            { value: "AVJ", label: "AVJ" },
-            { value: "PBD", label: "PBD" },
+            { value: 'MSQ', label: 'MSQ' },
+            { value: 'AVJ', label: 'AVJ' },
+            { value: 'PBD', label: 'PBD' },
           ]}
-          label={`${t("GET FROM")}`}
-          onChange={(value) => handleFieldChange("getFrom", value)}
+          label={`${t('GET FROM')}`}
+          onChange={(value) => handleFieldChange('getFrom', value)}
         ></ProFormSelect>
         <ProFormSelect
           rules={[{ required: true }]}
           name="neededOn"
           options={[
-            { value: "MSQ", label: "MSQ" },
-            { value: "AVJ", label: "AVJ" },
-            { value: "PBD", label: "PBD" },
-            { value: "MCC", label: "MCC" },
+            { value: 'MSQ', label: 'MSQ' },
+            { value: 'AVJ', label: 'AVJ' },
+            { value: 'PBD', label: 'PBD' },
+            { value: 'MCC', label: 'MCC' },
           ]}
-          label={`${t("NEEDED ON")}`}
-          onChange={(value) => handleFieldChange("neededOn", value)}
+          label={`${t('NEEDED ON')}`}
+          onChange={(value) => handleFieldChange('neededOn', value)}
         ></ProFormSelect>
         <ProFormText
-          name={"remarks"}
-          width={"xl"}
-          label={`${t("REMARKS")}`}
+          name={'remarks'}
+          width={'xl'}
+          label={`${t('REMARKS')}`}
           fieldProps={{
             onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-              handleFieldChange("remarks", e.target.value),
+              handleFieldChange('remarks', e.target.value),
           }}
         ></ProFormText>
         <ProFormDatePicker
           rules={[{ required: true }]}
-          name={"plannedDate"}
-          label={`${t("PLANNED DATE")}`}
+          name={'plannedDate'}
+          label={`${t('PLANNED DATE')}`}
           fieldProps={{
             onChange: (date: any | null) =>
-              handleFieldChange("plannedDate", date),
+              handleFieldChange('plannedDate', date),
           }}
         ></ProFormDatePicker>
       </ProFormGroup>
@@ -349,7 +349,7 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
         menuItems={items}
         recordCreatorProps={false}
         onRowClick={function (record: any, rowIndex?: any): void {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         onSave={function (rowKey: any, data: any, row: any): void {
           console.log(data);
@@ -357,7 +357,7 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
         }}
         yScroll={scroll}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
     </div>

@@ -299,7 +299,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
         cancelled: { text: 'CANCELLED', status: 'Error' },
         partyCancelled: { text: 'PARTY CANCELLED', status: 'Error' },
         transfer: { text: 'TRANSFER', status: 'Processing' },
-        completed: { text: 'COMPLETED', status: 'Success' },
+        completed: { text: 'COMPLETED', status: 'SUCCESS' },
       },
 
       dataIndex: 'STATUS',
@@ -325,7 +325,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
         cancelled: { text: t('CANCELLED'), status: 'Error' },
         partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
         transfer: { text: t('TRANSFER'), status: 'Processing' },
-        completed: { text: t('COMPLETED'), status: 'Success' },
+        completed: { text: t('COMPLETED'), status: 'SUCCESS' },
       },
 
       dataIndex: 'status',
@@ -564,7 +564,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                         })
                       );
                     }
-                    message.success('Success');
+                    message.success('SUCCESS');
                   }
                 }
               }

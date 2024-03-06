@@ -205,7 +205,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
         <ProFormSelect
           mode="multiple"
           name="partGroup"
-          label={`${t('PART SPESIAL GROUP')}`}
+          label={`${t('PART GROUP')}`}
           width="lg"
           tooltip={`${t('SELECT SPESIAL GROUP')}`}
           options={[

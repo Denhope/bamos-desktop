@@ -400,7 +400,7 @@ const PickSlipCancel: FC = () => {
         cancelled: { text: t('CANCELLED'), status: 'Error' },
         partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
         transfer: { text: t('TRANSFER'), status: 'Processing' },
-        completed: { text: t('COMPLETED'), status: 'Success' },
+        completed: { text: t('COMPLETED'), status: 'SUCCESS' },
       },
 
       dataIndex: 'status',

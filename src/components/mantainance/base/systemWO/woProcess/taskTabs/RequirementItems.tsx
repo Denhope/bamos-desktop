@@ -305,7 +305,7 @@ const RequirementItems: FC<RequirementItemsProps> = ({
       },
       onFilter: true,
       valueEnum: {
-        inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+        inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },
         closed: { text: t('CLOSED'), status: 'Default' },
@@ -318,7 +318,7 @@ const RequirementItems: FC<RequirementItemsProps> = ({
     },
 
     {
-      title: `${t('PART NUMBER')}`,
+      title: `${t('PART No')}`,
       dataIndex: 'PN',
       key: 'PN',
       tip: 'Right Click open Store search',

@@ -208,7 +208,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
       >
         {/* <ProFormText
           name="partNumber"
-          label={t("PART NUMBER")}
+          label={t("PART No")}
           width="lg"
           tooltip={t("PART No")}
           fieldProps={{
@@ -228,7 +228,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
           width={'sm'}
-          label={t('PART NUMBER')}
+          label={t('PART No')}
         ></ContextMenuPNSearchSelect>
         <ProFormText
           name="serialNumber"
@@ -264,7 +264,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
         <ProFormSelect
           mode="multiple"
           name="partGroup"
-          label={`${t('PART SPESIAL GROUP')}`}
+          label={`${t('PART GROUP')}`}
           width="lg"
           tooltip={`${t('SELECT SPESIAL GROUP')}`}
           options={[
@@ -291,7 +291,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             <ProFormSelect
               mode="multiple"
               name="projectWO"
-              label={`${t(`PROJECT SELECT`)}`}
+              label={`${t(`PROJECT`)}`}
               width="lg"
               options={options}
             />

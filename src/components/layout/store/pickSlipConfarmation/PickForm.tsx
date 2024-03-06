@@ -103,7 +103,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
             name="materialAplicationNumber"
             label={`${t('PICKSLIP')}`}
             width="xs"
-            tooltip="PICKSLIP NUMBER"
+            tooltip="PICKSLIP No"
             //rules={[{ required: true }]}
             fieldProps={{
               onDoubleClick: () => setOpenPickViewer(true),
@@ -116,7 +116,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
             name="status"
             label={`${t('STATUS')}`}
             width="xs"
-            // tooltip="PICKSLIP NUMBER"
+            // tooltip="PICKSLIP No"
             //rules={[{ required: true }]}
           />
           <ProFormText
@@ -132,7 +132,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
             name="storeman"
             label={`${t('STOREMAN')}`}
             width="sm"
-            // tooltip="PICKSLIP NUMBER"
+            // tooltip="PICKSLIP No"
             //rules={[{ required: true }]}
           />
           <ProFormDatePicker

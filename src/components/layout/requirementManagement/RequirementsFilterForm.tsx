@@ -269,7 +269,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           <ProFormSelect
             // mode="multiple"
             name="additionalSelectProject"
-            label={`${t(`PROJECT SELECT`)}`}
+            label={`${t(`PROJECT`)}`}
             width="lg"
             options={options}
             onChange={async (value: any) => {
@@ -288,7 +288,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         {receiverType === 'SHOP' && (
           <ProFormSelect
             name="additionalSelectShop"
-            label={`${t(`SHOP/STORE SELECT`)}`}
+            label={`${t(`NEEDED ON`)}`}
             width="lg"
             options={options}
           />
@@ -397,7 +397,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       <ProFormSelect
         mode="multiple"
         name="partGroup"
-        label={`${t('PART SPESIAL GROUP')}`}
+        label={`${t('PART  GROUP')}`}
         width="lg"
         tooltip={`${t('SELECT SPESIAL GROUP')}`}
         options={[

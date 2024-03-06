@@ -395,7 +395,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       ellipsis: true,
       onFilter: true,
       valueEnum: {
-        RECEIVED: { text: t('RECEIVED'), status: 'Success' },
+        RECEIVED: { text: t('RECEIVED'), status: 'SUCCESS' },
         CANCELLED: { text: t('CANCELLED'), status: 'Error' },
       },
 

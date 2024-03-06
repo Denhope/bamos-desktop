@@ -89,7 +89,7 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
         cancelled: { text: t('CANCELLED'), status: 'Error' },
         partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
         transfer: { text: t('TRANSFER'), status: 'Processing' },
-        completed: { text: t('COMPLETED'), status: 'Success' },
+        completed: { text: t('COMPLETED'), status: 'SUCCESS' },
       },
 
       dataIndex: 'status',
@@ -140,18 +140,19 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
       }),
     },
     {
+      title: `${t('GET FROM')}`,
+      dataIndex: 'getFrom',
+      key: 'storeFrom',
+      width: '7%',
+    },
+    {
       title: `${t('SEND TO')}`,
       dataIndex: 'neededOn',
       key: 'neededOn',
 
       width: '7%',
     },
-    {
-      title: `${t('SEND FROM')}`,
-      dataIndex: 'getFrom',
-      key: 'storeFrom',
-      width: '7%',
-    },
+
     {
       title: 'MECH',
       dataIndex: 'createBy',

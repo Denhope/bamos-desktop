@@ -163,7 +163,7 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
       valueEnum: {
         open: { text: t('OPEN'), status: 'Default' },
         inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
-        closed: { text: t('CLOSED'), status: 'Success' },
+        closed: { text: t('CLOSED'), status: 'SUCCESS' },
         canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },

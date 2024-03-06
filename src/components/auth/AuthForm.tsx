@@ -28,7 +28,7 @@ const AuthForm: FC = () => {
   // const isLogin = location.pathname === RouteNames.HOME;
   const { isLoading } = useTypedSelector((state) => state.auth);
   const onFinish = async (values: any) => {
-    // console.log('Success:', values);
+    // console.log('SUCCESS:', values);
     if (isLogin) {
       const result = await dispatch(login(values));
       if (result.meta.requestStatus === 'fulfilled') {

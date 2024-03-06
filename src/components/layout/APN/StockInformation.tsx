@@ -413,8 +413,8 @@ const StockInformstion: FC = () => {
                   optionLabel1="PART_NUMBER"
                   optionLabel2="DESCRIPTION"
                   onSelect={handleSelect}
-                  label={`${t('PART NUMBER')}`}
-                  tooltip={`${t('DOUBE CLICK OPEN PART NUMBER BOOK')}`}
+                  label={`${t('PART No')}`}
+                  tooltip={`${t('DOUBE CLICK OPEN PART No BOOK')}`}
                   rules={[]}
                   name={'PART_NUMBER'}
                 />

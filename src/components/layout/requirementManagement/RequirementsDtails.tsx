@@ -344,7 +344,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
-                  // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                  // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
@@ -363,7 +363,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
-                  // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                  // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
@@ -380,7 +380,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
-                  // inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+                  // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
@@ -534,7 +534,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   disabled
                   rules={[{ required: true }]}
                   name="partGroup"
-                  label={`${t('PART SPESIAL GROUP')}`}
+                  label={`${t('PART GROUP')}`}
                   width="sm"
                   tooltip={`${t('SELECT SPESIAL GROUP')}`}
                   options={[

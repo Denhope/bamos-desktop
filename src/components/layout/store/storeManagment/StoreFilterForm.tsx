@@ -199,7 +199,7 @@ const StoreFilterForm: FC<StoreFilterFormType> = ({
               })
             );
             if (result.meta.requestStatus === 'fulfilled') {
-              message.success('Success');
+              message.success('SUCCESS');
             } else message.error('Error');
 
             setNewOpenStoreViewer(false);

@@ -376,9 +376,9 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="PART_NUMBER"
-              label={t('PART NUMBER')}
+              label={t('PART No')}
               width="sm"
-              tooltip={t('PART NUMBER')}
+              tooltip={t('PART No')}
               fieldProps={{
                 onDoubleClick: () => {
                   setOpenStoreFind(true);

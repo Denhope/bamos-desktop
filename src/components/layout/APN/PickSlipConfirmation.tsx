@@ -1162,7 +1162,7 @@ const PickSlipConfirmation: FC = () => {
                           })
                         );
                       }
-                      message.success('Success');
+                      message.success('SUCCESS');
                     }
                   }
                 }

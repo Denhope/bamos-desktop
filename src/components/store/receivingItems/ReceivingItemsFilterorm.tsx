@@ -306,7 +306,7 @@ const ReceivingItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
             <ProFormSelect
               mode="multiple"
               name="partGroup"
-              label={`${t('PART SPESIAL GROUP')}`}
+              label={`${t('PART GROUP')}`}
               width="sm"
               tooltip={`${t('SELECT SPESIAL GROUP')}`}
               options={[

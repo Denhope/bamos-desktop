@@ -199,10 +199,10 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             },
             RECEIVED: {
               text: t('RECEIVED'),
-              status: 'Success',
+              status: 'SUCCESS',
             },
             // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
-            CLOSED: { text: t('CLOSED'), status: 'Success' },
+            CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
             // MISSING: { text: t('MISSING'), status: 'Error' },
             OPEN: { text: t('OPEN'), status: 'Processing' },
             // OPEN_AND_TRANSFER: {
@@ -212,7 +212,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             // PARTLY_ARRIVED: { text: t('PARTLY ARRIVED'), status: 'Processing' },
             // PARTLY_MISSING: { text: t('PARTLY MISSING'), status: 'Error' },
             // PARTLY_SENT: { text: t('PARTLY SENT'), status: 'Processing' },
-            // READY: { text: t('READY'), status: 'Success' },
+            // READY: { text: t('READY'), status: 'SUCCESS' },
             // PARTLY_READY: { text: t('PARTLY READY'), status: 'Processing' },
             // SENT: { text: t('SENT'), status: 'Processing' },
             TRANSFER: { text: t('TRANSFER'), status: 'Processing' },
