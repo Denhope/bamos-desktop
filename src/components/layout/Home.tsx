@@ -51,6 +51,7 @@ import Title from 'antd/lib/typography/Title';
 import RequirementViewer from './APN/RequirementViewer';
 import OrderViewer from './APN/OrderViewer';
 import PickslipRequest from './APN/PickslipRequest';
+import UserAdministration from './APN/UserAdministration';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -403,6 +404,17 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         ),
         closable: true,
       };
+    } else if (key === RouteNames.USER_ADMINISTRATION) {
+      tab = {
+        key,
+        title: `${t('USER ADMINISTRATION')}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <UserAdministration />
+          </div>
+        ),
+        closable: true,
+      };
     } else if (key === RouteNames.BASE) {
       tab = {
         key,
@@ -467,20 +479,6 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
   const { t } = useTranslation();
   const { isLoading } = useTypedSelector((state) => state.auth);
   const itemsHorisontal: MenuItem[] = [
-    // getItem(
-    //   t('Work Package Generation'),
-    //   RouteNames.WORKPACKGEN,
-    //   <GroupOutlined />
-    // ),
-
-    // getItem(<>{t('VIEW WORKPACKAGE')}</>, RouteNames.BASE, <ProjectOutlined />),
-
-    // // // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
-    // getItem(
-    //   t('Maintenance Management (MTX)'),
-    //   RouteNames.MTXT,
-    //   <ExclamationCircleOutlined />
-    // ),
     getItem(
       t('PART ADMINISTRATION'),
       RouteNames.PART_ADMINISTRATIONS,

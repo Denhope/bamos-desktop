@@ -35,6 +35,7 @@ import WOFilterForm from '@/components/mantainance/base/systemWO/woProcess/WOPro
 import WOTask from '@/components/mantainance/base/systemWO/woProcess/Task';
 import { ProCard } from '@ant-design/pro-components';
 import Title from 'antd/es/typography/Title';
+import { getItem } from '@/services/utilites';
 
 const { Sider, Content } = Layout;
 
@@ -303,25 +304,8 @@ const MaintenanceBase: FC = () => {
     }
   };
   type MenuItem = Required<MenuProps>['items'][number];
-  function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-    // path?: any,
-    type?: 'group'
-  ): MenuItem {
-    return {
-      key,
-      icon,
-      children,
-      label,
-      // path,
-      type,
-    } as MenuItem;
-  }
+
   const items: MenuItem[] = [
-    // getItem(<>{t('Base Maintenance')}</>, 'sub1', <ProjectOutlined />,
     //[
     getItem(
       <>{t('VIEW WORKPACKAGE (BAN:58)')}</>,

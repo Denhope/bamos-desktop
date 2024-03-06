@@ -21,6 +21,7 @@
   "dependencies": {
     "@ant-design/charts": "^2.0.2",
     "@ant-design/pro-components": "^2.6.48",
+    "@faker-js/faker": "^8.4.1",
     "@react-pdf/renderer": "^3.3.4",
     "@reduxjs/toolkit": "^2.1.0",
     "@types/lodash.get": "^4.4.9",
