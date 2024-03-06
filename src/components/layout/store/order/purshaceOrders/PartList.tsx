@@ -1,9 +1,9 @@
-import { ProColumns } from "@ant-design/pro-components";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 type PartListType = {
   scroll: number;
   addedParts?: any[];
@@ -24,10 +24,10 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
           quantity: item.requestQuantity,
           partRequestNumber: item.partRequestNumber,
           group: item.group,
-          state: "OPEN",
-          price: "100500",
+          state: 'OPEN',
+          price: '100500',
           backorder: item.requestQuantity,
-          serialNumber: "",
+          serialNumber: '',
           owner: item.ownerShortName,
           id: uuidv4(),
         };
@@ -42,8 +42,8 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
 
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("REQUIREMENT NUMBER")}`,
-      dataIndex: "partRequestNumber",
+      title: `${t('REQUIREMENT NUMBER')}`,
+      dataIndex: 'partRequestNumber',
       // valueType: 'index',
       ellipsis: true,
 
@@ -65,12 +65,12 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
       // sorter: (a, b) => (a.id || 0) - (b.id || 0),
     },
     {
-      title: `${t("PART NUMBER")}`,
-      dataIndex: "PN",
-      key: "PN",
+      title: `${t('PART No')}`,
+      dataIndex: 'PN',
+      key: 'PN',
       ellipsis: true,
       formItemProps: {
-        name: "PN",
+        name: 'PN',
       },
       editable: (text, record, index) => {
         return false;
@@ -79,11 +79,11 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
 
       editable: (text, record, index) => {
@@ -91,10 +91,10 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
       },
     },
     {
-      title: `${t("M.CLASS")}`,
-      dataIndex: "type",
-      key: "type",
-      responsive: ["sm"],
+      title: `${t('M.CLASS')}`,
+      dataIndex: 'type',
+      key: 'type',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -103,12 +103,12 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
     },
 
     {
-      title: `${t("QTY")}`,
-      dataIndex: "requestQuantity",
-      key: "requestQuantity",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'requestQuantity',
+      key: 'requestQuantity',
+      responsive: ['sm'],
       search: false,
-      width: "10%",
+      width: '10%',
       editable: (text, record, index) => {
         return true;
       },
@@ -116,10 +116,10 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -127,10 +127,10 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "owner",
-      key: "owner",
-      responsive: ["sm"],
+      title: `${t('OWNER')}`,
+      dataIndex: 'owner',
+      key: 'owner',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return true;
@@ -138,9 +138,9 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -174,7 +174,7 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
         onSave={handleSave}
         yScroll={scroll}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         isLoading={false}
       />

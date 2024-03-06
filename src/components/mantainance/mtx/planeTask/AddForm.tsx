@@ -10,30 +10,30 @@ import {
   Row,
   Select,
   Space,
-} from "antd";
-import React, { FC, useRef, useState, useEffect } from "react";
+} from 'antd';
+import React, { FC, useRef, useState, useEffect } from 'react';
 
 import {
   getFilteredPlanesTasks,
   getPlanesNumber,
   getPlanesTaskNumber,
-} from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { RangePickerProps } from "antd/es/date-picker";
-import { IPlane } from "@/models/IPlane";
-import { IPlaneTask } from "@/models/ITask";
+} from '@/utils/api/thunks';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { RangePickerProps } from 'antd/es/date-picker';
+import { IPlane } from '@/models/IPlane';
+import { IPlaneTask } from '@/models/ITask';
 
-import { setPlaneTasks } from "@/store/reducers/MtxSlice";
-import TextArea from "antd/es/input/TextArea";
-import MultiSelectForm from "@/components/shared/form/MultiSelectForm";
-import SingleSelectForm from "@/components/shared/form/SingleSelect";
-import { useTranslation } from "react-i18next";
+import { setPlaneTasks } from '@/store/reducers/MtxSlice';
+import TextArea from 'antd/es/input/TextArea';
+import MultiSelectForm from '@/components/shared/form/MultiSelectForm';
+import SingleSelectForm from '@/components/shared/form/SingleSelect';
+import { useTranslation } from 'react-i18next';
 const { RangePicker } = DatePicker;
 const FIlteredTaskForm: FC = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {
     // console.log('Selected Time: ', value);
@@ -41,7 +41,7 @@ const FIlteredTaskForm: FC = () => {
   };
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {
     // console.log('onOk: ', value);
   };
@@ -143,7 +143,7 @@ const FIlteredTaskForm: FC = () => {
       <div
         className="flex flex-col mx-auto"
         style={{
-          width: "100%",
+          width: '100%',
         }}
       >
         <Form
@@ -167,7 +167,7 @@ const FIlteredTaskForm: FC = () => {
               })
             );
             if (
-              result.meta.requestStatus === "fulfilled" &&
+              result.meta.requestStatus === 'fulfilled' &&
               result.payload.length == 0
             ) {
               setPlaneTasks([]);
@@ -187,14 +187,14 @@ const FIlteredTaskForm: FC = () => {
             >
               <Input placeholder="please enter A/C Number" />
             </AutoComplete>
-          </Form.Item>{" "}
-          <Form.Item label={`${t("Task Number")}`} name="taskNbr">
+          </Form.Item>{' '}
+          <Form.Item label={`${t('Task Number')}`} name="taskNbr">
             <Input placeholder="please enter Task Number" />
           </Form.Item>
-          <Form.Item label="Part Number" name="partNbr">
-            <Input placeholder="please enter Part Number" />
+          <Form.Item label="PART No" name="partNbr">
+            <Input placeholder="please enter PART No" />
           </Form.Item>
-          <Form.Item label={`${t("Serial Number")}`} name="partSerialNbr">
+          <Form.Item label={`${t('Serial Number')}`} name="partSerialNbr">
             <Input placeholder="please enter Part Serial Number" />
           </Form.Item>
           <Form.Item label="Position" name="position">
@@ -202,7 +202,7 @@ const FIlteredTaskForm: FC = () => {
           </Form.Item>
           <Form.Item
             rules={[{ required: true }]}
-            label={`${t("Description")}`}
+            label={`${t('Description')}`}
             name="description"
           >
             <TextArea allowClear placeholder="please enter description" />
@@ -212,75 +212,75 @@ const FIlteredTaskForm: FC = () => {
             label="TASK TYPE"
             name="taskType"
           >
-            {" "}
+            {' '}
             <SingleSelectForm
               options={[
-                { key: "AD", value: "AD - AIRWORTHINESS DIRECTIVE" },
-                { key: "SMC", value: "SMC - SHEDULED MAINTENENCE CHEACK" },
-                { key: "SB", value: "SB - SERVICE BULLETIN" },
-                { key: "PKGOP", value: "PKGOP - PACKAGE" },
-                { key: "ADP", value: "ADP - ADP" },
-                { key: "PN", value: "PN - COMPONENT" },
+                { key: 'AD', value: 'AD - AIRWORTHINESS DIRECTIVE' },
+                { key: 'SMC', value: 'SMC - SHEDULED MAINTENENCE CHEACK' },
+                { key: 'SB', value: 'SB - SERVICE BULLETIN' },
+                { key: 'PKGOP', value: 'PKGOP - PACKAGE' },
+                { key: 'ADP', value: 'ADP - ADP' },
+                { key: 'PN', value: 'PN - COMPONENT' },
               ]}
               onChange={handleMultiSelectTaskType}
             />
           </Form.Item>
           <Form.Item rules={[{ required: true }]} label="ATA" name="ata">
-            {" "}
+            {' '}
             <SingleSelectForm
               options={[
-                { key: "00", value: "00 - INFORMATION" },
-                { key: "01", value: "01 - lIMITATIONS" },
-                { key: "05", value: "05 - TIME LIMITS/MAINTENANCE CHECKS" },
-                { key: "08", value: "08 - LEVELING AND WEIGHING" },
-                { key: "20", value: "20 - STANDARD PRACTICES - AIRFRAME" },
-                { key: "21", value: "21 - AIR CONDITIONING" },
-                { key: "22", value: "22 - AUTO FLIGHT" },
-                { key: "23", value: "23 - COMMUNICATIONS" },
-                { key: "24", value: "24 - ELECTRICAL POWER" },
-                { key: "25", value: "25 - EQUIPMENT/FURNISHINGS" },
-                { key: "26", value: "26 - FIRE PROTECTION" },
-                { key: "27", value: "27 - FLIGHT CONTROLS" },
-                { key: "28", value: "28 - FUEL" },
-                { key: "30", value: "30 - ICE AND RAIN PROTECTION" },
-                { key: "31", value: "31 - INDICATING/RECORDING SYSTEMS" },
-                { key: "32", value: "32 - LANDING GEAR" },
-                { key: "33", value: "33 - LIGHTS" },
-                { key: "34", value: "34 - NAVIGATION" },
-                { key: "35", value: "35 - OXYGEN" },
-                { key: "36", value: "36 - PNEUMATIC" },
-                { key: "38", value: "38 - WATER/WASTE" },
+                { key: '00', value: '00 - INFORMATION' },
+                { key: '01', value: '01 - lIMITATIONS' },
+                { key: '05', value: '05 - TIME LIMITS/MAINTENANCE CHECKS' },
+                { key: '08', value: '08 - LEVELING AND WEIGHING' },
+                { key: '20', value: '20 - STANDARD PRACTICES - AIRFRAME' },
+                { key: '21', value: '21 - AIR CONDITIONING' },
+                { key: '22', value: '22 - AUTO FLIGHT' },
+                { key: '23', value: '23 - COMMUNICATIONS' },
+                { key: '24', value: '24 - ELECTRICAL POWER' },
+                { key: '25', value: '25 - EQUIPMENT/FURNISHINGS' },
+                { key: '26', value: '26 - FIRE PROTECTION' },
+                { key: '27', value: '27 - FLIGHT CONTROLS' },
+                { key: '28', value: '28 - FUEL' },
+                { key: '30', value: '30 - ICE AND RAIN PROTECTION' },
+                { key: '31', value: '31 - INDICATING/RECORDING SYSTEMS' },
+                { key: '32', value: '32 - LANDING GEAR' },
+                { key: '33', value: '33 - LIGHTS' },
+                { key: '34', value: '34 - NAVIGATION' },
+                { key: '35', value: '35 - OXYGEN' },
+                { key: '36', value: '36 - PNEUMATIC' },
+                { key: '38', value: '38 - WATER/WASTE' },
                 {
-                  key: "44",
-                  value: "44 - CABIN SYSTEMS",
+                  key: '44',
+                  value: '44 - CABIN SYSTEMS',
                 },
-                { key: "45", value: "45 - CENTRAL MAINT SYSTEM" },
-                { key: "46", value: "46 - INFORMATION SYSTEMS" },
-                { key: "49", value: "49 - AIRBORNE AUXILIARY POWER" },
-                { key: "50", value: "50 - CARGO COMPARTMENTS" },
-                { key: "52", value: "52 - DOORS" },
-                { key: "53", value: "53 - FUSELAGE" },
-                { key: "54", value: "54 - NACELLES/PYLONS" },
-                { key: "55", value: "55 - STABILIZERS" },
-                { key: "56", value: "56 - WINDOWS" },
-                { key: "57", value: "57 - WINGS" },
-                { key: "71", value: "71 - POWER PLANT" },
-                { key: "72", value: "72 - ENGINE" },
-                { key: "73", value: "73 - ENGINE FUEL AND CONTROL" },
-                { key: "74", value: "74 - IGNITION" },
-                { key: "75", value: "75 - AIR" },
-                { key: "76", value: "76 - ENGINE CONTROLS" },
-                { key: "77", value: "77 - ENGINE INDICATING" },
-                { key: "78", value: "78 - EXHAUST" },
-                { key: "79", value: "79 - OIL" },
-                { key: "80", value: "80 - STARTING" },
-                { key: "81", value: "81 - TURBINES" },
+                { key: '45', value: '45 - CENTRAL MAINT SYSTEM' },
+                { key: '46', value: '46 - INFORMATION SYSTEMS' },
+                { key: '49', value: '49 - AIRBORNE AUXILIARY POWER' },
+                { key: '50', value: '50 - CARGO COMPARTMENTS' },
+                { key: '52', value: '52 - DOORS' },
+                { key: '53', value: '53 - FUSELAGE' },
+                { key: '54', value: '54 - NACELLES/PYLONS' },
+                { key: '55', value: '55 - STABILIZERS' },
+                { key: '56', value: '56 - WINDOWS' },
+                { key: '57', value: '57 - WINGS' },
+                { key: '71', value: '71 - POWER PLANT' },
+                { key: '72', value: '72 - ENGINE' },
+                { key: '73', value: '73 - ENGINE FUEL AND CONTROL' },
+                { key: '74', value: '74 - IGNITION' },
+                { key: '75', value: '75 - AIR' },
+                { key: '76', value: '76 - ENGINE CONTROLS' },
+                { key: '77', value: '77 - ENGINE INDICATING' },
+                { key: '78', value: '78 - EXHAUST' },
+                { key: '79', value: '79 - OIL' },
+                { key: '80', value: '80 - STARTING' },
+                { key: '81', value: '81 - TURBINES' },
               ]}
               onChange={handleMultiSelectChange}
             />
           </Form.Item>
           <Divider />
-          <Row justify={"space-between"}>
+          <Row justify={'space-between'}>
             <Space direction="vertical">
               <Form.Item label="INT(DAY)" name="intervalDAYS">
                 <InputNumber placeholder="int.DAYS" />
@@ -296,13 +296,13 @@ const FIlteredTaskForm: FC = () => {
               </Form.Item>
             </Space>
             <Space direction="vertical" size={5}>
-              {" "}
+              {' '}
               <Form.Item label="C/W DAYS" name="completeDAYS">
                 <DatePicker onChange={onChange} />
-              </Form.Item>{" "}
+              </Form.Item>{' '}
               <Form.Item label="C/W HRS" name="completeHRS">
                 <Input />
-              </Form.Item>{" "}
+              </Form.Item>{' '}
               <Form.Item label="C/W AFL" name="completeAFL">
                 <InputNumber />
               </Form.Item>
@@ -310,7 +310,7 @@ const FIlteredTaskForm: FC = () => {
           </Row>
           <Form.Item>
             <Space className="">
-              {" "}
+              {' '}
               <Button htmlType="submit" type="primary">
                 Save
               </Button>

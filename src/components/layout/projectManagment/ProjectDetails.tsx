@@ -1,17 +1,18 @@
-import { EditOutlined, SettingOutlined } from "@ant-design/icons";
-import { ProFormDatePicker } from "@ant-design/pro-components";
+import { EditOutlined, SettingOutlined } from '@ant-design/icons';
+import { ProFormDatePicker } from '@ant-design/pro-components';
 import ProForm, {
   ProFormGroup,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
-} from "@ant-design/pro-form";
-import { Button, Col, Divider, Form, Row, Space, message } from "antd";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
-import { createProject, updateProject } from "@/utils/api/thunks";
+} from '@ant-design/pro-form';
+import { Button, Col, Divider, Form, Row, Space, message } from 'antd';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
+import { createProject, updateProject } from '@/utils/api/thunks';
+import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
 
 type ProjectDetailsFormType = {
   project: any;
@@ -24,8 +25,10 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(true);
+  const [selectedSingleCustomer, setSecectedSingleCustomer] = useState<any>();
   const [isEditingView, setIsEditingView] = useState(false);
-  const [isCreateView, setIsCreateView] = useState(false);
+
+  const [initialForm, setinitialForm] = useState<any>('');
   const [isCreating, setIsCreating] = useState(false);
   const [form] = Form.useForm();
   const [formAdd] = Form.useForm();
@@ -51,23 +54,23 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
     if (project) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: "projectNumber", value: project?.projectWO },
-        { name: "projectType", value: project?.projectType },
-        { name: "projectState", value: project?.status },
-        { name: "acRegistrationNumber", value: project.acRegistrationNumber },
-        { name: "manufactureNumber", value: project.manufactureNumber },
-        { name: "acType", value: project.acType },
-        { name: "acHours", value: project.acHours },
-        { name: "acLDG", value: project.acLDG },
-        { name: "WOType", value: project.WOType },
-        { name: "projectName", value: project.projectName },
-        { name: "classification", value: project.classification },
-        { name: "department", value: project.department },
-        { name: "description", value: project.description },
-        { name: "customer", value: project.customer },
-        { name: "startDate", value: project.startDate },
-        { name: "planedStartDate", value: project.planedStartDate },
-        { name: "planedFinishDate", value: project.planedFinishDate },
+        { name: 'projectNumber', value: project?.projectWO },
+        { name: 'projectType', value: project?.projectType },
+        { name: 'projectState', value: project?.status },
+        { name: 'acRegistrationNumber', value: project.acRegistrationNumber },
+        { name: 'manufactureNumber', value: project.manufactureNumber },
+        { name: 'acType', value: project.acType },
+        { name: 'acHours', value: project.acHours },
+        { name: 'acLDG', value: project.acLDG },
+        { name: 'WOType', value: project.WOType },
+        { name: 'projectName', value: project.projectName },
+        { name: 'classification', value: project.classification },
+        { name: 'department', value: project.department },
+        { name: 'description', value: project.description },
+        { name: 'customer', value: project.customer },
+        { name: 'startDate', value: project.startDate },
+        { name: 'planedStartDate', value: project.planedStartDate },
+        { name: 'planedFinishDate', value: project.planedFinishDate },
       ]);
 
       // onFilterTransferprojects(form.getFieldsValue());
@@ -85,8 +88,8 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
           <Space
             className={`cursor-pointer transform transition px-3 ${
               isEditing || isCreating
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-blue-500"
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:text-blue-500'
             }`}
             onClick={() => {
               if (!isEditing) {
@@ -101,29 +104,39 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
           >
             <SettingOutlined
               className={`${
-                isEditing || !isCreating
-                  ? "cursor-not-allowed"
-                  : "cursor-pointer"
+                isEditing || isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
               }`}
             />
             <div
               className={`${
-                isEditing || !isCreating
-                  ? "cursor-not-allowed"
-                  : "cursor-pointer"
+                isEditing || isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer'
               }`}
             >
-              {t("NEW PROJECT")}
+              {t('NEW PROJECT')}
             </div>
           </Space>
           <Space
-            onClick={() => project && setIsEditingView(!isEditingView)}
-            className={`cursor-pointer transform transition px-3 ${
-              !project ? "opacity-50 cursor-not-allowed" : "hover:text-blue-500"
+            onClick={() =>
+              project && project._id && setIsEditingView(!isEditingView)
+            }
+            className={`transform transition px-3 ${
+              isEditing || isCreating
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:text-blue-500 cursor-pointer '
             }`}
           >
-            <EditOutlined />
-            <>{t("EDIT")}</>
+            <EditOutlined
+              className={`${
+                isEditing || !isCreating
+                  ? 'cursor-not-allowed'
+                  : 'cursor-pointer '
+              }`}
+            />
+            <>{t('EDIT')}</>
           </Space>
         </Space>
       </Col>
@@ -133,6 +146,12 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
         className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
       >
         <ProForm
+          onReset={() => {
+            setinitialForm('');
+
+            setSecectedSingleCustomer({ CODE: '' });
+            // setSecectedSingleLocation({ locationName: '' });
+          }}
           size="small"
           form={form}
           disabled={!isEditing && !isCreating}
@@ -143,23 +162,23 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
               const result = await dispatch(
                 updateProject({
                   id: project._id || project.id,
-                  companyID: localStorage.getItem("companyID"),
+                  companyID: localStorage.getItem('companyID'),
                   projectName: values.projectName,
                   planedStartDate: values.planedStartDate,
                   planedFinishDate: values.planedFinishDate,
                   updateByID: USER_ID,
-                  updateUserSing: localStorage.getItem("singNumber"),
+                  updateUserSing: localStorage.getItem('singNumber'),
                   department: values.department,
                   classification: values.classification,
                   updateDate: new Date(),
                   startDate:
-                    values.projectState === "inProgress" ||
-                    values.projectState === "INPROGRESS"
+                    values.projectState === 'inProgress' ||
+                    values.projectState === 'INPROGRESS'
                       ? values.startDate || new Date()
                       : values.startDate,
                   finishDate: values.finishDate,
                   description: values?.description,
-                  customer: values?.customer,
+                  customer: selectedSingleCustomer?.CODE,
                   acRegistrationNumber: values?.acRegistrationNumber,
                   manufactureNumber: values?.manufactureNumber,
                   acType: values?.acType,
@@ -171,30 +190,30 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                   acModel: values.acModel,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 onEditProjectDetailsEdit(result.payload);
-                message.success(t("SUCCESS"));
+                message.success(t('SUCCESS'));
                 setIsEditing(false);
                 setIsCreating(false);
-              } else message.error(t("ERROR"));
+              } else message.error(t('ERROR'));
             }
             if (isCreating) {
               const result = await dispatch(
                 createProject({
-                  companyID: localStorage.getItem("companyID"),
+                  companyID: localStorage.getItem('companyID'),
                   projectName: values.projectName,
                   planedStartDate: values.planedStartDate,
                   planedFinishDate: values.planedFinishDate,
                   ownerId: USER_ID,
                   createByID: USER_ID,
-                  createBySing: localStorage.getItem("singNumber"),
+                  createBySing: localStorage.getItem('singNumber'),
                   department: values.department,
                   classification: values.classification,
                   createDate: new Date(),
                   startDate: null,
                   finishDate: null,
                   description: values?.description,
-                  customer: values?.customer,
+                  customer: selectedSingleCustomer?.CODE,
                   acRegistrationNumber: values?.acRegistrationNumber,
                   manufactureNumber: values?.manufactureNumber,
                   acType: values?.acType,
@@ -213,17 +232,17 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                   },
                   isEdited: false,
 
-                  status: "DRAFT",
+                  status: 'DRAFT',
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 onEditProjectDetailsEdit(result.payload);
-                message.success(t("SUCCESS"));
+                message.success(t('SUCCESS'));
                 setIsEditing(false);
                 setIsCreating(false);
               }
             }
-            const currentCompanyID = localStorage.getItem("companyID") || "";
+            const currentCompanyID = localStorage.getItem('companyID') || '';
           }}
           submitter={{
             render: (_, dom) =>
@@ -236,16 +255,16 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                         isEditing && setIsEditingView(!isEditingView);
                         isCreating && setIsCreating(false);
                         setSelectedProjectType(
-                          form.getFieldValue("projectState")
+                          form.getFieldValue('projectState')
                         );
                       }}
                     >
-                      {t("Cancel")}
+                      {t('Cancel')}
                     </Button>,
                   ]
                 : [],
             submitButtonProps: {
-              children: "Search",
+              children: 'Search',
             },
           }}
         >
@@ -254,18 +273,18 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             showSearch
             disabled={!isCreating}
             name="projectType"
-            label={t("PROJECT TYPE")}
+            label={t('PROJECT TYPE')}
             width="lg"
-            tooltip={t("PROJECT TYPE")}
+            tooltip={t('PROJECT TYPE')}
             valueEnum={{
-              MAINTENANCE_AC_PROJECT: t("MAINTENANCE A/C "),
-              REPAIR_AC_PROJECT: t("REPAIR A/C "),
-              REPAIR_COMPONENT_PROJECT: t("REPAIR COMPONENT "),
-              SERVICE_COMPONENT_PROJECT: t("COMPONENT SERVICE "),
-              COMPONENT_REPAIR_PROJECT: t("COMPONENT REPAIR "),
-              PRODUCTION_PROJECT: t("PRODUCTION "),
-              PURCHASE_PROJECT: t("PURCHASE "),
-              MINIMUM_SUPPLY_LIST: t("MINIMUM SUPPLY LIST"),
+              MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
+              REPAIR_AC_PROJECT: t('REPAIR A/C '),
+              REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
+              SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
+              COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
+              PRODUCTION_PROJECT: t('PRODUCTION '),
+              PURCHASE_PROJECT: t('PURCHASE '),
+              MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
             }}
             onChange={(value: any) => setSelectedProjectType(value)}
           />
@@ -274,105 +293,108 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             disabled={isCreating || !isEditing}
             rules={[{ required: true }]}
             name="projectState"
-            label={t("PROJECT STATE")}
+            label={t('PROJECT STATE')}
             width="sm"
-            initialValue={["DRAFT"]}
+            initialValue={['DRAFT']}
             valueEnum={{
-              DRAFT: { text: t("DRAFT"), status: "DRAFT" },
-              OPEN: { text: t("OPEN"), status: "Processing" },
-              inProgress: { text: t("PROGRESS"), status: "PROGRESS" },
-              PLANNED: { text: t("PLANNED"), status: "Waiting" },
-              COMPLETED: { text: t("COMPLETED"), status: "Default" },
-              CLOSED: { text: t("CLOSED"), status: "Success" },
-              CANCELLED: { text: t("CANCELLED"), status: "Error" },
+              DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
+              OPEN: { text: t('OPEN'), status: 'Processing' },
+              inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+              PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+              COMPLETED: { text: t('COMPLETED'), status: 'Default' },
+              CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+              CANCELLED: { text: t('CANCELLED'), status: 'Error' },
             }}
           />
-          {(project?.projectType === "PURCHASE_PROJECT" ||
-            project?.projectType === "PURCHASE_PROJECT" ||
-            selectedProjectType === "PURCHASE_PROJECT" ||
-            selectedProjectType === "MINIMUM_SUPPLY_LIST") && (
+          {(project?.projectType === 'PURCHASE_PROJECT' ||
+            project?.projectType === 'PURCHASE_PROJECT' ||
+            selectedProjectType === 'PURCHASE_PROJECT' ||
+            selectedProjectType === 'MINIMUM_SUPPLY_LIST') && (
             <ProFormText
               rules={[{ required: true }]}
               name="projectName"
-              label={t("PROJECT SHOT NAME")}
+              label={t('PROJECT SHOT NAME')}
               width="sm"
             ></ProFormText>
           )}
 
           <ProFormTextArea
-            fieldProps={{ style: { resize: "none" } }}
+            fieldProps={{ style: { resize: 'none' } }}
             rules={[{ required: true }]}
             name="description"
-            label={t("DESCRIPTION")}
+            label={t('DESCRIPTION')}
             width="lg"
-            tooltip={t("DESCRIPTION")}
+            tooltip={t('DESCRIPTION')}
           ></ProFormTextArea>
 
           <ProFormGroup>
             <ProFormDatePicker
-              label={t("PLANNED START DATE")}
+              label={t('PLANNED START DATE')}
               name="planedStartDate"
               width="sm"
             ></ProFormDatePicker>
             <ProFormDatePicker
               disabled
-              label={t("START DATE")}
+              label={t('START DATE')}
               name="startDate"
               width="sm"
             ></ProFormDatePicker>
-            <ProFormText
-              fieldProps={{ style: { resize: "none" } }}
-              // rules={[{ required: true }]}
-              name="customer"
-              label={t("CUSTOMER")}
+            <ContextMenuVendorsSearchSelect
               width="sm"
-            ></ProFormText>
+              rules={[{ required: false }]}
+              name={'customer'}
+              onSelectedVendor={function (record: any, rowIndex?: any): void {
+                setSecectedSingleCustomer(record);
+              }}
+              initialForm={selectedSingleCustomer?.CODE || initialForm}
+              label={t('CUSTOMER')}
+            />
           </ProFormGroup>
           <ProFormGroup>
             <ProFormDatePicker
-              label={t("PLANNED FINISH DATE")}
+              label={t('PLANNED FINISH DATE')}
               name="planedFinishDate"
               width="sm"
             ></ProFormDatePicker>
             <ProFormDatePicker
               disabled
-              label={t("FINISH DATE")}
+              label={t('FINISH DATE')}
               name="finishDate"
               width="sm"
             ></ProFormDatePicker>
           </ProFormGroup>
 
-          {(selectedProjectType === "MAINTENANCE_AC_PROJECT" ||
-            project?.projectType === "MAINTENANCE_AC_PROJECT") && (
+          {(selectedProjectType === 'MAINTENANCE_AC_PROJECT' ||
+            project?.projectType === 'MAINTENANCE_AC_PROJECT') && (
             <>
               <ProFormGroup>
                 <ProFormText
                   rules={[{ required: true }]}
                   name="acRegistrationNumber"
-                  label={t("A/C REGISTR. No")}
+                  label={t('A/C REGISTR. No')}
                   width="sm"
                 ></ProFormText>
                 <ProFormText
                   rules={[{ required: true }]}
                   name="manufactureNumber"
-                  label={t("A/C MSN No")}
+                  label={t('A/C MSN No')}
                   width="sm"
                 ></ProFormText>
 
                 <ProFormSelect
                   showSearch
                   name="acType"
-                  label={t("A/C TYPE")}
+                  label={t('A/C TYPE')}
                   width="xs"
                   valueEnum={{
-                    RRJ_95: { text: t("RRJ-95"), status: "RRJ-95" },
-                    a320: { text: t("A 320"), status: "RRJ-95" },
+                    RRJ_95: { text: t('RRJ-95'), status: 'RRJ-95' },
+                    a320: { text: t('A 320'), status: 'RRJ-95' },
                   }}
                 />
                 <ProFormSelect
                   showSearch
                   name="acModel"
-                  label={t("A/C MODEL")}
+                  label={t('A/C MODEL')}
                   width="xs"
                   valueEnum={{}}
                 />
@@ -381,13 +403,13 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                 <ProFormText
                   rules={[{ required: true }]}
                   name="acHours"
-                  label={t("A/C TIMES (HOURS)")}
+                  label={t('A/C TIMES (HOURS)')}
                   width="sm"
                 ></ProFormText>
                 <ProFormText
                   rules={[{ required: true }]}
                   name="acLDG"
-                  label={t("A/C TIMES (LDG)")}
+                  label={t('A/C TIMES (LDG)')}
                   width="sm"
                 ></ProFormText>
               </ProFormGroup>
@@ -396,37 +418,37 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
                 <ProFormText
                   rules={[{ required: true }]}
                   name="WOType"
-                  label={t("WORK PACKAGE TYPE")}
+                  label={t('WORK PACKAGE TYPE')}
                   width="sm"
                 ></ProFormText>
                 <ProFormText
                   rules={[{ required: true }]}
                   name="projectName"
-                  label={t("WORK PACKAGE NAME")}
+                  label={t('WORK PACKAGE NAME')}
                   width="sm"
                 ></ProFormText>
                 <ProFormSelect
                   showSearch
                   name="classification"
-                  label={t("CLASSIFICATION")}
+                  label={t('CLASSIFICATION')}
                   width="sm"
                   valueEnum={{
-                    SCHEDULED: { text: t("SCHEDULED"), status: "Success" },
+                    SCHEDULED: { text: t('SCHEDULED'), status: 'SUCCESS' },
                     UNSCHEDULED: {
-                      text: t("UNSCHEDULED"),
-                      status: "Processing",
+                      text: t('UNSCHEDULED'),
+                      status: 'Processing',
                     },
                   }}
                 />
                 <ProFormSelect
                   showSearch
                   name="department"
-                  label={t("DEPARTMENT")}
+                  label={t('DEPARTMENT')}
                   width="sm"
                   valueEnum={{
-                    MAINTENANCE: { text: t("MAINTENANCE") },
+                    MAINTENANCE: { text: t('MAINTENANCE') },
                     OPERATIONS: {
-                      text: t("OPERATIONS"),
+                      text: t('OPERATIONS'),
                     },
                   }}
                 />

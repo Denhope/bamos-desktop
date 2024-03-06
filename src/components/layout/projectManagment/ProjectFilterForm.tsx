@@ -2,12 +2,14 @@ import ProForm, {
   FormInstance,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-form";
-import { Form } from "antd";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredProjects } from "@/utils/api/thunks";
+} from '@ant-design/pro-form';
+import { Form } from 'antd';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getFilteredProjects } from '@/utils/api/thunks';
+import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenuProjectSearchSelect';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 type ProjectFilterFormType = {
   onProjectSearch: (orders: any[] | []) => void;
 };
@@ -17,13 +19,28 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
   const [form] = Form.useForm();
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
+  const [selectedSingleProject, setSecectedSingleProject] = useState<any>();
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [initialForm, setinitialForm] = useState<any>('');
+  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [initialFormProject, setinitialFormProject] = useState<any>('');
   return (
     <div>
       <ProForm
+        onReset={() => {
+          setIsResetForm(true);
+          setTimeout(() => {
+            setIsResetForm(false);
+          }, 0);
+          setSecectedSingleProject(null);
+          setinitialFormProject('');
+          setinitialForm('');
+          setSecectedSingleProject({ projectWO: '' });
+        }}
         className="bg-white px-4 py-3 rounded-md border-gray-400"
         size="small"
         layout="horizontal"
@@ -31,47 +48,49 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
         formRef={formRef}
         form={form}
         onFinish={async (values) => {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
+          const currentCompanyID = localStorage.getItem('companyID') || '';
           const result = await dispatch(
             getFilteredProjects({
               companyID: currentCompanyID,
               planeNumber: values.planeNumber,
               status: values.projectState,
               projectType: values.projectType,
-              projectWO: form.getFieldValue("projectNumber"),
+              projectWO: selectedSingleProject?.projectWO,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             onProjectSearch(result.payload || []);
           }
         }}
       >
-        <ProFormText
-          name="projectNumber"
-          label={t("PROJECT No")}
-          width="sm"
-          fieldProps={{
-            // onDoubleClick: () => setOpenPickViewer(true),
-            onKeyPress: handleKeyPress,
-            autoFocus: true,
+        <ContextMenuProjectSearchSelect
+          isResetForm={isResetForm}
+          rules={[{ required: false }]}
+          onSelectedProject={function (project: any): void {
+            setSecectedSingleProject(project);
           }}
-        ></ProFormText>
+          name={'projectNumber'}
+          initialForm={selectedSingleProject?.projectWO || initialFormProject}
+          width={'lg'}
+          label={`${t(`PROJECT`)}`}
+        ></ContextMenuProjectSearchSelect>
+
         <ProFormSelect
           showSearch
           mode="multiple"
           name="projectType"
-          label={t("PROJECT TYPE")}
+          label={t('PROJECT TYPE')}
           width="sm"
-          tooltip={t("PROJECT TYPE")}
+          tooltip={t('PROJECT TYPE')}
           valueEnum={{
-            MAINTENANCE_AC_PROJECT: t("MAINTENANCE A/C "),
-            REPAIR_AC_PROJECT: t("REPAIR A/C "),
-            REPAIR_COMPONENT_PROJECT: t("REPAIR COMPONENT "),
-            SERVICE_COMPONENT_PROJECT: t("COMPONENT SERVICE "),
-            COMPONENT_REPAIR_PROJECT: t("COMPONENT REPAIR "),
-            PRODUCTION_PROJECT: t("PRODUCTION "),
-            PURCHASE_PROJECT: t("PURCHASE "),
-            MINIMUM_SUPPLY_LIST: t("MINIMUM SUPPLY LIST"),
+            MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
+            REPAIR_AC_PROJECT: t('REPAIR A/C '),
+            REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
+            SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
+            COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
+            PRODUCTION_PROJECT: t('PRODUCTION '),
+            PURCHASE_PROJECT: t('PURCHASE '),
+            MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
           }}
         />
         <ProFormText
@@ -84,21 +103,22 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
             autoFocus: true,
           }}
         />
-        <ProFormText
-          name="partNumber"
-          label={t("PART No")}
-          width="sm"
-          tooltip={t("PART No")}
-          fieldProps={{
-            // onDoubleClick: () => setOpenPickViewer(true),
-            onKeyPress: handleKeyPress,
+        <ContextMenuPNSearchSelect
+          label={t('PART No')}
+          isResetForm={isResetForm}
+          rules={[{ required: false }]}
+          onSelectedPN={function (PN: any): void {
+            setSecectedSinglePN(PN);
           }}
-        ></ProFormText>
+          name={'partNumber'}
+          initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
+          width={'sm'}
+        ></ContextMenuPNSearchSelect>
         <ProFormText
           name="serialNumber"
-          label={t("SERIAL No")}
+          label={t('SERIAL No')}
           width="sm"
-          tooltip={t("SERIAL No")}
+          tooltip={t('SERIAL No')}
           fieldProps={{
             // onDoubleClick: () => setOpenPickViewer(true),
             onKeyPress: handleKeyPress,
@@ -108,17 +128,17 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
           showSearch
           mode="multiple"
           name="projectState"
-          label={t("PROJECT STATE")}
+          label={t('PROJECT STATE')}
           width="sm"
-          initialValue={["DRAFT", "OPEN"]}
+          initialValue={['DRAFT', 'OPEN']}
           valueEnum={{
-            DRAFT: { text: t("DRAFT"), status: "DRAFT" },
-            OPEN: { text: t("OPEN"), status: "Processing" },
-            inProgress: { text: t("PROGRESS"), status: "PROGRESS" },
-            PLANNED: { text: t("PLANNED"), status: "Waiting" },
-            COMPLETED: { text: t("COMPLETED"), status: "Default" },
-            CLOSED: { text: t("CLOSED"), status: "Success" },
-            CANCELLED: { text: t("CANCELLED"), status: "Error" },
+            DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
+            OPEN: { text: t('OPEN'), status: 'Processing' },
+            inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+            PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+            COMPLETED: { text: t('COMPLETED'), status: 'Default' },
+            CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+            CANCELLED: { text: t('CANCELLED'), status: 'Error' },
           }}
         />
       </ProForm>

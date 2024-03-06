@@ -7,31 +7,31 @@ import {
   Space,
   Tag,
   message,
-} from "antd";
-import Sider from "antd/es/layout/Sider";
-import { Content } from "antd/es/layout/layout";
-import React, { FC, useEffect, useState } from "react";
-import { getItem } from "@/services/utilites";
-import { EditOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { useTranslation } from "react-i18next";
-import StoreFilterForm from "../store/storeManagment/StoreFilterForm";
-import { IStore, IStoreLocation } from "@/models/IStore";
+} from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import { Content } from 'antd/es/layout/layout';
+import React, { FC, useEffect, useState } from 'react';
+import { getItem } from '@/services/utilites';
+import { EditOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import StoreFilterForm from '../store/storeManagment/StoreFilterForm';
+import { IStore, IStoreLocation } from '@/models/IStore';
 import {
   ModalForm,
   ProColumns,
   ProDescriptions,
-} from "@ant-design/pro-components";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import CreateNewLocation from "../store/storeManagment/CreateNewLocation";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { updateStoreByID } from "@/utils/api/thunks";
-import EditLocation from "../store/storeManagment/EditNewLocation";
-import ShowParts from "../store/storeManagment/ShowParts";
-import StoreEditForm from "../store/storeManagment/StoreEditForm";
+} from '@ant-design/pro-components';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import CreateNewLocation from '../store/storeManagment/CreateNewLocation';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { updateStoreByID } from '@/utils/api/thunks';
+import EditLocation from '../store/storeManagment/EditNewLocation';
+import ShowParts from '../store/storeManagment/ShowParts';
+import StoreEditForm from '../store/storeManagment/StoreEditForm';
 
 const StoreManagment: FC = () => {
   const { t } = useTranslation();
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   const [collapsed, setCollapsed] = useState(false);
   const [currentStore, setCurrenStore] = useState<IStore | null>(null);
   const [locations, setLocations] = useState<IStoreLocation[]>([]);
@@ -40,8 +40,8 @@ const StoreManagment: FC = () => {
   const [openShowParts, setOpenShowParts] = useState(false);
   const [openEditStore, setOpenEditStore] = useState(false);
   const sortedLocations = [...locations].sort((a, b) => {
-    const [aLetter, aNumber] = a.locationName.split("-");
-    const [bLetter, bNumber] = b.locationName.split("-");
+    const [aLetter, aNumber] = a.locationName.split('-');
+    const [bLetter, bNumber] = b.locationName.split('-');
 
     if (aLetter < bLetter) {
       return -1;
@@ -54,8 +54,8 @@ const StoreManagment: FC = () => {
 
   const items: MenuItem[] = [
     getItem(
-      <>{t("STORE MANAGEMENT (BAN:220)")}</>,
-      "sub1",
+      <>{t('STORE MANAGEMENT (BAN:220)')}</>,
+      'sub1',
       <ShoppingCartOutlined />
     ),
     // ]
@@ -66,57 +66,57 @@ const StoreManagment: FC = () => {
   }, [currentStore]);
   const initialReleseColumns: ProColumns<IStoreLocation>[] = [
     {
-      title: `${t("LOCATION")}`,
-      dataIndex: "locationName",
-      key: "PN",
+      title: `${t('LOCATION')}`,
+      dataIndex: 'locationName',
+      key: 'PN',
       ellipsis: true,
 
       editable: (text, record, index) => {
         return false;
       },
-      width: "8%",
+      width: '8%',
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "description",
-      key: "description",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'description',
+      key: 'description',
       ellipsis: true,
-      valueType: "select",
+      valueType: 'select',
       valueEnum: {
         LOCATION_FOR_UNSERVICEABLE_PARTS: {
-          text: t("LOCATION FOR UNSERVICEABLE_PARTS"),
+          text: t('LOCATION FOR UNSERVICEABLE_PARTS'),
         },
         LOCATION_FOR_PARTS_IN_HANGAR: {
-          text: t("LOCATION FOR PARTS IN HANGAR"),
+          text: t('LOCATION FOR PARTS IN HANGAR'),
         },
         LOCATION_FOR_PARTS_IN_INVENTORY: {
-          text: t("LOCATION FOR PARTS IN INVENTORY"),
+          text: t('LOCATION FOR PARTS IN INVENTORY'),
         },
         LOCATION_FOR_SERVICEABLE_PARTS: {
-          text: t("LOCATION FOR SERVICEABLE PARTS"),
+          text: t('LOCATION FOR SERVICEABLE PARTS'),
         },
         LOCATION_FOR_PARTS_TO_SCRAP: {
-          text: t("LOCATION FOR PARTS TO SCRAP"),
+          text: t('LOCATION FOR PARTS TO SCRAP'),
         },
         LOCATION_FOR_PARTS_IN_QUARANTINE: {
-          text: t("LOCATION FOR PARTS IN QUARANTINE"),
+          text: t('LOCATION FOR PARTS IN QUARANTINE'),
         },
         LOCATION_FOR_PARTS_ON_ROLLOUT: {
-          text: t("LOCATION FOR PARTS ON ROLLOUT"),
+          text: t('LOCATION FOR PARTS ON ROLLOUT'),
         },
         LOCATION_FOR_PARTS_IN_SHOP: {
-          text: t("LOCATION FOR PARTS IN SHOP"),
+          text: t('LOCATION FOR PARTS IN SHOP'),
         },
-        QUAR_LOCATION: { text: t("QUAR LOCATION") },
-        DROP_LOCATION: { text: t("DROP LOCATION") },
+        QUAR_LOCATION: { text: t('QUAR LOCATION') },
+        DROP_LOCATION: { text: t('DROP LOCATION') },
       },
 
       editable: (text, record, index) => {
         return false;
       },
-      width: "32%",
+      width: '32%',
 
       // responsive: ['sm'],
     },
@@ -138,15 +138,15 @@ const StoreManagment: FC = () => {
     // },
 
     {
-      title: `${t("RESTRICTION")}`,
-      dataIndex: "rectriction",
-      key: "rectriction",
+      title: `${t('RESTRICTION')}`,
+      dataIndex: 'rectriction',
+      key: 'rectriction',
       ellipsis: true,
-      valueType: "select",
+      valueType: 'select',
       valueEnum: {
-        standart: { text: t("STANDART") },
-        inaccessible: { text: t("INACCESSIBLE") },
-        restricted: { text: t("RESTRICTED") },
+        standart: { text: t('STANDART') },
+        inaccessible: { text: t('INACCESSIBLE') },
+        restricted: { text: t('RESTRICTED') },
       },
 
       editable: (text, record, index) => {
@@ -156,29 +156,29 @@ const StoreManagment: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("LOCATION TYPE")}`,
-      dataIndex: "locationType",
-      key: "locationType",
-      valueType: "select",
+      title: `${t('LOCATION TYPE')}`,
+      dataIndex: 'locationType',
+      key: 'locationType',
+      valueType: 'select',
       ellipsis: true,
       valueEnum: {
-        standart: { text: t("STANDART") },
-        hangar: { text: t("HANGAR") },
-        inventory: { text: t("INVENTORY") },
-        quarantine: { text: t("QUARANTINE") },
-        rollOut: { text: t("ROLLOUT") },
-        scrap: { text: t("SCRAP") },
-        shipment: { text: t("SHIPMENT") },
-        transfer: { text: t("TRANSFER") },
-        shop: { text: t("SHOP") },
-        unserviceable: { text: t("UNSERVICEABLE") },
-        reservation: { text: t("RESERVATION") },
-        customer: { text: t("CUSTOMER") },
-        consingment: { text: t("CONSIGNMENT") },
+        standart: { text: t('STANDART') },
+        hangar: { text: t('HANGAR') },
+        inventory: { text: t('INVENTORY') },
+        quarantine: { text: t('QUARANTINE') },
+        rollOut: { text: t('ROLLOUT') },
+        scrap: { text: t('SCRAP') },
+        shipment: { text: t('SHIPMENT') },
+        transfer: { text: t('TRANSFER') },
+        shop: { text: t('SHOP') },
+        unserviceable: { text: t('UNSERVICEABLE') },
+        reservation: { text: t('RESERVATION') },
+        customer: { text: t('CUSTOMER') },
+        consingment: { text: t('CONSIGNMENT') },
         // pool: { text: t('POOL') },
-        tool: { text: t("TOOL") },
-        arhive: { text: t("ARCHIVE") },
-        moving: { text: t("MOVING") },
+        tool: { text: t('TOOL') },
+        arhive: { text: t('ARCHIVE') },
+        moving: { text: t('MOVING') },
       },
       editable: (text, record, index) => {
         return false;
@@ -187,9 +187,9 @@ const StoreManagment: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "ownerShotName",
-      key: "ownerShotName",
+      title: `${t('OWNER')}`,
+      dataIndex: 'ownerShotName',
+      key: 'ownerShotName',
       ellipsis: true,
 
       editable: (text, record, index) => {
@@ -199,9 +199,9 @@ const StoreManagment: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t("REMARKS")}`,
-      dataIndex: "remarks",
-      key: "remarks",
+      title: `${t('REMARKS')}`,
+      dataIndex: 'remarks',
+      key: 'remarks',
       ellipsis: true,
 
       editable: (text, record, index) => {
@@ -249,7 +249,7 @@ const StoreManagment: FC = () => {
         <div className="mx-auto px-5">
           <div
             style={{
-              display: !collapsed ? "block" : "none",
+              display: !collapsed ? 'block' : 'none',
             }}
           >
             <StoreFilterForm
@@ -261,12 +261,12 @@ const StoreManagment: FC = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[79vh] overflow-hidden flex flex-col justify-between">
+        <div className="h-[82vh] overflow-hidden flex flex-col justify-between">
           <div className="flex flex-col">
             <ProDescriptions className="bg-gray-200 align-middle ">
               <ProDescriptions.Item
                 span={0.4}
-                label={`${t("STATION")}`}
+                label={`${t('STATION')}`}
                 valueType="text"
               >
                 <Space>
@@ -281,21 +281,21 @@ const StoreManagment: FC = () => {
               </ProDescriptions.Item>
               <ProDescriptions.Item
                 span={0.2}
-                label={`${t("STORE")}`}
+                label={`${t('STORE')}`}
                 valueType="text"
               >
                 <Tag>{currentStore?.shopShortName}</Tag>
               </ProDescriptions.Item>
               <ProDescriptions.Item
                 span={1.2}
-                label={`${t("DESCRIPTIONS")}`}
+                label={`${t('DESCRIPTIONS')}`}
                 valueType="text"
               >
                 <Tag>{currentStore?.description}</Tag>
               </ProDescriptions.Item>
               <ProDescriptions.Item
                 span={1}
-                label={`${t("ADRESS")}`}
+                label={`${t('ADRESS')}`}
                 valueType="text"
               >
                 <Tag>{currentStore?.adress}</Tag>
@@ -331,11 +331,11 @@ const StoreManagment: FC = () => {
                 // console.log(record);
               }}
               onSave={function (rowKey: any, data: any, row: any): void {
-                throw new Error("Function not implemented.");
+                throw new Error('Function not implemented.');
               }}
               yScroll={52}
               externalReload={function () {
-                throw new Error("Function not implemented.");
+                throw new Error('Function not implemented.');
               }}
             ></EditableTable>
           </div>
@@ -346,7 +346,7 @@ const StoreManagment: FC = () => {
               disabled={!currentStore}
               onClick={() => setOpenCreateLocation(true)}
             >
-              +{t("CREATE")}
+              +{t('CREATE')}
             </Button>
 
             <Button
@@ -356,7 +356,7 @@ const StoreManagment: FC = () => {
 
                 // Предупреждение перед удалением
                 Modal.confirm({
-                  title: t("CONFIRM_DELETE"),
+                  title: t('CONFIRM_DELETE'),
                   onOk: async () => {
                     // Удаление выбранных элементов
                     const newLocations = (currentStore.locations?.filter(
@@ -373,7 +373,7 @@ const StoreManagment: FC = () => {
                     );
 
                     // Если обновление прошло успешно
-                    if (result.meta.requestStatus === "fulfilled") {
+                    if (result.meta.requestStatus === 'fulfilled') {
                       setLocations(result.payload.locations);
                       setCurrenStore({
                         ...currentStore,
@@ -385,7 +385,7 @@ const StoreManagment: FC = () => {
               }}
               disabled={!currentStore || !selectedRowKeys.length}
             >
-              {t("DELETE")}
+              {t('DELETE')}
             </Button>
             <Button
               size="small"
@@ -398,16 +398,16 @@ const StoreManagment: FC = () => {
                 // !selectedRowKeys.length
               }
             >
-              {t("SHOW PARTS")}
+              {t('SHOW PARTS')}
             </Button>
           </Space>
         </div>
         <ModalForm
           submitter={false}
           onFinish={async () => {}}
-          title={`${t("CREATE NEW LOCATION")}`}
+          title={`${t('CREATE NEW LOCATION')}`}
           open={openCreateLocation}
-          width={"40vw"}
+          width={'40vw'}
           onOpenChange={setOpenCreateLocation}
         >
           {currentStore && (
@@ -425,9 +425,9 @@ const StoreManagment: FC = () => {
         <ModalForm
           submitter={false}
           onFinish={async () => {}}
-          title={`${t("EDIT LOCATION")}`}
+          title={`${t('EDIT LOCATION')}`}
           open={editCreateLocation}
-          width={"40vw"}
+          width={'40vw'}
           onOpenChange={setOpenEditLocation}
         >
           {currentStore && selectedLocation && (
@@ -444,9 +444,9 @@ const StoreManagment: FC = () => {
         <ModalForm
           submitter={false}
           onFinish={async () => {}}
-          title={`${t("SHOW PARTS")}`}
+          title={`${t('SHOW PARTS')}`}
           open={openShowParts}
-          width={"90vw"}
+          width={'90vw'}
           onOpenChange={setOpenShowParts}
         >
           {currentStore && selectedLocationsItems && (
@@ -460,9 +460,9 @@ const StoreManagment: FC = () => {
         <ModalForm
           submitter={false}
           onFinish={async () => {}}
-          title={`${t("EDIT STORE")}`}
+          title={`${t('EDIT STORE')}`}
           open={openEditStore}
-          width={"50vw"}
+          width={'50vw'}
           onOpenChange={setOpenEditStore}
         >
           {currentStore && (

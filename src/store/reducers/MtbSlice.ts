@@ -5,24 +5,13 @@ import {
 import { IProjectResponce } from '@/models/IProject';
 import { IProjectTask } from '@/models/IProjectTaskMTB';
 import {
-  ICreateProjectGroup,
-  createNRCMTB,
-  createProjectGroup,
-  deleteGroupsByIds,
-  getFilteredAditionalTask,
   getFilteredAditionalTasks,
   getFilteredGroups,
   getFilteredGroupsTasks,
-  getFilteredProjectTasks,
   getFilteredProjects,
-  getFilteredRemoverdItems,
-  getFilteredRequirements,
   updateAdditionalTask,
   updateGroupByID,
   updateProjectAdditionalTasksByIds,
-  updateProjectTask,
-  updateProjectTaskActions,
-  updateProjectTasksByIds,
 } from '@/utils/api/thunks';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
@@ -200,6 +189,24 @@ export const PlaneSlice = createSlice({
         state.planesFetchError = action.error.message || 'An error occurred';
         console.error(action.error);
       })
+
+      .addCase(getFilteredGroups.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        getFilteredGroups.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.isLoading = false;
+          state.projectGroups = action.payload || [];
+          // Handle the fulfilled action as needed
+        }
+      )
+      .addCase(getFilteredGroups.rejected, (state, action) => {
+        state.isLoading = false;
+        state.planesFetchError = action.error.message || 'An error occurred';
+        console.error(action.error);
+      })
+
       // ... (other cases for updateGroupByID, deleteGroupsByIds, getFilteredGroupsTasks, getFilteredRemoverdItems, getFilteredGroups, createProjectGroup, updateProjectTasksByIds, and getFilteredAditionalTasks)
       .addCase(getFilteredAditionalTasks.pending, (state) => {
         state.isLoading = true;

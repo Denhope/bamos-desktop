@@ -1,8 +1,8 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { DatePicker } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import { DatePicker } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 type showOrderListType = {
   order?: any;
 
@@ -26,21 +26,21 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
   const { t } = useTranslation();
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("POSITION")}`,
-      dataIndex: "POSITION",
-      key: "POSITION",
+      title: `${t('POSITION')}`,
+      dataIndex: 'POSITION',
+      key: 'POSITION',
       // tip: 'LOCAL_ID',
       ellipsis: true,
-      width: "10%",
+      width: '10%',
       render: (text, record, index) => index + 1,
     },
 
     {
-      title: `${t("STATE")}`,
-      dataIndex: "state",
-      key: "state",
-      width: "13%",
-      valueType: "select",
+      title: `${t('STATE')}`,
+      dataIndex: 'state',
+      key: 'state',
+      width: '13%',
+      valueType: 'select',
       // filterSearch: true,
       // filters: true,
       editable: (text, record, index) => {
@@ -49,12 +49,12 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       render: (text: any, record: any) => {
         // Определяем цвет фона в зависимости от условия
         let backgroundColor;
-        if (record.state === "RECEIVED") {
-          backgroundColor = "#62d156";
-        } else if (record.state === "OPEN" || record.state === "open") {
-          backgroundColor = "red";
+        if (record.state === 'RECEIVED') {
+          backgroundColor = '#62d156';
+        } else if (record.state === 'OPEN' || record.state === 'open') {
+          backgroundColor = 'red';
         } else {
-          backgroundColor = "#f0be37";
+          backgroundColor = '#f0be37';
         }
         return (
           <div style={{ backgroundColor }}>{record.state && record.state}</div>
@@ -62,60 +62,76 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       },
     },
     {
-      title: `${t("PN")}`,
-      dataIndex: "PN",
-      key: "PN",
+      title: `${t('PN')}`,
+      dataIndex: 'PN',
+      key: 'PN',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
       editable: (text, record, index) => {
         return false;
       },
-      width: "12%",
+      render: (text: any, record: any) => record?.PN || record?.PART_NUMBER,
+      width: '12%',
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
-      width: "13%",
+      width: '13%',
       editable: (text, record, index) => {
         return false;
       },
+      render: (text: any, record: any) =>
+        record?.nameOfMaterial || record?.DESCRIPTION,
     },
     {
-      title: `${t("M.CLASS")}`,
-      dataIndex: "group",
-      key: "group",
-      responsive: ["sm"],
+      title: `${t('GROUP')}`,
+      dataIndex: 'group',
+      key: 'group',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
       },
+      render: (text: any, record: any) => record?.group || record?.GROUP,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("B/SERIAL")}`,
-      dataIndex: "SERIAL_NUMBER",
-      width: "9%",
+      title: `${t('B/SERIAL')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      width: '9%',
       editable: (text, record, index) => {
         return false;
       },
-      key: "SERIAL_NUMBER",
+      key: 'SERIAL_NUMBER',
       render: (text: any, record: any) =>
         record?.SERIAL_NUMBER || record?.SUPPLIER_BATCH_NUMBER,
       // остальные свойства...
     },
     {
-      title: `${t("QTY")}`,
-      dataIndex: "quantity",
-      key: "quantity",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'quantity',
+      key: 'quantity',
+      responsive: ['sm'],
+      search: false,
+      editable: (text, record, index) => {
+        return false;
+      },
+      render: (text: any, record: any) => record?.quantity || record?.QUANTITY,
+      // sorter: (a, b) => a.unit.length - b.unit.length,
+    },
+    {
+      title: `${t('BACKORDER')}`,
+      dataIndex: 'backorder',
+      key: 'backorder',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
@@ -123,36 +139,28 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("BACKORDER")}`,
-      dataIndex: "backorder",
-      key: "backorder",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
       },
+      render: (text: any, record: any) =>
+        record?.unit || record?.UNIT_OF_MEASURE,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: `${t('PRICE')}`,
+      dataIndex: 'PRICE',
+      key: 'PRICE',
+      responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
       },
-      // sorter: (a, b) => a.unit.length - b.unit.length,
-    },
-    {
-      title: `${t("PRICE")}`,
-      dataIndex: "PRICE",
-      key: "PRICE",
-      responsive: ["sm"],
-      search: false,
-      editable: (text, record, index) => {
-        return false;
-      },
+      render: (text: any, record: any) => record?.price || record?.PRICE,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
   ];
@@ -172,11 +180,11 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
           onSelectedPart && onSelectedPart(record, rowIndex);
         }}
         onSave={function (rowKey: any, data: any, row: any): void {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         yScroll={scroll}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         isLoading={false}
       />

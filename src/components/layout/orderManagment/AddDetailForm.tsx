@@ -1,37 +1,42 @@
 import {
   ModalForm,
   ProForm,
+  ProFormCheckbox,
   ProFormDigit,
   ProFormGroup,
   ProFormItem,
   ProFormRate,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Button, Form, FormInstance, message } from "antd";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
-import { t } from "i18next";
-import { IOrder } from "@/models/IOrder";
+} from '@ant-design/pro-components';
+import { Button, Form, FormInstance, message } from 'antd';
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+import { t } from 'i18next';
+import { IOrder } from '@/models/IOrder';
 
-import React, { FC, useEffect, useRef, useState } from "react";
-import Alternates from "../partAdministration/tabs/mainView/Alternates";
-import AlternativeTable from "../AlternativeTable";
+import React, { FC, useEffect, useRef, useState } from 'react';
+import Alternates from '../partAdministration/tabs/mainView/Alternates';
+import AlternativeTable from '../AlternativeTable';
 import {
   getFilteredAlternativePN,
   getFilteredRequirements,
   updateOrderByID,
-} from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import PartsForecast from "../APN/PartsForecast";
-import RequirementItemsQuatation from "./RequirementItemsQuatation";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import PartsForecast from '../APN/PartsForecast';
+import RequirementItemsQuatation from './RequirementItemsQuatation';
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
+import { USER_ID } from '@/utils/api/http';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import RequirementViewer from '../APN/RequirementViewer';
 type AddDetailFormType = {
   currentDetail?: any;
   currenOrder?: IOrder | null;
   onUpdateOrder?: (data: any) => void;
   isEditing?: boolean;
   isCreating?: boolean;
+  onSave: (data: any) => void;
+  onCancel: (data: any) => void;
   onSearchItems?: (part?: any) => void;
 };
 const AddDetailForm: FC<AddDetailFormType> = ({
@@ -41,6 +46,8 @@ const AddDetailForm: FC<AddDetailFormType> = ({
   currenOrder,
   currentDetail,
   onUpdateOrder,
+  onSave,
+  onCancel,
 }) => {
   const [form] = Form.useForm();
   const [requariment, setRequariment] = useState<any | null>(null);
@@ -53,19 +60,22 @@ const AddDetailForm: FC<AddDetailFormType> = ({
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [newPart, setnewPart] = useState<any>(currentDetail);
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const [isAltertative, setIsAltertative] = useState<any>(true);
+  const [initialForm, setinitialForm] = useState<any>('');
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
   const formRef = useRef<FormInstance>(null);
   const dispatch = useAppDispatch();
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
   const uuidv4: () => string = originalUuidv4;
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   useEffect(() => {
     if (requariment) {
       form.setFields([
-        { name: "requariment", value: requariment.partRequestNumber },
+        { name: 'requariment', value: requariment.partRequestNumber },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -74,7 +84,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
   useEffect(() => {
     if (selectedSinglePN) {
       const fetchData = async () => {
-        const storedKeys = localStorage.getItem("selectedKeys");
+        const storedKeys = localStorage.getItem('selectedKeys');
         const result = await dispatch(
           getFilteredAlternativePN({
             companyID: companyID,
@@ -82,12 +92,18 @@ const AddDetailForm: FC<AddDetailFormType> = ({
           })
         );
 
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           setAlternates(result.payload);
           onSearchItems && onSearchItems(result.payload);
         }
       };
       const fetchReq = async () => {
+        // const partNumbers = isAltertative
+        //   ? [
+        //       selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
+        //       ...(alternates || []).map((alternate) => alternate.ALTERNATIVE),
+        //     ]
+        //   : [selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN];
         const partNumbers = [
           selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
           ...(alternates || []).map((alternate) => alternate.ALTERNATIVE),
@@ -96,14 +112,14 @@ const AddDetailForm: FC<AddDetailFormType> = ({
           getFilteredRequirements({
             companyID: companyID,
             partNumbers: partNumbers,
-            status: ["open", "onOrder"],
+            status: ['open', 'onOrder'],
           })
         );
 
-        if (resultReq.meta.requestStatus === "fulfilled") {
-          if (resultReq.meta.requestStatus === "fulfilled") {
+        if (resultReq.meta.requestStatus === 'fulfilled') {
+          if (resultReq.meta.requestStatus === 'fulfilled') {
             const filteredPayload = resultReq.payload.filter(
-              (record: any) => record.readyStatus === "not Ready"
+              (record: any) => record.readyStatus === 'not Ready'
             );
 
             const sum = filteredPayload.reduce((acc: any, record: any) => {
@@ -130,7 +146,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                 selectedSinglePN?.UNIT_OF_MEASURE || selectedSinglePN?.unit,
               ADD_UNIT_OF_MEASURE:
                 selectedSinglePN?.ADD_UNIT_OF_MEASURE || selectedSinglePN?.unit,
-              QUANTITY: form.getFieldValue("quantity"),
+              QUANTITY: form.getFieldValue('quantity'),
               REQUIREMENTS: (filteredPayload || []).map(
                 (part: any) => part.partRequestNumber
               ),
@@ -148,13 +164,13 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       fetchData();
       fetchReq();
     }
-  }, [selectedSinglePN]);
+  }, [selectedSinglePN, isAltertative]);
 
   useEffect(() => {
     if (quantitySum) {
       form.setFields([
         {
-          name: "quantity",
+          name: 'quantity',
           value: quantitySum,
         },
       ]);
@@ -166,8 +182,19 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       setIsLocalEditing(isEditing);
     }
   }, [currentDetail]);
+
   return (
     <ProForm
+      onReset={() => {
+        setIsResetForm(true);
+        setTimeout(() => {
+          setIsResetForm(false);
+        }, 0);
+        setinitialForm('');
+        setSecectedSinglePN(null);
+        setAlternates([]);
+        setRequirements([]);
+      }}
       layout="horizontal"
       submitter={{
         render: (_, dom) =>
@@ -179,65 +206,120 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                   onClick={() => {
                     isLocalEditing && setIsLocalEditing(false);
                     isLocalCreating && setIsLocalCreating(false);
+                    onCancel(null);
                   }}
                 >
-                  {t("Cancel")}
+                  {t('Cancel')}
                 </Button>,
               ]
             : [],
         submitButtonProps: {
-          children: "Search",
+          children: 'Search',
         },
       }}
       onFinish={async (values) => {
         if (currenOrder && newPart) {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
-          const result = await dispatch(
-            updateOrderByID({
-              id: currenOrder._id || currenOrder.id,
-              companyID: currentCompanyID || "",
-              updateByID: USER_ID,
-              updateBySing: localStorage.getItem("singNumber"),
-              updateByName: localStorage.getItem("name"),
-              updateDate: new Date(),
+          const currentCompanyID = localStorage.getItem('companyID') || '';
+          if (currenOrder?.orderType === 'QUOTATION_ORDER') {
+            const result = await dispatch(
+              updateOrderByID({
+                id: currenOrder._id || currenOrder.id,
+                companyID: currentCompanyID || '',
+                updateByID: USER_ID,
+                updateBySing: localStorage.getItem('singNumber'),
+                updateByName: localStorage.getItem('name'),
+                updateDate: new Date(),
 
-              parts: [
-                ...(currenOrder.parts || []),
-                {
-                  id: uuidv4(),
-                  PART_NUMBER:
-                    selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
-                  DESCRIPTION:
-                    selectedSinglePN?.nameOfMaterial ||
-                    selectedSinglePN?.DESCRIPTION,
-                  GROUP: selectedSinglePN?.GROUP || selectedSinglePN?.group,
-                  TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
-                  UNIT_OF_MEASURE:
-                    selectedSinglePN?.UNIT_OF_MEASURE || selectedSinglePN?.unit,
-                  QUANTITY: form.getFieldValue("quantity"),
-                  ADD_DESCRIPTION:
-                    selectedSinglePN?.ADD_DESCRIPTION ||
-                    selectedSinglePN?.nameOfMaterial,
-                  ADD_UNIT_OF_MEASURE:
-                    selectedSinglePN?.ADD_UNIT_OF_MEASURE ||
-                    selectedSinglePN?.unit,
-                  REQUIREMENTS: (requirements || []).map(
-                    (part: any) => part.partRequestNumber
-                  ),
-                  ALTERNATES: (alternates || []).map(
-                    (part: any) => part.ALTERNATIVE
-                  ),
-                  VENDORS: [],
-                },
-              ],
-            })
-          );
-          if (result.meta.requestStatus === "fulfilled") {
-            onUpdateOrder && onUpdateOrder(result.payload);
-            message.success(t("SUCCESS"));
-            setIsLocalCreating(false);
-            setIsLocalEditing(false);
-          } else message.error(t("ERROR"));
+                parts: [
+                  ...(currenOrder.parts || []),
+                  {
+                    id: uuidv4(),
+                    PART_NUMBER:
+                      selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
+                    DESCRIPTION:
+                      selectedSinglePN?.nameOfMaterial ||
+                      selectedSinglePN?.DESCRIPTION,
+                    GROUP: selectedSinglePN?.GROUP || selectedSinglePN?.group,
+                    TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
+                    UNIT_OF_MEASURE:
+                      selectedSinglePN?.UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    QUANTITY: form.getFieldValue('quantity'),
+                    ADD_DESCRIPTION:
+                      selectedSinglePN?.ADD_DESCRIPTION ||
+                      selectedSinglePN?.nameOfMaterial,
+                    ADD_UNIT_OF_MEASURE:
+                      selectedSinglePN?.ADD_UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    REQUIREMENTS: (requirements || []).map(
+                      (part: any) => part.partRequestNumber
+                    ),
+                    ALTERNATES: (alternates || []).map(
+                      (part: any) => part.ALTERNATIVE
+                    ),
+                    VENDORS: [],
+                  },
+                ],
+              })
+            );
+            if (result.meta.requestStatus === 'fulfilled') {
+              onUpdateOrder && onUpdateOrder(result.payload);
+              message.success(t('SUCCESS'));
+              setIsLocalCreating(false);
+              setIsLocalEditing(false);
+              onSave(null);
+            } else message.error(t('ERROR'));
+          } else if (currenOrder?.orderType === 'PURCHASE_ORDER') {
+            const result = await dispatch(
+              updateOrderByID({
+                id: currenOrder._id || currenOrder.id,
+                companyID: currentCompanyID || '',
+                updateByID: USER_ID,
+                updateBySing: localStorage.getItem('singNumber'),
+                updateByName: localStorage.getItem('name'),
+                updateDate: new Date(),
+
+                parts: [
+                  ...(currenOrder.parts || []),
+                  {
+                    id: uuidv4(),
+                    PART_NUMBER:
+                      selectedSinglePN?.PART_NUMBER || selectedSinglePN?.PN,
+                    DESCRIPTION:
+                      selectedSinglePN?.nameOfMaterial ||
+                      selectedSinglePN?.DESCRIPTION,
+                    GROUP: selectedSinglePN?.GROUP || selectedSinglePN?.group,
+                    TYPE: selectedSinglePN?.GROUP || selectedSinglePN?.type,
+                    UNIT_OF_MEASURE:
+                      selectedSinglePN?.UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    quantity: form.getFieldValue('quantity'),
+                    ADD_DESCRIPTION:
+                      selectedSinglePN?.ADD_DESCRIPTION ||
+                      selectedSinglePN?.nameOfMaterial,
+                    ADD_UNIT_OF_MEASURE:
+                      selectedSinglePN?.ADD_UNIT_OF_MEASURE ||
+                      selectedSinglePN?.unit,
+                    REQUIREMENTS: (requirements || []).map(
+                      (part: any) => part.partRequestNumber
+                    ),
+                    ALTERNATES: (alternates || []).map(
+                      (part: any) => part.ALTERNATIVE
+                    ),
+                    state: 'OPEN',
+                    backorder: form.getFieldValue('quantity'),
+                  },
+                ],
+              })
+            );
+            if (result.meta.requestStatus === 'fulfilled') {
+              onUpdateOrder && onUpdateOrder(result.payload);
+              message.success(t('SUCCESS'));
+              setIsLocalCreating(false);
+              setIsLocalEditing(false);
+              onSave(null);
+            } else message.error(t('ERROR'));
+          }
         }
       }}
       size="small"
@@ -246,50 +328,97 @@ const AddDetailForm: FC<AddDetailFormType> = ({
       <ProFormGroup direction="horizontal">
         <ProFormGroup direction="vertical">
           <ProFormGroup direction="horizontal">
-            <ProFormText
+            {/* <ProFormText
               rules={[{ required: true }]}
               name="PART_NUMBER"
-              label={t("PART NUMBER")}
+              label={t('PART No')}
               width="sm"
-              tooltip={t("PART NUMBER")}
+              tooltip={t('PART No')}
               fieldProps={{
                 onDoubleClick: () => {
                   setOpenStoreFind(true);
                 },
                 onKeyPress: handleKeyPress,
               }}
-            ></ProFormText>
+            ></ProFormText> */}
+            <ProForm.Group>
+              <ContextMenuPNSearchSelect
+                label={t('PART No')}
+                isResetForm={isResetForm}
+                rules={[{ required: false }]}
+                onSelectedPN={function (PN: any): void {
+                  setSecectedSinglePN(PN);
+                  form.setFields([
+                    { name: 'DESCRIPTION', value: PN.DESCRIPTION },
+                  ]);
+                  form.setFields([
+                    { name: 'UNIT_OF_MEASURE', value: PN.UNIT_OF_MEASURE },
+                  ]);
+
+                  form.setFields([{ name: 'GROUP', value: PN.GROUP }]);
+                  form.setFields([{ name: 'TYPE', value: PN.TYPE }]);
+                }}
+                name={'partNumber'}
+                initialFormPN={
+                  selectedSinglePN?.PART_NUMBER ||
+                  selectedSinglePN?.PN ||
+                  initialForm
+                }
+                width={'sm'}
+              ></ContextMenuPNSearchSelect>
+              {/* <ProFormCheckbox.Group
+                className="my-0 py-0"
+                disabled={!selectedSinglePN?.PART_NUMBER}
+                initialValue={['true']}
+                labelAlign="left"
+                name="isAlternative"
+                fieldProps={{
+                  onChange: (value) => setIsAltertative(value),
+                }}
+                options={[
+                  { label: `${t('Altern.')}`, value: 'true' },
+                  // { label: 'Load all Exp. Dates', value: 'allDate' },
+                ].map((option) => ({
+                  ...option,
+                  style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+                }))}
+              /> */}
+            </ProForm.Group>
+
             <ProFormText
               rules={[{ required: true }]}
               name="DESCRIPTION"
-              label={t("DESCRIPTION")}
+              disabled
+              label={t('DESCRIPTION')}
               width="sm"
-              tooltip={t("DESCRIPTION")}
+              tooltip={t('DESCRIPTION')}
             ></ProFormText>
             <ProFormGroup>
               <ProFormSelect
+                disabled
                 rules={[{ required: true }]}
                 name="GROUP"
-                label={`${t("PART SPESIAL GROUP")}`}
+                label={`${t('PART GROUP')}`}
                 width="sm"
-                tooltip={`${t("SELECT SPESIAL GROUP")}`}
+                tooltip={`${t('SELECT SPESIAL GROUP')}`}
                 options={[
-                  { value: "CONS", label: t("CONS") },
-                  { value: "TOOL", label: t("TOOL") },
-                  { value: "CHEM", label: t("CHEM") },
-                  { value: "ROT", label: t("ROT") },
-                  { value: "GSE", label: t("GSE") },
+                  { value: 'CONS', label: t('CONS') },
+                  { value: 'TOOL', label: t('TOOL') },
+                  { value: 'CHEM', label: t('CHEM') },
+                  { value: 'ROT', label: t('ROT') },
+                  { value: 'GSE', label: t('GSE') },
                 ]}
               />
               <ProFormSelect
+                disabled
                 rules={[{ required: true }]}
                 name="TYPE"
-                label={`${t("PART TYPE")}`}
+                label={`${t('PART TYPE')}`}
                 width="sm"
-                tooltip={`${t("SELECT PART TYPE")}`}
+                tooltip={`${t('SELECT PART TYPE')}`}
                 options={[
-                  { value: "ROTABLE", label: t("ROTABLE") },
-                  { value: "CONSUMABLE", label: t("CONSUMABLE") },
+                  { value: 'ROTABLE', label: t('ROTABLE') },
+                  { value: 'CONSUMABLE', label: t('CONSUMABLE') },
                 ]}
               />
             </ProFormGroup>
@@ -303,9 +432,9 @@ const AddDetailForm: FC<AddDetailFormType> = ({
         </ProFormGroup>
         <ProFormText
           name="requariment"
-          label={t("REQUIREMENT No")}
+          label={t('REQUIREMENT No')}
           width="sm"
-          tooltip={t("REQUIREMENTS NUMBER")}
+          tooltip={t('REQUIREMENTS NUMBER')}
           fieldProps={{
             onDoubleClick: () => setOpenPickViewer(true),
 
@@ -322,92 +451,42 @@ const AddDetailForm: FC<AddDetailFormType> = ({
         <ProFormDigit
           name="quantity"
           rules={[{ required: true }]}
-          label={t("QUANTITY")}
+          label={t('QUANTITY')}
           width="xs"
         ></ProFormDigit>
         <ProFormText
           rules={[{ required: true }]}
-          label={t("UNIT")}
+          label={t('UNIT')}
           name="UNIT_OF_MEASURE"
           width="xs"
         ></ProFormText>
       </ProFormGroup>
 
       <ModalForm
-        // title={`Search on Store`}
-        width={"70vw"}
-        // placement={'bottom'}
-        open={openStoreFindModal}
-        // submitter={false}
-        onOpenChange={setOpenStoreFind}
-        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
-          setOpenStoreFind(false);
-          setSecectedSinglePN(record);
-
-          form.setFields([
-            { name: "partNumber", value: selectedSinglePN.PART_NUMBER },
-          ]);
-        }}
-      >
-        <PartNumberSearch
-          initialParams={{ partNumber: "" }}
-          scroll={45}
-          onRowClick={function (record: any, rowIndex?: any): void {
-            setOpenStoreFind(false);
-            setSecectedSinglePN(record);
-
-            form.setFields([
-              { name: "PART_NUMBER", value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: "DESCRIPTION", value: record.DESCRIPTION },
-            ]);
-            form.setFields([
-              { name: "UNIT_OF_MEASURE", value: record.UNIT_OF_MEASURE },
-            ]);
-
-            form.setFields([{ name: "GROUP", value: record.GROUP }]);
-            form.setFields([{ name: "TYPE", value: record.TYPE }]);
-          }}
-          isLoading={false}
-          onRowSingleClick={function (record: any, rowIndex?: any): void {
-            form.setFields([
-              { name: "PART_NUMBER", value: record.PART_NUMBER },
-            ]);
-            form.setFields([
-              { name: "DESCRIPTION", value: record.DESCRIPTION },
-            ]);
-            form.setFields([
-              { name: "UNIT_OF_MEASURE", value: record.UNIT_OF_MEASURE },
-            ]);
-
-            form.setFields([{ name: "GROUP", value: record.GROUP }]);
-            form.setFields([{ name: "TYPE", value: record.TYPE }]);
-          }}
-        />
-      </ModalForm>
-      <ModalForm
         title=""
         open={openPickViewer}
-        width={"90%"}
+        width={'90%'}
         onOpenChange={setOpenPickViewer}
+        onFinish={async function (record: any, rowIndex?: any): Promise<void> {
+          setOpenPickViewer(false);
+        }}
       >
         <div className="h-[78vh]  overflow-hidden">
-          <PartsForecast
+          <RequirementViewer
             onDoubleClick={(record) => {
               setRequariment(record);
               setSecectedSinglePN(record);
               setOpenPickViewer(false);
-              form.setFields([{ name: "PART_NUMBER", value: record.PN }]);
+              form.setFields([{ name: 'PART_NUMBER', value: record.PN }]);
               form.setFields([
-                { name: "DESCRIPTION", value: record.nameOfMaterial },
+                { name: 'DESCRIPTION', value: record.nameOfMaterial },
               ]);
-              form.setFields([{ name: "UNIT_OF_MEASURE", value: record.unit }]);
+              form.setFields([{ name: 'UNIT_OF_MEASURE', value: record.unit }]);
 
-              form.setFields([{ name: "GROUP", value: record.group }]);
-              form.setFields([{ name: "TYPE", value: record.type }]);
+              form.setFields([{ name: 'GROUP', value: record.group }]);
+              form.setFields([{ name: 'TYPE', value: record.type }]);
             }}
-          ></PartsForecast>
+          ></RequirementViewer>
         </div>
       </ModalForm>
     </ProForm>

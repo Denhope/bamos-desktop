@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
-import { Layout, Menu, Skeleton, TabPaneProps, Tabs } from "antd";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import logoImage from "../../assets/img/407Technics_logo.png";
+import React, { FC, useEffect, useState } from 'react';
+import { Layout, Menu, Skeleton, TabPaneProps, Tabs } from 'antd';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import logoImage from '../../assets/img/407Technics_logo.png';
 // import logoImage from '../../assets/img/Image.jpg';
 
 import {
@@ -13,39 +13,45 @@ import {
   ProjectOutlined,
   ExclamationCircleOutlined,
   GroupOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import { MenuItem, getItem } from "@/services/utilites";
-import { RouteNames } from "@/router";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { ProCard } from "@ant-design/pro-components";
-import TabPane from "antd/es/tabs/TabPane";
+import { MenuItem, getItem } from '@/services/utilites';
+import { RouteNames } from '@/router';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ProCard } from '@ant-design/pro-components';
+import TabPane from 'antd/es/tabs/TabPane';
 
-import WPGeneration from "./planning/WPGeneration/WPGeneration";
-import MaterialsStore from "./store/StoresMaterials";
-import MaintenanceBase from "./maintenance/base/MaintenanceBase";
-import MaintenanceMTX from "./maintenance/mtx/MaintenanceMTX";
-import WorkOrder from "./APN/WorkOrder";
-import StockInformstion from "./APN/StockInformation";
-import PartsForecast from "./APN/PartsForecast";
-import PickSlipViwer from "./APN/PickSlipViwer";
-import { Content, Footer } from "antd/es/layout/layout";
-import PickSlipConfirmation from "./APN/PickSlipConfirmation";
-import PickSlipCancel from "./APN/PickSlipCancel";
-import StoreManagment from "./APN/StoreManagment";
-import PartsTransfer from "./APN/PartsTransfer";
-import GoodsReciving from "./APN/GoodsReciving";
-import OrderCreator from "./APN/OrderCreator";
-import ReceivingTracking from "./APN/ReceivingTracking";
-import PartAdministration from "./APN/PartAdministration";
-import ShelfExpiry from "./APN/ShelfExpiry";
-import CancelReceiving from "./APN/CancelReceiving";
-import ScrapMaterial from "./APN/ScrapMaterial";
-import PartsTracking from "./APN/PartsTracking";
-import ProjectManagment from "./APN/ProjectManagment";
-import ProjectViewer from "./APN/ProjectViewer";
-import OrderManagment from "./APN/OrderManagment";
+import WPGeneration from './planning/WPGeneration/WPGeneration';
+import MaterialsStore from './store/StoresMaterials';
+import MaintenanceBase from './maintenance/base/MaintenanceBase';
+import MaintenanceMTX from './maintenance/mtx/MaintenanceMTX';
+import WorkOrder from './APN/WorkOrder';
+import StockInformstion from './APN/StockInformation';
+import PartsForecast from './APN/PartsForecast';
+import PickSlipViwer from './APN/PickSlipViwer';
+import { Content, Footer } from 'antd/es/layout/layout';
+import PickSlipConfirmation from './APN/PickSlipConfirmation';
+import PickSlipCancel from './APN/PickSlipCancel';
+import StoreManagment from './APN/StoreManagment';
+import PartsTransfer from './APN/PartsTransfer';
+import GoodsReciving from './APN/GoodsReciving';
+import OrderCreator from './APN/OrderCreator';
+import ReceivingTracking from './APN/ReceivingTracking';
+import PartAdministration from './APN/PartAdministration';
+import ShelfExpiry from './APN/ShelfExpiry';
+import CancelReceiving from './APN/CancelReceiving';
+import ScrapMaterial from './APN/ScrapMaterial';
+import PartsTracking from './APN/PartsTracking';
+import ProjectManagment from './APN/ProjectManagment';
+import ProjectViewer from './APN/ProjectViewer';
+import OrderManagment from './APN/OrderManagment';
+import RequirementManagement from './APN/RequirementManagement';
+import Title from 'antd/lib/typography/Title';
+import RequirementViewer from './APN/RequirementViewer';
+import OrderViewer from './APN/OrderViewer';
+import PickslipRequest from './APN/PickslipRequest';
+
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -64,7 +70,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`WP GENERATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <WPGeneration />
           </div>
         ),
@@ -78,8 +84,22 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`WORKORDER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <WorkOrder />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.REQUIREMENT_MANAGMENT) {
+      tab = {
+        key,
+
+        title: `${t(`REQUIREMENT MANAGMENT`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <RequirementManagement />
           </div>
         ),
 
@@ -92,7 +112,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`ORDER MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <OrderManagment />
           </div>
         ),
@@ -106,7 +126,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`SCRAP MATERIAL`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ScrapMaterial />
           </div>
         ),
@@ -120,7 +140,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`STOCK INFORMATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <StockInformstion />
           </div>
         ),
@@ -134,7 +154,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`PARTS TRANSFER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartsTransfer />
           </div>
         ),
@@ -148,7 +168,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         title: `${t(`PARTS TRACKING`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartsTracking />
           </div>
         ),
@@ -161,8 +181,35 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PARTS CONSUMPTION FORECAST`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartsForecast />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.ORDER_VIEWER) {
+      tab = {
+        key,
+        title: `${t(`ORDER VIEWER`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <OrderViewer />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+
+    if (key == RouteNames.REQUIREMENT_VIEWER) {
+      tab = {
+        key,
+        title: `${t(`REQUIREMENT VIEWER`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <RequirementViewer />
           </div>
         ),
 
@@ -174,7 +221,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PICKSLIP VIEWER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PickSlipViwer />
           </div>
         ),
@@ -187,7 +234,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PICKSLIP CONFIRMATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PickSlipConfirmation />
           </div>
         ),
@@ -200,7 +247,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`CANCEL PICKSLIP`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PickSlipCancel />
           </div>
         ),
@@ -213,7 +260,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`RECEIVING VIEWER`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ReceivingTracking />
           </div>
         ),
@@ -226,7 +273,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`CANCEL RECEIVING `)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <CancelReceiving />
           </div>
         ),
@@ -239,7 +286,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(` PROJECT VIEWER `)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ProjectViewer />
           </div>
         ),
@@ -252,7 +299,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`STORE MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <StoreManagment></StoreManagment>
           </div>
         ),
@@ -265,7 +312,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`SHELF EXPIRY`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ShelfExpiry />
           </div>
         ),
@@ -278,7 +325,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`GOODS RECEIVING`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <GoodsReciving />
           </div>
         ),
@@ -290,7 +337,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`ORDER CREATOR`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <OrderCreator />
           </div>
         ),
@@ -302,7 +349,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PROJECT MANAGMENT`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <ProjectManagment />
           </div>
         ),
@@ -314,7 +361,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`PART ADMINISTRATION`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <PartAdministration />
           </div>
         ),
@@ -327,19 +374,30 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `${t(`MTX`)}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <MaintenanceMTX />
           </div>
         ),
 
         closable: true,
       };
+    } else if (key === RouteNames.PICKSLIP_REQUEST) {
+      tab = {
+        key,
+        title: `${t('PICKSLIP REQUEST')}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <PickslipRequest />
+          </div>
+        ),
+        closable: true,
+      };
     } else if (key === RouteNames.STORE) {
       tab = {
         key,
-        title: `${t("STORES/LOGISTIC")}`,
+        title: `${t('STORES/LOGISTIC')}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <MaterialsStore />
           </div>
         ),
@@ -348,9 +406,9 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     } else if (key === RouteNames.BASE) {
       tab = {
         key,
-        title: `${t("WORKPACKAGE VIEWER")}`,
+        title: `${t('WORKPACKAGE VIEWER')}`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <MaintenanceBase />
           </div>
         ),
@@ -361,7 +419,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         key,
         title: `TOOL`,
         content: (
-          <div className="h-[79vh] overflow-hidden">
+          <div className="h-[82vh] overflow-hidden">
             <></>
           </div>
         ),
@@ -396,7 +454,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
           ...new Set([...prevSelectedTopKeys, tab!.key]),
         ];
         localStorage.setItem(
-          "selectedTopKeys",
+          'selectedTopKeys',
           JSON.stringify(newSelectedTopKeys)
         );
         return newSelectedTopKeys;
@@ -424,64 +482,64 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     //   <ExclamationCircleOutlined />
     // ),
     getItem(
-      t("PART ADMINISTRATION"),
+      t('PART ADMINISTRATION'),
       RouteNames.PART_ADMINISTRATIONS,
       <SettingOutlined />
     ),
-    getItem(t("STORE MANAGMENT"), RouteNames.STORE_MANAGMENT, <HomeOutlined />),
+    getItem(t('STORE MANAGMENT'), RouteNames.STORE_MANAGMENT, <HomeOutlined />),
     getItem(
-      t("STOCK INFORMATION"),
+      t('STOCK INFORMATION'),
       RouteNames.STOCK_NFORMATIONS,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("GOODS RECEIVING"),
+      t('GOODS RECEIVING'),
       RouteNames.GOODS_RESERVING,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("SCRAP MATERIAL"),
+      t('SCRAP MATERIAL'),
       RouteNames.SCRAP_MATERIAL,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("CANCEL RECEIVING"),
+      t('CANCEL RECEIVING'),
       RouteNames.CANCEL_RESERVING,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("RECEIVING VIEWER"),
+      t('RECEIVING VIEWER'),
       RouteNames.RESERVING_TRACK,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("PICKSLIP VIEWER"),
+      t('PICKSLIP VIEWER'),
       RouteNames.PICKSLIP_VIEWER,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("PICKSLIP CONFIRMATION"),
+      t('PICKSLIP CONFIRMATION'),
       RouteNames.PICKSLIP_CONFIRMATIONS,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("CANCEL PICKSLIP"),
+      t('CANCEL PICKSLIP'),
       RouteNames.PICKSLIP_CANCEL,
       <ShoppingCartOutlined />
     ),
     getItem(
-      t("PARTS TRANSFER"),
+      t('PARTS TRANSFER'),
       RouteNames.PARTS_TRANSFER,
       <ShoppingCartOutlined />
     ),
-    getItem(t("PARTS TRACKING"), RouteNames.PARTS_TRACKING, <SwapOutlined />),
+    getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
 
     getItem(
-      t("PARTS CONSUMPTION FORECAST"),
+      t('PARTS CONSUMPTION FORECAST'),
       RouteNames.PARTS_FORECAST,
       <SisternodeOutlined />
     ),
-    getItem(t("SHELF EXPIRY"), RouteNames.SHELF_LIFE, <SisternodeOutlined />),
+    getItem(t('SHELF EXPIRY'), RouteNames.SHELF_LIFE, <SisternodeOutlined />),
     // getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
   ];
   const navigate = useNavigate();
@@ -493,7 +551,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     setSelectedTopKeys((prevSelectedTopKeys) => {
       const newSelectedTopKeys = [...prevSelectedTopKeys, ...selectedKeys];
       localStorage.setItem(
-        "selectedTopKeys",
+        'selectedTopKeys',
         JSON.stringify(newSelectedTopKeys)
       );
       return newSelectedTopKeys;
@@ -507,21 +565,21 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
       content: (
         <div
           style={{
-            backgroundSize: "cover",
+            backgroundSize: 'cover',
             // backgroundImage: "url('https://via.placeholder.com/150')",
             // opacity: '0.9',
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
-          className="h-[79vh] overflow-hidden "
+          className="h-[82vh] overflow-hidden "
         >
           <Layout>
-            <ProCard className="flex   justify-center align-middle ">
+            <ProCard className="flex  justify-center align-middle ">
               <Menu
                 style={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 onClick={onMenuClick}
                 // onSelect={handleClick}
@@ -531,7 +589,8 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
               />
             </ProCard>
           </Layout>
-          <img
+          <Title className="ml-auto pr-10">LOGO</Title>
+          {/* <img
             className="ml-auto"
             src={logoImage} // замените на URL вашего логотипа
             style={{
@@ -539,18 +598,18 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
               // height: '100px', // измените размер по желанию
               // borderRadius: '50%', // делает изображение круглым
 
-              width: "200px", // измените размер по желанию
-              height: "40px", // измените размер по желанию
+              width: '200px', // измените размер по желанию
+              height: '40px', // измените размер по желанию
               // // borderRadius: '50%', // делает изображение круглым
             }}
-          />
+          /> */}
         </div>
       ),
       closable: false,
     },
   ]);
 
-  const [activeKey, setActiveKey] = useState<string>("");
+  const [activeKey, setActiveKey] = useState<string>('');
   interface TabData extends TabPaneProps {
     key: string;
     title: any;
@@ -562,10 +621,10 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
       | string
       | React.MouseEvent<Element, MouseEvent>
       | React.KeyboardEvent<Element>,
-    action: "add" | "remove"
+    action: 'add' | 'remove'
   ) => {
-    if (typeof targetKey === "string") {
-      if (action === "remove") {
+    if (typeof targetKey === 'string') {
+      if (action === 'remove') {
         const newPanes = panes.filter((pane) => pane.key !== targetKey);
         setPanes(newPanes);
         if (newPanes.length > 0) {
@@ -576,7 +635,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
   };
 
   useEffect(() => {
-    const storedSelectedTopKeys = localStorage.getItem("selectedTopKeys");
+    const storedSelectedTopKeys = localStorage.getItem('selectedTopKeys');
     if (storedSelectedTopKeys) {
       setSelectedTopKeys(JSON.parse(storedSelectedTopKeys));
       setActiveKey(RouteNames.HOME);
@@ -592,9 +651,9 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
           <Tabs
             tabPosition="bottom"
             style={{
-              width: "98%",
+              width: '98%',
             }}
-            className="mx-auto"
+            className="mx-auto "
             size="small"
             hideAdd
             onChange={setActiveKey}

@@ -10,11 +10,11 @@ import {
   Tag,
   Tooltip,
   message,
-} from "antd";
+} from 'antd';
 
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from 'react';
 
 import {
   getFilteredGroupsTasks,
@@ -22,8 +22,8 @@ import {
   getFilteredProjectTasks,
   updateProjectTask,
   updateProjectTasksByIds,
-} from "@/utils/api/thunks";
-import { DatePicker } from "antd";
+} from '@/utils/api/thunks';
+import { DatePicker } from 'antd';
 
 import {
   DownloadOutlined,
@@ -32,25 +32,25 @@ import {
   PlusOutlined,
   PrinterOutlined,
   EditOutlined,
-} from "@ant-design/icons";
-import { TDifficulty } from "@/models/IAdditionalTask";
-import { exportToExcel, tagInfo } from "@/services/utilites";
-import React from "react";
+} from '@ant-design/icons';
+import { TDifficulty } from '@/models/IAdditionalTask';
+import { exportToExcel, tagInfo } from '@/services/utilites';
+import React from 'react';
 
-import moment from "moment";
+import moment from 'moment';
 
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import NavigationPanel from "@/components/shared/NavigationPanel";
-import DrawerPanel from "@/components/shared/DrawerPanel";
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import NavigationPanel from '@/components/shared/NavigationPanel';
+import DrawerPanel from '@/components/shared/DrawerPanel';
 
 import {
   setCurrentAction,
   setCurrentActionIndexMtb,
   setCurrentProjectTask,
   setUpdatedProjectTask,
-} from "@/store/reducers/MtbSlice";
-import TabContent from "@/components/shared/Table/TabContent";
-import TaskDetails from "./activeTask/Details";
+} from '@/store/reducers/MtbSlice';
+import TabContent from '@/components/shared/Table/TabContent';
+import TaskDetails from './activeTask/Details';
 
 // import StepsContent from './activeTask/steps/StepsContent';
 import {
@@ -58,24 +58,24 @@ import {
   ColumnsState,
   ModalForm,
   ProColumns,
-} from "@ant-design/pro-components";
-import { IPlaneTask } from "@/models/ITask";
-import ProjectDescription from "./ProjectDescription";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import { IProjectResponce } from "@/models/IProject";
-import CloseContent from "./activeTask/close/CloseContent";
-import NRCStepForm from "./activeTask/addNRC/NRCStepForm";
-import WOEditForm from "./WOEditForm";
-import { DefaultOptionType } from "antd/es/cascader";
-import GroupAddForm from "./GroupAddForm";
+} from '@ant-design/pro-components';
+import { IPlaneTask } from '@/models/ITask';
+import ProjectDescription from './ProjectDescription';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import { IProjectResponce } from '@/models/IProject';
+import CloseContent from './activeTask/close/CloseContent';
+import NRCStepForm from './activeTask/addNRC/NRCStepForm';
+import WOEditForm from './WOEditForm';
+import { DefaultOptionType } from 'antd/es/cascader';
+import GroupAddForm from './GroupAddForm';
 
-import IssuedMatForm from "./activeTask/requeriments/IssuedMatForm";
-import RequirementItems from "./activeTask/requeriments/RequirementItems";
-import GeneretedWOPdf from "@/components/pdf/GeneretedWOPdf";
-import { useTranslation } from "react-i18next";
-import GeneretedWOPdfCurr from "@/components/pdf/GeneretedWOPdfCurr";
-import StepsContent from "../systemWO/woProcess/taskTabs/StepsContent";
+import IssuedMatForm from './activeTask/requeriments/IssuedMatForm';
+import RequirementItems from './activeTask/requeriments/RequirementItems';
+import GeneretedWOPdf from '@/components/pdf/GeneretedWOPdf';
+import { useTranslation } from 'react-i18next';
+import GeneretedWOPdfCurr from '@/components/pdf/GeneretedWOPdfCurr';
+import StepsContent from '../systemWO/woProcess/taskTabs/StepsContent';
 
 // import Store from '@/components/pages/Store';
 
@@ -88,7 +88,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
   projectGroprojectGroupID,
 }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const companyID = localStorage.getItem("companyID");
+  const companyID = localStorage.getItem('companyID');
   const { RangePicker } = DatePicker;
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [projectGroupTasks, setProjectGroupTasks] = useState<any[]>([]);
@@ -125,13 +125,13 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
   const { t } = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
           getFilteredGroupsTasks({
-            projectId: currentProject?._id || "",
-            projectGroprojectGroupID: projectGroprojectGroupID || "",
+            projectId: currentProject?._id || '',
+            projectGroprojectGroupID: projectGroprojectGroupID || '',
           })
         );
         setDataSource(result.payload);
@@ -157,10 +157,10 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
   const newMenuItems = projectGroups.map(
     (group: any) =>
       group.status &&
-      group.status == "open" &&
+      group.status == 'open' &&
       selectedRowKeys.length > 0 &&
       getItem(
-        group.status == "open" && (
+        group.status == 'open' && (
           <div
             onClick={async () => {
               const result = await dispatch(
@@ -189,142 +189,142 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
 
   const options: Option[] = [
     {
-      value: "mec",
-      label: "MEC",
+      value: 'mec',
+      label: 'MEC',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "cab",
-      label: "CAB",
+      value: 'cab',
+      label: 'CAB',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "avi",
-      label: "AVI",
+      value: 'avi',
+      label: 'AVI',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "srs",
-      label: "SRS",
+      value: 'srs',
+      label: 'SRS',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "ndt",
-      label: "NDT",
+      value: 'ndt',
+      label: 'NDT',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
-        },
-      ],
-    },
-
-    {
-      value: "pnt",
-      label: "PNT",
-      children: [
-        {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
-        },
-        {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
 
     {
-      value: "ED",
-      label: "ED",
+      value: 'pnt',
+      label: 'PNT',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
+        },
+      ],
+    },
+
+    {
+      value: 'ED',
+      label: 'ED',
+      children: [
+        {
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
+        },
+        {
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "QI",
-      label: "QI",
+      value: 'QI',
+      label: 'QI',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
     {
-      value: "OUT A/C",
-      label: "OUT A/C",
+      value: 'OUT A/C',
+      label: 'OUT A/C',
       children: [
         {
-          value: "accessOpen",
-          label: "ACCESS OPEN",
+          value: 'accessOpen',
+          label: 'ACCESS OPEN',
         },
         {
-          value: "accessClose",
-          label: "ACCESS CLOSE",
+          value: 'accessClose',
+          label: 'ACCESS CLOSE',
         },
       ],
     },
   ];
 
-  const onChange: any["props"]["onChange"] = async (
+  const onChange: any['props']['onChange'] = async (
     value: any,
     selectedOptions: any
   ) => {
     const selectedCount = selectedRowKeys && selectedRowKeys.length;
     if (selectedCount < 1) {
-      message.error("Please select Items.");
+      message.error('Please select Items.');
       return;
     }
     const result = await dispatch(
@@ -333,11 +333,11 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         ids: selectedRowKeys,
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       const result = await dispatch(
         getFilteredGroupsTasks({
-          projectId: currentProject?._id || "",
-          projectGroprojectGroupID: projectGroprojectGroupID || "",
+          projectId: currentProject?._id || '',
+          projectGroprojectGroupID: projectGroprojectGroupID || '',
         })
       );
       setDataSource(result.payload);
@@ -367,13 +367,13 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       });
     }
   };
-  const onChangeRewiew: any["props"]["onChange"] = async (
+  const onChangeRewiew: any['props']['onChange'] = async (
     value: any,
     selectedOptions: any
   ) => {
     const selectedCount = selectedRowKeys && selectedRowKeys.length;
     if (selectedCount < 1) {
-      message.error("Please select Items.");
+      message.error('Please select Items.');
       return;
     }
     const result = await dispatch(
@@ -382,11 +382,11 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         ids: selectedRowKeys,
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       const result = await dispatch(
         getFilteredGroupsTasks({
-          projectId: currentProject?._id || "",
-          projectGroprojectGroupID: projectGroprojectGroupID || "",
+          projectId: currentProject?._id || '',
+          projectGroprojectGroupID: projectGroprojectGroupID || '',
         })
       );
       setDataSource(result.payload);
@@ -424,169 +424,169 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     );
   const optionsRewiew = [
     {
-      label: "BLANC",
-      value: "blanc",
+      label: 'BLANC',
+      value: 'blanc',
     },
 
     {
-      label: "READY FOR PERFORM",
-      value: "readyForPer",
+      label: 'READY FOR PERFORM',
+      value: 'readyForPer',
     },
     {
-      label: "TO WAIT",
-      value: "waiting",
+      label: 'TO WAIT',
+      value: 'waiting',
     },
     {
-      label: "IN PROGRESS",
-      value: "inProgress",
+      label: 'IN PROGRESS',
+      value: 'inProgress',
     },
     {
-      label: "COMPLETED",
-      value: "completed",
+      label: 'COMPLETED',
+      value: 'completed',
     },
     {
-      label: "CANCELED",
-      value: "canceled",
+      label: 'CANCELED',
+      value: 'canceled',
     },
   ];
   const cascaderOptions = [
     {
-      field: "MEC",
-      value: "mec",
+      field: 'MEC',
+      value: 'mec',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
 
     {
-      field: "CAB",
-      value: "cab",
+      field: 'CAB',
+      value: 'cab',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "AVI",
-      value: "avi",
+      field: 'AVI',
+      value: 'avi',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "SRS",
-      value: "srs",
+      field: 'SRS',
+      value: 'srs',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "NDT",
-      value: "ndt",
+      field: 'NDT',
+      value: 'ndt',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
 
     {
-      field: "PNT",
-      value: "pnt",
+      field: 'PNT',
+      value: 'pnt',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "ED",
-      value: "ed",
+      field: 'ED',
+      value: 'ed',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "QI",
-      value: "qi",
+      field: 'QI',
+      value: 'qi',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
     {
-      field: "OUT A/C",
-      value: "out",
+      field: 'OUT A/C',
+      value: 'out',
       language: [
         {
-          field: "ACCESS OPEN",
-          value: "accessOpen",
+          field: 'ACCESS OPEN',
+          value: 'accessOpen',
         },
         {
-          field: "ACCESS CLOSE",
-          value: "accessClose",
+          field: 'ACCESS CLOSE',
+          value: 'accessClose',
         },
       ],
     },
   ];
   const initialBlockColumns: ProColumns<any>[] = [
     {
-      title: "LOCAL ID",
-      dataIndex: "LOCAL_ID",
+      title: 'LABEL',
+      dataIndex: 'LOCAL_ID',
       // valueType: 'index',
       ellipsis: true,
-      key: "LOCAL_ID",
-      width: "12%",
+      key: 'LOCAL_ID',
+      width: '12%',
 
       editable: (text, record, index) => {
         return false;
@@ -608,66 +608,66 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      responsive: ["sm"],
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: "B/S NUMBER",
-      dataIndex: "BATCH_ID",
-      key: "BATCH_ID",
+      title: 'B/S NUMBER',
+      dataIndex: 'BATCH_ID',
+      key: 'BATCH_ID',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: "STOCK",
-      dataIndex: "STOCK",
-      key: "BATCH_ID",
+      title: 'STOCK',
+      dataIndex: 'STOCK',
+      key: 'BATCH_ID',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
       editable: (text, record, index) => {
         return false;
       },
@@ -676,57 +676,57 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
   ];
   const initialColumns: ProColumns<any>[] = [
     {
-      title: "",
-      dataIndex: ["readyStatus", "status"],
-      key: "readyStatus",
-      width: "3%",
+      title: '',
+      dataIndex: ['readyStatus', 'status'],
+      key: 'readyStatus',
+      width: '3%',
       editable: (text, record, index) => {
         return false;
       },
-      valueType: "select",
+      valueType: 'select',
 
       filters: true,
       onFilter: true,
       valueEnum: {
-        "not Ready": { text: "NOT AVAILABLE" },
-        Ready: { text: "AVAILABLE" },
+        'not Ready': { text: 'NOT AVAILABLE' },
+        Ready: { text: 'AVAILABLE' },
       },
       render: (text: any, record: any) => {
         let color =
-          record?.readyStatus && record.readyStatus.status === "not Ready"
-            ? "red"
-            : "green";
+          record?.readyStatus && record.readyStatus.status === 'not Ready'
+            ? 'red'
+            : 'green';
         return (
           <>
             <Tooltip
               title={
                 <>
                   <div>
-                    material Status:{" "}
+                    material Status:{' '}
                     {record?.readyStatus && record.readyStatus.materialStatus}
                   </div>
                   <div>
-                    access Status:{" "}
+                    access Status:{' '}
                     {record?.readyStatus && record.readyStatus.accessStatus}
                   </div>
                 </>
               }
             >
-              {" "}
+              {' '}
               <Tag
                 color={color}
-                style={{ borderRadius: "50%", width: "16px", height: "16px" }}
-              />{" "}
+                style={{ borderRadius: '50%', width: '16px', height: '16px' }}
+              />{' '}
             </Tooltip>
           </>
         );
       },
     },
     {
-      title: `${t("W/O")}`,
-      dataIndex: "projectTaskWO",
-      key: "projectTaskWO",
-      width: "5%",
+      title: `${t('W/O')}`,
+      dataIndex: 'projectTaskWO',
+      key: 'projectTaskWO',
+      width: '5%',
       editable: (text, record, index) => {
         return false;
       },
@@ -742,12 +742,12 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                     workOrderNbr: record.projectTaskWO,
                   })
                 );
-                if ((await result).meta.requestStatus === "fulfilled") {
+                if ((await result).meta.requestStatus === 'fulfilled') {
                   setCurrentProjectTask((await result).payload[0]);
                   console.log((await result).payload[0]);
                   dispatch(setCurrentActionIndexMtb(0));
                 } else {
-                  message.error("NO ITEMS");
+                  message.error('NO ITEMS');
                 }
 
                 // dispatch(setCurrentProjectTask(record));
@@ -760,7 +760,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         );
       },
       ...useColumnSearchProps({
-        dataIndex: "projectTaskWO",
+        dataIndex: 'projectTaskWO',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -781,18 +781,18 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       }),
     },
     {
-      title: `${t("TASK")}`,
+      title: `${t('TASK')}`,
 
-      dataIndex: "taskNumber",
-      key: "taskNumber",
+      dataIndex: 'taskNumber',
+      key: 'taskNumber',
       editable: (text, record, index) => {
         return false;
       },
       // responsive: ['lg'],
-      width: "6%",
+      width: '6%',
       onFilter: true,
       ...useColumnSearchProps({
-        dataIndex: "taskNumber",
+        dataIndex: 'taskNumber',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -813,20 +813,20 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       }),
     },
     {
-      title: `${t("DESCRIPTIONS")}`,
-      dataIndex: "taskDescription",
-      key: "taskDescription",
+      title: `${t('DESCRIPTIONS')}`,
+      dataIndex: 'taskDescription',
+      key: 'taskDescription',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
-      tip: "Text Show",
+      tip: 'Text Show',
       // width: '9%',
 
-      responsive: ["lg"],
+      responsive: ['lg'],
 
       ...useColumnSearchProps({
-        dataIndex: "taskDescription",
+        dataIndex: 'taskDescription',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -877,18 +877,18 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     //   }),
     // },
     {
-      title: `${t("REFERENCE")}`,
-      dataIndex: "amtoss",
-      tip: "Text Show",
+      title: `${t('REFERENCE')}`,
+      dataIndex: 'amtoss',
+      tip: 'Text Show',
       ellipsis: true,
-      key: "amtoss",
-      responsive: ["lg"],
-      width: "8%",
+      key: 'amtoss',
+      responsive: ['lg'],
+      width: '8%',
       editable: (text, record, index) => {
         return false;
       },
       ...useColumnSearchProps({
-        dataIndex: "amtoss",
+        dataIndex: 'amtoss',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -906,18 +906,18 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       }),
     },
     {
-      title: `${t("CODE")}`,
-      dataIndex: "code",
-      key: "code",
+      title: `${t('CODE')}`,
+      dataIndex: 'code',
+      key: 'code',
 
-      width: "4%",
-      responsive: ["lg"],
+      width: '4%',
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
 
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       // filters: [
       //   { text: 'FC', value: 'FC' },
       //   { text: 'RS', value: 'RS' },
@@ -942,11 +942,11 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       filterSearch: true,
     },
     {
-      title: `${t("ZONE")}`,
+      title: `${t('ZONE')}`,
       //ellipsis: true,
-      width: "5%",
-      dataIndex: "zonesArr",
-      key: "majoreZoneShort",
+      width: '5%',
+      dataIndex: 'zonesArr',
+      key: 'majoreZoneShort',
       editable: (text, record, index) => {
         return false;
       },
@@ -958,8 +958,8 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                   (zone: { majoreZoneShort: string }) => zone.majoreZoneShort
                 )
               ),
-            ].join(", ")
-          : "",
+            ].join(', ')
+          : '',
       filters: Array.from(
         new Set(
           Array.isArray(dataSource)
@@ -981,11 +981,11 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         ),
     },
     {
-      title: `${t("SUB ZONE")}`,
-      dataIndex: "zonesArr",
-      key: "dataSource",
+      title: `${t('SUB ZONE')}`,
+      dataIndex: 'zonesArr',
+      key: 'dataSource',
 
-      width: "7%",
+      width: '7%',
       editable: (text, record, index) => {
         return false;
       },
@@ -995,8 +995,8 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
               ...new Set(
                 zonesArr.map((zone: { subZone: string }) => zone.subZone)
               ),
-            ].join(", ")
-          : "",
+            ].join(', ')
+          : '',
 
       filters: Array.from(
         new Set(
@@ -1026,19 +1026,19 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         ),
     },
     {
-      title: `${t("ZONE ID")}`,
-      dataIndex: "area",
+      title: `${t('ZONE ID')}`,
+      dataIndex: 'area',
 
-      key: "area",
-      width: "7%",
+      key: 'area',
+      width: '7%',
 
       ellipsis: true,
-      responsive: ["lg"],
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
       ...useColumnSearchProps({
-        dataIndex: "area",
+        dataIndex: 'area',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -1081,46 +1081,46 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     //   },
     // },
     {
-      title: `${t("ACCESS")}`,
-      dataIndex: "access",
+      title: `${t('ACCESS')}`,
+      dataIndex: 'access',
       editable: (text, record, index) => {
         return false;
       },
-      key: "access",
-      width: "5%",
+      key: 'access',
+      width: '5%',
 
       ellipsis: true,
       // responsive: ['lg'],
     },
     {
-      title: `${t("PROGRESS")}`,
-      dataIndex: "status",
+      title: `${t('PROGRESS')}`,
+      dataIndex: 'status',
 
-      key: "status",
-      width: "7%",
+      key: 'status',
+      width: '7%',
       editable: (text, record, index) => {
         return false;
       },
 
       filters: true,
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       filterSearch: true,
       valueEnum: {
-        отложен: { text: t("OPEN"), status: "Default" },
-        inProgress: { text: t("IN_PROGRESS"), status: "Processing" },
-        closed: { text: t("CLOSED"), status: "Success" },
-        canceled: { text: t("CANCELED"), status: "Error" },
+        отложен: { text: t('OPEN'), status: 'Default' },
+        inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
+        closed: { text: t('CLOSED'), status: 'Success' },
+        canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },
     {
-      title: `${t("TAGS")}`,
-      dataIndex: "restrictionArr",
+      title: `${t('TAGS')}`,
+      dataIndex: 'restrictionArr',
       search: false,
       editable: (text, record, index) => {
         return false;
       },
-      width: "8%",
+      width: '8%',
 
       filters: Array.from(
         new Set(
@@ -1137,7 +1137,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         <>
           {record.restrictionArr && record.restrictionArr.length > 0
             ? record.restrictionArr.map((tag: any) => {
-                const info = tagInfo[tag] || { color: "yellow" };
+                const info = tagInfo[tag] || { color: 'yellow' };
                 return (
                   <Tooltip title={tag}>
                     <Tag className="text-xs" color={info.color} key={tag}>
@@ -1151,48 +1151,48 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       ),
     },
     {
-      title: `${t("NEXT SKILL")}`,
-      key: "cascader",
-      dataIndex: "cascader",
+      title: `${t('NEXT SKILL')}`,
+      key: 'cascader',
+      dataIndex: 'cascader',
       // tip: 'Text Show',
       ellipsis: true,
-      valueType: "treeSelect",
-      width: "7%",
+      valueType: 'treeSelect',
+      width: '7%',
       valueEnum: {
-        AF: { text: "AF" },
-        AV: { text: "AV" },
-        CA: { text: "CA" },
-        EL: { text: "EL" },
-        EN: { text: "EN" },
-        RA: { text: "RA" },
-        UT: { text: "UT" },
-        SRC: { text: "SRC" },
-        NDT: { text: "NDT" },
-        PNT: { text: "PNT" },
-        ED: { text: "ED" },
-        QI: { text: "QI" },
-        OUT: { text: "QUT A/C" },
+        AF: { text: 'AF' },
+        AV: { text: 'AV' },
+        CA: { text: 'CA' },
+        EL: { text: 'EL' },
+        EN: { text: 'EN' },
+        RA: { text: 'RA' },
+        UT: { text: 'UT' },
+        SRC: { text: 'SRC' },
+        NDT: { text: 'NDT' },
+        PNT: { text: 'PNT' },
+        ED: { text: 'ED' },
+        QI: { text: 'QI' },
+        OUT: { text: 'QUT A/C' },
       },
       filters: true,
       filterSearch: true,
       onFilter: true,
     },
     {
-      title: `${t("WAIT STATUS")}`,
-      dataIndex: ["readyStatus", "commonRestrStatus"],
-      key: "commonRestrStatus",
-      width: "8%",
-      valueType: "select",
+      title: `${t('WAIT STATUS')}`,
+      dataIndex: ['readyStatus', 'commonRestrStatus'],
+      key: 'commonRestrStatus',
+      width: '8%',
+      valueType: 'select',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
       filters: [
-        { text: "ACCESS", value: "A" },
-        { text: "MATERIAL", value: "M" },
-        { text: "TOOL", value: "T" },
-        { text: "CONFIGURATION A/C", value: "TR" },
-        { text: "READY TO PERF", value: "ready" },
+        { text: 'ACCESS', value: 'A' },
+        { text: 'MATERIAL', value: 'M' },
+        { text: 'TOOL', value: 'T' },
+        { text: 'CONFIGURATION A/C', value: 'TR' },
+        { text: 'READY TO PERF', value: 'ready' },
       ],
       onFilter: (value, record) =>
         record?.readyStatus?.commonRestrStatus.includes(value),
@@ -1203,51 +1203,51 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           record?.readyStatus?.commonRestrStatus.length > 0 ? (
             record?.readyStatus?.commonRestrStatus.map((tag: any) => {
               let color;
-              if (tag === "M") {
-                color = "volcano";
-              } else if (tag === "A") {
-                color = "geekblue";
-              } else if (tag === "TR") {
-                color = "orange";
+              if (tag === 'M') {
+                color = 'volcano';
+              } else if (tag === 'A') {
+                color = 'geekblue';
+              } else if (tag === 'TR') {
+                color = 'orange';
               } else {
-                color = "green";
+                color = 'green';
               }
               return (
                 <Tooltip
                   title={
-                    tag === "A" && record?.removeInslallItemsIds
+                    tag === 'A' && record?.removeInslallItemsIds
                       ? record?.removeInslallItemsIds
                           .filter(
                             (item: { status: string }) =>
-                              item.status === "closed"
+                              item.status === 'closed'
                           )
                           .map(
                             (item: { accessItemID: any }) =>
                               item.accessItemID.panel
                           )
-                          .join(", ")
-                      : tag === "M" && record?.requirementItemsIds
+                          .join(', ')
+                      : tag === 'M' && record?.requirementItemsIds
                       ? record?.requirementItemsIds
                           .filter(
                             (item: { status: string }) =>
-                              item.status === "open" ||
-                              item.status === "onCheack" ||
-                              item.status === "onPush"
+                              item.status === 'open' ||
+                              item.status === 'onCheack' ||
+                              item.status === 'onPush'
                           )
-                          .join("\n")
-                      : tag === "TR" && record?.ТResources
+                          .join('\n')
+                      : tag === 'TR' && record?.ТResources
                       ? record?.ТResources
                           .map(
                             (item: any) =>
                               `${item.PN} - ${item.nameOfMaterial}   ${item.amout}${item.unit};`
                           )
-                          .join("\n")
-                      : tag === "TR" && record?.restrictionArr
+                          .join('\n')
+                      : tag === 'TR' && record?.restrictionArr
                       ? record?.restrictionArr
 
                           .map((item: any) => `${item};`)
-                          .join("\n")
-                      : ""
+                          .join('\n')
+                      : ''
                   }
                 >
                   <Tag color={color} key={tag}>
@@ -1264,22 +1264,22 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     },
 
     {
-      title: `${t("NOTE")}`,
-      dataIndex: "note",
-      key: "note",
+      title: `${t('NOTE')}`,
+      dataIndex: 'note',
+      key: 'note',
       render: (text) => {
-        if (typeof text === "string" && text.length > 1) {
+        if (typeof text === 'string' && text.length > 1) {
           return (
             <Tooltip placement="top" title={text}>
-              <Tag color={"red"}>{"note"}</Tag>
+              <Tag color={'red'}>{'note'}</Tag>
             </Tooltip>
           );
         } else {
-          return "-";
+          return '-';
         }
       },
-      width: "4%",
-      filters: [{ text: "Note", value: true }],
+      width: '4%',
+      filters: [{ text: 'Note', value: true }],
       onFilter: (value, record) => {
         if (value) {
           return !!record.note;
@@ -1290,10 +1290,10 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     },
 
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
-      width: "4%",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
+      width: '4%',
       render: (text, record, _, action) => [
         <a
           key="editable"
@@ -1309,8 +1309,8 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
 
   const rowClassName = (record: IProjectTask) => {
     return record._id === selectedRowKey
-      ? "cursor-pointer text-sm text-transform: uppercase bg-blue-100 "
-      : "cursor-pointer  text-sm text-transform: uppercase ";
+      ? 'cursor-pointer text-sm text-transform: uppercase bg-blue-100 '
+      : 'cursor-pointer  text-sm text-transform: uppercase ';
   };
   const [columns, setColumns] = useState(initialColumns);
 
@@ -1354,13 +1354,13 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
   const [openEditWOForm, setOpenEditWOForm] = useState(false);
   // const [openEditTaskForm, setOpenEditTaskForm] = useState(false);
   const [openTaskDrawer, setOpenTaskDrawer] = useState(false);
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -1370,22 +1370,22 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       type,
     } as MenuItem;
   }
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
         // getItem('Print Status Report', 'sub4', <PrinterOutlined />, [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
           getItem(
             <div
@@ -1393,11 +1393,11 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             >
               <PrinterOutlined /> MJSS
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -1414,7 +1414,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -1431,7 +1431,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             >
               <DownloadOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -1439,18 +1439,18 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     },
 
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
-        getItem("Add Selected Task to Group", "sub09", "", [
+        getItem('Add Selected Task to Group', 'sub09', '', [
           getItem(
             <>
               <div onClick={() => setOpenAddGroupForm(true)}>
                 <PlusOutlined /> New Group<Divider></Divider>
               </div>
             </>,
-            "9ss"
+            '9ss'
           ),
 
           ...newMenuItems,
@@ -1461,7 +1461,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           >
             <EditOutlined /> Edit selected Item
           </div>,
-          "9sshsssswishhxs"
+          '9sshsssswishhxs'
         ),
         getItem(
           <div
@@ -1472,8 +1472,8 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           >
             Update Skill selected Item
           </div>,
-          "updateSkill",
-          "",
+          'updateSkill',
+          '',
           [
             getItem(
               <div
@@ -1483,19 +1483,19 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
               >
                 <Select
                   options={[
-                    { value: "AF", label: "AF" },
-                    { value: "AV", label: "AV" },
-                    { value: "CA", label: "CA" },
-                    { value: "EL", label: "EL" },
-                    { value: "EN", label: "EN" },
-                    { value: "RA", label: "RA" },
-                    { value: "UT", label: "UT" },
-                    { value: "SRC", label: "SRC" },
-                    { value: "NDT", label: "NDT" },
-                    { value: "PNT", label: "PNT" },
-                    { value: "ED", label: "ED" },
-                    { value: "QI", label: "QI" },
-                    { value: "OUT", label: "QUT A/C" },
+                    { value: 'AF', label: 'AF' },
+                    { value: 'AV', label: 'AV' },
+                    { value: 'CA', label: 'CA' },
+                    { value: 'EL', label: 'EL' },
+                    { value: 'EN', label: 'EN' },
+                    { value: 'RA', label: 'RA' },
+                    { value: 'UT', label: 'UT' },
+                    { value: 'SRC', label: 'SRC' },
+                    { value: 'NDT', label: 'NDT' },
+                    { value: 'PNT', label: 'PNT' },
+                    { value: 'ED', label: 'ED' },
+                    { value: 'QI', label: 'QI' },
+                    { value: 'OUT', label: 'QUT A/C' },
                   ]}
                   onChange={onChange}
                   placeholder="Please select"
@@ -1542,27 +1542,27 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         //     ),
         //   ]
         // ),
-        getItem("Update Status selected items", "subydd09", "", [
+        getItem('Update Status selected items', 'subydd09', '', [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectTasksByIds({
-                    status: "inProgress",
+                    status: 'inProgress',
                     ids: selectedRowKeys,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result = await dispatch(
                     getFilteredGroupsTasks({
-                      projectId: currentProject?._id || "",
-                      projectGroprojectGroupID: projectGroprojectGroupID || "",
+                      projectId: currentProject?._id || '',
+                      projectGroprojectGroupID: projectGroprojectGroupID || '',
                     })
                   );
                   setDataSource(result.payload);
@@ -1581,7 +1581,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                             index: index,
                             task: {
                               ...projectGroupTasks[index],
-                              status: "inProgress",
+                              status: 'inProgress',
                             },
                           })
                         );
@@ -1593,7 +1593,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             >
               In Progress
             </div>,
-            "9sasyhqss"
+            '9sasyhqss'
           ),
 
           getItem(
@@ -1601,21 +1601,21 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select Items.");
+                  message.error('Please select Items.');
                   return;
                 }
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectTasksByIds({
-                    status: "canceled",
+                    status: 'canceled',
                     ids: selectedRowKeys,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result = await dispatch(
                     getFilteredGroupsTasks({
-                      projectId: currentProject?._id || "",
-                      projectGroprojectGroupID: projectGroprojectGroupID || "",
+                      projectId: currentProject?._id || '',
+                      projectGroprojectGroupID: projectGroprojectGroupID || '',
                     })
                   );
                   setDataSource(result.payload);
@@ -1634,7 +1634,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                             index: index,
                             task: {
                               ...projectGroupTasks[index],
-                              status: "canceled",
+                              status: 'canceled',
                             },
                           })
                         );
@@ -1646,7 +1646,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             >
               Canceled
             </div>,
-            "9saqs46ms"
+            '9saqs46ms'
           ),
         ]),
         getItem(
@@ -1654,21 +1654,21 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             onClick={async () => {
               const selectedCount = selectedRowKeys && selectedRowKeys.length;
               if (selectedCount < 1) {
-                message.error("Please select Items.");
+                message.error('Please select Items.');
                 return;
               }
               // console.log(selectedRowKeys);
               const result = await dispatch(
                 updateProjectTasksByIds({
-                  status: "open",
+                  status: 'open',
                   ids: selectedRowKeys,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 const result = await dispatch(
                   getFilteredGroupsTasks({
-                    projectId: currentProject?._id || "",
-                    projectGroprojectGroupID: projectGroprojectGroupID || "",
+                    projectId: currentProject?._id || '',
+                    projectGroprojectGroupID: projectGroprojectGroupID || '',
                   })
                 );
                 setDataSource(result.payload);
@@ -1687,7 +1687,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                           index: index,
                           task: {
                             ...projectGroupTasks[index],
-                            status: "open",
+                            status: 'open',
                           },
                         })
                       );
@@ -1699,14 +1699,14 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           >
             <StopOutlined /> Reopen selected items
           </div>,
-          "9ss2hhhxs"
+          '9ss2hhhxs'
         ),
       ],
     },
 
     {
-      label: `${t("Print")}`,
-      key: "printAction",
+      label: `${t('Print')}`,
+      key: 'printAction',
       icon: null,
       children: [
         getItem(
@@ -1714,41 +1714,41 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
             onClick={() => {
               const selectedCount = selectedRowKeys && selectedRowKeys.length;
               if (selectedCount < 1) {
-                message.error("Please select Items.");
+                message.error('Please select Items.');
                 return;
               }
             }}
           >
             Quick Print Work Card
           </div>,
-          "9sstsssishhxs"
+          '9sstsssishhxs'
         ),
         getItem(
           <div
             onClick={() => {
               const selectedCount = selectedRowKeys && selectedRowKeys.length;
               if (selectedCount < 1) {
-                message.error("Please select Items.");
+                message.error('Please select Items.');
                 return;
               }
             }}
           >
             Print Work Card with options
           </div>,
-          "9sshsssswishhxs"
+          '9sshsssswishhxs'
         ),
       ],
     },
   ];
-  const taskItems: MenuProps["items"] = [
+  const taskItems: MenuProps['items'] = [
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: <SettingOutlined />,
       children: [
         {
-          label: `${"Print"}`,
-          key: "printAction",
+          label: `${'Print'}`,
+          key: 'printAction',
           icon: null,
           children: [
             getItem(
@@ -1757,7 +1757,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
               >
                 Print Work Card with options
               </div>,
-              "9sshsssswishhxs"
+              '9sshsssswishhxs'
             ),
             getItem(
               <div
@@ -1765,31 +1765,31 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
               >
                 Print Material list
               </div>,
-              "9sshsssswishhxs"
+              '9sshsssswishhxs'
             ),
           ],
         },
         getItem(
-          <div onClick={() => console.log("New Work Order open Form")}>
+          <div onClick={() => console.log('New Work Order open Form')}>
             <EditOutlined /> Edit in Data
           </div>,
-          "9sssxxss"
+          '9sssxxss'
         ),
 
-        getItem("Update Status", "subydd09", "", [
+        getItem('Update Status', 'subydd09', '', [
           getItem(
             <div
               onClick={async () => {
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectTask({
-                    status: "inProgress",
+                    status: 'inProgress',
                     id: currentProjectTask._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setCurrentProjectTask(result.payload);
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const index = projectTasks.findIndex(
                     (task) => task._id === currentProjectTask?._id
                   );
@@ -1801,15 +1801,15 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                       })
                     );
                   }
-                  message.success("Task successfully updated ");
+                  message.success('Task successfully updated ');
                 } else {
-                  message.error("Task not updated");
+                  message.error('Task not updated');
                 }
               }}
             >
               In Progress
             </div>,
-            "9saqss"
+            '9saqss'
           ),
           getItem(
             <div
@@ -1817,13 +1817,13 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectTask({
-                    status: "open",
+                    status: 'open',
                     id: currentProjectTask._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setCurrentProjectTask(result.payload);
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const index = projectTasks.findIndex(
                     (task) => task._id === currentProjectTask?._id
                   );
@@ -1835,15 +1835,15 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                       })
                     );
                   }
-                  message.success("Task successfully updated ");
+                  message.success('Task successfully updated ');
                 } else {
-                  message.error("Task not updated");
+                  message.error('Task not updated');
                 }
               }}
             >
               Open
             </div>,
-            "open"
+            'open'
           ),
         ]),
       ],
@@ -1851,15 +1851,15 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
   ];
   const actionRef = useRef<ActionType>();
   const [selectedObject, setSelectedObject] = useState({
-    PART_NUMBER: "",
+    PART_NUMBER: '',
     QUANTITY: 0,
-    NAME_OF_MATERIAL: "",
+    NAME_OF_MATERIAL: '',
   });
 
   return (
     <div className="flex my-0 mx-auto flex-col  h-[78vh] relative overflow-hidden">
       {/* <div className="flex my-0 mx-auto flex-col relative overflow-hidden"> */}
-      <Row justify={"space-between"}>
+      <Row justify={'space-between'}>
         <Space className="">
           <EditOutlined
             onClick={() => setOpenEditWOForm(true)}
@@ -1868,22 +1868,22 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           <Tooltip placement="top" title={currentProject?.planeNumber}>
             <a onClick={showDrawer}>{currentProject?.projectName}</a>
           </Tooltip>
-        </Space>{" "}
+        </Space>{' '}
         <Space>
           <>
-            {t("Date In")}:{" "}
+            {t('Date In')}:{' '}
             {currentProject &&
-              moment(currentProject?.startDate).format("DD-MMM-YYYY")}
+              moment(currentProject?.startDate).format('DD-MMM-YYYY')}
           </>
         </Space>
         <Space>
           <>
-            {t("Date Out")}:{" "}
+            {t('Date Out')}:{' '}
             {currentProject &&
-              moment(currentProject?.finishDate).format("DD-MMM-YYYY")}
+              moment(currentProject?.finishDate).format('DD-MMM-YYYY')}
           </>
         </Space>
-      </Row>{" "}
+      </Row>{' '}
       <EditableTable
         xScroll={1700}
         data={dataSource || []}
@@ -1906,11 +1906,11 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
               note: data.note,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             const result = await dispatch(
               getFilteredGroupsTasks({
-                projectId: currentProject?._id || "",
-                projectGroprojectGroupID: projectGroprojectGroupID || "",
+                projectId: currentProject?._id || '',
+                projectGroprojectGroupID: projectGroprojectGroupID || '',
               })
             );
             setDataSource(result.payload);
@@ -1936,7 +1936,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
         onVisibleColumnsChange={handleVisibleColumnsChange}
         recordCreatorProps={false}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       <Drawer
@@ -1951,8 +1951,8 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       </Drawer>
       <DrawerPanel
         title={`Edit WP: ${currentProject?.projectName}(W/O: ${currentProject?.projectWO})`}
-        size={"medium"}
-        placement={"right"}
+        size={'medium'}
+        placement={'right'}
         open={openEditWOForm}
         onClose={setOpenEditWOForm}
       >
@@ -1960,24 +1960,24 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       </DrawerPanel>
       <DrawerPanel
         title={`Add New Group`}
-        size={"medium"}
-        placement={"right"}
+        size={'medium'}
+        placement={'right'}
         open={openAddGroupForm}
         onClose={setOpenAddGroupForm}
         getContainer={false}
       >
         <GroupAddForm
-          projectID={currentProject?._id || ""}
-          companyID={companyID || ""}
+          projectID={currentProject?._id || ''}
+          companyID={companyID || ''}
         ></GroupAddForm>
-      </DrawerPanel>{" "}
+      </DrawerPanel>{' '}
       <ModalForm
         title={`ISSUE PICKSLIP INFORMARION`}
-        size={"small"}
+        size={'small'}
         // placement={'bottom'}
         open={issuedtDrawer}
         submitter={false}
-        width={"70vw"}
+        width={'70vw'}
         onOpenChange={setOpenIssuedDrawer}
         // getContainer={false}
       >
@@ -1995,7 +1995,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           }}
           yScroll={26}
           externalReload={function (): Promise<void> {
-            throw new Error("Function not implemented.");
+            throw new Error('Function not implemented.');
           }}
           // onTableDataChange={}
         />
@@ -2010,8 +2010,8 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       />
       <DrawerPanel
         title={`${currentProjectTask?.taskNumber?.toUpperCase()} ###${currentProjectTask?.taskDescription?.toUpperCase()}`}
-        size={"large"}
-        placement={"bottom"}
+        size={'large'}
+        placement={'bottom'}
         onClose={() => {
           setOpenTaskDrawer(false);
           // dispatch(setCurrentProjectTask(null));
@@ -2020,22 +2020,22 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           dispatch(setCurrentActionIndexMtb(0));
           dispatch(setCurrentAction(null));
           setSelectedObject({
-            PART_NUMBER: "",
+            PART_NUMBER: '',
             QUANTITY: 0,
-            NAME_OF_MATERIAL: "",
+            NAME_OF_MATERIAL: '',
           });
         }}
         open={openTaskDrawer}
         getContainer={false}
         extra={
-          <Row align={"middle"}>
+          <Row align={'middle'}>
             <Tag
-              color={currentProjectTask?.status === "closed" ? "green" : "red"}
+              color={currentProjectTask?.status === 'closed' ? 'green' : 'red'}
             >
               {String(
-                currentProjectTask?.status ? currentProjectTask?.status : ""
+                currentProjectTask?.status ? currentProjectTask?.status : ''
               ).toUpperCase()}
-            </Tag>{" "}
+            </Tag>{' '}
             <div className=" ml-auto w-40">
               <NavigationPanel
                 onMenuClick={handleMenuClick}
@@ -2056,7 +2056,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
           tabs={[
             {
               content: <TaskDetails task={currentProjectTask} />,
-              title: `${t("Details")}`,
+              title: `${t('Details')}`,
             },
             {
               content: (
@@ -2071,10 +2071,10 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                       onIssuedClick={onIssuedClick}
                       selectedObjectParent={selectedObject}
                     />
-                  </div>{" "}
+                  </div>{' '}
                 </>
               ),
-              title: `${t("Requests/Parts")}`,
+              title: `${t('Requests/Parts')}`,
             },
             {
               content: (
@@ -2083,7 +2083,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                   upData={setCurrentProjectTask} // upData={setCurrentProjectTask}
                 />
               ),
-              title: `${t("Steps")}`,
+              title: `${t('Steps')}`,
             },
             {
               content: (
@@ -2092,21 +2092,21 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                   upData={setCurrentProjectTask}
                 />
               ),
-              title: `${t("Close Work Order")}`,
+              title: `${t('Close Work Order')}`,
             },
             {
               content: (
                 <NRCStepForm
-                  disabled={currentProjectTask?.status !== "inProgress"}
+                  disabled={currentProjectTask?.status !== 'inProgress'}
                   task={currentProjectTask}
                   projectTasks={projectGroupTasks}
                 />
               ),
-              title: `${t("+ Add NRC")}`,
+              title: `${t('+ Add NRC')}`,
             },
             {
               content: <GeneretedWOPdf task={currentProjectTask} />,
-              title: `${t("Work Card")}`,
+              title: `${t('Work Card')}`,
             },
           ]}
         />

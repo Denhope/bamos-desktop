@@ -1,6 +1,6 @@
-import { Excel } from "antd-table-saveas-excel";
+import { Excel } from 'antd-table-saveas-excel';
 
-import { IProjectTaskAll } from "@/models/IProjectTask";
+import { IProjectTaskAll } from '@/models/IProjectTask';
 
 import {
   ITaskType,
@@ -14,12 +14,12 @@ import {
   IInspectionScopeDTO,
   ITaskTypeUpdate,
   IAmtossNewData,
-} from "@/types/TypesData";
-import { saveAs } from "file-saver";
-import * as XLSX from "xlsx";
-import { MenuProps } from "antd";
-import { getFileFromServer } from "@/utils/api/thunks";
-
+} from '@/types/TypesData';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { MenuProps } from 'antd';
+import { getFileFromServer } from '@/utils/api/thunks';
+// import { fileTypeFromBuffer } from 'file-type';
 export const includeTasks = (
   arrayOfAllObjectsData: ITaskType[],
   arrayOfCheakObjectData: IDTO[]
@@ -30,14 +30,14 @@ export const includeTasks = (
       String(
         task.taskNumber
           // ?.trim()
-          ?.replace(/Изм.00/g, "")
-          ?.replace(/Изм. 00/g, "")
-          ?.replace(/Изм.03/g, "")
-          ?.replace(/,Изм.00/g, "")
-          ?.replace(/, Изм.00/g, "")
-          ?.replace(/Изм.01/g, "")
-          ?.replace(/Изм. 01/g, "")
-          ?.replace(/Изм. 01/g, "")
+          ?.replace(/Изм.00/g, '')
+          ?.replace(/Изм. 00/g, '')
+          ?.replace(/Изм.03/g, '')
+          ?.replace(/,Изм.00/g, '')
+          ?.replace(/, Изм.00/g, '')
+          ?.replace(/Изм.01/g, '')
+          ?.replace(/Изм. 01/g, '')
+          ?.replace(/Изм. 01/g, '')
           ?.trim()
       )
     );
@@ -54,13 +54,13 @@ export const includeTasks = (
   const filteredItemsUnic = arrayOfAllObjectsData.filter((e) =>
     includeFilterSet.has(
       String(e.taskNumber)
-        ?.replace(/Изм.00/g, "")
-        ?.replace(/Изм. 00/g, "")
-        ?.replace(/Изм.03/g, "")
-        ?.replace(/Изм.01/g, "")
-        ?.replace(/,Изм.00/g, "")
-        ?.replace(/, Изм.00/g, "")
-        ?.replace(/Изм. 01/g, "")
+        ?.replace(/Изм.00/g, '')
+        ?.replace(/Изм. 00/g, '')
+        ?.replace(/Изм.03/g, '')
+        ?.replace(/Изм.01/g, '')
+        ?.replace(/,Изм.00/g, '')
+        ?.replace(/, Изм.00/g, '')
+        ?.replace(/Изм. 01/g, '')
         .trim()
     )
   );
@@ -82,12 +82,12 @@ export const notIncludeTasks = (
     notIncludeTaskFilter.push(
       String(
         task.taskNumber
-          ?.replace(/Изм.00/g, "")
-          ?.replace(/Изм.03/g, "")
-          ?.replace(/Изм.01/g, "")
-          ?.replace(/Изм. 01/g, "")
-          ?.replace(/, Изм.00/g, "")
-          ?.replace(/Изм. 00/g, "")
+          ?.replace(/Изм.00/g, '')
+          ?.replace(/Изм.03/g, '')
+          ?.replace(/Изм.01/g, '')
+          ?.replace(/Изм. 01/g, '')
+          ?.replace(/, Изм.00/g, '')
+          ?.replace(/Изм. 00/g, '')
           ?.trim()
       )
     );
@@ -97,13 +97,13 @@ export const notIncludeTasks = (
     (e) =>
       !notIncludeFilterSet.has(
         String(e.taskNumber)
-          ?.replace(/Изм.00/g, "")
-          ?.replace(/Изм. 00/g, "")
-          ?.replace(/Изм.03/g, "")
-          ?.replace(/Изм.01/g, "")
-          ?.replace(/Изм. 01/g, "")
-          ?.replace(/Изм.01/g, "")
-          ?.replace(/, Изм.00/g, "")
+          ?.replace(/Изм.00/g, '')
+          ?.replace(/Изм. 00/g, '')
+          ?.replace(/Изм.03/g, '')
+          ?.replace(/Изм.01/g, '')
+          ?.replace(/Изм. 01/g, '')
+          ?.replace(/Изм.01/g, '')
+          ?.replace(/, Изм.00/g, '')
           ?.trim()
       )
   );
@@ -115,7 +115,7 @@ export const notIncludeTasks = (
 export const saveExls = (columns: any, dataSource: any, fileName: string) => {
   const excel = new Excel();
   excel
-    .addSheet("test")
+    .addSheet('test')
     .addColumns(columns)
     .addDataSource(dataSource, {
       str2Percent: true,
@@ -130,28 +130,28 @@ export const saveNewData = (data: ITaskType[]) => {
   data.forEach((task: ITaskType) => {
     if (task !== undefined) {
       tasksAccessArr.push(task?.access);
-      let access = String(task?.access) || "";
-      let zones = String(task?.area) || "";
-      let amtoss = String(task?.amtoss) || "";
-      let amtossNewRev = task.ammtossArrNew.join("\n");
+      let access = String(task?.access) || '';
+      let zones = String(task?.area) || '';
+      let amtoss = String(task?.amtoss) || '';
+      let amtossNewRev = task.ammtossArrNew.join('\n');
       let re = /\s*;\s*|\s*,\s*|\s*\r\n\s*|\s*\n\s*/;
       let accessList = access.split(re);
       let zonesList = zones.split(re);
       let amtossList = amtoss.split(re);
       let Obj: ITaskType = JSON.parse(JSON.stringify(task));
-      Obj["accessArr"] = accessList.filter(
+      Obj['accessArr'] = accessList.filter(
         (x) => /^[1-8]/.exec(x) && x.length > 2
       );
-      Obj["hardAccess"] = accessList.filter(
+      Obj['hardAccess'] = accessList.filter(
         (x) =>
           !/^[1-8]/.exec(x) &&
           x.length > 2 &&
           !/(ПРЯМОЙ)/.exec(x) &&
           !/(ПРИМЕЧАНИЕ)/.exec(x)
       );
-      Obj["zonesArr"] = zonesList;
-      Obj["ammtossArr"] = amtossList;
-      Obj["amtossNewRev"] = amtossNewRev;
+      Obj['zonesArr'] = zonesList;
+      Obj['ammtossArr'] = amtossList;
+      Obj['amtossNewRev'] = amtossNewRev;
       delete Obj.id;
 
       newData.push(Obj);
@@ -160,14 +160,14 @@ export const saveNewData = (data: ITaskType[]) => {
   return newData;
 };
 
-export const arrayToCSV = (arr: any[], delimiter = ",") =>
+export const arrayToCSV = (arr: any[], delimiter = ',') =>
   arr
     .map((v) =>
       v
         .map((x: any) => (isNaN(x) ? `"${x.replace(/"/g, '""')}"` : x))
         .join(delimiter)
     )
-    .join("\n");
+    .join('\n');
 export const filteredInstrument = (
   currentProjectTask: IProjectTaskAll,
   allInstruments: IInstData1[]
@@ -182,14 +182,14 @@ export const filteredInstrument = (
       String(
         currentProjectTask.optional?.taskNumber
           // ?.trim()
-          ?.replace(/Изм.00/g, "")
-          ?.replace(/Изм. 00/g, "")
-          ?.replace(/Изм.03/g, "")
-          ?.replace(/,Изм.00/g, "")
-          ?.replace(/, Изм.00/g, "")
-          ?.replace(/Изм.01/g, "")
-          ?.replace(/Изм. 01/g, "")
-          ?.replace(/Изм. 01/g, "")
+          ?.replace(/Изм.00/g, '')
+          ?.replace(/Изм. 00/g, '')
+          ?.replace(/Изм.03/g, '')
+          ?.replace(/,Изм.00/g, '')
+          ?.replace(/, Изм.00/g, '')
+          ?.replace(/Изм.01/g, '')
+          ?.replace(/Изм. 01/g, '')
+          ?.replace(/Изм. 01/g, '')
           ?.trim()
       )
     );
@@ -201,13 +201,13 @@ export const filteredInstrument = (
     // includeFilterSet.has(e.taskNumber)
     includeFilterSet.has(
       String(e.taskNumber)
-        ?.replace(/Изм.00/g, "")
-        ?.replace(/Изм. 00/g, "")
-        ?.replace(/Изм.03/g, "")
-        ?.replace(/Изм.01/g, "")
-        ?.replace(/,Изм.00/g, "")
-        ?.replace(/, Изм.00/g, "")
-        ?.replace(/Изм. 01/g, "")
+        ?.replace(/Изм.00/g, '')
+        ?.replace(/Изм. 00/g, '')
+        ?.replace(/Изм.03/g, '')
+        ?.replace(/Изм.01/g, '')
+        ?.replace(/,Изм.00/g, '')
+        ?.replace(/, Изм.00/g, '')
+        ?.replace(/Изм. 01/g, '')
         .trim()
     )
   );
@@ -222,11 +222,11 @@ export const filteredInstrument = (
       (element: IInstData1) =>
         (element.code === code &&
           element.PN === pn &&
-          element.PN !== "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+          element.PN !== 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
           element.nameOfInstrument === instName) ||
-        (element.PN === "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+        (element.PN === 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
           element.nameOfInstrument === instName) ||
-        (element.PN === "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+        (element.PN === 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
           element.nameOfInstrument === instName &&
           element.code === code)
     );
@@ -254,14 +254,14 @@ export const filterMaterial = (
       String(
         currentProjectTask.optional?.taskNumber
           //       // ?.trim()
-          ?.replace(/Изм.00/g, "")
-          ?.replace(/Изм. 00/g, "")
-          ?.replace(/Изм.03/g, "")
-          ?.replace(/,Изм.00/g, "")
-          ?.replace(/, Изм.00/g, "")
-          ?.replace(/Изм.01/g, "")
-          ?.replace(/Изм. 01/g, "")
-          ?.replace(/Изм. 01/g, "")
+          ?.replace(/Изм.00/g, '')
+          ?.replace(/Изм. 00/g, '')
+          ?.replace(/Изм.03/g, '')
+          ?.replace(/,Изм.00/g, '')
+          ?.replace(/, Изм.00/g, '')
+          ?.replace(/Изм.01/g, '')
+          ?.replace(/Изм. 01/g, '')
+          ?.replace(/Изм. 01/g, '')
           ?.trim()
       )
     );
@@ -273,13 +273,13 @@ export const filterMaterial = (
     // includeFilterSet.has(e.taskNumber)
     includeFilterSet.has(
       String(e.taskNumber)
-        ?.replace(/Изм.00/g, "")
-        ?.replace(/Изм. 00/g, "")
-        ?.replace(/Изм.03/g, "")
-        ?.replace(/Изм.01/g, "")
-        ?.replace(/,Изм.00/g, "")
-        ?.replace(/, Изм.00/g, "")
-        ?.replace(/Изм. 01/g, "")
+        ?.replace(/Изм.00/g, '')
+        ?.replace(/Изм. 00/g, '')
+        ?.replace(/Изм.03/g, '')
+        ?.replace(/Изм.01/g, '')
+        ?.replace(/,Изм.00/g, '')
+        ?.replace(/, Изм.00/g, '')
+        ?.replace(/Изм. 01/g, '')
         .trim()
     )
   );
@@ -294,11 +294,11 @@ export const filterMaterial = (
       (element: IMatData1) =>
         (element.code === code &&
           element.PN === pn &&
-          element.PN !== "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+          element.PN !== 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
           element.nameOfMaterial === matName) ||
-        (element.PN === "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+        (element.PN === 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
           element.nameOfMaterial === matName) ||
-        (element.PN === "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+        (element.PN === 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
           element.nameOfMaterial === matName &&
           element.code === code)
     );
@@ -377,7 +377,7 @@ export const filteredNotIncludePanels = (
 
   const objArr: IPanelDTO1[] | [] = currentProjectTask.taskId?.accessArr.map(
     (e: string) => ({
-      access: e || "",
+      access: e || '',
     })
   );
   interface IAmtossDTO1 {
@@ -391,7 +391,7 @@ export const filteredNotIncludePanels = (
   let panelsNotIncludeArr = notFilteredPanels.map((item) => {
     let newObj = {
       panel: item.access,
-      description: "",
+      description: '',
     };
 
     return newObj;
@@ -424,7 +424,7 @@ export const inspectionScopes = (
   allInspectionScopes: IInspectionScopeDTO[]
 ) => {
   const includeFilterInspectionScopeSet = new Set([
-    currentProjectTask.taskId?.taskNumber || "",
+    currentProjectTask.taskId?.taskNumber || '',
   ]);
   const filteredInspectionScopes = allInspectionScopes.filter(
     (e: IInspectionScopeDTO) =>
@@ -449,24 +449,24 @@ export const compareArrays = (arr1: ITaskType[], arr2: IDTO[]) => {
         obj2.taskNumber ===
         String(
           obj1.taskNumber
-            ?.replace(/Изм.00/g, "")
-            ?.replace(/Изм. 00/g, "")
-            ?.replace(/Изм.03/g, "")
-            ?.replace(/Изм.01/g, "")
-            ?.replace(/,Изм.00/g, "")
-            ?.replace(/, Изм.00/g, "")
-            ?.replace(/Изм. 01/g, "")
+            ?.replace(/Изм.00/g, '')
+            ?.replace(/Изм. 00/g, '')
+            ?.replace(/Изм.03/g, '')
+            ?.replace(/Изм.01/g, '')
+            ?.replace(/,Изм.00/g, '')
+            ?.replace(/, Изм.00/g, '')
+            ?.replace(/Изм. 01/g, '')
             .trim()
         )
     );
     if (obj2) {
       return {
         ...obj1,
-        WOCustomer: obj2.WOCustomer || "",
-        MJSSNumber: obj2.id || "",
-        WOPackageType: obj2.WOPackageType || "",
-        position: obj2.position || "",
-        amtoss: obj2.amtoss || "",
+        WOCustomer: obj2.WOCustomer || '',
+        MJSSNumber: obj2.id || '',
+        WOPackageType: obj2.WOPackageType || '',
+        position: obj2.position || '',
+        amtoss: obj2.amtoss || '',
       };
     } else {
       return obj1;
@@ -478,10 +478,10 @@ export const compareArrays = (arr1: ITaskType[], arr2: IDTO[]) => {
 export const compareForPrint = (arr1: any[]) => {
   const updatedArr = arr1.map((obj1) => {
     return {
-      PART_NUMBER: obj1.PN.toUpperCase() || "",
-      NAME_OF_MATERIAL: obj1.description.toUpperCase() || "",
+      PART_NUMBER: obj1.PN.toUpperCase() || '',
+      NAME_OF_MATERIAL: obj1.description.toUpperCase() || '',
       QUANTITY: obj1.quantity || 0,
-      UNIT_OF_MEASURE: obj1.unit.toUpperCase() || "",
+      UNIT_OF_MEASURE: obj1.unit.toUpperCase() || '',
     };
   });
   return updatedArr;
@@ -531,12 +531,12 @@ export const calculateTime = (
   currentTime: string,
   interval: string
 ): string => {
-  let [currentHours, currentMinutes] = currentTime.split(":").map(Number);
-  let [intervalHours, intervalMinutes] = interval.split(":").map(Number);
+  let [currentHours, currentMinutes] = currentTime.split(':').map(Number);
+  let [intervalHours, intervalMinutes] = interval.split(':').map(Number);
   let totalMinutes = currentMinutes + intervalMinutes;
   let totalHours = currentHours + intervalHours + Math.floor(totalMinutes / 60);
   let remainingMinutes = totalMinutes % 60;
-  return `${totalHours}:${remainingMinutes.toString().padStart(2, "0")}`;
+  return `${totalHours}:${remainingMinutes.toString().padStart(2, '0')}`;
 };
 
 export const exportToExcel = (
@@ -559,37 +559,37 @@ export const exportToExcel = (
     );
   const ws = XLSX.utils.json_to_sheet(filteredData);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   saveAs(
-    new Blob([wbout], { type: "application/octet-stream" }),
+    new Blob([wbout], { type: 'application/octet-stream' }),
     `${title}.xlsx`
   );
 };
 
 export const tagInfo: { [key: string]: { color: string; tagShort: string } } = {
-  "AC/DC ON": { color: "green", tagShort: "AC/DC" },
-  "AC/DC OFF": { color: "red", tagShort: "AC/DC" },
-  "A/C ON JACKs": { color: "yellow", tagShort: "jack" },
-  "AIRCRAFT JACKING": { color: "yellow", tagShort: "jack" },
-  "ENG RUN": { color: "yellow", tagShort: "ERUN" },
-  "APU RUN": { color: "yellow", tagShort: "ARUN" },
-  ACT: { color: "yellow", tagShort: "ACT" },
-  DEFUELING: { color: "yellow", tagShort: "DEFL" },
-  "FUEL TANKS": { color: "yellow", tagShort: "DEFL" },
-  "HYD ON": { color: "green", tagShort: "HYD" },
-  "HYD OFF": { color: "red", tagShort: "HYD" },
-  "GROUND CART": { color: "yellow", tagShort: "GRC" },
-  "SLATS EXTENDED": { color: "yellow", tagShort: "SEXT" },
-  "SPOILERS EXTENDED": { color: "yellow", tagShort: "SPEXT" },
-  "FLAPS EXTENDED": { color: "yellow", tagShort: "FEXT" },
-  WATER: { color: "yellow", tagShort: "WAT" },
-  WASTE: { color: "yellow", tagShort: "WAS" },
+  'AC/DC ON': { color: 'green', tagShort: 'AC/DC' },
+  'AC/DC OFF': { color: 'red', tagShort: 'AC/DC' },
+  'A/C ON JACKs': { color: 'yellow', tagShort: 'jack' },
+  'AIRCRAFT JACKING': { color: 'yellow', tagShort: 'jack' },
+  'ENG RUN': { color: 'yellow', tagShort: 'ERUN' },
+  'APU RUN': { color: 'yellow', tagShort: 'ARUN' },
+  ACT: { color: 'yellow', tagShort: 'ACT' },
+  DEFUELING: { color: 'yellow', tagShort: 'DEFL' },
+  'FUEL TANKS': { color: 'yellow', tagShort: 'DEFL' },
+  'HYD ON': { color: 'green', tagShort: 'HYD' },
+  'HYD OFF': { color: 'red', tagShort: 'HYD' },
+  'GROUND CART': { color: 'yellow', tagShort: 'GRC' },
+  'SLATS EXTENDED': { color: 'yellow', tagShort: 'SEXT' },
+  'SPOILERS EXTENDED': { color: 'yellow', tagShort: 'SPEXT' },
+  'FLAPS EXTENDED': { color: 'yellow', tagShort: 'FEXT' },
+  WATER: { color: 'yellow', tagShort: 'WAT' },
+  WASTE: { color: 'yellow', tagShort: 'WAS' },
   // Добавьте остальные теги здесь...
   // Добавьте остальные теги здесь...
 };
 
-export type MenuItem = Required<MenuProps>["items"][number];
+export type MenuItem = Required<MenuProps>['items'][number];
 
 export function getItem(
   label: React.ReactNode,
@@ -597,7 +597,7 @@ export function getItem(
   icon?: React.ReactNode,
   children?: MenuItem[],
   // path?: any,
-  type?: "group"
+  type?: 'group'
 ): MenuItem {
   return {
     key,
@@ -614,50 +614,50 @@ export async function handleFileSelect(file: {
   name: string;
 }): Promise<void> {
   try {
-    const companyID = localStorage.getItem("companyID") || "";
+    const companyID = localStorage.getItem('companyID') || '';
     const fileData = await getFileFromServer(companyID, file.id);
 
-    // Определите MIME-тип на основе расширения файла
-    const extension = file.name.split(".").pop();
-    let type = "";
+    const extensionMatch = file.name.match(/\.([^.]+)$/);
+    const extension = extensionMatch ? extensionMatch[1] : '';
+    let type = '';
     switch (extension) {
-      case "pdf":
-        type = "application/pdf";
+      case 'pdf':
+        type = 'application/pdf';
         break;
-      case "jpg":
-      case "jpeg":
-        type = "image/jpeg";
+      case 'jpg':
+      case 'jpeg':
+        type = 'image/jpeg';
         break;
-      case "png":
-        type = "image/png";
+      case 'png':
+        type = 'image/png';
         break;
-      case "gif":
-        type = "image/gif";
+      case 'gif':
+        type = 'image/gif';
         break;
-      case "txt":
-        type = "text/plain";
+      case 'txt':
+        type = 'text/plain';
         break;
-      case "doc":
-      case "docx":
-        type = "application/msword";
+      case 'doc':
+      case 'docx':
+        type = 'application/msword';
         break;
-      case "xls":
-      case "xlsx":
-        type = "application/vnd.ms-excel";
+      case 'xls':
+      case 'xlsx':
+        type = 'application/vnd.ms-excel';
         break;
-      case "ppt":
-      case "pptx":
-        type = "application/vnd.ms-powerpoint";
+      case 'ppt':
+      case 'pptx':
+        type = 'application/vnd.ms-powerpoint';
         break;
-      case "zip":
-        type = "application/zip";
+      case 'zip':
+        type = 'application/zip';
         break;
-      case "rar":
-        type = "application/x-rar-compressed";
+      case 'rar':
+        type = 'application/x-rar-compressed';
         break;
-      // добавьте больше случаев для других типов файлов...
+
       default:
-        type = "application/octet-stream"; // общий тип для двоичных файлов
+        type = 'application/octet-stream';
     }
 
     // Создайте Blob из файла
@@ -670,12 +670,63 @@ export async function handleFileSelect(file: {
     console.log(fileURL);
 
     // Создайте ссылку для скачивания файла
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = fileURL;
     link.download = file.name; // Используйте имя файла
     link.click();
   } catch (error) {
-    console.error("Не удалось получить файл", error);
+    console.error('Не удалось получить файл', error);
+  }
+}
+
+// export async function handleFileOpen(file: any): Promise<void> {
+//   try {
+//     const companyID = localStorage.getItem('companyID') || '';
+//     const fileData = await getFileFromServer(companyID, file.id);
+
+//     // Создайте Blob из файла
+//     const blob = new Blob([fileData], { type: file.type });
+
+//     // Создайте временный URL для Blob
+//     const fileURL = window.URL.createObjectURL(blob);
+
+//     // Откройте файл в новой вкладке или окне
+//     window.open(fileURL, '_blank');
+//     console.log(fileURL);
+//   } catch (error) {
+//     console.error('Не удалось открыть файл', error);
+//   }
+// }
+
+export async function handleFileOpen(file: any): Promise<void> {
+  try {
+    const companyID = localStorage.getItem('companyID') || '';
+    const fileData = await getFileFromServer(companyID, file.id);
+
+    // Создайте Blob из файла
+    const blob = new Blob([fileData], { type: file.type });
+
+    // Создайте временный URL для Blob
+    const fileURL = window.URL.createObjectURL(blob);
+
+    // Откройте файл в новом окне или вкладке браузера
+    const newWindow = window.open(fileURL, '_blank');
+
+    // Если браузер блокирует открытие файла, предложите сохранить его
+    if (
+      !newWindow ||
+      newWindow.closed ||
+      typeof newWindow.closed === 'undefined'
+    ) {
+      alert('Заблокировано открытие файла. Пожалуйста загрузите файл.');
+    } else {
+      newWindow.focus();
+    }
+
+    // Не забывайте очищать URL после открытия файла
+    window.URL.revokeObjectURL(fileURL);
+  } catch (error) {
+    console.error('Не удалось открыть файл', error);
   }
 }
 

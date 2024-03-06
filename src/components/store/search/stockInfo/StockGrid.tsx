@@ -1,20 +1,21 @@
-import { ProCard, ProColumns } from "@ant-design/pro-components";
-import { DatePicker, Divider, Layout, Row, Space, TimePicker } from "antd";
-import Title from "antd/es/typography/Title";
-import ContextMenuWrapper from "@/components/shared/ContextMenuWrapperProps";
-import FilesSelector from "@/components/shared/FilesSelector";
+import { ProCard, ProColumns } from '@ant-design/pro-components';
+import { DatePicker, Divider, Layout, Row, Space, TimePicker } from 'antd';
+import Title from 'antd/es/typography/Title';
+import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
+import FilesSelector from '@/components/shared/FilesSelector';
 
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import moment from "moment";
-import RcResizeObserver from "rc-resize-observer";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { handleFileSelect } from "@/services/utilites";
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import moment from 'moment';
+import RcResizeObserver from 'rc-resize-observer';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import {
   getFilteredMaterialItems,
   getFilteredMaterialItemsStock,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
+import FileModalList from '@/components/shared/FileModalList';
 
 interface Stock {
   STOCK: string;
@@ -51,52 +52,52 @@ const StockGrid: React.FC<StockGridProps> = ({
   };
   const handleAdd = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    console.log("Добавить:", value);
+    console.log('Добавить:', value);
   };
 
   const handleAddPick = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    console.log("Добавить Pick:", value);
+    console.log('Добавить Pick:', value);
   };
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("LOCAL_ID")}`,
-      dataIndex: "LOCAL_ID",
-      key: "LOCAL_ID",
+      title: `${t('LOCAL_ID')}`,
+      dataIndex: 'LOCAL_ID',
+      key: 'LOCAL_ID',
       // tip: 'LOCAL_ID',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "LOCAL_ID",
+        name: 'LOCAL_ID',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       //tip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       // width: '15%',
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
       render: (text: any, record: any) => {
         return (
           <ContextMenuWrapper
             items={[
               {
-                label: "Copy",
+                label: 'Copy',
                 action: handleCopy,
               },
               {
-                label: "Open with",
+                label: 'Open with',
                 action: () => {},
                 submenu: [
-                  { label: "Part Tracking", action: handleAdd },
-                  { label: "PickSlip Request", action: handleAddPick },
+                  { label: 'PART TRACKING', action: handleAdd },
+                  { label: 'PICKSLIP REQUEST', action: handleAddPick },
                 ],
               },
             ]}
@@ -117,14 +118,14 @@ const StockGrid: React.FC<StockGridProps> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("STORE")}`,
-      dataIndex: "STOCK",
-      key: "STOCK",
+      title: `${t('STORE')}`,
+      dataIndex: 'STOCK',
+      key: 'STOCK',
       // tip: 'ITEM STORE',
       ellipsis: true,
-      width: "6%",
+      width: '6%',
       formItemProps: {
-        name: "STOCK",
+        name: 'STOCK',
       },
       render: (text: any, record: any) => {
         return (
@@ -143,14 +144,14 @@ const StockGrid: React.FC<StockGridProps> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("CONDITION")}`,
-      dataIndex: "CONDITION",
-      key: "CONDITION",
+      title: `${t('CONDITION')}`,
+      dataIndex: 'CONDITION',
+      key: 'CONDITION',
       //tip: 'CONDITION',
       ellipsis: true,
-      width: "10%",
+      width: '10%',
       formItemProps: {
-        name: "CONDITION",
+        name: 'CONDITION',
       },
       render: (text: any, record: any) => {
         return (
@@ -170,14 +171,14 @@ const StockGrid: React.FC<StockGridProps> = ({
     },
 
     {
-      title: `${t("LOCATION")}`,
-      dataIndex: "SHELF_NUMBER",
-      key: "SHELF_NUMBER",
+      title: `${t('LOCATION')}`,
+      dataIndex: 'SHELF_NUMBER',
+      key: 'SHELF_NUMBER',
       //tip: 'ITEM LOCATION',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "SHELF_NUMBER",
+        name: 'SHELF_NUMBER',
       },
 
       // responsive: ['sm'],
@@ -194,38 +195,38 @@ const StockGrid: React.FC<StockGridProps> = ({
     //   width: '20%',
     // },
     {
-      title: `${t("BATCH/SERIAL")}`,
-      dataIndex: "SERIAL_NUMBER",
-      key: "SERIAL_NUMBER",
+      title: `${t('BATCH/SERIAL')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      key: 'SERIAL_NUMBER',
       render: (text: any, record: any) =>
         record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
       ellipsis: true,
-      width: "10%",
+      width: '10%',
       formItemProps: {
-        name: "Batch_Unit Notes",
+        name: 'Batch_Unit Notes',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("RESEIVING")}`,
-      dataIndex: "ORDER_NUMBER",
-      key: "ORDER_NUMBER",
+      title: `${t('RESEIVING')}`,
+      dataIndex: 'ORDER_NUMBER',
+      key: 'ORDER_NUMBER',
       //tip: 'ITEM ORDER_NUMBER',
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "ORDER_NUMBER",
+        name: 'ORDER_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("QTY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      width: "5%",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      width: '5%',
+      responsive: ['sm'],
       search: false,
       render: (text, record) => {
         let backgroundColor;
@@ -233,16 +234,16 @@ const StockGrid: React.FC<StockGridProps> = ({
           record?.PRODUCT_EXPIRATION_DATE &&
           new Date(record.PRODUCT_EXPIRATION_DATE) >= new Date()
         ) {
-          backgroundColor = "#32CD32"; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
+          backgroundColor = '#32CD32'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
         } // Зеленый фон по умолчанию
-        if (record?.SHELF_NUMBER === "TRANSFER") {
-          backgroundColor = "#FFDB58"; // Желтый фон для SHELF_NUMBER 'TRANSFER'
+        if (record?.SHELF_NUMBER === 'TRANSFER') {
+          backgroundColor = '#FFDB58'; // Желтый фон для SHELF_NUMBER 'TRANSFER'
         }
         if (
           record?.PRODUCT_EXPIRATION_DATE &&
           new Date(record.PRODUCT_EXPIRATION_DATE) < new Date()
         ) {
-          backgroundColor = "#FF0000"; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
+          backgroundColor = '#FF0000'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
         }
         return <div style={{ backgroundColor }}>{text}</div>;
       },
@@ -250,19 +251,19 @@ const StockGrid: React.FC<StockGridProps> = ({
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
-      width: "6%",
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
+      width: '6%',
       search: false,
       // sorter: (a, b) =
     },
     {
-      title: `${t("OWNER")}`,
-      dataIndex: "OWNER_SHORT_NAME",
-      key: "Owner Short Name",
-      width: "9%",
+      title: `${t('OWNER')}`,
+      dataIndex: 'OWNER_SHORT_NAME',
+      key: 'Owner Short Name',
+      width: '9%',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
@@ -270,19 +271,27 @@ const StockGrid: React.FC<StockGridProps> = ({
       search: false,
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
-      width: "7%",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
+      width: '7%',
       ellipsis: true,
       editable: (text, record, index) => {
         return false;
       },
       render: (text, record, index) => {
         return record.FILES && record.FILES.length > 0 ? (
-          <FilesSelector
-            files={record.FILES || []}
-            onFileSelect={handleFileSelect}
+          <FileModalList
+            files={record?.FILES}
+            onFileSelect={function (file: any): void {
+              handleFileSelect({
+                id: file?.id,
+                name: file?.name,
+              });
+            }}
+            onFileOpen={function (file: any): void {
+              handleFileOpen(file);
+            }}
           />
         ) : (
           <></>
@@ -306,7 +315,7 @@ const StockGrid: React.FC<StockGridProps> = ({
             <ProCard
               key={index}
               style={{
-                cursor: "pointer",
+                cursor: 'pointer',
                 maxWidth: `${size}%`,
                 maxHeight: `${sizey}vh`,
                 minHeight: `${sizey}vh`,
@@ -315,16 +324,16 @@ const StockGrid: React.FC<StockGridProps> = ({
                   selectedKey === stock?.STOCK &&
                   filteredCurrentStockItems &&
                   filteredCurrentStockItems.length > 0
-                    ? "#228B22"
-                    : "#32CD32",
+                    ? '#228B22'
+                    : '#32CD32',
                 border:
                   selectedKey === stock?.STOCK
-                    ? "1px solid blanc"
-                    : "1px solid gray",
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
-                transition: "transform .2s", // Добавлено для анимации
+                    ? '1px solid blanc'
+                    : '1px solid gray',
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                transition: 'transform .2s', // Добавлено для анимации
               }}
               onClick={async () => {
                 setSelectedKey(stock?.STOCK);
@@ -332,28 +341,28 @@ const StockGrid: React.FC<StockGridProps> = ({
                 const result = await dispatch(
                   getFilteredMaterialItemsStock({
                     PART_NUMBER: partNumber.trim(),
-                    companyID: localStorage.getItem("companyID") || "",
+                    companyID: localStorage.getItem('companyID') || '',
                     STOCK: stock?.STOCK,
                     alternatives: alternativeValues,
                     isAllDate: selectedFlterDate,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   console.log(result.payload);
                 }
               }}
               onMouseOver={(e) =>
-                (e.currentTarget.style.transform = "scale(1.02)")
+                (e.currentTarget.style.transform = 'scale(1.02)')
               } // Добавлено для анимации
-              onMouseOut={(e) => (e.currentTarget.style.transform = "")}
+              onMouseOut={(e) => (e.currentTarget.style.transform = '')}
             >
               <div
                 style={{
-                  alignItems: "center",
+                  alignItems: 'center',
                   fontSize: `${fontSize}px`,
-                  fontWeight: "bold",
-                  display: "flex",
-                  flexDirection: "column",
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
                 <div> {stock.STOCK}</div>
@@ -368,30 +377,30 @@ const StockGrid: React.FC<StockGridProps> = ({
           <ProCard
             key={1}
             style={{
-              cursor: "pointer",
+              cursor: 'pointer',
               maxWidth: `${size}%`,
               maxHeight: `${sizey}vh`,
               minHeight: `${sizey}vh`,
               margin: 1,
-              backgroundColor: "#FF4500",
-              border: "solid gray",
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-              transition: "transform .2s", // Добавлено для анимации
+              backgroundColor: '#FF4500',
+              border: 'solid gray',
+              display: 'flex',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              transition: 'transform .2s', // Добавлено для анимации
             }}
             onMouseOver={(e) =>
-              (e.currentTarget.style.transform = "scale(1.02)")
+              (e.currentTarget.style.transform = 'scale(1.02)')
             } // Добавлено для анимации
-            onMouseOut={(e) => (e.currentTarget.style.transform = "")}
+            onMouseOut={(e) => (e.currentTarget.style.transform = '')}
           >
             <div
               style={{
-                alignItems: "center",
+                alignItems: 'center',
                 fontSize: `${fontSize}px`,
-                fontWeight: "bold",
-                display: "flex",
-                flexDirection: "column",
+                fontWeight: 'bold',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               <div> {0}</div>
@@ -404,7 +413,7 @@ const StockGrid: React.FC<StockGridProps> = ({
           TOTAL STOCK QTY:
           <span
             className={`highlight ${
-              totalQuantity ? "bg-green-500" : "bg-red-500"
+              totalQuantity ? 'bg-green-500' : 'bg-red-500'
             }`}
           >
             {totalQuantity || 0}
@@ -414,14 +423,15 @@ const StockGrid: React.FC<StockGridProps> = ({
 
       <div className="py-5 flex flex-col w-[99%]">
         <Title level={5}>
-          {t("DETAILS FOR STORE ")} -
+          {t('DETAILS FOR STORE ')} -
           <a className="font-bold text-lg">
             {filteredCurrentStockItems && filteredCurrentStockItems.length > 0
               ? selectedKey
-              : ""}
+              : ''}
           </a>
         </Title>
         <EditableTable
+          isNoneRowSelection={true}
           showSearchInput={true}
           data={filteredCurrentStockItems}
           initialColumns={initialColumns}

@@ -3,22 +3,22 @@ import {
   ColumnsState,
   EditableProTable,
   ProColumns,
-} from "@ant-design/pro-components";
-import { ConfigProvider, Row, Space, MenuProps, Input, Form } from "antd";
+} from '@ant-design/pro-components';
+import { ConfigProvider, Row, Space, MenuProps, Input, Form } from 'antd';
 
-import ruRU from "antd/lib/locale/ru_RU"; // Для русского
+import ruRU from 'antd/lib/locale/ru_RU'; // Для русского
 
-import React, { FC, RefObject, useEffect, useRef, useState } from "react";
-import NavigationPanel from "../NavigationPanel";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useTranslation } from "react-i18next";
+import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
+import NavigationPanel from '../NavigationPanel';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useTranslation } from 'react-i18next';
 
 type EditableTablerops = {
   data: any;
   onMultiSelect?: (selectedRows: (string | undefined)[]) => void;
   initialColumns: ProColumns<any>[];
   isLoading: boolean;
-  menuItems: MenuProps["items"] | [];
+  menuItems: MenuProps['items'] | [];
   recordCreatorProps: any;
   onRowClick: (record: any, rowIndex?: any) => void;
   onDoubleRowClick?: (record: any, rowIndex?: any) => void;
@@ -36,6 +36,7 @@ type EditableTablerops = {
   recordSearchProps?: any;
   showSearchInput?: boolean;
   domDelete?: boolean;
+  isOptionsNone?: boolean;
   isNoneRowSelection?: boolean;
 };
 const EditableTable: FC<EditableTablerops> = ({
@@ -61,6 +62,7 @@ const EditableTable: FC<EditableTablerops> = ({
   domDelete = false,
   onMultiSelect,
   isNoneRowSelection,
+  isOptionsNone,
 }) => {
   const searchInputRef: RefObject<any> = React.createRef();
 
@@ -71,7 +73,7 @@ const EditableTable: FC<EditableTablerops> = ({
   const [selectedRowKey, setSelectedRowKey] = useState<any[] | any>(null);
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         setSelectedRowKeys([]);
         setSelectedMultiItems([]);
         setSelectedRowKey(null);
@@ -80,10 +82,10 @@ const EditableTable: FC<EditableTablerops> = ({
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
   const [dataSource, setDataSource] = useState<readonly any[]>(data);
@@ -158,25 +160,25 @@ const EditableTable: FC<EditableTablerops> = ({
 
   const rowClassName = (record: any) => {
     if (selectedMultiItems.includes(record)) {
-      return "cursor-pointer text-transform: uppercase bg-blue-100 py-0 my-0";
+      return 'cursor-pointer text-transform: uppercase bg-blue-100 py-0 my-0';
     } else if (
       record.id === selectedRowKey ||
       record._id === selectedRowKey ||
       record.actionNumber === selectedRowKey
     ) {
-      return "cursor-pointer text-transform: uppercase bg-blue-100 py-0 my-0";
+      return 'cursor-pointer text-transform: uppercase bg-blue-100 py-0 my-0';
     } else {
-      return "cursor-pointer  text-transform: uppercase  py-0 my-0";
+      return 'cursor-pointer  text-transform: uppercase  py-0 my-0';
     }
   };
   const { language } = useTypedSelector((state) => state.userPreferences);
   const { t } = useTranslation();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
 
   const handleSearch = (e: { target: { value: any } }) => {
     const value = e.target.value;
     setSearchText(value);
-    if (value === "") {
+    if (value === '') {
       setDataSource(data);
     } else {
       const filteredData = data.filter(
@@ -203,12 +205,16 @@ const EditableTable: FC<EditableTablerops> = ({
         tableAlertRender={false}
         // headerTitle="dddd"
 
-        options={{
-          density: false,
-          search: false,
-          fullScreen: false,
-          reload: () => actionRef.current?.reload(),
-        }}
+        options={
+          isOptionsNone && isOptionsNone
+            ? {
+                density: false,
+                search: false,
+                fullScreen: false,
+                reload: () => actionRef.current?.reload(),
+              }
+            : false
+        }
         onRow={(record: any, rowIndex) => {
           return {
             onClick: async (event) => {
@@ -271,7 +277,7 @@ const EditableTable: FC<EditableTablerops> = ({
           actionRender: (row, config, dom) => {
             return [dom.save, dom.cancel, actionRenderDelete && dom.delete];
           },
-          type: "multiple",
+          type: 'multiple',
           editableKeys,
 
           onSave: async (rowKey, data, row) => {
@@ -309,9 +315,9 @@ const EditableTable: FC<EditableTablerops> = ({
         toolBarRender={() => [
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
             <Space>
@@ -333,15 +339,15 @@ const EditableTable: FC<EditableTablerops> = ({
               </Space>
 
               <Space>
-                {t("Selected items")}: {selectedRowKeys?.length}
+                {t('Selected items')}: {selectedRowKeys?.length}
               </Space>
               <Space>
-                {t("items")}: {data?.length}
+                {t('items')}: {data?.length}
               </Space>
             </Space>
           </div>,
         ]}
-      ></EditableProTable>{" "}
+      ></EditableProTable>{' '}
     </div>
   );
 };

@@ -1,28 +1,28 @@
-import React, { useState, useEffect, FC } from "react";
-import { Layout, Menu, MenuProps, TabPaneProps, Tabs } from "antd";
-import { useNavigate } from "react-router-dom";
-import { v4 as originalUuidv4 } from "uuid";
+import React, { useState, useEffect, FC } from 'react';
+import { Layout, Menu, MenuProps, TabPaneProps, Tabs } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { v4 as originalUuidv4 } from 'uuid';
 
-import MenuItem from "antd/es/menu/MenuItem";
-import { RouteNames } from "@/router";
+import MenuItem from 'antd/es/menu/MenuItem';
+import { RouteNames } from '@/router';
 
 import {
   AppstoreOutlined,
   ProjectOutlined,
   DatabaseOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import Aplications from "@/components/mantainance/base/workPackage/packageAplications/Aplications";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import TabPane from "antd/es/tabs/TabPane";
-import { IAplicationInfo } from "@/types/TypesData";
-import TaskList from "@/components/mantainance/mtx/wo/TaskList";
-import AplicationContent from "@/components/mantainance/base/workPackage/packageAplications/AplicationContent";
-import { getFilteredAplications } from "@/utils/api/thunks";
-import Projects from "@/components/mantainance/base/workPackage/workProject/Projects";
-import ProjectContent from "@/components/mantainance/base/workPackage/workProject/ProjectContent";
-import { useTranslation } from "react-i18next";
-import { ProCard } from "@ant-design/pro-components";
+import Aplications from '@/components/mantainance/base/workPackage/packageAplications/Aplications';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import TabPane from 'antd/es/tabs/TabPane';
+import { IAplicationInfo } from '@/types/TypesData';
+import TaskList from '@/components/mantainance/mtx/wo/TaskList';
+import AplicationContent from '@/components/mantainance/base/workPackage/packageAplications/AplicationContent';
+import { getFilteredAplications } from '@/utils/api/thunks';
+import Projects from '@/components/mantainance/base/workPackage/workProject/Projects';
+import ProjectContent from '@/components/mantainance/base/workPackage/workProject/ProjectContent';
+import { useTranslation } from 'react-i18next';
+import { ProCard } from '@ant-design/pro-components';
 const { Sider, Content } = Layout;
 
 const WPGeneration: FC = () => {
@@ -43,14 +43,14 @@ const WPGeneration: FC = () => {
   const { filteredAplications, isLoading, filteredProjects } = useTypedSelector(
     (state) => state.planning
   );
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
     children?: MenuItem[],
     // path?: any,
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -63,11 +63,11 @@ const WPGeneration: FC = () => {
   }
 
   const items: MenuItem[] = [
-    getItem(t("Work Package Generation"), "sub1", <AppstoreOutlined />, [
+    getItem(t('Work Package Generation'), 'sub1', <AppstoreOutlined />, [
       // getItem('Summary view', RouteNames.GRIDTABSVIEW, <DatabaseOutlined />),
-      getItem(t("Aplications"), RouteNames.APLICATIONS, <DatabaseOutlined />),
+      getItem(t('Aplications'), RouteNames.APLICATIONS, <DatabaseOutlined />),
       // ]),
-      getItem(<>{t("Work Package")}</>, RouteNames.MTBWP, <ProjectOutlined />),
+      getItem(<>{t('Work Package')}</>, RouteNames.MTBWP, <ProjectOutlined />),
     ]),
   ];
 
@@ -76,7 +76,7 @@ const WPGeneration: FC = () => {
       key: uuidv4(), // уникальный ключ для каждой вкладки
       title: `APLICATION: ${record.aplicationName}`,
       content: (
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <AplicationContent aplication={record} />
         </ProCard>
       ),
@@ -92,7 +92,7 @@ const WPGeneration: FC = () => {
       key: uuidv4(), // уникальный ключ для каждой вкладки
       title: `PROJECT: ${record.projectName}`,
       content: (
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <ProjectContent project={record} />
         </ProCard>
       ),
@@ -111,15 +111,15 @@ const WPGeneration: FC = () => {
     content: React.ReactNode;
   }
 
-  const [activeKey, setActiveKey] = useState<string>(""); // Используйте строку вместо массива
+  const [activeKey, setActiveKey] = useState<string>(''); // Используйте строку вместо массива
   const [panes, setPanes] = useState<TabData[]>([]);
 
   const navigate = useNavigate();
-  const rootSubmenuKeys = ["-"];
-  const [openKeys, setOpenKeys] = useState(["sub1", "sub2"]);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>(["sub1"]);
+  const rootSubmenuKeys = ['-'];
+  const [openKeys, setOpenKeys] = useState(['sub1', 'sub2']);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>(['sub1']);
   useEffect(() => {
-    const storedKeys = localStorage.getItem("selectedKeys");
+    const storedKeys = localStorage.getItem('selectedKeys');
     if (storedKeys) {
       setSelectedKeys(JSON.parse(storedKeys));
 
@@ -128,10 +128,10 @@ const WPGeneration: FC = () => {
   }, []);
   const handleClick = ({ selectedKeys }: { selectedKeys: string[] }) => {
     setSelectedKeys(selectedKeys);
-    localStorage.setItem("selectedKeys", JSON.stringify(selectedKeys));
+    localStorage.setItem('selectedKeys', JSON.stringify(selectedKeys));
   };
 
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
@@ -145,14 +145,14 @@ const WPGeneration: FC = () => {
     if (key === RouteNames.APLICATIONS) {
       const tab = {
         key,
-        title: "APLICATIONS",
+        title: 'APLICATIONS',
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <Aplications
               onRowClick={onRowClick}
               data={filteredAplications}
-              height={"h-full"}
-              scroll={"calc(57vh)"}
+              height={'h-full'}
+              scroll={'calc(57vh)'}
               isLoading={isLoading}
             />
           </ProCard>
@@ -167,14 +167,14 @@ const WPGeneration: FC = () => {
     if (key === RouteNames.MTBWP) {
       const tab = {
         key,
-        title: "WORKPACKAGE",
+        title: 'WORKPACKAGE',
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <Projects
               onRowClick={onProjectRowClick}
               data={filteredProjects}
-              height={"h-full"}
-              scroll={"calc(57vh)"}
+              height={'h-full'}
+              scroll={'calc(57vh)'}
               isLoading={isLoading}
             />
           </ProCard>
@@ -192,10 +192,10 @@ const WPGeneration: FC = () => {
       | string
       | React.MouseEvent<Element, MouseEvent>
       | React.KeyboardEvent<Element>,
-    action: "add" | "remove"
+    action: 'add' | 'remove'
   ) => {
-    if (typeof targetKey === "string") {
-      if (action === "remove") {
+    if (typeof targetKey === 'string') {
+      if (action === 'remove') {
         const newPanes = panes.filter((pane) => pane.key !== targetKey);
         setPanes(newPanes);
         if (newPanes.length > 0) {
@@ -211,7 +211,7 @@ const WPGeneration: FC = () => {
       <Sider
         theme="light"
         style={{
-          marginLeft: "auto",
+          marginLeft: 'auto',
           //background: 'rgba(255, 255, 255, 0.2)',
         }}
         width={350}
@@ -237,7 +237,7 @@ const WPGeneration: FC = () => {
       <Content className="">
         <Tabs
           style={{
-            width: "98%",
+            width: '98%',
           }}
           className="mx-auto"
           size="small"

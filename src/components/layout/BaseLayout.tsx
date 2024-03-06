@@ -40,6 +40,7 @@ import HomeWEB from './HomeWEB';
 import { ModalForm, ProCard, ProFormItem } from '@ant-design/pro-components';
 import { MenuItem, getItem } from '@/services/utilites';
 import APNTable from '@/components/layout/APNTable';
+import UTCClock from '../shared/UTCClock';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -94,9 +95,19 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.ORDER_CREATOR,
     // },
     {
+      APNNBR: '1200',
+      descriptions: `${t(`ORDER VIEWER`)}`,
+      route: RouteNames.ORDER_VIEWER,
+    },
+    {
       APNNBR: '1201',
       descriptions: `${t(`ORDER MANAGMENT`)}`,
       route: RouteNames.ORDER_MANAGMENT,
+    },
+    {
+      APNNBR: '1202',
+      descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
+      route: RouteNames.REQUIREMENT_MANAGMENT,
     },
 
     {
@@ -118,6 +129,12 @@ const BaseLayout: React.FC = () => {
       route: RouteNames.PARTS_FORECAST,
     },
     {
+      APNNBR: '205',
+
+      descriptions: `${t(`REQUIREMENT VIEWER`)}`,
+      route: RouteNames.REQUIREMENT_VIEWER,
+    },
+    {
       APNNBR: '220',
 
       descriptions: `${t(`STORE MANAGEMENT`)}`,
@@ -135,6 +152,12 @@ const BaseLayout: React.FC = () => {
 
       descriptions: `${t(`PARTS TRANSFER`)}`,
       route: RouteNames.PARTS_TRANSFER,
+    },
+    {
+      APNNBR: '225',
+
+      descriptions: `${t(`PICKSLIP REQUEST`)}`,
+      route: RouteNames.PICKSLIP_REQUEST,
     },
     {
       APNNBR: '230',
@@ -427,8 +450,7 @@ const BaseLayout: React.FC = () => {
               tooltip={'DOUBLE CLICK OPEN APN BOOK'}
               className="flex justify-center align-middle my-10"
             >
-              <div style={{ width: '200px' }}>
-                {' '}
+              <div style={{ width: '300px' }}>
                 <Select
                   showSearch
                   placeholder="BAN"
@@ -572,12 +594,7 @@ const BaseLayout: React.FC = () => {
         <div style={{ flex: 1 }}></div>
         <div>©2023 Created by Kavalchuk D.</div>
         <div style={{ flex: 1, textAlign: 'right' }}>
-          {/* <LiveClock
-            className="text-lg"
-            format={'HH:mm:ss'}
-            ticking={true}
-            timezone={'utc'}
-          /> */}
+          <UTCClock />
         </div>
       </Footer>
 

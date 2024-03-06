@@ -1,134 +1,82 @@
 import {
-  ModalForm,
-  ProCard,
   ProForm,
   ProFormCheckbox,
   ProFormDigit,
   ProFormGroup,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Form } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import SearchTable from "@/components/layout/SearchElemTable";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredShops } from "@/utils/api/thunks";
+} from '@ant-design/pro-components';
+import { Form } from 'antd';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
+import ContextMenuLocationSearchSelect from '@/components/shared/form/ContextMenuLocationSearchSelect';
 type BookingDetailsFormType = {
   onFilterBookingDEtails?: (record: any) => void;
-  initialStoreName?: any;
+
+  initialStore?: any;
 };
 const BookingDetailsForm: FC<BookingDetailsFormType> = ({
   onFilterBookingDEtails,
-  initialStoreName,
+
+  initialStore,
 }) => {
   const { t } = useTranslation();
 
-  // Состояние для управления чекбоксами
   const [isTransferPartsChecked, setIsTransferPartsChecked] = useState(false);
   const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
   const [form] = Form.useForm();
-  const [selectedFeatchStore, setSecectedFeatchStore] = useState<any>(null);
-  const [selectedStore, setSecectedStore] = useState<any>(null);
+
   const [selectedSingleStore, setSecectedSingleStore] = useState<any>(null);
-  const dispatch = useAppDispatch();
-  const [openStoreViewer, setOpenStoreViewer] = useState<boolean>(false);
-  const [APN, setAPN] = useState([]);
+
   const [LOCATION, setLOCATION] = useState([]); //
-  const [selectedLocation, setSecectedLocation] = useState<any>(null);
+
   const [selectedSingleLocation, setSecectedSingleLocation] =
     useState<any>(null);
-  const [openLocationViewer, setOpenLocationViewer] = useState<boolean>(false);
 
   useEffect(() => {
-    if (initialStoreName) {
-      // setSecectedStore(initialStore);
+    if (initialStore) {
+      setSecectedSingleStore(initialStore);
 
-      form.setFields([
-        { name: "targetStore", value: initialStoreName?.toUpperCase().trim() },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
-      ]);
-    }
-  }, [initialStoreName]);
-
-  useEffect(() => {
-    if (selectedStore) {
       form.setFields([
         {
-          name: "targetStore",
-          value: selectedStore?.APNNBR || selectedStore?.shopShortName,
+          name: 'targetStore',
+          value: initialStore?.shopShortName?.toUpperCase().trim(),
         },
-
-        // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
     }
-  }, [selectedStore]);
+  }, [initialStore]);
   useEffect(() => {
-    if (selectedLocation) {
-      form.setFields([
-        { name: "targetLocation", value: selectedLocation.APNNBR },
-        { name: "owner", value: selectedLocation.ownerShotName },
-        {
-          name: "rectriction",
-          value: selectedLocation.rectriction?.toUpperCase(),
-        },
+    if (selectedSingleStore) {
+      form.setFields([{ name: 'store', value: selectedSingleStore?.APNNBR }]);
+      const transformedData = selectedSingleStore?.locations.map(
+        (item: any) => ({
+          ...item,
+          APNNBR: item?.locationName, // Преобразуем shopShortName в APNNBR
+        })
+      );
 
-        // Добавьте здесь другие поля, которые вы хотите обновить
+      setLOCATION(transformedData);
+    }
+  }, [selectedSingleStore]);
+
+  useEffect(() => {
+    if (selectedSingleLocation) {
+      form.setFields([
+        { name: 'targetLocation', value: selectedSingleLocation?.APNNBR },
+        { name: 'owner', value: selectedSingleLocation?.ownerShotName },
+        {
+          name: 'rectriction',
+          value: selectedSingleLocation?.rectriction?.toUpperCase(),
+        },
       ]);
       onFilterBookingDEtails && onFilterBookingDEtails(form.getFieldsValue());
     }
-  }, [selectedLocation]);
+  }, [selectedSingleLocation]);
 
-  useEffect(() => {
-    if (openStoreViewer) {
-      // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
-      dispatch(
-        getFilteredShops({
-          companyID: currentCompanyID,
-        })
-      ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
-          const transformedData = action.payload.map((item: any) => ({
-            ...item,
-            APNNBR: item.shopShortName, // Преобразуем shopShortName в APNNBR
-          }));
-          setAPN(transformedData);
-          // Обновляем состояние с преобразованными данными
-        }
-      });
-    }
-  }, [openStoreViewer, dispatch]);
-
-  useEffect(() => {
-    if (openLocationViewer) {
-      // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
-      dispatch(
-        getFilteredShops({
-          companyID: currentCompanyID,
-          shopShortName:
-            selectedStore?.APNNBR ||
-            selectedStore?.shopShortName?.toUpperCase().trim(),
-        })
-      ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
-          setSecectedFeatchStore(action.payload[0]);
-          const transformedData = action.payload[0].locations.map(
-            (item: any) => ({
-              ...item,
-              APNNBR: item.locationName, // Преобразуем shopShortName в APNNBR
-            })
-          );
-
-          setLOCATION(transformedData);
-          // Обновляем состояние с преобразованными данными
-        }
-      });
-    }
-  }, [openLocationViewer, dispatch]);
-
+  const [initialForm, setinitialForm] = useState<any>('');
   return (
     <>
       <ProForm
@@ -144,56 +92,57 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
           }
         }}
       >
-        <ProFormGroup size={"large"}>
+        <ProFormGroup size={'large'}>
           <ProFormGroup>
             <ProFormText
-              initialValue={"MSQ"}
+              initialValue={'MSQ'}
               disabled
               name="station"
-              label={`${t("STATION")}`}
+              label={`${t('STATION')}`}
               width="xs"
-              tooltip={`${t("STATION CODE")}`}
+              tooltip={`${t('STATION CODE')}`}
               fieldProps={{
                 autoFocus: true,
               }}
             />
 
-            <ProFormText
-              name="targetStore"
-              label={`${t("TARGET STORE")}`}
-              width="sm"
-              tooltip={`${t("TARGET STORE")}`}
-              disabled={isChangeLocationChecked} // Поле неактивно, если выбран чекбокс "Change location"
-              initialValue={
-                isChangeLocationChecked
-                  ? form.getFieldValue("store")
-                  : undefined
-              } // Значение равно значению поля "STORE", если выбран чекбокс "Change location"
-              fieldProps={{
-                onDoubleClick: () => setOpenStoreViewer(true),
-                // onKeyPress: handleKeyPress,
-                autoFocus: true,
+            <ContextMenuStoreSearchSelect
+              disabled={isChangeLocationChecked}
+              rules={[{ required: true }]}
+              name={'targetStore'}
+              width={'xs'}
+              onSelectedStore={function (record: any): void {
+                setSecectedSingleStore(record);
+                // setSecectedStore(record);
               }}
+              initialFormStore={
+                selectedSingleStore?.shopShortName || initialForm
+              }
+              label={t('TARGET STORE')}
             />
-            <ProFormText
-              name="targetLocation"
-              label={`${t("TARGET LOCATION")}`}
-              width="sm"
-              tooltip={`${t("TARGET LOCATION")}`}
-              fieldProps={{
-                onDoubleClick: () => setOpenLocationViewer(true),
-                // onKeyPress: handleKeyPress,
+
+            <ContextMenuLocationSearchSelect
+              disabled={!selectedSingleStore?.shopShortName}
+              rules={[{ required: false }]}
+              width={'xs'}
+              name={'targetLocation'}
+              onSelectedLocation={function (record: any): void {
+                setSecectedSingleLocation(record);
               }}
+              initialFormStore={
+                selectedSingleLocation?.locationName || initialForm
+              }
+              locations={LOCATION}
             />
             <ProFormText
               name="rectriction"
               disabled
-              label={`${t("RESRTICTION")}`}
+              label={`${t('RESRTICTION')}`}
               width="sm"
-              tooltip={`${t("RESTRICTION")}`}
+              tooltip={`${t('RESTRICTION')}`}
             />
           </ProFormGroup>
-          <ProFormGroup size={"small"}>
+          <ProFormGroup size={'small'}>
             <ProFormCheckbox
               fieldProps={{
                 checked: isTransferPartsChecked,
@@ -203,7 +152,7 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
                 },
               }}
             >
-              {t("TRANSFER PARTS")}
+              {t('TRANSFER PARTS')}
             </ProFormCheckbox>
             <ProFormCheckbox
               fieldProps={{
@@ -214,15 +163,15 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
                 },
               }}
             >
-              {t("CHANGE LOCATION")}
+              {t('CHANGE LOCATION')}
             </ProFormCheckbox>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormDigit
               name="quantity"
-              label={`${t("QUANTITY")}`}
+              label={`${t('QUANTITY')}`}
               width="xs"
-              disabled={isChangeLocationChecked}
+              disabled={true}
               fieldProps={{
                 autoFocus: true,
               }}
@@ -230,7 +179,7 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
             <ProFormText
               disabled
               name="owner"
-              label={`${t("LOCATION OWNER")}`}
+              label={`${t('LOCATION OWNER')}`}
               width="md"
               fieldProps={{
                 autoFocus: true,
@@ -238,9 +187,9 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
             />
             <ProFormText
               name="remarks"
-              label={`${t("REMARKS")}`}
+              label={`${t('REMARKS')}`}
               width="md"
-              tooltip={`${t("REMARKS")}`}
+              tooltip={`${t('REMARKS')}`}
               fieldProps={{
                 autoFocus: true,
               }}
@@ -248,64 +197,6 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
           </ProFormGroup>
         </ProFormGroup>
       </ProForm>
-      <ModalForm
-        onFinish={async () => {
-          setSecectedStore(selectedSingleStore);
-          setOpenStoreViewer(false);
-        }}
-        title={`${t("TARGET STORE")}`}
-        open={openStoreViewer}
-        width={"35vw"}
-        onOpenChange={setOpenStoreViewer}
-      >
-        <ProCard
-          className="flex mx-auto justify-center align-middle"
-          style={{}}
-        >
-          {APN && (
-            <SearchTable
-              data={APN}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSecectedStore(record);
-                console.log(record);
-                setOpenStoreViewer(false);
-              }}
-              onRowSingleClick={function (record: any, rowIndex?: any): void {
-                setSecectedSingleStore(record);
-              }}
-            ></SearchTable>
-          )}
-        </ProCard>
-      </ModalForm>
-      <ModalForm
-        onFinish={async () => {
-          setSecectedLocation(selectedSingleLocation);
-          setOpenLocationViewer(false);
-        }}
-        title={`${t("LOCATION SEARCH")}`}
-        open={openLocationViewer}
-        width={"35vw"}
-        onOpenChange={setOpenLocationViewer}
-      >
-        <ProCard
-          className="flex mx-auto justify-center align-middle"
-          style={{}}
-        >
-          {LOCATION && (
-            <SearchTable
-              data={LOCATION}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSecectedLocation(record);
-
-                setOpenLocationViewer(false);
-              }}
-              onRowSingleClick={function (record: any, rowIndex?: any): void {
-                setSecectedSingleLocation(record);
-              }}
-            ></SearchTable>
-          )}
-        </ProCard>
-      </ModalForm>
     </>
   );
 };

@@ -84,7 +84,7 @@ const MaintenanceBase: FC = () => {
       key: uuidv4(), // уникальный ключ для каждой вкладки
       title: `WO: ${record.projectTaskWO}`,
       content: (
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <WOTask currentTask={record}></WOTask>
         </ProCard>
       ),
@@ -112,7 +112,7 @@ const MaintenanceBase: FC = () => {
       key: uuidv4(), // уникальный ключ для каждой вкладки
       title: `GROUP: ${String(record.groupName).toUpperCase()}`,
       content: (
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           {<GroupTaskList projectGroprojectGroupID={record._id} filter={''} />}
         </ProCard>
       ),
@@ -165,7 +165,7 @@ const MaintenanceBase: FC = () => {
         key,
         title: `${t('WP LIST')}`,
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <MTBWP onRowClick={onRowClick} />
           </ProCard>
         ),
@@ -182,7 +182,7 @@ const MaintenanceBase: FC = () => {
         title: `${t('TASKS')}:${currentProject?.projectName}`,
         content: (
           // <>ddd</>
-          <ProCard className="h-[79vh] overflow-y-auto">
+          <ProCard className="h-[82vh] overflow-y-auto">
             {<ProjectTaskList filter={''} />}
           </ProCard>
         ),
@@ -198,7 +198,7 @@ const MaintenanceBase: FC = () => {
         key,
         title: `${t('NRC')}:${currentProject?.projectName}`,
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <NRCTaskList filter={''} />
           </ProCard>
         ),
@@ -216,7 +216,7 @@ const MaintenanceBase: FC = () => {
         title: `${t('REQUIREMENTS')}:${currentProject?.projectName}`,
 
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <RequirementItems
               scrollX={1700}
               data
@@ -243,7 +243,7 @@ const MaintenanceBase: FC = () => {
 
         title: `${t('GROUPS')}:${currentProject?.projectName}`,
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <GroupsList onRowClick={onRowGroupClick} />
           </ProCard>
         ),
@@ -260,7 +260,7 @@ const MaintenanceBase: FC = () => {
 
         title: `${t('ACCESS')}:${currentProject?.projectName}`,
         content: (
-          <ProCard className="h-[79vh] overflow-hidden">
+          <ProCard className="h-[82vh] overflow-hidden">
             <RemoverdItems
               scrollX={1700}
               data
