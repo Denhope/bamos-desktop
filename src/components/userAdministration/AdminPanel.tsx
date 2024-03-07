@@ -23,17 +23,17 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   onUserUpdate,
   onUserDelete,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const handleCreate = () => {
     setEditingUser(null);
-    setModalVisible(true);
+    // setModalVisible(true);
   };
 
   const handleEdit = (user: User) => {
     setEditingUser(user);
-    setModalVisible(true);
+    // setModalVisible(true);
   };
 
   const handleDelete = (userId: string) => {
@@ -49,12 +49,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
   const handleSubmit = (user: User) => {
     if (editingUser) {
       onUserUpdate(user);
-      message.success('Пользователь успешно обновлен');
     } else {
       onUserCreate(user);
-      message.success('Пользователь успешно создан');
     }
-    setModalVisible(false);
+    // setModalVisible(false);
   };
   const { t } = useTranslation();
 
@@ -82,7 +80,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
           <UserForm
             user={editingUser || undefined}
             onSubmit={handleSubmit}
-            roles={[]}
+            roles={['admin']}
             groups={[]}
           />
         </Col>

@@ -1,26 +1,26 @@
-import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
-import instrumentReducer from "./reducers/InstrumentSlice";
-import materialReducer from "./reducers/MaterialSlice";
-import applicationReducer from "./reducers/AplicationSlice";
-import authSlice from "./reducers/AuthSlice";
-import tasksReducer from "./reducers/TasksSlice";
-import projectsReducer from "./reducers/ProjectSlise";
-import projectTasksReducer from "./reducers/ProjectTaskSlise";
-import additionalTasksReducer from "./reducers/AdditionalTaskSlice";
-import filesUploadeReducer from "./reducers/FilesSlise";
-import materialAplicationReducer from "./reducers/MatirialAplicationsSlise";
-import pickSlipReducer from "./reducers/PickSlipSlice";
-import materialStoreReducer from "./reducers/MaterialStoreSlice";
-import viewsStoreReducer from "./reducers/ViewsSlice";
-import removedItemsStoreReducer from "./reducers//RemovedItemsSlice";
-import purchaseItemsStoreReducer from "./reducers/PurchaseSlice";
-import statisticsItemsStoreReducer from "./reducers/StatisticsSlice";
-import planesStoreReducer from "./reducers/MtxSlice";
-import mtbaseStoreReducer from "./reducers/MtbSlice";
-import planningStoreReducer from "./reducers/WPGenerationSlise";
-import storesLogisticReducer from "./reducers/StoreLogisticSlice";
-import userPreferencesSlice from "./reducers/UserPreferencesSlice";
-
+import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
+import instrumentReducer from './reducers/InstrumentSlice';
+import materialReducer from './reducers/MaterialSlice';
+import applicationReducer from './reducers/AplicationSlice';
+import authSlice from './reducers/AuthSlice';
+import tasksReducer from './reducers/TasksSlice';
+import projectsReducer from './reducers/ProjectSlise';
+import projectTasksReducer from './reducers/ProjectTaskSlise';
+import additionalTasksReducer from './reducers/AdditionalTaskSlice';
+import filesUploadeReducer from './reducers/FilesSlise';
+import materialAplicationReducer from './reducers/MatirialAplicationsSlise';
+import pickSlipReducer from './reducers/PickSlipSlice';
+import materialStoreReducer from './reducers/MaterialStoreSlice';
+import viewsStoreReducer from './reducers/ViewsSlice';
+import removedItemsStoreReducer from './reducers//RemovedItemsSlice';
+import purchaseItemsStoreReducer from './reducers/PurchaseSlice';
+import statisticsItemsStoreReducer from './reducers/StatisticsSlice';
+import planesStoreReducer from './reducers/MtxSlice';
+import mtbaseStoreReducer from './reducers/MtbSlice';
+import planningStoreReducer from './reducers/WPGenerationSlise';
+import storesLogisticReducer from './reducers/StoreLogisticSlice';
+import userPreferencesSlice from './reducers/UserPreferencesSlice';
+import { userApi } from '@/features/userAdministration/userApi';
 const store = configureStore({
   reducer: {
     auth: authSlice,
@@ -44,7 +44,10 @@ const store = configureStore({
     planning: planningStoreReducer,
     storesLogistic: storesLogisticReducer,
     userPreferences: userPreferencesSlice,
+    [userApi.reducerPath]: userApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(userApi.middleware),
 });
 export default store;
 

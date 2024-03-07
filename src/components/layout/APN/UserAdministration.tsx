@@ -1,6 +1,6 @@
 import { RouteNames } from '@/router';
 import { getItem } from '@/services/utilites';
-import { Layout, Menu, MenuProps, Tabs } from 'antd';
+import { Layout, Menu, MenuProps, Tabs, message } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
@@ -19,31 +19,35 @@ import {
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useGetUsersGroupQuery,
 } from '@/features/userAdministration/userApi';
 import { IUser, User } from '@/models/IUser';
 
 const UserAdministration: FC = () => {
   const [userId, seuserId] = useState<string>('');
-  // const { data, isLoading } = useGetUserQuery(userId);
-  // const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
-  // const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-  // const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
+  const { data, isLoading } = useGetUserQuery(userId);
+  // const [users, isLoading:isGet] = useGetUsersGroupQuery();
+  const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
+  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+  const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
 
-  // const onAddUser = async (newUserData: Partial<User>) => {
-  //   try {
-  //     const result = await addUser(newUserData).unwrap();
-  //   } catch (error) {
-  //     // Handle the error
-  //   }
-  // };
+  const onAddUser = async (newUserData: Partial<User>) => {
+    try {
+      const result = await addUser(newUserData).unwrap();
+      message.success('Пользователь успешно создан');
+    } catch (error) {
+      // Handle the error
+      message.error('ERROR');
+    }
+  };
 
-  // const onEditUser = async (updatedUserData: User) => {
-  //   try {
-  //     const result = await updateUser(updatedUserData).unwrap();
-  //   } catch (error) {
-  //     // Handle the error
-  //   }
-  // };
+  const onEditUser = async (updatedUserData: User) => {
+    try {
+      const result = await updateUser(updatedUserData).unwrap();
+    } catch (error) {
+      // Handle the error
+    }
+  };
 
   // const onDeleteUser = async (userId: string) => {
   //   try {
@@ -166,13 +170,14 @@ const UserAdministration: FC = () => {
             <AdminPanel
               users={[]}
               onUserCreate={function (user: User): void {
-                throw new Error('Function not implemented.');
+                console.log(user);
+                onAddUser(user);
               }}
               onUserUpdate={function (user: User): void {
-                throw new Error('Function not implemented.');
+                console.log(user);
               }}
               onUserDelete={function (userId: string): void {
-                throw new Error('Function not implemented.');
+                console.log(userId);
               }}
             />
           </>

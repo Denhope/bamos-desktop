@@ -1,10 +1,15 @@
-import { IUser, User } from '@/models/IUser';
+import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
+import { IUser, User, UserGroup } from '@/models/IUser';
+import { API_URL } from '@/utils/api/http';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
+    getUsersGroup: builder.query<any, string>({
+      query: () => `users/`,
+    }),
     getUser: builder.query<User, string>({
       query: (id) => `users/${id}`,
     }),
@@ -34,6 +39,7 @@ export const userApi = createApi({
 // Export hooks for usage in functional components
 export const {
   useGetUserQuery,
+  useGetUsersGroupQuery,
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
