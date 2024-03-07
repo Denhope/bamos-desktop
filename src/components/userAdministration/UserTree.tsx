@@ -1720,7 +1720,7 @@ const UserTree: FC<UserTreeProps> = ({ onUserSelect }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 py-3">
       <Input.Search
         placeholder="Search users..."
         onChange={(e) => handleSearch(e.target.value)}
@@ -1732,7 +1732,7 @@ const UserTree: FC<UserTreeProps> = ({ onUserSelect }) => {
         showLine
         onSelect={onSelect}
         onExpand={onExpand}
-        height={690}
+        height={680}
         treeData={filteredTreeData}
         selectedKeys={selectedKeys}
         expandedKeys={expandedKeys}
