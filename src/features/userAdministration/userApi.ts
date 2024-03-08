@@ -2,13 +2,19 @@ import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { IUser, User, UserGroup } from '@/models/IUser';
 import { API_URL } from '@/utils/api/http';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
+const currentCompanyID = localStorage.getItem('companyID') || '';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    getUsersGroup: builder.query<any, string>({
-      query: () => `users/`,
+    getGroupUsers: builder.query<
+      UserGroup[],
+      { singNumber?: string; pass?: string }
+    >({
+      query: ({ singNumber, pass }) => ({
+        url: `users/getFilteredGroupUsers/company/${currentCompanyID}`,
+        params: { singNumber, pass },
+      }),
     }),
     getUser: builder.query<User, string>({
       query: (id) => `users/${id}`,
@@ -39,7 +45,7 @@ export const userApi = createApi({
 // Export hooks for usage in functional components
 export const {
   useGetUserQuery,
-  useGetUsersGroupQuery,
+  useGetGroupUsersQuery,
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,

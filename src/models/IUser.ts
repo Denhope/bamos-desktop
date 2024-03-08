@@ -62,5 +62,6 @@ export interface UserGroup {
   createByID: string;
   updateDate?: string;
   updateByID?: string;
+  companyID?: string;
   users?: User[];
 }

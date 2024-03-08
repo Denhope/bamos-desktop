@@ -9,9 +9,10 @@ interface TreeDataNode extends DataNode {
 }
 interface UserTreeProps {
   onUserSelect: (user: User) => void;
+  usersGroup: UserGroup[] | [];
 }
 const { TreeNode } = Tree;
-const UserTree: FC<UserTreeProps> = ({ onUserSelect }) => {
+const UserTree: FC<UserTreeProps> = ({ onUserSelect, usersGroup }) => {
   const groups: UserGroup[] = [
     {
       id: 'group1',
@@ -1634,15 +1635,15 @@ const UserTree: FC<UserTreeProps> = ({ onUserSelect }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   useEffect(() => {
-    setTreeData(renderTreeNodes(groups));
-    setFilteredTreeData(renderTreeNodes(groups));
-  }, [groups]);
+    setTreeData(renderTreeNodes(usersGroup));
+    setFilteredTreeData(renderTreeNodes(usersGroup));
+  }, [usersGroup]);
 
   const renderTreeNodes = (data: UserGroup[]): TreeDataNode[] => {
     return data.map((group) => ({
       title: group.title,
       key: group.id,
-      children: group.users?.map((user) => ({
+      children: group.users?.map((user: { firstName: any; lastName: any; id: any; }) => ({
         title: `${user.firstName} ${user.lastName}`,
         key: user.id,
         user: user,

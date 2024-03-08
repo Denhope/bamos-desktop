@@ -13,30 +13,45 @@ import {
   UserSwitchOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import AdminPanel from '@/components/userAdministration/AdminPanel';
+import AdminPanel from '@/components/userAdministration/accountAdminisrtation/AdminPanel';
 import {
   useGetUserQuery,
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useGetUsersGroupQuery,
+  useGetGroupUsersQuery,
+  userApi,
 } from '@/features/userAdministration/userApi';
-import { IUser, User } from '@/models/IUser';
+import {
+  useAddGroupUserMutation,
+  useGetGroupsUserQuery,
+} from '@/features/userAdministration/userGroupApi';
+import { IUser, User, UserGroup } from '@/models/IUser';
+import AdminuserGroupPanel from '@/components/userAdministration/userGroupAdministration/AdminuserGroupPanel';
 
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
+export const selectUserGroups = (state: RootState) => state.userGroup;
 const UserAdministration: FC = () => {
   const [userId, seuserId] = useState<string>('');
   const { data, isLoading } = useGetUserQuery(userId);
-  // const [users, isLoading:isGet] = useGetUsersGroupQuery();
+  const { data: groupUsers, isLoading: isGettingUser } = useGetGroupUsersQuery(
+    {}
+  );
   const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
   const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
   const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
 
+  const { data: groups, refetch: refetchGroups } = useGetGroupsUserQuery({});
+  const userGroups = useTypedSelector((state) => state.userGroup);
+
   const onAddUser = async (newUserData: Partial<User>) => {
     try {
       const result = await addUser(newUserData).unwrap();
+
       message.success('Пользователь успешно создан');
     } catch (error) {
-      // Handle the error
       message.error('ERROR');
     }
   };
@@ -44,9 +59,7 @@ const UserAdministration: FC = () => {
   const onEditUser = async (updatedUserData: User) => {
     try {
       const result = await updateUser(updatedUserData).unwrap();
-    } catch (error) {
-      // Handle the error
-    }
+    } catch (error) {}
   };
 
   // const onDeleteUser = async (userId: string) => {
@@ -80,21 +93,7 @@ const UserAdministration: FC = () => {
     ),
   ];
   const [collapsed, setCollapsed] = useState(false);
-  const [panes, setPanes] = useState<TabData[]>([
-    // {
-    //   key: RouteNames.USER_ACCOUNTS,
-    //   title: `${t('ACCOUNTS')}`,
-    //   content: (
-    //     <AdminPanel
-    //       user={user}
-    //       onAddUser={onAddUser}
-    //       onEditUser={onEditUser}
-    //       onDeleteUser={onDeleteUser}
-    //     />
-    //   ),
-    //   closable: true,
-    // },
-  ]);
+  const [panes, setPanes] = useState<TabData[]>([]);
   const [activeKey, setActiveKey] = useState<string>('');
   const onEdit = (
     targetKey:
@@ -122,7 +121,7 @@ const UserAdministration: FC = () => {
         title: `${t('GROUPS')}`,
         content: (
           <div>
-            <></>
+            <AdminuserGroupPanel />
           </div>
         ),
         closable: true,
@@ -136,11 +135,7 @@ const UserAdministration: FC = () => {
       const tab = {
         key,
         title: `${t('PERMISSIONS')}`,
-        content: (
-          <div>
-            <></>
-          </div>
-        ),
+        content: <></>,
         closable: true,
       };
       if (!panes.find((pane) => pane.key === tab.key)) {
@@ -166,9 +161,8 @@ const UserAdministration: FC = () => {
         title: `${t('ACCOUNTS')}`,
         content: (
           <>
-            <></>
             <AdminPanel
-              users={[]}
+              usersGroup={groupUsers || []}
               onUserCreate={function (user: User): void {
                 console.log(user);
                 onAddUser(user);
@@ -190,6 +184,7 @@ const UserAdministration: FC = () => {
       setActiveKey(tab.key);
     }
   };
+
   return (
     <Layout>
       <Sider
@@ -202,16 +197,7 @@ const UserAdministration: FC = () => {
           setCollapsed(value)
         }
       >
-        <Menu
-          theme="light"
-          mode="inline"
-          items={items}
-          // openKeys={openKeys}
-          // onOpenChange={onOpenChange}
-          // onSelect={handleClick}
-          // selectedKeys={selectedKeys}
-          onClick={onMenuClick}
-        />
+        <Menu theme="light" mode="inline" items={items} onClick={onMenuClick} />
       </Sider>
       <Content>
         <Tabs

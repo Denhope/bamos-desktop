@@ -7,18 +7,18 @@ import {
   UserDeleteOutlined,
 } from '@ant-design/icons';
 import UserForm from './UserForm';
-import { User } from '@/models/IUser';
+import { User, UserGroup } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
 import UserTree from './UserTree';
 interface AdminPanelProps {
-  users: User[];
+  usersGroup: UserGroup[] | [];
   onUserCreate: (user: User) => void;
   onUserUpdate: (user: User) => void;
   onUserDelete: (userId: string) => void;
 }
 
 const AdminPanel: React.FC<AdminPanelProps> = ({
-  users,
+  usersGroup,
   onUserCreate,
   onUserUpdate,
   onUserDelete,
@@ -71,6 +71,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
               setEditingUser(user);
               console.log(user);
             }}
+            usersGroup={usersGroup}
           />
         </Col>
         <Col
