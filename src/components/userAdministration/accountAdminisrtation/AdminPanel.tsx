@@ -1,66 +1,92 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message } from 'antd';
-import {
-  PlusOutlined,
-  UserAddOutlined,
-  EditOutlined,
-  UserDeleteOutlined,
-} from '@ant-design/icons';
+import { Button, Row, Col, Modal, message, Space } from 'antd';
+import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import UserForm from './UserForm';
 import { User, UserGroup } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
 import UserTree from './UserTree';
-interface AdminPanelProps {
-  usersGroup: UserGroup[] | [];
-  onUserCreate: (user: User) => void;
-  onUserUpdate: (user: User) => void;
-  onUserDelete: (userId: string) => void;
-}
+import {
+  useAddUserMutation,
+  useDeleteUserMutation,
+  useGetGroupUsersQuery,
+  useUpdateUserMutation,
+} from '@/features/userAdministration/userApi';
+import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
+interface AdminPanelProps {}
 
-const AdminPanel: React.FC<AdminPanelProps> = ({
-  usersGroup,
-  onUserCreate,
-  onUserUpdate,
-  onUserDelete,
-}) => {
-  // const [modalVisible, setModalVisible] = useState(false);
+const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const { data: usersGroup, isLoading } = useGetGroupUsersQuery({});
+  const { data: groups } = useGetGroupsUserQuery({});
+  const [addUser] = useAddUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
   const handleCreate = () => {
     setEditingUser(null);
-    // setModalVisible(true);
   };
 
   const handleEdit = (user: User) => {
     setEditingUser(user);
-    // setModalVisible(true);
   };
 
   const handleDelete = (userId: string) => {
     Modal.confirm({
       title: 'Вы уверены, что хотите удалить этого пользователя?',
-      onOk: () => {
-        onUserDelete(userId);
-        message.success('Пользователь успешно удален');
+      onOk: async () => {
+        try {
+          await deleteUser(userId);
+          message.success(t('USER  SUCCESSFULLY DELETED'));
+        } catch (error) {
+          message.error(t('ERROR DELETING USER '));
+        }
       },
     });
   };
 
-  const handleSubmit = (user: User) => {
-    if (editingUser) {
-      onUserUpdate(user);
-    } else {
-      onUserCreate(user);
+  const handleSubmit = async (user: User) => {
+    try {
+      if (editingUser) {
+        await updateUser(user).unwrap();
+        message.success(t('USER  SUCCESSFULLY UPDATED'));
+      } else {
+        await addUser(user).unwrap();
+        message.success(t('USER  SUCCESSFULLY ADDED'));
+      }
+      setEditingUser(null);
+    } catch (error) {
+      message.error(t('ERROR SAVING USER '));
     }
-    // setModalVisible(false);
   };
   const { t } = useTranslation();
 
   return (
     <>
-      <Button size="small" icon={<UserAddOutlined />} onClick={handleCreate}>
-        {t('ADD USER')}
-      </Button>
+      <Space className="gap-4 py-3">
+        <Col span={20}>
+          <Button
+            size="small"
+            icon={<UserAddOutlined />}
+            onClick={handleCreate}
+          >
+            {t('ADD USER')}
+          </Button>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          {editingUser && (
+            <Button
+              size="small"
+              icon={<UserDeleteOutlined />}
+              onClick={() =>
+                handleDelete(editingUser?.id || editingUser?._id || '')
+              }
+            >
+              {t('DELETE USER')}
+            </Button>
+          )}
+        </Col>
+      </Space>
+
       <Row gutter={[16, 16]} className="gap-4">
         <Col
           sm={5}
@@ -71,7 +97,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
               setEditingUser(user);
               console.log(user);
             }}
-            usersGroup={usersGroup}
+            usersGroup={usersGroup || []}
           />
         </Col>
         <Col
@@ -82,7 +108,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
             user={editingUser || undefined}
             onSubmit={handleSubmit}
             roles={['admin']}
-            groups={[]}
+            groups={groups || []}
           />
         </Col>
       </Row>

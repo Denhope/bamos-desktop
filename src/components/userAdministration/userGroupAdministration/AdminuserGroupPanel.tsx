@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space } from 'antd';
-import {
-  PlusOutlined,
-  UserAddOutlined,
-  EditOutlined,
-  UserDeleteOutlined,
-} from '@ant-design/icons';
+import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 
-import { User, UserGroup } from '@/models/IUser';
+import { UserGroup } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
 import UserGroupForm from './UserGroupForm';
 import UserGroupTree from './UserGroupTree';
@@ -41,9 +36,9 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
   const handleDelete = async (userGroupId: string) => {
     try {
       await deleteGroupUser(userGroupId).unwrap();
-      message.success('Группа пользователей успешно удалена');
+      message.success(t('USER GROUP SUCCESSFULLY DELETED'));
     } catch (error) {
-      message.error('Ошибка при удалении группы пользователей');
+      message.error(t('ERROR DELETING USER GROUP'));
     }
   };
 
@@ -51,14 +46,14 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
     try {
       if (editingUserGroup) {
         await updateGroupUser(userGroup).unwrap();
-        message.success('Группа пользователей успешно обновлена');
+        message.success(t('USER GROUP SUCCESSFULLY UPDATED'));
       } else {
         await addGroupUser(userGroup).unwrap();
-        message.success('Группа пользователей успешно добавлена');
+        message.success(t('USER GROUP SUCCESSFULLY ADDED'));
       }
       setEditingUserGroup(null);
     } catch (error) {
-      message.error('Ошибка при сохранении группы пользователей');
+      message.error(t('ERROR SAVING USER GROUP'));
     }
   };
 

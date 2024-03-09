@@ -7,7 +7,7 @@ import { ProFormSelect } from '@ant-design/pro-components';
 interface UserFormProps {
   userGroup?: UserGroup;
   onSubmit: (userGroup: UserGroup) => void;
-  onDelete?: (userGroupId: string) => void; // Добавлен новый обработчик удаления
+  onDelete?: (userGroupId: string) => void;
 }
 
 const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {

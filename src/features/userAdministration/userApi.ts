@@ -1,11 +1,14 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { IUser, User, UserGroup } from '@/models/IUser';
-import { API_URL } from '@/utils/api/http';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { setUsersGroup } from './userSlice';
+
 const currentCompanyID = localStorage.getItem('companyID') || '';
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: baseQueryWithReauth,
+  tagTypes: ['Users'], // Add tag types for caching
   endpoints: (builder) => ({
     getGroupUsers: builder.query<
       UserGroup[],
@@ -15,34 +18,48 @@ export const userApi = createApi({
         url: `users/getFilteredGroupUsers/company/${currentCompanyID}`,
         params: { singNumber, pass },
       }),
+      providesTags: ['Users'],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          dispatch(setUsersGroup(data));
+        } catch (error) {
+          console.error('Ошибка при выполнении запроса:', error);
+        }
+      },
+      // Provide the 'Users' tag after fetching
     }),
     getUser: builder.query<User, string>({
       query: (id) => `users/${id}`,
+      providesTags: ['Users'], // Provide the 'Users' tag after fetching
     }),
     addUser: builder.mutation<User, Partial<User>>({
       query: (user) => ({
-        url: 'users',
+        url: `users/company/${currentCompanyID}`,
         method: 'POST',
         body: user,
       }),
+      invalidatesTags: ['Users'], // Invalidate the 'Users' tag after mutation
     }),
     updateUser: builder.mutation<User, User>({
       query: (user) => ({
-        url: `users/${user.id}`,
+        url: `users/company/${currentCompanyID}/user/${user.id || user._id}`,
         method: 'PUT',
         body: user,
       }),
+      invalidatesTags: ['Users'], // Invalidate the 'Users' tag after mutation
     }),
     deleteUser: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
-        url: `users/${id}`,
+        url: `users/company/${currentCompanyID}/user/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Users'], // Invalidate the 'Users' tag after mutation
     }),
   }),
 });
 
-// Export hooks for usage in functional components
 export const {
   useGetUserQuery,
   useGetGroupUsersQuery,

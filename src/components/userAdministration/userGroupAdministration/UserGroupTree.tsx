@@ -23,7 +23,6 @@ const UserGroupTree: FC<UserTreeProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  // Функция для преобразования UserGroup в TreeDataNode
   const convertToTreeData = (userGroups: UserGroup[]): TreeDataNode[] => {
     return userGroups.map((userGroup) => ({
       title: userGroup.title,
@@ -32,47 +31,39 @@ const UserGroupTree: FC<UserTreeProps> = ({
     }));
   };
 
-  // Обновляем treeData, когда usersGroup изменяется
   useEffect(() => {
     setTreeData(convertToTreeData(usersGroup));
   }, [usersGroup]);
 
-  // Фильтруем treeData на основе searchQuery
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
       return treeData;
     }
     return treeData.filter((node) => {
-      // Проверяем, что title является строкой перед вызовом toLowerCase
       if (typeof node.title === 'string') {
         return node.title.toLowerCase().includes(searchQuery.toLowerCase());
       }
-      return false; // Если title не является строкой, игнорируем его
+      return false;
     });
   }, [treeData, searchQuery]);
 
-  // Функция для обработки нажатия клавиши Enter
   const handleEnterPress = () => {
     if (filteredTreeData.length === 0) return;
 
-    // Если группа не выбрана, выбираем первую
     if (selectedIndex === -1) {
       setSelectedIndex(0);
     } else {
-      // Выбираем следующую группу в списке, переходя обратно к первой при необходимости
       setSelectedIndex(
         (prevIndex) => (prevIndex + 1) % filteredTreeData.length
       );
     }
 
-    // Уведомляем родительский компонент о выбранной группе
     const selectedGroup = filteredTreeData[selectedIndex].usersGroup;
     if (selectedGroup) {
       onUsersGroupSelect(selectedGroup);
     }
   };
 
-  // Функция для рекурсивного рендеринга узлов дерева
   const renderTreeNodes = (data: TreeDataNode[]) => {
     return data.map((item, index) => (
       <TreeNode
@@ -87,15 +78,14 @@ const UserGroupTree: FC<UserTreeProps> = ({
     <div>
       <Search
         size="small"
-        placeholder="Search groups"
         allowClear
         onSearch={(value) => {
           setSearchQuery(value);
-          handleEnterPress(); // Выбираем первую группу, которая соответствует поисковому запросу
+          handleEnterPress();
         }}
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: 8 }}
-        enterButton="Select Group"
+        enterButton
         onPressEnter={handleEnterPress}
       />
       <Tree

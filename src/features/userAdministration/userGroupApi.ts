@@ -1,4 +1,3 @@
-// userGroupApi.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { IUser, User, UserGroup } from '@/models/IUser';

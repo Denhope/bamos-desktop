@@ -35,32 +35,32 @@ import { useSelector } from 'react-redux';
 export const selectUserGroups = (state: RootState) => state.userGroup;
 const UserAdministration: FC = () => {
   const [userId, seuserId] = useState<string>('');
-  const { data, isLoading } = useGetUserQuery(userId);
+  // const { data, isLoading } = useGetUserQuery(userId);
   const { data: groupUsers, isLoading: isGettingUser } = useGetGroupUsersQuery(
     {}
   );
-  const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
-  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-  const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
+  // const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
+  // const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+  // const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
 
-  const { data: groups, refetch: refetchGroups } = useGetGroupsUserQuery({});
-  const userGroups = useTypedSelector((state) => state.userGroup);
+  // const { data: groups, refetch: refetchGroups } = useGetGroupsUserQuery({});
+  // const userGroups = useTypedSelector((state) => state.userGroup);
 
-  const onAddUser = async (newUserData: Partial<User>) => {
-    try {
-      const result = await addUser(newUserData).unwrap();
+  // const onAddUser = async (newUserData: Partial<User>) => {
+  //   try {
+  //     const result = await addUser(newUserData).unwrap();
 
-      message.success('Пользователь успешно создан');
-    } catch (error) {
-      message.error('ERROR');
-    }
-  };
+  //     message.success('Пользователь успешно создан');
+  //   } catch (error) {
+  //     message.error('ERROR');
+  //   }
+  // };
 
-  const onEditUser = async (updatedUserData: User) => {
-    try {
-      const result = await updateUser(updatedUserData).unwrap();
-    } catch (error) {}
-  };
+  // const onEditUser = async (updatedUserData: User) => {
+  //   try {
+  //     const result = await updateUser(updatedUserData).unwrap();
+  //   } catch (error) {}
+  // };
 
   // const onDeleteUser = async (userId: string) => {
   //   try {
@@ -83,14 +83,14 @@ const UserAdministration: FC = () => {
       <UserSwitchOutlined />
     ),
     getItem(<>{t('ACCOUNTS')}</>, RouteNames.USER_ACCOUNTS, <UserOutlined />),
-    getItem(<>{t('ROLES')}</>, RouteNames.USER_ROLES, <ControlOutlined />),
+    // getItem(<>{t('ROLES')}</>, RouteNames.USER_ROLES, <ControlOutlined />),
     getItem(<>{t('Groups')}</>, RouteNames.USER_GROUPS, <GroupOutlined />),
 
-    getItem(
-      <>{t('PERMISSIONS')}</>,
-      RouteNames.USER_PERMISSIONS,
-      <DatabaseOutlined />
-    ),
+    // getItem(
+    //   <>{t('PERMISSIONS')}</>,
+    //   RouteNames.USER_PERMISSIONS,
+    //   <DatabaseOutlined />
+    // ),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -162,17 +162,17 @@ const UserAdministration: FC = () => {
         content: (
           <>
             <AdminPanel
-              usersGroup={groupUsers || []}
-              onUserCreate={function (user: User): void {
-                console.log(user);
-                onAddUser(user);
-              }}
-              onUserUpdate={function (user: User): void {
-                console.log(user);
-              }}
-              onUserDelete={function (userId: string): void {
-                console.log(userId);
-              }}
+            // usersGroup={groupUsers || []}
+            // onUserCreate={function (user: User): void {
+            //   console.log(user);
+            //   onAddUser(user);
+            // }}
+            // onUserUpdate={function (user: User): void {
+            //   console.log(user);
+            // }}
+            // onUserDelete={function (userId: string): void {
+            //   console.log(userId);
+            // }}
             />
           </>
         ),
