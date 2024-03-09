@@ -1,39 +1,36 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
-import { UserGroup } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип UserGroup
+import { ICompany } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип company
 
 interface TreeDataNode extends DataNode {
-  usersGroup?: UserGroup;
+  company?: ICompany;
 }
 
 interface UserTreeProps {
-  onUsersGroupSelect: (userGroup: UserGroup) => void;
-  usersGroup: UserGroup[] | [];
+  onCompanySelect: (company: ICompany) => void;
+  companies: ICompany[] | [];
 }
 
 const { TreeNode } = Tree;
 const { Search } = Input;
 
-const UserGroupTree: FC<UserTreeProps> = ({
-  onUsersGroupSelect,
-  usersGroup,
-}) => {
+const CompanyTree: FC<UserTreeProps> = ({ onCompanySelect, companies }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  const convertToTreeData = (userGroups: UserGroup[]): TreeDataNode[] => {
-    return userGroups.map((userGroup) => ({
-      title: userGroup.title,
-      key: userGroup.id,
-      usersGroup: userGroup,
+  const convertToTreeData = (companys: ICompany[]): TreeDataNode[] => {
+    return companys.map((company) => ({
+      title: company.title || company?.companyName,
+      key: company.id,
+      company: company,
     }));
   };
 
   useEffect(() => {
-    setTreeData(convertToTreeData(usersGroup));
-  }, [usersGroup]);
+    setTreeData(convertToTreeData(companies));
+  }, [companies]);
 
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
@@ -58,9 +55,9 @@ const UserGroupTree: FC<UserTreeProps> = ({
       );
     }
 
-    const selectedGroup = filteredTreeData[selectedIndex].usersGroup;
+    const selectedGroup = filteredTreeData[selectedIndex].company;
     if (selectedGroup) {
-      onUsersGroupSelect(selectedGroup);
+      onCompanySelect(selectedGroup);
     }
   };
 
@@ -93,11 +90,11 @@ const UserGroupTree: FC<UserTreeProps> = ({
         height={680}
         defaultExpandedKeys={['group1']}
         onSelect={(selectedKeys, info) => {
-          const userGroup = usersGroup.find(
-            (group) => group.id === selectedKeys[0]
+          const company = companies.find(
+            (company) => company.id === selectedKeys[0]
           );
-          if (userGroup) {
-            onUsersGroupSelect(userGroup);
+          if (company) {
+            onCompanySelect(company);
           }
         }}
       >
@@ -107,4 +104,4 @@ const UserGroupTree: FC<UserTreeProps> = ({
   );
 };
 
-export default UserGroupTree;
+export default CompanyTree;

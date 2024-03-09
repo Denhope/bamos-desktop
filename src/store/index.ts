@@ -22,6 +22,7 @@ import storesLogisticReducer from './reducers/StoreLogisticSlice';
 import userPreferencesSlice from './reducers/UserPreferencesSlice';
 import { userApi } from '@/features/userAdministration/userApi';
 import { userGroupApi } from '@/features/userAdministration/userGroupApi';
+import { companyApi } from '@/features/companyAdministration/companyApi';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
 const store = configureStore({
   reducer: {
@@ -49,9 +50,14 @@ const store = configureStore({
     userGroup: userGroupReducer,
     [userApi.reducerPath]: userApi.reducer,
     [userGroupApi.reducerPath]: userGroupApi.reducer,
+    [companyApi.reducerPath]: companyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApi.middleware, userGroupApi.middleware),
+    getDefaultMiddleware().concat(
+      userApi.middleware,
+      userGroupApi.middleware,
+      companyApi.middleware
+    ),
 });
 export default store;
 

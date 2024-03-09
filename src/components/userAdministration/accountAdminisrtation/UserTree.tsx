@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { Tree, Typography, Input, Button } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 import { User, UserGroup } from '@/models/IUser';
-import { faker } from '@faker-js/faker';
 
 interface TreeDataNode extends DataNode {
   user?: User;
@@ -110,7 +109,7 @@ const UserTree: FC<UserTreeProps> = ({ onUserSelect, usersGroup }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 py-3">
+    <div className="flex flex-col gap-2">
       <Search
         size="small"
         allowClear

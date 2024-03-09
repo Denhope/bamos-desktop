@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space } from 'antd';
+import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 
 import { UserGroup } from '@/models/IUser';
@@ -34,12 +34,17 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
   };
 
   const handleDelete = async (userGroupId: string) => {
-    try {
-      await deleteGroupUser(userGroupId).unwrap();
-      message.success(t('USER GROUP SUCCESSFULLY DELETED'));
-    } catch (error) {
-      message.error(t('ERROR DELETING USER GROUP'));
-    }
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS GROUP?'),
+      onOk: async () => {
+        try {
+          await deleteGroupUser(userGroupId).unwrap();
+          message.success(t('USER GROUP SUCCESSFULLY DELETED'));
+        } catch (error) {
+          message.error(t('ERROR DELETING USER GROUP'));
+        }
+      },
+    });
   };
 
   const handleSubmit = async (userGroup: UserGroup) => {
@@ -60,9 +65,12 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
   const { t } = useTranslation();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spin />
+      </div>
+    );
   }
-
   return (
     <>
       <Space className="gap-4 py-3">

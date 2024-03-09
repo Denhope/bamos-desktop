@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space } from 'antd';
+import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import UserForm from './UserForm';
 import { User, UserGroup } from '@/models/IUser';
@@ -12,12 +12,14 @@ import {
   useUpdateUserMutation,
 } from '@/features/userAdministration/userApi';
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
+import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 interface AdminPanelProps {}
 
 const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const { data: usersGroup, isLoading } = useGetGroupUsersQuery({});
   const { data: groups } = useGetGroupsUserQuery({});
+
   const [addUser] = useAddUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -32,7 +34,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
 
   const handleDelete = (userId: string) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить этого пользователя?',
+      title: 'ARE YOU SURE, YOU WANT TO DELETE THIS USER?',
       onOk: async () => {
         try {
           await deleteUser(userId);
@@ -59,6 +61,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
     }
   };
   const { t } = useTranslation();
+  if (isLoading) {
+    return (
+      <div>
+        <Spin />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -95,7 +104,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
           <UserTree
             onUserSelect={function (user: User): void {
               setEditingUser(user);
-              console.log(user);
             }}
             usersGroup={usersGroup || []}
           />

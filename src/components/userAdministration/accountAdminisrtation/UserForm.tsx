@@ -40,6 +40,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
 
   return (
     <ProForm
+      size="small"
       form={form}
       onFinish={handleSubmit}
       submitter={false}

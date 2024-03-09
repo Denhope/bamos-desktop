@@ -22,53 +22,13 @@ import {
   useGetGroupUsersQuery,
   userApi,
 } from '@/features/userAdministration/userApi';
-import {
-  useAddGroupUserMutation,
-  useGetGroupsUserQuery,
-} from '@/features/userAdministration/userGroupApi';
-import { IUser, User, UserGroup } from '@/models/IUser';
+import {} from '@/features/userAdministration/userGroupApi';
+
 import AdminuserGroupPanel from '@/components/userAdministration/userGroupAdministration/AdminuserGroupPanel';
 
-import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
-import { RootState } from '@/store';
-import { useSelector } from 'react-redux';
-export const selectUserGroups = (state: RootState) => state.userGroup;
+import AdminCompanyPanel from '@/components/userAdministration/companyAdministration/AdminCompanyPanel';
+
 const UserAdministration: FC = () => {
-  const [userId, seuserId] = useState<string>('');
-  // const { data, isLoading } = useGetUserQuery(userId);
-  const { data: groupUsers, isLoading: isGettingUser } = useGetGroupUsersQuery(
-    {}
-  );
-  // const [addUser, { isLoading: isAddingUser }] = useAddUserMutation();
-  // const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-  // const [deleteUser, { isLoading: isDeletingUser }] = useDeleteUserMutation();
-
-  // const { data: groups, refetch: refetchGroups } = useGetGroupsUserQuery({});
-  // const userGroups = useTypedSelector((state) => state.userGroup);
-
-  // const onAddUser = async (newUserData: Partial<User>) => {
-  //   try {
-  //     const result = await addUser(newUserData).unwrap();
-
-  //     message.success('Пользователь успешно создан');
-  //   } catch (error) {
-  //     message.error('ERROR');
-  //   }
-  // };
-
-  // const onEditUser = async (updatedUserData: User) => {
-  //   try {
-  //     const result = await updateUser(updatedUserData).unwrap();
-  //   } catch (error) {}
-  // };
-
-  // const onDeleteUser = async (userId: string) => {
-  //   try {
-  //     const result = await deleteUser(userId).unwrap();
-  //   } catch (error) {
-  //     // Handle the error
-  //   }
-  // };
   type MenuItem = Required<MenuProps>['items'][number];
   interface TabData extends TabPaneProps {
     key: string;
@@ -78,13 +38,18 @@ const UserAdministration: FC = () => {
   const { t } = useTranslation();
   const items: MenuItem[] = [
     getItem(
-      <>{t('USER ADMINISTRATION')}</>,
+      <>{t('ADMINISTRATION')}</>,
       RouteNames.USER_ADMINISTRATION,
       <UserSwitchOutlined />
     ),
     getItem(<>{t('ACCOUNTS')}</>, RouteNames.USER_ACCOUNTS, <UserOutlined />),
     // getItem(<>{t('ROLES')}</>, RouteNames.USER_ROLES, <ControlOutlined />),
-    getItem(<>{t('Groups')}</>, RouteNames.USER_GROUPS, <GroupOutlined />),
+    getItem(
+      <>{t('ACCOUNTS GROUPS')}</>,
+      RouteNames.USER_GROUPS,
+      <GroupOutlined />
+    ),
+    getItem(<>{t('COMPANIES ')}</>, RouteNames.COMPANIES, <GroupOutlined />),
 
     // getItem(
     //   <>{t('PERMISSIONS')}</>,
@@ -118,7 +83,7 @@ const UserAdministration: FC = () => {
     if (key === RouteNames.USER_GROUPS) {
       const tab = {
         key,
-        title: `${t('GROUPS')}`,
+        title: `${t('ACCOUNTS GROUPS')}`,
         content: (
           <div>
             <AdminuserGroupPanel />
@@ -136,6 +101,18 @@ const UserAdministration: FC = () => {
         key,
         title: `${t('PERMISSIONS')}`,
         content: <></>,
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+    if (key === RouteNames.COMPANIES) {
+      const tab = {
+        key,
+        title: `${t('COMPANIES')}`,
+        content: <AdminCompanyPanel></AdminCompanyPanel>,
         closable: true,
       };
       if (!panes.find((pane) => pane.key === tab.key)) {
@@ -161,19 +138,7 @@ const UserAdministration: FC = () => {
         title: `${t('ACCOUNTS')}`,
         content: (
           <>
-            <AdminPanel
-            // usersGroup={groupUsers || []}
-            // onUserCreate={function (user: User): void {
-            //   console.log(user);
-            //   onAddUser(user);
-            // }}
-            // onUserUpdate={function (user: User): void {
-            //   console.log(user);
-            // }}
-            // onUserDelete={function (userId: string): void {
-            //   console.log(userId);
-            // }}
-            />
+            <AdminPanel />
           </>
         ),
         closable: true,

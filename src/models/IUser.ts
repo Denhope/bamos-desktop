@@ -84,3 +84,18 @@ export interface UserGroup {
   companyID?: string;
   users?: User[];
 }
+
+export interface ICompany {
+  id: string;
+  title: string;
+  description: string;
+  companyName: string;
+  code?: string;
+  email: string;
+  contacts: string;
+  createDate: string;
+  createByID: string;
+  updateDate?: string;
+  updateByID?: string;
+  FILES?: any[];
+}

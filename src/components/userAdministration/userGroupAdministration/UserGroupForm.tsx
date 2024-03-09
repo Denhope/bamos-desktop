@@ -27,6 +27,7 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
   }, [userGroup, form]);
   return (
     <ProForm
+      size="small"
       form={form}
       onFinish={handleSubmit}
       submitter={false}

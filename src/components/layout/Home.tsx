@@ -407,7 +407,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     } else if (key === RouteNames.USER_ADMINISTRATION) {
       tab = {
         key,
-        title: `${t('USER ADMINISTRATION')}`,
+        title: `${t(' ADMINISTRATION')}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <UserAdministration />
