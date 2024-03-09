@@ -24,6 +24,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
   };
   useEffect(() => {
     if (user) {
+      form.resetFields();
       form.setFieldsValue({
         ...user,
         userGroupID: user.userGroupID._id, // Set the initial value to the _id of the userGroupID

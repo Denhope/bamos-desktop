@@ -27,6 +27,7 @@ import {} from '@/features/userAdministration/userGroupApi';
 import AdminuserGroupPanel from '@/components/userAdministration/userGroupAdministration/AdminuserGroupPanel';
 
 import AdminCompanyPanel from '@/components/userAdministration/companyAdministration/AdminCompanyPanel';
+import AdminVendorPanel from '@/components/userAdministration/vendorAdministration/AdminVendorPanel';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -50,6 +51,7 @@ const UserAdministration: FC = () => {
       <GroupOutlined />
     ),
     getItem(<>{t('COMPANIES ')}</>, RouteNames.COMPANIES, <GroupOutlined />),
+    getItem(<>{t('VENDORS ')}</>, RouteNames.VENDORS, <GroupOutlined />),
 
     // getItem(
     //   <>{t('PERMISSIONS')}</>,
@@ -87,6 +89,22 @@ const UserAdministration: FC = () => {
         content: (
           <div>
             <AdminuserGroupPanel />
+          </div>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+    if (key === RouteNames.VENDORS) {
+      const tab = {
+        key,
+        title: `${t('VENDORS')}`,
+        content: (
+          <div>
+            <AdminVendorPanel />
           </div>
         ),
         closable: true,
@@ -155,7 +173,7 @@ const UserAdministration: FC = () => {
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={250}
+        width={300}
         collapsible
         collapsed={collapsed}
         onCollapse={(value: boolean | ((prevState: boolean) => boolean)) =>
@@ -167,7 +185,7 @@ const UserAdministration: FC = () => {
       <Content>
         <Tabs
           style={{
-            width: '98%',
+            width: '97%',
           }}
           className="mx-auto"
           size="small"

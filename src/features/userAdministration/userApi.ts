@@ -2,8 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { IUser, User, UserGroup } from '@/models/IUser';
 import { setUsersGroup } from './userSlice';
-
-const currentCompanyID = localStorage.getItem('companyID') || '';
+import { COMPANY_ID } from '@/utils/api/http';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -15,7 +14,7 @@ export const userApi = createApi({
       { singNumber?: string; pass?: string }
     >({
       query: ({ singNumber, pass }) => ({
-        url: `users/getFilteredGroupUsers/company/${currentCompanyID}`,
+        url: `users/getFilteredGroupUsers/company/${COMPANY_ID}`,
         params: { singNumber, pass },
       }),
       providesTags: ['Users'],
@@ -36,7 +35,7 @@ export const userApi = createApi({
     }),
     addUser: builder.mutation<User, Partial<User>>({
       query: (user) => ({
-        url: `users/company/${currentCompanyID}`,
+        url: `users/company/${COMPANY_ID}`,
         method: 'POST',
         body: user,
       }),
@@ -44,7 +43,7 @@ export const userApi = createApi({
     }),
     updateUser: builder.mutation<User, User>({
       query: (user) => ({
-        url: `users/company/${currentCompanyID}/user/${user.id || user._id}`,
+        url: `users/company/${COMPANY_ID}/user/${user.id || user._id}`,
         method: 'PUT',
         body: user,
       }),
@@ -52,7 +51,7 @@ export const userApi = createApi({
     }),
     deleteUser: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
-        url: `users/company/${currentCompanyID}/user/${id}`,
+        url: `users/company/${COMPANY_ID}/user/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Users'], // Invalidate the 'Users' tag after mutation

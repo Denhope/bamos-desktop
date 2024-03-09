@@ -6,6 +6,7 @@ export const API_URL = 'http://localhost:4000';
 
 // export const API_URL = 'https://planebox-api-production.up.railway.app';
 export const USER_ID = localStorage.getItem('userId');
+export const COMPANY_ID = localStorage.getItem('companyID') || '';
 
 const $host = axios.create({
   baseURL: API_URL,

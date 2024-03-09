@@ -2,69 +2,37 @@ import React, { FC, useEffect } from 'react';
 import {
   ProForm,
   ProFormText,
-  ProFormCheckbox,
   ProFormGroup,
   ProFormSelect,
 } from '@ant-design/pro-form';
-import { Button, Tabs, Upload, message } from 'antd';
-import { ICompany } from '@/models/IUser';
+import { Button, Tabs } from 'antd';
+
 import { useTranslation } from 'react-i18next';
-import { uploadFileServer } from '@/utils/api/thunks';
-import { UploadOutlined } from '@ant-design/icons';
-import { handleFileSelect } from '@/services/utilites';
+
+import { IVendor } from '@/models/IUser';
+import { ProFormTextArea } from '@ant-design/pro-components';
 
 interface UserFormProps {
-  company?: ICompany;
-  onSubmit: (company: ICompany) => void;
-  onDelete?: (companyId: string) => void;
+  vendor?: IVendor;
+  onSubmit: (vendor: IVendor) => void;
+  onDelete?: (vendorId: string) => void;
 }
 
-const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
+const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
-  const handleSubmit = async (values: ICompany) => {
-    const newUser: ICompany = company
-      ? { ...company, ...values }
-      : { ...values };
+  const handleSubmit = async (values: IVendor) => {
+    const newUser: IVendor = vendor ? { ...vendor, ...values } : { ...values };
     onSubmit(newUser);
   };
   useEffect(() => {
-    if (company) {
+    if (vendor) {
       form.resetFields();
-      form.setFieldsValue(company);
+      form.setFieldsValue(vendor || {});
     } else {
       form.resetFields();
     }
-  }, [company, form]);
-
-  const handleUpload = async (file: File) => {
-    if (!company || !company.id) {
-      console.error(
-        'Невозможно загрузить файл: компания не существует или не имеет id'
-      );
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      const response = await uploadFileServer(formData);
-
-      if (response) {
-        const updatedCompany: ICompany = {
-          ...company,
-          FILES: response,
-        };
-
-        onSubmit({ ...company, FILES: response });
-      } else {
-        message.error('Ошибка при загрузке файла: неверный ответ сервера');
-      }
-    } catch (error) {
-      message.error('Ошибка при загрузке файла');
-      throw error;
-    }
-  };
+  }, [vendor, form]);
 
   return (
     <ProForm
@@ -72,17 +40,17 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
       form={form}
       onFinish={handleSubmit}
       submitter={false}
-      initialValues={company}
+      // initialValues={vendor || {}}
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
         <Tabs.TabPane tab="MAIN" key="1">
-          <ProForm.Group>
-            <ProForm.Group>
+          <ProFormGroup>
+            <ProFormGroup>
               <ProFormText
                 width={'sm'}
-                name="title"
-                label="TITLE"
+                name="CODE"
+                label="CODE"
                 rules={[
                   {
                     required: true,
@@ -91,8 +59,8 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               />
               <ProFormText
                 width={'sm'}
-                name="companyName"
-                label="NAME"
+                name="SHORT_NAME"
+                label="SHORT NAME"
                 rules={[
                   {
                     required: true,
@@ -101,20 +69,20 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               />
               <ProFormText
                 width={'lg'}
-                name="description"
-                label="DESCRIPTION"
+                name="NAME"
+                label="NAME"
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               />
-            </ProForm.Group>
+            </ProFormGroup>
             <ProFormGroup>
               <ProFormSelect
                 width={'sm'}
-                name="country"
-                label="COUNTRY"
+                name="COUNTRY"
+                label={t('COUNTRY')}
                 showSearch
                 valueEnum={{
                   BY: t('BELARUS'),
@@ -139,7 +107,6 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
                   BH: t('BAHRAIN'),
                   BD: t('BANGLADESH'),
                   BB: t('BARBADOS'),
-
                   BE: t('BELGIUM'),
                   BZ: t('BELIZE'),
                   BJ: t('BENIN'),
@@ -266,59 +233,58 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
                   MC: t('MONACO'),
                 }}
               />
-              <ProFormText
+              <ProFormTextArea
                 width={'lg'}
-                name="adress"
-                label="ADRESS"
+                name="ADRESS"
+                fieldProps={{ style: { resize: 'none' } }}
+                colSize={2}
+                label={t('ADRESS')}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               />
-              <ProFormText
-                name="email"
-                label="Email"
-                rules={[
-                  { required: true, message: 'Please enter your email' },
-                  { type: 'email', message: 'Please enter a valid email' },
-                ]}
-              />
-              <ProFormText
-                name="contacts"
-                label="Phone Number"
-                rules={[
-                  { required: true, message: 'Please enter your phone number' },
-                  {
-                    pattern:
-                      /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
-                    message: 'Please enter a valid phone number',
-                  },
-                ]}
-              />
+              <ProFormGroup>
+                <ProFormText
+                  name="EMAIL"
+                  width={'lg'}
+                  label={t('EMAIL')}
+                  rules={[
+                    { required: true, message: 'Please enter your email' },
+                    { type: 'email', message: 'Please enter a valid email' },
+                  ]}
+                />
+                <ProFormText
+                  width={'lg'}
+                  name="MAIN_CONTRACT"
+                  label="CONTRACT"
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: 'Please enter your phone number',
+                  //   },
+                  //   {
+                  //     pattern:
+                  //       /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
+                  //     message: 'Please enter a valid phone number',
+                  //   },
+                  // ]}
+                />
+              </ProFormGroup>
+              <ProFormText name="UNP" label={t('UNP')} />
+              <ProFormText name="MAIN_ACCOUNT" label={t('MAIN ACCOUNT')} />
             </ProFormGroup>
-          </ProForm.Group>
-          <ProForm.Item label={t('UPLOAD LOGO')}>
-            <Upload
-              name="FILES"
-              fileList={company?.FILES}
-              listType="picture"
-              className="upload-list-inline"
-              beforeUpload={handleUpload}
-              accept="image/*"
-            >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
-          </ProForm.Item>{' '}
+          </ProFormGroup>
         </Tabs.TabPane>
       </Tabs>
 
       <ProForm.Item>
         <Button type="primary" htmlType="submit">
-          {company ? 'Update' : 'Create'}
+          {vendor ? 'Update' : 'Create'}
         </Button>
       </ProForm.Item>
     </ProForm>
   );
 };
-export default CompanyForm;
+export default vendorForm;

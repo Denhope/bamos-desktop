@@ -78,9 +78,9 @@ export interface UserGroup {
   title: string;
   description: string;
   createDate: string;
-  createByID: string;
+  createUserID: string;
   updateDate?: string;
-  updateByID?: string;
+  updateUserID?: string;
   companyID?: string;
   users?: User[];
 }
@@ -98,4 +98,24 @@ export interface ICompany {
   updateDate?: string;
   updateByID?: string;
   FILES?: any[];
+}
+
+export interface IVendor {
+  id: string;
+  CODE: string;
+  SHORT_NAME: string;
+  NAME: string;
+  UNP: string;
+  ADRESS: string;
+  MAIN_ACCOUNT: string;
+  BANK: string;
+  IS_RESIDENT: boolean;
+  COUNTRY: string;
+  MAIN_CONTRACT: any;
+  EMAIL: string;
+  companyID: string;
+  createDate: Date;
+  createUserID: string;
+  updateDate?: Date;
+  updateUserID?: string;
 }

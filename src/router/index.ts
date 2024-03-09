@@ -31,6 +31,7 @@ export enum RouteNames {
   USER_PERMISSIONS = '/user/administration/permissions',
   USER_ACCOUNTS = '/user/administration/accounts',
   USER_GROUPS = '/user/administration/groups',
+  VENDORS = '/user/administration/vendors',
   COMPANIES = '/user/administration/companies',
   USER = '/user',
   HOME = '/',

@@ -20,6 +20,7 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
   };
   useEffect(() => {
     if (userGroup) {
+      form.resetFields();
       form.setFieldsValue(userGroup);
     } else {
       form.resetFields();
