@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 
@@ -10,17 +10,21 @@ import VendorTree from './VendorTree';
 import {
   useAddVendorMutation,
   useDeleteVendorMutation,
-  useGetVendorQuery,
   useGetVendorsQuery,
   useUpdateVendorMutation,
 } from '@/features/vendorAdministration/vendorApi';
+import { VendorFilteredFormValues } from './VendorFilteredForm';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
-interface AdminPanelProps {}
+interface AdminPanelProps {
+  values: VendorFilteredFormValues;
+}
 
-const AdminvendorPanel: React.FC<AdminPanelProps> = () => {
+const AdminvendorPanel: React.FC<AdminPanelProps> = ({ values }) => {
   const [editingvendor, setEditingvendor] = useState<IVendor | null>(null);
-
-  const { data: vendors, isLoading } = useGetVendorsQuery({});
+  const { vendors } = useTypedSelector((state) => state.vendor);
+  const {} = useTypedSelector((state) => state.vendorApi);
+  const { isLoading } = useGetVendorsQuery({});
 
   const [addvendor] = useAddVendorMutation();
   const [updateVendor] = useUpdateVendorMutation();
@@ -75,7 +79,7 @@ const AdminvendorPanel: React.FC<AdminPanelProps> = () => {
 
   return (
     <>
-      <Space className="gap-4 py-3">
+      <Space className="gap-4 pb-3">
         <Col span={20}>
           <Button
             size="small"

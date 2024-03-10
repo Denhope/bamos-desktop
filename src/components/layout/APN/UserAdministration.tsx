@@ -4,7 +4,7 @@ import { Layout, Menu, MenuProps, Tabs, message } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   DatabaseOutlined,
   UserOutlined,
@@ -28,6 +28,11 @@ import AdminuserGroupPanel from '@/components/userAdministration/userGroupAdmini
 
 import AdminCompanyPanel from '@/components/userAdministration/companyAdministration/AdminCompanyPanel';
 import AdminVendorPanel from '@/components/userAdministration/vendorAdministration/AdminVendorPanel';
+import VendorFilteredForm, {
+  VendorFilteredFormValues,
+} from '@/components/userAdministration/vendorAdministration/VendorFilteredForm';
+import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
+import { IVendor } from '@/models/IUser';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -61,7 +66,24 @@ const UserAdministration: FC = () => {
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
+
   const [activeKey, setActiveKey] = useState<string>('');
+  const [vendorFormValues, setVendorFormValues] =
+    useState<VendorFilteredFormValues>({
+      CODE: '',
+      NAME: '',
+      status: [''],
+    });
+  const { refetch } = useGetVendorsQuery({
+    code: vendorFormValues.CODE,
+    status: vendorFormValues.status,
+    name: vendorFormValues.NAME,
+    isResident: vendorFormValues.IS_RESIDENT,
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [vendorFormValues, refetch]);
   const onEdit = (
     targetKey:
       | string
@@ -78,7 +100,6 @@ const UserAdministration: FC = () => {
         }
       }
     } else {
-      // Обработка события мыши или клавиатуры
     }
   };
   const onMenuClick = ({ key }: { key: string }) => {
@@ -104,7 +125,7 @@ const UserAdministration: FC = () => {
         title: `${t('VENDORS')}`,
         content: (
           <div>
-            <AdminVendorPanel />
+            <AdminVendorPanel values={vendorFormValues} />
           </div>
         ),
         closable: true,
@@ -181,6 +202,14 @@ const UserAdministration: FC = () => {
         }
       >
         <Menu theme="light" mode="inline" items={items} onClick={onMenuClick} />
+
+        {activeKey === RouteNames.VENDORS && !collapsed && (
+          <VendorFilteredForm
+            onSubmit={function (values: VendorFilteredFormValues): void {
+              setVendorFormValues(values);
+            }}
+          />
+        )}
       </Sider>
       <Content>
         <Tabs

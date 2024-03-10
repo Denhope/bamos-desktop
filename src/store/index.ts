@@ -24,6 +24,8 @@ import { userApi } from '@/features/userAdministration/userApi';
 import { userGroupApi } from '@/features/userAdministration/userGroupApi';
 import { companyApi } from '@/features/companyAdministration/companyApi';
 import { vendorApi } from '@/features/vendorAdministration/vendorApi';
+import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
+// import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
 const store = configureStore({
   reducer: {
@@ -53,6 +55,7 @@ const store = configureStore({
     [userGroupApi.reducerPath]: userGroupApi.reducer,
     [companyApi.reducerPath]: companyApi.reducer,
     [vendorApi.reducerPath]: vendorApi.reducer,
+    vendor: vendorReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

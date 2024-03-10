@@ -2,23 +2,33 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { IVendor } from '@/models/IUser';
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
+import { setVendors } from './vendorSlice';
 
 export const vendorApi = createApi({
   reducerPath: 'vendorApi',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Vendors'], // Добавляем типы тегов для кэширования
   endpoints: (builder) => ({
-    getVendors: builder.query<IVendor[], { companyName?: string }>({
-      query: ({ companyName }) => ({
+    getVendors: builder.query<
+      IVendor[],
+      {
+        companyName?: string;
+        code?: string;
+        status?: string[];
+        name?: string;
+        isResident?: boolean;
+      }
+    >({
+      query: ({ companyName, code, status, name, isResident }) => ({
         url: `vendors/getFilteredVendors/company/${COMPANY_ID}`,
-        params: { companyName },
+        params: { code, status, name, isResident },
       }),
       providesTags: ['Vendors'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
 
-          // dispatch(setUserGroups(data));
+          dispatch(setVendors(data));
         } catch (error) {
           console.error('Ошибка при выполнении запроса:', error);
         }

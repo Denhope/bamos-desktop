@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { IUser, User, UserGroup } from '@/models/IUser';
 import { setUserGroups } from './userGroupSlice';
-import { COMPANY_ID } from '@/utils/api/http';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 
 export const userGroupApi = createApi({
   reducerPath: 'userGroupApi',

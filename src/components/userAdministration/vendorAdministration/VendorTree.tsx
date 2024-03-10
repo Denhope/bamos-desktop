@@ -87,7 +87,7 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
       />
       <Tree
         showLine
-        height={650}
+        height={660}
         defaultExpandedKeys={['group1']}
         onSelect={(selectedKeys, info) => {
           const vendor = vendors.find(

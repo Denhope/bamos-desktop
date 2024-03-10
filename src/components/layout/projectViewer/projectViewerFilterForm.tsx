@@ -10,11 +10,12 @@ import {
 import { DatePickerProps, Form } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { t } from 'i18next';
+
 import React, { FC, useRef, useState } from 'react';
 import { getFilteredProjects } from '@/utils/api/thunks';
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
 import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenuProjectSearchSelect';
+import { useTranslation } from 'react-i18next';
 type ProjectViewerFilterFormType = {
   onProjectSearch: (orders: any[] | []) => void;
 };
@@ -22,6 +23,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
   onProjectSearch,
 }) => {
   const formRef = useRef<FormInstance>(null);
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [selectedCreateDate, setSelectedCreateDate] = useState<any>();
   const [selectedCreateEndDate, setSelectedCreateEndDate] = useState<any>();

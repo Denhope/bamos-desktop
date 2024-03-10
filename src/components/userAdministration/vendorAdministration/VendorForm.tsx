@@ -10,7 +10,7 @@ import { Button, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { IVendor } from '@/models/IUser';
-import { ProFormTextArea } from '@ant-design/pro-components';
+import { ProFormCheckbox, ProFormTextArea } from '@ant-design/pro-components';
 
 interface UserFormProps {
   vendor?: IVendor;
@@ -274,6 +274,18 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
               </ProFormGroup>
               <ProFormText name="UNP" label={t('UNP')} />
               <ProFormText name="MAIN_ACCOUNT" label={t('MAIN ACCOUNT')} />
+              <ProFormSelect
+                showSearch
+                // mode="multiple"
+                name="status"
+                label={t('STATE')}
+                width="sm"
+                valueEnum={{
+                  ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
+                  INACTIVE: { text: t('INACTIVE'), status: 'Error' },
+                }}
+              />
+              <ProFormCheckbox name="IS_RESIDENT" label={t('RESIDENT')} />
             </ProFormGroup>
           </ProFormGroup>
         </Tabs.TabPane>
