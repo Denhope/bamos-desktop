@@ -24,7 +24,9 @@ import { userApi } from '@/features/userAdministration/userApi';
 import { userGroupApi } from '@/features/userAdministration/userGroupApi';
 import { companyApi } from '@/features/companyAdministration/companyApi';
 import { vendorApi } from '@/features/vendorAdministration/vendorApi';
+import { acTypeApi } from '@/features/acTypeAdministration/acTypeApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
+import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
 const store = configureStore({
@@ -55,14 +57,17 @@ const store = configureStore({
     [userGroupApi.reducerPath]: userGroupApi.reducer,
     [companyApi.reducerPath]: companyApi.reducer,
     [vendorApi.reducerPath]: vendorApi.reducer,
+    [acTypeApi.reducerPath]: acTypeApi.reducer,
     vendor: vendorReducer,
+    acTypes: acTypesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       userApi.middleware,
       userGroupApi.middleware,
       companyApi.middleware,
-      vendorApi.middleware
+      vendorApi.middleware,
+      acTypeApi.middleware
     ),
 });
 export default store;

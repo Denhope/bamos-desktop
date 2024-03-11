@@ -14,14 +14,7 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import AdminPanel from '@/components/userAdministration/accountAdminisrtation/AdminPanel';
-import {
-  useGetUserQuery,
-  useAddUserMutation,
-  useUpdateUserMutation,
-  useDeleteUserMutation,
-  useGetGroupUsersQuery,
-  userApi,
-} from '@/features/userAdministration/userApi';
+
 import {} from '@/features/userAdministration/userGroupApi';
 
 import AdminuserGroupPanel from '@/components/userAdministration/userGroupAdministration/AdminuserGroupPanel';
@@ -33,6 +26,9 @@ import VendorFilteredForm, {
 } from '@/components/userAdministration/vendorAdministration/VendorFilteredForm';
 import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 import { IVendor } from '@/models/IUser';
+import AdminACTypesPanel from '@/components/userAdministration/acTypesAdministration/AdminACTypesPanel';
+import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
+import { ACTypesFilteredFormValues } from '@/components/userAdministration/acTypesAdministration/ASTypesFilteredForm';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -57,12 +53,7 @@ const UserAdministration: FC = () => {
     ),
     getItem(<>{t('COMPANIES ')}</>, RouteNames.COMPANIES, <GroupOutlined />),
     getItem(<>{t('VENDORS ')}</>, RouteNames.VENDORS, <GroupOutlined />),
-
-    // getItem(
-    //   <>{t('PERMISSIONS')}</>,
-    //   RouteNames.USER_PERMISSIONS,
-    //   <DatabaseOutlined />
-    // ),
+    getItem(<>{t('AC TYPES ')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -74,16 +65,31 @@ const UserAdministration: FC = () => {
       NAME: '',
       status: [''],
     });
-  const { refetch } = useGetVendorsQuery({
+  const [ACTypesFormValues, setACTypesFormValues] =
+    useState<ACTypesFilteredFormValues>({
+      code: '',
+      name: '',
+      status: [''],
+    });
+  const { refetch: refetchVendors } = useGetVendorsQuery({
     code: vendorFormValues.CODE,
     status: vendorFormValues.status,
     name: vendorFormValues.NAME,
     isResident: vendorFormValues.IS_RESIDENT,
   });
+  const { refetch: refetchACTypes } = useGetACTypesQuery({
+    code: ACTypesFormValues.code,
+    status: ACTypesFormValues.status,
+    name: ACTypesFormValues.name,
+  });
+  // useGetACTypesQuery
+  useEffect(() => {
+    refetchVendors();
+  }, [vendorFormValues, refetchVendors]);
 
   useEffect(() => {
-    refetch();
-  }, [vendorFormValues, refetch]);
+    refetchACTypes();
+  }, [ACTypesFormValues, refetchACTypes]);
   const onEdit = (
     targetKey:
       | string
@@ -126,6 +132,22 @@ const UserAdministration: FC = () => {
         content: (
           <div>
             <AdminVendorPanel values={vendorFormValues} />
+          </div>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+    if (key === RouteNames.AC_TYPES) {
+      const tab = {
+        key,
+        title: `${t('AC TYPES')}`,
+        content: (
+          <div>
+            <AdminACTypesPanel values={ACTypesFormValues} />
           </div>
         ),
         closable: true,

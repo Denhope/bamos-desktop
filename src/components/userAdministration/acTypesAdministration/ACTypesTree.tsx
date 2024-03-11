@@ -1,36 +1,37 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
-import { IVendor } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип vendor
+
+import { IACType } from '@/models/AC';
 
 interface TreeDataNode extends DataNode {
-  vendor?: IVendor;
+  acType?: IACType;
 }
 
 interface UserTreeProps {
-  onVendorSelect: (vendor: IVendor) => void;
-  vendors: IVendor[] | [];
+  onACTypeSelect: (acType: IACType) => void;
+  acTypes: IACType[] | [];
 }
 
 const { TreeNode } = Tree;
 const { Search } = Input;
 
-const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
+const ACTypesTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  const convertToTreeData = (vendors: IVendor[]): TreeDataNode[] => {
-    return vendors.map((vendor) => ({
-      title: String(vendor.CODE).toUpperCase(),
-      key: vendor.id,
-      vendor: vendor,
+  const convertToTreeData = (acTypes: IACType[]): TreeDataNode[] => {
+    return acTypes.map((acType) => ({
+      title: String(acType.name).toUpperCase(),
+      key: acType.id,
+      acType: acType,
     }));
   };
 
   useEffect(() => {
-    setTreeData(convertToTreeData(vendors));
-  }, [vendors]);
+    setTreeData(convertToTreeData(acTypes));
+  }, [acTypes]);
 
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
@@ -55,9 +56,9 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
       );
     }
 
-    const selectedGroup = filteredTreeData[selectedIndex].vendor;
+    const selectedGroup = filteredTreeData[selectedIndex].acType;
     if (selectedGroup) {
-      onVendorSelect(selectedGroup);
+      onACTypeSelect(selectedGroup);
     }
   };
 
@@ -90,11 +91,11 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
         height={660}
         defaultExpandedKeys={['group1']}
         onSelect={(selectedKeys, info) => {
-          const vendor = vendors.find(
-            (vendor) => vendor.id === selectedKeys[0]
+          const acType = acTypes.find(
+            (acType) => acType.id === selectedKeys[0]
           );
-          if (vendor) {
-            onVendorSelect(vendor);
+          if (acType) {
+            onACTypeSelect(acType);
           }
         }}
       >
@@ -104,4 +105,4 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
   );
 };
 
-export default VendorTree;
+export default ACTypesTree;

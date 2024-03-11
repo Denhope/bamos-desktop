@@ -1,37 +1,36 @@
-import React, { FC, useState, useEffect, useMemo } from 'react';
-import { Tree, Input } from 'antd';
-import type { DataNode } from 'antd/lib/tree';
-import { IVendor } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип vendor
+import { IACType, IMaintenanceType } from '@/models/AC';
+import { Input } from 'antd';
+import Tree, { DataNode } from 'antd/es/tree';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 interface TreeDataNode extends DataNode {
-  vendor?: IVendor;
+  maintenanceType?: IMaintenanceType;
 }
-
-interface UserTreeProps {
-  onVendorSelect: (vendor: IVendor) => void;
-  vendors: IVendor[] | [];
+interface MaintenanceTypeProps {
+  onMaintananceTypeSelect: (vendor: IMaintenanceType) => void;
+  maintenanceTypes: IMaintenanceType[] | [];
 }
-
 const { TreeNode } = Tree;
 const { Search } = Input;
-
-const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
+const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
+  maintenanceTypes,
+  onMaintananceTypeSelect,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
-
-  const convertToTreeData = (vendors: IVendor[]): TreeDataNode[] => {
-    return vendors.map((vendor) => ({
-      title: String(vendor.CODE).toUpperCase(),
-      key: vendor.id,
-      vendor: vendor,
+  const convertToTreeData = (
+    maintenanceTypes: IMaintenanceType[]
+  ): TreeDataNode[] => {
+    return maintenanceTypes.map((maintenanceType) => ({
+      title: String(maintenanceType.name).toUpperCase(),
+      key: maintenanceType.id,
+      maintenanceType: maintenanceType,
     }));
   };
-
   useEffect(() => {
-    setTreeData(convertToTreeData(vendors));
-  }, [vendors]);
-
+    setTreeData(convertToTreeData(maintenanceTypes));
+  }, [maintenanceTypes]);
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
       return treeData;
@@ -43,7 +42,6 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
       return false;
     });
   }, [treeData, searchQuery]);
-
   const handleEnterPress = () => {
     if (filteredTreeData.length === 0) return;
 
@@ -55,12 +53,11 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
       );
     }
 
-    const selectedGroup = filteredTreeData[selectedIndex].vendor;
+    const selectedGroup = filteredTreeData[selectedIndex].maintenanceType;
     if (selectedGroup) {
-      onVendorSelect(selectedGroup);
+      onMaintananceTypeSelect(selectedGroup);
     }
   };
-
   const renderTreeNodes = (data: TreeDataNode[]) => {
     return data.map((item, index) => (
       <TreeNode
@@ -85,16 +82,16 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
         enterButton
         onPressEnter={handleEnterPress}
       />
-      <Tree
+      <Tree 
         showLine
         height={660}
         defaultExpandedKeys={['group1']}
         onSelect={(selectedKeys, info) => {
-          const vendor = vendors.find(
-            (vendor) => vendor.id === selectedKeys[0]
+          const maintenanceType = maintenanceTypes.find(
+            (maintenanceType) => maintenanceType.id === selectedKeys[0]
           );
-          if (vendor) {
-            onVendorSelect(vendor);
+          if (maintenanceType) {
+            onMaintananceTypeSelect(maintenanceType);
           }
         }}
       >
@@ -104,4 +101,4 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
   );
 };
 
-export default VendorTree;
+export default MaintenanceTypeTree;

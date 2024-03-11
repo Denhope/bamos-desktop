@@ -27,11 +27,11 @@ const UserTree: FC<UserTreeProps> = ({ onUserSelect, usersGroup }) => {
 
   const renderTreeNodes = (data: UserGroup[]): TreeDataNode[] => {
     return data.map((group) => ({
-      title: group.title,
+      title: String(group.title).toUpperCase(),
       key: group.id,
       children: group.users?.map(
         (user: { firstName: any; lastName: any; id: any }) => ({
-          title: `${user.firstName} ${user.lastName}`,
+          title: `${user.firstName.toUpperCase()} ${user.lastName.toUpperCase()}`,
           key: user.id,
           user: user,
         })

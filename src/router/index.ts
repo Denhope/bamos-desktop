@@ -32,6 +32,7 @@ export enum RouteNames {
   USER_ACCOUNTS = '/user/administration/accounts',
   USER_GROUPS = '/user/administration/groups',
   VENDORS = '/user/administration/vendors',
+  AC_TYPES = '/user/administration/acTypes',
   COMPANIES = '/user/administration/companies',
   USER = '/user',
   HOME = '/',
