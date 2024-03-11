@@ -71,7 +71,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
 
   return (
     <>
-      <Space className="gap-4 py-3">
+      <Space className="gap-4 pb-3">
         <Col span={20}>
           <Button
             size="small"
@@ -96,7 +96,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
         </Col>
       </Space>
 
-      <Row gutter={[16, 16]} className="gap-4">
+      <Row className="gap-6">
         <Col
           sm={5}
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "

@@ -1,120 +1,4 @@
-// import { IACType, IMaintenanceType } from '@/models/AC';
-// import {
-//   ProForm,
-//   ProFormGroup,
-//   ProFormSelect,
-//   ProFormText,
-//   ProFormTextArea,
-// } from '@ant-design/pro-components';
-// import { Button, Tabs } from 'antd';
-// import React, { FC, useEffect } from 'react';
-// import { useTranslation } from 'react-i18next';
-// interface IACTypeFormProps {
-//   acType: IACType | undefined;
-//   maintenanceType?: IMaintenanceType | null;
-//   onSubmit: (acType: IMaintenanceType) => void;
-//   onDelete?: (acTypeId: string) => void;
-// }
-// const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
-//   onSubmit,
-//   maintenanceType,
-//   acType,
-// }) => {
-//   const [form] = ProForm.useForm();
-//   const { t } = useTranslation();
-//   const handleSubmit = async (values: IMaintenanceType) => {
-//     const newUser: IMaintenanceType = maintenanceType
-//       ? { ...maintenanceType, ...values }
-//       : { ...values };
-//     onSubmit(newUser);
-//     // console.log(newUser);
-//   };
-
-//   useEffect(() => {
-//     // console.log(maintenanceType);
-//     form.resetFields();
-//     if (maintenanceType) {
-//       form.resetFields();
-//       form.setFieldsValue(maintenanceType || {});
-//     } else {
-//       form.resetFields();
-//     }
-//   }, [maintenanceType, form, acType]);
-//   return (
-//     <div>
-//       <ProForm<IMaintenanceType>
-//         size="small"
-//         form={form}
-//         onFinish={handleSubmit}
-//         submitter={false}
-//         // initialValues={vendor || {}}
-//         layout="horizontal"
-//       >
-//         <Tabs defaultActiveKey="1" type="card">
-//           <Tabs.TabPane tab="MAIN" key="1">
-//             <ProFormGroup>
-//               <ProFormGroup>
-//                 <ProFormText
-//                   width={'sm'}
-//                   name="code"
-//                   label="CODE"
-//                   rules={[
-//                     {
-//                       required: true,
-//                     },
-//                   ]}
-//                 />
-
-//                 <ProFormText
-//                   width={'lg'}
-//                   name="name"
-//                   label="TITLE"
-//                   rules={[
-//                     {
-//                       required: true,
-//                     },
-//                   ]}
-//                 />
-//                 <ProFormTextArea
-//                   width={'lg'}
-//                   name="description"
-//                   label="DESCRIPTION"
-//                   rules={[
-//                     {
-//                       required: true,
-//                     },
-//                   ]}
-//                 />
-//               </ProFormGroup>
-//               <ProFormGroup>
-//                 <ProFormSelect
-//                   showSearch
-//                   // mode="multiple"
-//                   name="status"
-//                   label={t('STATE')}
-//                   width="sm"
-//                   valueEnum={{
-//                     ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
-//                     INACTIVE: { text: t('INACTIVE'), status: 'Error' },
-//                   }}
-//                 />
-//               </ProFormGroup>
-//             </ProFormGroup>
-//           </Tabs.TabPane>
-//         </Tabs>
-//         <ProForm.Item>
-//           <Button type="primary" htmlType="submit">
-//             {maintenanceType ? 'Update' : 'Create'}
-//           </Button>
-//         </ProForm.Item>
-//       </ProForm>
-//     </div>
-//   );
-// };
-
-// export default MaintenanceTypeForm;
-
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IACType, IMaintenanceType } from '@/models/AC';
 import {
@@ -148,17 +32,18 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
       ? { ...maintenanceType, ...values }
       : { ...values, id: uuidv4() };
     onSubmit(newMaintenanceType);
+    form.resetFields();
   };
 
   useEffect(() => {
     form.resetFields();
     if (maintenanceType) {
       form.setFieldsValue(maintenanceType);
-    }
-  }, [maintenanceType, form, acType]);
+    } else form.resetFields();
+  }, [maintenanceType, acType]);
 
   return (
-    <div>
+    <div className="bg-white  p-2">
       <ProForm<IMaintenanceType>
         size="small"
         submitter={{
@@ -223,9 +108,9 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
           </Tabs.TabPane>
         </Tabs>
         <ProForm.Item>
-          {/* <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit">
             {maintenanceType ? 'Update' : 'Create'}
-          </Button> */}
+          </Button>
         </ProForm.Item>
       </ProForm>
     </div>

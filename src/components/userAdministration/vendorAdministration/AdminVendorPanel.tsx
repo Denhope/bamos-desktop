@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { IVendor } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
@@ -79,21 +79,21 @@ const AdminvendorPanel: React.FC<AdminPanelProps> = ({ values }) => {
 
   return (
     <>
-      <Space className="gap-4 pb-3">
-        <Col span={20}>
+      <Space className="gap-6 pb-3">
+        <Col>
           <Button
             size="small"
-            icon={<UserAddOutlined />}
+            icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
             {t('ADD VENDOR')}
           </Button>
         </Col>
-        <Col span={4} style={{ textAlign: 'right' }}>
+        <Col style={{ textAlign: 'right' }}>
           {editingvendor && (
             <Button
               size="small"
-              icon={<UserDeleteOutlined />}
+              icon={<MinusSquareOutlined />}
               onClick={() => handleDelete(editingvendor.id)}
             >
               {t('DELETE VENDOR')}
@@ -102,7 +102,7 @@ const AdminvendorPanel: React.FC<AdminPanelProps> = ({ values }) => {
         </Col>
       </Space>
 
-      <Row className="gap-5">
+      <Row className="gap-6">
         <Col
           sm={6}
           className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
@@ -110,7 +110,7 @@ const AdminvendorPanel: React.FC<AdminPanelProps> = ({ values }) => {
           <VendorTree onVendorSelect={handleEdit} vendors={vendors || []} />
         </Col>
         <Col
-          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400  "
+          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
           sm={17}
         >
           <VendorForm

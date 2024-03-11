@@ -14,7 +14,7 @@ export interface IACType {
 export interface IMaintenanceType {
   id: string;
   code: string;
-  name: string;  
+  name: string;
   description: string;
   companyID: string;
   createDate: Date;
@@ -22,4 +22,5 @@ export interface IMaintenanceType {
   updateDate?: Date;
   updateUserID?: string;
   files?: any[];
+  manufacturer: string;
 }

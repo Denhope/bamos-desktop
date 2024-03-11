@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IProjectInfo, TStatus } from "@/models/IProject";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IProjectInfo, TStatus } from '@/models/IProject';
 
-import { fetchAllProjects, fetchProjectById } from "@/utils/api/thunks";
+import { fetchAllProjects, fetchProjectById } from '@/utils/api/thunks';
 
 type ProjectsState = {
   allProjects: IProjectInfo[];
@@ -11,24 +11,25 @@ type ProjectsState = {
 };
 
 export const initialCurrent: IProjectInfo = {
-  projectName: "",
+  projectName: '',
   aplicationId: {
     additionalTasks: [],
-    aplicationName: "",
-    companyID: "",
+    aplicationName: '',
+    companyID: '',
     hardTimeTasks: [],
-    id: "",
+    id: '',
     routineTasks: [],
-    serviceType: "",
+    serviceType: '',
   },
   ownerId: {
-    email: "",
-    password: "",
-    companyID: "",
-    telegramID: "",
-    nameEnglish: "",
-    name: "",
-    pass: "",
+    email: '',
+    password: '',
+    companyID: '',
+    telegramID: '',
+    nameEnglish: '',
+    name: '',
+    pass: '',
+    id: '',
   },
 };
 
@@ -39,31 +40,32 @@ const initialState: ProjectsState = {
   currentProject: {
     aplicationId: {
       additionalTasks: [],
-      aplicationName: "",
-      companyID: "",
+      aplicationName: '',
+      companyID: '',
       hardTimeTasks: [],
-      id: "",
+      id: '',
       routineTasks: [],
-      serviceType: "",
+      serviceType: '',
     },
     ownerId: {
-      email: "",
-      password: "",
-      companyID: "",
-      telegramID: "",
-      nameEnglish: "",
-      name: "",
-      pass: "",
+      email: '',
+      password: '',
+      companyID: '',
+      telegramID: '',
+      nameEnglish: '',
+      name: '',
+      pass: '',
+      id: '',
     },
-    projectName: "",
-    projectId: "",
-    status: "отложен",
+    projectName: '',
+    projectId: '',
+    status: 'отложен',
     isEdited: false,
   },
 };
 
 export const projectsSlice = createSlice({
-  name: "projects",
+  name: 'projects',
   initialState,
   reducers: {
     addNewProject: (state, action: PayloadAction<IProjectInfo>) => {

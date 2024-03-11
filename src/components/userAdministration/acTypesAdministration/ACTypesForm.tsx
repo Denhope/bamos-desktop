@@ -76,6 +76,16 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
                   },
                 ]}
               />
+              <ProFormText
+                width={'lg'}
+                name="manufacturer"
+                label="MANUFACTURER"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              />
             </ProFormGroup>
             <ProFormGroup>
               <ProFormSelect
@@ -92,7 +102,7 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
             </ProFormGroup>
           </ProFormGroup>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="MAINTENANCE TYPE" key="2">
+        <Tabs.TabPane tab="MAINTENANCE TYPES" key="2">
           <MaintenanceTypeTab values={undefined} acType={acType || undefined} />
         </Tabs.TabPane>
       </Tabs>

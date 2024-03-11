@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
-import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { IACType, IMaintenanceType } from '@/models/AC';
 
 import {
-  useAddACTypeMutation,
-  useDeleteACTypeMutation,
   useGetACTypesQuery,
   useUpdateACTypeMutation,
 } from '@/features/acTypeAdministration/acTypeApi';
@@ -21,14 +18,17 @@ interface AdminPanelProps {
   acType: IACType | undefined;
 }
 
-const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
+const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
   const [editingACType, setEditingACType] = useState<IACType | null>(null);
   const [editingMaintenanceType, setEditingMaintenanceType] =
     useState<IMaintenanceType | null>(null);
-  // const { acTypes } = useTypedSelector((state) => state.acTypes);
+
   const [types, setEditingTypes] = useState<IMaintenanceType[] | []>([]);
 
   const { isLoading } = useGetACTypesQuery({});
+  const handleCreate = () => {
+    setEditingMaintenanceType(null);
+  };
   useEffect(() => {
     if (acType) {
       setEditingTypes(acType.maintenanceTypes || []);
@@ -37,13 +37,9 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
       setEditingACType(acType);
     } else {
     }
-  }, [acType]);
+  }, [acType, editingACType]);
 
   const [updateACType] = useUpdateACTypeMutation();
-
-  const handleCreate = () => {
-    setEditingMaintenanceType(null);
-  };
 
   const handleEdit = (acMaintType: IMaintenanceType) => {
     setEditingMaintenanceType(acMaintType);
@@ -54,7 +50,6 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS MAINTENANCE TYPE?'),
       onOk: async () => {
         try {
-          // Обновление состояния после успешного удаления
           if (acType?.maintenanceTypes) {
             const newMaintenanceTypes =
               acType?.maintenanceTypes.filter(
@@ -63,9 +58,14 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
 
             if (editingACType) {
               await updateACType({
-                ...acType,
+                ...editingACType,
                 maintenanceTypes: newMaintenanceTypes,
-              }).unwrap();
+              })
+                .unwrap()
+                .then((payload) =>
+                  setEditingTypes(payload.maintenanceTypes || [])
+                );
+
               message.success(t('MAINTENANCE TYPE SUCCESSFULLY DELETED'));
             }
           }
@@ -80,14 +80,15 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
     try {
       if (editingACType) {
         await updateACType(acType).unwrap();
-        // setEditingMaintenanceType(acType);
+        setEditingMaintenanceType(null);
+        if (acType.maintenanceTypes) {
+          setEditingTypes(acType.maintenanceTypes);
+        }
 
-        message.success(t('VENDOR SUCCESSFULLY UPDATED'));
+        message.success(t('MAINTENANCE TYPE SUCCESSFULLY UPDATED'));
       }
-
-      setEditingMaintenanceType(null);
     } catch (error) {
-      message.error(t('ERROR SAVING VENDOR GROUP'));
+      message.error(t('ERROR SAVING MAINTENANCE TYPE'));
     }
   };
 
@@ -103,14 +104,13 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
 
   return (
     <>
-      <Space className="gap-4 pb-3">
+      <Space className="gap-4 p-3">
         <Col span={20}>
           <Button
             size="small"
-            icon={<UserAddOutlined />}
+            icon={<PlusSquareOutlined />}
             onClick={() => {
-              setEditingMaintenanceType(null);
-              handleCreate;
+              handleCreate();
             }}
           >
             {t('ADD MAINTENANCE TYPE')}
@@ -120,19 +120,19 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
           {editingMaintenanceType && (
             <Button
               size="small"
-              icon={<UserDeleteOutlined />}
+              icon={<MinusSquareOutlined />}
               onClick={() => handleDelete(editingMaintenanceType.id)}
             >
-              {t('DELETE AC TYPE')}
+              {t('DELETE MAINTENANCE TYPE')}
             </Button>
           )}
         </Col>
       </Space>
 
-      <Row className="gap-5">
+      <Row className="  gap-5">
         <Col
           sm={8}
-          className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+          className="h-[78vh] bg-white px-4 rounded-md border-gray-400 "
         >
           <MaintenanceTypeTree
             maintenanceTypes={types || []}
@@ -141,14 +141,10 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
             }}
           />
         </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400  "
-          sm={15}
-        >
+        <Col className="h-[75vh] bg-white  rounded-md " sm={15}>
           <MaintenanceTypeForm
             acType={acType}
             onSubmit={function (maintenanceType: IMaintenanceType): void {
-              // console.log(maintenanceType);
               if (acType && acType?.maintenanceTypes) {
                 const updatedACType: IACType = {
                   ...acType,
@@ -158,7 +154,6 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
                     ) || [],
                 };
 
-                // Проверяем, существует ли maintenanceType с таким id
                 const existingMaintenanceType = acType?.maintenanceTypes?.find(
                   (mt) => mt.id === maintenanceType.id
                 );
@@ -170,18 +165,17 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ values, acType }) => {
                       mt.id === maintenanceType.id ? maintenanceType : mt
                   );
                   handleSubmit(updatedACType);
+                  setEditingMaintenanceType(null);
                 } else {
-                  // Если не существует, добавляем новый
                   updatedACType.maintenanceTypes = [
                     ...(acType.maintenanceTypes || []),
                     maintenanceType,
                   ];
                   handleSubmit(updatedACType);
-                  setEditingTypes({ ...types, ...maintenanceType });
+                  setEditingMaintenanceType(null);
                 }
               }
             }}
-            // onDelete={handleDelete}
             maintenanceType={editingMaintenanceType || null}
           />
         </Col>

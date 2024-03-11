@@ -46,7 +46,7 @@ const VendorFilteredForm: FC<
     [onSubmit]
   );
   return (
-    <div className="p-3 bg-slate-100">
+    <div className="p-3 m-1 rounded-md bg-slate-100">
       <ProForm
         size="small"
         onFinish={handleSubmit}

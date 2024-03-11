@@ -23,7 +23,7 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
     maintenanceTypes: IMaintenanceType[]
   ): TreeDataNode[] => {
     return maintenanceTypes.map((maintenanceType) => ({
-      title: String(maintenanceType.name).toUpperCase(),
+      title: String(maintenanceType?.name).toUpperCase(),
       key: maintenanceType.id,
       maintenanceType: maintenanceType,
     }));
@@ -69,7 +69,7 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="  flex flex-col gap-2 py-2">
       <Search
         size="small"
         allowClear
@@ -82,7 +82,8 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
         enterButton
         onPressEnter={handleEnterPress}
       />
-      <Tree 
+
+      <Tree
         showLine
         height={660}
         defaultExpandedKeys={['group1']}

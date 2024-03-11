@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
@@ -83,7 +83,7 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
         <Col span={20}>
           <Button
             size="small"
-            icon={<UserAddOutlined />}
+            icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
             {t('ADD AC TYPE')}
@@ -93,7 +93,7 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
           {editingACType && (
             <Button
               size="small"
-              icon={<UserDeleteOutlined />}
+              icon={<MinusSquareOutlined />}
               onClick={() => handleDelete(editingACType.id)}
             >
               {t('DELETE AC TYPE')}
@@ -102,16 +102,16 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
         </Col>
       </Space>
 
-      <Row className="gap-5">
+      <Row className="gap-6">
         <Col
-          sm={3}
+          sm={4}
           className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
         >
           <ACTypesTree onACTypeSelect={handleEdit} acTypes={acTypes || []} />
         </Col>
         <Col
-          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400  "
-          sm={20}
+          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
+          sm={19}
         >
           <ACTypesForm
             onSubmit={handleSubmit}

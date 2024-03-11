@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { ICompany } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
@@ -74,21 +74,21 @@ const AdminCompanyPanel: React.FC<AdminPanelProps> = () => {
 
   return (
     <>
-      <Space className="gap-4 py-3">
-        <Col span={20}>
+      <Space className="gap-4 pb-3">
+        <Col>
           <Button
             size="small"
-            icon={<UserAddOutlined />}
+            icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
             {t('ADD COMPANY')}
           </Button>
         </Col>
-        <Col span={4} style={{ textAlign: 'right' }}>
+        <Col style={{ textAlign: 'right' }}>
           {editingCompany && (
             <Button
               size="small"
-              icon={<UserDeleteOutlined />}
+              icon={<MinusSquareOutlined />}
               onClick={() => handleDelete(editingCompany.id)}
             >
               {t('DELETE COMPANY')}
@@ -97,10 +97,10 @@ const AdminCompanyPanel: React.FC<AdminPanelProps> = () => {
         </Col>
       </Space>
 
-      <Row gutter={[16, 16]} className="gap-4">
+      <Row className="gap-6">
         <Col
           sm={5}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[78vh] bg-white  rounded-md border-gray-400 p-3 "
         >
           <CompanyTree
             onCompanySelect={handleEdit}
@@ -108,7 +108,7 @@ const AdminCompanyPanel: React.FC<AdminPanelProps> = () => {
           />
         </Col>
         <Col
-          className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
+          className="h-[75vh] bg-white  py-3 rounded-md brequierement-gray-400 p-3 "
           sm={18}
         >
           <CompanyForm

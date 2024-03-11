@@ -29,10 +29,10 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
     string,
     {
       text: string;
-      status: 'default' | 'SUCCESS' | 'processing' | 'error' | 'warning';
+      status: 'default' | 'success' | 'processing' | 'error' | 'warning';
     }
   > = {
-    ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
+    ACTIVE: { text: t('ACTIVE'), status: 'success' },
     NO_ACTIVE: { text: t('NO ACTIVE'), status: 'error' },
   };
   const [isEditing, setIsEditing] = useState(true);
