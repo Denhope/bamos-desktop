@@ -1,8 +1,8 @@
-import { ITaskType } from "@/types/TypesData";
-import { IUser } from "./IUser";
+import { ITaskType } from '@/types/TypesData';
+import { IUser } from './IUser';
 
 export interface IPlaneTask {
-  tasktypeLookup?: "PKGOP" | "SB" | "SMC" | "ADP" | "AD" | "PN";
+  tasktypeLookup?: 'PKGOP' | 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
   planeID: IPlane;
   companyID?: string;
   status: Status;
@@ -97,7 +97,7 @@ export interface IPlaneTaskResponce {
   toleranceAFL?: number;
   toleranceMOS?: number;
   toleranceMHS?: string;
-  tasktypeLookup?: "PKGOP" | "SB" | "SMC" | "ADP" | "AD" | "PN";
+  tasktypeLookup?: 'PKGOP' | 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
   planeID?: IPlane;
   companyID?: string;
   status?: Status;
@@ -221,5 +221,25 @@ export interface IPlane {
     eng4?: { date: Date; HRS: string; AFL: number };
   };
 }
-type PlaneType = "ERJ-190" | "737-600/700/800/900" | "RRJ-95";
-type Status = "permormed" | "delete" | "in Maintenance";
+type PlaneType = 'ERJ-190' | '737-600/700/800/900' | 'RRJ-95';
+type Status = 'permormed' | 'delete' | 'in Maintenance';
+
+export interface ITaskCode {
+  id: string;
+  title: string;
+  code: string;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId: string;
+  acTypeTitle: string;
+}
+
+export interface ITaskCodeGroup {
+  acTypeId: string;
+  acTypeTitle: string;
+  tasksCodes: ITaskCode[] | [];
+}

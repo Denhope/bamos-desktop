@@ -119,3 +119,4 @@ export interface IVendor {
   updateDate?: Date;
   updateUserID?: string;
 }
+

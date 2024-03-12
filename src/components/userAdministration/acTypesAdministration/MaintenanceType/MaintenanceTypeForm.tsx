@@ -72,7 +72,7 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
                 />
 
                 <ProFormText
-                  width={'lg'}
+                  width={'xl'}
                   name="name"
                   label="TITLE"
                   rules={[
@@ -82,6 +82,12 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
                   ]}
                 />
                 <ProFormTextArea
+                  fieldProps={{
+                    style: {
+                      resize: 'none',
+                    },
+                    rows: 10,
+                  }}
                   width={'lg'}
                   name="description"
                   label="DESCRIPTION"
@@ -107,11 +113,11 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
             </ProFormGroup>
           </Tabs.TabPane>
         </Tabs>
-        <ProForm.Item>
+        {/* <ProForm.Item>
           <Button type="primary" htmlType="submit">
             {maintenanceType ? 'Update' : 'Create'}
           </Button>
-        </ProForm.Item>
+        </ProForm.Item> */}
       </ProForm>
     </div>
   );

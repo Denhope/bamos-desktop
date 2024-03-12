@@ -14,6 +14,7 @@ import { IACType, IMaintenanceType } from '@/models/AC';
 import MaintenanceTypeTab from './MaintenanceType/MaintenanceTypeTab';
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import MaintenanceTypeTree from './MaintenanceType/MaintenanceTypeTree';
+import TaskCodeFormPanel from '../taskCodeAdministration/TaskCodeFormPanel';
 
 interface IACTypeFormProps {
   acType: IACType | undefined;
@@ -104,6 +105,9 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
         </Tabs.TabPane>
         <Tabs.TabPane tab="MAINTENANCE TYPES" key="2">
           <MaintenanceTypeTab values={undefined} acType={acType || undefined} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="TASK CODES" key="3">
+          <TaskCodeFormPanel acTypeID={acType?.id || ''} />
         </Tabs.TabPane>
       </Tabs>
 

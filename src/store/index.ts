@@ -25,6 +25,7 @@ import { userGroupApi } from '@/features/userAdministration/userGroupApi';
 import { companyApi } from '@/features/companyAdministration/companyApi';
 import { vendorApi } from '@/features/vendorAdministration/vendorApi';
 import { acTypeApi } from '@/features/acTypeAdministration/acTypeApi';
+import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
@@ -58,6 +59,7 @@ const store = configureStore({
     [companyApi.reducerPath]: companyApi.reducer,
     [vendorApi.reducerPath]: vendorApi.reducer,
     [acTypeApi.reducerPath]: acTypeApi.reducer,
+    [taskCodeApi.reducerPath]: taskCodeApi.reducer,
     vendor: vendorReducer,
     acTypes: acTypesReducer,
   },
@@ -67,7 +69,8 @@ const store = configureStore({
       userGroupApi.middleware,
       companyApi.middleware,
       vendorApi.middleware,
-      acTypeApi.middleware
+      acTypeApi.middleware,
+      taskCodeApi.middleware
     ),
 });
 export default store;
