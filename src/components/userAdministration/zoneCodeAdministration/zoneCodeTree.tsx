@@ -28,26 +28,56 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
+  // const convertToTreeData = (
+  //   zoneCodesGroup: IZoneCodeGroup[]
+  // ): TreeDataNode[] => {
+  //   return zoneCodesGroup.map((group) => {
+  //     const groupNode: TreeDataNode = {
+  //       title: `${group.majoreZoneNbr} - ${String(
+  //         group.majoreZoneDescription
+  //       )?.toUpperCase()}`,
+  //       key: group.id,
+  //       zoneCode: group,
+  //       children: group.subZonesCode?.map((subZone) => {
+  //         const subZoneNode: TreeDataNode = {
+  //           title: `${
+  //             subZone.subZoneNbr
+  //           } - ${subZone.subZoneDescription?.toUpperCase()}`,
+  //           key: subZone.id,
+  //           subZoneCode: subZone,
+  //           children: subZone.areasCode?.map((area) => ({
+  //             title: `${area.areaNbr} - ${area.areaDescription?.toUpperCase()}`,
+  //             key: area.id,
+  //             areaCode: area,
+  //           })),
+  //         };
+  //         return subZoneNode;
+  //       }),
+  //     };
+  //     return groupNode;
+  //   });
+  // };
+
   const convertToTreeData = (
     zoneCodesGroup: IZoneCodeGroup[]
   ): TreeDataNode[] => {
     return zoneCodesGroup.map((group) => {
       const groupNode: TreeDataNode = {
-        title: `${
-          group.majoreZoneNbr
-        } - ${group.majoreZoneDescription.toUpperCase()}`,
-        key: group.id,
+        title: `${group.majoreZoneNbr} - ${String(
+          group.majoreZoneDescription
+        )?.toUpperCase()}`,
+        key: group.majoreZoneNbr, // Используйте majoreZoneNbr в качестве ключа
         zoneCode: group,
         children: group.subZonesCode?.map((subZone) => {
           const subZoneNode: TreeDataNode = {
             title: `${
               subZone.subZoneNbr
             } - ${subZone.subZoneDescription?.toUpperCase()}`,
-            key: subZone.id,
+            key: `${group.majoreZoneNbr}-${subZone.subZoneNbr}`, // Создайте уникальный ключ для subZone
             subZoneCode: subZone,
             children: subZone.areasCode?.map((area) => ({
               title: `${area.areaNbr} - ${area.areaDescription?.toUpperCase()}`,
-              key: area.id,
+              key: `${group.majoreZoneNbr}-${subZone.subZoneNbr}-${area.areaNbr}`, // Создайте уникальный ключ для area
               areaCode: area,
             })),
           };

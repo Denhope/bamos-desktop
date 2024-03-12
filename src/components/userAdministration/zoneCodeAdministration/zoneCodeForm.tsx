@@ -46,30 +46,52 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit }) => {
         <ProForm.Group>
           <ProFormText
             width={'sm'}
-            name="code"
-            label="TITLE"
+            name="majoreZoneNbr"
+            label="MAJOREZONE NUMBER"
             rules={[
               {
                 required: true,
               },
             ]}
           />
-          <ProFormTextArea
-            width={'lg'}
-            fieldProps={{
-              style: {
-                resize: 'none',
-              },
-              rows: 3,
-              // This is the correct way to set colSize within fieldProps
-            }}
-            name="description"
-            label="DESCRIPTION"
+          <ProFormText
+            width={'sm'}
+            // fieldProps={{
+            //   style: {
+            //     resize: 'none',
+            //   },
+            //   rows: 3,
+            //   // This is the correct way to set colSize within fieldProps
+            // }}
+            name="majoreZoneDescription"
+            label=" MAJOREZONE DESCRIPTION"
             rules={[
               {
                 required: true,
               },
             ]}
+          />
+          <ProFormText
+            width={'sm'}
+            name="subZoneNbr"
+            label="SUBZONE NUMBER"
+            rules={[
+              {
+                required: false,
+              },
+            ]}
+          />
+          <ProFormText
+            width={'sm'}
+            // fieldProps={{
+            //   style: {
+            //     resize: 'none',
+            //   },
+            //   rows: 3,
+            //   // This is the correct way to set colSize within fieldProps
+            // }}
+            name="subZoneDescription"
+            label=" SUBZONE DESCRIPTION"
           />
           <ProFormGroup>
             <ProFormSelect

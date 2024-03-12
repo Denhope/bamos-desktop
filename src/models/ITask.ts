@@ -262,6 +262,7 @@ export interface IZoneCode {
   updateDate?: string;
   updateUserID?: string;
   companyID: string;
+  status?: string;
 }
 export interface ISubZoneCode extends IZoneCode {
   areasCode?: IZoneCode[];

@@ -12,8 +12,8 @@ import {
   useGetZonesByGroupQuery,
   useUpdateZoneCodeMutation,
 } from '@/features/zoneAdministration/zonesApi';
-import ZoneCodeForm from './zoneCodeForm';
-import ZoneCodeTree from './zoneCodeTree';
+import ZoneCodeForm from './ZoneCodeForm';
+import ZoneCodeTree from './ZoneCodeTree';
 
 interface AdminPanelProps {
   acTypeID: string;
@@ -28,7 +28,7 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
 
   if (acTypeID) {
     const { data, isLoading: loading } = useGetZonesByGroupQuery({
-      acTypeID,
+      acTypeId: acTypeID,
     });
     zoneCodesGroup = data;
     isLoading = loading;

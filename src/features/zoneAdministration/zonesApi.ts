@@ -12,15 +12,16 @@ export const zoneCodeApi = createApi({
     getZonesByGroup: builder.query<
       IZoneCodeGroup[],
       {
-        acTypeID: string;
+        acTypeId: string;
         majoreZoneNbr?: number;
         subZoneNbr?: number;
         areaNbr?: number;
+        status?: string;
       }
     >({
-      query: ({ acTypeID, majoreZoneNbr, subZoneNbr, areaNbr }) => ({
+      query: ({ acTypeId, majoreZoneNbr, subZoneNbr, areaNbr, status }) => ({
         url: `zones/getFilteredZonesByGroup/company/${COMPANY_ID}`,
-        params: { acTypeID, majoreZoneNbr, subZoneNbr, areaNbr },
+        params: { acTypeId, majoreZoneNbr, subZoneNbr, areaNbr, status },
       }),
       providesTags: ['Zones'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -35,7 +36,7 @@ export const zoneCodeApi = createApi({
       // Provide the 'Users' tag after fetching
     }),
     getZoneCode: builder.query<IZoneCode, string>({
-      query: (id) => `zones/company/${COMPANY_ID}/zone/${id}`,
+      query: (id) => `zones/company/${COMPANY_ID}/zoneCode/${id}`,
       providesTags: ['Zones'], // Provide the 'Users' tag after fetching
     }),
     addZoneCode: builder.mutation<
@@ -50,14 +51,14 @@ export const zoneCodeApi = createApi({
           createUserID: USER_ID,
           createDate: new Date(),
           companyID: COMPANY_ID,
-          acTypeID: acTypeId,
+          acTypeId: acTypeId,
         },
       }),
       invalidatesTags: ['Zones'], // Invalidate the 'Users' tag after mutation
     }),
     updateZoneCode: builder.mutation<IZoneCode, IZoneCode>({
       query: (zoneCode) => ({
-        url: `zones/company/${COMPANY_ID}/zone/${zoneCode.id}`,
+        url: `zones/company/${COMPANY_ID}/zoneCode/${zoneCode.id}`,
         method: 'PUT',
         body: {
           ...zoneCode,
@@ -69,7 +70,7 @@ export const zoneCodeApi = createApi({
     }),
     deleteZoneCode: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
-        url: `users/company/${COMPANY_ID}/zone/${id}`,
+        url: `zones/company/${COMPANY_ID}/zoneCode/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Zones'], // Invalidate the 'Users' tag after mutation

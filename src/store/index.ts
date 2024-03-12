@@ -61,6 +61,7 @@ const store = configureStore({
     [vendorApi.reducerPath]: vendorApi.reducer,
     [acTypeApi.reducerPath]: acTypeApi.reducer,
     [taskCodeApi.reducerPath]: taskCodeApi.reducer,
+    [zoneCodeApi.reducerPath]: zoneCodeApi.reducer,
     vendor: vendorReducer,
     acTypes: acTypesReducer,
   },
@@ -71,7 +72,8 @@ const store = configureStore({
       companyApi.middleware,
       vendorApi.middleware,
       acTypeApi.middleware,
-      taskCodeApi.middleware
+      taskCodeApi.middleware,
+      zoneCodeApi.middleware
     ),
 });
 export default store;

@@ -34,7 +34,7 @@ export const taskCodeApi = createApi({
     }),
     addTaskCode: builder.mutation<
       ITaskCode,
-      { taskCode: Partial<ITaskCode>; acTypeId: string }
+      { taskCode: Partial<ITaskCode>; acTypeId?: string }
     >({
       query: ({ taskCode, acTypeId }) => ({
         url: `tasksCodes/company/${COMPANY_ID}`,
