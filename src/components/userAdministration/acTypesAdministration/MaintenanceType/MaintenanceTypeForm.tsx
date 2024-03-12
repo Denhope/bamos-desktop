@@ -56,63 +56,63 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
         // submitter={false}
         layout="horizontal"
       >
-        <Tabs defaultActiveKey="1" type="card">
-          <Tabs.TabPane tab="MAIN" key="1">
-            <ProFormGroup>
-              <ProFormGroup>
-                <ProFormText
-                  width={'sm'}
-                  name="code"
-                  label="CODE"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                />
+        {/* <Tabs defaultActiveKey="1" type="card">
+          <Tabs.TabPane tab="MAIN" key="1"> */}
+        <ProFormGroup>
+          <ProFormGroup>
+            <ProFormText
+              width={'sm'}
+              name="code"
+              label="CODE"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            />
 
-                <ProFormText
-                  width={'xl'}
-                  name="name"
-                  label="TITLE"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                />
-                <ProFormTextArea
-                  fieldProps={{
-                    style: {
-                      resize: 'none',
-                    },
-                    rows: 10,
-                  }}
-                  width={'lg'}
-                  name="description"
-                  label="DESCRIPTION"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                />
-              </ProFormGroup>
-              <ProFormGroup>
-                <ProFormSelect
-                  showSearch
-                  name="status"
-                  label={t('STATE')}
-                  width="sm"
-                  valueEnum={{
-                    ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
-                    INACTIVE: { text: t('INACTIVE'), status: 'Error' },
-                  }}
-                />
-              </ProFormGroup>
-            </ProFormGroup>
-          </Tabs.TabPane>
-        </Tabs>
+            <ProFormText
+              width={'xl'}
+              name="name"
+              label="TITLE"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            />
+            <ProFormTextArea
+              fieldProps={{
+                style: {
+                  resize: 'none',
+                },
+                rows: 10,
+              }}
+              width={'lg'}
+              name="description"
+              label="DESCRIPTION"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            />
+          </ProFormGroup>
+          <ProFormGroup>
+            <ProFormSelect
+              showSearch
+              name="status"
+              label={t('STATE')}
+              width="sm"
+              valueEnum={{
+                ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
+                INACTIVE: { text: t('INACTIVE'), status: 'Error' },
+              }}
+            />
+          </ProFormGroup>
+        </ProFormGroup>
+        {/* </Tabs.TabPane>
+        </Tabs> */}
         {/* <ProForm.Item>
           <Button type="primary" htmlType="submit">
             {maintenanceType ? 'Update' : 'Create'}

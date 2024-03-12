@@ -104,7 +104,7 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
 
   return (
     <>
-      <Space className="gap-4 p-3">
+      <Space className="gap-4 pb-3">
         <Col span={20}>
           <Button
             size="small"

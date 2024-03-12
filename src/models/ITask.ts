@@ -243,3 +243,22 @@ export interface ITaskCodeGroup {
   acTypeTitle: string;
   tasksCodes: ITaskCode[] | [];
 }
+
+export interface IZoneCode {
+  id: string;
+  title: string;
+  code: string;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId: string;
+  acTypeTitle: string;
+  acType: string;
+  zoneNbr: number;
+  majoreZone?: string;
+  subZone?: string;
+  majoreZoneShort?: string;
+}
