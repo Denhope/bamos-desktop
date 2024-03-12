@@ -1,49 +1,66 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { Tree, Typography, Input, Button } from 'antd';
+import { Tree, Typography, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 
-import { ITaskCode } from '@/models/ITask';
+import {
+  IAreaCode,
+  ISubZoneCode,
+  IZoneCode,
+  IZoneCodeGroup,
+} from '@/models/ITask';
 
 interface TreeDataNode extends DataNode {
-  taskCode?: ITaskCode;
+  zoneCode?: IZoneCode;
+  subZoneCode?: ISubZoneCode;
+  areaCode?: IAreaCode;
 }
-interface UserTreeProps {
-  onTaskCodeSelect: (user: ITaskCode) => void;
-  taskCodes: ITaskCode[] | [];
-}
-const { Text } = Typography;
-const { TreeNode } = Tree;
-const { Search } = Input;
 
-const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
+interface ZoneTreeProps {
+  onZoneCodeSelect: (zoneCode: IZoneCode) => void;
+  zoneCodesGroup: IZoneCodeGroup[] | [];
+}
+
+const ZoneCodeTree: FC<ZoneTreeProps> = ({
+  onZoneCodeSelect,
+  zoneCodesGroup,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  const convertToTreeData = (taskCodes: ITaskCode[]): TreeDataNode[] => {
-    return taskCodes.map((taskCode) => ({
-      title: `${taskCode.code.toUpperCase()} - ${taskCode.description.toUpperCase()}`,
-      key: taskCode.id,
-      taskCode: taskCode,
-    }));
+  const convertToTreeData = (
+    zoneCodesGroup: IZoneCodeGroup[]
+  ): TreeDataNode[] => {
+    return zoneCodesGroup.map((group) => {
+      const groupNode: TreeDataNode = {
+        title: `${
+          group.majoreZoneNbr
+        } - ${group.majoreZoneDescription.toUpperCase()}`,
+        key: group.id,
+        zoneCode: group,
+        children: group.subZonesCode?.map((subZone) => {
+          const subZoneNode: TreeDataNode = {
+            title: `${
+              subZone.subZoneNbr
+            } - ${subZone.subZoneDescription?.toUpperCase()}`,
+            key: subZone.id,
+            subZoneCode: subZone,
+            children: subZone.areasCode?.map((area) => ({
+              title: `${area.areaNbr} - ${area.areaDescription?.toUpperCase()}`,
+              key: area.id,
+              areaCode: area,
+            })),
+          };
+          return subZoneNode;
+        }),
+      };
+      return groupNode;
+    });
   };
 
-  // const convertToTreeData = (taskCodes: ITaskCode[]): TreeDataNode[] => {
-  //   return taskCodes.map((taskCode) => ({
-  //     title: (
-  //       <span>
-  //         <Text style={{ color: 'blue' }}>{taskCode.code.toUpperCase()}</Text> -{' '}
-  //         {taskCode.description.toUpperCase()}
-  //       </span>
-  //     ),
-  //     key: taskCode.id,
-  //     taskCode: taskCode,
-  //   }));
-  // };
-
   useEffect(() => {
-    setTreeData(convertToTreeData(taskCodes));
-  }, [taskCodes]);
+    setTreeData(convertToTreeData(zoneCodesGroup));
+  }, [zoneCodesGroup]);
 
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
@@ -60,33 +77,33 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
   const handleEnterPress = () => {
     if (filteredTreeData.length === 0) return;
 
-    if (selectedIndex === -1) {
-      setSelectedIndex(0);
-    } else {
-      setSelectedIndex(
-        (prevIndex) => (prevIndex + 1) % filteredTreeData.length
-      );
-    }
+    setSelectedIndex((prevIndex) => (prevIndex + 1) % filteredTreeData.length);
 
-    const selectedGroup = filteredTreeData[selectedIndex].taskCode;
-    if (selectedGroup) {
-      onTaskCodeSelect(selectedGroup);
+    const selectedNode = filteredTreeData[selectedIndex];
+    if (selectedNode.zoneCode) {
+      onZoneCodeSelect(selectedNode.zoneCode);
+    } else if (selectedNode.subZoneCode) {
+      onZoneCodeSelect(selectedNode.subZoneCode);
+    } else if (selectedNode.areaCode) {
+      onZoneCodeSelect(selectedNode.areaCode);
     }
   };
 
   const renderTreeNodes = (data: TreeDataNode[]) => {
-    return data.map((item, index) => (
-      <TreeNode
+    return data.map((item) => (
+      <Tree.TreeNode
         title={item.title}
         key={item.key}
-        className={index === selectedIndex ? 'ant-tree-node-selected' : ''}
-      />
+        className={item.key === selectedIndex ? 'ant-tree-node-selected' : ''}
+      >
+        {item.children && renderTreeNodes(item.children)}
+      </Tree.TreeNode>
     ));
   };
 
   return (
     <div className="flex flex-col gap-2 ">
-      <Search
+      <Input.Search
         size="small"
         allowClear
         onSearch={(value) => {
@@ -100,14 +117,14 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
       />
       <Tree
         showLine
-        height={680}
+        height={650}
         defaultExpandedKeys={['group1']}
         onSelect={(selectedKeys, info) => {
-          const userGroup = taskCodes.find(
-            (group) => group.id === selectedKeys[0]
+          const selectedNode = treeData.find(
+            (node) => node.key === selectedKeys[0]
           );
-          if (userGroup) {
-            onTaskCodeSelect(userGroup);
+          if (selectedNode && selectedNode.zoneCode) {
+            onZoneCodeSelect(selectedNode.zoneCode);
           }
         }}
       >
@@ -117,4 +134,4 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
   );
 };
 
-export default TaskCodeTree;
+export default ZoneCodeTree;

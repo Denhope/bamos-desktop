@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
 
-import { ITaskCode } from '@/models/ITask';
+import { IZoneCode } from '@/models/ITask';
 import {
   ProFormGroup,
   ProFormSelect,
@@ -11,35 +11,35 @@ import {
 import { useTranslation } from 'react-i18next';
 
 interface UserFormProps {
-  taskCode?: ITaskCode;
-  onSubmit: (taskCode: ITaskCode) => void;
-  onDelete?: (taskCodeId: string) => void;
+  zoneCode?: IZoneCode;
+  onSubmit: (zoneCode: IZoneCode) => void;
+  onDelete?: (zoneCodeId: string) => void;
 }
 
-const TaskCodeForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
+const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
-  const handleSubmit = async (values: ITaskCode) => {
-    const newUser: ITaskCode = taskCode
-      ? { ...taskCode, ...values }
-      : { ...values, companyID: localStorage.getItem('companyID') || '' };
+  const handleSubmit = async (values: IZoneCode) => {
+    const newUser: IZoneCode = zoneCode
+      ? { ...zoneCode, ...values }
+      : { ...values };
     onSubmit(newUser);
   };
   useEffect(() => {
-    if (taskCode) {
+    if (zoneCode) {
       form.resetFields();
-      form.setFieldsValue(taskCode);
+      form.setFieldsValue(zoneCode);
     } else {
       form.resetFields();
     }
-  }, [taskCode, form]);
+  }, [zoneCode, form]);
   return (
     <ProForm
       size="small"
       form={form}
       onFinish={handleSubmit}
       // submitter={false}
-      initialValues={taskCode}
+      initialValues={zoneCode}
       layout="horizontal"
     >
       <ProForm.Group>
@@ -88,10 +88,10 @@ const TaskCodeForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
 
       {/* <ProForm.Item>
         <Button type="primary" htmlType="submit">
-          {taskCode ? 'Update' : 'Create'}
+          {zoneCode ? 'Update' : 'Create'}
         </Button>
       </ProForm.Item> */}
     </ProForm>
   );
 };
-export default TaskCodeForm;
+export default ZoneCodeForm;

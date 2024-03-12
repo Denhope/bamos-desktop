@@ -26,6 +26,7 @@ import { companyApi } from '@/features/companyAdministration/companyApi';
 import { vendorApi } from '@/features/vendorAdministration/vendorApi';
 import { acTypeApi } from '@/features/acTypeAdministration/acTypeApi';
 import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
+import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';

@@ -9,12 +9,11 @@ import { Button, Col, Row, Space, Tabs } from 'antd';
 
 import { useTranslation } from 'react-i18next';
 
-import { ProFormCheckbox, ProFormTextArea } from '@ant-design/pro-components';
 import { IACType, IMaintenanceType } from '@/models/AC';
 import MaintenanceTypeTab from './MaintenanceType/MaintenanceTypeTab';
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
-import MaintenanceTypeTree from './MaintenanceType/MaintenanceTypeTree';
+
 import TaskCodeFormPanel from '../taskCodeAdministration/TaskCodeFormPanel';
+import ZoneCodeFormPanel from '../zoneCodeAdministration/zoneCodeFormPanel';
 
 interface IACTypeFormProps {
   acType: IACType | undefined;
@@ -107,7 +106,14 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
           <MaintenanceTypeTab values={undefined} acType={acType || undefined} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="TASK CODES" key="3">
-          <TaskCodeFormPanel acTypeID={acType?.id || ''} />
+          {acType && acType.id && (
+            <TaskCodeFormPanel acTypeID={acType?.id || ''} />
+          )}
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="ZONES CODES" key="4">
+          {acType && acType.id && (
+            <ZoneCodeFormPanel acTypeID={acType.id || ''} />
+          )}
         </Tabs.TabPane>
       </Tabs>
 

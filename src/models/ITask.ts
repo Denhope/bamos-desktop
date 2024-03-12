@@ -246,19 +246,28 @@ export interface ITaskCodeGroup {
 
 export interface IZoneCode {
   id: string;
-  title: string;
-  code: string;
-  description: string;
+  majoreZoneNbr: number;
+  majoreZoneDescription: string;
+  majoreZoneShortDescription: string;
+  subZoneNbr?: number;
+  subZoneDescription?: string;
+  subZoneShortDescription?: string;
+  areaNbr?: string | number;
+  areaDescription?: string;
+  acTypeId: string;
+  acTypeTitle: string;
+  acType: string;
   createDate: string;
   createUserID: string;
   updateDate?: string;
   updateUserID?: string;
   companyID: string;
-  acTypeId: string;
-  acTypeTitle: string;
-  acType: string;
-  zoneNbr: number;
-  majoreZone?: string;
-  subZone?: string;
-  majoreZoneShort?: string;
+}
+export interface ISubZoneCode extends IZoneCode {
+  areasCode?: IZoneCode[];
+}
+export interface IAreaCode extends IZoneCode {}
+
+export interface IZoneCodeGroup extends IZoneCode {
+  subZonesCode?: ISubZoneCode[];
 }

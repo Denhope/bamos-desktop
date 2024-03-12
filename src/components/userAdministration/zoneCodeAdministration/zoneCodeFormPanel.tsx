@@ -4,74 +4,74 @@ import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
-import { ITaskCode } from '@/models/ITask';
+import { IZoneCode } from '@/models/ITask';
 
-import TaskCodeTree from './zoneCodeTree';
 import {
-  useGetGroupTaskCodesQuery,
-  useDeleteTaskCodeMutation,
-  useAddTaskCodeMutation,
-  useUpdateTaskCodeMutation,
-} from '@/features/tasksAdministration/taskCodesApi';
-import TaskCodeForm from './zoneCodeForm';
+  useAddZoneCodeMutation,
+  useDeleteZoneCodeMutation,
+  useGetZonesByGroupQuery,
+  useUpdateZoneCodeMutation,
+} from '@/features/zoneAdministration/zonesApi';
+import ZoneCodeForm from './zoneCodeForm';
+import ZoneCodeTree from './zoneCodeTree';
 
 interface AdminPanelProps {
   acTypeID: string;
 }
 
 const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
-  const [editingTaskCode, setEditingTaskCode] = useState<ITaskCode | null>(
+  const [editingZoneCode, setEditingZoneCode] = useState<IZoneCode | null>(
     null
   );
-  let taskCodes = null;
+  let zoneCodesGroup = null;
   let isLoading = false;
 
   if (acTypeID) {
-    const { data, isLoading: loading } = useGetGroupTaskCodesQuery({
+    const { data, isLoading: loading } = useGetZonesByGroupQuery({
       acTypeID,
     });
-    taskCodes = data;
+    zoneCodesGroup = data;
     isLoading = loading;
   }
-  const [addTaskCode] = useAddTaskCodeMutation({});
-  const [updateTaskCode] = useUpdateTaskCodeMutation();
-  const [deleteTaskCode] = useDeleteTaskCodeMutation();
+  const [addZoneCode] = useAddZoneCodeMutation({});
+  const [updateZoneCode] = useUpdateZoneCodeMutation();
+  const [deleteZoneCode] = useDeleteZoneCodeMutation();
 
   const handleCreate = () => {
-    setEditingTaskCode(null);
+    setEditingZoneCode(null);
   };
 
-  const handleEdit = (taskCode: ITaskCode) => {
-    setEditingTaskCode(taskCode);
+  const handleEdit = (zoneCode: IZoneCode) => {
+    setEditingZoneCode(zoneCode);
   };
 
-  const handleDelete = async (taskCodeId: string) => {
+  const handleDelete = async (zoneCodeId: string) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS TASK CODE?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS ZONE CODE?'),
       onOk: async () => {
         try {
-          await deleteTaskCode(taskCodeId).unwrap();
-          message.success(t('TASK CODE SUCCESSFULLY DELETED'));
+          await deleteZoneCode(zoneCodeId).unwrap();
+          message.success(t('ZONE CODE SUCCESSFULLY DELETED'));
         } catch (error) {
-          message.error(t('ERROR DELETING TASK CODE'));
+          message.error(t('ERROR DELETING ZONE CODE'));
         }
       },
     });
   };
 
-  const handleSubmit = async (taskCode: ITaskCode) => {
+  const handleSubmit = async (zoneCode: IZoneCode) => {
     try {
-      if (editingTaskCode) {
-        await updateTaskCode(taskCode).unwrap();
-        message.success(t('TASK CODE SUCCESSFULLY UPDATED'));
-        setEditingTaskCode(null);
+      if (editingZoneCode) {
+        await updateZoneCode(zoneCode).unwrap();
+        message.success(t('TASK ZONE SUCCESSFULLY UPDATED'));
+        setEditingZoneCode(null);
       } else {
-        await addTaskCode({ taskCode, acTypeId: acTypeID }).unwrap();
-        message.success(t('TASK CODE SUCCESSFULLY ADDED'));
-        setEditingTaskCode(null);
+        await addZoneCode({ zoneCode, acTypeId: acTypeID }).unwrap();
+        message.success(t('TASK ZONE SUCCESSFULLY ADDED'));
+        setEditingZoneCode(null);
       }
     } catch (error) {
-      message.error(t('ERROR SAVING TASK CODE'));
+      message.error(t('ERROR SAVING TASK ZONE'));
     }
   };
 
@@ -93,17 +93,17 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
             icon={<UserAddOutlined />}
             onClick={handleCreate}
           >
-            {t('ADD TASK CODE')}
+            {t('ADD ZONE CODE')}
           </Button>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
-          {editingTaskCode && (
+          {editingZoneCode && (
             <Button
               size="small"
               icon={<UserDeleteOutlined />}
-              onClick={() => handleDelete(editingTaskCode.id)}
+              onClick={() => handleDelete(editingZoneCode.id)}
             >
-              {t('DELETE TASK CODE')}
+              {t('DELETE ZONE CODE')}
             </Button>
           )}
         </Col>
@@ -114,17 +114,17 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
           sm={12}
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
-          <TaskCodeTree
-            taskCodes={taskCodes || []}
-            onTaskCodeSelect={handleEdit}
+          <ZoneCodeTree
+            zoneCodesGroup={zoneCodesGroup || []}
+            onZoneCodeSelect={handleEdit}
           />
         </Col>
         <Col
           className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
           sm={11}
         >
-          <TaskCodeForm
-            taskCode={editingTaskCode || undefined}
+          <ZoneCodeForm
+            zoneCode={editingZoneCode || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
           />
