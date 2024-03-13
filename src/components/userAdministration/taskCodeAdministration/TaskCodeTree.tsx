@@ -3,6 +3,7 @@ import { Tree, Typography, Input, Button } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 
 import { ITaskCode } from '@/models/ITask';
+import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
   taskCode?: ITaskCode;
@@ -70,7 +71,12 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
       />
     ));
   };
-
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Отменяем действие по умолчанию
+      event.stopPropagation(); // Останавливаем дальнейшую передачу события
+    }
+  };
   return (
     <div className="flex flex-col  ">
       <Search
@@ -78,14 +84,29 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
         allowClear
         onSearch={(value) => {
           setSearchQuery(value);
-          handleEnterPress();
+          // handleEnterPress();
         }}
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: 8 }}
         enterButton
-        onPressEnter={handleEnterPress}
+        // onPressEnter={handleEnterPress}
+        onKeyDown={handleKeyDown}
       />
-      <Tree
+      <CustomTree
+        checkable={false}
+        treeData={filteredTreeData}
+        onSelect={(selectedKeys, info) => {
+          const userGroup = taskCodes.find(
+            (group) => group.id === selectedKeys[0]
+          );
+          if (userGroup) {
+            onTaskCodeSelect(userGroup);
+          }
+        }}
+        height={680}
+        searchQuery={searchQuery}
+      />
+      {/* <Tree
         showLine
         height={680}
         defaultExpandedKeys={['group1']}
@@ -99,7 +120,7 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
         }}
       >
         {renderTreeNodes(filteredTreeData)}
-      </Tree>
+      </Tree> */}
     </div>
   );
 };

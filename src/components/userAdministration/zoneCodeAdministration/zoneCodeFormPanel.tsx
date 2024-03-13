@@ -116,7 +116,7 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
           <ZoneCodeTree
-            zoneCodesGroup={data || []}
+            zoneCodesGroup={zoneCodesGroup || []}
             onZoneCodeSelect={handleEdit}
           />
         </Col>
@@ -128,7 +128,7 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
             zoneCode={editingZoneCode || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
-            zoneCodes={data || []}
+            zoneCodes={zoneCodesGroup || []}
           />
         </Col>
       </Row>

@@ -61,7 +61,6 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
         await addACType(acType).unwrap();
         message.success(t('VENDOR SUCCESSFULLY ADDED'));
       }
-      setEditingACType(null);
     } catch (error) {
       message.error(t('ERROR SAVING VENDOR GROUP'));
     }

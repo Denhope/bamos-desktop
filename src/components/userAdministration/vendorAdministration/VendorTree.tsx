@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 import { IVendor } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип vendor
+import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
   vendor?: IVendor;
@@ -12,7 +13,6 @@ interface UserTreeProps {
   vendors: IVendor[] | [];
 }
 
-const { TreeNode } = Tree;
 const { Search } = Input;
 
 const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
@@ -61,16 +61,6 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
     }
   };
 
-  const renderTreeNodes = (data: TreeDataNode[]) => {
-    return data.map((item, index) => (
-      <TreeNode
-        title={item.title}
-        key={item.key}
-        className={index === selectedIndex ? 'ant-tree-node-selected' : ''}
-      />
-    ));
-  };
-
   return (
     <div className="flex flex-col gap-2 ">
       <Search
@@ -85,10 +75,10 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
         enterButton
         onPressEnter={handleEnterPress}
       />
-      <Tree
-        showLine
-        height={660}
-        defaultExpandedKeys={['group1']}
+
+      <CustomTree
+        checkable={false}
+        treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
           const vendor = vendors.find(
             (vendor) => vendor.id === selectedKeys[0]
@@ -97,9 +87,9 @@ const VendorTree: FC<UserTreeProps> = ({ onVendorSelect, vendors }) => {
             onVendorSelect(vendor);
           }
         }}
-      >
-        {renderTreeNodes(filteredTreeData)}
-      </Tree>
+        height={660}
+        searchQuery={searchQuery}
+      />
     </div>
   );
 };

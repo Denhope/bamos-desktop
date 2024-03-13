@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 import { UserGroup } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип UserGroup
+import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
   usersGroup?: UserGroup;
@@ -88,7 +89,22 @@ const UserGroupTree: FC<UserTreeProps> = ({
         enterButton
         onPressEnter={handleEnterPress}
       />
-      <Tree
+
+      <CustomTree
+        checkable={false}
+        treeData={filteredTreeData}
+        onSelect={(selectedKeys, info) => {
+          const userGroup = usersGroup.find(
+            (group) => group.id === selectedKeys[0]
+          );
+          if (userGroup) {
+            onUsersGroupSelect(userGroup);
+          }
+        }}
+        height={680}
+        searchQuery={searchQuery}
+      />
+      {/* <Tree
         showLine
         height={680}
         defaultExpandedKeys={['group1']}
@@ -102,7 +118,7 @@ const UserGroupTree: FC<UserTreeProps> = ({
         }}
       >
         {renderTreeNodes(filteredTreeData)}
-      </Tree>
+      </Tree> */}
     </div>
   );
 };

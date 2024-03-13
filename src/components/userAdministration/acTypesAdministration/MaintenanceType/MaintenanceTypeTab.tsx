@@ -37,7 +37,7 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
       setEditingACType(acType);
     } else {
     }
-  }, [acType, editingACType]);
+  }, [acType && acType.id, editingACType]);
 
   const [updateACType] = useUpdateACTypeMutation();
 
@@ -104,7 +104,7 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
 
   return (
     <>
-      <Space className="gap-4 pb-3">
+      <Space className="gap-6 pb-3">
         <Col span={20}>
           <Button
             size="small"
@@ -129,10 +129,10 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
         </Col>
       </Space>
 
-      <Row className="  gap-5">
+      <Row justify={'space-between'} className="  gap-5">
         <Col
           sm={8}
-          className="h-[78vh] bg-white px-4 rounded-md border-gray-400 "
+          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 "
         >
           <MaintenanceTypeTree
             maintenanceTypes={types || []}

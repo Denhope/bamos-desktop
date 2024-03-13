@@ -40,7 +40,7 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
     } else {
       form.resetFields();
     }
-  }, [acType, form]);
+  }, [acType?.id, form]);
 
   return (
     <ProForm<IACType>

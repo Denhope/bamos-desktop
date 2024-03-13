@@ -2,7 +2,12 @@
 
 // The rest of your code here will not be type-checked by TypeScript
 import React, { FC, useEffect, useState } from 'react';
-import { ProForm, ProFormText, ProFormRadio } from '@ant-design/pro-form';
+import {
+  ProForm,
+  ProFormText,
+  ProFormRadio,
+  ProFormTextArea,
+} from '@ant-design/pro-form';
 import { IZoneCode, IZoneCodeGroup } from '@/models/ITask';
 import { ProFormGroup, ProFormSelect } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
@@ -98,9 +103,9 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
           name="zoneType"
           layout="horizontal"
           options={[
-            { label: 'Major Zone', value: 'majoreZoneNbr' },
-            { label: 'Sub Zone', value: 'subZoneNbr' },
-            { label: 'Area', value: 'areaNbr' },
+            { label: 'MAJOR ZONE', value: 'majoreZoneNbr' },
+            { label: 'SUB ZONE', value: 'subZoneNbr' },
+            { label: 'AREA', value: 'areaNbr' },
           ]}
           onChange={(e: any) => setSearchQuery(e.target.value)}
         />
@@ -117,7 +122,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               ]}
             />
             <ProFormText
-              width={'sm'}
+              width={'lg'}
               name="majoreZoneDescription"
               label="MAJOREZONE DESCRIPTION"
               rules={[
@@ -147,7 +152,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               <ProFormSelect
                 options={majoreZoneDescriptionOptions}
                 disabled={isDisabled}
-                width={'sm'}
+                width={'lg'}
                 name="majoreZoneDescription"
                 label="MAJOREZONE DESCRIPTION"
                 rules={[
@@ -168,7 +173,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               ]}
             />
             <ProFormText
-              width={'sm'}
+              width={'lg'}
               name="subZoneDescription"
               label="SUBZONE DESCRIPTION"
               rules={[
@@ -196,7 +201,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormSelect
               options={majoreZoneDescriptionOptions}
               disabled={isDisabled}
-              width={'sm'}
+              width={'lg'}
               name="majoreZoneDescription"
               label="MAJOREZONE DESCRIPTION"
               rules={[
@@ -220,7 +225,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormSelect
               disabled={isDisabled}
               options={subZoneDescriptionOptions}
-              width={'sm'}
+              width={'lg'}
               name="subZoneDescription"
               label="SUBZONE DESCRIPTION"
               rules={[
@@ -239,8 +244,8 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
                 },
               ]}
             />
-            <ProFormText
-              width={'sm'}
+            <ProFormTextArea
+              width={'lg'}
               name="areaDescription"
               label="AREA DESCRIPTION"
               rules={[

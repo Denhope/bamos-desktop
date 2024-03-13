@@ -3,6 +3,7 @@ import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 
 import { IACType } from '@/models/AC';
+import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
   acType?: IACType;
@@ -86,10 +87,10 @@ const ACTypesTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
         enterButton
         onPressEnter={handleEnterPress}
       />
-      <Tree
-        showLine
-        height={660}
-        defaultExpandedKeys={['group1']}
+
+      <CustomTree
+        checkable={false}
+        treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
           const acType = acTypes.find(
             (acType) => acType.id === selectedKeys[0]
@@ -98,9 +99,9 @@ const ACTypesTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
             onACTypeSelect(acType);
           }
         }}
-      >
-        {renderTreeNodes(filteredTreeData)}
-      </Tree>
+        height={660}
+        searchQuery={searchQuery}
+      />
     </div>
   );
 };

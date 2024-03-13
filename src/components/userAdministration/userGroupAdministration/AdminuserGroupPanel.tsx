@@ -98,7 +98,7 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
 
       <Row className="gap-6">
         <Col
-          sm={5}
+          sm={6}
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
           <UserGroupTree
@@ -108,7 +108,7 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
         </Col>
         <Col
           className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
-          sm={18}
+          sm={17}
         >
           <UserGroupForm
             userGroup={editingUserGroup || undefined}

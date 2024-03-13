@@ -2,6 +2,7 @@ import { IACType, IMaintenanceType } from '@/models/AC';
 import { Input } from 'antd';
 import Tree, { DataNode } from 'antd/es/tree';
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import CustomTree from '../../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
   maintenanceType?: IMaintenanceType;
@@ -68,25 +69,31 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
     ));
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Отменяем действие по умолчанию
+      event.stopPropagation(); // Останавливаем дальнейшую передачу события
+    }
+  };
+
   return (
-    <div className="  flex flex-col py-2">
+    <div className="  flex flex-col ">
       <Search
         size="small"
         allowClear
         onSearch={(value) => {
           setSearchQuery(value);
-          handleEnterPress();
+          // handleEnterPress();
         }}
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: 8 }}
         enterButton
-        onPressEnter={handleEnterPress}
+        onKeyDown={handleKeyDown}
+        // onPressEnter={handleEnterPress}
       />
-
-      <Tree
-        showLine
-        height={660}
-        defaultExpandedKeys={['group1']}
+      <CustomTree
+        checkable={false}
+        treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
           const maintenanceType = maintenanceTypes.find(
             (maintenanceType) => maintenanceType.id === selectedKeys[0]
@@ -95,9 +102,9 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
             onMaintananceTypeSelect(maintenanceType);
           }
         }}
-      >
-        {renderTreeNodes(filteredTreeData)}
-      </Tree>
+        height={560}
+        searchQuery={searchQuery}
+      />
     </div>
   );
 };
