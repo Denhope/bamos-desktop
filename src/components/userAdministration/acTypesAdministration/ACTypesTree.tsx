@@ -73,7 +73,7 @@ const ACTypesTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="flex flex-col  ">
       <Search
         size="small"
         allowClear

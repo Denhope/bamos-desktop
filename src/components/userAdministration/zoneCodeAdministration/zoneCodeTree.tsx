@@ -16,7 +16,7 @@ interface TreeDataNode extends DataNode {
 }
 
 interface ZoneTreeProps {
-  onZoneCodeSelect: (zoneCode: IZoneCode) => void;
+  onZoneCodeSelect: (zoneCode: IZoneCode | ISubZoneCode | IAreaCode) => void;
   zoneCodesGroup: IZoneCodeGroup[] | [];
 }
 
@@ -25,91 +25,50 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
   zoneCodesGroup,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
+  const { Search } = Input;
 
-  // const convertToTreeData = (
-  //   zoneCodesGroup: IZoneCodeGroup[]
-  // ): TreeDataNode[] => {
-  //   return zoneCodesGroup.map((group) => {
-  //     const groupNode: TreeDataNode = {
-  //       title: `${group.majoreZoneNbr} - ${String(
-  //         group.majoreZoneDescription
-  //       )?.toUpperCase()}`,
-  //       key: group.id,
-  //       zoneCode: group,
-  //       children: group.subZonesCode?.map((subZone) => {
-  //         const subZoneNode: TreeDataNode = {
-  //           title: `${
-  //             subZone.subZoneNbr
-  //           } - ${subZone.subZoneDescription?.toUpperCase()}`,
-  //           key: subZone.id,
-  //           subZoneCode: subZone,
-  //           children: subZone.areasCode?.map((area) => ({
-  //             title: `${area.areaNbr} - ${area.areaDescription?.toUpperCase()}`,
-  //             key: area.id,
-  //             areaCode: area,
-  //           })),
-  //         };
-  //         return subZoneNode;
-  //       }),
-  //     };
-  //     return groupNode;
-  //   });
-  // };
-
-  const convertToTreeData = (
-    zoneCodesGroup: IZoneCodeGroup[]
-  ): TreeDataNode[] => {
-    return zoneCodesGroup.map((group) => {
-      const groupNode: TreeDataNode = {
-        title: `${group.majoreZoneNbr} - ${String(
-          group.majoreZoneDescription
-        )?.toUpperCase()}`,
-        key: group.majoreZoneNbr, // Используйте majoreZoneNbr в качестве ключа
-        zoneCode: group,
-        children: group.subZonesCode?.map((subZone) => {
-          const subZoneNode: TreeDataNode = {
-            title: `${
-              subZone.subZoneNbr
-            } - ${subZone.subZoneDescription?.toUpperCase()}`,
-            key: `${group.majoreZoneNbr}-${subZone.subZoneNbr}`, // Создайте уникальный ключ для subZone
-            subZoneCode: subZone,
-            children: subZone.areasCode?.map((area) => ({
-              title: `${area.areaNbr} - ${area.areaDescription?.toUpperCase()}`,
-              key: `${group.majoreZoneNbr}-${subZone.subZoneNbr}-${area.areaNbr}`, // Создайте уникальный ключ для area
-              areaCode: area,
-            })),
-          };
-          return subZoneNode;
-        }),
+  const convertToTreeData = (zoneCodes: IZoneCodeGroup[]): TreeDataNode[] => {
+    return zoneCodes.map((zoneCode) => {
+      const zoneNode: TreeDataNode = {
+        title: `${
+          zoneCode.majoreZoneNbr
+        } - ${zoneCode.majoreZoneDescription.toUpperCase()}`,
+        key: zoneCode.id,
+        zoneCode,
+        children:
+          zoneCode.subZonesCode &&
+          zoneCode.subZonesCode.map((subZoneCode) => {
+            const subZoneNode: TreeDataNode = {
+              title: `${subZoneCode.subZoneNbr} - ${
+                subZoneCode?.subZoneDescription &&
+                subZoneCode?.subZoneDescription.toUpperCase()
+              }`,
+              key: subZoneCode.id,
+              subZoneCode,
+              children:
+                subZoneCode.areasCode &&
+                subZoneCode.areasCode.map((areaCode) => ({
+                  title: `${areaCode.areaNbr} - ${
+                    areaCode.areaDescription &&
+                    areaCode.areaDescription.toUpperCase()
+                  }`,
+                  key: areaCode.id,
+                  areaCode,
+                })),
+            };
+            return subZoneNode;
+          }),
       };
-      return groupNode;
+      return zoneNode;
     });
   };
-
   useEffect(() => {
     setTreeData(convertToTreeData(zoneCodesGroup));
   }, [zoneCodesGroup]);
 
-  const filteredTreeData = useMemo(() => {
-    if (!searchQuery) {
-      return treeData;
-    }
-    return treeData.filter((node) => {
-      if (typeof node.title === 'string') {
-        return node.title.toLowerCase().includes(searchQuery.toLowerCase());
-      }
-      return false;
-    });
-  }, [treeData, searchQuery]);
-
-  const handleEnterPress = () => {
-    if (filteredTreeData.length === 0) return;
-
-    setSelectedIndex((prevIndex) => (prevIndex + 1) % filteredTreeData.length);
-
-    const selectedNode = filteredTreeData[selectedIndex];
+  const onSelect = (selectedKeys: React.Key[], info: any) => {
+    const selectedNode = info.node;
     if (selectedNode.zoneCode) {
       onZoneCodeSelect(selectedNode.zoneCode);
     } else if (selectedNode.subZoneCode) {
@@ -119,21 +78,60 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
     }
   };
 
-  const renderTreeNodes = (data: TreeDataNode[]) => {
-    return data.map((item) => (
-      <Tree.TreeNode
-        title={item.title}
-        key={item.key}
-        className={item.key === selectedIndex ? 'ant-tree-node-selected' : ''}
-      >
-        {item.children && renderTreeNodes(item.children)}
-      </Tree.TreeNode>
-    ));
+  const filterTreeData = (
+    treeData: TreeDataNode[],
+    searchQuery: string
+  ): TreeDataNode[] => {
+    return treeData.reduce((acc: TreeDataNode[], node) => {
+      const title = String(node.title).toLowerCase();
+      const query = searchQuery.toLowerCase();
+
+      if (title.includes(query)) {
+        const filteredChildren = node.children
+          ? filterTreeData(node.children, searchQuery)
+          : [];
+        acc.push({ ...node, children: filteredChildren });
+      }
+
+      return acc;
+    }, []);
+  };
+  const filteredTreeData = useMemo(() => {
+    if (!searchQuery) {
+      return treeData;
+    }
+    return filterTreeData(treeData, searchQuery);
+  }, [treeData, searchQuery]);
+
+  useEffect(() => {
+    setTreeData(filteredTreeData);
+  }, [filteredTreeData]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const handleEnterPress = () => {
+    if (filteredTreeData.length === 0) return;
+
+    if (selectedIndex === -1) {
+      setSelectedIndex(0);
+    } else {
+      setSelectedIndex(
+        (prevIndex) => (prevIndex + 1) % filteredTreeData.length
+      );
+    }
+
+    const selectedGroup = filteredTreeData[selectedIndex].areaCode;
+    if (selectedGroup) {
+      onZoneCodeSelect(selectedGroup);
+    }
   };
 
+  useEffect(() => {
+    const filteredTreeData = filterTreeData(treeData, searchQuery);
+    setTreeData(filteredTreeData);
+  }, [searchQuery]);
+
   return (
-    <div className="flex flex-col gap-2 ">
-      <Input.Search
+    <div>
+      <Search
         size="small"
         allowClear
         onSearch={(value) => {
@@ -142,24 +140,14 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
         }}
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: 8 }}
-        enterButton
         onPressEnter={handleEnterPress}
       />
       <Tree
         showLine
-        height={650}
         defaultExpandedKeys={['group1']}
-        onSelect={(selectedKeys, info) => {
-          const selectedNode = treeData.find(
-            (node) => node.key === selectedKeys[0]
-          );
-          if (selectedNode && selectedNode.zoneCode) {
-            onZoneCodeSelect(selectedNode.zoneCode);
-          }
-        }}
-      >
-        {renderTreeNodes(filteredTreeData)}
-      </Tree>
+        onSelect={onSelect}
+        treeData={treeData}
+      />
     </div>
   );
 };

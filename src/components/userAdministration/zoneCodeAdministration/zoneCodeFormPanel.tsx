@@ -14,25 +14,26 @@ import {
 } from '@/features/zoneAdministration/zonesApi';
 import ZoneCodeForm from './ZoneCodeForm';
 import ZoneCodeTree from './ZoneCodeTree';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
 interface AdminPanelProps {
-  acTypeID: string;
+  acTypeId: string;
 }
 
-const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
+const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
   const [editingZoneCode, setEditingZoneCode] = useState<IZoneCode | null>(
     null
   );
   let zoneCodesGroup = null;
   let isLoading = false;
 
-  if (acTypeID) {
-    const { data, isLoading: loading } = useGetZonesByGroupQuery({
-      acTypeId: acTypeID,
-    });
-    zoneCodesGroup = data;
-    isLoading = loading;
-  }
+  // if (acTypeId) {
+  const { data, isLoading: loading } = useGetZonesByGroupQuery({
+    acTypeId,
+  });
+  zoneCodesGroup = data;
+  isLoading = loading;
+  // }
   const [addZoneCode] = useAddZoneCodeMutation({});
   const [updateZoneCode] = useUpdateZoneCodeMutation();
   const [deleteZoneCode] = useDeleteZoneCodeMutation();
@@ -66,7 +67,7 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
         message.success(t('TASK ZONE SUCCESSFULLY UPDATED'));
         setEditingZoneCode(null);
       } else {
-        await addZoneCode({ zoneCode, acTypeId: acTypeID }).unwrap();
+        await addZoneCode({ zoneCode, acTypeId }).unwrap();
         message.success(t('TASK ZONE SUCCESSFULLY ADDED'));
         setEditingZoneCode(null);
       }
@@ -114,10 +115,12 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
           sm={12}
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
-          <ZoneCodeTree
-            zoneCodesGroup={zoneCodesGroup || []}
-            onZoneCodeSelect={handleEdit}
-          />
+          {data && (
+            <ZoneCodeTree
+              zoneCodesGroup={data || []}
+              onZoneCodeSelect={handleEdit}
+            />
+          )}
         </Col>
         <Col
           className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
@@ -127,6 +130,7 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
             zoneCode={editingZoneCode || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
+            zoneCodes={data || []}
           />
         </Col>
       </Row>

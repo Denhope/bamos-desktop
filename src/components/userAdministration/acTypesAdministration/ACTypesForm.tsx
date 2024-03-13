@@ -112,7 +112,7 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
         </Tabs.TabPane>
         <Tabs.TabPane tab="ZONES CODES" key="4">
           {acType && acType.id && (
-            <ZoneCodeFormPanel acTypeID={acType.id || ''} />
+            <ZoneCodeFormPanel acTypeId={acType?.id || ''} />
           )}
         </Tabs.TabPane>
       </Tabs>

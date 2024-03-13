@@ -3,6 +3,7 @@ import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { IZoneCode, IZoneCodeGroup } from '@/models/ITask';
+import { setZonesGroups } from './zonesSlice';
 
 export const zoneCodeApi = createApi({
   reducerPath: 'zones',
@@ -28,7 +29,7 @@ export const zoneCodeApi = createApi({
         try {
           const { data } = await queryFulfilled;
 
-          // dispatch(setUsersGroup(data));
+          dispatch(setZonesGroups(data));
         } catch (error) {
           console.error('Ошибка при выполнении запроса:', error);
         }

@@ -69,7 +69,7 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
   };
 
   return (
-    <div className="  flex flex-col gap-2 py-2">
+    <div className="  flex flex-col py-2">
       <Search
         size="small"
         allowClear

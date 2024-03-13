@@ -29,6 +29,7 @@ import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
 import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
+import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
 const store = configureStore({
@@ -64,6 +65,7 @@ const store = configureStore({
     [zoneCodeApi.reducerPath]: zoneCodeApi.reducer,
     vendor: vendorReducer,
     acTypes: acTypesReducer,
+    ACZones: zonesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

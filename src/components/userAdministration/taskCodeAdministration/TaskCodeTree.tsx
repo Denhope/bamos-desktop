@@ -28,19 +28,6 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
     }));
   };
 
-  // const convertToTreeData = (taskCodes: ITaskCode[]): TreeDataNode[] => {
-  //   return taskCodes.map((taskCode) => ({
-  //     title: (
-  //       <span>
-  //         <Text style={{ color: 'blue' }}>{taskCode.code.toUpperCase()}</Text> -{' '}
-  //         {taskCode.description.toUpperCase()}
-  //       </span>
-  //     ),
-  //     key: taskCode.id,
-  //     taskCode: taskCode,
-  //   }));
-  // };
-
   useEffect(() => {
     setTreeData(convertToTreeData(taskCodes));
   }, [taskCodes]);
@@ -85,7 +72,7 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="flex flex-col  ">
       <Search
         size="small"
         allowClear
