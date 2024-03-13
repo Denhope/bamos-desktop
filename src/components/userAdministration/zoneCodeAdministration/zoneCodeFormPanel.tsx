@@ -115,12 +115,10 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
           sm={12}
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
-          {data && (
-            <ZoneCodeTree
-              zoneCodesGroup={data || []}
-              onZoneCodeSelect={handleEdit}
-            />
-          )}
+          <ZoneCodeTree
+            zoneCodesGroup={data || []}
+            onZoneCodeSelect={handleEdit}
+          />
         </Col>
         <Col
           className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "

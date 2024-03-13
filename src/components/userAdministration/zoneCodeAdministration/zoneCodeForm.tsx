@@ -50,6 +50,10 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
     } else {
       form.resetFields();
       setIsDisabled(!isDisabled);
+      setSearchQuery('majoreZoneNbr');
+      form.setFieldsValue({
+        zoneType: 'majoreZoneNbr',
+      });
     }
   }, [form, zoneCode]);
 
