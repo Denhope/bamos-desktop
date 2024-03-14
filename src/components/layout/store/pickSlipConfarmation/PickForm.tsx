@@ -13,6 +13,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getFilteredPickSlip } from '@/utils/api/thunks';
+import { FULL_NAME } from '@/utils/api/http';
 type PickSlipFilterFormType = {
   onFilterPickSlip: (record: any) => void;
   pickSlipNumber?: string;
@@ -49,7 +50,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
         { name: 'bookingDate', value: pickData?.closedDate || new Date() },
         {
           name: 'storeman',
-          value: pickData?.storeMan || localStorage.getItem('name'),
+          value: pickData?.storeMan || FULL_NAME,
         },
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);

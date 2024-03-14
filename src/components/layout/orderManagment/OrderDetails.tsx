@@ -18,7 +18,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder, OrderType } from '@/models/IOrder';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { USER_ID } from '@/utils/api/http';
+import { COMPANY_ID, FULL_NAME, USER_ID } from '@/utils/api/http';
 import {
   getFilteredProjects,
   postNewOrder,
@@ -177,7 +177,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
     if (isCreating) {
       form.setFields([
         { name: 'createBySingNew', value: localStorage.getItem('singNumber') },
-        { name: 'createByNameNew', value: localStorage.getItem('name') },
+        { name: 'createByNameNew', value: FULL_NAME },
       ]);
     } else {
       setIsEditing(false);
@@ -185,7 +185,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
   }, [isCreating]);
 
   useEffect(() => {
-    const currentCompanyID = localStorage.getItem('companyID');
+    const currentCompanyID = COMPANY_ID;
     if (selectedProjectType) {
       let action;
       let url;
@@ -259,7 +259,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     planedDate: values.planedDate,
                     updateByID: USER_ID,
                     updateBySing: localStorage.getItem('singNumber'),
-                    updateByName: localStorage.getItem('name'),
+                    updateByName: FULL_NAME,
                     updateDate: new Date(),
                     startDate: values?.startDate,
                     finishDate: values?.finishDate,
@@ -287,7 +287,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     projectNumbers: values.projectNumbers,
                     createByID: USER_ID,
                     createBySing: localStorage.getItem('singNumber'),
-                    createByName: localStorage.getItem('name'),
+                    createByName: FULL_NAME,
                     createDate: new Date(),
                     startDate: null,
                     finishDate: null,
@@ -512,7 +512,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             files: updatedFiles,
                           })
@@ -652,7 +652,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             files: updatedFiles,
                           })
@@ -866,7 +866,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })
@@ -942,7 +942,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })
@@ -1029,7 +1029,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })
@@ -1105,7 +1105,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })

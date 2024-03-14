@@ -45,6 +45,7 @@ import { t } from 'i18next';
 import { render } from 'react-dom';
 import SearchTable from '../SearchElemTable';
 import { USER_ID } from '@/utils/api/http';
+import { setCurrentPickSlip } from '@/store/reducers/PickSlipSlice';
 
 const PickSlipCancel: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -411,16 +412,23 @@ const PickSlipCancel: FC = () => {
       valueType: 'option',
       key: 'option',
       // width: '9%',
-      render: (text, record, _, action) => [
-        <a
-          key="editable"
-          onClick={() => {
-            action?.startEditable?.(record._id);
-          }}
-        >
-          Edit
-        </a>,
-      ],
+      render: (text, record, _, action) => {
+        // Check if the record status is not 'canceled'
+        if (record.status !== 'cancelled') {
+          return (
+            <a
+              key="editable"
+              onClick={() => {
+                action?.startEditable?.(record._id);
+              }}
+            >
+              Edit
+            </a>
+          );
+        }
+        // If the status is 'canceled', return null or an empty element
+        return null; // or <span>&nbsp;</span>;
+      },
     },
   ];
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -605,7 +613,11 @@ const PickSlipCancel: FC = () => {
                 {t('PRINT')}
               </Button>
               <Button
-                disabled={!selectedRowKeys.length}
+                disabled={
+                  !selectedRowKeys.length ||
+                  selectPickSlip?.status == 'open' ||
+                  selectPickSlip?.status == 'issued'
+                }
                 onClick={() => setOpenPickCancel(true)}
                 size="small"
               >
@@ -667,7 +679,6 @@ const PickSlipCancel: FC = () => {
         onCancel={() => setOpenPickCancel(false)}
         footer={null}
       >
-        {' '}
         <ProForm
           size={'small'}
           form={form}
@@ -944,6 +955,37 @@ const PickSlipCancel: FC = () => {
                               ],
                         })
                       );
+                      if (result1.meta.requestStatus === 'fulfilled') {
+                        onSelectPickSlip(result1.payload);
+                        setSelectedRowKeys([]);
+                        setSelectedStoreUser(null);
+                        setSelectedСonsigneeUser(null);
+                        setOpenPickCancel(false);
+                        setTableData(
+                          result1.payload?.materials.flatMap(
+                            (item: {
+                              CANCELED_QUANTITY: any;
+                              id: any;
+                              QTYCANCEL: any;
+                              LOCATION_TO: any;
+                              QUANTITY_BOOK: any;
+                              onBlock: any[];
+                              status: any;
+                            }) =>
+                              item.onBlock.map((blockItem) => ({
+                                ...blockItem,
+                                status: item?.status,
+                                QUANTITY_BOOK: item?.QUANTITY_BOOK,
+                                LOCATION_TO: item?.LOCATION_TO || '',
+                                QTYCANCEL: item?.QTYCANCEL || 0,
+                                CANCELED_QUANTITY: item?.CANCELED_QUANTITY || 0,
+                                materialID: item.id,
+                              }))
+                          ) || []
+                        );
+
+                        message.success(t('SUCCESS'));
+                      }
                       const indexCancel = filteredPickSlipsForCancel.findIndex(
                         (itemR: any) => itemR._id === result1.payload._id
                       );
@@ -962,10 +1004,9 @@ const PickSlipCancel: FC = () => {
                           item: result1.payload,
                         })
                       );
-                      setSelectedRowKeys([]);
                     }
                   }
-                }
+                } else message.error(t('ERROR'));
               },
             });
           }}
@@ -983,13 +1024,13 @@ const PickSlipCancel: FC = () => {
               <h4 className="storeman">{t('STOREMAN')}</h4>
               <ProForm.Item style={{ width: '100%' }}>
                 <UserSearchForm
-                  // performedName={localStorage.getItem('name')}
-                  actionNumber={null}
-                  // performedSing={localStorage.getItem('singNumber')}
+                  performedName={selectedStoreUser?.name || ''}
+                  performedSing={selectedStoreUser?.singNumber || ''}
                   onUserSelect={(user) => {
                     setSelectedStoreUser(user);
                   }}
                   reset={false}
+                  actionNumber={null}
                 />
               </ProForm.Item>
             </div>
@@ -1005,9 +1046,9 @@ const PickSlipCancel: FC = () => {
               <h4 className="mech">{t('MECH')}</h4>
               {/* <Form.Item style={{ width: '100%' }}> */}
               <UserSearchForm
-                performedName={''}
                 actionNumber={null}
-                performedSing={''}
+                performedName={selectedСonsigneeUser?.name || ''}
+                performedSing={selectedСonsigneeUser?.singNumber || ''}
                 onUserSelect={(user) => {
                   setSelectedСonsigneeUser(user);
                 }}

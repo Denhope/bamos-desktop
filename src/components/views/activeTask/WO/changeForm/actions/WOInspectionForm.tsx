@@ -1,12 +1,12 @@
-import { Button, Form, Input } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import Title from "antd/es/typography/Title";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import moment from "moment";
-import React, { useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { IActionType } from "@/store/reducers/AdditionalTaskSlice";
-import { updateAction } from "@/store/reducers/ProjectTaskSlise";
+import { Button, Form, Input } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import Title from 'antd/es/typography/Title';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import moment from 'moment';
+import React, { useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { IActionType } from '@/store/reducers/AdditionalTaskSlice';
+import { updateAction } from '@/store/reducers/ProjectTaskSlise';
 
 const WOInspectionForm = () => {
   const { currentProjectTask } = useTypedSelector((state) => state.projectTask);
@@ -15,10 +15,10 @@ const WOInspectionForm = () => {
   const handleSelectChange = (action: any) => {
     form.setFieldsValue({
       inspectedDate:
-        action.inspectedDate || moment.utc().format("Do. MMM. YYYY"),
-      inspectedTime: action.inspectedTime || moment.utc().format("HH:mm"),
-      inspectedSing: action.inspectedSing || localStorage.getItem("singNumber"),
-      inspectedName: action.inspectedName || localStorage.getItem("name"),
+        action.inspectedDate || moment.utc().format('Do. MMM. YYYY'),
+      inspectedTime: action.inspectedTime || moment.utc().format('HH:mm'),
+      inspectedSing: action.inspectedSing || localStorage.getItem('singNumber'),
+      inspectedName: action.inspectedName || FULL_NAME,
     });
   };
   useEffect(() => {
@@ -57,7 +57,7 @@ const WOInspectionForm = () => {
               },
             })
           );
-          toast.success("Инспекция успешно добавлена");
+          toast.success('Инспекция успешно добавлена');
           form.resetFields();
         }}
         onFinishFailed={(error: any) => {
@@ -94,7 +94,7 @@ const WOInspectionForm = () => {
               // defaultValue={
               //   currentProjectTask.currentAction?.performedName &&
               //   (currentProjectTask.currentAction?.inspectedName ||
-              //     localStorage.getItem('name') ||
+              //     FULL_NAME ||
               //     '')
               // }
             />

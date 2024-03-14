@@ -7,19 +7,12 @@ import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
 import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { useTranslation } from 'react-i18next';
 import { v4 as originalUuidv4 } from 'uuid';
-import {
-  TransactionOutlined,
-  EditOutlined,
-  PrinterOutlined,
-  CloseCircleOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
+import { CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import {
   createProjectTaskMaterialAplication,
   createSingleRequirement,
-  updateProjectTask,
   updateRequirementsByBody,
   updatedMaterialOrdersById,
 } from '@/utils/api/thunks';
@@ -348,6 +341,7 @@ const PickslipRequest: FC = () => {
                       materials: updatedRequirements,
                       createDate: new Date(),
                       createUserId: USER_ID || '',
+                      mechSing: currentPickData && currentPickData?.neededOn,
                       additionalTaskID:
                         currentPickData?.receiverType === 'NRC'
                           ? currentPickData?.taskId

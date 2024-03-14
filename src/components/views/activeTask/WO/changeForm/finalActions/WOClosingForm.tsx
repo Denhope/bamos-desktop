@@ -1,11 +1,11 @@
-import { Button, Form, Input } from "antd";
-import Title from "antd/es/typography/Title";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { IFinalActionType } from "@/models/IAdditionalTask";
-import moment from "moment";
-import React, { FC } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { setOptional, setStatus } from "@/store/reducers/ProjectTaskSlise";
+import { Button, Form, Input } from 'antd';
+import Title from 'antd/es/typography/Title';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { IFinalActionType } from '@/models/IAdditionalTask';
+import moment from 'moment';
+import React, { FC } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { setOptional, setStatus } from '@/store/reducers/ProjectTaskSlise';
 
 const WOClosingForm: FC = () => {
   const { currentProjectTask } = useTypedSelector((state) => state.projectTask);
@@ -18,7 +18,7 @@ const WOClosingForm: FC = () => {
         className="w-full"
         autoComplete="off"
         onFinish={(values: IFinalActionType) => {
-          dispatch(setStatus("закрыт"));
+          dispatch(setStatus('закрыт'));
           dispatch(
             setOptional({
               WOCustomer: currentProjectTask.optional?.WOCustomer,
@@ -51,7 +51,7 @@ const WOClosingForm: FC = () => {
               },
             })
           );
-          toast.success("Штамп успешно добавлен");
+          toast.success('Штамп успешно добавлен');
           form.resetFields();
         }}
         onFinishFailed={(error: any) => {
@@ -100,7 +100,7 @@ const WOClosingForm: FC = () => {
                 currentProjectTask.actions[
                   currentProjectTask.actions.length - 1
                 ].inspectedName
-                // localStorage.getItem('name') ||
+                // FULL_NAME ||
                 // ''
               }
             />

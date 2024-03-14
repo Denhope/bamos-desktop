@@ -1586,7 +1586,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                           },
                           status: 'open',
                           _id: '',
-                          name: String(localStorage.getItem('name')),
+                          name: String(FULL_NAME),
                           sing: String(localStorage.getItem('singNumber')),
                           actions: [
                             {

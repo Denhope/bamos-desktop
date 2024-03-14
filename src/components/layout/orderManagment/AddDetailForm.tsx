@@ -26,7 +26,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import PartsForecast from '../APN/PartsForecast';
 import RequirementItemsQuatation from './RequirementItemsQuatation';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import RequirementViewer from '../APN/RequirementViewer';
 type AddDetailFormType = {
@@ -227,7 +227,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                 companyID: currentCompanyID || '',
                 updateByID: USER_ID,
                 updateBySing: localStorage.getItem('singNumber'),
-                updateByName: localStorage.getItem('name'),
+                updateByName: FULL_NAME,
                 updateDate: new Date(),
 
                 parts: [
@@ -276,7 +276,7 @@ const AddDetailForm: FC<AddDetailFormType> = ({
                 companyID: currentCompanyID || '',
                 updateByID: USER_ID,
                 updateBySing: localStorage.getItem('singNumber'),
-                updateByName: localStorage.getItem('name'),
+                updateByName: FULL_NAME,
                 updateDate: new Date(),
 
                 parts: [
