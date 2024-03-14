@@ -13,7 +13,7 @@ import { IACType, IMaintenanceType } from '@/models/AC';
 import MaintenanceTypeTab from './MaintenanceType/MaintenanceTypeTab';
 
 import TaskCodeFormPanel from '../taskCodeAdministration/TaskCodeFormPanel';
-import ZoneCodeFormPanel from '../zoneCodeAdministration/ZoneCodeFormPanel';
+import ZoneCodeFormPanel from '../zoneCodeAdministration/zoneCodeFormPanel';
 
 interface IACTypeFormProps {
   acType: IACType | undefined;
