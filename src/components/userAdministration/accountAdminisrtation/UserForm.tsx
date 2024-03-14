@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
 import { User, Permission, UserGroup } from '@/models/IUser';
@@ -38,13 +38,30 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
     label: group.title,
     value: group.id, // Use the _id as the value
   }));
+  const SubmitButton = () => (
+    <Button type="primary" htmlType="submit">
+      {user ? t('UPDATE') : t('CREATE')}
+    </Button>
+  );
+  const [showSubmitButton, setShowSubmitButton] = useState(true);
 
+  // Обработчик изменения активной вкладки
+  const handleTabChange = (activeKey: string) => {
+    setShowSubmitButton(activeKey === '1');
+  };
   return (
     <ProForm
       size="small"
       form={form}
       onFinish={handleSubmit}
-      submitter={false}
+      submitter={{
+        render: (_, dom) => {
+          if (showSubmitButton) {
+            return [<SubmitButton key="submit" />, dom.reverse()[1]];
+          }
+          return null;
+        },
+      }}
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
@@ -243,11 +260,11 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
           </ProForm.Group>
         </Tabs.TabPane>
       </Tabs>
-      <ProForm.Item>
+      {/* <ProForm.Item>
         <Button type="primary" htmlType="submit">
           {user ? 'Update' : 'Create'}
         </Button>
-      </ProForm.Item>
+      </ProForm.Item> */}
     </ProForm>
   );
 };

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   ProForm,
   ProFormText,
@@ -65,13 +65,25 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
       throw error;
     }
   };
-
+  const SubmitButton = () => (
+    <Button type="primary" htmlType="submit">
+      {company ? t('UPDATE') : t('CREATE')}
+    </Button>
+  );
+  const [showSubmitButton, setShowSubmitButton] = useState(true);
   return (
     <ProForm
       size="small"
       form={form}
       onFinish={handleSubmit}
-      submitter={false}
+      submitter={{
+        render: (_, dom) => {
+          if (showSubmitButton) {
+            return [<SubmitButton key="submit" />, dom.reverse()[1]];
+          }
+          return null;
+        },
+      }}
       initialValues={company}
       layout="horizontal"
     >
@@ -313,11 +325,11 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
         </Tabs.TabPane>
       </Tabs>
 
-      <ProForm.Item>
+      {/* <ProForm.Item>
         <Button type="primary" htmlType="submit">
           {company ? 'Update' : 'Create'}
         </Button>
-      </ProForm.Item>
+      </ProForm.Item> */}
     </ProForm>
   );
 };

@@ -29,6 +29,7 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
   const handleCreate = () => {
     setEditingMaintenanceType(null);
   };
+
   useEffect(() => {
     if (acType) {
       setEditingTypes(acType.maintenanceTypes || []);

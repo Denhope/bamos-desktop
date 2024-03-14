@@ -272,3 +272,27 @@ export interface IAreaCode extends IZoneCode {}
 export interface IZoneCodeGroup extends IZoneCode {
   subZonesCode?: ISubZoneCode[];
 }
+
+export interface IAreaCode {
+  id: string;
+  majoreZoneNbr: number;
+  majoreZoneDescription: string;
+  majoreZoneShortDescription: string;
+  subZoneNbr?: number;
+  subZoneDescription?: string;
+  subZoneShortDescription?: string;
+  areaNbr?: string | number;
+  areaDescription?: string;
+  accessNumber?: string | number;
+  accessDescription?: string;
+  acTypeId: string;
+  acTypeTitle: string;
+  acType: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  zoneCodeId: string;
+  status?: string;
+}
