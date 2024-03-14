@@ -41,23 +41,20 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
       form.setFieldsValue(maintenanceType);
     } else form.resetFields();
   }, [maintenanceType, acType]);
-
+  const SubmitButton = () => (
+    <Button type="primary" htmlType="submit">
+      {maintenanceType ? t('UPDATE') : t('CREATE')}
+    </Button>
+  );
   return (
     <div className="bg-white  p-2">
       <ProForm<IMaintenanceType>
         size="small"
-        submitter={{
-          submitButtonProps: {
-            children: maintenanceType ? 'Update' : 'Create',
-          },
-        }}
         form={form}
         onFinish={handleSubmit}
         // submitter={false}
         layout="horizontal"
       >
-        {/* <Tabs defaultActiveKey="1" type="card">
-          <Tabs.TabPane tab="MAIN" key="1"> */}
         <ProFormGroup>
           <ProFormGroup>
             <ProFormText

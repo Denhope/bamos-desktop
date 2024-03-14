@@ -1,8 +1,9 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
 import { User, Permission, UserGroup } from '@/models/IUser';
 import { ProFormSelect } from '@ant-design/pro-components';
+import { useTranslation } from 'react-i18next';
 
 interface UserFormProps {
   userGroup?: UserGroup;
@@ -26,12 +27,32 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
       form.resetFields();
     }
   }, [userGroup, form]);
+  const { t } = useTranslation();
+  const SubmitButton = () => (
+    <Button type="primary" htmlType="submit">
+      {userGroup ? t('UPDATE') : t('CREATE')}
+    </Button>
+  );
+  const [showSubmitButton, setShowSubmitButton] = useState(true);
+
+  // Обработчик изменения активной вкладки
+  const handleTabChange = (activeKey: string) => {
+    setShowSubmitButton(activeKey === '1');
+  };
   return (
     <ProForm
       size="small"
       form={form}
       onFinish={handleSubmit}
-      submitter={false}
+      // submitter={false}
+      submitter={{
+        render: (_, dom) => {
+          if (showSubmitButton) {
+            return [<SubmitButton key="submit" />, dom.reverse()[1]];
+          }
+          return null;
+        },
+      }}
       initialValues={userGroup}
       layout="horizontal"
     >
@@ -63,11 +84,11 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
           </ProForm.Group>
         </Tabs.TabPane>
       </Tabs>
-      <ProForm.Item>
+      {/* <ProForm.Item>
         <Button type="primary" htmlType="submit">
           {userGroup ? 'Update' : 'Create'}
         </Button>
-      </ProForm.Item>
+      </ProForm.Item> */}
     </ProForm>
   );
 };

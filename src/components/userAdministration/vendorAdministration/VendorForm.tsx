@@ -33,13 +33,25 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
       form.resetFields();
     }
   }, [vendor, form]);
-
+  const SubmitButton = () => (
+    <Button type="primary" htmlType="submit">
+      {vendor ? t('UPDATE') : t('CREATE')}
+    </Button>
+  );
   return (
     <ProForm
       size="small"
       form={form}
       onFinish={handleSubmit}
-      submitter={false}
+      // submitter={false}
+      submitter={{
+        render: (_, dom) => {
+          // if (showSubmitButton) {
+          return [<SubmitButton key="submit" />, dom.reverse()[1]];
+          // }
+          // return null;
+        },
+      }}
       // initialValues={vendor || {}}
       layout="horizontal"
     >
@@ -291,11 +303,11 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
         </Tabs.TabPane>
       </Tabs>
 
-      <ProForm.Item>
+      {/* <ProForm.Item>
         <Button type="primary" htmlType="submit">
           {vendor ? 'Update' : 'Create'}
         </Button>
-      </ProForm.Item>
+      </ProForm.Item> */}
     </ProForm>
   );
 };
