@@ -28,19 +28,24 @@ interface UserFormProps {
   requierement?: Requirement;
   onSubmit: (company: Requirement) => void;
   onDelete?: (companyId: string) => void;
+  isCreatingV?: boolean;
 }
 interface Option {
   value: string;
   label: string;
 }
-const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
+const RequirementForm: FC<UserFormProps> = ({
+  requierement,
+  onSubmit,
+  isCreatingV,
+}) => {
   const [selectedRequirementState, setSelectedRequirementState] = useState<
     any | null
   >(null);
   const [isEditing, setIsEditing] = useState(true);
   const [isEditingView, setIsEditingView] = useState(false);
 
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(isCreatingV);
 
   const [formReq] = Form.useForm();
   const [formBook] = Form.useForm();
@@ -54,102 +59,93 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
   const [initialFormPN, setinitialFormPN] = useState<any>('');
   const [initialFormProject, setinitialFormProject] = useState<any>('');
   const [selectedSingleProject, setSecectedSingleProject] = useState<any>();
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
-    }
-  };
-  useEffect(() => {
-    if (requierement) {
-      setinitialFormPN(requierement.PN);
-      setinitialFormProject(requierement.projectWO);
 
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
-      form.setFields([
-        { name: 'projectNumber', value: requierement?.projectWO },
-        { name: 'partNumber', value: requierement?.PN },
-        { name: 'projectState', value: requierement?.status },
-
-        { name: 'description', value: requierement.nameOfMaterial },
-
-        { name: 'planedStartDate', value: requierement.plannedDate },
-        { name: 'unit', value: requierement?.unit },
-        { name: 'qty', value: requierement?.amout },
-        { name: 'partGroup', value: requierement?.group },
-        { name: 'partType', value: requierement?.type },
-        { name: 'task', value: requierement?.projectTaskWO },
-      ]);
-      formReq.setFields([
-        { name: 'qty', value: requierement?.issuedQuantity || 0 },
-        { name: 'unit', value: requierement?.unit },
-      ]);
-      formBook.setFields([
-        { name: 'qty', value: requierement?.requestQuantity || 0 },
-        { name: 'unit', value: requierement?.unit },
-      ]);
-
-      // onFilterTransferprojects(form.getFieldsValue());
-    }
-  }, [requierement]);
-  useEffect(() => {
-    if (requierement && isEditingView) {
-      setIsEditing(false);
-    } else {
-      setIsEditing(false);
-    }
-  }, [requierement]);
+  const [form] = ProForm.useForm();
 
   useEffect(() => {
-    if (isEditingView) {
-      setIsEditing(true);
-    } else {
-      setIsEditing(false);
-    }
-  }, [isEditingView]);
-  useEffect(() => {
-    if (isCreating) {
-      form.setFields([{ name: 'partNumber', value: '' }]);
-    }
-  }, [isCreating]);
-  useEffect(() => {
-    const fetchData = async () => {
+    const fetchProjects = async () => {
       const currentCompanyID = localStorage.getItem('companyID');
       if (currentCompanyID) {
-        const result = await dispatch(
-          getFilteredProjects({ companyID: currentCompanyID || '' })
-        );
-        if (result.meta.requestStatus === 'fulfilled') {
-          const options = result.payload.map((item: any) => ({
-            value: item._id, // замените на нужное поле для 'PROJECT'
-            label: `${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
+        try {
+          const result = await dispatch(
+            getFilteredProjects({ companyID: currentCompanyID })
+          ).unwrap();
+          const projectOptions = result.map((item: any) => ({
+            value: item._id,
+            label: `${item.projectWO}-${item.projectName}`,
           }));
-          setOptions(options);
+          setOptions(projectOptions);
+        } catch (error) {
+          message.error('Failed to fetch projects');
         }
       }
     };
 
-    fetchData();
+    fetchProjects();
   }, [dispatch]);
+  useEffect(() => {
+    if (isCreatingV) {
+      setIsCreating(true);
+      form.resetFields();
+      setinitialFormProject('');
+      setinitialFormPN('');
+      setProject(null);
+      setSecectedSingleProject(null);
+      setinitialFormProject('');
+      setSecectedSingleProject({ projectWO: '' });
+    } else {
+      setinitialFormPN('');
+      setinitialFormProject('');
+    }
+  }, [requierement, isCreatingV, form]);
+
+  useEffect(() => {
+    if (requierement) {
+      form.setFieldsValue({
+        // projectNumber: requierement.projectWO,
+        partNumber: requierement.PN,
+        projectState: requierement.status,
+        description: requierement.nameOfMaterial,
+        planedStartDate: requierement.plannedDate,
+        unit: requierement.unit,
+        qty: requierement.amout,
+        partGroup: requierement.group,
+        partType: requierement.type,
+        task: requierement.projectTaskWO,
+      });
+      setinitialFormPN(requierement.PN);
+      setinitialFormProject(requierement.projectWO);
+
+      // Additional form field settings for formReq and formBook
+    } else {
+      setinitialFormPN('');
+      form.setFieldsValue({
+        // projectNumber: requierement.projectWO,
+        partNumber: '',
+      });
+    }
+  }, [requierement, form]);
   const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
 
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [receiverType, setReceiverType] = useState<any>('MAIN_TASK');
-  const [form] = ProForm.useForm();
+
   const { t } = useTranslation();
-  const handleSubmit = async (values: Requirement) => {
-    const newUser: Requirement = requierement
-      ? { ...requierement, ...values }
-      : { ...values };
-    onSubmit(newUser);
-  };
-  useEffect(() => {
-    if (requierement) {
-      form.resetFields();
-      form.setFieldsValue(requierement);
-    } else {
-      form.resetFields();
+
+  const handleSubmit = async (values: any) => {
+    try {
+      // Perform any necessary data transformation or validation here
+      const newRequirement: any = {
+        // ...map the form values to the Requirement model
+      };
+      onSubmit(newRequirement);
+      if (isCreating) {
+        form.resetFields(); // Reset the form fields after creating a new requirement
+      }
+    } catch (error) {
+      message.error(t('ERROR SAVING REQUIREMENT'));
     }
-  }, [requierement, form]);
+  };
 
   const handleUpload = async (file: File) => {
     if (!requierement || !requierement.id) {
@@ -190,6 +186,24 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   return (
     <ProForm
+      onReset={() => {
+        // setIsResetForm(true);
+
+        // setTimeout(() => {
+        //   setIsResetForm(false);
+        // }, 0);
+        setinitialFormPN('');
+        setProject(null);
+        setSecectedSingleProject(null);
+        setinitialFormProject('');
+        setSecectedSingleProject({ projectWO: '' });
+      }}
+      onValuesChange={(changedValues, allValues) => {
+        // Handle changes in the form
+        if (changedValues.receiverType) {
+          setReceiverType(changedValues.receiverType);
+        }
+      }}
       size="small"
       form={form}
       onFinish={handleSubmit}
@@ -206,65 +220,30 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
     >
       <Tabs defaultActiveKey="1" type="card">
         <Tabs.TabPane tab="MAIN" key="1">
-          {isEditing && !isCreating && (
-            <>
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                name="projectState"
-                label={t('REQUIREMENT STATE')}
-                width="sm"
-                // initialValue={planned}
-                valueEnum={{
-                  // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
-                  //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
-                  planned: { text: t('PLANNED'), status: 'Default' },
-                  open: { text: t('NEW'), status: 'Error' },
-                  closed: { text: t('CLOSED'), status: 'Default' },
-                  canceled: { text: t('CANCELLED'), status: 'Error' },
-                  onOrder: { text: t('ISSUED'), status: 'Processing' },
-                }}
-              />
-            </>
-          )}
-          {isCreating && (
-            <>
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                name="projectState"
-                label={t('REQUIREMENT STATE')}
-                width="sm"
-                // initialValue={planned}
-                valueEnum={{
-                  // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
-                  //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
-                  planned: { text: t('PLANNED'), status: 'Default' },
-                  open: { text: t('NEW'), status: 'Error' },
-                }}
-              />
-            </>
-          )}
-          {!isCreating && !isEditing && (
+          <>
             <ProFormSelect
-              disabled
               showSearch
               rules={[{ required: true }]}
               name="projectState"
               label={t('REQUIREMENT STATE')}
               width="sm"
-              // initialValue={planned}
+              initialValue={'draft'}
               valueEnum={{
                 // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
                 //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                 planned: { text: t('PLANNED'), status: 'Default' },
                 open: { text: t('NEW'), status: 'Error' },
+                draft: { text: t('DRAFT'), status: 'Default' },
+                // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
+                //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+
                 closed: { text: t('CLOSED'), status: 'Default' },
                 canceled: { text: t('CANCELLED'), status: 'Error' },
                 onOrder: { text: t('ISSUED'), status: 'Processing' },
               }}
             />
-          )}
+          </>
+
           <ProFormGroup>
             <ProForm.Group direction="horizontal">
               <ContextMenuProjectSearchSelect
@@ -278,7 +257,8 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                 }}
                 name={'projectNumber'}
                 initialForm={
-                  selectedSingleProject?.projectWO || initialFormProject
+                  initialFormProject || selectedSingleProject?.projectWO
+                  // ''
                 }
                 width={'sm'}
                 label={`${t(`PROJECT LINK`)}`}
@@ -350,7 +330,10 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                     { name: 'partNumber', value: PN.PART_NUMBER },
                   ]);
                   form.setFields([
-                    { name: 'description', value: PN.DESCRIPTION },
+                    {
+                      name: 'description',
+                      value: PN.DESCRIPTION || PN.nameOfMaterial,
+                    },
                   ]);
                   form.setFields([{ name: 'unit', value: PN.UNIT_OF_MEASURE }]);
                   form.setFields([
@@ -364,7 +347,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                   form.setFields([{ name: 'partType', value: PN.TYPE }]);
                 }}
                 name={'partNumber'}
-                initialFormPN={initialFormPN}
+                initialFormPN={initialFormPN || ''}
                 width={'lg'}
                 label={`${t('PART No')}`}
               ></ContextMenuPNSearchSelect>
@@ -380,7 +363,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             <ProFormGroup>
               <ProFormDigit
                 name="qty"
-                disabled={!isCreating || !isEditing}
+                disabled={!isCreating}
                 rules={[{ required: true }]}
                 label={t('QTY')}
                 width="xs"

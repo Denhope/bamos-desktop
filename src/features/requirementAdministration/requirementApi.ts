@@ -19,15 +19,13 @@ export const requirementApi = createApi({
       Requirement[],
       {
         projectID?: string;
-        majoreZoneNbr?: number;
-        subZoneNbr?: number;
-        areaNbr?: number;
+        startDate?: any;
         status?: string;
       }
     >({
-      query: ({ majoreZoneNbr, subZoneNbr, areaNbr, status }) => ({
+      query: ({ status, projectID, startDate }) => ({
         url: `requirements/getFilteredRequirements/company/${COMPANY_ID}`,
-        params: { majoreZoneNbr, subZoneNbr, areaNbr, status },
+        params: { projectID, startDate, status },
       }),
       providesTags: ['Requirement'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

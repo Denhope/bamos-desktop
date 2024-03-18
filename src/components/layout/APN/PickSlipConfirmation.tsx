@@ -1067,6 +1067,9 @@ const PickSlipConfirmation: FC = () => {
                                 projectTaskWO: result.payload?.projectTaskWO,
                                 additionalTaskID:
                                   result.payload?.additionalTaskID,
+                                pickDate: result.payload?.createDate,
+                                pickSlipNumber:
+                                  result.payload?.materialAplicationNumber,
                               },
                             })
                           );

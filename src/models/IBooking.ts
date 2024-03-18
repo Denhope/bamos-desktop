@@ -91,6 +91,8 @@ export interface IBookingItem {
   PART_PICKSLIP_REMARKS?: string;
   PART_REPARE_REMARKS?: string;
   PART_PURCHASE_REMARKS?: string;
+  pickDate?: any;
+  pickSlipNumber?: any;
 }
 type VaucherModelType =
   | 'ADD_NEW_PART'

@@ -29,12 +29,13 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
 }) => {
   const [editingRequirement, setEditingRequirement] =
     useState<Requirement | null>(null);
-
+  const [isCreating, setIsCreating] = useState<boolean>(false);
   const { data: requirements, isLoading } = useGetFilteredRequirementsQuery({
     projectID: requirementsSearchValues?.projectID
       ? requirementsSearchValues?.projectID
       : '',
-    status: requirementsSearchValues?.status,
+    startDate: requirementsSearchValues?.startDate,
+    status: requirementsSearchValues?.status || 'open',
   });
 
   const [addCompany] = useAddCompanyMutation();
@@ -43,6 +44,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
 
   const handleCreate = () => {
     setEditingRequirement(null);
+    setIsCreating(true);
   };
 
   const handleEdit = (requierement: Requirement) => {
@@ -51,13 +53,13 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
 
   const handleDelete = async (companyId: string) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS REQUIREMINT?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS REQUIREMENT?'),
       onOk: async () => {
         try {
           await deleteGCompany(companyId).unwrap();
-          message.success(t('REQUIREMINT SUCCESSFULLY DELETED'));
+          message.success(t('REQUIREMENT SUCCESSFULLY DELETED'));
         } catch (error) {
-          message.error(t('ERROR DELETING REQUIREMINT'));
+          message.error(t('ERROR DELETING REQUIREMENT'));
         }
       },
     });
@@ -67,10 +69,10 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     try {
       if (editingRequirement) {
         // await updateCompany(requirement).unwrap();
-        message.success(t('REQUIREMINT SUCCESSFULLY UPDATED'));
+        message.success(t('REQUIREMENT SUCCESSFULLY UPDATED'));
       } else {
         // await addCompany(requirement).unwrap();
-        message.success(t('REQUIREMINT SUCCESSFULLY ADDED'));
+        message.success(t('REQUIREMENT SUCCESSFULLY ADDED'));
       }
       setEditingRequirement(null);
     } catch (error) {
@@ -108,7 +110,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
-            {t('ADD REQUIREMINT')}
+            {t('ADD REQUIREMENT')}
           </Button>
         </Col>
         <Col style={{ textAlign: 'right' }}>
@@ -118,7 +120,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
               icon={<MinusSquareOutlined />}
               // onClick={() => handleDelete(editingRequirement.id)}
             >
-              {t('DELETE REQUIREMINT')}
+              {t('DELETE REQUIREMENT')}
             </Button>
           )}
         </Col>
@@ -142,6 +144,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             requierement={editingRequirement || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
+            isCreatingV={isCreating}
           />
         </Col>
       </Row>
