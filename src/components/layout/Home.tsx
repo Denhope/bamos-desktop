@@ -52,6 +52,7 @@ import RequirementViewer from './APN/RequirementViewer';
 import OrderViewer from './APN/OrderViewer';
 import PickslipRequest from './APN/PickslipRequest';
 import UserAdministration from './APN/UserAdministration';
+import RequirementAdministration from './APN/RequirementAdministration';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -211,6 +212,19 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <RequirementViewer />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.REQUIREMENT_ADMINISTRATION) {
+      tab = {
+        key,
+        title: `${t(`REQUIREMENT ADMINISTRATION`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <RequirementAdministration />
           </div>
         ),
 

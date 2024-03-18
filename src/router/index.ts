@@ -27,6 +27,7 @@ export enum RouteNames {
   LOGIN = '/login',
   REGISTRATION = '/registration',
   USER_ADMINISTRATION = '/user/administration',
+  REQUIREMENT_ADMINISTRATION = '/requirement/administration',
   USER_ROLES = '/user/administration/roles',
   USER_PERMISSIONS = '/user/administration/permissions',
   USER_ACCOUNTS = '/user/administration/accounts',

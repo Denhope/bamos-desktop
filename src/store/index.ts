@@ -27,6 +27,7 @@ import { vendorApi } from '@/features/vendorAdministration/vendorApi';
 import { acTypeApi } from '@/features/acTypeAdministration/acTypeApi';
 import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
 import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
+import { requirementApi } from '@/features/requirementAdministration/requirementApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
 import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
@@ -63,6 +64,7 @@ const store = configureStore({
     [acTypeApi.reducerPath]: acTypeApi.reducer,
     [taskCodeApi.reducerPath]: taskCodeApi.reducer,
     [zoneCodeApi.reducerPath]: zoneCodeApi.reducer,
+    [requirementApi.reducerPath]: requirementApi.reducer,
     vendor: vendorReducer,
     acTypes: acTypesReducer,
     ACZones: zonesReducer,
@@ -75,7 +77,8 @@ const store = configureStore({
       vendorApi.middleware,
       acTypeApi.middleware,
       taskCodeApi.middleware,
-      zoneCodeApi.middleware
+      zoneCodeApi.middleware,
+      requirementApi.middleware
     ),
 });
 export default store;

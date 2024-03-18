@@ -113,6 +113,11 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
       route: RouteNames.REQUIREMENT_MANAGMENT,
     },
+    {
+      APNNBR: '1203',
+      descriptions: `${t(`REQUIREMENT ADMINISTRATION`)}`,
+      route: RouteNames.REQUIREMENT_ADMINISTRATION,
+    },
 
     {
       APNNBR: '2121',
