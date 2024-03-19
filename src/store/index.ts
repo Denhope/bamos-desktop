@@ -29,6 +29,7 @@ import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
 import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
 import { mpdCodeApi } from '@/features/MPDAdministration/mpdCodesApi';
 import { taskApi } from '@/features/tasksAdministration/tasksApi';
+import { acAdminApi } from '@/features/acAdministration/acAdminApi';
 import { requirementApi } from '@/features/requirementAdministration/requirementApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
@@ -36,6 +37,7 @@ import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features//tasksAdministration/taskSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
+import acAdministrationReducer from '@/features/acAdministration/acAdminSlice';
 const store = configureStore({
   reducer: {
     auth: authSlice,
@@ -70,11 +72,13 @@ const store = configureStore({
     [requirementApi.reducerPath]: requirementApi.reducer,
     [mpdCodeApi.reducerPath]: mpdCodeApi.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
+    [acAdminApi.reducerPath]: acAdminApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
     ACZones: zonesReducer,
     tasksAdministration: taskReducer,
+    planesAdministration: acAdministrationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -87,7 +91,8 @@ const store = configureStore({
       zoneCodeApi.middleware,
       requirementApi.middleware,
       mpdCodeApi.middleware,
-      taskApi.middleware
+      taskApi.middleware,
+      acAdminApi.middleware
     ),
 });
 export default store;

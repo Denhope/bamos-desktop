@@ -8,16 +8,20 @@ import {} from '@/features/vendorAdministration/vendorApi';
 import { VendorFilteredFormValues } from './ACAdministrationFilterdForm';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import {
-  useAddTaskMutation,
-  useGetTasksQuery,
   useDeleteTaskMutation,
   useUpdateTaskMutation,
 } from '@/features/tasksAdministration/tasksApi';
-import AdminTaskPanelTree from './ACAdministrationTree';
-import AdminTaskPanelForm from './ACAdministrationlForm';
-import { ITask, ITaskResponce } from '@/models/ITask';
-import ACAdministrationTree from './ACAdministrationTree';
+
+import { ITask } from '@/models/ITask';
+
 import ACAdministrationlForm from './ACAdministrationlForm';
+import {
+  useAddPlaneMutation,
+  useDeletePlaneMutation,
+  useGetPlanesQuery,
+  useUpdatePlaneMutation,
+} from '@/features/acAdministration/acAdminApi';
+import ACAdministrationTree from './ACAdministrationTree';
 
 interface AdminPanelProps {
   values: VendorFilteredFormValues;
@@ -25,19 +29,19 @@ interface AdminPanelProps {
 
 const ACAdministrationPanel: React.FC<AdminPanelProps> = ({ values }) => {
   const [editingvendor, setEditingvendor] = useState<ITask | null>(null);
-  const { tasks } = useTypedSelector((state) => state.tasksAdministration);
+  const { planes } = useTypedSelector((state) => state.planesAdministration);
 
-  const { isLoading } = useGetTasksQuery({});
+  const { isLoading } = useGetPlanesQuery({});
 
-  const [addTask] = useAddTaskMutation();
-  const [updateTask] = useUpdateTaskMutation();
-  const [deleteTask] = useDeleteTaskMutation();
+  const [addPlane] = useAddPlaneMutation();
+  const [updatePlane] = useUpdatePlaneMutation();
+  const [deletePlane] = useDeletePlaneMutation();
 
   const handleCreate = () => {
     setEditingvendor(null);
   };
 
-  const handleEdit = (vendor: ITask) => {
+  const handleEdit = (vendor: any) => {
     setEditingvendor(vendor);
   };
 
@@ -46,7 +50,7 @@ const ACAdministrationPanel: React.FC<AdminPanelProps> = ({ values }) => {
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS A/C?'),
       onOk: async () => {
         try {
-          await deleteTask(vendorId).unwrap();
+          await deletePlane(vendorId).unwrap();
           message.success(t('A/C SUCCESSFULLY DELETED'));
         } catch (error) {
           message.error(t('ERROR DELETING A/C'));
@@ -58,10 +62,10 @@ const ACAdministrationPanel: React.FC<AdminPanelProps> = ({ values }) => {
   const handleSubmit = async (task: ITask) => {
     try {
       if (editingvendor) {
-        await updateTask(task).unwrap();
+        await updatePlane(task).unwrap();
         message.success(t('A/C SUCCESSFULLY UPDATED'));
       } else {
-        await addTask({ task }).unwrap();
+        await addPlane({ task }).unwrap();
         console.log(task);
         message.success(t('A/C SUCCESSFULLY ADDED'));
       }
@@ -111,7 +115,10 @@ const ACAdministrationPanel: React.FC<AdminPanelProps> = ({ values }) => {
           sm={6}
           className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
         >
-          <AdminTaskPanelTree onTaskSelect={handleEdit} tasks={tasks || []} />
+          <ACAdministrationTree
+            onPlaneselect={handleEdit}
+            planes={planes || []}
+          />
         </Col>
         <Col
           className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "

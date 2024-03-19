@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 
 // The rest of your TypeScript code here will not be type-checked by the compiler
 
@@ -17,6 +17,7 @@ import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
 import { useGetGroupTaskCodesQuery } from '@/features/tasksAdministration/taskCodesApi';
 import { ProFormDigit, ProFormTextArea } from '@ant-design/pro-components';
+import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 
 interface UserFormProps {
   task?: ITask;
@@ -68,7 +69,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       acc[acType.id] = acType.name;
       return acc;
     }, {}) || {};
-
+  const { data: companies, isLoading } = useGetCompaniesQuery({});
   const { data: mpdCodes, isLoading: mpdCodesLoading } = useGetMPDCodesQuery(
     { acTypeID },
     { skip: !acTypeID } // Skip the query if acTypeID is not set
@@ -85,6 +86,11 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   const mpdCodesValueEnum: Record<string, string> =
     mpdCodes?.reduce((acc, mpdCode) => {
       acc[mpdCode.id] = mpdCode.code;
+      return acc;
+    }, {}) || {};
+  const companiesCodesValueEnum: Record<string, string> =
+    companies?.reduce((acc, mpdCode) => {
+      acc[mpdCode.id] = mpdCode.companyName;
       return acc;
     }, {}) || {};
 
@@ -111,7 +117,6 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 onChange={(value: any) => setACTypeID(value)}
               />
               <ProFormSelect
-                mode={'multiple'}
                 showSearch
                 name="mpdDocumentationId"
                 label={t('MPD CODE')}
@@ -121,79 +126,23 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               />
               <ProFormSelect
                 showSearch
-                // mode="multiple"
-                name="taskType"
-                label={t('TASK TYPE')}
-                width="xl"
-                valueEnum={{
-                  SB: { text: t('SERVICE BULLETIN') },
-                  SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
-                  ADP: { text: t('ADP') },
-                  AD: { text: t('AIRWORTHINESS DIRECTIVE') },
-                  PN: { text: t('COMPONENT') },
-                }}
-              />
-              <ProFormGroup>
-                <ProFormText
-                  width={'sm'}
-                  name="taskNumber"
-                  label="TASK NUMBER"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                />
-                <ProFormText
-                  width={'xs'}
-                  name="revision"
-                  label={t('REVISION')}
-                  rules={[
-                    {
-                      // required: true,
-                    },
-                  ]}
-                />
-                <ProFormText
-                  width={'sm'}
-                  name="taskDescription"
-                  label="DESCRIPTION"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                />
-              </ProFormGroup>
-
-              <ProFormText
-                width={'sm'}
-                name="amtoss"
-                label="AMM"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              />
-              <ProFormSelect
-                showSearch
-                name="zonesID"
-                mode={'multiple'}
-                label={t('ZONES')}
-                width="sm"
-                valueEnum={zonesValueEnum}
-                disabled={!acTypeID}
-              />
-              <ProFormSelect
-                // mode={'multiple'}
-                showSearch
-                name="code"
-                label={t('TASK CODE')}
-                width="sm"
-                valueEnum={taskCodesValueEnum}
+                name="companyID"
+                label={t('COMPANY CODE')}
+                width="lg"
+                valueEnum={companiesCodesValueEnum}
                 disabled={!acTypeID} // Disable the select if acTypeID is not set
               />
+
+              <ProFormText
+                name="serialNbr"
+                label={t('SERIAL No')}
+                width="sm"
+              ></ProFormText>
+              <ProFormText
+                name="regNbr"
+                label={t('REGISTRATION No')}
+                width="sm"
+              ></ProFormText>
               <ProFormTextArea
                 // mode={'multiple'}
 
@@ -216,51 +165,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
             </ProFormGroup>
             <Divider />
             <ProFormGroup>
-              <ProFormDigit
-                width={'xs'}
-                name="intervalDAYS"
-                label={t('INTERVAL DAYS')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="toleranceDAY"
-                label={t('TOLERANCE DAY')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="intervalMOS"
-                label={t('INTERVAL MOS')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="toleranceMOS"
-                label={t('TOLERANCE MOS')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="intervalHRS"
-                label={t('INTERVAL HRS')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="toleranceMHS"
-                label={t('TOLERANCE MHS')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="intervalAFL"
-                label={t('INTERVAL AFL')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="intervalENC"
-                label={t('INTERVAL ENC')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="intervalAPUS"
-                label={t('INTERVAL APUS')}
-              />
+              <ProFormDigit width={'xs'} name="ACAFL" label={t('ACAFL')} />
             </ProFormGroup>
           </ProFormGroup>
         </Tabs.TabPane>

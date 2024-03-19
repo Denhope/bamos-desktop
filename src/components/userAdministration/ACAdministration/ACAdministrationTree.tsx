@@ -1,37 +1,36 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
-// Убедитесь, что вы импортировали правильный тип task
+// Убедитесь, что вы импортировали правильный тип plane
 import CustomTree from '../zoneCodeAdministration/CustomTree';
-import { ITask } from '@/models/ITask';
 
 interface TreeDataNode extends DataNode {
-  task?: ITask;
+  plane?: any;
 }
 
 interface UserTreeProps {
-  onTaskSelect: (task: ITask) => void;
-  tasks: ITask[] | [];
+  onPlaneselect: (plane: any) => void;
+  planes: any[] | [];
 }
 
 const { Search } = Input;
 
-const ACAdministrationTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
+const ACAdministrationTree: FC<UserTreeProps> = ({ onPlaneselect, planes }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  const convertToTreeData = (tasks: ITask[]): TreeDataNode[] => {
-    return tasks.map((task) => ({
-      title: String(task.taskNumber).toUpperCase(),
-      key: task.id,
-      task: task,
+  const convertToTreeData = (planes: any[]): TreeDataNode[] => {
+    return planes.map((plane) => ({
+      title: String(plane.regNbr).toUpperCase(),
+      key: plane.id,
+      plane: plane,
     }));
   };
 
   useEffect(() => {
-    setTreeData(convertToTreeData(tasks));
-  }, [tasks]);
+    setTreeData(convertToTreeData(planes));
+  }, [planes]);
 
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
@@ -56,9 +55,9 @@ const ACAdministrationTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
       );
     }
 
-    const selectedGroup = filteredTreeData[selectedIndex].task;
+    const selectedGroup = filteredTreeData[selectedIndex].plane;
     if (selectedGroup) {
-      onTaskSelect(selectedGroup);
+      onPlaneselect(selectedGroup);
     }
   };
 
@@ -81,9 +80,9 @@ const ACAdministrationTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
         checkable={false}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
-          const task = tasks.find((task) => task.id === selectedKeys[0]);
-          if (task) {
-            onTaskSelect(task);
+          const plane = planes.find((plane) => plane.id === selectedKeys[0]);
+          if (plane) {
+            onPlaneselect(plane);
           }
         }}
         height={660}

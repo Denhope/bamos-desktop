@@ -33,6 +33,8 @@ import AdminTaskPanelForm from '@/components/userAdministration/taskAdministrati
 import AdminTaskPanel from '@/components/userAdministration/taskAdministration/AdminTaskPanel';
 import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministration/AdminTaskFilterdForm';
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
+
+import { useGetPlanesQuery } from '@/features/acAdministration/acAdminApi';
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
 
 const UserAdministration: FC = () => {
@@ -60,16 +62,15 @@ const UserAdministration: FC = () => {
     getItem(<>{t('VENDORS ')}</>, RouteNames.VENDORS, <GroupOutlined />),
     getItem(<>{t('AC TYPES ')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
     getItem(<>{t('AC TASKS ')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
-    getItem(
-      <>{t('AC ADMINISTRATION ')}</>,
-      RouteNames.AC_ADMINISTRATION,
-      <GroupOutlined />
-    ),
+    getItem(<>{t('AC ADMINISTRATION ')}</>, RouteNames.AC, <GroupOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
 
   const [activeKey, setActiveKey] = useState<string>('');
+  const [acrFormValues, setACFormValues] = useState<any>({
+    status: [''],
+  });
   const [vendorFormValues, setVendorFormValues] =
     useState<VendorFilteredFormValues>({
       CODE: '',
@@ -86,10 +87,15 @@ const UserAdministration: FC = () => {
       name: '',
       status: [''],
     });
-
+  const { refetch: refetchPlanes } = useGetPlanesQuery({
+    status: tasksFormValues.status,
+    // planeNumber: tasksFormValues.taskNumber,
+    acTypeID: tasksFormValues.acTypeId,
+  });
   const { refetch: refetchTasks } = useGetTasksQuery({
     status: tasksFormValues.status,
     taskNumber: tasksFormValues.taskNumber,
+    acTypeID: tasksFormValues.acTypeId,
   });
   const { refetch: refetchVendors } = useGetVendorsQuery({
     code: vendorFormValues.CODE,
@@ -113,6 +119,9 @@ const UserAdministration: FC = () => {
   useEffect(() => {
     refetchACTypes();
   }, [ACTypesFormValues, refetchACTypes]);
+  useEffect(() => {
+    refetchPlanes();
+  }, [acrFormValues, refetchPlanes]);
   const onEdit = (
     targetKey:
       | string
@@ -132,6 +141,23 @@ const UserAdministration: FC = () => {
     }
   };
   const onMenuClick = ({ key }: { key: string }) => {
+    if (key === RouteNames.AC) {
+      const tab = {
+        key,
+        title: `${t('AC ADMINISTRATION')}`,
+        content: (
+          <div>
+            <ACAdministrationPanel values={acrFormValues} />
+          </div>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+
     if (key === RouteNames.USER_GROUPS) {
       const tab = {
         key,
@@ -197,18 +223,7 @@ const UserAdministration: FC = () => {
       }
       setActiveKey(tab.key);
     }
-    if (key === RouteNames.AC_ADMINISTRATION) {
-      const tab = {
-        key,
-        title: `${t('AC ADMINISTRATION')}`,
-        content: (
-          <div>
-            <ACAdministrationPanel values={vendorFormValues} />
-          </div>
-        ),
-        closable: true,
-      };
-    }
+
     if (key === RouteNames.USER_PERMISSIONS) {
       const tab = {
         key,
