@@ -17,11 +17,17 @@ export const acAdminApi = createApi({
   endpoints: (builder) => ({
     getPlanes: builder.query<
       any[],
-      { code?: string; status?: any; acTypeID?: string; taskNumber?: string }
+      {
+        code?: string;
+        status?: any;
+        acTypeID?: string;
+        taskNumber?: string;
+        taskType?: string;
+      }
     >({
-      query: ({ code, acTypeID, taskNumber, status }) => ({
+      query: ({ code, acTypeID, taskNumber, taskType }) => ({
         url: `planes/administration/getFilteredAC/company/${COMPANY_ID}`,
-        params: { code, status, acTypeID, taskNumber },
+        params: { code, status, acTypeID, taskNumber, taskType },
       }),
       providesTags: ['ACTypes'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

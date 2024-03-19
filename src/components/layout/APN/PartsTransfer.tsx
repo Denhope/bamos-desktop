@@ -58,46 +58,46 @@ const PartsTransfer: FC = () => {
   const [partsOpenModify, setOpenPartsModify] = useState<boolean>(false);
 
   return (
-    <div className="h-[82vh]   px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh]    overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col">
-        <div className="py-4">
-          <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
-            <Col xs={2} sm={7}>
-              <TransferFilteredForm
-                onReset={() => {
-                  // Сброс состояний
-                  setSecectedParts(null);
-                  setOnFilterBookingDEtails(null);
-                  setOnFilterTransferDEtails(null);
-                  setSecectedStore(null);
-                  setSelectedComStore(null);
-                  setSecectedLocation(null);
-                }}
-                onSelectedValues={setOnFilterTransferDEtails}
-                onSelectLocation={function (record: any): void {
-                  // setselectedRowKeys([]);
-                  setSecectedLocation(record);
-                }}
-                onSelectSelectedStore={function (record: any): void {
-                  setSecectedStore(record);
-                  setSelectedComStore(record);
+        {/* <div className="py-4"> */}
+        <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="pb-4">
+          <Col xs={2} sm={7}>
+            <TransferFilteredForm
+              onReset={() => {
+                // Сброс состояний
+                setSecectedParts(null);
+                setOnFilterBookingDEtails(null);
+                setOnFilterTransferDEtails(null);
+                setSecectedStore(null);
+                setSelectedComStore(null);
+                setSecectedLocation(null);
+              }}
+              onSelectedValues={setOnFilterTransferDEtails}
+              onSelectLocation={function (record: any): void {
+                // setselectedRowKeys([]);
+                setSecectedLocation(record);
+              }}
+              onSelectSelectedStore={function (record: any): void {
+                setSecectedStore(record);
+                setSelectedComStore(record);
 
-                  // setselectedRowKeys([]);
-                }}
-                onFilterTransferParts={function (record: any): void {
-                  // setSecectedStore(record);
-                  // setselectedRowKeys([]);
-                }}
-              ></TransferFilteredForm>
-            </Col>
-            <Col sm={17}>
-              <BookingDetailsForm
-                onFilterBookingDEtails={setOnFilterBookingDEtails}
-                initialStore={selectedStore}
-              />
-            </Col>
-          </Row>
-        </div>
+                // setselectedRowKeys([]);
+              }}
+              onFilterTransferParts={function (record: any): void {
+                // setSecectedStore(record);
+                // setselectedRowKeys([]);
+              }}
+            ></TransferFilteredForm>
+          </Col>
+          <Col sm={17}>
+            <BookingDetailsForm
+              onFilterBookingDEtails={setOnFilterBookingDEtails}
+              initialStore={selectedStore}
+            />
+          </Col>
+        </Row>
+        {/* </div> */}
 
         <ShowParts
           storeName={onFilterTransferDEtails?.store?.toUpperCase().trim()}

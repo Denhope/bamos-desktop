@@ -71,7 +71,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               <ProFormText
                 width={'sm'}
                 name="firstNameEnglish"
-                label="First Name (English)"
+                label={t('FIRST NAME (ENGLISH)')}
                 rules={[
                   {
                     required: true,
@@ -86,7 +86,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               <ProFormText
                 width={'lg'}
                 name="lastNameEnglish"
-                label="Last Name (English)"
+                label={t('LAST NAME (ENGLISH)')}
                 rules={[
                   {
                     required: true,
@@ -103,7 +103,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               <ProFormText
                 width={'sm'}
                 name="firstName"
-                label="First Name"
+                label={t('FIRST NAME')}
                 rules={[
                   {
                     required: true,
@@ -118,7 +118,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               <ProFormText
                 width={'lg'}
                 name="lastName"
-                label="Last Name"
+                label={t('LAST NAME')}
                 rules={[
                   {
                     required: true,
@@ -134,7 +134,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
             <ProForm.Group>
               <ProFormSelect
                 name="role"
-                label="Role"
+                label={t('ROLE')}
                 options={[
                   { value: 'admin', label: t('ADMIN') },
                   { value: 'engineer', label: t('ENGINEER') },
@@ -146,7 +146,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               />
               <ProFormSelect
                 name="userGroupID"
-                label="Group"
+                label={t('GROUP')}
                 options={groupOptions}
                 rules={[{ required: true }]}
               />
@@ -154,7 +154,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
             <ProForm.Group>
               <ProFormText
                 name="login"
-                label="Login"
+                label={t('LOGIN')}
                 // rules={[
                 //   { required: true, message: 'Please enter your login' },
                 //   { type: 'email', message: 'Please enter a valid login' },
@@ -162,7 +162,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               />
               <ProFormText
                 name="email"
-                label="Email"
+                label={t('EMAIL')}
                 rules={[
                   { required: true, message: 'Please enter your email' },
                   { type: 'email', message: 'Please enter a valid email' },
@@ -172,7 +172,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
                 <ProForm.Group>
                   <ProFormText.Password
                     name="password"
-                    label="Password"
+                    label={t('PASSWORD')}
                     rules={[
                       { required: true, message: 'Please enter your password' },
                       {
@@ -185,7 +185,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
               )}
               <ProFormText.Password
                 name="pass"
-                label="Pass"
+                label={t('PASS')}
                 rules={[
                   { required: true, message: 'Please enter your pass' },
                   { min: 6, message: 'Password must be at least 6 characters' },
@@ -195,7 +195,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
 
             <ProFormText
               name="phoneNumber"
-              label="Phone Number"
+              label={t('PHONE')}
               rules={[
                 { required: true, message: 'Please enter your phone number' },
                 {
@@ -207,7 +207,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
             />
             <ProFormText
               name="telegramID"
-              label="Telegram ID"
+              label={t('TELEGRAM ID')}
               // rules={[
               //   { required: true, message: 'Please enter your Telegram ID' },
               //   {
@@ -218,7 +218,8 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
             />
             <ProFormText
               name="singNumber"
-              label="Employee ID"
+              label={t('EMPLOYEE ID')}
+
               // rules={[
               //   { required: true, message: 'Please enter your employee ID' },
               //   {

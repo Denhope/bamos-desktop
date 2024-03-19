@@ -96,10 +96,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
         </Col>
       </Space>
 
-      <Row className="gap-6">
-        <Col
-          sm={6}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+      <div className="  flex gap-4 justify-between">
+        <div
+          // sm={4}
+          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
         >
           <UserTree
             onUserSelect={function (user: User): void {
@@ -107,10 +107,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
             }}
             usersGroup={usersGroup || []}
           />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white py-3 rounded-md brequierement-gray-400 p-3 "
-          sm={17}
+        </div>
+        <div
+          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
+          // sm={19}
         >
           <UserForm
             user={editingUser || undefined}
@@ -118,8 +118,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
             roles={['admin']}
             groups={groups || []}
           />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </>
   );
 };

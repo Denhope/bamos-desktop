@@ -92,7 +92,7 @@ const AdminTaskFilterdForm: FC<
         />
         <ProFormSelect
           showSearch
-          // mode="multiple"
+          mode="multiple"
           name="taskType"
           label={t('TASK TYPE')}
           width="xl"

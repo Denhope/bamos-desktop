@@ -110,7 +110,7 @@ const MPDAdministrationFormPanel: React.FC<AdminPanelProps> = ({
         </Col>
       </Space>
 
-      <Row justify={'space-between'} className="gap-6">
+      <Row justify={'space-between'} className="gap-4">
         <Col
           sm={12}
           className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
