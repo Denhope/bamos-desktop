@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 const UnserviseDetaails: FC = () => {
   const { t } = useTranslation();
-  const { isLoading, filteredCurrentStockItems, filteredStockDetails } =
-    useTypedSelector((state) => state.storesLogistic);
+  const { filteredStockDetails } = useTypedSelector(
+    (state) => state.storesLogistic
+  );
   const [data, setData] = useState<any>([]);
   useEffect(() => {
     setData(filteredStockDetails);
@@ -83,16 +84,6 @@ const UnserviseDetaails: FC = () => {
       // responsive: ['sm'],
     },
 
-    // {
-    //   title: `${t('DESCRIPTION')}`,
-    //   dataIndex: 'NAME_OF_MATERIAL',
-    //   key: 'NAME_OF_MATERIAL',
-
-    //   // responsive: ['sm'],
-    //   tooltip: 'ITEM DESCRIPTION',
-    //   ellipsis: true, //
-    //   width: '20%',
-    // },
     {
       title: `${t('BATCH/SERIAL')}`,
       dataIndex: 'SERIAL_NUMBER',

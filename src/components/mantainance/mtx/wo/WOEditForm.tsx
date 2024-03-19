@@ -12,9 +12,9 @@ import {
   Select,
   Space,
   message,
-} from "antd";
-import React, { FC, useRef, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+} from 'antd';
+import React, { FC, useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   createNewPlaneWO,
   editPlaneWO,
@@ -23,20 +23,18 @@ import {
   getPlaneWOByID,
   getPlanesNumber,
   getPlanesTaskNumber,
-} from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { RangePickerProps } from "antd/es/date-picker";
-import { IPlane } from "@/models/IPlane";
-import { IPlaneTask } from "@/models/ITask";
+} from '@/utils/api/thunks';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { RangePickerProps } from 'antd/es/date-picker';
+import { IPlane } from '@/models/IPlane';
 
-import { setPlaneTasks } from "@/store/reducers/MtxSlice";
-import TextArea from "antd/es/input/TextArea";
+import TextArea from 'antd/es/input/TextArea';
 
-import SingleSelectForm from "@/components/shared/form/SingleSelect";
-import toast, { Toaster } from "react-hot-toast";
-import { IPlaneWO } from "@/models/IPlaneWO";
-import moment from "moment";
-import { USER_ID } from "@/utils/api/http";
+import toast, { Toaster } from 'react-hot-toast';
+import { IPlaneWO } from '@/models/IPlaneWO';
+import moment from 'moment';
+import { USER_ID } from '@/utils/api/http';
+import { ProFormDatePicker } from '@ant-design/pro-components';
 interface EditFormProps {
   selectedWOumber: any;
   // planeWO: IPlaneWO | null;
@@ -44,25 +42,20 @@ interface EditFormProps {
 const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
   const dispatch = useAppDispatch();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {};
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {
     // console.log('onOk: ', value);
   };
   const { Option } = Select;
 
   const [form] = Form.useForm();
-  // const [selectedValuesATA, setSelectedValuesATA] = useState<string[]>([]);
-  // const [selectedValuesTaskype, setSelectedValuesTaskType] = useState<string[]>(
-  // [];
-  // );
+
   const [optionsRegNbr, setOptionsRegNbr] = useState([]);
-  // const [selectedPlane, setSelectedPlane] = useState<any | null>(null);
-  // const timeoutRefRegNbr = useRef<NodeJS.Timeout | null>(null);
 
   const handleSelectDepartment = (values: any) => {
     form.setFieldsValue({
@@ -93,7 +86,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const currentPlaneID = localStorage.getItem("currentPlaneID");
+      const currentPlaneID = localStorage.getItem('currentPlaneID');
       if (currentPlaneID && selectedWOumber) {
         const planeWO = await getPlaneWOByID(selectedWOumber).then((wo) =>
           setPlaneWO(wo)
@@ -149,7 +142,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
       <div
         className="flex flex-col mx-auto"
         style={{
-          width: "100%",
+          width: '100%',
         }}
       >
         <Form
@@ -168,16 +161,16 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
                 classification: values.classification,
                 department: values.department,
                 status: values.status,
-                userID: USER_ID || "",
+                userID: USER_ID || '',
                 planeID: currentPlane?.id || currentPlane?._id,
                 dateCreate: new Date(),
                 description: values.description,
                 regNbr: currentPlane?.regNbr,
               })
             );
-            if (result.meta.requestStatus === "fulfilled") {
-              toast.success("WO Edit Sucsess");
-              const currentPlaneID = localStorage.getItem("currentPlaneID");
+            if (result.meta.requestStatus === 'fulfilled') {
+              toast.success('WO Edit Sucsess');
+              const currentPlaneID = localStorage.getItem('currentPlaneID');
               if (currentPlaneID) {
                 dispatch(
                   getFilteredPlanesWO({ planeID: JSON.parse(currentPlaneID) })
@@ -185,7 +178,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
               }
               // dispatch(fetchAllProjects());
             } else {
-              toast.error("Error");
+              toast.error('Error');
             }
           }}
           form={form}
@@ -203,20 +196,20 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
             >
               <Input placeholder="please enter A/C Number" />
             </AutoComplete>
-          </Form.Item>{" "}
+          </Form.Item>{' '}
           <Form.Item label="Work Order Number" name="WONbr">
             <Input placeholder="please enter Work Order Number" />
           </Form.Item>
-          <Form.Item label={`${t("Description")}`} name="description">
+          <Form.Item label={`${t('Description')}`} name="description">
             <TextArea placeholder="please enter decsription" />
           </Form.Item>
           <Divider />
-          <Row justify={"space-between"}>
+          <Row justify={'space-between'}>
             <Form.Item label="Date In" name="dateIn">
-              <DatePicker onChange={onChange} />
+              <ProFormDatePicker />
             </Form.Item>
             <Form.Item label="Date Out" name="dateOut">
-              <DatePicker onChange={onChange} />
+              <ProFormDatePicker />
             </Form.Item>
           </Row>
           <Divider />
@@ -267,19 +260,19 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
           </Form.Item>
           <Divider />
           <>Hours</>
-          <Row align={"middle"} gutter={[16, 16]}>
+          <Row align={'middle'} gutter={[16, 16]}>
             <Col span={7}></Col>
             <Col span={5}>Estimated</Col>
             <Col span={8}>Actual</Col>
           </Row>
           <Form.Item>
-            <Row align={"middle"} gutter={[16, 16]}>
+            <Row align={'middle'} gutter={[16, 16]}>
               <Col span={10}>
                 <div>Labor (Hrs:Min)</div>
               </Col>
 
               <Col span={7}>
-                <Form.Item noStyle name={"projAFL"}>
+                <Form.Item noStyle name={'projAFL'}>
                   <Input
                     className="w-full"
                     // onChange={handleChange}
@@ -287,7 +280,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
                 </Form.Item>
               </Col>
               <Col span={7}>
-                <Form.Item noStyle name={"targetAFL"}>
+                <Form.Item noStyle name={'targetAFL'}>
                   <Input
                   // value={
                   //   value && currentPlane?.utilisation?.ACAFL
@@ -301,13 +294,13 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
             </Row>
           </Form.Item>
           <Form.Item>
-            <Row align={"middle"} gutter={[16, 16]}>
+            <Row align={'middle'} gutter={[16, 16]}>
               <Col span={10}>
                 <div>Labor Cost </div>
               </Col>
 
               <Col span={7}>
-                <Form.Item noStyle name={"projAFL"}>
+                <Form.Item noStyle name={'projAFL'}>
                   <Input
                     className="w-full"
                     // onChange={handleChange}
@@ -315,7 +308,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
                 </Form.Item>
               </Col>
               <Col span={7}>
-                <Form.Item noStyle name={"targetAFL"}>
+                <Form.Item noStyle name={'targetAFL'}>
                   <Input
                   // value={
                   //   value && currentPlane?.utilisation?.ACAFL
@@ -330,7 +323,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
           </Form.Item>
           <Form.Item>
             <Space className="">
-              {" "}
+              {' '}
               <Button htmlType="submit" type="primary">
                 Save
               </Button>

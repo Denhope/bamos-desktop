@@ -7,19 +7,19 @@ import {
   Input,
   InputNumber,
   Spin,
-} from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
-import form from "antd/es/form";
-import Title from "antd/es/typography/Title";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IPlane } from "@/models/IPlane";
-import moment, { localeData } from "moment";
-import dayjs from "dayjs";
+} from 'antd';
+import { RangePickerProps } from 'antd/es/date-picker';
+import form from 'antd/es/form';
+import Title from 'antd/es/typography/Title';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IPlane } from '@/models/IPlane';
+import moment, { localeData } from 'moment';
+import dayjs from 'dayjs';
 
-import React, { FC, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { createNewPlane, editPlane, getPlane } from "@/utils/api/thunks";
-import { useTranslation } from "react-i18next";
+import React, { FC, useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { createNewPlane, editPlane, getPlane } from '@/utils/api/thunks';
+import { useTranslation } from 'react-i18next';
 interface EditFormProps {
   selectedACNumber: any;
 }
@@ -29,7 +29,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
   const { t } = useTranslation();
   const timeFormat = /^\d{1,4}:\d{2}$/;
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {
     // console.log('Selected Time: ', value);
@@ -37,7 +37,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
   };
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {
     // console.log('onOk: ', value);
   };
@@ -90,7 +90,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
       <div
         className="flex flex-col mx-auto"
         style={{
-          width: "93%",
+          width: '93%',
         }}
       >
         {plane && plane?.id ? (
@@ -142,8 +142,8 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
                   },
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
-                toast.success(" A/C is Edited");
+              if (result.meta.requestStatus === 'fulfilled') {
+                toast.success(' A/C is Edited');
                 // form.resetFields();
               }
             }}
@@ -160,7 +160,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
             </Form.Item>
             <Form.Item
               rules={[{ required: true }]}
-              label={`${t("Serial Number")}`}
+              label={`${t('Serial Number')}`}
               name="serialNbr"
             >
               <Input disabled />
@@ -180,14 +180,14 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
               label="Certification"
               name="certification"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               // rules={[{ required: true }]}
               label="A/C Times (Date)"
               name="ACDATE"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               rules={[{ required: true }]}
@@ -207,7 +207,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
             <Title level={5}>Engine 1</Title>
             <Form.Item
               rules={[{ required: true }]}
-              label={`${t("Serial Number")}`}
+              label={`${t('Serial Number')}`}
               name="ENC1SerialNumber"
             >
               <Input allowClear />
@@ -225,14 +225,14 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
               label="Certification"
               name="ENC1Certification"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               // rules={[{ required: true }]}
               label="ENGINE Times (Date)"
               name="ENC1DATE"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               rules={[{ required: true }]}
@@ -253,7 +253,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
 
             <Form.Item
               rules={[{ required: true }]}
-              label={`${t("Serial Number")}`}
+              label={`${t('Serial Number')}`}
               name="ENC2SerialNumber"
             >
               <Input allowClear />
@@ -271,14 +271,14 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
               label="Certification"
               name="ENC2Certification"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               // rules={[{ required: true }]}
               label="ENGINE Times (Date)"
               name="ENC2DATE"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               rules={[{ required: true }]}
@@ -299,7 +299,7 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
 
             <Form.Item
               rules={[{ required: true }]}
-              label={`${t("Serial Number")}`}
+              label={`${t('Serial Number')}`}
               name="APUSerialNumber"
             >
               <Input allowClear />
@@ -317,14 +317,14 @@ const EditForm: FC<EditFormProps> = ({ selectedACNumber }) => {
               label="Certification"
               name="APUCertification"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               // rules={[{ required: true }]}
               label="APU Times (Date)"
               name="APUDATE"
             >
-              <DatePicker onChange={onChange} onOk={onOk} />
+              {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
             </Form.Item>
             <Form.Item
               rules={[{ required: true }]}

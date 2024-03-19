@@ -73,7 +73,7 @@ import CloseContent from '../../wp/activeTask/close/CloseContent';
 import RequirementItems from '../../wp/activeTask/requeriments/RequirementItems';
 import GeneretedWOPdfCurr from '@/components/pdf/GeneretedWOPdfCurr';
 import IssuedMatForm from '../../wp/activeTask/requeriments/IssuedMatForm';
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 
 // import Store from '@/components/pages/Store';
 
@@ -1586,7 +1586,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                           },
                           status: 'open',
                           _id: '',
-                          name: String(FULL_NAME),
+                          name: FULL_NAME,
                           sing: String(localStorage.getItem('singNumber')),
                           actions: [
                             {

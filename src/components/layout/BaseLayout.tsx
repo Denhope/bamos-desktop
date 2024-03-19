@@ -469,7 +469,7 @@ const BaseLayout: React.FC = () => {
                   open={isFocused}
                   onSearch={handleSearch}
                   onSelect={handleSelect}
-                  // onFocus={handleFocus} // Добавляем обработчик события onFocus
+                  onFocus={handleFocus} // Добавляем обработчик события onFocus
                   onBlur={handleBlur} // Добавляем обработчик события onBlur
                   value={value}
                   filterOption={(input, option) => {
