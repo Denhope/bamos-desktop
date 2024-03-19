@@ -33,6 +33,7 @@ import AdminTaskPanelForm from '@/components/userAdministration/taskAdministrati
 import AdminTaskPanel from '@/components/userAdministration/taskAdministration/AdminTaskPanel';
 import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministration/AdminTaskFilterdForm';
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
+import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -59,6 +60,11 @@ const UserAdministration: FC = () => {
     getItem(<>{t('VENDORS ')}</>, RouteNames.VENDORS, <GroupOutlined />),
     getItem(<>{t('AC TYPES ')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
     getItem(<>{t('AC TASKS ')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
+    getItem(
+      <>{t('AC ADMINISTRATION ')}</>,
+      RouteNames.AC_ADMINISTRATION,
+      <GroupOutlined />
+    ),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -185,10 +191,23 @@ const UserAdministration: FC = () => {
         ),
         closable: true,
       };
+
       if (!panes.find((pane) => pane.key === tab.key)) {
         setPanes((prevPanes) => [...prevPanes, tab]);
       }
       setActiveKey(tab.key);
+    }
+    if (key === RouteNames.AC_ADMINISTRATION) {
+      const tab = {
+        key,
+        title: `${t('AC ADMINISTRATION')}`,
+        content: (
+          <div>
+            <ACAdministrationPanel values={vendorFormValues} />
+          </div>
+        ),
+        closable: true,
+      };
     }
     if (key === RouteNames.USER_PERMISSIONS) {
       const tab = {
