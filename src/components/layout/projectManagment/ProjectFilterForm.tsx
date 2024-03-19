@@ -44,7 +44,7 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
         className="bg-white px-4 py-3 rounded-md border-gray-400"
         size="small"
         layout="horizontal"
-        labelCol={{ span: 12 }}
+        // labelCol={{ span: 12 }}
         formRef={formRef}
         form={form}
         onFinish={async (values) => {

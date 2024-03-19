@@ -58,9 +58,13 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
 
   const zonesValueEnum: Record<string, string> =
-    zones?.reduce((acc, acType) => {
-      acc[acType.id] = acType.majoreZoneNbr;
-      return acc;
+    zones?.reduce((acc1, majorZone) => {
+      return majorZone.subZonesCode.reduce((acc2, subZone) => {
+        return subZone.areasCode.reduce((acc3, area) => {
+          acc3[area.id] = String(area.areaNbr);
+          return acc3;
+        }, acc2);
+      }, acc1);
     }, {}) || {};
 
   const acTypeValueEnum: Record<string, string> =
@@ -135,7 +139,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               />
               <ProFormGroup>
                 <ProFormText
-                  width={'sm'}
+                  width={'xl'}
                   name="taskNumber"
                   label="TASK NUMBER"
                   rules={[
@@ -146,7 +150,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 />
                 <ProFormText
                   width={'xs'}
-                  name="revision"
+                  name="rev"
                   label={t('REVISION')}
                   rules={[
                     {
@@ -154,8 +158,17 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                     },
                   ]}
                 />
-                <ProFormText
-                  width={'sm'}
+                <ProFormDigit
+                  width={'xs'}
+                  name="allTaskTime"
+                  label={t('MHS')}
+                />
+                <ProFormTextArea
+                  fieldProps={{
+                    style: { resize: 'none' },
+                    rows: 6,
+                  }}
+                  width="xl"
                   name="taskDescription"
                   label="DESCRIPTION"
                   rules={[
@@ -166,8 +179,9 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 />
               </ProFormGroup>
 
-              <ProFormText
+              <ProFormTextArea
                 width={'sm'}
+                fieldProps={{ style: { resize: 'none' } }}
                 name="amtoss"
                 label="AMM"
                 rules={[
@@ -186,6 +200,15 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 disabled={!acTypeID}
               />
               <ProFormSelect
+                showSearch
+                name="accessID"
+                mode={'multiple'}
+                label={t('ACCESS')}
+                width="sm"
+                valueEnum={[]}
+                disabled={!acTypeID}
+              />
+              <ProFormSelect
                 // mode={'multiple'}
                 showSearch
                 name="code"
@@ -195,8 +218,10 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 disabled={!acTypeID} // Disable the select if acTypeID is not set
               />
               <ProFormTextArea
-                // mode={'multiple'}
-
+                fieldProps={{
+                  style: { resize: 'none' },
+                  rows: 1,
+                }}
                 name="note"
                 label={t('REMARKS')}
                 width="lg"
@@ -214,7 +239,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 }}
               />
             </ProFormGroup>
-            <Divider />
+
             <ProFormGroup>
               <ProFormDigit
                 width={'xs'}

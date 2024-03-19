@@ -146,7 +146,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               <ProFormTextArea
                 // mode={'multiple'}
 
-                name="note"
+                name="remarks"
                 label={t('REMARKS')}
                 width="lg"
                 // Disable the select if acTypeID is not set
@@ -163,7 +163,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 }}
               />
             </ProFormGroup>
-            <Divider />
+
             <ProFormGroup>
               <ProFormDigit width={'xs'} name="ACAFL" label={t('ACAFL')} />
             </ProFormGroup>

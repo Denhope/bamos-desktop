@@ -107,27 +107,27 @@ const ACAdministrationPanel: React.FC<AdminPanelProps> = ({ values }) => {
         </Col>
       </Space>
 
-      <Row className="gap-6">
-        <Col
-          sm={6}
-          className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+      <div className="  flex gap-4 justify-between">
+        <div
+          // sm={4}
+          className="w-2/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
         >
           <ACAdministrationTree
             onPlaneselect={handleEdit}
             planes={planes || []}
           />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          sm={17}
+        </div>
+        <div
+          className="w-10/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
+          // sm={19}
         >
           <ACAdministrationlForm
             task={editingvendor || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
           />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </>
   );
 };

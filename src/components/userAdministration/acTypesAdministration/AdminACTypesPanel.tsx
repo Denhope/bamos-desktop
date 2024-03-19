@@ -101,24 +101,24 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
         </Col>
       </Space>
 
-      <Row className="gap-6">
-        <Col
-          sm={4}
-          className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+      <div className="  flex gap-4 justify-between">
+        <div
+          // sm={4}
+          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
         >
           <ACTypesTree onACTypeSelect={handleEdit} acTypes={acTypes || []} />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          sm={19}
+        </div>
+        <div
+          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
+          // sm={19}
         >
           <ACTypesForm
             onSubmit={handleSubmit}
             onDelete={handleDelete}
             acType={editingACType || undefined}
           />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </>
   );
 };

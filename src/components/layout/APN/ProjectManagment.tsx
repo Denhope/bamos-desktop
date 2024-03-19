@@ -35,7 +35,7 @@ const ProjectManagment: FC = () => {
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={400}
+        width={350}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}
@@ -60,7 +60,7 @@ const ProjectManagment: FC = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-5">
+        <div className="h-[82vh] overflow-hidden flex flex-col justify-between ">
           <ProjectDescription onProjectSearch={setProject} project={project} />
           <ProjectDetails
             project={project}

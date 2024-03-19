@@ -97,27 +97,21 @@ const AdminCompanyPanel: React.FC<AdminPanelProps> = () => {
         </Col>
       </Space>
 
-      <Row className="gap-6">
-        <Col
-          sm={6}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
-        >
+      <div className="  flex gap-4 justify-between">
+        <div className=" w-3/12 h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
           <CompanyTree
             onCompanySelect={handleEdit}
             companies={companies || []}
           />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 py-3  rounded-md brequierement-gray-400 p-3 "
-          sm={17}
-        >
+        </div>
+        <div className=" w-9/12 h-[75vh] bg-white px-4 py-3  rounded-md brequierement-gray-400 p-3 ">
           <CompanyForm
             company={editingCompany || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
           />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </>
   );
 };

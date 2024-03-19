@@ -147,7 +147,7 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
             <Empty description="No Data" />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab="MPD DOCUMENTATION" key="5">
+        <Tabs.TabPane tab="DOCUMENTATION" key="5">
           {acType && acType.id ? (
             <MPDAdministrationFormPanel acTypeID={acType.id} />
           ) : (

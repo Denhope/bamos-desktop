@@ -17,11 +17,17 @@ export const taskApi = createApi({
   endpoints: (builder) => ({
     getTasks: builder.query<
       ITask[],
-      { code?: string; status?: any; acTypeID?: string; taskNumber?: string }
+      {
+        code?: string;
+        status?: any;
+        acTypeID?: string;
+        taskNumber?: string;
+        taskType?: string;
+      }
     >({
-      query: ({ code, acTypeID, taskNumber, status }) => ({
+      query: ({ code, acTypeID, taskNumber, status, taskType }) => ({
         url: `tasks/administration/getFilteredTasks/company/${COMPANY_ID}`,
-        params: { code, status, acTypeID, taskNumber },
+        params: { code, status, acTypeID, taskNumber, taskType },
       }),
       providesTags: ['TaskTypes'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

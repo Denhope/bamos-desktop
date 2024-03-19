@@ -238,7 +238,6 @@ const BaseLayout: React.FC = () => {
       <ProjectOutlined />
     ),
 
-    // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
     getItem(
       t('Maintenance Management (MTX)'),
       RouteNames.MTXT,
@@ -274,7 +273,7 @@ const BaseLayout: React.FC = () => {
         RouteNames.BASE,
         <ProjectOutlined />
       ),
-      // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
+
       getItem(
         t('Maintenance Management (MTX)'),
         RouteNames.MTXT,
@@ -311,14 +310,6 @@ const BaseLayout: React.FC = () => {
     'sub21',
   ];
   const { Option } = Select;
-  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-      setOpenKeys(keys);
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
-    }
-  };
 
   useEffect(() => {
     const storedSelectedTopKeys = localStorage.getItem('selectedTopKeys');
@@ -331,19 +322,33 @@ const BaseLayout: React.FC = () => {
     setSelectedTopKeys(selectedKeys);
     localStorage.setItem('selectedTopKeys', JSON.stringify(selectedKeys));
   };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
   const location = useLocation();
   const [selectedAPN, setSecectedAPN] = useState<any | null>(null);
   const [selectedSingleAPN, setSecectedSingleAPN] = useState(null);
   useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.ctrlKey && event.key === 'b') {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Ctrl + B or Ctrl + Р (Russian 'B' key)
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        (event.key === 'b' || event.key === 'и')
+      ) {
+        event.preventDefault(); // Prevent the default action if needed
         setIsModalOpen(true);
       }
     };
 
+    // Add the event listener
     window.addEventListener('keydown', handleKeyDown);
 
-    // Удаляем обработчик событий при размонтировании компонента
+    // Cleanup function to remove the event listener
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -384,8 +389,6 @@ const BaseLayout: React.FC = () => {
         <Header
           className="flex justify-between "
           style={{
-            // marginLeft: 'auto',
-            // background: 'rgba(255, 255, 255, 0.2)',
             background: 'rgba(255, 255, 255, 0.2)',
           }}
         >
@@ -403,7 +406,6 @@ const BaseLayout: React.FC = () => {
                 <Menu
                   style={{
                     width: '100%',
-                    // marginLeft: 'auto',
                     background: 'rgba(255, 255, 255, 0.0)',
                   }}
                   onClick={({ key }) => {
@@ -442,8 +444,6 @@ const BaseLayout: React.FC = () => {
         <Header
           className="flex justify-between my-0 "
           style={{
-            // marginLeft: 'auto',
-            // background: 'rgba(255, 255, 255, 0.2)',
             background: 'rgba(255, 255, 255, 0.2)',
           }}
         >
@@ -461,6 +461,7 @@ const BaseLayout: React.FC = () => {
             >
               <div style={{ width: '300px' }}>
                 <Select
+                  allowClear
                   showSearch
                   placeholder="BAN"
                   onChange={handleChange}
@@ -468,6 +469,8 @@ const BaseLayout: React.FC = () => {
                   open={isFocused}
                   onSearch={handleSearch}
                   onSelect={handleSelect}
+                  // onFocus={handleFocus} // Добавляем обработчик события onFocus
+                  onBlur={handleBlur} // Добавляем обработчик события onBlur
                   value={value}
                   filterOption={(input, option) => {
                     if (option && option.children) {
@@ -526,7 +529,6 @@ const BaseLayout: React.FC = () => {
         <Content
           style={
             {
-              // marginLeft: 'auto',
               // background: 'rgba(255, 255, 255, 0.2)',
               // background: 'rgba(255, 255, 255, 0.8)',
             }
@@ -537,12 +539,7 @@ const BaseLayout: React.FC = () => {
               element={<Home apnRoute={selectedAPN} />}
               path={RouteNames.HOME}
             />
-            <Route element={<HomeWEB />} path={RouteNames.WEB} />
-            <Route element={<MaintenanceMTX />} path={RouteNames.MTXT} />
-            <Route element={<MaintenanceBase />} path={RouteNames.BASE} />{' '}
-            <Route element={<MaintenanceLine />} path={RouteNames.LINE} />
-            <Route element={<MaterialsStore />} path={RouteNames.STORE} />
-            <Route element={<WPGeneration />} path={RouteNames.WORKPACKGEN} />
+
             <Route
               element={
                 <Result
@@ -551,7 +548,6 @@ const BaseLayout: React.FC = () => {
                   status="404"
                   title="404"
                   subTitle="Sorry, the page you visited does not exist."
-                  //extra={<Button type="primary">Back Home</Button>}
                 />
               }
               path={'*'}
@@ -564,13 +560,9 @@ const BaseLayout: React.FC = () => {
             setIsModalOpen(false);
           }}
           onOpenChange={setIsModalOpen}
-          //onCancel={() => setIsModalOpen(false)}
           title={`${t(`BAN BOOK`)}`}
-          // placement={'bottom'}
           open={isModalOpen}
           width={'30vw'}
-
-          // getContainer={false}
         >
           <ProCard
             className="flex mx-auto justify-center align-middle"

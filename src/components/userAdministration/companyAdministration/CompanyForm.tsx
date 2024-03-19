@@ -102,7 +102,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
                 ]}
               />
               <ProFormText
-                width={'sm'}
+                width={'lg'}
                 name="companyName"
                 label="NAME"
                 rules={[

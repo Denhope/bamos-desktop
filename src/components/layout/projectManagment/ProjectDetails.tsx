@@ -78,11 +78,11 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
   }, [project]);
 
   return (
-    <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-6">
+    <Row className="gap-4">
       <Col
         xs={2}
         sm={3}
-        className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+        className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  "
       >
         <Space direction="vertical">
           <Space

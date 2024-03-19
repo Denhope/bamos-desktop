@@ -590,13 +590,13 @@ const PickSlipConfirmation: FC = () => {
   return (
     <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-2">
       <div className="h-[60%]">
-        <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
+        <Row gutter={{ xs: 8, sm: 11, md: 18 }}>
           <Col xs={2} sm={6}>
             <PickForm
               updateValue={updateValue}
               onFilterPickSlip={setCurrenPick}
             ></PickForm>
-          </Col>{' '}
+          </Col>
           <Col xs={32} sm={18}>
             <EditableSearchTable
               showDefaultToolbarContent={false}

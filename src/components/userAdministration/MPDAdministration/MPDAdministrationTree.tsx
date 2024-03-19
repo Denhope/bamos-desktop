@@ -26,7 +26,7 @@ const MPDAdministrationTree: FC<UserTreeProps> = ({
 
   const convertToTreeData = (MPDCodes: IMPD[]): TreeDataNode[] => {
     return MPDCodes.map((taskCode) => ({
-      title: `${taskCode.code.toUpperCase()} - ${taskCode.description.toUpperCase()}`,
+      title: `${taskCode.code.toUpperCase()} `,
       key: taskCode.id,
       taskCode: taskCode,
     }));

@@ -6,9 +6,7 @@ import { Content } from 'antd/es/layout/layout';
 import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
 import React, { FC, useEffect, useState } from 'react';
 import {
-  DatabaseOutlined,
   UserOutlined,
-  ControlOutlined,
   GroupOutlined,
   UserSwitchOutlined,
 } from '@ant-design/icons';
@@ -25,11 +23,11 @@ import VendorFilteredForm, {
   VendorFilteredFormValues,
 } from '@/components/userAdministration/vendorAdministration/VendorFilteredForm';
 import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
-import { IVendor } from '@/models/IUser';
+
 import AdminACTypesPanel from '@/components/userAdministration/acTypesAdministration/AdminACTypesPanel';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { ACTypesFilteredFormValues } from '@/components/userAdministration/acTypesAdministration/ASTypesFilteredForm';
-import AdminTaskPanelForm from '@/components/userAdministration/taskAdministration/AdminTaskPanelForm';
+
 import AdminTaskPanel from '@/components/userAdministration/taskAdministration/AdminTaskPanel';
 import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministration/AdminTaskFilterdForm';
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
@@ -96,6 +94,7 @@ const UserAdministration: FC = () => {
     status: tasksFormValues.status,
     taskNumber: tasksFormValues.taskNumber,
     acTypeID: tasksFormValues.acTypeId,
+    taskType: tasksFormValues.taskType,
   });
   const { refetch: refetchVendors } = useGetVendorsQuery({
     code: vendorFormValues.CODE,
@@ -307,11 +306,11 @@ const UserAdministration: FC = () => {
           />
         )}
       </Sider>
-      <Content>
+      <Content className="pl-4">
         <Tabs
-          style={{
-            width: '97%',
-          }}
+          // style={{
+          //   width: '97%',
+          // }}
           className="mx-auto"
           size="small"
           hideAdd

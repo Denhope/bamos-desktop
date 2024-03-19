@@ -45,7 +45,7 @@ const MPDAdministrationForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
       <ProForm.Group>
         <ProForm.Group>
           <ProFormText
-            width={'sm'}
+            width={'xl'}
             name="code"
             label="TITLE"
             rules={[
@@ -55,12 +55,12 @@ const MPDAdministrationForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
             ]}
           />
           <ProFormTextArea
-            width={'lg'}
+            width={'xl'}
             fieldProps={{
               style: {
                 resize: 'none',
               },
-              rows: 3,
+              rows: 12,
               // This is the correct way to set colSize within fieldProps
             }}
             name="description"

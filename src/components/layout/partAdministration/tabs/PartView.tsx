@@ -90,11 +90,11 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
 
   return (
     <div>
-      <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-5">
+      <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-4">
         <Col
           xs={2}
           sm={4}
-          className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[61vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
           <Space direction="vertical">
             <Space
@@ -146,7 +146,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
         <Col
           xs={2}
           sm={13}
-          className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[61vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
           <ProForm
             onFinish={async (values) => {
@@ -437,7 +437,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
           </ProForm>
         </Col>
         <Col
-          className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[61vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
           xs={2}
           sm={6}
         >
