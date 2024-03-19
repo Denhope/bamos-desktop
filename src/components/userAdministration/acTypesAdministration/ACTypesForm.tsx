@@ -14,6 +14,7 @@ import MaintenanceTypeTab from './MaintenanceType/MaintenanceTypeTab';
 
 import TaskCodeFormPanel from '../taskCodeAdministration/TaskCodeFormPanel';
 import ZoneCodeFormPanel from '../zoneCodeAdministration/zoneCodeFormPanel';
+import MPDAdministrationFormPanel from '../MPDAdministration/MPDAdministrationFormPanel';
 
 interface IACTypeFormProps {
   acType: IACType | undefined;
@@ -142,6 +143,13 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
         <Tabs.TabPane tab="ZONES CODES" key="4">
           {acType && acType.id ? (
             <ZoneCodeFormPanel acTypeId={acType.id} />
+          ) : (
+            <Empty description="No Data" />
+          )}
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="MPD DOCUMENTATION" key="5">
+          {acType && acType.id ? (
+            <MPDAdministrationFormPanel acTypeID={acType.id} />
           ) : (
             <Empty description="No Data" />
           )}

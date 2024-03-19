@@ -1,5 +1,6 @@
 import { ITaskType } from '@/types/TypesData';
 import { IUser } from './IUser';
+import { IACType } from './AC';
 
 export interface IPlaneTask {
   tasktypeLookup?: 'PKGOP' | 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
@@ -238,6 +239,19 @@ export interface ITaskCode {
   acTypeTitle: string;
 }
 
+export interface IMPD {
+  id: string;
+  title: string;
+  code: string;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId: string;
+}
+
 export interface ITaskCodeGroup {
   acTypeId: string;
   acTypeTitle: string;
@@ -295,4 +309,74 @@ export interface IAreaCode {
   companyID: string;
   zoneCodeId: string;
   status?: string;
+}
+
+export interface ITaskResponce {
+  taskNumber?: string;
+  id: any;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId?: IACType;
+  zonesID?: IAreaCode[];
+  accessID?: any[];
+  taskCodeId?: ITaskCode;
+  taskType?: 'AC_TASK' | 'COMMON_TASK';
+  workerNumber?: number;
+  specialization?: string;
+  prepareTaskTime?: number;
+  allTaskTime?: number;
+  applicability?: any;
+  workInterval?: string;
+  amtoss?: string;
+  document?: string;
+  taskDepartment?: 'sceduledTask' | 'piper' | '';
+  revision?: any;
+  mpdDocumentationId?: any;
+  preparationCode?: any;
+}
+export interface ITask {
+  taskNumber?: string;
+  id?: any;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId?: IACType | string;
+  zonesID?: IAreaCode[] | string[];
+  accessID?: any[];
+  taskCodeId?: string;
+  // taskType?: 'AC_TASK' | 'COMMON_TASK';
+  workerNumber?: number;
+  specialization?: string;
+  prepareTaskTime?: number;
+  allTaskTime?: number;
+  applicability?: any;
+  workInterval?: string;
+  amtoss?: string;
+  document?: string;
+  taskDepartment?: 'sceduledTask' | 'piper' | '';
+  revision?: any;
+  mpdDocumentationId?: any;
+  note?: any;
+  isDoubleInspectionRequired?: boolean;
+  position?: string;
+  intervalMOS?: number; //месяцы
+  intervalHRS?: number;
+  intervalAFL?: number;
+  intervalAPUS?: number;
+  intervalENC?: number;
+  intervalDAYS?: number;
+  preparationCode?: any;
+  toleranceAFL?: number;
+  toleranceMOS?: number;
+  toleranceDAY?: number;
+  toleranceMHS?: string;
+  status?: string;
+  taskType?: 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
 }

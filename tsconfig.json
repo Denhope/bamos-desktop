@@ -20,6 +20,10 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "electron"],
+  "include": [
+    "src",
+    "electron",
+    "src/components/userAdministration/MPDAdministration/MPDAdministrationTree.tsx"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

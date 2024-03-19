@@ -40,7 +40,7 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
 
   const handleDelete = async (acTypeId: string) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS VENDOR?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS AC TYPE?'),
       onOk: async () => {
         try {
           await deleteACType(acTypeId).unwrap();

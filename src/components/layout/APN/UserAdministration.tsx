@@ -29,6 +29,10 @@ import { IVendor } from '@/models/IUser';
 import AdminACTypesPanel from '@/components/userAdministration/acTypesAdministration/AdminACTypesPanel';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { ACTypesFilteredFormValues } from '@/components/userAdministration/acTypesAdministration/ASTypesFilteredForm';
+import AdminTaskPanelForm from '@/components/userAdministration/taskAdministration/AdminTaskPanelForm';
+import AdminTaskPanel from '@/components/userAdministration/taskAdministration/AdminTaskPanel';
+import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministration/AdminTaskFilterdForm';
+import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -54,6 +58,7 @@ const UserAdministration: FC = () => {
     getItem(<>{t('COMPANIES ')}</>, RouteNames.COMPANIES, <GroupOutlined />),
     getItem(<>{t('VENDORS ')}</>, RouteNames.VENDORS, <GroupOutlined />),
     getItem(<>{t('AC TYPES ')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
+    getItem(<>{t('AC TASKS ')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -65,12 +70,21 @@ const UserAdministration: FC = () => {
       NAME: '',
       status: [''],
     });
+  const [tasksFormValues, setTasksFormValues] = useState<any>({
+    taskNumber: '',
+    status: [''],
+  });
   const [ACTypesFormValues, setACTypesFormValues] =
     useState<ACTypesFilteredFormValues>({
       code: '',
       name: '',
       status: [''],
     });
+
+  const { refetch: refetchTasks } = useGetTasksQuery({
+    status: tasksFormValues.status,
+    taskNumber: tasksFormValues.taskNumber,
+  });
   const { refetch: refetchVendors } = useGetVendorsQuery({
     code: vendorFormValues.CODE,
     status: vendorFormValues.status,
@@ -87,6 +101,9 @@ const UserAdministration: FC = () => {
     refetchVendors();
   }, [vendorFormValues, refetchVendors]);
 
+  useEffect(() => {
+    refetchTasks();
+  }, [tasksFormValues, refetchTasks]);
   useEffect(() => {
     refetchACTypes();
   }, [ACTypesFormValues, refetchACTypes]);
@@ -148,6 +165,22 @@ const UserAdministration: FC = () => {
         content: (
           <div>
             <AdminACTypesPanel values={ACTypesFormValues} />
+          </div>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+    if (key === RouteNames.AC_TASKS) {
+      const tab = {
+        key,
+        title: `${t('AC TASKS')}`,
+        content: (
+          <div>
+            <AdminTaskPanel values={vendorFormValues} />
           </div>
         ),
         closable: true,
@@ -229,6 +262,13 @@ const UserAdministration: FC = () => {
           <VendorFilteredForm
             onSubmit={function (values: VendorFilteredFormValues): void {
               setVendorFormValues(values);
+            }}
+          />
+        )}
+        {activeKey === RouteNames.AC_TASKS && !collapsed && (
+          <AdminTaskFilterdForm
+            onSubmit={function (values: VendorFilteredFormValues): void {
+              setTasksFormValues(values);
             }}
           />
         )}
