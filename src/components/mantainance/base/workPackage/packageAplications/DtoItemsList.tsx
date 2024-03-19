@@ -1,20 +1,20 @@
-import { ProColumns } from "@ant-design/pro-components";
-import React, { FC, useEffect, useState } from "react";
-import { ITaskDTO } from "./AddAplicationForm";
+import { ProColumns } from '@ant-design/pro-components';
+import React, { FC, useEffect, useState } from 'react';
+import { ITaskDTO } from './AddAplicationForm';
 
-import { Empty, MenuProps, Spin, Tag, Tooltip } from "antd";
+import { Empty, MenuProps, Spin, Tag, Tooltip } from 'antd';
 import {
   DownloadOutlined,
   PlusOutlined,
   PrinterOutlined,
-} from "@ant-design/icons";
-import { exportToExcel } from "@/services/utilites";
+} from '@ant-design/icons';
+import { exportToExcel } from '@/services/utilites';
 
-import DrawerPanel from "@/components/shared/DrawerPanel";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useTranslation } from "react-i18next";
+import DrawerPanel from '@/components/shared/DrawerPanel';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useTranslation } from 'react-i18next';
 type DtoItemsListProps = {
   data: ITaskDTO[];
   aplicationName: string;
@@ -41,10 +41,10 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
 
   const initialColumns: ProColumns<ITaskDTO>[] = [
     {
-      title: "Index",
-      dataIndex: "id",
-      valueType: "index",
-      width: "5%",
+      title: 'Index',
+      dataIndex: 'id',
+      valueType: 'index',
+      width: '5%',
 
       editable: (text, record, index) => {
         return false;
@@ -54,11 +54,11 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
     {
       //
 
-      title: "Task Nbr",
-      key: "taskNumber",
-      width: "10%",
+      title: 'Task Nbr',
+      key: 'taskNumber',
+      width: '10%',
       ...useColumnSearchProps({
-        dataIndex: "Task Nbr",
+        dataIndex: 'Task Nbr',
         onSearch: (value) => {
           // Обработайте поисковый запрос
           if (value) {
@@ -77,16 +77,16 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
         },
         data,
       }),
-      dataIndex: "taskNumber",
+      dataIndex: 'taskNumber',
     },
 
     {
-      title: `${t("DESCRIPTIONS")}`,
+      title: `${t('DESCRIPTIONS')}`,
 
-      key: "taskDescription",
+      key: 'taskDescription',
       ellipsis: true,
       ...useColumnSearchProps({
-        dataIndex: "Descriptions",
+        dataIndex: 'Descriptions',
         onSearch: (value) => {
           // Обработайте поисковый запрос
           if (value) {
@@ -105,19 +105,19 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
         },
         data,
       }),
-      dataIndex: "taskDescription",
+      dataIndex: 'taskDescription',
 
-      tip: "Text Show",
-      width: "30%",
+      tooltip: 'Text Show',
+      width: '30%',
 
       // responsive: ['lg'],
 
       // ...useColumnSearchProps('taskDescription'),
     },
     {
-      title: "AMM",
+      title: 'AMM',
       ...useColumnSearchProps({
-        dataIndex: "AMM",
+        dataIndex: 'AMM',
         onSearch: (value) => {
           // Обработайте поисковый запрос
           if (value) {
@@ -136,37 +136,37 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
         },
         data,
       }),
-      dataIndex: "amtoss",
-      tip: "Text Show",
+      dataIndex: 'amtoss',
+      tooltip: 'Text Show',
       ellipsis: true,
-      key: "amtoss",
+      key: 'amtoss',
       // responsive: ['lg'],
-      width: "15%",
+      width: '15%',
     },
     {
-      title: "WOCustomer",
+      title: 'WOCustomer',
 
-      dataIndex: "WOCustomer",
-      tip: "Text Show",
+      dataIndex: 'WOCustomer',
+      tooltip: 'Text Show',
       // ellipsis: true,
-      key: "WOCustomer",
+      key: 'WOCustomer',
       // responsive: ['lg'],
-      width: "12%",
+      width: '12%',
     },
     {
-      title: "WOPackageType",
+      title: 'WOPackageType',
 
-      dataIndex: "WOPackageType",
-      tip: "Text Show",
+      dataIndex: 'WOPackageType',
+      tooltip: 'Text Show',
       // ellipsis: true,
-      key: "WOPackageType",
+      key: 'WOPackageType',
       // responsive: ['lg'],
-      width: "12%",
+      width: '12%',
     },
     {
-      title: "Position",
+      title: 'Position',
       ...useColumnSearchProps({
-        dataIndex: "Position",
+        dataIndex: 'Position',
         onSearch: (value) => {
           // Обработайте поисковый запрос
           if (value) {
@@ -185,30 +185,30 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
         },
         data,
       }),
-      dataIndex: "position",
-      tip: "number Item position on A/C",
+      dataIndex: 'position',
+      tooltip: 'number Item position on A/C',
       // ellipsis: true,
-      key: "position",
+      key: 'position',
       // responsive: ['lg'],
-      width: "8%",
+      width: '8%',
     },
     {
-      title: `${t("NOTE")}`,
-      dataIndex: "note",
-      key: "note",
+      title: `${t('NOTE')}`,
+      dataIndex: 'note',
+      key: 'note',
       render: (text) => {
-        if (typeof text === "string" && text.length > 1) {
+        if (typeof text === 'string' && text.length > 1) {
           return (
             <Tooltip placement="top" title={text}>
-              <Tag color={"red"}>{"note"}</Tag>
+              <Tag color={'red'}>{'note'}</Tag>
             </Tooltip>
           );
         } else {
-          return "-";
+          return '-';
         }
       },
-      width: "6%",
-      filters: [{ text: "Note", value: true }],
+      width: '6%',
+      filters: [{ text: 'Note', value: true }],
       onFilter: (value, record) => {
         if (value) {
           return !!record.note;
@@ -218,10 +218,10 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
       },
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
-      width: "14%",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
+      width: '14%',
       render: (text, record, _, action) => [
         <a
           key="editable"
@@ -235,13 +235,13 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
     },
   ];
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -251,18 +251,18 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
       type,
     } as MenuItem;
   }
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
       label: `Info`,
-      key: "info",
+      key: 'info',
       icon: null,
       onClick: () => {
         setOpenAPINFOForm(true);
       },
     },
     {
-      label: `${t("Add New Item")}`,
-      key: "add",
+      label: `${t('Add New Item')}`,
+      key: 'add',
       icon: <PlusOutlined />,
       // onClick: () => {
       //   setOpenAddWOForm(true);
@@ -270,23 +270,23 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
     },
 
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -303,7 +303,7 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -314,13 +314,13 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
                   selectedRowKeys,
                   visibleColumns,
                   data,
-                  "All Data"
+                  'All Data'
                 )
               }
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -328,13 +328,13 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
     },
 
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
         getItem(
           <div onClick={() => {}}>Delete selected Items</div>,
-          "9sshstsssishhxs"
+          '9sshstsssishhxs'
         ),
       ],
     },
@@ -368,15 +368,15 @@ const DtoItemsList: FC<DtoItemsListProps> = ({ data, aplicationName }) => {
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onVisibleColumnsChange={handleVisibleColumnsChange}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       {/* )} */}
 
       <DrawerPanel
         title={`INFO:${aplicationName}`}
-        size={"small"}
-        placement={"top"}
+        size={'small'}
+        placement={'top'}
         open={openAPINFOForm}
         onClose={setOpenAPINFOForm}
         getContainer={false}

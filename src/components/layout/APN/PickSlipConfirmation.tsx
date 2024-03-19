@@ -91,7 +91,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'STOCK',
       key: 'STOCK',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -118,7 +118,7 @@ const PickSlipConfirmation: FC = () => {
       title: `${t('EXPIRES')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       width: '8%',
       search: false,
@@ -201,7 +201,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '20%',
     },
@@ -306,7 +306,7 @@ const PickSlipConfirmation: FC = () => {
       title: `${t('EXPIRES')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       width: '6%',
       valueType: 'date',
@@ -335,7 +335,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       render: (text: any, record: any) => {
         return <a>{record.foRealese ? record.foRealese.LOCAL_ID : text}</a>;
@@ -415,7 +415,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'description',
       key: 'description',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '13%',
       editable: (text, record, index) => {

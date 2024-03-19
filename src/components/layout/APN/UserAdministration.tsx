@@ -34,8 +34,8 @@ import AdminTaskPanel from '@/components/userAdministration/taskAdministration/A
 import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministration/AdminTaskFilterdForm';
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 
-import { useGetPlanesQuery } from '@/features/acAdministration/acAdminApi';
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acAdminApi';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];

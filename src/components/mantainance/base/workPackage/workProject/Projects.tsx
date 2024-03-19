@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from 'react';
 
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { DatePicker, MenuProps, Tag, Tooltip } from "antd";
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { DatePicker, MenuProps, Tag, Tooltip } from 'antd';
 
-import { getFilteredProjects } from "@/utils/api/thunks";
-import Table, { ColumnsType } from "antd/es/table";
+import { getFilteredProjects } from '@/utils/api/thunks';
+import Table, { ColumnsType } from 'antd/es/table';
 
 import {
   AppstoreOutlined,
@@ -13,17 +13,17 @@ import {
   PlusOutlined,
   PrinterOutlined,
   EditOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import DrawerPanel from "@/components/shared/DrawerPanel";
+import DrawerPanel from '@/components/shared/DrawerPanel';
 
-import NavigationPanel from "@/components/shared/NavigationPanel";
-import { exportToExcel } from "@/services/utilites";
-import moment from "moment";
-import { AplicationResponce } from "@/store/reducers/WPGenerationSlise";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { ProColumns } from "@ant-design/pro-components";
-import { useTranslation } from "react-i18next";
+import NavigationPanel from '@/components/shared/NavigationPanel';
+import { exportToExcel } from '@/services/utilites';
+import moment from 'moment';
+import { AplicationResponce } from '@/store/reducers/WPGenerationSlise';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { ProColumns } from '@ant-design/pro-components';
+import { useTranslation } from 'react-i18next';
 type ProjectsPropsType = {
   data: any[];
   columns?: any;
@@ -44,7 +44,7 @@ const Projects: FC<ProjectsPropsType> = ({
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   useEffect(() => {
-    const companyID = localStorage.getItem("companyID");
+    const companyID = localStorage.getItem('companyID');
 
     if (companyID) {
       dispatch(
@@ -62,46 +62,46 @@ const Projects: FC<ProjectsPropsType> = ({
 
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("WP NAME")}`,
-      dataIndex: "aplicationName",
-      key: "aplicationName",
+      title: `${t('WP NAME')}`,
+      dataIndex: 'aplicationName',
+      key: 'aplicationName',
       // responsive: ['sm'],
       // filteredValue: [searchedText],
       render: (text: any, record: any) => (
-        <a style={{ cursor: "pointer" }} onClick={() => onRowClick(record)}>
-          {record.projectName}{" "}
+        <a style={{ cursor: 'pointer' }} onClick={() => onRowClick(record)}>
+          {record.projectName}{' '}
         </a>
       ),
     },
     {
-      title: "COMPANY",
-      dataIndex: "companyName",
-      key: "companyName",
+      title: 'COMPANY',
+      dataIndex: 'companyName',
+      key: 'companyName',
 
       // responsive: ['sm'],
-      className: "rounded-tl-none",
+      className: 'rounded-tl-none',
     },
     {
-      title: `${t("A/C TYPE")}`,
-      dataIndex: "planeType",
-      key: "planeType",
+      title: `${t('A/C TYPE')}`,
+      dataIndex: 'planeType',
+      key: 'planeType',
     },
     {
-      title: "REG. NBR",
-      dataIndex: "planeNumber",
-      key: "planeNumber",
+      title: 'REG. NBR',
+      dataIndex: 'planeNumber',
+      key: 'planeNumber',
     },
     {
-      title: "CREATE DATE",
+      title: 'CREATE DATE',
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "createDate",
-      key: "createDate",
+      dataIndex: 'createDate',
+      key: 'createDate',
       // width: '7%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.createDate && b.createDate) {
           const aFinishDate = new Date(a.createDate);
@@ -116,16 +116,16 @@ const Projects: FC<ProjectsPropsType> = ({
       },
     },
     {
-      title: "START DATE",
+      title: 'START DATE',
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "startDate",
-      key: "startDate",
+      dataIndex: 'startDate',
+      key: 'startDate',
       // width: '7%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.startDate && b.startDate) {
           const aFinishDate = new Date(a.startDate);
@@ -140,16 +140,16 @@ const Projects: FC<ProjectsPropsType> = ({
       },
     },
     {
-      title: "FINISH DATE",
+      title: 'FINISH DATE',
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "finishDate",
-      key: "finishDate",
+      dataIndex: 'finishDate',
+      key: 'finishDate',
       // width: '7%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.finishDate && b.finishDate) {
           const aFinishDate = new Date(a.finishDate);
@@ -164,22 +164,22 @@ const Projects: FC<ProjectsPropsType> = ({
       },
     },
     {
-      title: `${t("NOTE")}`,
-      dataIndex: "note",
-      key: "note",
+      title: `${t('NOTE')}`,
+      dataIndex: 'note',
+      key: 'note',
       render: (text) => {
-        if (typeof text === "string" && text.length > 1) {
+        if (typeof text === 'string' && text.length > 1) {
           return (
             <Tooltip placement="top" title={text}>
-              <Tag color={"red"}>{"note"}</Tag>
+              <Tag color={'red'}>{'note'}</Tag>
             </Tooltip>
           );
         } else {
-          return "-";
+          return '-';
         }
       },
-      width: "6%",
-      filters: [{ text: "Note", value: true }],
+      width: '6%',
+      filters: [{ text: 'Note', value: true }],
       onFilter: (value, record) => {
         if (value) {
           return !!record.note;
@@ -189,42 +189,42 @@ const Projects: FC<ProjectsPropsType> = ({
       },
     },
     {
-      title: `${t("Status")}`,
-      dataIndex: "status",
+      title: `${t('Status')}`,
+      dataIndex: 'status',
 
-      key: "status",
-      width: "9%",
+      key: 'status',
+      width: '9%',
       editable: (text, record, index) => {
         return false;
       },
 
       filters: true,
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       filterSearch: true,
       valueEnum: {
-        отложен: { text: t("OPEN"), status: "Default" },
-        inProgress: { text: t("IN_PROGRESS"), status: "Processing" },
-        closed: { text: t("CLOSED"), status: "Success" },
-        canceled: { text: t("CANCELED"), status: "Error" },
+        отложен: { text: t('OPEN'), status: 'Default' },
+        inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
+        closed: { text: t('CLOSED'), status: 'Success' },
+        canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },
     {
-      title: `${t("REWIEW")}`,
-      dataIndex: "rewiewStatus",
-      key: "rewiewStatus",
-      width: "10%",
-      valueType: "select",
-      tip: "Text Show",
+      title: `${t('REWIEW')}`,
+      dataIndex: 'rewiewStatus',
+      key: 'rewiewStatus',
+      width: '10%',
+      valueType: 'select',
+      tooltip: 'Text Show',
       ellipsis: true,
       // initialValue: 'all',
       filters: true,
       filterSearch: true,
       onFilter: true,
       valueEnum: {
-        waiting: { text: "TO WAIT", status: "Warning" },
-        inProgress: { text: "IN PROGRESS", status: "Processing" },
-        completed: { text: "COMPLETED", status: "Success" },
+        waiting: { text: 'TO WAIT', status: 'Warning' },
+        inProgress: { text: 'IN PROGRESS', status: 'Processing' },
+        completed: { text: 'COMPLETED', status: 'Success' },
       },
     },
   ];
@@ -232,7 +232,7 @@ const Projects: FC<ProjectsPropsType> = ({
   const [openAddAppForm, setOpenAddAppForm] = useState(false);
   const [openFilterppForm, setOpenFilterAppForm] = useState(false);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -255,13 +255,13 @@ const Projects: FC<ProjectsPropsType> = ({
     }
   };
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -272,25 +272,25 @@ const Projects: FC<ProjectsPropsType> = ({
     } as MenuItem;
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: "REPORT",
-      key: "print",
+      label: 'REPORT',
+      key: 'print',
       icon: <AppstoreOutlined />,
       children: [
-        getItem("Print", "sub4.1", <PrinterOutlined />, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', <PrinterOutlined />, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", <PrinterOutlined />, [
+        getItem('Export to Exel', 'sub5', <PrinterOutlined />, [
           getItem(
             <div
               onClick={() =>
@@ -301,13 +301,13 @@ const Projects: FC<ProjectsPropsType> = ({
                   selectedRowKeys,
                   selectedColumns,
                   filteredProjects,
-                  "Selected Aplications"
+                  'Selected Aplications'
                 )
               }
             >
               <PrinterOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -318,13 +318,13 @@ const Projects: FC<ProjectsPropsType> = ({
                   selectedRowKeys,
                   selectedColumns,
                   filteredProjects,
-                  "All Data"
+                  'All Data'
                 )
               }
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -332,15 +332,15 @@ const Projects: FC<ProjectsPropsType> = ({
     },
 
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: <SettingOutlined />,
       children: [
         getItem(
           <div onClick={() => setOpenAddAppForm(true)}>
             <PlusOutlined /> ADD New Work Pacage
           </div>,
-          "9ssxs"
+          '9ssxs'
         ),
         // getItem(
         //   <div
@@ -372,7 +372,7 @@ const Projects: FC<ProjectsPropsType> = ({
       // }}
     >
       <div className={`${height}`}>
-        {/* <div className="h-1/3"> */}{" "}
+        {/* <div className="h-1/3"> */}{' '}
         <div>
           <EditableTable
             data={filteredProjects}
@@ -392,7 +392,7 @@ const Projects: FC<ProjectsPropsType> = ({
             onVisibleColumnsChange={handleVisibleColumnsChange}
             recordCreatorProps={false}
             externalReload={function (): Promise<void> {
-              throw new Error("Function not implemented.");
+              throw new Error('Function not implemented.');
             }}
           ></EditableTable>
         </div>

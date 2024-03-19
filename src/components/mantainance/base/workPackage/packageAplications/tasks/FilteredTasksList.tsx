@@ -1,28 +1,28 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import React, { FC, useEffect, useState } from "react";
+import { ProColumns } from '@ant-design/pro-components';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import React, { FC, useEffect, useState } from 'react';
 
 import {
   createProjectTask,
   featchAllTasksByProjectId,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 import {
   DownloadOutlined,
   PlusOutlined,
   PrinterOutlined,
-} from "@ant-design/icons";
-import { Empty, MenuProps, Spin } from "antd";
-import { exportToExcel } from "@/services/utilites";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { ITaskDTO } from "../AddAplicationForm";
-import { findTasksAndCalculateTotalTime } from "@/utils/api/thunks";
-import { ITaskType } from "@/types/TypesData";
-import { IReferencesLinkType } from "@/models/IAdditionalTask";
-import toast from "react-hot-toast";
-import { AplicationResponce } from "@/store/reducers/WPGenerationSlise";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
+} from '@ant-design/icons';
+import { Empty, MenuProps, Spin } from 'antd';
+import { exportToExcel } from '@/services/utilites';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { ITaskDTO } from '../AddAplicationForm';
+import { findTasksAndCalculateTotalTime } from '@/utils/api/thunks';
+import { ITaskType } from '@/types/TypesData';
+import { IReferencesLinkType } from '@/models/IAdditionalTask';
+import toast from 'react-hot-toast';
+import { AplicationResponce } from '@/store/reducers/WPGenerationSlise';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
 type FilteredTasksListPropsType = {
   data: AplicationResponce;
   aplicationName: string;
@@ -42,7 +42,7 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
   const [foundTasks, setFoundTasks] = useState<any>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
@@ -50,7 +50,7 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
             taskDTO: data.tasks || [],
           })
         );
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           // console.log(result.payload);
           if (onResult) {
             onResult(result.payload);
@@ -80,10 +80,10 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
 
   const initialColumns: ProColumns<ITaskType>[] = [
     {
-      title: "Index",
-      dataIndex: "id",
-      valueType: "index",
-      width: "5%",
+      title: 'Index',
+      dataIndex: 'id',
+      valueType: 'index',
+      width: '5%',
 
       editable: (text, record, index) => {
         return false;
@@ -91,108 +91,108 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
       // sorter: (a, b) => (a.id || 0) - (b.id || 0),
     },
     {
-      title: "Task Nbr",
-      key: "taskNumber",
-      tip: "Text Show",
+      title: 'Task Nbr',
+      key: 'taskNumber',
+      tooltip: 'Text Show',
       ellipsis: true,
-      width: "10%",
+      width: '10%',
 
-      dataIndex: "taskNumber",
+      dataIndex: 'taskNumber',
     },
     {
-      title: `${t("DESCRIPTIONS")}`,
+      title: `${t('DESCRIPTIONS')}`,
 
-      dataIndex: "taskDescription",
-      key: "taskDescription",
+      dataIndex: 'taskDescription',
+      key: 'taskDescription',
       ellipsis: true,
 
-      tip: "Text Show",
-      width: "20%",
+      tooltip: 'Text Show',
+      width: '20%',
 
       // responsive: ['lg'],
 
       // ...useColumnSearchProps('taskDescription'),
     },
     {
-      title: "AMM",
-      dataIndex: "amtossNewRev",
-      tip: "Text Show",
+      title: 'AMM',
+      dataIndex: 'amtossNewRev',
+      tooltip: 'Text Show',
       ellipsis: true,
-      key: "amtossNewRev",
+      key: 'amtossNewRev',
       // responsive: ['lg'],
-      width: "15%",
+      width: '15%',
     },
     {
-      title: `${t("CODE")}`,
-      dataIndex: "code",
-      key: "code",
-      width: "6%",
-      responsive: ["lg"],
+      title: `${t('CODE')}`,
+      dataIndex: 'code',
+      key: 'code',
+      width: '6%',
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
 
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       filters: [
-        { text: "FC", value: "FC" },
-        { text: "RS", value: "RS" },
-        { text: "GVI", value: "GVI" },
-        { text: "DET", value: "DET" },
-        { text: "VC", value: "VC" },
-        { text: "LU", value: "LU" },
-        { text: "OP", value: "OP" },
-        { text: "SDI", value: "SDI" },
-        { text: "OP", value: "OP" },
-        { text: "NDT", value: "NDT" },
+        { text: 'FC', value: 'FC' },
+        { text: 'RS', value: 'RS' },
+        { text: 'GVI', value: 'GVI' },
+        { text: 'DET', value: 'DET' },
+        { text: 'VC', value: 'VC' },
+        { text: 'LU', value: 'LU' },
+        { text: 'OP', value: 'OP' },
+        { text: 'SDI', value: 'SDI' },
+        { text: 'OP', value: 'OP' },
+        { text: 'NDT', value: 'NDT' },
       ],
 
       filterSearch: true,
     },
     {
-      title: `${t("ZONE")}`,
-      dataIndex: "area",
+      title: `${t('ZONE')}`,
+      dataIndex: 'area',
 
-      key: "area",
-      width: "5%",
-      tip: "Text Show",
+      key: 'area',
+      width: '5%',
+      tooltip: 'Text Show',
       ellipsis: true,
-      responsive: ["lg"],
+      responsive: ['lg'],
       editable: (text, record, index) => {
         return false;
       },
       // ...useColumnSearchProps(['taskId', 'area']),
     },
     {
-      title: "Спец.",
-      dataIndex: "specialization",
-      key: "specialization",
-      responsive: ["sm"],
-      width: "6%",
+      title: 'Спец.',
+      dataIndex: 'specialization',
+      key: 'specialization',
+      responsive: ['sm'],
+      width: '6%',
       filters: [
         {
-          text: "AF/AV",
-          value: "AF/AV",
+          text: 'AF/AV',
+          value: 'AF/AV',
         },
         {
-          text: "AF",
-          value: "AF",
+          text: 'AF',
+          value: 'AF',
         },
         {
-          text: "AV",
-          value: "AV",
+          text: 'AV',
+          value: 'AV',
         },
         {
-          text: "EN",
-          value: "EN",
+          text: 'EN',
+          value: 'EN',
         },
         {
-          text: "EN/AV",
-          value: "EN/AV",
+          text: 'EN/AV',
+          value: 'EN/AV',
         },
         {
-          text: "NDT",
-          value: "NDT",
+          text: 'NDT',
+          value: 'NDT',
         },
       ],
 
@@ -201,53 +201,53 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
       },
     },
     {
-      title: "Man",
-      dataIndex: "workerNumber",
-      key: "workerNumber",
-      responsive: ["sm"],
-      width: "6%",
+      title: 'Man',
+      dataIndex: 'workerNumber',
+      key: 'workerNumber',
+      responsive: ['sm'],
+      width: '6%',
     },
 
     {
-      title: "T m.Work",
+      title: 'T m.Work',
       ellipsis: true,
-      dataIndex: "mainWorkTime",
-      key: "mainWorkTime",
-      width: "7%",
+      dataIndex: 'mainWorkTime',
+      key: 'mainWorkTime',
+      width: '7%',
       sorter: (a: any, b: any) => {
         return a.mainWorkTime - b.mainWorkTime;
       },
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
     {
-      title: "T add.Work",
-      dataIndex: "prepareTaskTime",
-      key: "prepareTaskTime",
-      width: "8%",
+      title: 'T add.Work',
+      dataIndex: 'prepareTaskTime',
+      key: 'prepareTaskTime',
+      width: '8%',
       sorter: (a: any, b: any) => {
         return Number(a.mainWorkTime - b.mainWorkTime);
       },
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
     {
-      title: "Time",
-      dataIndex: "allTaskTime",
-      key: "allTaskTime",
+      title: 'Time',
+      dataIndex: 'allTaskTime',
+      key: 'allTaskTime',
       ellipsis: true,
-      width: "6%",
+      width: '6%',
       sorter: (a: any, b: any) => {
         return Number(a.mainWorkTime - b.mainWorkTime);
       },
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
-      width: "10%",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
+      width: '10%',
       render: (text, record, _, action) => [
         <a
           key="editable"
@@ -260,13 +260,13 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
       ],
     },
   ];
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -276,10 +276,10 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
       type,
     } as MenuItem;
   }
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
         getItem(
@@ -290,18 +290,18 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
                   let refArr = task.ammtossArrNew?.map(
                     (item: string): IReferencesLinkType =>
                       ({
-                        type: "AMM",
+                        type: 'AMM',
                         reference: item,
-                        description: "",
+                        description: '',
                       } || [])
                   );
 
                   const result = await dispatch(
                     createProjectTask({
                       taskId: task._id,
-                      companyID: localStorage.getItem("companyID"),
-                      projectId: data.projectId || "",
-                      taskType: "sheduled",
+                      companyID: localStorage.getItem('companyID'),
+                      projectId: data.projectId || '',
+                      taskType: 'sheduled',
                       createDate: new Date(),
                       ownerId: USER_ID,
                       optional: {
@@ -317,10 +317,10 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
                         isFavorite: false,
                         isStarting: false,
                       },
-                      status: "open",
-                      _id: "",
-                      name: String(localStorage.getItem("name")),
-                      sing: String(localStorage.getItem("singNumber")),
+                      status: 'open',
+                      _id: '',
+                      name: String(localStorage.getItem('name')),
+                      sing: String(localStorage.getItem('singNumber')),
                       actions: [
                         {
                           actionDescription: `ВЫПОЛНЕНО: \r\n ${
@@ -337,48 +337,48 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
                       workStepReferencesLinks: [
                         ...(refArr || []),
                         {
-                          type: "WO",
-                          reference: task.WOCustomer || "",
-                          description: "Customer WO / WO Заказчика",
+                          type: 'WO',
+                          reference: task.WOCustomer || '',
+                          description: 'Customer WO / WO Заказчика',
                         },
                         {
-                          type: "WO",
-                          reference: String(data.projectWO) || "",
-                          description: "Local WO / Внутренний WO",
+                          type: 'WO',
+                          reference: String(data.projectWO) || '',
+                          description: 'Local WO / Внутренний WO',
                         },
                       ],
                       materialReuest: [],
                       materialReuestAplications: [],
                       plane: {
                         registrationNumber: data.planeNumber,
-                        type: data.planeType || "",
+                        type: data.planeType || '',
                         companyName: data.companyName,
                       },
                       projectWO: data.projectWO,
                       newMaterial: [],
                       cascader:
                         task.accessArr && task.accessArr.length
-                          ? ["mec", "accessOpen"]
+                          ? ['mec', 'accessOpen']
                           : null,
                       rewiewStatus:
                         task.accessArr && task.accessArr.length
-                          ? "waiting"
+                          ? 'waiting'
                           : null,
                     })
                   );
 
                   if (
                     foundTasks[foundTasks.length - 1] === task &&
-                    result.meta.requestStatus === "fulfilled"
+                    result.meta.requestStatus === 'fulfilled'
                   ) {
                     notFoundTaskDTOs &&
                       notFoundTaskDTOs.forEach(async (task: ITaskDTO) => {
                         const resultNotFounded = await dispatch(
                           createProjectTask({
                             // taskId: task.id,
-                            companyID: localStorage.getItem("companyID"),
-                            projectId: data.projectId || "",
-                            taskType: "sheduled",
+                            companyID: localStorage.getItem('companyID'),
+                            projectId: data.projectId || '',
+                            taskType: 'sheduled',
                             createDate: new Date(),
                             ownerId: USER_ID,
                             optional: {
@@ -394,8 +394,8 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
                               isFavorite: false,
                               isStarting: false,
                             },
-                            status: "open",
-                            _id: "",
+                            status: 'open',
+                            _id: '',
                             actions: [
                               {
                                 actionDescription: `ВЫПОЛНЕНО: \r\n ${
@@ -414,21 +414,21 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
 
                             workStepReferencesLinks: [
                               {
-                                type: "WO",
-                                reference: task.WOCustomer || "",
-                                description: "Customer WO / WO Заказчика",
+                                type: 'WO',
+                                reference: task.WOCustomer || '',
+                                description: 'Customer WO / WO Заказчика',
                               },
                               {
-                                type: "WO",
-                                reference: String(data.projectWO) || "",
-                                description: "Local WO / Внутренний WO",
+                                type: 'WO',
+                                reference: String(data.projectWO) || '',
+                                description: 'Local WO / Внутренний WO',
                               },
                             ],
                             materialReuest: [],
                             materialReuestAplications: [],
                             plane: {
                               registrationNumber: data.planeNumber,
-                              type: data.planeType || "",
+                              type: data.planeType || '',
                               companyName: data.companyName,
                             },
                             projectWO: data.projectWO,
@@ -437,38 +437,38 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
                         );
                       });
 
-                    toast.success("Tasks add to Work Package successfully ");
-                  } else if (result.meta.requestStatus === "rejected") {
-                    toast.error("Tasks not add to Work Package");
+                    toast.success('Tasks add to Work Package successfully ');
+                  } else if (result.meta.requestStatus === 'rejected') {
+                    toast.error('Tasks not add to Work Package');
                   }
                 });
             }}
           >
             Add Items to Work Package
           </div>,
-          "9sshstsssishhxs"
+          '9sshstsssishhxs'
         ),
       ],
     },
 
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -485,7 +485,7 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -496,13 +496,13 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
                   selectedRowKeys,
                   visibleColumns,
                   foundTasks,
-                  "All Data"
+                  'All Data'
                 )
               }
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -527,7 +527,7 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onVisibleColumnsChange={handleVisibleColumnsChange}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
     </div>

@@ -3,14 +3,14 @@ import {
   EditableProTable,
   ProColumns,
   ProTable,
-} from "@ant-design/pro-components";
-import { Row, Space } from "antd";
-import NavigationPanel from "@/components/shared/NavigationPanel";
-import EditableSearchTable from "@/components/shared/Table/EditableSearchTable";
-import React, { FC, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import request from "umi-request";
-import { API_URL } from "@/utils/api/http";
+} from '@ant-design/pro-components';
+import { Row, Space } from 'antd';
+import NavigationPanel from '@/components/shared/NavigationPanel';
+import EditableSearchTable from '@/components/shared/Table/EditableSearchTable';
+import React, { FC, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import request from 'umi-request';
+import { API_URL } from '@/utils/api/http';
 export interface MaterialItemStoreSearchNewProps {
   initialParams: any;
   scroll: number;
@@ -32,64 +32,64 @@ const PartNumberSearch: FC<MaterialItemStoreSearchNewProps> = ({
   };
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
-      tip: "ITEM PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
+      tooltip: 'ITEM PART_NUMBER',
       ellipsis: true,
       formItemProps: {
-        name: "partNumber",
+        name: 'partNumber',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "DESCRIPTION",
-      key: "DESCRIPTION",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'DESCRIPTION',
+      key: 'DESCRIPTION',
 
       // responsive: ['sm'],
-      tip: "ITEM DESCRIPTION",
+      tooltip: 'ITEM DESCRIPTION',
       ellipsis: true, //
       // width: '20%',
       formItemProps: {
-        name: "description",
+        name: 'description',
       },
     },
 
     {
-      title: `${t("A/C TYPE")}`,
-      dataIndex: "AC_TYPE",
-      key: "AC_TYPE",
+      title: `${t('A/C TYPE')}`,
+      dataIndex: 'AC_TYPE',
+      key: 'AC_TYPE',
 
       // responsive: ['sm'],
-      tip: "AC_TYPE",
+      tooltip: 'AC_TYPE',
       ellipsis: true, //
       // width: '20%',
       formItemProps: {
-        name: "acType",
+        name: 'acType',
       },
     },
     {
-      title: `${t("GROUP")}`,
-      dataIndex: "GROUP",
-      key: "GROUP",
+      title: `${t('GROUP')}`,
+      dataIndex: 'GROUP',
+      key: 'GROUP',
 
       // responsive: ['sm'],
-      tip: "ITEM GROUP",
+      tooltip: 'ITEM GROUP',
       ellipsis: true, //
       // width: '20%',
       formItemProps: {
-        name: "group",
+        name: 'group',
       },
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
@@ -102,21 +102,21 @@ const PartNumberSearch: FC<MaterialItemStoreSearchNewProps> = ({
   const rowClassName = (record: any) => {
     if (record.id) {
       return record.id === selectedRowKey
-        ? "cursor-pointer text-sm text-transform: uppercase bg-blue-100 "
-        : "cursor-pointer  text-sm text-transform: uppercase ";
+        ? 'cursor-pointer text-sm text-transform: uppercase bg-blue-100 '
+        : 'cursor-pointer  text-sm text-transform: uppercase ';
     } else if (record._id) {
       return record._id === selectedRowKey
-        ? "cursor-pointer text-sm text-transform: uppercase bg-blue-100 "
-        : "cursor-pointer  text-sm text-transform: uppercase ";
+        ? 'cursor-pointer text-sm text-transform: uppercase bg-blue-100 '
+        : 'cursor-pointer  text-sm text-transform: uppercase ';
     } else if (record.actionNumber) {
       return record.actionNumber === selectedRowKey
-        ? "cursor-pointer text-sm text-transform: uppercase bg-blue-100 "
-        : "cursor-pointer  text-sm text-transform: uppercase ";
+        ? 'cursor-pointer text-sm text-transform: uppercase bg-blue-100 '
+        : 'cursor-pointer  text-sm text-transform: uppercase ';
     } else {
-      return "cursor-pointer  text-sm text-transform: uppercase ";
+      return 'cursor-pointer  text-sm text-transform: uppercase ';
     }
   };
-  const companyID = localStorage.getItem("companyID");
+  const companyID = localStorage.getItem('companyID');
   const [shouldRequest, setShouldRequest] = useState(false);
   return (
     <div className="flex my-0 mx-auto  h-[78vh] flex-col relative overflow-hidden">
@@ -148,7 +148,7 @@ const PartNumberSearch: FC<MaterialItemStoreSearchNewProps> = ({
         //onChange={setDataSource}
         onSubmit={() => setShouldRequest(true)}
         search={{
-          labelWidth: "auto",
+          labelWidth: 'auto',
         }}
         actionRef={actionRef}
         cardBordered
@@ -172,7 +172,7 @@ const PartNumberSearch: FC<MaterialItemStoreSearchNewProps> = ({
                 // проверяем shouldRequest перед выполнением запроса
                 const config = {
                   headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                   },
                 };
                 const url = new URL(
@@ -194,7 +194,7 @@ const PartNumberSearch: FC<MaterialItemStoreSearchNewProps> = ({
             : undefined
         } // если shouldRequest равно false, не выполняем запрос
         //loading={isLoading}
-      ></ProTable>{" "}
+      ></ProTable>{' '}
     </div>
   );
 };

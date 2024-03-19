@@ -2,12 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
-import {
-  ITask,
-  ITaskCode,
-  ITaskCodeGroup,
-  ITaskResponce,
-} from '@/models/ITask';
+import { ITask } from '@/models/ITask';
 import { setPlanes } from './acAdminSlice';
 
 export const acAdminApi = createApi({

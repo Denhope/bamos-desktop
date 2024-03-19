@@ -155,7 +155,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -345,7 +345,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
       dataIndex: 'description',
       key: 'description',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },

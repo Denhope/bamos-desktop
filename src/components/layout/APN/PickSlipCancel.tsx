@@ -145,7 +145,7 @@ const PickSlipCancel: FC = () => {
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+
       ellipsis: true, //
       width: '10%',
       editable: (text, record, index) => {
@@ -220,7 +220,7 @@ const PickSlipCancel: FC = () => {
       title: `${t('EXPIRES')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       width: '6%',
       valueType: 'date',
@@ -249,7 +249,7 @@ const PickSlipCancel: FC = () => {
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
       // responsive: ['sm'],
-      tip: 'Text Show',
+
       ellipsis: true, //
       render: (text: any, record: any) => {
         return <a>{record.foRealese ? record.foRealese.LOCAL_ID : text}</a>;

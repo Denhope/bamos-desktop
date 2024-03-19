@@ -1,8 +1,8 @@
-import { ProColumns } from "@ant-design/pro-components";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const UnserviseDetaails: FC = () => {
   const { t } = useTranslation();
@@ -16,68 +16,68 @@ const UnserviseDetaails: FC = () => {
   }, [filteredStockDetails]);
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("LOCAL_ID")}`,
-      dataIndex: "LOCAL_ID",
-      key: "LOCAL_ID",
-      tip: "LOCAL_ID",
+      title: `${t('LOCAL_ID')}`,
+      dataIndex: 'LOCAL_ID',
+      key: 'LOCAL_ID',
+
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "LOCAL_ID",
+        name: 'LOCAL_ID',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
-      tip: "ITEM PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
+
       ellipsis: true,
-      width: "10%",
+      width: '10%',
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("STORE")}`,
-      dataIndex: "STOCK",
-      key: "STOCK",
-      tip: "ITEM STORE",
+      title: `${t('STORE')}`,
+      dataIndex: 'STOCK',
+      key: 'STOCK',
+
       ellipsis: true,
       //width: '9',
       formItemProps: {
-        name: "STOCK",
+        name: 'STOCK',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("CONDITION")}`,
-      dataIndex: "CONDITION",
-      key: "CONDITION",
-      tip: "CONDITION",
+      title: `${t('CONDITION')}`,
+      dataIndex: 'CONDITION',
+      key: 'CONDITION',
+
       ellipsis: true,
-      width: "10%",
+      width: '10%',
       formItemProps: {
-        name: "CONDITION",
+        name: 'CONDITION',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("LOCATION")}`,
-      dataIndex: "SHELF_NUMBER",
-      key: "SHELF_NUMBER",
-      tip: "ITEM LOCATION",
+      title: `${t('LOCATION')}`,
+      dataIndex: 'SHELF_NUMBER',
+      key: 'SHELF_NUMBER',
+
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "SHELF_NUMBER",
+        name: 'SHELF_NUMBER',
       },
 
       // responsive: ['sm'],
@@ -89,46 +89,46 @@ const UnserviseDetaails: FC = () => {
     //   key: 'NAME_OF_MATERIAL',
 
     //   // responsive: ['sm'],
-    //   tip: 'ITEM DESCRIPTION',
+    //   tooltip: 'ITEM DESCRIPTION',
     //   ellipsis: true, //
     //   width: '20%',
     // },
     {
-      title: `${t("BATCH/SERIAL")}`,
-      dataIndex: "SERIAL_NUMBER",
-      key: "SERIAL_NUMBER",
+      title: `${t('BATCH/SERIAL')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      key: 'SERIAL_NUMBER',
       render: (text: any, record: any) =>
         record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
       ellipsis: true,
-      width: "9%",
+      width: '9%',
       formItemProps: {
-        name: "Batch_Unit Notes",
+        name: 'Batch_Unit Notes',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("RESEIVING")}`,
-      dataIndex: "ORDER_NUMBER",
-      key: "ORDER_NUMBER",
-      tip: "ITEM ORDER_NUMBER",
+      title: `${t('RESEIVING')}`,
+      dataIndex: 'ORDER_NUMBER',
+      key: 'ORDER_NUMBER',
+
       ellipsis: true,
-      width: "7%",
+      width: '7%',
       formItemProps: {
-        name: "ORDER_NUMBER",
+        name: 'ORDER_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("EXPIRY DATE")}`,
-      dataIndex: "PRODUCT_EXPIRATION_DATE",
-      key: "PRODUCT_EXPIRATION_DATE",
-      tip: "ITEM EXPIRY DATE",
+      title: `${t('EXPIRY DATE')}`,
+      dataIndex: 'PRODUCT_EXPIRATION_DATE',
+      key: 'PRODUCT_EXPIRATION_DATE',
+
       ellipsis: true,
-      width: "9%",
+      width: '9%',
       formItemProps: {
-        name: "PRODUCT_EXPIRATION_DATE",
+        name: 'PRODUCT_EXPIRATION_DATE',
       },
       sorter: (a, b) => {
         if (a.finishDate && b.finishDate) {
@@ -144,56 +144,56 @@ const UnserviseDetaails: FC = () => {
     },
 
     {
-      title: `${t("QTY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      width: "4%",
-      responsive: ["sm"],
+      title: `${t('QTY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      width: '4%',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
-      width: "4%",
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
+      width: '4%',
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: "RESERVED QTY",
-      dataIndex: "reserved",
-      key: "reserved",
-      width: "6%",
-      responsive: ["sm"],
+      title: 'RESERVED QTY',
+      dataIndex: 'reserved',
+      key: 'reserved',
+      width: '6%',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: "BLOCKED QTY",
-      width: "6%",
-      dataIndex: "ONBLOCK_QUANTITY",
-      key: "ONBLOCK_QUANTITY",
-      responsive: ["sm"],
+      title: 'BLOCKED QTY',
+      width: '6%',
+      dataIndex: 'ONBLOCK_QUANTITY',
+      key: 'ONBLOCK_QUANTITY',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: "OWNER",
-      dataIndex: "Owner Short Name",
-      key: "Owner Short Name",
-      width: "6%",
+      title: 'OWNER',
+      dataIndex: 'Owner Short Name',
+      key: 'Owner Short Name',
+      width: '6%',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
       editable: (text, record, index) => {
         return false;
       },
@@ -209,14 +209,14 @@ const UnserviseDetaails: FC = () => {
         menuItems={undefined}
         recordCreatorProps={false}
         onRowClick={function (record: any, rowIndex?: any): void {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         onSave={function (rowKey: any, data: any, row: any): void {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         yScroll={40}
         externalReload={function () {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       />
     </div>

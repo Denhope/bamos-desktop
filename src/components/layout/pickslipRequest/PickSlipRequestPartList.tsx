@@ -36,7 +36,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       title: `${t('PART No')}`,
       dataIndex: 'PN',
       key: 'PN',
-      tip: ' Click open Store search',
+      tooltip: ' Click open Store search',
       ellipsis: true,
       // width: '15%',
       renderFormItem: (item, { onChange, record }) => {

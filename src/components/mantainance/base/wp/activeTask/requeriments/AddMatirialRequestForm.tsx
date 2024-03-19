@@ -87,7 +87,7 @@ const AddMatirialRequestList: FC<FilteredRequirementItemsListPropsType> = ({
       dataIndex: 'description',
       key: 'desctiption',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '15%',
       editable: (text, record, index) => {

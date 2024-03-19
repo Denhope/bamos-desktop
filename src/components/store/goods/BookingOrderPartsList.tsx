@@ -29,7 +29,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       title: `${t('POSITION')}`,
       dataIndex: 'POSITION',
       key: 'POSITION',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       width: '10%',
       render: (text, record, index) => index + 1,
@@ -82,7 +82,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       dataIndex: 'nameOfMaterial',
       key: 'nameOfMaterial',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '13%',
       editable: (text, record, index) => {

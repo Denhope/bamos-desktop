@@ -14,8 +14,8 @@ import {
 } from '@/features/zoneAdministration/zonesApi';
 
 import { useTypedSelector } from '@/hooks/useTypedSelector';
-import ZoneCodeForm from './ZoneCodeForm';
-import ZoneCodeTree from './ZoneCodeTree';
+import ZoneCodeForm from './zoneCodeForm';
+import ZoneCodeTree from './zoneCodeTree';
 
 interface AdminPanelProps {
   acTypeId: string;

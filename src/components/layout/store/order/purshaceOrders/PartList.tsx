@@ -83,7 +83,7 @@ const PartList: FC<PartListType> = ({ scroll, addedParts, onAddedData }) => {
       dataIndex: 'nameOfMaterial',
       key: 'nameOfMaterial',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
 
       editable: (text, record, index) => {
