@@ -299,7 +299,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.PROJECT_VIEWER) {
       tab = {
         key,
-        title: `${t(` PROJECT VIEWER `)}`,
+        title: `${t(` PROJECT ADMINISTRATION `)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <ProjectViewer />

@@ -592,12 +592,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   //   }
   // }, [isEditingView]);
   return (
-    <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-4">
-      <Col
-        xs={5}
-        sm={6}
-        className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 "
-      >
+    <div className="  flex gap-4 justify-between">
+      <div className=" w-3/12 h-[75vh] bg-white  py-3 rounded-md brequierement-gray-400 ">
         <Space direction="vertical">
           <Space
             className={`cursor-pointer transform transition px-3 ${
@@ -787,16 +783,12 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
             </>
           )}
         </Space>
-      </Col>
+      </div>
 
-      <Col
-        className="h-[82vh] px-4  rounded-md brequierement-gray-400"
-        xs={15}
-        sm={17}
-      >
+      <div className=" w-9/12 h-[82vh]   rounded-md brequierement-gray-400">
         <TabContent tabs={tabs}></TabContent>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
