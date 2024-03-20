@@ -33,7 +33,8 @@ import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministra
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acAdminApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acAdminApi';
+import RequirementsTypesPanel from '@/components/userAdministration/requirementsTypes/RequirementsTypesPanel';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -54,6 +55,11 @@ const UserAdministration: FC = () => {
     getItem(
       <>{t('ACCOUNTS GROUPS')}</>,
       RouteNames.USER_GROUPS,
+      <GroupOutlined />
+    ),
+    getItem(
+      <>{t('REQUIREMENTS TYPES ')}</>,
+      RouteNames.REQUIREMENTS_CODES,
       <GroupOutlined />
     ),
     getItem(<>{t('COMPANIES ')}</>, RouteNames.COMPANIES, <GroupOutlined />),
@@ -147,6 +153,22 @@ const UserAdministration: FC = () => {
         content: (
           <div>
             <ACAdministrationPanel values={acrFormValues} />
+          </div>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+    if (key === RouteNames.REQUIREMENTS_CODES) {
+      const tab = {
+        key,
+        title: `${t('REQUIREMENTS TYPES')}`,
+        content: (
+          <div>
+            <RequirementsTypesPanel values={[]} />
           </div>
         ),
         closable: true,

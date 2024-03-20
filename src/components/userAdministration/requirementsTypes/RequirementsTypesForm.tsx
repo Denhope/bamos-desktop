@@ -9,24 +9,28 @@ import { Button, Col, Empty, Row, Space, Tabs } from 'antd';
 
 import { useTranslation } from 'react-i18next';
 
-import { IACType, IMaintenanceType } from '@/models/AC';
-import MaintenanceTypeTab from './MaintenanceType/MaintenanceTypeTab';
+import { IRequirementType, IMaintenanceType } from '@/models/AC';
 
-import TaskCodeFormPanel from '../taskCodeAdministration/TaskCodeFormPanel';
-import ZoneCodeFormPanel from '../zoneCodeAdministration/zoneCodeFormPanel';
-import MPDAdministrationFormPanel from '../MPDAdministration/MPDAdministrationFormPanel';
+import { ProFormTextArea } from '@ant-design/pro-components';
 
-interface IACTypeFormProps {
-  acType: IACType | undefined;
-  onSubmit: (acType: IACType) => void;
-  onDelete?: (acTypeId: string) => void;
+import ReqCodesAdmin from '../requirementsCodesAdministration/ReqCodesAdmin';
+
+interface IRequirementTypeFormProps {
+  reqType: IRequirementType | undefined;
+  onSubmit: (reqType: IRequirementType) => void;
+  onDelete?: (reqTypeId: string) => void;
 }
 
-const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
+const RequirementsTypesForm: FC<IRequirementTypeFormProps> = ({
+  reqType,
+  onSubmit,
+}) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
-  const handleSubmit = async (values: IACType) => {
-    const newUser: IACType = acType ? { ...acType, ...values } : { ...values };
+  const handleSubmit = async (values: IRequirementType) => {
+    const newUser: IRequirementType = reqType
+      ? { ...reqType, ...values }
+      : { ...values };
     onSubmit(newUser);
   };
   const [editingMaintenanceType, setEditingMaintenanceType] =
@@ -43,21 +47,21 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
     setShowSubmitButton(activeKey === '1');
   };
   useEffect(() => {
-    if (acType) {
+    if (reqType) {
       form.resetFields();
-      form.setFieldsValue(acType || {});
+      form.setFieldsValue(reqType || {});
     } else {
       form.resetFields();
     }
-  }, [acType?.id, form]);
+  }, [reqType?.id, form]);
   const SubmitButton = () => (
     <Button type="primary" htmlType="submit">
-      {acType ? t('UPDATE') : t('CREATE')}
+      {reqType ? t('UPDATE') : t('CREATE')}
     </Button>
   );
 
   return (
-    <ProForm<IACType>
+    <ProForm
       size="small"
       form={form}
       onFinish={handleSubmit}
@@ -77,9 +81,19 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
           <ProFormGroup>
             <ProFormGroup>
               <ProFormText
+                width={'lg'}
+                name="title"
+                label={t('TITLE')}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              />
+              <ProFormText
                 width={'sm'}
                 name="code"
-                label="CODE"
+                label={t('CODE')}
                 rules={[
                   {
                     required: true,
@@ -88,24 +102,20 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
               />
 
               <ProFormText
-                width={'lg'}
-                name="name"
-                label="TITLE"
+                width={'xl'}
+                name="description"
+                label={t('DESCRIPTION')}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               />
-              <ProFormText
-                width={'lg'}
-                name="manufacturer"
-                label="MANUFACTURER"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
+              <ProFormTextArea
+                width={'xl'}
+                fieldProps={{ style: { resize: 'none' } }}
+                name="remarks"
+                label={t('REMARKS')}
               />
             </ProFormGroup>
             <ProFormGroup>
@@ -123,33 +133,9 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
             </ProFormGroup>
           </ProFormGroup>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="MAINTENANCE TYPES" key="2">
-          {acType && acType.id ? (
-            <MaintenanceTypeTab
-              values={undefined}
-              acType={acType || undefined}
-            />
-          ) : (
-            <Empty description="No Data" />
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="TASK CODES" key="3">
-          {acType && acType.id ? (
-            <TaskCodeFormPanel acTypeID={acType?.id || ''} />
-          ) : (
-            <Empty description="No Data" />
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="ZONES CODES" key="4">
-          {acType && acType.id ? (
-            <ZoneCodeFormPanel acTypeId={acType.id} />
-          ) : (
-            <Empty description="No Data" />
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="DOCUMENTATION" key="5">
-          {acType && acType.id ? (
-            <MPDAdministrationFormPanel acTypeID={acType.id} />
+        <Tabs.TabPane tab={t('CODES')} key="2">
+          {reqType && reqType.id ? (
+            <ReqCodesAdmin reqTypeID={reqType.id} />
           ) : (
             <Empty description="No Data" />
           )}
@@ -158,4 +144,4 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
     </ProForm>
   );
 };
-export default ACTypeForm;
+export default RequirementsTypesForm;

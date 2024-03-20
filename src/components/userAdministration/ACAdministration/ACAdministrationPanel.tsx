@@ -14,11 +14,11 @@ import ACAdministrationlForm from './ACAdministrationlForm';
 
 import ACAdministrationTree from './ACAdministrationTree';
 import {
-  useGetPlanesQuery,
   useAddPlaneMutation,
-  useUpdatePlaneMutation,
   useDeletePlaneMutation,
-} from '@/features/ACAdministration/acAdminApi';
+  useGetPlanesQuery,
+  useUpdatePlaneMutation,
+} from '@/features/acAdministration/acAdminApi';
 
 interface AdminPanelProps {
   values: VendorFilteredFormValues;

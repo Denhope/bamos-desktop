@@ -2,37 +2,37 @@ import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 
-import { IACType } from '@/models/AC';
+import { IRequirementType } from '@/models/AC';
 import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
-  acType?: IACType;
+  reqType?: IRequirementType;
 }
 
 interface UserTreeProps {
-  onACTypeSelect: (acType: IACType) => void;
-  acTypes: IACType[] | [];
+  onreqTypeselect: (acType: IRequirementType) => void;
+  reqTypes: IRequirementType[] | [];
 }
 
 const { TreeNode } = Tree;
 const { Search } = Input;
 
-const RequirementsTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
+const RequirementsTree: FC<UserTreeProps> = ({ onreqTypeselect, reqTypes }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  const convertToTreeData = (acTypes: IACType[]): TreeDataNode[] => {
-    return acTypes.map((acType) => ({
-      title: String(acType.name).toUpperCase(),
+  const convertToTreeData = (reqTypes: IRequirementType[]): TreeDataNode[] => {
+    return reqTypes.map((acType) => ({
+      title: String(acType.title).toUpperCase(),
       key: acType.id,
       acType: acType,
     }));
   };
 
   useEffect(() => {
-    setTreeData(convertToTreeData(acTypes));
-  }, [acTypes]);
+    setTreeData(convertToTreeData(reqTypes));
+  }, [reqTypes]);
 
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
@@ -57,9 +57,9 @@ const RequirementsTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
       );
     }
 
-    const selectedGroup = filteredTreeData[selectedIndex].acType;
+    const selectedGroup = filteredTreeData[selectedIndex].reqType;
     if (selectedGroup) {
-      onACTypeSelect(selectedGroup);
+      onreqTypeselect(selectedGroup);
     }
   };
 
@@ -82,11 +82,11 @@ const RequirementsTree: FC<UserTreeProps> = ({ onACTypeSelect, acTypes }) => {
         checkable={false}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
-          const acType = acTypes.find(
+          const acType = reqTypes.find(
             (acType) => acType.id === selectedKeys[0]
           );
           if (acType) {
-            onACTypeSelect(acType);
+            onreqTypeselect(acType);
           }
         }}
         height={660}

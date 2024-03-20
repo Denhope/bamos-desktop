@@ -4,65 +4,67 @@ import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
-import { ACTypesFilteredFormValues } from './ASTypesFilteredForm';
-import { useTypedSelector } from '@/hooks/useTypedSelector';
-import { IACType } from '@/models/AC';
-import ACTypesForm from './ACTypesForm';
-import ACTypesTree from './RequirementsTree';
+import { IRequirementType } from '@/models/AC';
+
+import RequirementsTypesTree from './RequirementsTypesTree';
+
 import {
-  useAddACTypeMutation,
-  useDeleteACTypeMutation,
-  useGetACTypesQuery,
-  useUpdateACTypeMutation,
-} from '@/features/acTypeAdministration/acTypeApi';
+  useAddREQTypeMutation,
+  useDeleteREQTypeMutation,
+  useGetREQTypesQuery,
+  useUpdateREQTypeMutation,
+} from '@/features/requirementsTypeAdministration/requirementsTypeApi';
+import RequirementsTypesForm from './RequirementsTypesForm';
 
 interface AdminPanelProps {
-  values: ACTypesFilteredFormValues;
+  values?: any;
 }
 
-const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
-  const [editingACType, setEditingACType] = useState<IACType | null>(null);
-  const { acTypes } = useTypedSelector((state) => state.acTypes);
+const RequirementsTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
+  const [editingACType, setEditingACType] = useState<IRequirementType | null>(
+    null
+  );
+  // const { acTypes } = useTypedSelector((state) => state.acTypes);
 
-  const { isLoading } = useGetACTypesQuery({});
+  const { data: reqTypes, isLoading } = useGetREQTypesQuery({});
 
-  const [addACType] = useAddACTypeMutation();
-  const [updateACType] = useUpdateACTypeMutation();
-  const [deleteACType] = useDeleteACTypeMutation();
+  const [addREQType] = useAddREQTypeMutation();
+  const [updateREQType] = useUpdateREQTypeMutation();
+  const [deleteREQType] = useDeleteREQTypeMutation();
 
   const handleCreate = () => {
     setEditingACType(null);
   };
 
-  const handleEdit = (acType: IACType) => {
+  const handleEdit = (acType: IRequirementType) => {
     setEditingACType(acType);
   };
 
   const handleDelete = async (acTypeId: string) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS AC TYPE?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS ?'),
       onOk: async () => {
         try {
-          await deleteACType(acTypeId).unwrap();
-          message.success(t('AC TYPE SUCCESSFULLY DELETED'));
+          await deleteREQType(acTypeId).unwrap();
+          message.success(t('REQUIREMENT TYPE SUCCESSFULLY DELETED'));
         } catch (error) {
-          message.error(t('ERROR DELETING AC TYPE'));
+          message.error(t('ERROR DELETING REQUIREMENT TYPE'));
         }
       },
     });
   };
 
-  const handleSubmit = async (acType: IACType) => {
+  const handleSubmit = async (acType: IRequirementType) => {
     try {
       if (editingACType) {
-        await updateACType(acType).unwrap();
-        message.success(t('VENDOR SUCCESSFULLY UPDATED'));
+        await updateREQType(acType).unwrap();
+        message.success(t('REQUIREMENT TYPE SUCCESSFULLY UPDATED'));
       } else {
-        await addACType(acType).unwrap();
-        message.success(t('VENDOR SUCCESSFULLY ADDED'));
+        await addREQType(acType).unwrap();
+        message.success(t('REQUIREMENT TYPE SUCCESSFULLY ADDED'));
       }
     } catch (error) {
-      message.error(t('ERROR SAVING VENDOR GROUP'));
+      message.error(t('ERROR SAVING REQUIREMENT TYPE'));
     }
   };
 
@@ -85,7 +87,7 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
-            {t('ADD AC TYPE')}
+            {t('ADD REQUIREMENT TYPE')}
           </Button>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
@@ -95,7 +97,7 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
               icon={<MinusSquareOutlined />}
               onClick={() => handleDelete(editingACType.id)}
             >
-              {t('DELETE AC TYPE')}
+              {t('DELETE REQUIREMENT TYPE')}
             </Button>
           )}
         </Col>
@@ -106,16 +108,19 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
           // sm={4}
           className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
         >
-          <ACTypesTree onACTypeSelect={handleEdit} acTypes={acTypes || []} />
+          <RequirementsTypesTree
+            onreqTypeselect={handleEdit}
+            reqTypes={reqTypes || []}
+          />
         </div>
         <div
           className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
           // sm={19}
         >
-          <ACTypesForm
+          <RequirementsTypesForm
             onSubmit={handleSubmit}
             onDelete={handleDelete}
-            acType={editingACType || undefined}
+            reqType={editingACType || undefined}
           />
         </div>
       </div>
@@ -123,4 +128,4 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
   );
 };
 
-export default AdminACTypesPanel;
+export default RequirementsTypesPanel;

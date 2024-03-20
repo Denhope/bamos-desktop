@@ -37,6 +37,7 @@ export enum RouteNames {
   AC_TASKS = '/user/administration/acTasks',
   AC = '/user/administration/ac',
   COMPANIES = '/user/administration/companies',
+  REQUIREMENTS_CODES = '/user/administration/requirements/codes',
   USER = '/user',
   HOME = '/',
   WEB = '/web/app',

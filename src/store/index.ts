@@ -29,7 +29,9 @@ import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
 import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
 import { mpdCodeApi } from '@/features/MPDAdministration/mpdCodesApi';
 import { taskApi } from '@/features/tasksAdministration/tasksApi';
-import { acAdminApi } from '../../src/features/ACAdministration/acAdminApi';
+import { requirementsTypeApi } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
+import { requirementsCodesApi } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
+import { acAdminApi } from '../../src/features/acAdministration/acAdminApi';
 import { requirementApi } from '@/features/requirementAdministration/requirementApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
@@ -37,7 +39,7 @@ import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
+import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
 const store = configureStore({
   reducer: {
     auth: authSlice,
@@ -73,6 +75,8 @@ const store = configureStore({
     [mpdCodeApi.reducerPath]: mpdCodeApi.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
     [acAdminApi.reducerPath]: acAdminApi.reducer,
+    [requirementsTypeApi.reducerPath]: requirementsTypeApi.reducer,
+    [requirementsCodesApi.reducerPath]: requirementsCodesApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -92,7 +96,9 @@ const store = configureStore({
       requirementApi.middleware,
       mpdCodeApi.middleware,
       taskApi.middleware,
-      acAdminApi.middleware
+      acAdminApi.middleware,
+      requirementsTypeApi.middleware,
+      requirementsCodesApi.middleware
     ),
 });
 export default store;

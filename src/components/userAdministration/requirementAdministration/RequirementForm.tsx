@@ -435,7 +435,10 @@ const RequirementForm: FC<UserFormProps> = ({
             ></ProFormDatePicker>
           </ProFormGroup>
           <ProFormTextArea
-            fieldProps={{ style: { resize: 'none' } }}
+            fieldProps={{
+              style: { resize: 'none' },
+              rows: 3,
+            }}
             name="remarks"
             colSize={1}
             label={t('REMARKS')}

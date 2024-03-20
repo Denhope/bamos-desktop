@@ -1,37 +1,41 @@
-import { IACType, IMaintenanceType } from '@/models/AC';
-import { Input } from 'antd';
-import Tree, { DataNode } from 'antd/es/tree';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import CustomTree from '../../zoneCodeAdministration/CustomTree';
+import { Tree, Typography, Input, Button } from 'antd';
+import type { DataNode } from 'antd/lib/tree';
+
+import { IRequirementCode } from '@/models/AC';
+import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 interface TreeDataNode extends DataNode {
-  maintenanceType?: IMaintenanceType;
+  reqCode?: IRequirementCode;
 }
-interface MaintenanceTypeProps {
-  onMaintananceTypeSelect: (vendor: IMaintenanceType) => void;
-  maintenanceTypes: IMaintenanceType[] | [];
+interface reqTreeProps {
+  onReqCodeselect: (req: IRequirementCode) => void;
+  reqCodes: IRequirementCode[] | [];
 }
+const { Text } = Typography;
 const { TreeNode } = Tree;
 const { Search } = Input;
-const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
-  maintenanceTypes,
-  onMaintananceTypeSelect,
+
+const ReqCodesAdministrationTree: FC<reqTreeProps> = ({
+  onReqCodeselect,
+  reqCodes,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
-  const convertToTreeData = (
-    maintenanceTypes: IMaintenanceType[]
-  ): TreeDataNode[] => {
-    return maintenanceTypes.map((maintenanceType) => ({
-      title: String(maintenanceType?.name).toUpperCase(),
-      key: maintenanceType.id,
-      maintenanceType: maintenanceType,
+
+  const convertToTreeData = (reqCodes: IRequirementCode[]): TreeDataNode[] => {
+    return reqCodes.map((reqCode) => ({
+      title: `${reqCode.code.toUpperCase()} - ${reqCode.description.toUpperCase()}  `,
+      key: reqCode.id,
+      reqCode: reqCode,
     }));
   };
+
   useEffect(() => {
-    setTreeData(convertToTreeData(maintenanceTypes));
-  }, [maintenanceTypes]);
+    setTreeData(convertToTreeData(reqCodes));
+  }, [reqCodes]);
+
   const filteredTreeData = useMemo(() => {
     if (!searchQuery) {
       return treeData;
@@ -43,6 +47,7 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
       return false;
     });
   }, [treeData, searchQuery]);
+
   const handleEnterPress = () => {
     if (filteredTreeData.length === 0) return;
 
@@ -54,11 +59,12 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
       );
     }
 
-    const selectedGroup = filteredTreeData[selectedIndex].maintenanceType;
+    const selectedGroup = filteredTreeData[selectedIndex].reqCode;
     if (selectedGroup) {
-      onMaintananceTypeSelect(selectedGroup);
+      onReqCodeselect(selectedGroup);
     }
   };
+
   const renderTreeNodes = (data: TreeDataNode[]) => {
     return data.map((item, index) => (
       <TreeNode
@@ -68,16 +74,14 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
       />
     ));
   };
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault(); // Отменяем действие по умолчанию
       event.stopPropagation(); // Останавливаем дальнейшую передачу события
     }
   };
-
   return (
-    <div className="  flex flex-col ">
+    <div className="flex flex-col  ">
       <Search
         size="small"
         allowClear
@@ -88,25 +92,25 @@ const MaintenanceTypeTree: FC<MaintenanceTypeProps> = ({
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: 8 }}
         enterButton
-        onKeyDown={handleKeyDown}
         // onPressEnter={handleEnterPress}
+        onKeyDown={handleKeyDown}
       />
       <CustomTree
         checkable={false}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
-          const maintenanceType = maintenanceTypes.find(
-            (maintenanceType) => maintenanceType.id === selectedKeys[0]
+          const reqGroup = reqCodes.find(
+            (group) => group.id === selectedKeys[0]
           );
-          if (maintenanceType) {
-            onMaintananceTypeSelect(maintenanceType);
+          if (reqGroup) {
+            onReqCodeselect(reqGroup);
           }
         }}
-        height={560}
+        height={680}
         searchQuery={searchQuery}
       />
     </div>
   );
 };
 
-export default MaintenanceTypeTree;
+export default ReqCodesAdministrationTree;
