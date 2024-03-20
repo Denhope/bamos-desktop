@@ -30,7 +30,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       title: `${t('PROJECT No')}`,
       dataIndex: 'projectWO',
       key: 'projectWO',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       // width: '13%',
 

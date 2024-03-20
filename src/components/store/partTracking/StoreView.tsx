@@ -17,7 +17,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       dataIndex: 'createDate',
 
       key: 'createDate',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       valueType: 'date',
 
@@ -43,7 +43,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       title: `${t('BOOKING')}`,
       dataIndex: 'voucherModel',
       key: 'voucherModel',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
@@ -53,7 +53,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
 
       formItemProps: {
@@ -72,7 +72,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       title: `${t('STATION')}`,
       dataIndex: 'station',
       key: 'station',
-      //tip: 'CONDITION',
+      //tooltip: 'CONDITION',
       ellipsis: true,
 
       formItemProps: {
@@ -92,7 +92,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       title: `${t('STORE')}`,
       dataIndex: 'STOCK',
       key: 'STOCK',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
@@ -108,7 +108,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       title: `${t('LOCATION')}`,
       dataIndex: 'SHELF_NUMBER',
       key: 'SHELF_NUMBER',
-      //tip: 'ITEM LOCATION',
+      //tooltip: 'ITEM LOCATION',
       ellipsis: true,
 
       formItemProps: {
@@ -131,7 +131,7 @@ const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
       title: `${t('DESCRIPTION')}`,
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {

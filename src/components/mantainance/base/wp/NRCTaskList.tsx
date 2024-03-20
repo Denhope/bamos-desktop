@@ -623,7 +623,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       editable: (text, record, index) => {
         return false;
       },
-      tip: 'Text Show',
+      tooltip: 'Text Show',
 
       responsive: ['lg'],
 
@@ -703,7 +703,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     // {
     //   title: 'AMM',
     //   dataIndex: 'amtoss',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
     //   key: 'amtoss',
     //   responsive: ['lg'],
@@ -814,7 +814,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
 
       key: 'zone',
       width: '7%',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
       responsive: ['lg'],
       editable: (text, record, index) => {
@@ -956,7 +956,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   title: `${t('SKILL')}`,
     //   key: 'cascader',
     //   dataIndex: 'cascader',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
 
     //   fieldProps: {
@@ -993,7 +993,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
       title: `${t('NEXT SKILL')}`,
       key: 'cascader',
       dataIndex: 'cascader',
-      // tip: 'Text Show',
+      // tooltip: 'Text Show',
       ellipsis: true,
       valueType: 'treeSelect',
       width: '7%',
@@ -1131,7 +1131,7 @@ const NRCTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   key: 'rewiewStatus',
     //   width: '10%',
     //   valueType: 'select',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
     //   // initialValue: 'all',
     //   filters: true,

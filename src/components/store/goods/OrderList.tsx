@@ -26,7 +26,7 @@ const OrderList: FC<showOrderListType> = ({
       title: `${t('ORDER No')}`,
       dataIndex: 'orderNumber',
       key: 'orderNumber',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       // width: '13%',
 

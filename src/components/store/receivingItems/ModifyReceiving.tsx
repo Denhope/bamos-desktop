@@ -74,7 +74,7 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
       title: `${t('ORDER NUMBER')}`,
       dataIndex: 'ORDER_NUMBER',
       key: 'ORDER_NUMBER',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
@@ -88,7 +88,7 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
 
       formItemProps: {

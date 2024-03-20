@@ -139,7 +139,7 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       dataIndex: 'PN',
       key: 'PN',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       width: '10%',
       formItemProps: {

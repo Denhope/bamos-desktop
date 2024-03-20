@@ -21,7 +21,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       dataIndex: 'createDate',
 
       key: 'createDate',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       valueType: 'date',
 
@@ -47,7 +47,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('BOOKING')}`,
       dataIndex: 'voucherModel',
       key: 'voucherModel',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
@@ -57,7 +57,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
 
       formItemProps: {
@@ -76,7 +76,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('CONDITION')}`,
       dataIndex: 'CONDITION',
       key: 'CONDITION',
-      //tip: 'CONDITION',
+      //tooltip: 'CONDITION',
       ellipsis: true,
 
       formItemProps: {
@@ -92,7 +92,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('A/C')}`,
       dataIndex: 'registrationNumber',
       key: 'registrationNumber',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
@@ -111,7 +111,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('LABEL')}`,
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       formItemProps: {
@@ -125,7 +125,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('PROJECT No')}`,
       dataIndex: 'projectWO',
       key: 'projectWO',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       formItemProps: {
@@ -139,7 +139,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('WO No')}`,
       dataIndex: 'projectTaskWO',
       key: 'projectTaskWO',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       formItemProps: {
@@ -153,7 +153,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('DESCRIPTION')}`,
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {

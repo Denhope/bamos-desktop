@@ -624,7 +624,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -820,7 +820,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       editable: (text, record, index) => {
         return false;
       },
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       // width: '9%',
 
       responsive: ['lg'],
@@ -879,7 +879,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     {
       title: `${t('REFERENCE')}`,
       dataIndex: 'amtoss',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
       key: 'amtoss',
       responsive: ['lg'],
@@ -1154,7 +1154,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       title: `${t('NEXT SKILL')}`,
       key: 'cascader',
       dataIndex: 'cascader',
-      // tip: 'Text Show',
+      // tooltip: 'Text Show',
       ellipsis: true,
       valueType: 'treeSelect',
       width: '7%',

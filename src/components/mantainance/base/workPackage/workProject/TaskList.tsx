@@ -73,7 +73,7 @@ import CloseContent from '../../wp/activeTask/close/CloseContent';
 import RequirementItems from '../../wp/activeTask/requeriments/RequirementItems';
 import GeneretedWOPdfCurr from '@/components/pdf/GeneretedWOPdfCurr';
 import IssuedMatForm from '../../wp/activeTask/requeriments/IssuedMatForm';
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 
 // import Store from '@/components/pages/Store';
 
@@ -136,7 +136,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -736,7 +736,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       editable: (text, record, index) => {
         return false;
       },
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       // width: '9%',
 
       responsive: ['lg'],
@@ -766,7 +766,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
     {
       title: 'AMM',
       dataIndex: 'amtoss',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
       key: 'amtoss',
       responsive: ['lg'],
@@ -825,7 +825,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
 
       key: 'area',
       width: '5%',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
       responsive: ['lg'],
       editable: (text, record, index) => {
@@ -907,7 +907,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       title: 'Skill/Wait',
       key: 'cascader',
       dataIndex: 'cascader',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
 
       fieldProps: {
@@ -973,7 +973,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       key: 'rewiewStatus',
       width: '10%',
       valueType: 'select',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
       // initialValue: 'all',
       filters: true,
@@ -1586,7 +1586,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
                           },
                           status: 'open',
                           _id: '',
-                          name: String(FULL_NAME),
+                          name: FULL_NAME,
                           sing: String(localStorage.getItem('singNumber')),
                           actions: [
                             {

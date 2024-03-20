@@ -47,7 +47,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('RECEIVING No')}`,
       dataIndex: 'RECEIVING_NUMBER',
       key: 'RECEIVING_NUMBER',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -62,7 +62,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('RECEIVING ITEM No')}`,
       dataIndex: 'RECEIVING_ITEM_NUMBER',
       key: 'RECEIVING_ITEM_NUMBER',
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -106,7 +106,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('ORDER No')}`,
       dataIndex: 'ORDER_NUMBER',
       key: 'ORDER_NUMBER',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
       // width: '8%',
       formItemProps: {
@@ -120,7 +120,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       width: '10%',
       formItemProps: {
@@ -172,7 +172,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('DESCRIPTION')}`,
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
@@ -185,7 +185,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('CONDITION')}`,
       dataIndex: 'CONDITION',
       key: 'CONDITION',
-      //tip: 'CONDITION',
+      //tooltip: 'CONDITION',
       ellipsis: true,
 
       formItemProps: {
@@ -211,7 +211,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('LABEL')}`,
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -225,7 +225,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('AWB No')}`,
       dataIndex: 'AWB_NUMBER',
       key: 'AWB_NUMBER',
-      //tip: 'ITEM ORDER_NUMBER',
+      //tooltip: 'ITEM ORDER_NUMBER',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -239,7 +239,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('STORE')}`,
       dataIndex: 'STOCK',
       key: 'STOCK',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
       width: '4%',
       formItemProps: {
@@ -266,7 +266,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       title: `${t('LOCATION')}`,
       dataIndex: 'SHELF_NUMBER',
       key: 'SHELF_NUMBER',
-      //tip: 'ITEM LOCATION',
+      //tooltip: 'ITEM LOCATION',
       ellipsis: true,
       width: '5%',
       formItemProps: {
@@ -280,7 +280,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       dataIndex: 'RECEIVED_DATE',
       width: '7%',
       key: 'RECEIVED_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       valueType: 'date',
 

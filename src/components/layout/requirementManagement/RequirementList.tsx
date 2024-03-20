@@ -26,7 +26,7 @@ const RequirementList: FC<showProjectListType> = ({
       title: `${t('REQUIREMENT No')}`,
       dataIndex: 'partRequestNumber',
       key: 'partRequestNumber',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       // width: '13%',
 

@@ -1,7 +1,7 @@
-import { ProColumns } from "@ant-design/pro-components";
-import EditableSearchTable from "@/components/shared/Table/EditableSearchTable";
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import EditableSearchTable from '@/components/shared/Table/EditableSearchTable';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 export interface MaterialItemStoreSearchNewProps {
   initialParams: any;
   scroll: number;
@@ -22,13 +22,13 @@ const MaterialItemStoreSearchNew: FC<MaterialItemStoreSearchNewProps> = ({
   const { t } = useTranslation();
   const initialColumns: ProColumns<any>[] = [
     {
-      title: "ID",
-      dataIndex: "ID",
+      title: 'ID',
+      dataIndex: 'ID',
       // valueType: 'index',
       ellipsis: true,
-      tip: "ITEM ID",
-      key: "ID",
-      width: "9",
+      tooltip: 'ITEM ID',
+      key: 'ID',
+      width: '9',
       search: false,
 
       editable: (text, record, index) => {
@@ -51,75 +51,75 @@ const MaterialItemStoreSearchNew: FC<MaterialItemStoreSearchNewProps> = ({
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
-      tip: "ITEM PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
+      tooltip: 'ITEM PART_NUMBER',
       ellipsis: true,
-      width: "9",
+      width: '9',
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
 
       // responsive: ['sm'],
-      tip: "ITEM DESCRIPTION",
+      tooltip: 'ITEM DESCRIPTION',
       ellipsis: true, //
-      width: "20%",
+      width: '20%',
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      responsive: ["sm"],
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: "RESERVED",
-      dataIndex: "reserved",
-      key: "reserved",
-      responsive: ["sm"],
+      title: 'RESERVED',
+      dataIndex: 'reserved',
+      key: 'reserved',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: "BLOCKED",
-      dataIndex: "ONBLOCK_QUANTITY",
-      key: "ONBLOCK_QUANTITY",
-      responsive: ["sm"],
+      title: 'BLOCKED',
+      dataIndex: 'ONBLOCK_QUANTITY',
+      key: 'ONBLOCK_QUANTITY',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: "OWNER",
-      dataIndex: "OWNER",
-      key: "OWNER",
+      title: 'OWNER',
+      dataIndex: 'OWNER',
+      key: 'OWNER',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
       editable: (text, record, index) => {
         return false;
       },
