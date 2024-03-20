@@ -9,7 +9,6 @@ import {
 import { DatePickerProps, Form, FormInstance, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 
-import axios from 'axios';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,12 +16,14 @@ import {
   getFilteredAditionalTasks,
   getFilteredProjectTasks,
   getFilteredProjects,
-  getFilteredRequirementsManager,
   getFilteredShops,
 } from '@/utils/api/thunks';
+
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import { IProjectTaskAll } from '@/models/IProjectTask';
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
+import { useGetREQTypesQuery } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
+import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (values: any) => void;
   nonCalculate?: boolean;
@@ -33,8 +34,9 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   nonCalculate,
   foForecact,
 }) => {
-  const [form] = Form.useForm();
   const formRef = useRef<FormInstance>(null);
+  const [form] = Form.useForm();
+
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -44,10 +46,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     setSelectedEndDate(dateString[1]);
     setSelectedStartDate(dateString[0]);
   };
-  interface Item {
-    field1: string;
-    field2: string;
-  }
+
   interface Option {
     value: string;
     label: string;
@@ -62,8 +61,15 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   const [receiverTaskType, setReceiverTaskType] = useState('MAIN_TASK');
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [options, setOptions] = useState<Option[]>([]); // указываем тип состояния явно
+  const [reqTypeID, setReqTypeID] = useState<any>('');
+  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [initialForm, setinitialForm] = useState<any>('');
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [taskOptions, setTaskOptions] = useState<Option[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
   const { t } = useTranslation();
   const currentCompanyID = localStorage.getItem('companyID');
+
   useEffect(() => {
     if (receiverType) {
       let action;
@@ -120,11 +126,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       }
     }
   }, [receiverType, dispatch]);
-  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
-  const [initialForm, setinitialForm] = useState<any>('');
-  const [isResetForm, setIsResetForm] = useState<boolean>(false);
-  const [taskOptions, setTaskOptions] = useState<Option[]>([]);
-  const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
+
   useEffect(() => {
     const currentCompanyID = localStorage.getItem('companyID');
     if (receiverTaskType) {
@@ -180,6 +182,21 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     }
   }, [selectedProjectId, receiverTaskType, dispatch]);
   const [isAltertative, setIsAltertative] = useState<any>(true);
+  const { data: reqTypes, isLoading } = useGetREQTypesQuery({});
+
+  const { data: reqCodes, isLoading: loading } = useGetREQCodesQuery({
+    reqTypeID,
+  });
+  const requirementCodesValueEnum: Record<string, string> =
+    reqCodes?.reduce((acc, reqCode) => {
+      acc[reqCode.id] = reqCode.code;
+      return acc;
+    }, {}) || {};
+  const requirementTypesValueEnum: Record<string, string> =
+    reqTypes?.reduce((acc, reqType) => {
+      acc[reqType.id] = reqType.code;
+      return acc;
+    }, {}) || {};
 
   const onFinish = async (values: any) => {
     try {
@@ -286,8 +303,6 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           fieldProps={{
             onKeyPress: handleKeyPress,
           }}
-
-          //rules={[{ required: true }]}
         />
         <ProForm.Group>
           <ContextMenuPNSearchSelect
@@ -364,15 +379,25 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         )}
       </ProForm.Group>
       <ProFormSelect
-        mode="multiple"
+        // mode={'multiple'}
+        showSearch
         name="requierementType"
-        label={`${t('REQUIREMENT  TYPE')}`}
-        width="lg"
-        options={[
-          { value: 'PART_REQUEST', label: t('PART REQUEST') },
-          { value: 'WORK', label: t('WORK') },
-        ]}
+        label={t('REQUIREMENT  TYPE')}
+        width="sm"
+        valueEnum={requirementTypesValueEnum}
+        onChange={(value: any) => setReqTypeID(value)}
+        // disabled={!acTypeID} // Disable the select if acTypeID is not set
       />
+      <ProFormSelect
+        // mode={'multiple'}
+        showSearch
+        name="requierementCode"
+        label={t('REQUIREMENT  CODE')}
+        width="sm"
+        valueEnum={requirementCodesValueEnum || []}
+        disabled={!reqTypeID} // Disable the select if acTypeID is not set
+      />
+
       <ProFormSelect
         initialValue={['open']}
         mode="multiple"

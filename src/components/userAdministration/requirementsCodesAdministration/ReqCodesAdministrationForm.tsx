@@ -47,9 +47,19 @@ const ReqCodesAdministrationForm: FC<UserFormProps> = ({
       <ProForm.Group>
         <ProForm.Group>
           <ProFormText
-            width={'xl'}
+            width={'lg'}
+            name="title"
+            label={t('TITLE')}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          />
+          <ProFormText
+            width={'sm'}
             name="code"
-            label="TITLE"
+            label={t('CODE')}
             rules={[
               {
                 required: true,

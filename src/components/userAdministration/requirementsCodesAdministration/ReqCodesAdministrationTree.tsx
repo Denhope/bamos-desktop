@@ -26,7 +26,7 @@ const ReqCodesAdministrationTree: FC<reqTreeProps> = ({
 
   const convertToTreeData = (reqCodes: IRequirementCode[]): TreeDataNode[] => {
     return reqCodes.map((reqCode) => ({
-      title: `${reqCode.code.toUpperCase()} - ${reqCode.description.toUpperCase()}  `,
+      title: `${reqCode?.title?.toUpperCase()} - ${reqCode.description.toUpperCase()}  `,
       key: reqCode.id,
       reqCode: reqCode,
     }));

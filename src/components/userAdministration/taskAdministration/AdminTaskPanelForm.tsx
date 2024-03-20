@@ -75,7 +75,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
 
   const { data: mpdCodes, isLoading: mpdCodesLoading } = useGetMPDCodesQuery(
     { acTypeID },
-    { skip: !acTypeID } // Skip the query if acTypeID is not set
+    { skip: !acTypeID }
   );
   const { data: taskCodes } = useGetGroupTaskCodesQuery(
     { acTypeID },
