@@ -144,9 +144,9 @@ const PickslipRequest: FC = () => {
   const dispatch = useAppDispatch();
   const uuidv4: () => string = originalUuidv4;
   return (
-    <div className="h-[82vh]  bg-white px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
-      <div className="flex flex-col">
-        <div className="py-4">
+    <div className="h-[82vh]   px-4 py-3 gap-4  overflow-hidden flex flex-col justify-between ">
+      <div className="flex flex-col gap-4">
+        <div className="py-4 bg-white">
           <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
             <Col sm={18}>
               <PickslipRequestForm
@@ -156,7 +156,6 @@ const PickslipRequest: FC = () => {
                 }}
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
-                  console.log(data);
                 }}
                 setCancel={isCancel}
                 onCreate={function (data: boolean): void {
