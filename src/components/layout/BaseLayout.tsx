@@ -69,7 +69,7 @@ const BaseLayout: React.FC = () => {
     },
     {
       APNNBR: '100',
-      descriptions: `${t(`PROJECT MANAGMENT`)}`,
+      descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
       route: RouteNames.PROJECT_MANAGMENT,
     },
     {

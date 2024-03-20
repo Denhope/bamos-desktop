@@ -78,11 +78,10 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
   }, [project]);
 
   return (
-    <Row className="gap-4">
-      <Col
-        xs={2}
-        sm={3}
-        className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  "
+    <div className="  flex gap-4 justify-between">
+      <div
+        // sm={4}
+        className="w-3/12 h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  "
       >
         <Space direction="vertical">
           <Space
@@ -139,12 +138,8 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             <>{t('EDIT')}</>
           </Space>
         </Space>
-      </Col>
-      <Col
-        xs={2}
-        sm={20}
-        className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
-      >
+      </div>
+      <div className="w-9/12 h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  ">
         <ProForm
           onReset={() => {
             setinitialForm('');
@@ -456,8 +451,8 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             </>
           )}
         </ProForm>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
