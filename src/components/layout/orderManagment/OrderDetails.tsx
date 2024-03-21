@@ -794,7 +794,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             }}
           >
             <SettingOutlined />
-            <div>{t('NEW ORDER')}</div>
+            <div>{t('NEW')}</div>
           </Space>
           <Space
             onClick={() => order && setIsEditingView(!isEditingView)}

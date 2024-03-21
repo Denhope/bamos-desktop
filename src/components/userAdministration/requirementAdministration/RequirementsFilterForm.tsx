@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   ProForm,
   ProFormCheckbox,
@@ -184,7 +186,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   const [isAltertative, setIsAltertative] = useState<any>(true);
   const { data: reqTypes, isLoading } = useGetREQTypesQuery({});
 
-  const { data: reqCodes, isLoading: loading } = useGetREQCodesQuery({
+  const { data: reqCodes } = useGetREQCodesQuery({
     reqTypeID,
   });
   const requirementCodesValueEnum: Record<string, string> =

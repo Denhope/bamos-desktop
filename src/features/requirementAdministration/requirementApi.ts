@@ -24,7 +24,7 @@ export const requirementApi = createApi({
       }
     >({
       query: ({ status, projectID, startDate }) => ({
-        url: `requirements/getFilteredRequirements/company/${COMPANY_ID}`,
+        url: `requirements/getRequirements/company/${COMPANY_ID}`,
         params: { projectID, startDate, status },
       }),
       providesTags: ['Requirement'],

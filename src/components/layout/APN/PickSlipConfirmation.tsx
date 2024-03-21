@@ -1,12 +1,4 @@
-import {
-  FormInstance,
-  ProCard,
-  ProColumns,
-  ProForm,
-  ProFormDatePicker,
-  ProFormGroup,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { FormInstance, ProColumns, ProForm } from '@ant-design/pro-components';
 import {
   Button,
   Col,
@@ -22,12 +14,7 @@ import { v4 as originalUuidv4 } from 'uuid';
 import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  TransactionOutlined,
-  EditOutlined,
-  PrinterOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
+import { PrinterOutlined, SaveOutlined } from '@ant-design/icons';
 import {
   createBookingItem,
   createPickSlip,
@@ -39,7 +26,7 @@ import {
 import PickForm from '../store/pickSlipConfarmation/PickForm';
 
 import EditableSearchTable from '@/components/shared/Table/EditableSearchTable';
-import EditableTable from '@/components/shared/Table/EditableTable';
+
 import EditableTableForStore from '@/components/shared/Table/EditableTableForStore';
 import { setUpdatedMaterialOrder } from '@/store/reducers/StoreLogisticSlice';
 import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
@@ -48,7 +35,7 @@ import { UserResponce } from '@/models/IUser';
 import GeneretedCompleteSlipPdf from '@/components/pdf/GeneretedCompleteSlip';
 import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
 import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
-import FilesSelector from '@/components/shared/FilesSelector';
+
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { USER_ID } from '@/utils/api/http';
 import FileModalList from '@/components/shared/FileModalList';
@@ -603,7 +590,6 @@ const PickSlipConfirmation: FC = () => {
               initialParams={
                 currentPick && {
                   STOCK: currentPick?.getFrom,
-                  // isAllExpDate: true,
                   PART_NUMBER: selectedPart?.PN
                     ? selectedPart?.PN
                     : currentPick?.materials[0].PN,
@@ -753,27 +739,6 @@ const PickSlipConfirmation: FC = () => {
                   ...currentPick,
                   materials: updatetOrderMaterials,
                 };
-                // Обновляем промежуточные данные прямо здесь
-                // const newData = updatetOrderMaterials?.map((item) => {
-                //   return {
-                //     ...item,
-                //     QUANTITY: item.QUANTITY_BOOK,
-                //     onBlockQuantity: Number(item.QUANTITY_BOOK),
-                //     unit: item.unit,
-                //     required: item.required,
-                //     description: item.description,
-                //     onBlock: item.foRealese
-                //       ? [
-                //           Object.assign({}, item.foRealese, {
-                //             QUANTITY: Number(item.QUANTITY_BOOK),
-                //             LOCATION_TO: currentPick?.neededOn,
-                //             STATUS: 'completed',
-                //           }),
-                //         ]
-                //       : [],
-                //     status: 'completed',
-                //   };
-                // });
 
                 setIntermediateData(newData);
                 setOpenCompleteWorkPrint(true);
@@ -796,7 +761,8 @@ const PickSlipConfirmation: FC = () => {
               currentPick?.status === 'new' ||
               currentPick?.status === 'cancelled' ||
               currentPick?.status === 'partyCancelled' ||
-              !currentPick
+              !currentPick ||
+              (updatetOrderMaterials && !updatetOrderMaterials.length)
             }
             onClick={async () => {
               Modal.confirm({

@@ -38,7 +38,7 @@ const OrderManagment: FC = () => {
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={400}
+        width={350}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}

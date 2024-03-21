@@ -26,28 +26,11 @@ const GoodsReciving: FC = () => {
     ),
   ];
   return (
-    // <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
-    //   <div className="flex flex-col">
-    //     <div className="py-4">
-    //       <Row gutter={{ xs: 6, sm: 11, md: 24, lg: 32 }}>
-    //         <Col xs={5}>
-    //           <BookingPartLeftSide
-    //             onUpdateOrder={onUpdateOrder}
-    //             onSelectedOrder={setOrder}
-    //           />
-    //         </Col>
-    //         <Col xs={19}>
-    //           <BookingPartSide onUpdateOrder={setUpdateOrder} order={order} />
-    //         </Col>
-    //       </Row>
-    //     </div>
-    //   </div>
-    // </div>
     <Layout>
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={400}
+        width={350}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}

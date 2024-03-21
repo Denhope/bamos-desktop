@@ -144,7 +144,6 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             requierement={editingRequirement || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}
-            isCreatingV={isCreating}
           />
         </div>
       </div>

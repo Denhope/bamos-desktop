@@ -1,3 +1,6 @@
+import { IRequirement, Requirement } from './IRequirement';
+import { ITask } from './ITask';
+
 export interface IUser {
   name: string;
   email: string;
@@ -120,3 +123,70 @@ export interface IVendor {
   updateUserID?: string;
 }
 
+export interface IPartNumber {
+  id: string;
+  PART_NUMBER: string;
+  DESCRIPTION: string;
+  TYPE: string;
+  GROUP: string;
+  UNIT_OF_MEASURE: string;
+  UNIT_OF_MEASURE_LONG: string;
+  ADD_DESCRIPTION: string;
+  ADD_UNIT_OF_MEASURE: boolean;
+  STATUS?: string;
+  MANAFACTURER?: string;
+  DEFAULT_REPAIRE?: string;
+  DEFAULT_SUPPLIER?: string;
+  PART_PICKSLIP_REMARKS?: string;
+  PART_RECEIVING_REMARKS?: string;
+  PART_REPARE_REMARKS?: string;
+  PART_PURCHASE_REMARKS?: string;
+  COUNTRY_OF_ORIGIN?: string;
+  RESOURCE_TYPE?: string;
+  companyID: string;
+  createDate: Date;
+  createUserID: string;
+  updateDate?: Date;
+  updateUserID?: string;
+}
+
+export interface IProjectTask {
+  id?: string;
+  taskType?: NRCType | ScheduledType;
+  taskId?: string | ITask;
+  projectId?: string;
+  ownerId?: string;
+  startDate?: Date;
+  finishDate?: Date;
+  planedStartDate?: Date;
+  planedFinishDate?: Date;
+  companyID: string;
+  createDate: Date;
+  createUserID: string;
+  updateDate?: Date;
+  updateUserID?: string;
+  // materialReuestAplications?: MatRequestAplication[];
+  // workNeed?: IWorkNeed;
+  isDoubleInspectionRequired?: boolean;
+  status: TStatus;
+  WOType?: NRCType | ScheduledType;
+  workPackageID?: string | any;
+  requirementsIds?: IRequirement[];
+}
+export type NRCType = 'PIREP' | 'CABIN' | 'MAINT';
+export type ScheduledType =
+  | 'routine'
+  | 'hardTime'
+  | 'additional'
+  | 'partRepare'
+  | 'addHock'
+  | 'sheduled'
+  | '';
+
+export type TStatus =
+  | 'open'
+  | 'inProgress'
+  | 'closed'
+  | 'completed'
+  | 'canceled'
+  | 'planed';

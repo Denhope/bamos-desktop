@@ -356,6 +356,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             { value: 'UNIT_CHANGE', label: t('UNIT_CHANGE') },
             { value: 'AV_PRICE_CHANGE', label: t('AV_PRICE_CHANGE') },
             { value: 'QUARANTINE', label: t('QUARANTINE') },
+            { value: 'ADD_NEW_PART', label: t('ADD_NEW_PART') },
             { value: 'PART_NUMBER_CHANGE', label: t('PART_NUMBER_CHANGE') },
             { value: 'PART_RESERVATION', label: t('PART_RESERVATION') },
             { value: 'QTY_CHANGE', label: t('QTY_CHANGE') },
@@ -370,6 +371,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             { value: 'TOOL_TRANSFER', label: t('TOOL_TRANSFER') },
             { value: 'TOOL_LOST_NOTICE', label: t('TOOL_LOST_NOTICE') },
             { value: 'VENDOR_INSTALATION', label: t('VENDOR_INSTALATION') },
+
             {
               value: 'INCOMING_SHIPMENT_SENT',
               label: t('INCOMING_SHIPMENT_SENT'),

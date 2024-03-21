@@ -6,7 +6,7 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { IRequirementCode } from '@/models/AC';
 
 export const requirementsCodesApi = createApi({
-  reducerPath: 'requirementsCodesApi',
+  reducerPath: 'requirementsCodes',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['REQCodes'],
   endpoints: (builder) => ({

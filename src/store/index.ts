@@ -29,8 +29,11 @@ import { taskCodeApi } from '@/features/tasksAdministration/taskCodesApi';
 import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
 import { mpdCodeApi } from '@/features/MPDAdministration/mpdCodesApi';
 import { taskApi } from '@/features/tasksAdministration/tasksApi';
+import { partNumberApi } from '@/features/partAdministration/partApi';
+import { projectsTaskApi } from '@/features/projectTaskAdministration/projectsTaskApi';
 import { requirementsTypeApi } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import { requirementsCodesApi } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
+import { projectsApi } from '@/features/projectAdministration/projectsApi';
 import { acAdminApi } from '../../src/features/acAdministration/acAdminApi';
 import { requirementApi } from '@/features/requirementAdministration/requirementApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
@@ -77,6 +80,9 @@ const store = configureStore({
     [acAdminApi.reducerPath]: acAdminApi.reducer,
     [requirementsTypeApi.reducerPath]: requirementsTypeApi.reducer,
     [requirementsCodesApi.reducerPath]: requirementsCodesApi.reducer,
+    [projectsApi.reducerPath]: projectsApi.reducer,
+    [partNumberApi.reducerPath]: partNumberApi.reducer,
+    [projectsTaskApi.reducerPath]: projectsTaskApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -98,7 +104,10 @@ const store = configureStore({
       taskApi.middleware,
       acAdminApi.middleware,
       requirementsTypeApi.middleware,
-      requirementsCodesApi.middleware
+      requirementsCodesApi.middleware,
+      projectsApi.middleware,
+      partNumberApi.middleware,
+      projectsTaskApi.middleware
     ),
 });
 export default store;

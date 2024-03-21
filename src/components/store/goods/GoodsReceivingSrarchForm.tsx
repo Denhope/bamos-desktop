@@ -82,7 +82,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             // onFilterTransferParts(selectedFeatchStore);
           }
         }}
-        className="bg-white px-4 py-3 rounded-md border-gray-400"
+        // className="bg-white px-4 py-3 rounded-md border-gray-400"
         size="small"
         layout="horizontal"
         // labelCol={{ span: 8 }}
@@ -90,7 +90,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
         <ProFormText
           name="order"
           label={t('ORDER No')}
-          width="sm"
+          width="lg"
           tooltip={t('ORDER No')}
           fieldProps={{
             // onDoubleClick: () => setOpenPickViewer(true),
@@ -107,13 +107,13 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           }}
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
-          width={'sm'}
+          width={'lg'}
         ></ContextMenuPNSearchSelect>
 
         <ProFormText
           name="serialNumber"
           label={t('SERIAL No')}
-          width="sm"
+          width="lg"
           tooltip={t('SERIAL No')}
           fieldProps={{
             // onDoubleClick: () => setOpenPickViewer(true),
@@ -125,7 +125,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           showSearch
           name="orderType"
           label={t('ORDER TYPE')}
-          width="sm"
+          width="lg"
           initialValue={['PURCHASE_ORDER']}
           tooltip={t('ORDER TYPE')}
           valueEnum={{
@@ -163,7 +163,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
         />
 
         <ContextMenuVendorsSearchSelect
-          width="sm"
+          width="lg"
           rules={[{ required: false }]}
           name={'vendorName'}
           onSelectedVendor={function (record: any, rowIndex?: any): void {
@@ -189,7 +189,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           mode="multiple"
           name="orderState"
           label={t('ORDER STATE')}
-          width="sm"
+          width="lg"
           tooltip={t('ORDER STATE')}
           // initialValue={['PARTLY_RECEIVED', 'OPEN']}
           valueEnum={{

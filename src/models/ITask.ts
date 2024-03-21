@@ -351,6 +351,7 @@ export interface ITask {
   zonesID?: IAreaCode[] | string[];
   accessID?: any[];
   taskCodeId?: string;
+  ata?: any;
   // taskType?: 'AC_TASK' | 'COMMON_TASK';
   workerNumber?: number;
   specialization?: string;
