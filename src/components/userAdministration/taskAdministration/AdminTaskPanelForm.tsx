@@ -1,7 +1,5 @@
 // @ts-nocheck
 
-// The rest of your TypeScript code here will not be type-checked by the compiler
-
 import React, { FC, useEffect, useState } from 'react';
 import {
   ProForm,

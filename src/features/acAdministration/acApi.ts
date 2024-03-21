@@ -5,8 +5,8 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { ITask } from '@/models/ITask';
 import { setPlanes } from './acAdminSlice';
 
-export const acAdminApi = createApi({
-  reducerPath: 'acAdminApi',
+export const acApi = createApi({
+  reducerPath: 'acAdminReducer',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['ACTypes'], // Add tag types for caching
   endpoints: (builder) => ({
@@ -83,4 +83,4 @@ export const {
   useGetPlaneQuery,
   useGetPlanesQuery,
   useUpdatePlaneMutation,
-} = acAdminApi;
+} = acApi;

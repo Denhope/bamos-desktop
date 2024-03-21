@@ -12,8 +12,8 @@ import {
   useGetZonesByGroupQuery,
   useUpdateZoneCodeMutation,
 } from '@/features/zoneAdministration/zonesApi';
-import ZoneCodeForm from './ZoneCodeForm';
-import ZoneCodeTree from './ZoneCodeTree';
+import ZoneCodeTree from './zoneCodeTree';
+import ZoneCodeForm from './zoneCodeForm';
 
 interface AdminPanelProps {
   acTypeId: string;

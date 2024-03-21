@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IVendor, UserGroup } from '@/models/IUser';
-import { ITask } from '@/models/ITask';
 
 // const initialState: IVendor[] = [];
 interface taskstate {

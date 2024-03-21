@@ -31,7 +31,7 @@ import { mpdCodeApi } from '@/features/MPDAdministration/mpdCodesApi';
 import { taskApi } from '@/features/tasksAdministration/tasksApi';
 import { requirementsTypeApi } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import { requirementsCodesApi } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
-import { acAdminApi } from '../../src/features/acAdministration/acAdminApi';
+// import { acAdminApi } from '@/features/acAdministration/acAdminApi';
 import { requirementApi } from '@/features/requirementAdministration/requirementApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
@@ -39,7 +39,9 @@ import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
+
+import acAdminReducer from '../../src//features/ACAdministration/acAdminSlice';
+import { acApi } from '@/features/ACAdministration/acApi';
 const store = configureStore({
   reducer: {
     auth: authSlice,
@@ -74,7 +76,7 @@ const store = configureStore({
     [requirementApi.reducerPath]: requirementApi.reducer,
     [mpdCodeApi.reducerPath]: mpdCodeApi.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
-    [acAdminApi.reducerPath]: acAdminApi.reducer,
+    [acApi.reducerPath]: acApi.reducer,
     [requirementsTypeApi.reducerPath]: requirementsTypeApi.reducer,
     [requirementsCodesApi.reducerPath]: requirementsCodesApi.reducer,
 
@@ -82,7 +84,7 @@ const store = configureStore({
     acTypes: acTypesReducer,
     ACZones: zonesReducer,
     tasksAdministration: taskReducer,
-    planesAdministration: acAdministrationReducer,
+    planesAdministration: acAdminReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -96,7 +98,7 @@ const store = configureStore({
       requirementApi.middleware,
       mpdCodeApi.middleware,
       taskApi.middleware,
-      acAdminApi.middleware,
+      acApi.middleware,
       requirementsTypeApi.middleware,
       requirementsCodesApi.middleware
     ),
