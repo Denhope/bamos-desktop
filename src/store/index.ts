@@ -34,7 +34,7 @@ import { projectsTaskApi } from '@/features/projectTaskAdministration/projectsTa
 import { requirementsTypeApi } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import { requirementsCodesApi } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import { projectsApi } from '@/features/projectAdministration/projectsApi';
-import { acAdminApi } from '../../src/features/acAdministration/acAdminApi';
+
 import { requirementApi } from '@/features/requirementAdministration/requirementApi';
 import vendorReducer from '../../src/features/vendorAdministration/vendorSlice';
 import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice';
@@ -42,7 +42,9 @@ import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
+import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
+import { acApi } from '@/features/ACAdministration/acApi';
+
 const store = configureStore({
   reducer: {
     auth: authSlice,
@@ -77,7 +79,7 @@ const store = configureStore({
     [requirementApi.reducerPath]: requirementApi.reducer,
     [mpdCodeApi.reducerPath]: mpdCodeApi.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
-    [acAdminApi.reducerPath]: acAdminApi.reducer,
+    [acApi.reducerPath]: acApi.reducer,
     [requirementsTypeApi.reducerPath]: requirementsTypeApi.reducer,
     [requirementsCodesApi.reducerPath]: requirementsCodesApi.reducer,
     [projectsApi.reducerPath]: projectsApi.reducer,
@@ -102,7 +104,7 @@ const store = configureStore({
       requirementApi.middleware,
       mpdCodeApi.middleware,
       taskApi.middleware,
-      acAdminApi.middleware,
+      acApi.middleware,
       requirementsTypeApi.middleware,
       requirementsCodesApi.middleware,
       projectsApi.middleware,
