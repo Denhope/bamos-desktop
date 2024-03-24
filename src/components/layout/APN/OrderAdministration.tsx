@@ -6,11 +6,12 @@ import { ApartmentOutlined } from '@ant-design/icons';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 
-import RequirementsFilterForm from '@/components/userAdministration/requirementAdministration/RequirementsFilterForm';
-import RequirementPanel from '@/components/userAdministration/requirementAdministration/RequirementPanel';
+import OrdersFilterForm from '@/components/userAdministration/orderAdministration/OrdersFilterForm';
+import OrderPanel from '@/components/userAdministration/orderAdministration/OrderPanel';
+import OrdersFilteredForm from '@/components/userAdministration/orderAdministration/OrdersFilterForm';
 interface RequirementManagementProps {}
 
-const RequirementAdministration: FC<RequirementManagementProps> = () => {
+const OrderAdministration: FC<RequirementManagementProps> = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const [requirementsSearch, setRequirementsSearch] = useState<any>();
@@ -18,7 +19,7 @@ const RequirementAdministration: FC<RequirementManagementProps> = () => {
   const { t } = useTranslation();
   const items: MenuItem[] = [
     getItem(
-      <>{t('REQUIREMENT ADMINISTRATION')} (BAN:01)</>,
+      <>{t('ORDER ADMINISTRATION')} (BAN:1201)</>,
       'sub1',
       <ApartmentOutlined />
     ),
@@ -43,7 +44,7 @@ const RequirementAdministration: FC<RequirementManagementProps> = () => {
               display: !collapsed ? 'block' : 'none',
             }}
           >
-            <RequirementsFilterForm
+            <OrdersFilteredForm
               onRequirementsSearch={(values) => setRequirementsSearch(values)}
             />
           </div>
@@ -52,13 +53,11 @@ const RequirementAdministration: FC<RequirementManagementProps> = () => {
       <Content className="pl-4">
         <></>
         <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-5">
-          <RequirementPanel
-            requirementsSearchValues={requirementsSearch}
-          ></RequirementPanel>
+          <OrderPanel orderSearchValues={requirementsSearch}></OrderPanel>
         </div>
       </Content>
     </Layout>
   );
 };
 
-export default RequirementAdministration;
+export default OrderAdministration;

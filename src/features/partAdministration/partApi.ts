@@ -6,7 +6,7 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { IPartNumber } from '@/models/IUser';
 
 export const partNumberApi = createApi({
-  reducerPath: 'partNumbers',
+  reducerPath: 'partNumbersAdmin',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['PartNumber'], // Add tag types for caching
   endpoints: (builder) => ({
@@ -66,7 +66,7 @@ export const partNumberApi = createApi({
     }),
     updatePartNumber: builder.mutation<IPartNumber, IPartNumber>({
       query: (partNumber) => ({
-        url: `partNumbers/company/${COMPANY_ID}/partNumber/${partNumber.id}`,
+        url: `partNumbers/company/${COMPANY_ID}/partNumber/${partNumber._id}`,
         method: 'PUT',
         body: {
           ...partNumber,

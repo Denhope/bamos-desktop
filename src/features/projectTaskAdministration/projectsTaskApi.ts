@@ -22,7 +22,7 @@ export const projectsTaskApi = createApi({
       }
     >({
       query: ({ status, requirementsIds, projectId }) => ({
-        url: `/projects/tasks/getFilteredProjectsTasks/company/${COMPANY_ID}`,
+        url: `/projectsTasksNew/getFilteredProjectsTasks/company/${COMPANY_ID}`,
         params: { status, requirementsIds, projectId },
       }),
       providesTags: ['ProjectTask'],
@@ -38,7 +38,7 @@ export const projectsTaskApi = createApi({
       // Provide the 'Users' tag after fetching
     }),
     getProjectTask: builder.query<IProjectTask, string>({
-      query: (id) => `projectsTasks/company/${COMPANY_ID}/project/${id}`,
+      query: (id) => `projectsTasksNew/company/${COMPANY_ID}/project/${id}`,
       providesTags: ['ProjectTask'], // Provide the 'Users' tag after fetching
     }),
     addProjectTask: builder.mutation<
@@ -59,7 +59,7 @@ export const projectsTaskApi = createApi({
     }),
     updateProjectTask: builder.mutation<IProjectTask, IProjectTask>({
       query: (project) => ({
-        url: `projectsTasks/company/${COMPANY_ID}/project/${project.id}`,
+        url: `projectsTasksNew/company/${COMPANY_ID}/project/${project.id}`,
         method: 'PUT',
         body: {
           ...project,
@@ -74,7 +74,7 @@ export const projectsTaskApi = createApi({
       string
     >({
       query: (id) => ({
-        url: `projects/company/${COMPANY_ID}/project/${id}`,
+        url: `projectsTasksNew/company/${COMPANY_ID}/project/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['ProjectTask'], // Invalidate the 'Users' tag after mutation

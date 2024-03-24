@@ -124,7 +124,7 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
-  id: string;
+  _id: string;
   PART_NUMBER: string;
   DESCRIPTION: string;
   TYPE: string;
@@ -151,16 +151,18 @@ export interface IPartNumber {
 }
 
 export interface IProjectTask {
+  projectTaskWO: any;
+  taskWo: any;
   id?: string;
+  taskWO: number;
   taskType?: NRCType | ScheduledType;
   taskId?: string | ITask;
   projectId?: string;
-  ownerId?: string;
   startDate?: Date;
   finishDate?: Date;
   planedStartDate?: Date;
   planedFinishDate?: Date;
-  companyID: string;
+  companyID: string | ICompany;
   createDate: Date;
   createUserID: string;
   updateDate?: Date;
@@ -172,6 +174,7 @@ export interface IProjectTask {
   WOType?: NRCType | ScheduledType;
   workPackageID?: string | any;
   requirementsIds?: IRequirement[];
+  taskCassificationID?: string;
 }
 export type NRCType = 'PIREP' | 'CABIN' | 'MAINT';
 export type ScheduledType =

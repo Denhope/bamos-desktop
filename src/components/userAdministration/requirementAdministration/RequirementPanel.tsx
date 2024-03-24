@@ -6,18 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 import RequirementForm from './RequirementForm';
 
-import {
-  useAddCompanyMutation,
-  useDeleteCompanyMutation,
-  useUpdateCompanyMutation,
-  useGetCompaniesQuery,
-} from '@/features/companyAdministration/companyApi';
 import RequirementTree from './RequirementTree';
 import {
-  useGetRequirementsQuery,
   useGetFilteredRequirementsQuery,
+  useDeleteRequirementMutation,
+  useUpdateRequirementMutation,
+  useAddRequirementMutation,
 } from '@/features/requirementAdministration/requirementApi';
-import { Requirement } from '@/models/IRequirement';
+import { IRequirement } from '@/models/IRequirement';
 import RequirementsDiscription from './RequirementsDiscription';
 
 interface AdminPanelProps {
@@ -28,26 +24,51 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   requirementsSearchValues,
 }) => {
   const [editingRequirement, setEditingRequirement] =
-    useState<Requirement | null>(null);
+    useState<IRequirement | null>(null);
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const { data: requirements, isLoading } = useGetFilteredRequirementsQuery({
     projectID: requirementsSearchValues?.projectID
       ? requirementsSearchValues?.projectID
       : '',
-    startDate: requirementsSearchValues?.startDate,
+    projectTaskID: requirementsSearchValues?.projectTaskID
+      ? requirementsSearchValues?.projectTaskID
+      : '',
+    partNumberID: requirementsSearchValues?.partNumberID
+      ? requirementsSearchValues?.partNumberID
+      : '',
+    reqTypesID: requirementsSearchValues?.reqTypesID
+      ? requirementsSearchValues?.reqTypesID
+      : '',
+    reqCodesID: requirementsSearchValues?.reqCodesID
+      ? requirementsSearchValues?.reqCodesID
+      : '',
+
+    startDate: requirementsSearchValues?.startDate
+      ? requirementsSearchValues?.startDate
+      : '',
+
+    endDate: requirementsSearchValues?.endDate
+      ? requirementsSearchValues?.endDate
+      : '',
+
     status: requirementsSearchValues?.status || 'open',
+    partRequestNumberNew: requirementsSearchValues?.partRequestNumber,
+
+    neededOnID: requirementsSearchValues?.neededOnID
+      ? requirementsSearchValues?.neededOnID
+      : '',
   });
 
-  const [addCompany] = useAddCompanyMutation();
-  const [updateCompany] = useUpdateCompanyMutation();
-  const [deleteGCompany] = useDeleteCompanyMutation();
+  const [addRequirement] = useAddRequirementMutation();
+  const [updateRequirement] = useUpdateRequirementMutation();
+  const [deleteRequirement] = useDeleteRequirementMutation();
 
   const handleCreate = () => {
     setEditingRequirement(null);
     setIsCreating(true);
   };
 
-  const handleEdit = (requierement: Requirement) => {
+  const handleEdit = (requierement: IRequirement) => {
     setEditingRequirement(requierement);
   };
 
@@ -56,7 +77,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS REQUIREMENT?'),
       onOk: async () => {
         try {
-          await deleteGCompany(companyId).unwrap();
+          await deleteRequirement(companyId).unwrap();
           message.success(t('REQUIREMENT SUCCESSFULLY DELETED'));
         } catch (error) {
           message.error(t('ERROR DELETING REQUIREMENT'));
@@ -65,18 +86,18 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     });
   };
 
-  const handleSubmit = async (requirement: Requirement) => {
+  const handleSubmit = async (requirement: IRequirement) => {
     try {
       if (editingRequirement) {
-        // await updateCompany(requirement).unwrap();
+        await updateRequirement(requirement).unwrap();
         message.success(t('REQUIREMENT SUCCESSFULLY UPDATED'));
       } else {
-        // await addCompany(requirement).unwrap();
+        await addRequirement({ requirement }).unwrap();
         message.success(t('REQUIREMENT SUCCESSFULLY ADDED'));
       }
       setEditingRequirement(null);
     } catch (error) {
-      message.error(t('ERROR SAVING COMPANY GROUP'));
+      message.error(t('ERROR SAVING REQUIREMENT'));
     }
   };
 
@@ -118,9 +139,21 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             <Button
               size="small"
               icon={<MinusSquareOutlined />}
-              // onClick={() => handleDelete(editingRequirement.id)}
+              onClick={() => handleDelete(editingRequirement._id)}
             >
               {t('DELETE REQUIREMENT')}
+            </Button>
+          )}
+        </Col>
+        <Col style={{ textAlign: 'right' }}>
+          {editingRequirement && (
+            <Button
+              disabled
+              size="small"
+              icon={<MinusSquareOutlined />}
+              // onClick={() => handleDelete(editingRequirement.id)}
+            >
+              {t('COPY REQUIREMENT')}
             </Button>
           )}
         </Col>

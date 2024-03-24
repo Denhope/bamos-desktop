@@ -1,14 +1,9 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
-import { IZoneCode, IZoneCodeGroup } from '@/models/ITask';
-import { setZonesGroups } from './accessSlice';
-import {
-  IRequirement,
-  IRequirementGroup,
-  Requirement,
-} from '@/models/IRequirement';
+
+import { IRequirement, Requirement } from '@/models/IRequirement';
 
 export const requirementApi = createApi({
   reducerPath: 'requirements',
@@ -16,16 +11,48 @@ export const requirementApi = createApi({
   tagTypes: ['Requirement'], // Add tag types for caching
   endpoints: (builder) => ({
     getFilteredRequirements: builder.query<
-      Requirement[],
+      IRequirement[],
       {
         projectID?: string;
         startDate?: any;
+        endDate?: any;
         status?: string;
+        projectTaskID?: string;
+        readyStatus?: string;
+        reqTypesID?: string;
+        reqCodesID?: string;
+        partRequestNumberNew?: number;
+        partNumberID?: string;
+        neededOnID?: string;
       }
     >({
-      query: ({ status, projectID, startDate }) => ({
-        url: `requirements/getRequirements/company/${COMPANY_ID}`,
-        params: { projectID, startDate, status },
+      query: ({
+        projectID,
+        startDate,
+        status,
+        projectTaskID,
+        readyStatus,
+        reqTypesID,
+        reqCodesID,
+        partRequestNumberNew,
+        partNumberID,
+        neededOnID,
+        endDate,
+      }) => ({
+        url: `requirementsNew/getFilteredRequirements/company/${COMPANY_ID}`,
+        params: {
+          projectID,
+          startDate,
+          status,
+          projectTaskID,
+          readyStatus,
+          reqTypesID,
+          reqCodesID,
+          partRequestNumberNew,
+          partNumberID,
+          neededOnID,
+          endDate,
+        },
       }),
       providesTags: ['Requirement'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -39,65 +66,47 @@ export const requirementApi = createApi({
       },
       // Provide the 'Users' tag after fetching
     }),
-    getRequirements: builder.query<
-      Requirement[],
-      {
-        projectID?: string;
-        status?: string;
-      }
-    >({
-      query: ({ status, projectID }) => ({
-        url: `requirements/getRequirements/company/${COMPANY_ID}`,
-        params: { status, projectID },
-      }),
-      providesTags: ['Requirement'],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
 
-          // dispatch(setZonesGroups(data));
-        } catch (error) {
-          console.error('Ошибка при выполнении запроса:', error);
-        }
-      },
-      // Provide the 'Users' tag after fetching
-    }),
-    getZoneCode: builder.query<IZoneCode, string>({
-      query: (id) => `requirements/company/${COMPANY_ID}/zoneCode/${id}`,
-      providesTags: ['Requirement'], // Provide the 'Users' tag after fetching
+    getRequirement: builder.query<IRequirement, string>({
+      query: (id) => `requirementsNew/company/${COMPANY_ID}/requirement/${id}`,
+      providesTags: ['Requirement'],
     }),
     addRequirement: builder.mutation<
-      IZoneCode,
-      { zoneCode: Partial<IZoneCode>; acTypeId?: string }
+      IRequirement,
+      { requirement: Partial<IRequirement> }
     >({
-      query: ({ zoneCode, acTypeId }) => ({
-        url: `requirements/company/${COMPANY_ID}`,
+      query: ({ requirement }) => ({
+        url: `requirementsNew/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
-          ...zoneCode,
+          ...requirement,
           createUserID: USER_ID,
           createDate: new Date(),
           companyID: COMPANY_ID,
-          acTypeId: acTypeId,
         },
       }),
-      invalidatesTags: ['Requirement'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: ['Requirement'],
     }),
-    updateZoneCode: builder.mutation<IZoneCode, IZoneCode>({
-      query: (zoneCode) => ({
-        url: `zones/company/${COMPANY_ID}/zoneCode/${zoneCode.id}`,
+    updateRequirement: builder.mutation<IRequirement, IRequirement>({
+      query: (requirement) => ({
+        url: `requirementsNew/company/${COMPANY_ID}/requirement/${
+          requirement.id || requirement._id
+        }`,
         method: 'PUT',
         body: {
-          ...zoneCode,
+          ...requirement,
           updateUserID: USER_ID,
           updateDate: new Date(),
         },
       }),
       invalidatesTags: ['Requirement'], // Invalidate the 'Users' tag after mutation
     }),
-    deleteZoneCode: builder.mutation<{ success: boolean; id: string }, string>({
+    deleteRequirement: builder.mutation<
+      { success: boolean; id: string },
+      string
+    >({
       query: (id) => ({
-        url: `zones/company/${COMPANY_ID}/zoneCode/${id}`,
+        url: `requirementsNew/company/${COMPANY_ID}/requirement/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Requirement'], // Invalidate the 'Users' tag after mutation
@@ -107,6 +116,9 @@ export const requirementApi = createApi({
 
 export const {
   useAddRequirementMutation,
-  useGetRequirementsQuery,
+
   useGetFilteredRequirementsQuery,
+  useGetRequirementQuery,
+  useDeleteRequirementMutation,
+  useUpdateRequirementMutation,
 } = requirementApi;

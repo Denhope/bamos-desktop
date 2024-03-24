@@ -57,11 +57,11 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(` ADMINISTRATION`)}`,
       route: RouteNames.USER_ADMINISTRATION,
     },
-    {
-      APNNBR: '58',
-      descriptions: `${t(`VIEW WORKPACKAGE`)}`,
-      route: RouteNames.BASE,
-    },
+    // {
+    //   APNNBR: '58',
+    //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,
+    //   route: RouteNames.BASE,
+    // },
     {
       APNNBR: '59',
       descriptions: `${t(`PART ADMINISTRATION`)}`,
@@ -77,16 +77,16 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`PROJECT VIEWER`)}`,
       route: RouteNames.PROJECT_VIEWER,
     },
-    {
-      APNNBR: '1001',
-      descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
-      route: RouteNames.MTXT,
-    },
-    {
-      APNNBR: '1002',
-      descriptions: `${t(`WORK PACKAGE CREATE`)}`,
-      route: RouteNames.WORKPACKGEN,
-    },
+    // {
+    //   APNNBR: '1001',
+    //   descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
+    //   route: RouteNames.MTXT,
+    // },
+    // {
+    //   APNNBR: '1002',
+    //   descriptions: `${t(`WORK PACKAGE CREATE`)}`,
+    //   route: RouteNames.WORKPACKGEN,
+    // },
     {
       APNNBR: '1198',
       descriptions: `${t(`RECEIVING VIEWER`)}`,
@@ -107,6 +107,11 @@ const BaseLayout: React.FC = () => {
       APNNBR: '1201',
       descriptions: `${t(`ORDER MANAGMENT`)}`,
       route: RouteNames.ORDER_MANAGMENT,
+    },
+    {
+      APNNBR: '12000',
+      descriptions: `${t(`ORDER ADMINISTARTION`)}`,
+      route: RouteNames.ORDERS_ADMINISTRATION,
     },
     {
       APNNBR: '1202',
@@ -220,37 +225,6 @@ const BaseLayout: React.FC = () => {
   );
   if (localStorage.getItem('role') === 'admin') {
   }
-  const itemsModal: MenuItem[] = [
-    getItem(
-      t('PARTS ADMINISTRATIONS'),
-      RouteNames.WORKPACKGEN,
-      <ProjectOutlined />
-    ),
-
-    getItem(
-      <>{t('WORKPACKAGE VIEWER')}</>,
-      RouteNames.BASE,
-      <ProjectOutlined />
-    ),
-    getItem(
-      t('PLANNING FORECAST'),
-      RouteNames.PLANNINGFORECAST,
-      <ProjectOutlined />
-    ),
-
-    getItem(
-      t('Maintenance Management (MTX)'),
-      RouteNames.MTXT,
-      <ExclamationCircleOutlined />
-    ),
-
-    getItem(
-      <>{t('STORES/LOGISTICS')}</>,
-      RouteNames.STORE,
-      <ShoppingCartOutlined />
-    ),
-    getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
-  ];
 
   const itemsHorisontal: MenuItem[] = [
     getItem(<>{t('Engineering')}</>, '03'),

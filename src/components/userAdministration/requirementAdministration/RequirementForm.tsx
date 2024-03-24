@@ -1,6 +1,7 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import React, { FC, useEffect, useRef, useState } from 'react';
+import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import {
   ProForm,
   ProFormText,
@@ -9,32 +10,32 @@ import {
 } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Requirement } from '@/models/IRequirement';
+import { IRequirement, Requirement } from '@/models/IRequirement';
 import {
   ProFormDatePicker,
   ProFormDigit,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+// import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import { useGetREQTypesQuery } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
+import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 
 interface UserFormProps {
-  requierement?: Requirement;
-  onSubmit: (company: Requirement) => void;
+  requierement?: IRequirement;
+  onSubmit: (company: IRequirement) => void;
   onDelete?: (companyId: string) => void;
 }
 
 const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
-  const [initialFormPN, setinitialFormPN] = useState<any>('');
   const [reqTypeID, setReqTypeID] = useState<any>('');
   const [form] = ProForm.useForm();
-  const [projectId, setSelectedProjectId] = useState<any>(
-    requierement?.projectID || ''
-  );
+  const [projectId, setSelectedProjectId] = useState<any>();
+  const [partNumberId, setPartNumberId] = useState<any>();
+  // requierement?.projectID || ''
 
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
 
@@ -42,20 +43,27 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
     if (requierement) {
       form.resetFields();
       form.setFieldsValue(requierement);
-      setinitialFormPN(requierement.PN);
-      setReqTypeID(requierement._id);
+      // setinitialFormPN(requierement.PN);
+      setReqTypeID(requierement.reqTypesID);
       setSelectedProjectId(requierement.projectID);
+      setPartNumberId(requierement.partNumberID?._id);
+      form.setFieldsValue({
+        partNumberID: requierement.partNumberID?._id,
+        type: requierement.partNumberID?.TYPE,
+        group: requierement.partNumberID?.GROUP,
+        nameOfMaterial: requierement.partNumberID?.DESCRIPTION,
+        unit: requierement.partNumberID?.UNIT_OF_MEASURE,
+      });
     } else {
       form.resetFields();
       setSelectedProjectId(undefined);
-      setinitialFormPN('');
     }
   }, [requierement, form]);
 
   const { t } = useTranslation();
 
   const handleSubmit = async (values: any) => {
-    const newUser: Requirement = requierement
+    const newUser: IRequirement = requierement
       ? { ...requierement, ...values }
       : { ...values };
 
@@ -67,15 +75,22 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
       {requierement ? t('UPDATE') : t('CREATE')}
     </Button>
   );
+
+  const { data: usersGroups } = useGetGroupUsersQuery({});
   const { data: reqTypes } = useGetREQTypesQuery({});
 
-  const { data: reqCodes } = useGetREQCodesQuery({
-    reqTypeID,
-  });
+  const { data: reqCodes } = useGetREQCodesQuery(
+    {
+      reqTypeID,
+    },
+    { skip: !reqTypeID }
+  );
   const { data: projectTasks } = useGetProjectTasksQuery(
     { projectId },
     { skip: !projectId }
   );
+
+  const { data: partNumbers, isLoading, isError } = useGetPartNumbersQuery({});
 
   const { data: projects } = useGetProjectsQuery({});
   const [showSubmitButton, setShowSubmitButton] = useState(true);
@@ -85,9 +100,26 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
       return acc;
     }, {}) || {};
 
+  const neededCodesValueEnum: Record<string, string> =
+    usersGroups?.reduce((acc, usersGroup) => {
+      acc[usersGroup.id] = usersGroup.title;
+      return acc;
+    }, {}) || {};
+  // const partValueEnum: Record<string, string> =
+  //   partNumbers?.reduce((acc, partNumber) => {
+  //     acc[partNumber._id] = partNumber.PART_NUMBER;
+  //     return acc;
+  //   }, {}) || {};
+
+  const partValueEnum: Record<string, any> =
+    partNumbers?.reduce((acc, partNumber) => {
+      acc[partNumber._id] = partNumber; // Store the entire partNumber object
+      return acc;
+    }, {}) || {};
+
   const projectTasksCodesValueEnum: Record<string, string> =
     projectTasks?.reduce((acc, projectTask) => {
-      acc[projectTask.id] = projectTask?.projectId;
+      acc[projectTask.id] = projectTask?.taskWo || projectTask?.projectTaskWO;
       return acc;
     }, {}) || {};
 
@@ -103,6 +135,12 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
     }, {}) || {};
   return (
     <ProForm
+      onValuesChange={(changedValues, values) => {
+        // if ('partNumberID' in changedValues) {
+        //   // Update the partNumber state variable
+        //   setValue(values.partNumberID);
+        // }
+      }}
       onReset={() => {
         form.resetFields();
         setSelectedProjectId(null);
@@ -147,7 +185,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             />
             <ProFormSelect
               showSearch
-              name="requierementType"
+              name="reqTypesID"
               label={t('REQUIREMENT  TYPE')}
               width="sm"
               valueEnum={requirementTypesValueEnum}
@@ -155,7 +193,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             />
             <ProFormSelect
               showSearch
-              name="requierementCode"
+              name="reqCodesID"
               label={t('REQUIREMENT  CODE')}
               width="sm"
               valueEnum={requirementCodesValueEnum || []}
@@ -166,6 +204,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
           <ProFormGroup>
             <ProForm.Group direction="horizontal">
               <ProFormSelect
+                rules={[{ required: true }]}
                 // mode="multiple"
                 name="projectID"
                 label={`${t(`PROJECT`)}`}
@@ -175,6 +214,15 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                   setSelectedProjectId(value);
                 }}
               />
+              <ProFormSelect
+                showSearchv
+                rules={[{ required: true }]}
+                name="neededOnID"
+                label={t('NEEDED ON')}
+                width="sm"
+                valueEnum={neededCodesValueEnum || []}
+                disabled={!projectId}
+              />
             </ProForm.Group>
 
             {
@@ -182,6 +230,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                 {
                   <ProFormSelect
                     showSearch
+                    // rules={[{ required: true }]}
                     disabled={!projectId}
                     mode="single"
                     name="projectTaskID"
@@ -193,45 +242,62 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                     }}
                   />
                 }
+                {
+                  <ProFormSelect
+                    showSearch
+                    disabled
+                    mode="single"
+                    name="taskCassificationID"
+                    label={`${t(`TASK CLASSIFICATION`)}`}
+                    width="sm"
+                    valueEnum={[]}
+                    onChange={(value: any) => {
+                      // setSelectedTask(value);
+                    }}
+                  />
+                }
               </ProForm.Group>
             }
           </ProFormGroup>
 
           <ProFormGroup direction="horizontal">
             <ProFormGroup>
-              <ContextMenuPNSearchSelect
+              <ProFormSelect
+                showSearch
                 rules={[{ required: true }]}
-                onSelectedPN={function (PN: any): void {
+                width={'sm'}
+                name="partNumberID"
+                label={`${t(`PART No`)}`}
+                value={partNumber}
+                onChange={(value, data) => {
+                  // console.log(data);
                   form.setFields([
-                    { name: 'partNumber', value: PN.PART_NUMBER },
+                    { name: 'nameOfMaterial', value: data.data.DESCRIPTION },
+                    { name: 'unit', value: data.data.UNIT_OF_MEASURE },
+                    { name: 'type', value: data.data.TYPE },
+                    { name: 'group', value: data.data.GROUP },
                   ]);
-                  form.setFields([
-                    {
-                      name: 'description',
-                      value: PN.DESCRIPTION || PN.nameOfMaterial,
-                    },
-                  ]);
-                  form.setFields([{ name: 'unit', value: PN.UNIT_OF_MEASURE }]);
-                  form.setFields([
-                    { name: 'addPartNumber', value: PN.PART_NUMBER },
-                  ]);
-                  form.setFields([
-                    { name: 'addDescription', value: PN.DESCRIPTION },
-                  ]);
-
-                  form.setFields([{ name: 'group', value: PN.GROUP }]);
-                  form.setFields([{ name: 'type', value: PN.TYPE }]);
                 }}
-                name={'partNumber'}
-                initialFormPN={initialFormPN || ''}
-                width={'lg'}
-                label={`${t('PART No')}`}
-              ></ContextMenuPNSearchSelect>
+                options={Object.entries(partValueEnum).map(([key, part]) => ({
+                  label: part.PART_NUMBER,
+                  value: key,
+                  data: part,
+                }))}
+              />
+
               <ProFormText
                 disabled
                 rules={[{ required: true }]}
                 name="nameOfMaterial"
                 label={t('DESCRIPTION')}
+                width="md"
+                tooltip={t('DESCRIPTION')}
+              ></ProFormText>
+              <ProFormText
+                // disabled
+                // rules={[{ required: true }]}
+                name="serialNumber"
+                label={t('SERIAL NUMBER')}
                 width="sm"
                 tooltip={t('DESCRIPTION')}
               ></ProFormText>
@@ -275,7 +341,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             <ProFormGroup>
               <ProFormSelect
                 disabled
-                rules={[{ required: true }]}
+                // rules={[{ required: true }]}
                 name="group"
                 label={`${t('PART GROUP')}`}
                 width="sm"
@@ -290,7 +356,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
               />
               <ProFormSelect
                 disabled
-                rules={[{ required: true }]}
+                // rules={[{ required: true }]}
                 name="type"
                 label={`${t('PART TYPE')}`}
                 width="sm"
@@ -314,7 +380,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
               style: { resize: 'none' },
               rows: 3,
             }}
-            name="remarks"
+            name="note"
             colSize={1}
             label={t('REMARKS')}
             width="xl"

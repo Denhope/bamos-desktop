@@ -1,5 +1,3 @@
-import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { getFilteredRequirementsManager } from '@/utils/api/thunks';
 import {
   ModalForm,
   ProForm,
@@ -11,35 +9,34 @@ import { Button, Divider, Form, FormInstance, message } from 'antd';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type RequirementsDiscriptionType = {
-  requirement: any | null;
-  onRequirementSearch?: (orders: any | null) => void;
+type ordersDiscriptionType = {
+  order: any | null;
+  onorderSearch?: (orders: any | null) => void;
 };
 
-const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
-  requirement,
-  onRequirementSearch,
+const OrderDiscription: FC<ordersDiscriptionType> = ({
+  order,
+  onorderSearch,
 }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+
   const formRef = useRef<FormInstance>(null);
   useEffect(() => {
-    if (requirement) {
+    if (order) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: 'partRequestNumber', value: requirement?.partRequestNumberNew },
-        { name: 'lastModificateBy', value: requirement?.updateUserID?.name },
-        { name: 'modificationDate', value: requirement?.updateDate },
-        { name: 'createBy', value: requirement?.createUserID?.name },
-        { name: 'createDate', value: requirement.createDate },
+        { name: 'orderNumber', value: order?.orderNumberNew },
+        { name: 'lastModificateBy', value: order?.updateUserID?.name },
+        { name: 'modificationDate', value: order?.updateDate },
+        { name: 'createBy', value: order?.createUserID?.name },
+        { name: 'createDate', value: order.createDate },
       ]);
 
       // onFilterTransferprojects(form.getFieldsValue());
     }
-  }, [requirement]);
-  const [openStoreFindModal, setOpenStoreFind] = useState(false);
-  const [selectedRequirement, setRequariment] = useState<any | null>(null);
+  }, [order]);
+
   return (
     <div className="flex flex-col ">
       <ProForm
@@ -53,8 +50,8 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
         <ProFormGroup>
           <ProFormText
             disabled
-            label={t('REQUIREMENT No')}
-            name="partRequestNumber"
+            label={t('ORDER No')}
+            name="orderNumber"
             width="sm"
           ></ProFormText>
           <ProFormText
@@ -90,4 +87,4 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
   );
 };
 
-export default RequirementsDiscription;
+export default OrderDiscription;

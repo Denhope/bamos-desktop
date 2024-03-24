@@ -3,23 +3,17 @@ import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 import { ICompany } from '@/models/IUser'; // Убедитесь, что вы импортировали правильный тип company
 import CustomTree from '../zoneCodeAdministration/CustomTree';
-import { Requirement } from '@/models/IRequirement';
-import {
-  SettingOutlined,
-  DollarOutlined,
-  HomeOutlined,
-  DownOutlined,
-  DownloadOutlined,
-} from '@ant-design/icons';
+import { IRequirement } from '@/models/IRequirement';
+import { SettingOutlined } from '@ant-design/icons';
 
 interface TreeDataNode extends DataNode {
   color: any;
-  requirement?: Requirement;
+  requirement?: IRequirement;
 }
 
 interface UserTreeProps {
-  onCompanySelect: (requirement: Requirement) => void;
-  requirements: Requirement[] | [];
+  onCompanySelect: (requirement: IRequirement) => void;
+  requirements: IRequirement[] | [];
 }
 
 const { TreeNode } = Tree;
@@ -32,7 +26,7 @@ const RequirementTree: FC<UserTreeProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
-  const getColor = (requirement: Requirement): string => {
+  const getColor = (requirement: IRequirement): string => {
     // Define your logic here to determine the color based on the status and nested value
     // For example, if you have a 'status' field and a 'nestedValue' field, you might do:
     if (requirement.status === 'open') {
@@ -43,9 +37,9 @@ const RequirementTree: FC<UserTreeProps> = ({
       return 'default'; // Default color or color for other cases
     }
   };
-  const convertToTreeData = (requirements: Requirement[]): TreeDataNode[] => {
+  const convertToTreeData = (requirements: IRequirement[]): TreeDataNode[] => {
     return requirements.map((requirement) => {
-      const title = `№:${requirement.partRequestNumber} -/////(${requirement.PN})`;
+      const title = `№:${requirement?.partRequestNumberNew} -/////(${requirement?.partNumberID?.PART_NUMBER})`;
       // const children = [
       //   {
       //     title: `STATUS: ${requirement.status}`,

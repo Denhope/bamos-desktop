@@ -26,6 +26,7 @@ import { IProjectTaskAll } from '@/models/IProjectTask';
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 import { useGetREQTypesQuery } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
+import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (values: any) => void;
   nonCalculate?: boolean;
@@ -189,6 +190,13 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   const { data: reqCodes } = useGetREQCodesQuery({
     reqTypeID,
   });
+
+  const { data: usersGroups } = useGetGroupUsersQuery({});
+  const neededCodesValueEnum: Record<string, string> =
+    usersGroups?.reduce((acc, usersGroup) => {
+      acc[usersGroup.id] = usersGroup.title;
+      return acc;
+    }, {}) || {};
   const requirementCodesValueEnum: Record<string, string> =
     reqCodes?.reduce((acc, reqCode) => {
       acc[reqCode.id] = reqCode.code;
@@ -212,13 +220,16 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         additionalTaskID: receiverTaskType === 'NRC' && selectedTask,
         partRequestNumber: form.getFieldValue('partRequestNumber'),
         foForecast: foForecact,
-        partNumbers: [selectedSinglePN?.PART_NUMBER] || [],
+        partNumberID: selectedSinglePN?._id || selectedSinglePN?.id,
         endDate: selectedEndDate,
         companyID: currentCompanyID || '',
         isAlternatine: isAltertative,
         nonColculate: nonCalculate,
         includeAlternative: isAltertative,
         projectID: selectedProjectId,
+        reqCodesID: form.getFieldValue('reqCodesID'),
+        reqTypesID: form.getFieldValue('reqTypesID'),
+        neededOnID: form.getFieldValue('neededOnID'),
       };
 
       onRequirementsSearch(searchParams);
@@ -290,10 +301,12 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         )}
         {receiverType === 'SHOP' && (
           <ProFormSelect
-            name="additionalSelectShop"
-            label={`${t(`NEEDED ON`)}`}
-            width="lg"
-            options={options}
+            showSearch
+            name="neededOnID"
+            label={t('NEEDED ON')}
+            width="sm"
+            valueEnum={neededCodesValueEnum || []}
+            // disabled={!projectId}
           />
         )}
       </ProForm.Group>
@@ -315,7 +328,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
             }}
             name={'partNumber'}
             initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
-            width={'sm'}
+            width={'lg'}
             label={t('PART No')}
           ></ContextMenuPNSearchSelect>
           <ProFormCheckbox.Group
@@ -327,13 +340,12 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
             fieldProps={{
               onChange: (value) => setIsAltertative(value),
             }}
-            options={[
-              { label: `${t('Altern.')}`, value: 'true' },
-              // { label: 'Load all Exp. Dates', value: 'allDate' },
-            ].map((option) => ({
-              ...option,
-              style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
-            }))}
+            options={[{ label: `${t('ALTERNATIVES')}`, value: 'true' }].map(
+              (option) => ({
+                ...option,
+                style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+              })
+            )}
           />
         </ProForm.Group>
 
@@ -345,7 +357,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
               label={`${t('TASK TYPE')}`}
               options={[
                 { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
-                { value: 'NRC', label: 'NRC' },
+                // { value: 'NRC', label: 'NRC' },
               ]}
               initialValue="MAIN_TASK"
             />
@@ -356,21 +368,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
                 mode="single"
                 name="task"
                 label={`${t(`TASK`)}`}
-                width="sm"
-                options={taskOptions}
-                onChange={(value: any) => {
-                  setSelectedTask(value);
-                }}
-              />
-            )}
-            {receiverTaskType === 'NRC' && (
-              <ProFormSelect
-                disabled={!selectedProjectId}
-                showSearch
-                mode="single"
-                name="addTask"
-                label={`${t(`TASK`)}`}
-                width="sm"
+                width="lg"
                 options={taskOptions}
                 onChange={(value: any) => {
                   setSelectedTask(value);
@@ -383,9 +381,9 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       <ProFormSelect
         // mode={'multiple'}
         showSearch
-        name="requierementType"
+        name="reqTypesID"
         label={t('REQUIREMENT  TYPE')}
-        width="sm"
+        width="lg"
         valueEnum={requirementTypesValueEnum}
         onChange={(value: any) => setReqTypeID(value)}
         // disabled={!acTypeID} // Disable the select if acTypeID is not set
@@ -393,7 +391,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       <ProFormSelect
         // mode={'multiple'}
         showSearch
-        name="requierementCode"
+        name="reqCodesID"
         label={t('REQUIREMENT  CODE')}
         width="sm"
         valueEnum={requirementCodesValueEnum || []}
@@ -415,7 +413,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'transfer', label: t('TRANSFER') },
         ]}
       />
-      <ProFormSelect
+      {/* <ProFormSelect
         mode="multiple"
         name="partGroup"
         label={`${t('PART  GROUP')}`}
@@ -439,7 +437,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'ROTABLE', label: t('ROTABLE') },
           { value: 'CONSUMABLE', label: t('CONSUMABLE') },
         ]}
-      />
+      /> */}
       <ProFormDateRangePicker
         name="plannedDate"
         label={`${t('PLANNED DATE')}`}
