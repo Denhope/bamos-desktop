@@ -176,6 +176,7 @@ const OrderTree: FC<UserTreeProps> = ({
 
     if (title.includes(t('POS'))) {
       onOrderItemSelect && onOrderItemSelect(order);
+      // onCompanySelect(order);
     } else if (title.includes(t('FILE/'))) {
       const file = order.files.find((file: { id: any }) => file.id === key);
       if (file) {
