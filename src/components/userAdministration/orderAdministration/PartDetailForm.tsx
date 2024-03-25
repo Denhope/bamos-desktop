@@ -16,8 +16,14 @@ type Props = {
   orderItem?: IOrderItem | null;
   partValueEnum: Record<string, string>;
   onSubmit: (orderItem: IOrderItem) => void;
+  order?: IOrder | null;
 };
-const PartDetailForm: FC<Props> = ({ orderItem, onSubmit, partValueEnum }) => {
+const PartDetailForm: FC<Props> = ({
+  orderItem,
+  onSubmit,
+  partValueEnum,
+  order,
+}) => {
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   const SubmitButton = () => (
     <Button type="primary" htmlType="submit">

@@ -9,7 +9,7 @@ export const ordersNewApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Order'], // Add tag types for caching
   endpoints: (builder) => ({
-    getFilteredorders: builder.query<
+    getFilteredOrders: builder.query<
       IOrder[],
       {
         orderNumber?: number;
@@ -90,13 +90,28 @@ export const ordersNewApi = createApi({
       }),
       invalidatesTags: ['Order'], // Invalidate the 'Users' tag after mutation
     }),
+    sendEmail: builder.mutation<
+      { success: boolean; message: string },
+      { orderId: string }
+    >({
+      query: ({ orderId }) => ({
+        url: `ordersNew/companyID/${COMPANY_ID}/send-order-emails/${orderId}`,
+        method: 'POST',
+        body: {
+          orderId,
+          userId: USER_ID,
+          companyId: COMPANY_ID,
+        },
+      }),
+      invalidatesTags: ['Order'], // Invalidate the 'Order' tag after mutation
+    }),
   }),
 });
 
 export const {
   useAddOrderMutation,
-
-  useGetFilteredordersQuery,
+  useSendEmailMutation,
+  useGetFilteredOrdersQuery,
   useUpdateOrderMutation,
   useGetOrderQuery,
   useDeleteOrderMutation,

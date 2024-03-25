@@ -1,7 +1,11 @@
 //@ts-nocheck
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
-import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
+import {
+  PlusSquareOutlined,
+  MinusSquareOutlined,
+  MailOutlined,
+} from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
@@ -12,7 +16,8 @@ import OrderDiscription from './OrderDiscription';
 import {
   useAddOrderMutation,
   useDeleteOrderMutation,
-  useGetFilteredordersQuery,
+  useGetFilteredOrdersQuery,
+  useSendEmailMutation,
   useUpdateOrderMutation,
 } from '@/features/orderNewAdministration/ordersNewApi';
 import OrderAdministrationForm from './OrderAdministrationForm';
@@ -35,7 +40,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     data: requirements,
     isLoading,
     refetch: refetchOrders,
-  } = useGetFilteredordersQuery({
+  } = useGetFilteredOrdersQuery({
     startDate: orderSearchValues?.startDate ? orderSearchValues?.startDate : '',
     endDate: orderSearchValues?.endDate ? orderSearchValues?.endDate : '',
     state: orderSearchValues?.state || '',
@@ -47,6 +52,8 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   const [addOrder] = useAddOrderMutation({});
   const [deleteOrder] = useDeleteOrderMutation();
   const [addOrderItem] = useAddOrderItemMutation();
+  const [updateOrder] = useUpdateOrderMutation();
+  const [sentEmails] = useSendEmailMutation();
 
   const handleCreate = () => {
     setEditingOrder(null);
@@ -76,7 +83,6 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     try {
       if (editingOrderItem) {
         await updateOrderItem(orderItem).unwrap();
-        console.log(refetchOrders);
 
         await refetchOrders();
         message.success(t('ORDER SUCCESSFULLY UPDATED'));
@@ -89,6 +95,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     try {
       if (editingOrder) {
         await updateOrder(order).unwrap();
+        await refetchOrders();
         message.success(t('ORDER SUCCESSFULLY UPDATED'));
       } else {
         await addOrder(order).unwrap();
@@ -100,6 +107,17 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     }
   };
 
+  const handleSentEmail = async (order: IOrder) => {
+    try {
+      if (editingOrder) {
+        await sentEmails({ orderId: order.id }).unwrap();
+        // await refetchOrders();
+        message.success(t('EMAIL SUCCESSFULLY SEND'));
+      }
+    } catch (error) {
+      message.error(t('EMAIL SEND ERROR'));
+    }
+  };
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -147,6 +165,21 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
               {t('COPY ORDER')}
             </Button>
           )}
+        </Col>
+        <Col className="ml-auto" style={{ textAlign: 'right' }}>
+          {editingOrder &&
+            editingOrder.orderType === 'QUOTATION_ORDER' &&
+            editingOrder.parts &&
+            editingOrder.parts?.length > 0 && (
+              <Button
+                onClick={() => handleSentEmail(editingOrder)}
+                type="primary"
+                size="small"
+                icon={<MailOutlined />}
+              >
+                {t(`SEND TO VENDOR`)}
+              </Button>
+            )}
         </Col>
       </Space>
 

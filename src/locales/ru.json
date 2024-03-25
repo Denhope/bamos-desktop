@@ -157,8 +157,8 @@
   "STORE": "СКЛАД",
   "SHOP/STORE SELECT": "ЦЕХ/СКЛАД",
   "SHOP/STORE": "ЦЕХ/СКЛАД",
-  "PROJECT": "ВЫБОР ПРОЕКТА",
-  "PROJECT": "ШПЗ",
+
+  "PROJECT": "ПРОЕКТ",
   "RECEIVER TYPE": "ТИП",
   "RECEIVER": "ОБЬЕКТ",
   "BAN BOOK": "СПИСОК BAN",
@@ -300,5 +300,13 @@
   "EXPIRY DATE": "СРОК ГОДНОСТИ",
   "BATCH": "ПАРТИЯ",
   "SERIAL": "СЕР. НОМЕР",
-  "MINSK CIVIL AVIATION PLANT No 407": "МИНСКИЙ ЗАВОД ГРАЖДАНСКОЙ АВИАЦИИ № 407"
+  "MINSK CIVIL AVIATION PLANT No 407": "МИНСКИЙ ЗАВОД ГРАЖДАНСКОЙ АВИАЦИИ № 407",
+  "PART ADMINISTRATION": "КАРТОЧКИ ТОВАРА",
+  "SCRAP MATERIAL": "СПИСАНИЕ ТОВАРА",
+  "SHELF EXPIRY": "СРОКИ ГОДНОСТИ",
+  "PARTS TRANSFER": "ПЕРЕМЕЩЕНИЕ МАТЕРИАЛОВ",
+  "PARTS TRACKING": "КОНТРОЛЬ ПЕРЕМЕЩЕНИЯ",
+  "RECEIVING VIEWER": "ПРОСМОТР ПЕРЕМЕЩЕНИй",
+  "CANCEL RECEIVING": "ОТМЕНА ПОСТУПЛЕНИЯ",
+  "ADMINISTRATION": " АДМИНИСТРИРОВАНИЕ"
 }

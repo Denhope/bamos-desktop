@@ -87,6 +87,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
     if (order) {
       form.resetFields();
       form.setFieldsValue(order);
+      // form.setFields([{ name: 'vendorID', value: order.vendorID._id }]);
 
       setOrderData(order);
       setSelectedParts(order.parts);
@@ -114,6 +115,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       : { ...values, parts };
 
     onSubmit(newUser);
+    console.log(newUser);
   };
 
   const SubmitButton = () => (
@@ -168,7 +170,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       onFinish={handleSubmit}
       submitter={{
         render: (_, dom) => {
-          if (showSubmitButton) {
+          if (showSubmitButton && parts?.length > 0) {
             return [<SubmitButton key="submit" />, dom.reverse()[1]];
           }
           return null;
@@ -193,10 +195,11 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               rules={[{ required: true }]}
               name="state"
               label={t('ORDER STATUS')}
-              width="xs"
-              initialValue={'open'}
+              width="sm"
+              initialValue={'draft'}
               valueEnum={{
                 planned: { text: t('PLANNED'), status: 'Default' },
+                onQuatation: { text: t('QUATATION'), status: 'Processing' },
                 open: { text: t('NEW'), status: 'Error' },
                 draft: { text: t('DRAFT'), status: 'Default' },
                 closed: { text: t('CLOSED'), status: 'Default' },
@@ -297,7 +300,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               onDataChange={function (
                 rows: { partNumberID: string; quantity: number }[]
               ): void {
-                console.log(rows);
+                // console.log(rows);
                 setSelectedParts(rows);
               }}
               requirementCodesValueEnum={requirementCodesValueEnum}
@@ -309,6 +312,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
             <PartDetailForm
               partValueEnum={partValueEnum}
               orderItem={orderItemData}
+              order={order}
               onSubmit={function (orderItem: IOrderItem): void {
                 handleUpdateOrderItem(orderItem);
               }}
