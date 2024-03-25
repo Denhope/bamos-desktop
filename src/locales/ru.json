@@ -371,7 +371,7 @@
   "STATE": "СТАТУС",
   "CITY": "ГОРОД",
   "ROLES": "РОЛИ",
-  "UPDATE": "ОБНОВИТЬ",
+  "UPDATE": "Обновить",
   "TASK TYPE": "ТИП РАБОТЫ",
   "REVISION": "РЕВИЗИЯ",
   "TASK NUMBER": "НОМЕР РАБОТЫ",
@@ -459,6 +459,7 @@
   "RECEIVING No": "НОМЕР ПОСТУПЛЕНИЯ",
   "SINGLE RECEIVING": "ОДИНОЧНОЕ ПОСТУПЛЕНИЕ",
   "ORDER": "ОРДЕР",
+  "COPY ORDER": "КОПИРОВАТЬ ОРДЕР",
   "DOC TYPE": "ТИП ПРИХОДНОГО ДОКУМЕНТА",
   "DOC No": "НОМЕР ПРИХОДНОГО ДОКУМЕНТА",
   "DOC DATE": "ДАТА ДОКУМЕНТА",
@@ -505,6 +506,7 @@
   "ORDER SHOT NAME": "КОРОТКОЕ НАЗВАНИЕ",
   "DAY": "ДНЕЙ",
   "UNIT OF MEASURE": "ЕДЕНИЦЫ ИЗМЕРЕНИЯ",
+  "SEND TO VENDOR": "ОТПРАВИТЬ ЗАПРОС",
 
   "ARE YOU SURE YOU WANT TO DELETE THIS VENDOR": "ВЫ УВЕРЕНЫ ЧТО ХОТИТЕ УДАЛИТЬ ПОСТАВЩИКА"
 }

@@ -70,7 +70,15 @@ const OrderTree: FC<UserTreeProps> = ({
                 key: uuidv4(),
               },
               {
-                title: `${t('ALL PRICE')}:${vendorOrder?.allPrice}` || '',
+                title: (
+                  <div className="flex gap-1">
+                    <DollarOutlined /> {t('ALL PRICE')}
+                    <div className="font-semibold">
+                      {vendorOrder?.allPrice || ''}
+                    </div>
+                  </div>
+                ),
+
                 key: uuidv4(),
                 order: order,
               },
