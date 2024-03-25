@@ -172,7 +172,7 @@ const PartList: React.FC<Props> = ({
   return (
     <div>
       <ProFormItem>
-        <Button onClick={showModal}>Выбрать из потребностей</Button>
+        <Button onClick={showModal}>{t('SELECT REQUIREMENT')}</Button>
       </ProFormItem>
       {rows.map((row, index) => (
         <div
@@ -186,7 +186,7 @@ const PartList: React.FC<Props> = ({
             <ProFormSelect
               // rules={[{ required: true }]}
               // name="partNumberID"
-              label="PART"
+              label={t('PART')}
               width="sm"
               valueEnum={partValueEnum}
               value={row.partNumberID}

@@ -56,13 +56,13 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormGroup>
             <ProFormGroup>
               <ProFormText
                 width={'sm'}
                 name="CODE"
-                label="CODE"
+                label={t('CODE')}
                 rules={[
                   {
                     required: true,
@@ -72,7 +72,7 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
               <ProFormText
                 width={'sm'}
                 name="SHORT_NAME"
-                label="SHORT NAME"
+                label={t('SHORT NAME')}
                 rules={[
                   {
                     required: true,
@@ -82,7 +82,7 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="NAME"
-                label="NAME"
+                label={t('NAME')}
                 rules={[
                   {
                     required: true,
@@ -270,7 +270,7 @@ const vendorForm: FC<UserFormProps> = ({ vendor, onSubmit }) => {
                 <ProFormText
                   width={'lg'}
                   name="MAIN_CONTRACT"
-                  label="CONTRACT"
+                  label={t('CONTRACT')}
                   // rules={[
                   //   {
                   //     required: true,

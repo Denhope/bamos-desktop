@@ -10,18 +10,18 @@ import {
   Table,
   Tabs,
   TabsProps,
-} from "antd";
-import Paragraph from "antd/es/typography/Paragraph";
-import NRCADDForm from "@/components/projectask/projectTaskForm/NRCADDForm";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+} from 'antd';
+import Paragraph from 'antd/es/typography/Paragraph';
+import NRCADDForm from '@/components/projectask/projectTaskForm/NRCADDForm';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   addAdditionalTask,
   initialAdditionalTask,
   setInitialTask,
-} from "@/store/reducers/AdditionalTaskSlice";
+} from '@/store/reducers/AdditionalTaskSlice';
 import {
   addworkStepReferencesLinks,
   setCurrentProjectTaskMaterialRequest,
@@ -29,7 +29,7 @@ import {
   setCurrentProjectTaskNewMaterial,
   updateCurrentProjectTaskMaterialRequest,
   updateCurrentProjectTaskNewMaterial,
-} from "@/store/reducers/ProjectTaskSlise";
+} from '@/store/reducers/ProjectTaskSlise';
 import {
   createNRC,
   createProjectTaskMaterialAplication,
@@ -40,25 +40,25 @@ import {
   fetchTotalQuantity,
   getAllProjectTaskAplications,
   updateProjectTask,
-} from "@/utils/api/thunks";
-import WOCardView from "./WO/WOCardView";
-import WOFormChangeView from "./WO/changeForm/WOFormChangeView";
-import TaskCardView from "./WO/taskCard/TaskCarView";
-import { filterMaterial } from "@/services/utilites";
-import { ColumnsType } from "antd/es/table";
-import moment from "moment";
-import layout from "antd/es/layout";
+} from '@/utils/api/thunks';
+import WOCardView from './WO/WOCardView';
+import WOFormChangeView from './WO/changeForm/WOFormChangeView';
+import TaskCardView from './WO/taskCard/TaskCarView';
+import { filterMaterial } from '@/services/utilites';
+import { ColumnsType } from 'antd/es/table';
+import moment from 'moment';
+import layout from 'antd/es/layout';
 
-import { setInitialMaterial } from "@/store/reducers/MaterialStoreSlice";
-import { IMatData1 } from "@/types/TypesData";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { useTranslation } from "react-i18next";
+import { setInitialMaterial } from '@/store/reducers/MaterialStoreSlice';
+import { IMatData1 } from '@/types/TypesData';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useTranslation } from 'react-i18next';
 
 const WorkOrderView: FC = () => {
   const [searchIsVisible, setSearchIsVisible] = useState(false);
 
-  const [inputSearchValue, setSerchedText] = useState("");
-  const [inputSearchValueNewMaterial, setSerchedTextNewMaterial] = useState("");
+  const [inputSearchValue, setSerchedText] = useState('');
+  const [inputSearchValueNewMaterial, setSerchedTextNewMaterial] = useState('');
   const [openRec, setOpenRec] = useState(false);
   const [openMaterialList, setOpenMateialList] = useState(false);
   const [openAplications, setOpenAplications] = useState(false);
@@ -80,70 +80,70 @@ const WorkOrderView: FC = () => {
   let matRequest = filterMaterial(currentProjectTask, allMaterials);
   const columnsMatStore: ColumnsType<any> = [
     {
-      title: "P/N",
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
-      responsive: ["sm"],
+      title: 'P/N',
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
+      responsive: ['sm'],
       render: (record) => {
         return <Paragraph copyable>{record}</Paragraph>;
       },
     },
     {
-      title: "Партия",
-      dataIndex: "BATCH",
-      key: "BATCH",
-      responsive: ["sm"],
+      title: 'Партия',
+      dataIndex: 'BATCH',
+      key: 'BATCH',
+      responsive: ['sm'],
     },
     {
-      title: "S/N",
-      dataIndex: "BATCH_ID",
-      key: "BATCH_ID",
-      responsive: ["sm"],
+      title: 'S/N',
+      dataIndex: 'BATCH_ID',
+      key: 'BATCH_ID',
+      responsive: ['sm'],
     },
 
     {
       title: <p className="text- my-0 py-0">Наим.</p>,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
-      responsive: ["sm"],
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
+      responsive: ['sm'],
     },
     {
-      title: "Кол-во",
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      responsive: ["sm"],
+      title: 'Кол-во',
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      responsive: ['sm'],
     },
     {
-      title: "Бронь",
-      dataIndex: "RESERVATION",
-      key: "RESERVATION",
-      responsive: ["sm"],
+      title: 'Бронь',
+      dataIndex: 'RESERVATION',
+      key: 'RESERVATION',
+      responsive: ['sm'],
     },
     {
-      title: "Ед. Измер.",
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: 'Ед. Измер.',
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
     },
     {
-      title: "Склад",
-      dataIndex: "STOCK",
-      key: "STOCK",
-      responsive: ["sm"],
+      title: 'Склад',
+      dataIndex: 'STOCK',
+      key: 'STOCK',
+      responsive: ['sm'],
     },
   ];
   const columnsMat: ColumnsType<any> = [
     {
       title: <p className=" my-0 py-0">Код</p>,
-      dataIndex: "code",
-      key: "code",
-      responsive: ["sm"],
+      dataIndex: 'code',
+      key: 'code',
+      responsive: ['sm'],
     },
     {
-      title: "P/N",
-      dataIndex: "PN",
-      key: "PN",
-      responsive: ["sm"],
+      title: 'P/N',
+      dataIndex: 'PN',
+      key: 'PN',
+      responsive: ['sm'],
       // render: (record) => {
       //   return <Paragraph copyable>{record}</Paragraph>;
       // },
@@ -151,31 +151,31 @@ const WorkOrderView: FC = () => {
 
     {
       title: <p className="text- my-0 py-0">Наименование</p>,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
-      responsive: ["sm"],
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
+      responsive: ['sm'],
     },
     {
-      title: "Альтернатива",
-      dataIndex: "alternative",
-      key: "alternative",
-      responsive: ["sm"],
+      title: 'Альтернатива',
+      dataIndex: 'alternative',
+      key: 'alternative',
+      responsive: ['sm'],
     },
     {
-      title: "Кол-во",
-      dataIndex: "amout",
-      key: "amout",
-      responsive: ["sm"],
+      title: 'Кол-во',
+      dataIndex: 'amout',
+      key: 'amout',
+      responsive: ['sm'],
     },
     {
-      title: "Ед. Измер.",
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: 'Ед. Измер.',
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
     },
     {
-      key: "5",
-      title: `${t("Actions")}`,
+      key: '5',
+      title: `${t('Actions')}`,
       render: (record: any) => {
         return (
           <>
@@ -188,7 +188,7 @@ const WorkOrderView: FC = () => {
               onClick={() => {
                 onDeleteStudent(record);
               }}
-              style={{ color: "red", marginLeft: 12 }}
+              style={{ color: 'red', marginLeft: 12 }}
             />
           </>
         );
@@ -198,15 +198,15 @@ const WorkOrderView: FC = () => {
   const columnsMatNewMaterial: ColumnsType<any> = [
     {
       title: <p className=" my-0 py-0">Код</p>,
-      dataIndex: "code",
-      key: "code",
-      responsive: ["sm"],
+      dataIndex: 'code',
+      key: 'code',
+      responsive: ['sm'],
     },
     {
-      title: "P/N",
-      dataIndex: "PN",
-      key: "PN",
-      responsive: ["sm"],
+      title: 'P/N',
+      dataIndex: 'PN',
+      key: 'PN',
+      responsive: ['sm'],
       // render: (record) => {
       //   return <Paragraph copyable>{record}</Paragraph>;
       // },
@@ -214,31 +214,31 @@ const WorkOrderView: FC = () => {
 
     {
       title: <p className="text- my-0 py-0">Наименование</p>,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
-      responsive: ["sm"],
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
+      responsive: ['sm'],
     },
     {
-      title: "Альтернатива",
-      dataIndex: "alternative",
-      key: "alternative",
-      responsive: ["sm"],
+      title: 'Альтернатива',
+      dataIndex: 'alternative',
+      key: 'alternative',
+      responsive: ['sm'],
     },
     {
-      title: "Кол-во",
-      dataIndex: "amout",
-      key: "amout",
-      responsive: ["sm"],
+      title: 'Кол-во',
+      dataIndex: 'amout',
+      key: 'amout',
+      responsive: ['sm'],
     },
     {
-      title: "Ед. Измер.",
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: 'Ед. Измер.',
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
     },
     {
-      key: "5",
-      title: `${t("Actions")}`,
+      key: '5',
+      title: `${t('Actions')}`,
       render: (record: any) => {
         return (
           <>
@@ -251,7 +251,7 @@ const WorkOrderView: FC = () => {
               onClick={() => {
                 onDeleteNewMaterial(record);
               }}
-              style={{ color: "red", marginLeft: 12 }}
+              style={{ color: 'red', marginLeft: 12 }}
             />
           </>
         );
@@ -261,133 +261,133 @@ const WorkOrderView: FC = () => {
   const columnsAplications: ColumnsType<any> = [
     {
       title: <p className=" my-0 py-0">Номер Заявки</p>,
-      dataIndex: "materialAplicationNumber",
-      key: "materialAplicationNumber",
-      responsive: ["sm"],
+      dataIndex: 'materialAplicationNumber',
+      key: 'materialAplicationNumber',
+      responsive: ['sm'],
     },
 
     {
       title: <p className="text- my-0 py-0">Заказчик</p>,
-      dataIndex: "user",
-      key: "user",
-      responsive: ["sm"],
+      dataIndex: 'user',
+      key: 'user',
+      responsive: ['sm'],
     },
     {
-      title: "Дата создания",
-      dataIndex: "createDate",
-      key: "createDate",
-      responsive: ["sm"],
+      title: 'Дата создания',
+      dataIndex: 'createDate',
+      key: 'createDate',
+      responsive: ['sm'],
       render(text: Date) {
-        return moment(text).format("Do MMM  YYYY, HH:mm");
+        return moment(text).format('Do MMM  YYYY, HH:mm');
       },
     },
     {
-      title: "Статус",
-      dataIndex: "status",
-      key: "status",
-      responsive: ["sm"],
+      title: 'Статус',
+      dataIndex: 'status',
+      key: 'status',
+      responsive: ['sm'],
     },
   ];
   const columnsTasksMaterials: ColumnsType<any> = [
     {
       title: <p className=" my-0 py-0">PN</p>,
-      dataIndex: "PN",
-      key: "PN",
-      responsive: ["sm"],
+      dataIndex: 'PN',
+      key: 'PN',
+      responsive: ['sm'],
     },
 
     {
       title: <p className="text- my-0 py-0">Описание</p>,
-      dataIndex: "description",
-      key: "description",
-      width: "20%",
-      responsive: ["sm"],
+      dataIndex: 'description',
+      key: 'description',
+      width: '20%',
+      responsive: ['sm'],
     },
     {
-      title: "Количество",
-      dataIndex: "quantity",
-      key: "quantity",
-      width: "7%",
-      responsive: ["sm"],
+      title: 'Количество',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      width: '7%',
+      responsive: ['sm'],
     },
     {
-      title: "Ед. Изм",
-      dataIndex: "unit",
-      key: "unit",
-      width: "5%",
-      responsive: ["sm"],
+      title: 'Ед. Изм',
+      dataIndex: 'unit',
+      key: 'unit',
+      width: '5%',
+      responsive: ['sm'],
     },
     {
       title: <p className=" my-0 py-0">Получил</p>,
-      dataIndex: "recipient",
-      key: "recipient",
-      responsive: ["sm"],
+      dataIndex: 'recipient',
+      key: 'recipient',
+      responsive: ['sm'],
     },
     {
       title: <p className=" my-0 py-0">Дата </p>,
-      dataIndex: "closeDate",
-      key: "closeDate",
+      dataIndex: 'closeDate',
+      key: 'closeDate',
       render(text: Date) {
-        return moment(text).format("DD.MM.YYYY, HH:mm");
+        return moment(text).format('DD.MM.YYYY, HH:mm');
       },
-      width: "10%",
-      responsive: ["sm"],
+      width: '10%',
+      responsive: ['sm'],
     },
     {
       title: <p className=" my-0 py-0">Номер Требования</p>,
-      dataIndex: "pickSlipNumber",
-      key: "pickSlipNumber",
-      width: "8%",
-      responsive: ["sm"],
+      dataIndex: 'pickSlipNumber',
+      key: 'pickSlipNumber',
+      width: '8%',
+      responsive: ['sm'],
     },
 
     {
       title: <p className=" my-0 py-0">Номер Партии</p>,
-      dataIndex: "batch",
-      key: "batch",
-      responsive: ["sm"],
+      dataIndex: 'batch',
+      key: 'batch',
+      responsive: ['sm'],
     },
     {
       title: <p className=" my-0 py-0">Серийный номер</p>,
-      dataIndex: "batchId",
-      key: "batchId",
-      responsive: ["sm"],
+      dataIndex: 'batchId',
+      key: 'batchId',
+      responsive: ['sm'],
     },
   ];
 
-  const label = "Подтверждаю информацию, указанную в заявке";
+  const label = 'Подтверждаю информацию, указанную в заявке';
   const columnsMaterial: ColumnsType<any> = [
     {
       title: <p className=" my-0 py-0">Код</p>,
-      dataIndex: "code",
-      key: "code",
-      responsive: ["sm"],
+      dataIndex: 'code',
+      key: 'code',
+      responsive: ['sm'],
     },
-    { title: "P/N", dataIndex: "PN", key: "PN", responsive: ["sm"] },
+    { title: 'P/N', dataIndex: 'PN', key: 'PN', responsive: ['sm'] },
 
     {
       title: <p className="text- my-0 py-0">Наименование</p>,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
-      responsive: ["sm"],
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
+      responsive: ['sm'],
     },
     {
-      title: "Альтернатива",
-      dataIndex: "alternative",
-      key: "alternative",
-      responsive: ["sm"],
+      title: 'Альтернатива',
+      dataIndex: 'alternative',
+      key: 'alternative',
+      responsive: ['sm'],
     },
     {
-      title: "Кол-во",
-      dataIndex: "amout",
-      key: "amout",
-      responsive: ["sm"],
+      title: 'Кол-во',
+      dataIndex: 'amout',
+      key: 'amout',
+      responsive: ['sm'],
     },
     {
-      title: "Ед. Измер.",
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: 'Ед. Измер.',
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
     },
   ];
 
@@ -419,12 +419,12 @@ const WorkOrderView: FC = () => {
     const randomNumber = 1;
     const newStudent: IMatData1 = {
       id: String(currentProjectTask.materialReuest.length + 1),
-      code: "CODE " + randomNumber,
-      PN: "PN" + randomNumber,
+      code: 'CODE ' + randomNumber,
+      PN: 'PN' + randomNumber,
       amout: 1,
-      unit: "Eд.",
-      alternative: "-",
-      nameOfMaterial: "Описание",
+      unit: 'Eд.',
+      alternative: '-',
+      nameOfMaterial: 'Описание',
       amtoss: currentProjectTask.taskId?.amtoss,
       taskNumber: currentProjectTask.taskId?.taskNumber,
     };
@@ -443,12 +443,12 @@ const WorkOrderView: FC = () => {
     const randomNumber = 1;
     const newMaterial: IMatData1 = {
       id: String(currentProjectTask.newMaterial.length + 1),
-      code: "CODE " + randomNumber,
-      PN: "PN" + randomNumber,
+      code: 'CODE ' + randomNumber,
+      PN: 'PN' + randomNumber,
       amout: 1,
-      unit: "Eд.",
-      alternative: "-",
-      nameOfMaterial: "Описание",
+      unit: 'Eд.',
+      alternative: '-',
+      nameOfMaterial: 'Описание',
       amtoss: currentProjectTask.taskId?.amtoss,
       taskNumber: currentProjectTask.taskId?.taskNumber,
     };
@@ -465,10 +465,10 @@ const WorkOrderView: FC = () => {
   };
   const onDeleteStudent = (record: IMatData1) => {
     Modal.confirm({
-      title: "Вы уверены что хотите удалить запись?",
-      okText: "Да",
-      cancelText: "Отмена",
-      okType: "danger",
+      title: 'Вы уверены что хотите удалить запись?',
+      okText: 'Да',
+      cancelText: 'Отмена',
+      okType: 'danger',
       onOk: () => {
         dispatch(
           setCurrentProjectTaskMaterialRequest(
@@ -486,10 +486,10 @@ const WorkOrderView: FC = () => {
   };
   const onDeleteNewMaterial = (record: IMatData1) => {
     Modal.confirm({
-      title: "Вы уверены что хотите удалить запись?",
-      okText: "Да",
-      cancelText: "Отмена",
-      okType: "danger",
+      title: 'Вы уверены что хотите удалить запись?',
+      okText: 'Да',
+      cancelText: 'Отмена',
+      okType: 'danger',
       onOk: () => {
         dispatch(
           setCurrentProjectTaskNewMaterial(
@@ -509,7 +509,7 @@ const WorkOrderView: FC = () => {
   const onEditStudent = (record: IMatData1) => {
     setIsEditing(true);
     setEditingStudent({ ...record });
-    if (record.PN && record.PN !== "НЕ РЕГЛАМЕНТИРУЕТСЯ") {
+    if (record.PN && record.PN !== 'НЕ РЕГЛАМЕНТИРУЕТСЯ') {
       dispatch(
         fetchTotalQuantity(
           String(record.PN || record.alternative)
@@ -529,7 +529,7 @@ const WorkOrderView: FC = () => {
   const onEditNewMaterial = (record: IMatData1) => {
     setIsEditingNewMaterial(true);
     setEditingNewMaterial({ ...record });
-    if (record.PN && record.PN !== "НЕ РЕГЛАМЕНТИРУЕТСЯ") {
+    if (record.PN && record.PN !== 'НЕ РЕГЛАМЕНТИРУЕТСЯ') {
       dispatch(
         fetchTotalQuantity(
           String(record.PN || record.alternative)
@@ -563,9 +563,9 @@ const WorkOrderView: FC = () => {
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   };
-  const items: TabsProps["items"] = [
+  const items: TabsProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: `Материалы возможные к использованию`,
       children: (
         <div className="App">
@@ -579,16 +579,16 @@ const WorkOrderView: FC = () => {
                 pagination={false}
                 columns={columnsMat}
                 size="small"
-                scroll={{ y: "calc(60vh)" }}
+                scroll={{ y: 'calc(60vh)' }}
                 rowClassName="cursor-pointer  text-xs text-transform: uppercase"
                 dataSource={currentProjectTask.materialReuest}
               ></Table>
             }
 
-            <p style={{ marginBottom: "20px" }}>
+            <p style={{ marginBottom: '20px' }}>
               <Checkbox
                 checked={checked}
-                disabled={disabled || localStorage.getItem("role") == "boss"}
+                disabled={disabled || localStorage.getItem('role') == 'boss'}
                 onChange={onChange}
               >
                 {label}
@@ -597,61 +597,61 @@ const WorkOrderView: FC = () => {
             <Button
               disabled={
                 !checked ||
-                localStorage.getItem("role") == "boss" ||
+                localStorage.getItem('role') == 'boss' ||
                 !currentProjectTask.materialReuest?.length
               }
               onClick={async () => {
                 Modal.confirm({
-                  title: "Вы уверены что  хотите отправить заявку на склад?",
-                  okText: "Да",
-                  cancelText: "Отмена",
-                  okType: "danger",
+                  title: 'Вы уверены что  хотите отправить заявку на склад?',
+                  okText: 'Да',
+                  cancelText: 'Отмена',
+                  okType: 'danger',
                   onOk: async () => {
                     const result = await dispatch(
                       createProjectTaskMaterialAplication({
                         materials: currentProjectTask.materialReuest,
                         createDate: new Date(),
-                        user: localStorage.getItem("name") || "",
-                        userTelID: localStorage.getItem("telegramID") || "",
+                        user: localStorage.getItem('name') || '',
+                        userTelID: localStorage.getItem('telegramID') || '',
                         projectTaskId:
-                          currentProjectTask._id || currentProjectTask.id || "",
+                          currentProjectTask._id || currentProjectTask.id || '',
                         projectTaskWO: currentProjectTask.projectTaskWO || null,
-                        projectId: currentProject.id || "",
+                        projectId: currentProject.id || '',
                         projectWO: currentProject.projectWO || null,
                         planeType: currentProject.aplicationId.planeType,
                         registrationNumber:
                           currentProject.aplicationId.planeNumber,
                         taskNumber: currentProjectTask.optional?.taskNumber,
-                        status: "отложена",
+                        status: 'отложена',
                         userId: currentProjectTask.ownerId,
                         editedAction: {
                           editedStoreMaterials: [],
                           purchaseStoreMaterials: [],
-                          sing: "",
+                          sing: '',
                         },
                       })
                     );
-                    if (result.meta.requestStatus === "fulfilled") {
+                    if (result.meta.requestStatus === 'fulfilled') {
                       const result = await dispatch(
                         updateProjectTask({
                           ...currentProjectTask,
                           id: currentProjectTask._id || currentProjectTask.id,
                         })
                       );
-                      if (result.meta.requestStatus === "fulfilled") {
-                        toast.success("Заявка отправлена");
+                      if (result.meta.requestStatus === 'fulfilled') {
+                        toast.success('Заявка отправлена');
                         setOpen(false);
                         dispatch(setCurrentProjectTaskMaterialRequest([]));
                         dispatch(
                           getAllProjectTaskAplications(
                             currentProjectTask._id ||
                               currentProjectTask.id ||
-                              ""
+                              ''
                           )
                         );
                         setAddButtonDisabled(false);
                       } else {
-                        toast.error("Заявка не отправлена");
+                        toast.error('Заявка не отправлена');
                         setAddButtonDisabled(false);
                       }
                       setChecked(false);
@@ -659,7 +659,7 @@ const WorkOrderView: FC = () => {
                         getAllProjectTaskAplications(
                           currentProjectTask?._id ||
                             currentProjectTask?.id ||
-                            ""
+                            ''
                         )
                       );
                       setAddButtonDisabled(true);
@@ -693,9 +693,9 @@ const WorkOrderView: FC = () => {
             >
               <Form {...layout} style={{ maxWidth: 800 }}>
                 <div className="uppercase my-1 flex flex-wrap text-l font-bold gap-1">
-                  Наличие на складе{" "}
+                  Наличие на складе{' '}
                   <Paragraph copyable>
-                    {(editingStudent?.PN !== "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+                    {(editingStudent?.PN !== 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
                       editingStudent?.PN) ||
                       editingStudent?.nameOfMaterial}
                   </Paragraph>
@@ -705,7 +705,7 @@ const WorkOrderView: FC = () => {
 
                 <Form.Item label="Поиск">
                   <Input.Search
-                    defaultValue={""}
+                    defaultValue={''}
                     allowClear
                     placeholder="Для поиска введите значение"
                     onSearch={(value) => {
@@ -729,20 +729,20 @@ const WorkOrderView: FC = () => {
                   onCancel={() => {
                     setSearchIsVisible(false);
                     dispatch(setInitialMaterial([]));
-                    setSerchedText("");
+                    setSerchedText('');
                   }}
                   onOk={() => {
                     setSearchIsVisible(false);
                     dispatch(setInitialMaterial([]));
 
-                    setSerchedText("");
+                    setSerchedText('');
                   }}
-                  width={"60%"}
+                  width={'60%'}
                 >
                   <>{editingStudent?.PN}</>
                   {/* <Form.Item label="Поиск"> */}
                   <Input.Search
-                    defaultValue={""}
+                    defaultValue={''}
                     allowClear
                     placeholder="Для поиска введите значение"
                     onSearch={(value) => {
@@ -757,7 +757,7 @@ const WorkOrderView: FC = () => {
                   {/* </Form.Item> */}
                   <Table
                     size="small"
-                    scroll={{ y: "calc(60vh)" }}
+                    scroll={{ y: 'calc(60vh)' }}
                     rowClassName="cursor-pointer  text-xs text-transform: uppercase"
                     dataSource={isLoading ? [] : searchedSameItemsQuantity}
                     locale={{
@@ -771,7 +771,7 @@ const WorkOrderView: FC = () => {
                   ></Table>
                 </Modal>
 
-                <Form.Item label="Code">
+                <Form.Item label={t('CODE')}>
                   <Input
                     // disabled
                     value={editingStudent?.code}
@@ -809,7 +809,7 @@ const WorkOrderView: FC = () => {
                   />
                 </Form.Item>
                 <Form.Item label="Описание">
-                  {" "}
+                  {' '}
                   <Input
                     // disabled
 
@@ -874,7 +874,7 @@ const WorkOrderView: FC = () => {
     },
 
     {
-      key: "2",
+      key: '2',
       label: `Новая Заявка`,
       children: (
         <div className="App">
@@ -888,16 +888,16 @@ const WorkOrderView: FC = () => {
                 pagination={false}
                 columns={columnsMatNewMaterial}
                 size="small"
-                scroll={{ y: "calc(60vh)" }}
+                scroll={{ y: 'calc(60vh)' }}
                 rowClassName="cursor-pointer  text-xs text-transform: uppercase"
                 dataSource={currentProjectTask.newMaterial}
               ></Table>
             }
 
-            <p style={{ marginBottom: "20px" }}>
+            <p style={{ marginBottom: '20px' }}>
               <Checkbox
                 checked={checked}
-                disabled={disabled || localStorage.getItem("role") == "boss"}
+                disabled={disabled || localStorage.getItem('role') == 'boss'}
                 onChange={onChange}
               >
                 {label}
@@ -906,61 +906,61 @@ const WorkOrderView: FC = () => {
             <Button
               disabled={
                 !checked ||
-                localStorage.getItem("role") == "boss" ||
+                localStorage.getItem('role') == 'boss' ||
                 !currentProjectTask.newMaterial?.length
               }
               onClick={async () => {
                 Modal.confirm({
-                  title: "Вы уверены что  хотите отправить заявку на склад?",
-                  okText: "Да",
-                  cancelText: "Отмена",
-                  okType: "danger",
+                  title: 'Вы уверены что  хотите отправить заявку на склад?',
+                  okText: 'Да',
+                  cancelText: 'Отмена',
+                  okType: 'danger',
                   onOk: async () => {
                     const result = await dispatch(
                       createProjectTaskMaterialAplication({
                         materials: currentProjectTask?.newMaterial || [],
                         createDate: new Date(),
-                        user: localStorage.getItem("name") || "",
-                        userTelID: localStorage.getItem("telegramID") || "",
+                        user: localStorage.getItem('name') || '',
+                        userTelID: localStorage.getItem('telegramID') || '',
                         projectTaskId:
-                          currentProjectTask._id || currentProjectTask.id || "",
+                          currentProjectTask._id || currentProjectTask.id || '',
                         projectTaskWO: currentProjectTask.projectTaskWO || null,
-                        projectId: currentProject.id || "",
+                        projectId: currentProject.id || '',
                         projectWO: currentProject.projectWO || null,
                         planeType: currentProject.aplicationId.planeType,
                         registrationNumber:
                           currentProject.aplicationId.planeNumber,
                         taskNumber: currentProjectTask.optional?.taskNumber,
-                        status: "отложена",
+                        status: 'отложена',
                         userId: currentProjectTask.ownerId,
                         editedAction: {
                           editedStoreMaterials: [],
                           purchaseStoreMaterials: [],
-                          sing: "",
+                          sing: '',
                         },
                       })
                     );
-                    if (result.meta.requestStatus === "fulfilled") {
+                    if (result.meta.requestStatus === 'fulfilled') {
                       const result = await dispatch(
                         updateProjectTask({
                           ...currentProjectTask,
                           id: currentProjectTask._id || currentProjectTask.id,
                         })
                       );
-                      if (result.meta.requestStatus === "fulfilled") {
-                        toast.success("Заявка отправлена");
+                      if (result.meta.requestStatus === 'fulfilled') {
+                        toast.success('Заявка отправлена');
                         setOpen(false);
                         dispatch(setCurrentProjectTaskNewMaterial([]));
                         dispatch(
                           getAllProjectTaskAplications(
                             currentProjectTask._id ||
                               currentProjectTask.id ||
-                              ""
+                              ''
                           )
                         );
                         setAddButtonDisabled(false);
                       } else {
-                        toast.error("Заявка не отправлена");
+                        toast.error('Заявка не отправлена');
                         setAddButtonDisabled(false);
                       }
                       setChecked(false);
@@ -968,7 +968,7 @@ const WorkOrderView: FC = () => {
                         getAllProjectTaskAplications(
                           currentProjectTask?._id ||
                             currentProjectTask?.id ||
-                            ""
+                            ''
                         )
                       );
                       setAddButtonDisabled(true);
@@ -1002,9 +1002,9 @@ const WorkOrderView: FC = () => {
             >
               <Form {...layout} style={{ maxWidth: 800 }}>
                 <div className="uppercase my-1 flex flex-wrap text-l font-bold gap-1">
-                  Наличие на складе{" "}
+                  Наличие на складе{' '}
                   <Paragraph copyable>
-                    {(editingNewMaterial?.PN !== "НЕ РЕГЛАМЕНТИРУЕТСЯ" &&
+                    {(editingNewMaterial?.PN !== 'НЕ РЕГЛАМЕНТИРУЕТСЯ' &&
                       editingNewMaterial?.PN) ||
                       editingNewMaterial?.nameOfMaterial}
                   </Paragraph>
@@ -1014,7 +1014,7 @@ const WorkOrderView: FC = () => {
 
                 <Form.Item label="Поиск">
                   <Input.Search
-                    defaultValue={""}
+                    defaultValue={''}
                     allowClear
                     placeholder="Для поиска введите значение"
                     onSearch={(value) => {
@@ -1040,20 +1040,20 @@ const WorkOrderView: FC = () => {
                   onCancel={() => {
                     setSearchIsVisible(false);
                     dispatch(setInitialMaterial([]));
-                    setSerchedTextNewMaterial("");
+                    setSerchedTextNewMaterial('');
                   }}
                   onOk={() => {
                     setSearchIsVisible(false);
                     dispatch(setInitialMaterial([]));
 
-                    setSerchedTextNewMaterial("");
+                    setSerchedTextNewMaterial('');
                   }}
-                  width={"60%"}
+                  width={'60%'}
                 >
                   <>{editingNewMaterial?.PN}</>
                   {/* <Form.Item label="Поиск"> */}
                   <Input.Search
-                    defaultValue={""}
+                    defaultValue={''}
                     allowClear
                     placeholder="Для поиска введите значение"
                     onSearch={(value) => {
@@ -1070,7 +1070,7 @@ const WorkOrderView: FC = () => {
                   {/* </Form.Item> */}
                   <Table
                     size="small"
-                    scroll={{ y: "calc(60vh)" }}
+                    scroll={{ y: 'calc(60vh)' }}
                     rowClassName="cursor-pointer  text-xs text-transform: uppercase"
                     dataSource={isLoading ? [] : searchedSameItemsQuantity}
                     locale={{
@@ -1084,7 +1084,7 @@ const WorkOrderView: FC = () => {
                   ></Table>
                 </Modal>
 
-                <Form.Item label="Code">
+                <Form.Item label={t('CODE')}>
                   <Input
                     // disabled
                     value={editingNewMaterial?.code}
@@ -1122,7 +1122,7 @@ const WorkOrderView: FC = () => {
                   />
                 </Form.Item>
                 <Form.Item label="Описание">
-                  {" "}
+                  {' '}
                   <Input
                     // disabled
 
@@ -1216,7 +1216,7 @@ const WorkOrderView: FC = () => {
     //   ),
     // },
     {
-      key: "4",
+      key: '4',
       label: `Списанные материалы`,
       children: (
         <div className="gap-1 mx-auto justify-center flex-col">
@@ -1224,7 +1224,7 @@ const WorkOrderView: FC = () => {
             pagination={false}
             bordered
             size="small"
-            scroll={{ y: "calc(60vh)" }}
+            scroll={{ y: 'calc(60vh)' }}
             rowClassName="cursor-pointer  text-xs text-transform: uppercase"
             columns={columnsTasksMaterials}
             dataSource={currentProjectTask.taskPickSlipsMaterials}
@@ -1239,8 +1239,8 @@ const WorkOrderView: FC = () => {
       <div className="flex gap-2 flex-wrap">
         <Button
           disabled={
-            currentProjectTask.status == "закрыт" ||
-            localStorage.getItem("role") == "boss"
+            currentProjectTask.status == 'закрыт' ||
+            localStorage.getItem('role') == 'boss'
           }
           size="small"
           type="primary"
@@ -1261,14 +1261,14 @@ const WorkOrderView: FC = () => {
           centered
           open={open}
           cancelText="отмена"
-          okType={"default"}
+          okType={'default'}
           okText="Сохранить изменения"
           onOk={async () => {
             Modal.confirm({
-              title: "Вы уверены что хотите сохранить изменения?",
-              okText: "Да",
-              cancelText: "Отмена",
-              okType: "danger",
+              title: 'Вы уверены что хотите сохранить изменения?',
+              okText: 'Да',
+              cancelText: 'Отмена',
+              okType: 'danger',
               onOk: async () => {
                 const result = await dispatch(
                   updateProjectTask({
@@ -1276,19 +1276,19 @@ const WorkOrderView: FC = () => {
                     id: currentProjectTask._id || currentProjectTask.id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
-                  toast.success("Данные успешно обновлены");
+                if (result.meta.requestStatus === 'fulfilled') {
+                  toast.success('Данные успешно обновлены');
                   dispatch(
                     featchFilteredTasksByProjectId({
-                      projectId: currentProject.id || "",
-                      filter: "",
+                      projectId: currentProject.id || '',
+                      filter: '',
                     })
                   );
-                  dispatch(featchCountByStatus(currentProject.id || ""));
+                  dispatch(featchCountByStatus(currentProject.id || ''));
                   dispatch(setCurrentProjectTaskMaterialRequest(matRequest));
                   // setOpen(false);
                 } else {
-                  toast.error("Не удалось обновить проект");
+                  toast.error('Не удалось обновить проект');
                 }
               },
               onCancel: () => {
@@ -1300,7 +1300,7 @@ const WorkOrderView: FC = () => {
           onCancel={() => {
             setOpen(false);
           }}
-          width={"70%"}
+          width={'70%'}
         >
           <WOFormChangeView currentDefault={1} taskData={currentProjectTask} />
         </Modal>
@@ -1308,23 +1308,23 @@ const WorkOrderView: FC = () => {
           size="small"
           type="primary"
           disabled={
-            currentProjectTask.status == "в работе" ||
-            currentProjectTask.status == "выполнен" ||
-            currentProjectTask.status == "закрыт" ||
-            localStorage.getItem("role") == "boss"
+            currentProjectTask.status == 'в работе' ||
+            currentProjectTask.status == 'выполнен' ||
+            currentProjectTask.status == 'закрыт' ||
+            localStorage.getItem('role') == 'boss'
           }
           onClick={async () => {
             Modal.confirm({
-              title: "Вы уверены что хотите отметить задачу начатой?",
-              okText: "Да",
-              cancelText: "Отмена",
-              okType: "danger",
+              title: 'Вы уверены что хотите отметить задачу начатой?',
+              okText: 'Да',
+              cancelText: 'Отмена',
+              okType: 'danger',
               onOk: async () => {
                 const result = await dispatch(
                   updateProjectTask({
                     ...currentProjectTask,
                     id: currentProjectTask._id || currentProjectTask.id,
-                    status: "в работе",
+                    status: 'в работе',
                     startDate: new Date(),
 
                     optional: {
@@ -1335,19 +1335,19 @@ const WorkOrderView: FC = () => {
                     },
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
-                  toast.success("Данные успешно обновлены");
+                if (result.meta.requestStatus === 'fulfilled') {
+                  toast.success('Данные успешно обновлены');
                   dispatch(
                     featchFilteredTasksByProjectId({
-                      projectId: currentProject.id || "",
-                      filter: "",
+                      projectId: currentProject.id || '',
+                      filter: '',
                     })
                   );
-                  dispatch(featchCountByStatus(currentProject.id || ""));
+                  dispatch(featchCountByStatus(currentProject.id || ''));
                   dispatch(setCurrentProjectTaskMaterialRequest(matRequest));
                   setOpen(false);
                 } else {
-                  toast.error("Не удалось обновить проект");
+                  toast.error('Не удалось обновить проект');
                 }
               },
               onCancel: () => {
@@ -1357,12 +1357,12 @@ const WorkOrderView: FC = () => {
             });
           }}
         >
-          {currentProjectTask.status == "в работе" ? (
+          {currentProjectTask.status == 'в работе' ? (
             <>Задача в работе</>
           ) : (
             <>Отметить как начатую</>
           )}
-        </Button>{" "}
+        </Button>{' '}
         {/* <Button
           size="small"
           type="primary"
@@ -1427,10 +1427,10 @@ const WorkOrderView: FC = () => {
           size="small"
           type="primary"
           disabled={
-            currentProjectTask.status == "отложен" ||
-            currentProjectTask.status == "выполнен" ||
-            currentProjectTask.status == "закрыт" ||
-            localStorage.getItem("role") == "boss"
+            currentProjectTask.status == 'отложен' ||
+            currentProjectTask.status == 'выполнен' ||
+            currentProjectTask.status == 'закрыт' ||
+            localStorage.getItem('role') == 'boss'
           }
           onClick={() => {
             dispatch(
@@ -1438,15 +1438,15 @@ const WorkOrderView: FC = () => {
                 projectWO: currentProjectTask.projectWO,
                 projectTaskWO: currentProjectTask.projectTaskWO,
                 editMode: true,
-                status: "отложен",
+                status: 'отложен',
                 createDate: new Date(),
                 projectId: currentProjectTask?.projectId,
                 projectTaskID: currentProjectTask._id || currentProjectTask.id,
-                taskType: "MAINT",
+                taskType: 'MAINT',
                 plane: {
                   registrationNumber: currentProject.aplicationId.planeNumber,
                   companyName: currentProject.aplicationId.companyName,
-                  type: currentProject.aplicationId?.planeType || "",
+                  type: currentProject.aplicationId?.planeType || '',
                 },
                 ownerId: currentProjectTask?.ownerId,
                 taskHeadLine: `NRC-${
@@ -1455,7 +1455,7 @@ const WorkOrderView: FC = () => {
                   currentProjectTask.optional?.taskNumber
                 }`,
 
-                taskDescription: currentAdditionalTask?.taskDescription || "",
+                taskDescription: currentAdditionalTask?.taskDescription || '',
                 resourcesRequests: [],
                 material: [],
                 actions: [],
@@ -1463,22 +1463,22 @@ const WorkOrderView: FC = () => {
                 optional: currentAdditionalTask?.optional || {
                   isDone: false,
                   isActive: false,
-                  sing: "",
+                  sing: '',
                   isFavorite: false,
                   isStarting: false,
                 },
                 workStepReferencesLinks: [
                   {
-                    type: "WO",
-                    reference: String(currentProjectTask?.projectTaskWO || ""),
-                    description: "TaskCard W/O",
+                    type: 'WO',
+                    reference: String(currentProjectTask?.projectTaskWO || ''),
+                    description: 'TaskCard W/O',
                   },
                 ],
                 currentAction: {
-                  actionDescription: "",
-                  performedSing: "",
-                  performedDate: "",
-                  performedTime: "",
+                  actionDescription: '',
+                  performedSing: '',
+                  performedDate: '',
+                  performedTime: '',
                   inspectedSing: undefined,
                   inspectedDate: undefined,
                   inspectedTime: undefined,
@@ -1494,12 +1494,12 @@ const WorkOrderView: FC = () => {
           Открыть NRC
         </Button>
         <Button
-          size={"small"}
+          size={'small'}
           disabled={
             // currentProjectTask.status == 'отложен' ||
             // currentProjectTask.status == 'выполнен' ||
             // currentProjectTask.status == 'закрыт' ||
-            localStorage.getItem("role") == "boss"
+            localStorage.getItem('role') == 'boss'
           }
           type="primary"
           onClick={() => setOpenRec(true)}
@@ -1515,15 +1515,15 @@ const WorkOrderView: FC = () => {
           centered
           open={openRec}
           cancelText="отмена"
-          okType={"default"}
+          okType={'default'}
           okText="Отправить Заявку"
           footer={null}
           onOk={async () => {
             Modal.confirm({
-              title: "Вы уверены что  хотите отправить заявку на склад?",
-              okText: "Да",
-              cancelText: "Отмена",
-              okType: "danger",
+              title: 'Вы уверены что  хотите отправить заявку на склад?',
+              okText: 'Да',
+              cancelText: 'Отмена',
+              okType: 'danger',
               onOk: async () => {
                 if (addButtonDisabled) {
                 }
@@ -1535,9 +1535,9 @@ const WorkOrderView: FC = () => {
             setAddButtonDisabled(false);
             setChecked(false);
           }}
-          width={"60%"}
+          width={'60%'}
         >
-          <Tabs type="card" defaultActiveKey={"1"} items={items}></Tabs>
+          <Tabs type="card" defaultActiveKey={'1'} items={items}></Tabs>
         </Modal>
         {/* <Button
           disabled={currentProjectTask.status == 'отложен'}
@@ -1561,33 +1561,33 @@ const WorkOrderView: FC = () => {
           centered
           open={openNRC}
           cancelText="отмена"
-          okType={"default"}
+          okType={'default'}
           okText="Открыть NRC"
           onOk={async () => {
             Modal.confirm({
               title:
-                "Вы уверены что информация внесена верно? Хотите создать NRC?",
-              okText: "Да",
-              cancelText: "Отмена",
-              okType: "danger",
+                'Вы уверены что информация внесена верно? Хотите создать NRC?',
+              okText: 'Да',
+              cancelText: 'Отмена',
+              okType: 'danger',
               onOk: async () => {
                 const result = await dispatch(createNRC(currentAdditionalTask));
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result1 = await dispatch(
-                    featchCountAdditionalByStatus(currentProject.id || "")
+                    featchCountAdditionalByStatus(currentProject.id || '')
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     await dispatch(
                       updateProjectTask({
                         ...currentProjectTask,
                         id: currentProjectTask._id || currentProjectTask.id,
                         workStepReferencesLinks: [
                           {
-                            type: "WO",
+                            type: 'WO',
                             reference: String(
                               result.payload.additionalNumberId
                             ),
-                            description: "NRC W/O",
+                            description: 'NRC W/O',
                           },
                           currentProjectTask.workStepReferencesLinks,
                         ].flat(10),
@@ -1595,19 +1595,19 @@ const WorkOrderView: FC = () => {
                     );
                     dispatch(
                       featchFilteredTasksByProjectId({
-                        projectId: currentProject.id || "",
-                        filter: "",
+                        projectId: currentProject.id || '',
+                        filter: '',
                       })
                     );
 
                     dispatch(setInitialTask(initialAdditionalTask));
-                    toast.success("NRC Успешно создана");
+                    toast.success('NRC Успешно создана');
                     setOpenNRC(false);
                   }
 
                   dispatch(setCurrentProjectTaskMaterialRequest(matRequest));
                 } else {
-                  toast.error("Не удалось создать NRC");
+                  toast.error('Не удалось создать NRC');
                 }
               },
               onCancel: () => {
@@ -1618,7 +1618,7 @@ const WorkOrderView: FC = () => {
           onCancel={() => {
             setOpenNRC(false);
           }}
-          width={"70%"}
+          width={'70%'}
         >
           <NRCADDForm currentDefault={1} taskData={currentAdditionalTask} />
         </Modal>
@@ -1628,19 +1628,19 @@ const WorkOrderView: FC = () => {
           centered
           open={openAplications}
           cancelText="отмена"
-          okType={"default"}
+          okType={'default'}
           // okText="Отправить Заявку"
           onOk={async () => {
             setOpenAplications(false);
           }}
           onCancel={() => setOpenAplications(false)}
-          width={"60%"}
+          width={'60%'}
         >
-          {" "}
+          {' '}
           {
             <Table
               size="small"
-              scroll={{ y: "calc(60vh)" }}
+              scroll={{ y: 'calc(60vh)' }}
               rowClassName="cursor-pointer  text-xs text-transform: uppercase"
               columns={columnsAplications}
               dataSource={currentProjectTask.materialReuestAplications}
@@ -1668,19 +1668,19 @@ const WorkOrderView: FC = () => {
           centered
           open={openMaterialList}
           cancelText="отмена"
-          okType={"default"}
+          okType={'default'}
           // okText="Отправить Заявку"
           onOk={async () => {
             setOpenMateialList(false);
           }}
           onCancel={() => setOpenMateialList(false)}
-          width={"60%"}
+          width={'60%'}
         >
-          {" "}
+          {' '}
           {
             <Table
               size="small"
-              scroll={{ y: "calc(60vh)" }}
+              scroll={{ y: 'calc(60vh)' }}
               rowClassName="cursor-pointer  text-xs text-transform: uppercase"
               columns={columnsMaterial}
               dataSource={

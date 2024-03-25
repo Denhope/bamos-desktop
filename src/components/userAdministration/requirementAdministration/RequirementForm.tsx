@@ -160,7 +160,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormGroup>
             <ProFormSelect
               showSearch
@@ -186,7 +186,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             <ProFormSelect
               showSearch
               name="reqTypesID"
-              label={t('REQUIREMENT  TYPE')}
+              label={t('REQUIREMENT TYPE')}
               width="sm"
               valueEnum={requirementTypesValueEnum}
               onChange={(value: any) => setReqTypeID(value)}
@@ -194,7 +194,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             <ProFormSelect
               showSearch
               name="reqCodesID"
-              label={t('REQUIREMENT  CODE')}
+              label={t('REQUIREMENT CODE')}
               width="sm"
               valueEnum={requirementCodesValueEnum || []}
               disabled={!reqTypeID}

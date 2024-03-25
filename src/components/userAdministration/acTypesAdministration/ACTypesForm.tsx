@@ -73,13 +73,13 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card" onChange={handleTabChange}>
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormGroup>
             <ProFormGroup>
               <ProFormText
                 width={'sm'}
                 name="code"
-                label="CODE"
+                label={t('CODE')}
                 rules={[
                   {
                     required: true,
@@ -90,7 +90,7 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="name"
-                label="TITLE"
+                label={t('TITLE')}
                 rules={[
                   {
                     required: true,
@@ -100,7 +100,7 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="manufacturer"
-                label="MANUFACTURER"
+                label={t('MANUFACTURER')}
                 rules={[
                   {
                     required: true,
@@ -123,35 +123,35 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
             </ProFormGroup>
           </ProFormGroup>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="MAINTENANCE TYPES" key="2">
+        <Tabs.TabPane tab={t('MAINTENANCE TYPES')} key="2">
           {acType && acType.id ? (
             <MaintenanceTypeTab
               values={undefined}
               acType={acType || undefined}
             />
           ) : (
-            <Empty description="No Data" />
+            <Empty description={t('No Data')} />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab="TASK CODES" key="3">
+        <Tabs.TabPane tab={t('TASK CODES')} key="3">
           {acType && acType.id ? (
             <TaskCodeFormPanel acTypeID={acType?.id || ''} />
           ) : (
-            <Empty description="No Data" />
+            <Empty description={t('No Data')} />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab="ZONES CODES" key="4">
+        <Tabs.TabPane tab={t('ZONES CODES')} key="4">
           {acType && acType.id ? (
             <ZoneCodeFormPanel acTypeId={acType.id} />
           ) : (
-            <Empty description="No Data" />
+            <Empty description={t('No Data')} />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab="DOCUMENTATION" key="5">
+        <Tabs.TabPane tab={t('DOCUMENTATION')} key="5">
           {acType && acType.id ? (
             <MPDAdministrationFormPanel acTypeID={acType.id} />
           ) : (
-            <Empty description="No Data" />
+            <Empty description={t('No Data')} />
           )}
         </Tabs.TabPane>
       </Tabs>

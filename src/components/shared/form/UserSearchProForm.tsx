@@ -2,13 +2,13 @@ import {
   ProForm,
   ProFormSelect,
   ProFormText,
-} from "@ant-design/pro-components";
+} from '@ant-design/pro-components';
 
-import { AutoComplete, Col, Form, Row, Input } from "antd";
+import { AutoComplete, Col, Form, Row, Input } from 'antd';
 
-import { UserResponce } from "@/models/IUser";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { getFilteredUsers } from "@/utils/api/thunks";
+import { UserResponce } from '@/models/IUser';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { getFilteredUsers } from '@/utils/api/thunks';
 
 interface UserSearchFormProps {
   onUserSelect: (user: UserResponce) => void;
@@ -32,7 +32,7 @@ const UserSearchForm: FC<UserSearchFormProps> = ({
   const timeoutRefWO = useRef<NodeJS.Timeout | null>(null);
   const [optionsUsers, setOptionsUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState<UserResponce | null>(null);
-  const companyID = localStorage.getItem("companyID");
+  const companyID = localStorage.getItem('companyID');
   const handleSearchUser = async (value: any) => {
     if (timeoutRefWO.current) {
       clearTimeout(timeoutRefWO.current);
@@ -85,7 +85,7 @@ const UserSearchForm: FC<UserSearchFormProps> = ({
     setPassValue(value);
     handleSearch(value);
   };
-  const [passValue, setPassValue] = useState("");
+  const [passValue, setPassValue] = useState('');
 
   useEffect(() => {
     form.setFieldsValue({
@@ -120,7 +120,7 @@ const UserSearchForm: FC<UserSearchFormProps> = ({
           name="pass"
           label="PASS"
           fieldProps={{
-            width: "sm",
+            width: 'sm',
             allowClear: true,
             disabled: disabled,
             value: passValue,
@@ -146,10 +146,10 @@ const UserSearchForm: FC<UserSearchFormProps> = ({
         />
         <ProFormText
           name="performedName"
-          label="NAME"
+          label={t('NAME')}
           rules={[{ required: true }]}
           fieldProps={{
-            width: "sm",
+            width: 'sm',
             allowClear: true,
             disabled: disabled,
           }}

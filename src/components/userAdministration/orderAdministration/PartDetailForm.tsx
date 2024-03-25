@@ -108,7 +108,7 @@ const PartDetailForm: FC<Props> = ({
           <ProFormDigit
             rules={[{ required: true }]}
             name="price"
-            label={t('PURSHASE PRICE')}
+            label={t('PRICE FOR ONE')}
             width="xs"
           ></ProFormDigit>
           <ProFormDigit
@@ -181,7 +181,7 @@ const PartDetailForm: FC<Props> = ({
           ></ProFormDigit>
           <ProFormDigit
             name="qtyQuoted"
-            label={t('QUANTITY QTY')}
+            label={t('QUANTITY QUOTED')}
             width="sm"
           ></ProFormDigit>
           <ProFormText name="nds" label={t('NDS')} width="sm"></ProFormText>
@@ -202,13 +202,13 @@ const PartDetailForm: FC<Props> = ({
           }}
         />
         <ProFormGroup>
-          {orderItem && orderItem?.orderID?.orderType === 'QUOTATION_ORDER' && (
+          {/* {orderItem && orderItem?.orderID?.orderType === 'QUOTATION_ORDER' && (
             <ProFormDigit
               name="qtyQuoted"
               label={t('QUANTITY QUOTED')}
               width="xs"
             ></ProFormDigit>
-          )}
+          )} */}
           <ProFormTextArea
             className="mb-5"
             fieldProps={{ style: { resize: 'none' } }}

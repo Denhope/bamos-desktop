@@ -271,7 +271,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 currentReceiving?.receivingNumber
               }
               width={'sm'}
-              label={'RECEIVING No'}
+              label={t('RECEIVING No')}
             />
 
             <ProFormDatePicker
@@ -313,7 +313,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormText
               disabled={!isCreating}
               name="awbNumber"
-              label={t(' DOC No')}
+              label={t('DOC No')}
               rules={[{ required: true }]}
               width="sm"
               tooltip={t(' DOC NNUMBER')}
@@ -328,9 +328,9 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormText
               disabled={!isCreating}
               name="awbReference"
-              label={t(' REFERENCE')}
+              label={t('CONTRACT')}
               width="sm"
-              tooltip={t('REFERENCE')}
+              tooltip={t('CONTRACT')}
             ></ProFormText>
           </ProFormGroup>
         </Space>
@@ -348,7 +348,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               initialForm ||
               currentReceiving?.SUPPLIES_CODE
             }
-            label={'SUPPLIES CODE'}
+            label={t('SUPPLIES CODE')}
           />
           <ProFormText
             disabled={!isCreating}

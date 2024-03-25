@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState } from 'react';
 import {
   AppstoreOutlined,
   MailOutlined,
@@ -8,14 +8,14 @@ import {
   PlusOutlined,
   FilterOutlined,
   PrinterOutlined,
-} from "@ant-design/icons";
-import { Checkbox, Dropdown, Menu, MenuProps, Row, Space } from "antd";
-import AicraftList from "../airCraft/AicrafViewList";
-import AddTaskPackageform from "./AddTaskPackageform";
-import DownloadTaskPackageView from "./DownloadTaskPackageView";
-import TaskFilteredForm from "./TaskFilteredFormView";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import { useTranslation } from "react-i18next";
+} from '@ant-design/icons';
+import { Checkbox, Dropdown, Menu, MenuProps, Row, Space } from 'antd';
+import AicraftList from '../airCraft/AicrafViewList';
+import AddTaskPackageform from './AddTaskPackageform';
+import DownloadTaskPackageView from './DownloadTaskPackageView';
+import TaskFilteredForm from './TaskFilteredFormView';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useTranslation } from 'react-i18next';
 interface TaskNavigationPanelProps {
   toggleColumn: (columnKey: any) => void;
   columns: any;
@@ -46,13 +46,13 @@ const TaskNavigationPanel = ({
       ))}
     </Menu>
   );
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -62,10 +62,10 @@ const TaskNavigationPanel = ({
       type,
     } as MenuItem;
   }
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: "VIEWS",
-      key: "views",
+      label: 'VIEWS',
+      key: 'views',
       icon: <SettingOutlined />,
       children: [
         {
@@ -74,21 +74,21 @@ const TaskNavigationPanel = ({
               <a onClick={(e) => e.preventDefault()}>Columns</a>
             </Dropdown>
           ),
-          key: "setting:188",
+          key: 'setting:188',
         },
 
-        getItem("Saved Views", "sub4", <DeleteColumnOutlined />, [
+        getItem('Saved Views', 'sub4', <DeleteColumnOutlined />, [
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               Default
             </div>,
-            "9445"
+            '9445'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               User Default
             </div>,
-            "10444"
+            '10444'
           ),
         ]),
       ],
@@ -108,129 +108,129 @@ const TaskNavigationPanel = ({
     //   icon: <AppstoreOutlined />,
     // },
     {
-      label: `${t("Print")}`,
-      key: "print",
+      label: `${t('Print')}`,
+      key: 'print',
       icon: <AppstoreOutlined />,
       children: [
         {
           label: (
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               <PrinterOutlined className="mr-2" />
               Quick Print Card
             </div>
           ),
 
-          key: "setting:1",
+          key: 'setting:1',
         },
-        getItem("Print Status Report", "sub4", <PrinterOutlined />, [
+        getItem('Print Status Report', 'sub4', <PrinterOutlined />, [
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               Selected Items
             </div>,
-            "9"
+            '9'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               Complete Items
             </div>,
-            "10"
+            '10'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               All Items
             </div>,
-            "11"
+            '11'
           ),
         ]),
       ],
     },
 
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: <SettingOutlined />,
       children: [
-        getItem("Add to Work Order", "sub09", <PlusOutlined />, [
+        getItem('Add to Work Order', 'sub09', <PlusOutlined />, [
           getItem(
-            <div onClick={() => console.log("New Work Order open Form")}>
+            <div onClick={() => console.log('New Work Order open Form')}>
               New Work Order
             </div>,
-            "9ss"
+            '9ss'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               1111
             </div>,
-            "1011"
+            '1011'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               345
             </div>,
-            "1111"
+            '1111'
           ),
         ]),
-        getItem("Add to Group", "sub09s", <PlusOutlined />, [
+        getItem('Add to Group', 'sub09s', <PlusOutlined />, [
           getItem(
-            <div onClick={() => console.log("New Work Order open Form")}>
+            <div onClick={() => console.log('New Work Order open Form')}>
               New Group
             </div>,
-            "9sxs"
+            '9sxs'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               1111
             </div>,
-            "10x11"
+            '10x11'
           ),
           getItem(
-            <div onClick={() => console.log("Quick Print Card open Form")}>
+            <div onClick={() => console.log('Quick Print Card open Form')}>
               345
             </div>,
-            "11x11"
+            '11x11'
           ),
         ]),
         getItem(
-          <div onClick={() => console.log("Edit Selected Task open Form")}>
+          <div onClick={() => console.log('Edit Selected Task open Form')}>
             Edit Selected Task
           </div>,
-          "9sxs"
+          '9sxs'
         ),
-        getItem("Add New Task to", "sub09gts", <PlusOutlined />, [
+        getItem('Add New Task to', 'sub09gts', <PlusOutlined />, [
           getItem(
             <div
-              onClick={() => console.log("Add New Task to  AirCraft open Form")}
+              onClick={() => console.log('Add New Task to  AirCraft open Form')}
             >
               Simple Task
             </div>,
-            "9sssxs"
+            '9sssxs'
           ),
           getItem(
             <div onClick={() => setOpenAddPackForm(true)}>
               <DownloadOutlined /> Download Package
             </div>,
-            "9sessxs"
+            '9sessxs'
           ),
         ]),
       ],
     },
     {
-      label: "Update",
+      label: 'Update',
       children: [
         {
           label: (
-            <div onClick={() => console.log("Update Task open Form")}>
+            <div onClick={() => console.log('Update Task open Form')}>
               Update Task
             </div>
           ),
-          key: "1563",
+          key: '1563',
         },
       ],
 
-      key: "update",
+      key: 'update',
     },
     // {
-    //   label: 'AirCraft',
+    //   label: `${t(`AIRCRAFT`)}`,
     //   children: [
     //     {
     //       label: <div onClick={() => setOpen(true)}>AirCraft List</div>,
@@ -241,9 +241,9 @@ const TaskNavigationPanel = ({
     //   key: 'airCraft',
     // },
   ];
-  const [current, setCurrent] = useState("mail");
+  const [current, setCurrent] = useState('mail');
 
-  const onClick: MenuProps["onClick"] = (e) => {
+  const onClick: MenuProps['onClick'] = (e) => {
     // console.log('click ', e);
     setCurrent(e.key);
   };
@@ -264,7 +264,7 @@ const TaskNavigationPanel = ({
         <Menu
           style={{
             // marginLeft: 'auto',
-            background: "rgba(255, 255, 255, 00)",
+            background: 'rgba(255, 255, 255, 00)',
           }}
           onClick={onClick}
           selectedKeys={[current]}

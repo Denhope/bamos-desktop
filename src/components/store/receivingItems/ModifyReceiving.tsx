@@ -225,7 +225,7 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
             ></ProFormSelect>
             <ProFormText
               name="awbNumber"
-              label={t(' DOC No')}
+              label={t('DOC No')}
               rules={[{ required: true }]}
               width="sm"
               tooltip={t(' DOC NNUMBER')}

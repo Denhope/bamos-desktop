@@ -441,7 +441,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             name={'projectNumber'}
             initialForm={selectedSingleProject?.projectWO || initialFormProject}
             width={'sm'}
-            label={`${t(`PROJECT LINK`)}`}
+            label={`${t(`PROJECT`)}`}
           ></ContextMenuProjectSearchSelect>{' '}
           <ProFormText
             disabled={!isCreating}

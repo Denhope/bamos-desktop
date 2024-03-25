@@ -405,7 +405,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   selectedSingleProject?.projectWO || initialFormProject
                 }
                 width={'lg'}
-                label={`${t(`PROJECT LINK`)}`}
+                label={`${t(`PROJECT`)}`}
               ></ContextMenuProjectSearchSelect>
 
               {

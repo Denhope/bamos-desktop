@@ -255,7 +255,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
 
           <ProFormGroup>
             <ProFormDatePicker
-              label={t(' START DATE')}
+              label={t('START DATE')}
               name="startDate"
               width="sm"
             ></ProFormDatePicker>

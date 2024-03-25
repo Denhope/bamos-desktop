@@ -38,7 +38,7 @@ const OrderViewer: FC<ReceivingTracking> = ({
           />
         </>
       ),
-      title: `${t('Order List')}`,
+      title: `${t('ORDER LIST')}`,
     },
   ];
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();

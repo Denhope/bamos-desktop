@@ -105,7 +105,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormGroup>
             <ProFormGroup>
               <ProFormSelect

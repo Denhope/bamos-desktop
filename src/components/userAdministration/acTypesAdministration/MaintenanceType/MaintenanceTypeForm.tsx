@@ -60,7 +60,7 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
             <ProFormText
               width={'sm'}
               name="code"
-              label="CODE"
+              label={t('CODE')}
               rules={[
                 {
                   required: true,
@@ -71,7 +71,7 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
             <ProFormText
               width={'xl'}
               name="name"
-              label="TITLE"
+              label={t('TITLE')}
               rules={[
                 {
                   required: true,
@@ -87,7 +87,7 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
               }}
               width={'lg'}
               name="description"
-              label="DESCRIPTION"
+              label={t('DESCRIPTION')}
               rules={[
                 {
                   required: true,

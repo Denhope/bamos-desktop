@@ -274,7 +274,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           tooltip="ENTER TYPE"
           options={[
             { value: 'PROJECT', label: `${t(`PROJECT`)}` },
-            { value: 'AC', label: 'AIRCRAFT' },
+            { value: 'AC', label: `${t(`AIRCRAFT`)}` },
             { value: 'SHOP', label: `${t(`SHOP/STORE`)}` },
           ]}
           initialValue="PROJECT"
@@ -294,7 +294,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         {receiverType === 'AC' && (
           <ProFormText
             name="planeNumber"
-            label="A/C REGISTRATION"
+            label={`${t(`A/C REGISTRATION`)}`}
             width="lg"
             // options={options}
           />
@@ -382,7 +382,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         // mode={'multiple'}
         showSearch
         name="reqTypesID"
-        label={t('REQUIREMENT  TYPE')}
+        label={t('REQUIREMENT TYPE')}
         width="lg"
         valueEnum={requirementTypesValueEnum}
         onChange={(value: any) => setReqTypeID(value)}
@@ -392,7 +392,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         // mode={'multiple'}
         showSearch
         name="reqCodesID"
-        label={t('REQUIREMENT  CODE')}
+        label={t('REQUIREMENT CODE')}
         width="sm"
         valueEnum={requirementCodesValueEnum || []}
         disabled={!reqTypeID} // Disable the select if acTypeID is not set

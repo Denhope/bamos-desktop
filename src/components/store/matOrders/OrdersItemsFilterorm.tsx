@@ -181,7 +181,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               }}
               initialForm={selectedSinglePN?.receivingNumber || initialForm}
               width={'sm'}
-              label={'RECEIVING No'}
+              label={t('RECEIVING No')}
             /> */}
 
             {/* <ProFormText
@@ -264,7 +264,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 setSecectedSingleVendor(record);
               }}
               initialForm={selectedSingleVendor?.CODE || initialForm}
-              label={'VENDOR'}
+              label={t('VENDOR')}
             />
 
             <ProFormSelect

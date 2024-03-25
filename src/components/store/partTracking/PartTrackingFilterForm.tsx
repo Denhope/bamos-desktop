@@ -282,7 +282,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             tooltip="ENTER TYPE "
             options={[
               { value: 'PROJECT', label: `${t(`PROJECT`)}` },
-              { value: 'AC', label: 'AIRCRAFT' },
+              { value: 'AC', label: `${t(`AIRCRAFT`)}` },
               { value: 'SHOP', label: `${t(`SHOP/STORE`)}` },
             ]}
             initialValue="PROJECT"

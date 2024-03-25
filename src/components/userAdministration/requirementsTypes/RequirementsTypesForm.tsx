@@ -77,7 +77,7 @@ const RequirementsTypesForm: FC<IRequirementTypeFormProps> = ({
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card" onChange={handleTabChange}>
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormGroup>
             <ProFormGroup>
               <ProFormText

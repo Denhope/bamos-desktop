@@ -148,7 +148,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             // POOL_REQUEST_ORDER: t('POOL REQUEST ORDER'),
             // POOL_REQUEST_EXCHANGE_ORDER: t('POOL REQUEST EXCHANGE ORDER'),
             REPAIR_ORDER: t('REPAIR ORDER'),
-            CUSTOMER_REPAIR_ORDER: t('CUSTOMER REPAIR ORDER'),
+            // CUSTOMER_REPAIR_ORDER: t('CUSTOMER REPAIR ORDER'),
             // CONSIGNMENT_STOCK_INCOMING_ORDER: t(
             //   'CONSIGNMENT STOCK INCOMING ORDER'
             // ),
@@ -156,7 +156,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             //   'CONSIGNMENT STOCK PURCHASE ORDER'
             // ),
             WARRANTY_ORDER: t('WARRANTY ORDER'),
-            EXCHANGE_ORDER: t('EXCHANGE ORDER'),
+            // EXCHANGE_ORDER: t('EXCHANGE ORDER'),
             // EXCHANGE_IN_ADVANCE_ORDER: t('EXCHANGE IN ADVANCE ORDER'),
             TRANSFER_ORDER: t('TRANSFER ORDER'),
           }}

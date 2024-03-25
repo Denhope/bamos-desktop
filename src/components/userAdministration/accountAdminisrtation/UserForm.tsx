@@ -65,7 +65,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProForm.Group>
             <ProForm.Group>
               <ProFormText
@@ -251,7 +251,7 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
             />
           </ProForm.Group>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="PERMISSIONS" key="2">
+        <Tabs.TabPane tab={t('PERMISSIONS')} key="2">
           <ProForm.Group>
             <ProFormCheckbox.Group
               name="permissions"

@@ -127,7 +127,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       title: `${t('UNIT')}`,
       dataIndex: 'unit',
       key: 'unit',
-      width: '4%',
+      width: '6%',
       responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
       editable: (text, record, index) => {
@@ -159,7 +159,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       },
     },
     {
-      title: 'OPTION',
+      title: `${t('OPTION')}`,
       valueType: 'option',
       width: 200,
       render: (text, record, _, action) => [

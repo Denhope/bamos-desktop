@@ -88,13 +88,13 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProForm.Group>
             <ProForm.Group>
               <ProFormText
                 width={'sm'}
                 name="title"
-                label="TITLE"
+                label={t('TITLE')}
                 rules={[
                   {
                     required: true,
@@ -104,7 +104,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="companyName"
-                label="NAME"
+                label={t('NAME')}
                 rules={[
                   {
                     required: true,
@@ -114,7 +114,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="description"
-                label="DESCRIPTION"
+                label={t('DESCRIPTION')}
                 rules={[
                   {
                     required: true,
@@ -126,7 +126,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               <ProFormSelect
                 width={'sm'}
                 name="country"
-                label="COUNTRY"
+                label={t('COUNTRY')}
                 showSearch
                 valueEnum={{
                   BY: t('BELARUS'),
@@ -281,7 +281,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="adress"
-                label="ADRESS"
+                label={t('ADRESS')}
                 rules={[
                   {
                     required: true,
@@ -290,7 +290,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               />
               <ProFormText
                 name="email"
-                label="Email"
+                label={t('EMAIL')}
                 rules={[
                   { required: true, message: 'Please enter your email' },
                   { type: 'email', message: 'Please enter a valid email' },
@@ -298,7 +298,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               />
               <ProFormText
                 name="contacts"
-                label="Phone Number"
+                label={t('PHONE NUMBER')}
                 rules={[
                   { required: true, message: 'Please enter your phone number' },
                   {
@@ -319,7 +319,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
               beforeUpload={handleUpload}
               accept="image/*"
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              <Button icon={<UploadOutlined />}>{t('CLICK TO UPLOAD')}</Button>
             </Upload>
           </ProForm.Item>{' '}
         </Tabs.TabPane>

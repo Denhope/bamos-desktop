@@ -76,7 +76,7 @@ const ReqCodesAdministrationForm: FC<UserFormProps> = ({
               // This is the correct way to set colSize within fieldProps
             }}
             name="description"
-            label="DESCRIPTION"
+            label={t('DESCRIPTION')}
             rules={[
               {
                 required: true,

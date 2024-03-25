@@ -101,7 +101,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormGroup>
             <ProFormGroup>
               <ProFormSelect
@@ -139,7 +139,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 <ProFormText
                   width={'xl'}
                   name="taskNumber"
-                  label="TASK NUMBER"
+                  label={t('TASK NUMBER')}
                   rules={[
                     {
                       required: true,
@@ -168,7 +168,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   }}
                   width="xl"
                   name="taskDescription"
-                  label="DESCRIPTION"
+                  label={t('DESCRIPTION')}
                   rules={[
                     {
                       required: true,
@@ -181,7 +181,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 width={'sm'}
                 fieldProps={{ style: { resize: 'none' } }}
                 name="amtoss"
-                label="AMM"
+                label={t('AMM')}
                 rules={[
                   {
                     required: true,

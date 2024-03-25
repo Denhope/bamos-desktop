@@ -70,6 +70,11 @@ const OrderTree: FC<UserTreeProps> = ({
                 key: uuidv4(),
               },
               {
+                title: `${t('ALL PRICE')}:${vendorOrder?.allPrice}` || '',
+                key: uuidv4(),
+                order: order,
+              },
+              {
                 title: `${t('CURRENCY')}:${vendorOrder?.currency}` || '',
                 key: uuidv4(),
                 order: order,

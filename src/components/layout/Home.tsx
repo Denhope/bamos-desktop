@@ -314,7 +314,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.PROJECT_VIEWER) {
       tab = {
         key,
-        title: `${t(` PROJECT ADMINISTRATION `)}`,
+        title: `${t(` PROJECT ADMINISTRATION`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <ProjectViewer />
@@ -436,7 +436,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     } else if (key === RouteNames.USER_ADMINISTRATION) {
       tab = {
         key,
-        title: `${t(' ADMINISTRATION')}`,
+        title: `${t('ADMINISTRATION')}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <UserAdministration />

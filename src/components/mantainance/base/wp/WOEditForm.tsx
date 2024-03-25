@@ -195,7 +195,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
           <Form.Item label="Work Order Number" name="WONbr">
             <Input disabled placeholder="please enter Work Order Number" />
           </Form.Item>
-          <Form.Item label="Description" name="description">
+          <Form.Item label={t('DESCRIPTION')} name="description">
             <TextArea placeholder="please enter decsription" />
           </Form.Item>
           <Divider />

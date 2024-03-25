@@ -196,7 +196,7 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: 'BATCH ID',
+      title: `${t('BATCH ID')}`,
       dataIndex: 'SUPPLIER_BATCH_NUMBER',
       // valueType: 'index',
       ellipsis: true,
@@ -327,10 +327,12 @@ const PickSlipCancel: FC = () => {
     },
 
     {
-      title: `${t('LOC. TO')}`,
+      title: `${t('LOCATION TO')}`,
       dataIndex: 'LOCATION_TO',
       key: 'LOCATION_TO',
-      ellipsis: true,
+      width: '9%',
+      // ellipsis: true,
+      // tooltip,
       // valueType: 'select',
       editable: (text, record, index) => {
         return true;
@@ -385,7 +387,7 @@ const PickSlipCancel: FC = () => {
     {
       title: `${t('Status')}`,
       key: 'status',
-      width: '11%',
+      width: '8%',
       valueType: 'select',
       filterSearch: true,
       filters: true,

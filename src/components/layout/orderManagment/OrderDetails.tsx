@@ -445,7 +445,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                       mode="multiple"
                       rules={[{ required: true }]}
                       name="projectNumbers"
-                      label={`${t(`PROJECT LINK`)}`}
+                      label={`${t(`PROJECT`)}`}
                       width="sm"
                       options={options}
                     />
@@ -481,12 +481,12 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 ></ProFormText>
                 <ProFormGroup>
                   <ProFormDatePicker
-                    label={t('ORDER START DATE')}
+                    label={t('START DATE')}
                     name="startDate"
                     width="sm"
                   ></ProFormDatePicker>
                   <ProFormDatePicker
-                    label={t('ORDER FINISH DATE')}
+                    label={t('FINISH DATE')}
                     name="finishDate"
                     width="sm"
                   ></ProFormDatePicker>
@@ -585,7 +585,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                       mode="multiple"
                       rules={[{ required: true }]}
                       name="projectNumbers"
-                      label={`${t(`PROJECT LINK`)}`}
+                      label={`${t(`PROJECT`)}`}
                       width="sm"
                       options={options}
                     />

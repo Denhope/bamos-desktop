@@ -47,7 +47,7 @@ const TaskCodeForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
           <ProFormText
             width={'sm'}
             name="code"
-            label="TITLE"
+            label={t('TITLE')}
             rules={[
               {
                 required: true,
@@ -64,7 +64,7 @@ const TaskCodeForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
               // This is the correct way to set colSize within fieldProps
             }}
             name="description"
-            label="DESCRIPTION"
+            label={t('DESCRIPTION')}
             rules={[
               {
                 required: true,

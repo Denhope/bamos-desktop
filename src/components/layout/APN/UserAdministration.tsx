@@ -58,15 +58,15 @@ const UserAdministration: FC = () => {
       <GroupOutlined />
     ),
     getItem(
-      <>{t('REQUIREMENTS TYPES ')}</>,
+      <>{t('REQUIREMENTS TYPES')}</>,
       RouteNames.REQUIREMENTS_CODES,
       <GroupOutlined />
     ),
-    getItem(<>{t('COMPANIES ')}</>, RouteNames.COMPANIES, <GroupOutlined />),
-    getItem(<>{t('VENDORS ')}</>, RouteNames.VENDORS, <GroupOutlined />),
-    getItem(<>{t('AC TYPES ')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
-    getItem(<>{t('AC TASKS ')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
-    getItem(<>{t('AC ADMINISTRATION ')}</>, RouteNames.AC, <GroupOutlined />),
+    getItem(<>{t('COMPANIES')}</>, RouteNames.COMPANIES, <GroupOutlined />),
+    getItem(<>{t('VENDORS')}</>, RouteNames.VENDORS, <GroupOutlined />),
+    getItem(<>{t('AC TYPES')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
+    getItem(<>{t('AC TASKS')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
+    getItem(<>{t('AC ADMINISTRATION')}</>, RouteNames.AC, <GroupOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);

@@ -83,13 +83,12 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
           width="sm"
           tooltip={t('PROJECT TYPE')}
           valueEnum={{
-            MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
-            REPAIR_AC_PROJECT: t('REPAIR A/C '),
-            REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
-            SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
-            COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
-            PRODUCTION_PROJECT: t('PRODUCTION '),
-            PURCHASE_PROJECT: t('PURCHASE '),
+            MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C'),
+            REPAIR_AC_PROJECT: t('REPAIR A/C'),
+            SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE'),
+            COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR'),
+            PRODUCTION_PROJECT: t('PRODUCTION'),
+            PURCHASE_PROJECT: t('PURCHASE'),
             MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
           }}
         />

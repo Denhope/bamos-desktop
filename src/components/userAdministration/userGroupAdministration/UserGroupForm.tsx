@@ -57,13 +57,13 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab="MAIN" key="1">
+        <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProForm.Group>
             <ProForm.Group>
               <ProFormText
                 width={'sm'}
                 name="title"
-                label="TITLE"
+                label={t('TITLE')}
                 rules={[
                   {
                     required: true,
@@ -73,7 +73,7 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
               <ProFormText
                 width={'lg'}
                 name="description"
-                label="DESCRIPTION"
+                label={t('DESCRIPTION')}
                 rules={[
                   {
                     required: true,
