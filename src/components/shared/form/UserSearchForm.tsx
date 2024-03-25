@@ -4,6 +4,7 @@ import { AutoComplete, Col, Form, Row, Input } from 'antd';
 import { UserResponce } from '@/models/IUser';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { getFilteredUsers } from '@/utils/api/thunks';
+import { useTranslation } from 'react-i18next';
 
 interface UserSearchFormProps {
   onUserSelect: (user: UserResponce) => void;
@@ -23,6 +24,7 @@ const UserSearchForm: FC<UserSearchFormProps> = ({
   disabled,
 }) => {
   const [form] = Form.useForm();
+  const { t } = useTranslation();
   const inputRef = useRef<any>(null);
   const timeoutRefWO = useRef<NodeJS.Timeout | null>(null);
   const [optionsUsers, setOptionsUsers] = useState([]);

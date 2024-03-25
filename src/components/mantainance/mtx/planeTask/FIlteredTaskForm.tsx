@@ -24,6 +24,7 @@ import { setPlaneTasks } from '@/store/reducers/MtxSlice';
 import SingleSelectForm from '@/components/shared/form/SingleSelect';
 import MultiSelectForm from '@/components/shared/form/MultiSelectForm';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
+import { useTranslation } from 'react-i18next';
 
 const { RangePicker } = DatePicker;
 
@@ -36,6 +37,7 @@ const FIlteredTaskForm: FC<FIlteredTaskFormProps> = ({
   // currentPlaneNumberID,
 }) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
