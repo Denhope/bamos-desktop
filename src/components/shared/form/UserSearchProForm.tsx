@@ -9,6 +9,7 @@ import { AutoComplete, Col, Form, Row, Input } from 'antd';
 import { UserResponce } from '@/models/IUser';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { getFilteredUsers } from '@/utils/api/thunks';
+import { useTranslation } from 'react-i18next';
 
 interface UserSearchFormProps {
   onUserSelect: (user: UserResponce) => void;
@@ -33,6 +34,7 @@ const UserSearchForm: FC<UserSearchFormProps> = ({
   const [optionsUsers, setOptionsUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState<UserResponce | null>(null);
   const companyID = localStorage.getItem('companyID');
+  const { t } = useTranslation();
   const handleSearchUser = async (value: any) => {
     if (timeoutRefWO.current) {
       clearTimeout(timeoutRefWO.current);
