@@ -116,27 +116,6 @@ const PartDetailForm: FC<Props> = ({
 
         updatedOrderItem && (await updateOrderItem(updatedOrderItem).unwrap());
         orderItem && onSubmit(updatedOrderItem);
-        //   // // Предполагается, что response содержит данные о загруженном файле
-        //   // // Обновляем orderItem на сервере
-        //   // const updatedOrderItem = {
-        //   //   ...orderItem,
-        //   //   files: [...(orderItem && orderItem?.files), response], // Предполагается, что response - это объект файла с метаданными
-        //   // };
-        //   // console.log(updatedOrderItem);
-        //   // // Используем хук для обновления orderItem на сервере
-        //   // // await updateOrderItem({
-        //   // //   updatedOrderItem,
-        //   // // }).unwrap();
-
-        //   // if (error) {
-        //   //   // Обработка ошибки при обновлении orderItem на сервере
-        //   //   message.error('Ошибка при обновлении orderItem на сервере');
-        //   // } else {
-        //   //   // Обработка успешного обновления orderItem на сервере
-        //   //   message.success('Файл успешно загружен');
-        //   // }
-        // } else {
-        //   message.error('Ошибка при загрузке файла: неверный ответ сервера');
       }
     } catch (error) {
       message.error('Ошибка при загрузке файла');
