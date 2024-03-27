@@ -22,9 +22,6 @@ import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 import PartList from './PartList';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 import PartDetailForm from './PartDetailForm';
-import { uploadFileServer } from '@/utils/api/thunks';
-import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
-import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
 
 interface UserFormProps {
   order?: IOrder;
@@ -63,64 +60,6 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
     } catch (error) {}
   };
 
-  // const handleDownload = (file: any) => {
-  //   // Здесь должен быть код для скачивания файла
-  //   console.log('Скачивание файла:', file);
-  // };
-
-  // const handleDelete = (file: any) => {
-  //   Modal.confirm({
-  //     title: 'Вы уверены, что хотите удалить этот файл?',
-  //     onOk: () => {
-  //       // Здесь должен быть код для удаления файла
-  //       console.log('Удаление файла:', file);
-  //     },
-  //   });
-  // };
-  // const [updateOrderItem, error] = useUpdateOrderItemMutation();
-  // const handleUpload = async (file: File) => {
-  //   if (!order || !order.id) {
-  //     console.error(
-  //       'Невозможно загрузить файл: Ордер не существует или не имеет id'
-  //     );
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-
-  //   try {
-  //     const response = await uploadFileServer(formData);
-
-  //     if (response) {
-  //       // Предполагается, что response содержит данные о загруженном файле
-  //       // Обновляем orderItem на сервере
-  //       const updatedOrderItem = {
-  //         ...orderItem,
-  //         files: [...(orderItem && orderItem?.files), response], // Предполагается, что response - это объект файла с метаданными
-  //       };
-
-  //       // Используем хук для обновления orderItem на сервере
-  //       const resultAction = await updateOrderItem({
-  //         updatedOrderItem,
-  //       }).unwrap();
-
-  //       if (error) {
-  //         // Обработка ошибки при обновлении orderItem на сервере
-  //         message.error('Ошибка при обновлении orderItem на сервере');
-  //       } else {
-  //         // Обработка успешного обновления orderItem на сервере
-  //         message.success('Файл успешно загружен');
-  //       }
-  //     } else {
-  //       message.error('Ошибка при загрузке файла: неверный ответ сервера');
-  //     }
-  //   } catch (error) {
-  //     message.error('Ошибка при загрузке файла');
-  //     throw error;
-  //   }
-  // };
-
   const updateTabTitle = (selectedItem: IOrderItem | null, order: IOrder) => {
     if (order) {
       setTabTitles({
@@ -143,7 +82,6 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
     }
   };
 
-  // Update the tab title when the selected order item changes
   useEffect(() => {
     updateTabTitle(orderItem, order);
   }, [orderItem, order]);
@@ -332,6 +270,19 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               </ProFormGroup>
             </>
           )}
+          {(selectedProjectType === 'PURCHASE_ORDER' ||
+            order?.orderType === 'PURCHASE_ORDER') && (
+            <>
+              <ProFormGroup direction="horizontal">
+                <ProFormText
+                  rules={[{ required: true }]}
+                  name="orderName"
+                  label={t('ORDER SHOT NAME')}
+                  width="sm"
+                ></ProFormText>{' '}
+              </ProFormGroup>
+            </>
+          )}
 
           <ProFormGroup>
             <ProFormDatePicker
@@ -346,18 +297,40 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
             ></ProFormDatePicker>
           </ProFormGroup>
           <ProFormGroup>
-            <ProFormSelect
-              showSearch
-              rules={[{ required: true }]}
-              mode="multiple"
-              name="vendorID"
-              label={`${t(`VENDORS`)}`}
-              width="lg"
-              valueEnum={vendorValueEnum}
-              onChange={async (value: any) => {
-                // setSelectedProjectId(value);
-              }}
-            />
+            {(selectedProjectType === 'QUOTATION_ORDER' ||
+              order?.orderType === 'QUOTATION_ORDER') && (
+              <>
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  mode="multiple"
+                  name="vendorID"
+                  label={`${t(`VENDORS`)}`}
+                  width="lg"
+                  valueEnum={vendorValueEnum}
+                  onChange={async (value: any) => {
+                    // setSelectedProjectId(value);
+                  }}
+                />
+              </>
+            )}
+            {(selectedProjectType === 'PURCHASE_ORDER' ||
+              order?.orderType === 'PURCHASE_ORDER') && (
+              <>
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  // mode="multiple"
+                  name="vendorID"
+                  label={`${t(`VENDORS`)}`}
+                  width="lg"
+                  valueEnum={vendorValueEnum}
+                  onChange={async (value: any) => {
+                    // setSelectedProjectId(value);
+                  }}
+                />
+              </>
+            )}
           </ProFormGroup>
 
           <ProFormGroup>

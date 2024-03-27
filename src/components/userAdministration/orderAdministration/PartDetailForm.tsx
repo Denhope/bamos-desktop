@@ -132,14 +132,14 @@ const PartDetailForm: FC<Props> = ({
         onReset={() => {
           form.resetFields();
         }}
-        // submitter={{
-        //   render: (_, dom) => {
-        //     if (showSubmitButton) {
-        //       return [<SubmitButton key="submit" />, dom.reverse()[1]];
-        //     }
-        //     return null;
-        //   },
-        // }}
+        submitter={{
+          render: (_, dom) => {
+            if (orderItem?.state == !'draft') {
+              return dom;
+            }
+            return null;
+          },
+        }}
         size="small"
         form={form}
       >

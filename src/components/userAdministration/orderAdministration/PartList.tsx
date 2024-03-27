@@ -53,7 +53,15 @@ const PartList: React.FC<Props> = ({
     if (order) {
       setRows(order?.parts);
     } else {
-      setRows([]);
+      setRows([
+        {
+          partNumberID: '',
+          amout: 0,
+          unit: '',
+          reqCodesID: '',
+          _id: '',
+        },
+      ]); // Начальная пустая строка]);
       setSelectedRows([]);
     }
   }, [order]);

@@ -35,6 +35,8 @@ interface AdminPanelProps {
 const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   const [editingOrder, setEditingOrder] = useState<IOrder | null>(null);
   const [completeOpenPrint, setOpenCompletePrint] = useState<any>();
+  const [completeOpenPrintPurshase, setOpenCompletePrintPurshase] =
+    useState<any>();
   const [editingOrderItem, setEditingOrderItem] = useState<
     IOrderItem | null | {}
   >(null);
@@ -101,7 +103,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
         await refetchOrders();
         message.success(t('ORDER SUCCESSFULLY UPDATED'));
       } else {
-        await addOrder({ order }).unwrap();
+        await addOrder(order).unwrap();
         message.success(t('ORDER SUCCESSFULLY ADDED'));
       }
       setEditingOrder(null);
@@ -203,10 +205,14 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
                 editingOrder &&
                   editingOrder.state === 'onQuatation' &&
                   setOpenCompletePrint(true);
+                editingOrder &&
+                  editingOrder.orderType === 'PURCHASE_ORDER' &&
+                  setOpenCompletePrintPurshase(true);
               }}
               disabled={
-                !editingOrder ||
-                (editingOrder && editingOrder.state !== 'onQuatation')
+                !editingOrder || // If there is no editingOrder, the button should be disabled
+                (editingOrder.state !== 'onQuatation' &&
+                  editingOrder.orderType !== 'PURCHASE_ORDER') // If the state is not 'onQuatation' and the orderType is not 'PURCHASE_ORDER', the button should be disabled
               }
               size="small"
               icon={<MinusSquareOutlined />}
@@ -225,6 +231,24 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
         footer={null}
       >
         {editingOrder && editingOrder.state === 'onQuatation' && (
+          <GeneretedQuotationOrder
+            orderID={editingOrder.id || editingOrder._id}
+          />
+        )}
+      </Modal>
+      <Modal
+        title="PURSHASE ORDER"
+        open={completeOpenPrintPurshase}
+        width={'60%'}
+        onCancel={() => setOpenCompletePrintPurshase(false)}
+        footer={null}
+      >
+        {editingOrder && editingOrder.state === 'onQuatation' && (
+          <GeneretedQuotationOrder
+            orderID={editingOrder.id || editingOrder._id}
+          />
+        )}
+        {editingOrder && editingOrder.orderType === 'PURCHASE_ORDER' && (
           <GeneretedQuotationOrder
             orderID={editingOrder.id || editingOrder._id}
           />

@@ -25,7 +25,8 @@ const HeaderPdfView: FC<IheaderPdfViewProps> = ({ data }) => {
         <PdfView display="flex" flexDirection="row">
           <PDFGrid height={98} ph={3} cols={2} bw={0}>
             <PdfRegularSmall fontSize={9}>
-              Quotation Order №{'\r'}
+              {data.orderType === 'QUOTATION_ORDER' && ` Quotation Order №\r`}
+              {data.orderType === 'PURCHASE_ORDER' && ` Purchase Order №\r`}
               {data?.orderNumberNew} dated{'\r'}
               {data?.createDate &&
                 moment(data?.createDate).utc().format('DD.MM.YYYY')}{' '}
@@ -40,7 +41,10 @@ const HeaderPdfView: FC<IheaderPdfViewProps> = ({ data }) => {
           </PDFGrid>
           <PDFGrid height={98} ph={3} cols={2} bw={0}>
             <PdfRegularSmall fontSize={9}>
-              Запрос на поставку от{'\r'}
+              {data.orderType === 'QUOTATION_ORDER' &&
+                ` Запрос на поставку от №\r`}
+              {data.orderType === 'PURCHASE_ORDER' &&
+                ` Запрос на закупку от №\r`}
               {data?.createDate &&
                 moment(data?.createDate).utc().format('DD.MM.YYYY')}
               {'\r'}№{'\r'}
