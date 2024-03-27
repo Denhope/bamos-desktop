@@ -153,7 +153,9 @@ export interface IOrder {
   orderTypesID?: string | any;
   orderType?: string;
   note?: string;
+  state: string;
   orderName: string;
+  files?: any;
 }
 
 export interface IOrderItem {
@@ -169,7 +171,7 @@ export interface IOrderItem {
   updateUserID?: string;
   companyID: string;
   index?: number;
-
+  files?: any[];
   requirementsID?: any[];
   reseivingsItemsIds?: any;
 

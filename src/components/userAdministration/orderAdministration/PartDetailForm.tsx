@@ -1,6 +1,12 @@
 //@ts-nocheck
 
+import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder, IOrderItem } from '@/models/IRequirement';
+import { handleFileSelect } from '@/services/utilites';
+import { COMPANY_ID } from '@/utils/api/http';
+import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
+import { UploadOutlined } from '@ant-design/icons';
 import {
   ProFormDigit,
   ProFormGroup,
@@ -9,13 +15,13 @@ import {
   ProForm,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { Button, Modal, message, Upload } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 type Props = {
   orderItem?: IOrderItem | null;
   partValueEnum: Record<string, string>;
-  onSubmit: (orderItem: IOrderItem) => void;
+  onSubmit: (orderItem: IOrderItem | {} | undefined) => void;
   order?: IOrder | null;
 };
 const PartDetailForm: FC<Props> = ({
@@ -39,6 +45,7 @@ const PartDetailForm: FC<Props> = ({
 
     onSubmit(newUser);
   };
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (orderItem) {
       form.resetFields();
@@ -47,14 +54,100 @@ const PartDetailForm: FC<Props> = ({
         { name: 'description', value: orderItem.partID?.DESCRIPTION },
         { name: 'partNumberID', value: orderItem.partID?._id },
       ]);
-      console.log(orderItem);
     } else {
       form.resetFields();
     }
   }, [orderItem]);
+
+  const handleDownload = (file: any) => {
+    // Здесь должен быть код для скачивания файла
+
+    handleFileSelect(file);
+  };
+
+  const handleDelete = (file: any) => {
+    Modal.confirm({
+      title: 'Вы уверены, что хотите удалить этот файл?',
+      onOk: async () => {
+        try {
+          const response = await dispatch(
+            deleteFile({ id: file.id, companyID: COMPANY_ID })
+          );
+          if (response.meta.requestStatus === 'fulfilled') {
+            // Удаляем файл из массива files
+            const updatedFiles = orderItem.files.filter(
+              (f) => f.id !== file.id
+            );
+            const updatedOrderItem = {
+              ...orderItem,
+              files: updatedFiles,
+            };
+            await updateOrderItem(updatedOrderItem).unwrap();
+            orderItem && onSubmit(updatedOrderItem);
+          } else {
+            throw new Error('Не удалось удалить файл');
+          }
+        } catch (error) {
+          message.error('ERROR');
+        }
+      },
+    });
+  };
+  const [updateOrderItem, error] = useUpdateOrderItemMutation();
+  const handleUpload = async (file: File) => {
+    if (!order || !order.id) {
+      console.error(
+        'Невозможно загрузить файл: Ордер не существует или не имеет id'
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await uploadFileServer(formData);
+
+      if (response) {
+        const updatedOrderItem = {
+          ...orderItem,
+          files: [...orderItem?.files, response],
+        };
+
+        updatedOrderItem && (await updateOrderItem(updatedOrderItem).unwrap());
+        orderItem && onSubmit(updatedOrderItem);
+        //   // // Предполагается, что response содержит данные о загруженном файле
+        //   // // Обновляем orderItem на сервере
+        //   // const updatedOrderItem = {
+        //   //   ...orderItem,
+        //   //   files: [...(orderItem && orderItem?.files), response], // Предполагается, что response - это объект файла с метаданными
+        //   // };
+        //   // console.log(updatedOrderItem);
+        //   // // Используем хук для обновления orderItem на сервере
+        //   // // await updateOrderItem({
+        //   // //   updatedOrderItem,
+        //   // // }).unwrap();
+
+        //   // if (error) {
+        //   //   // Обработка ошибки при обновлении orderItem на сервере
+        //   //   message.error('Ошибка при обновлении orderItem на сервере');
+        //   // } else {
+        //   //   // Обработка успешного обновления orderItem на сервере
+        //   //   message.success('Файл успешно загружен');
+        //   // }
+        // } else {
+        //   message.error('Ошибка при загрузке файла: неверный ответ сервера');
+      }
+    } catch (error) {
+      message.error('Ошибка при загрузке файла');
+
+      throw error;
+    }
+  };
   return (
     <>
       <ProForm
+        disabled={!orderItem}
         onFinish={handleSubmit}
         layout="horizontal"
         onReset={() => {
@@ -179,44 +272,56 @@ const PartDetailForm: FC<Props> = ({
             label={t('MIN QUOTED')}
             width="sm"
           ></ProFormDigit>
-          <ProFormDigit
-            name="qtyQuoted"
-            label={t('QUANTITY QUOTED')}
-            width="sm"
-          ></ProFormDigit>
-          <ProFormText name="nds" label={t('NDS')} width="sm"></ProFormText>
         </ProFormGroup>
-
-        <ProFormSelect
-          showSearch
-          rules={[{ required: true }]}
-          name="condition"
-          label={t('CONDITION')}
-          width="sm"
-          valueEnum={{
-            '/NEW': t('NEW'),
-            '/INSPECTED': t('INSPECTED'),
-            '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
-            '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
-            '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),
-          }}
-        />
         <ProFormGroup>
-          {/* {orderItem && orderItem?.orderID?.orderType === 'QUOTATION_ORDER' && (
+          <ProFormGroup direction="vertical">
             <ProFormDigit
               name="qtyQuoted"
               label={t('QUANTITY QUOTED')}
-              width="xs"
+              width="sm"
             ></ProFormDigit>
-          )} */}
-          <ProFormTextArea
-            className="mb-5"
-            fieldProps={{ style: { resize: 'none' } }}
-            name="notes"
-            colSize={1}
-            label={t('REMARKS')}
-            width="lg"
-          ></ProFormTextArea>
+            <ProFormText name="nds" label={t('NDS')} width="sm"></ProFormText>{' '}
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              name="condition"
+              label={t('CONDITION')}
+              width="sm"
+              valueEnum={{
+                '/NEW': t('NEW'),
+                '/INSPECTED': t('INSPECTED'),
+                '/REPAIRED': t('REPAIRED'),
+                '/SERVICABLE': t('SERVICABLE'),
+                '/UNSERVICABLE': t('UNSERVICABLE'),
+              }}
+            />{' '}
+            <ProFormTextArea
+              className="mb-5"
+              fieldProps={{ style: { resize: 'none' } }}
+              name="notes"
+              colSize={1}
+              label={t('REMARKS')}
+              width="lg"
+            ></ProFormTextArea>
+          </ProFormGroup>
+          <ProForm.Item label={t('UPLOAD')}>
+            <div className="overflow-y-auto max-h-64">
+              <Upload
+                name="FILES"
+                fileList={orderItem?.files || []}
+                listType="picture"
+                className="upload-list-inline cursor-pointer"
+                beforeUpload={handleUpload}
+                accept="image/*"
+                onPreview={handleDownload}
+                onRemove={handleDelete}
+              >
+                <Button icon={<UploadOutlined />}>
+                  {t('CLICK TO UPLOAD')}
+                </Button>
+              </Upload>
+            </div>
+          </ProForm.Item>
         </ProFormGroup>
       </ProForm>
     </>

@@ -507,6 +507,10 @@
   "DAY": "ДНЕЙ",
   "UNIT OF MEASURE": "ЕДЕНИЦЫ ИЗМЕРЕНИЯ",
   "SEND TO VENDOR": "ОТПРАВИТЬ ЗАПРОС",
+  "REASON FOR CANCEL": "ПРИЧИНА ОТМЕНЫ",
+  "FILES": "ФАЙЛЫ",
+  "SERVICABLE": "ИСПРАВЕН",
+  "UNSERVICABLE": "НЕИСПРАВЕН",
 
   "ARE YOU SURE YOU WANT TO DELETE THIS VENDOR": "ВЫ УВЕРЕНЫ ЧТО ХОТИТЕ УДАЛИТЬ ПОСТАВЩИКА"
 }

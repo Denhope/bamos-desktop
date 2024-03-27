@@ -5276,9 +5276,11 @@ export async function getFileFromServer(companyID: string, fileId: string) {
 // Функция для удаления файла
 export const deleteFile = createAsyncThunk(
   'common/deleteFile',
-  async (id: string, { rejectWithValue }) => {
+  async (data: any, { rejectWithValue }) => {
     try {
-      const response = await $authHost.delete(`/file/${id}`);
+      const response = await $authHost.delete(
+        `files/companyID/${data.companyID}/file/${data.id}`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue('Не удалось удалить файл');

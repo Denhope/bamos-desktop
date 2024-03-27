@@ -170,7 +170,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
               width="xs"
               initialValue={'draft'}
               valueEnum={{
-                // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
+                onQuatation: { text: t('QUATATION'), status: 'Warning' },
                 //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                 planned: { text: t('PLANNED'), status: 'Default' },
                 open: { text: t('NEW'), status: 'Error' },

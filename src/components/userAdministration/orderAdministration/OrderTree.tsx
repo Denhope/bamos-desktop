@@ -16,7 +16,7 @@ interface TreeDataNode extends DataNode {
 
 interface UserTreeProps {
   onCompanySelect: (order: IOrder) => void;
-  onOrderItemSelect: (order: IOrderItem) => void;
+  onOrderItemSelect: (order: IOrderItem | {}) => void;
   orders: IOrder[] | [];
 }
 
@@ -44,27 +44,31 @@ const OrderTree: FC<UserTreeProps> = ({
   const convertToTreeData = (orders: IOrder[]): TreeDataNode[] => {
     return orders.map((order) => {
       const title = `№:${order.orderNumberNew} - ${order.orderName}`;
-      const vendorNodes = (order.vendorID || []).map((vendorId) => {
-        const vendorOrders = (order.orderItemsID || []).filter(
+      const vendorNodes = (order?.vendorID || []).map((vendorId) => {
+        const vendorOrders = (order?.orderItemsID || []).filter(
           (item) => item.vendorID?._id === vendorId
         );
         return {
           title: vendorOrders[0]?.vendorID?.SHORT_NAME || 'Unknown Vendor',
           key: `vendor-${order.id}-${vendorId}`,
           order: order,
-          children: vendorOrders.map((vendorOrder, index) => ({
+          children: vendorOrders?.map((vendorOrder, index) => ({
             title: `POS: ${index + 1}: ${vendorOrder.partID.PART_NUMBER} - ${
               vendorOrder.amout
             }${vendorOrder.partID.UNIT_OF_MEASURE}`,
+
             key: `${order.id!.toString()}-${vendorId}-${index}`,
-            order: vendorOrder,
+            orderItem: vendorOrder,
+            order: order,
             color: getColor(vendorOrder),
             children: [
               {
                 title: (
                   <div className="flex gap-1">
                     <DollarOutlined />{' '}
-                    {`${t('PRICE FOR ONE')}:${vendorOrder?.price}` || ''}
+                    {`${t('PRICE FOR ONE')}: ${
+                      vendorOrder.price ? vendorOrder.price : ''
+                    }`}
                   </div>
                 ),
                 key: uuidv4(),
@@ -74,7 +78,7 @@ const OrderTree: FC<UserTreeProps> = ({
                   <div className="flex gap-1">
                     <DollarOutlined /> {t('ALL PRICE')}
                     <div className="font-semibold">
-                      {vendorOrder?.allPrice || ''}
+                      {vendorOrder.allPrice ? vendorOrder.allPrice : ''}
                     </div>
                   </div>
                 ),
@@ -83,51 +87,67 @@ const OrderTree: FC<UserTreeProps> = ({
                 order: order,
               },
               {
-                title: `${t('CURRENCY')}:${vendorOrder?.currency}` || '',
+                title: `${t('CURRENCY')} :${
+                  vendorOrder.currency ? vendorOrder.currency : ''
+                }`,
                 key: uuidv4(),
                 order: order,
               },
               {
-                title: `${t('MIN QUOTED')}:${vendorOrder?.minQuoted}` || '',
+                title: `${t('MIN QUOTED')} :${
+                  vendorOrder.minQuoted ? vendorOrder.minQuoted : ''
+                }`,
+                key: uuidv4(),
+                order: order,
+              },
+
+              {
+                title: `${t('QUANTITY QUOTED')} :${
+                  vendorOrder?.qtyQuoted ? vendorOrder?.qtyQuoted : ''
+                }`,
+                key: uuidv4(),
+                order: order,
+              },
+
+              {
+                title: `${t('UNIT OF MEASURE')} :${
+                  vendorOrder?.unit ? vendorOrder?.unit : ''
+                }`,
+                key: uuidv4(),
+                order: order,
+              },
+
+              {
+                title: `${t('NDS')} :${
+                  vendorOrder?.nds ? vendorOrder?.nds : ''
+                }`,
                 key: uuidv4(),
                 order: order,
               },
               {
-                title:
-                  `${t('QUANTITY QUOTED')}:${vendorOrder?.qtyQuoted}` || '',
+                title: `${t('CONDITION')} :${
+                  vendorOrder.condition ? vendorOrder?.condition : ''
+                }`,
                 key: uuidv4(),
                 order: order,
               },
               {
-                title: `${t('UNIT OF MEASURE')}:${vendorOrder?.unit}` || '',
-                key: uuidv4(),
-                order: order,
-              },
-              {
-                title: `${t('NDS')}:${vendorOrder?.nds}`,
-                key: uuidv4(),
-                order: order,
-              },
-              {
-                title: `CONDITION:${vendorOrder.condition}`,
-                key: uuidv4(),
-                order: order,
-              },
-              {
-                title: `${t('LEAD TIME')}:${vendorOrder.leadTime}`,
+                title: `${t('LEAD TIME')}:
+                ${vendorOrder?.leadTime ? vendorOrder?.leadTime : ''}`,
                 key: uuidv4(),
                 order: order,
               },
               {
                 title: `${t('FILES')}:`,
                 key: uuidv4(),
+                orderItem: vendorOrder,
                 children: [
                   ...(vendorOrder?.files?.map((file: any, index: any) => {
                     return {
                       title: (
                         <div className="flex gap-1">
                           <DownloadOutlined />
-                          {`FILE/${''}${index + 1}:${file.name}`}
+                          {`FILE/${''}${index + 1}:${file?.name}`}
                         </div>
                       ),
                       key: file.id,
@@ -188,14 +208,19 @@ const OrderTree: FC<UserTreeProps> = ({
     const { title, key, order, orderItem } = node;
 
     if (title.includes(t('POS'))) {
-      onOrderItemSelect && onOrderItemSelect(order);
-      // onCompanySelect(order);
+      onOrderItemSelect && onOrderItemSelect(orderItem);
+      onCompanySelect(order);
     } else if (title.includes(t('FILE/'))) {
-      const file = order.files.find((file: { id: any }) => file.id === key);
+      onOrderItemSelect && onOrderItemSelect(orderItem);
+      const file = orderItem.files.find((file: { id: any }) => file.id === key);
       if (file) {
+        console.log(file);
         handleFileSelect(file);
       }
-    } else onCompanySelect(order);
+    } else {
+      onCompanySelect(order);
+      onOrderItemSelect({});
+    }
   };
 
   return (

@@ -301,7 +301,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.CANCEL_RESERVING) {
       tab = {
         key,
-        title: `${t(`CANCEL RECEIVING `)}`,
+        title: `${t(`CANCEL RECEIVING`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <CancelReceiving />

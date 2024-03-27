@@ -166,12 +166,13 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        initialValue={['open']}
+        // initialValue={['open']}
         mode="multiple"
         name="state"
         label={`${t('ORDER STATUS')}`}
         width="lg"
         options={[
+          { value: 'onQuatation', label: t('QUATATION') },
           { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
           { value: 'closed', label: t('CLOSED') },

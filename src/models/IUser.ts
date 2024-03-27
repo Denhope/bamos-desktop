@@ -95,6 +95,8 @@ export interface ICompany {
   companyName: string;
   code?: string;
   email: string;
+  emailBamosSupport: string;
+  emailBamosSupportPass: string;
   contacts: string;
   createDate: string;
   createByID: string;

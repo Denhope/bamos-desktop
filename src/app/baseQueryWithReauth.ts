@@ -19,10 +19,16 @@ export const baseQueryWithReauth: BaseQueryFn<
   // Get the token from localStorage
   const token = localStorage.getItem('token');
 
+  // Prepare the fetch arguments
+  let fetchArgs: FetchArgs;
+  if (typeof args === 'string') {
+    fetchArgs = { url: args };
+  } else {
+    fetchArgs = args;
+  }
+
   // Add the Authorization header to the request if a token is present
   if (token) {
-    // Ensure that the args are of type FetchArgs
-    const fetchArgs = args as FetchArgs;
     fetchArgs.headers = {
       ...fetchArgs.headers,
       Authorization: `Bearer ${token}`,
@@ -30,5 +36,5 @@ export const baseQueryWithReauth: BaseQueryFn<
   }
 
   // Execute the base query with the updated args
-  return fetchBaseQuery({ baseUrl: API_URL })(args, api, extraOptions);
+  return fetchBaseQuery({ baseUrl: API_URL })(fetchArgs, api, extraOptions);
 };

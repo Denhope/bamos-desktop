@@ -297,6 +297,24 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
                 ]}
               />
               <ProFormText
+                name="emailBamosSupport"
+                label={t('SUPPORT EMAIL')}
+                rules={[
+                  { required: true, message: 'Please enter your email' },
+                  { type: 'email', message: 'Please enter a valid email' },
+                ]}
+              />
+
+              <ProFormText.Password
+                name="emailBamosSupportPass"
+                label={t('PASSWORD APP')}
+                rules={[
+                  { required: true, message: 'Please enter your pass' },
+                  { min: 6, message: 'Password must be at least 6 characters' },
+                ]}
+              />
+
+              <ProFormText
                 name="contacts"
                 label={t('PHONE NUMBER')}
                 rules={[

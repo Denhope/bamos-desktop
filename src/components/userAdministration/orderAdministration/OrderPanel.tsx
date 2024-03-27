@@ -1,10 +1,11 @@
-//@ts-nocheck
+//ts-nocheck
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
   MailOutlined,
+  FilePdfOutlined,
 } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -25,6 +26,7 @@ import {
   useAddOrderItemMutation,
   useUpdateOrderItemMutation,
 } from '@/features/orderItemsAdministration/orderItemApi';
+import GeneretedQuotationOrder from './GeneretedQuotationOrder';
 
 interface AdminPanelProps {
   orderSearchValues?: any;
@@ -32,10 +34,11 @@ interface AdminPanelProps {
 
 const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   const [editingOrder, setEditingOrder] = useState<IOrder | null>(null);
-  const [editingOrderItem, setEditingOrderItem] = useState<IOrderItem | null>(
-    null
-  );
-  console.log(orderSearchValues);
+  const [completeOpenPrint, setOpenCompletePrint] = useState<any>();
+  const [editingOrderItem, setEditingOrderItem] = useState<
+    IOrderItem | null | {}
+  >(null);
+
   const {
     data: requirements,
     isLoading,
@@ -98,7 +101,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
         await refetchOrders();
         message.success(t('ORDER SUCCESSFULLY UPDATED'));
       } else {
-        await addOrder(order).unwrap();
+        await addOrder({ order }).unwrap();
         message.success(t('ORDER SUCCESSFULLY ADDED'));
       }
       setEditingOrder(null);
@@ -108,15 +111,19 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   };
 
   const handleSentEmail = async (order: IOrder) => {
-    try {
-      if (editingOrder) {
-        await sentEmails({ orderId: order.id }).unwrap();
-        // await refetchOrders();
-        message.success(t('EMAIL SUCCESSFULLY SEND'));
-      }
-    } catch (error) {
-      message.error(t('EMAIL SEND ERROR'));
-    }
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO SENT EMAIL TO VENDORS?'),
+      onOk: async () => {
+        try {
+          await sentEmails({ orderId: order.id }).unwrap();
+          await refetchOrders();
+          message.success(t('EMAIL SUCCESSFULLY SEND'));
+        } catch (error) {
+          await refetchOrders();
+          message.error(t('EMAIL SEND ERROR'));
+        }
+      },
+    });
   };
   const { t } = useTranslation();
 
@@ -132,7 +139,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     <>
       <Space>
         <Col
-          className=" bg-white px-4 py-3 w-[158vh]  rounded-md brequierement-gray-400 "
+          className=" bg-white px-4 py-3 w-[258vh]  rounded-md brequierement-gray-400 "
           sm={24}
         >
           <OrderDiscription order={editingOrder}></OrderDiscription>
@@ -151,6 +158,10 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
         <Col style={{ textAlign: 'right' }}>
           {editingOrder && (
             <Button
+              disabled={
+                (editingOrder && editingOrder.state === 'onQuatation') ||
+                editingOrder.state === 'open'
+              }
               size="small"
               icon={<MinusSquareOutlined />}
               onClick={() => handleDelete(editingOrder._id || editingOrder.id)}
@@ -172,16 +183,59 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
             editingOrder.parts &&
             editingOrder.parts?.length > 0 && (
               <Button
+                disabled={
+                  (editingOrder && editingOrder.state === 'onQuatation') ||
+                  editingOrder.state === 'draft'
+                }
                 onClick={() => handleSentEmail(editingOrder)}
                 type="primary"
                 size="small"
                 icon={<MailOutlined />}
               >
-                {t(`SEND TO VENDOR`)}
+                {t(`SEND EMAIL TO VENDOR`)}
               </Button>
             )}
         </Col>
+        <Col style={{ textAlign: 'right' }}>
+          {editingOrder && (
+            <Button
+              onClick={() => {
+                editingOrder &&
+                  editingOrder.state === 'onQuatation' &&
+                  setOpenCompletePrint(true);
+              }}
+              disabled={
+                !editingOrder ||
+                (editingOrder && editingOrder.state !== 'onQuatation')
+              }
+              size="small"
+              icon={<MinusSquareOutlined />}
+            >
+              {t('PRINT ORDER')}
+            </Button>
+          )}
+        </Col>
       </Space>
+
+      <Modal
+        title="QUATATION ORDER"
+        open={completeOpenPrint}
+        width={'60%'}
+        onCancel={() => setOpenCompletePrint(false)}
+        footer={null}
+      >
+        {editingOrder && editingOrder.state === 'onQuatation' && (
+          <GeneretedQuotationOrder
+            orderID={editingOrder.id || editingOrder._id}
+          />
+        )}
+      </Modal>
+      {/* <FilePdfOutlined
+        onClick={() => {
+          setOpenCompletePrint(true);
+        }}
+        className="text-3xl cursor-pointer hover:text-blue-500"
+      /> */}
 
       <div className="  flex gap-4 justify-between">
         <div
@@ -191,7 +245,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
           <OrderTree
             onCompanySelect={handleEdit}
             orders={requirements || []}
-            onOrderItemSelect={function (orderItem: IOrderItem): void {
+            onOrderItemSelect={function (orderItem: IOrderItem | {}): void {
               setEditingOrderItem(orderItem);
             }}
           />

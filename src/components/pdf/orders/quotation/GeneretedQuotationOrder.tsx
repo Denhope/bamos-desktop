@@ -1,36 +1,34 @@
-import { PDFViewer } from "@react-pdf/renderer";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { IReferencesLinkType } from "@/models/IAdditionalTask";
-import { title } from "process";
-import React, { FC, useRef, useEffect, useState } from "react";
+import { PDFViewer } from '@react-pdf/renderer';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { IReferencesLinkType } from '@/models/IAdditionalTask';
+import { title } from 'process';
+import React, { FC, useRef, useEffect, useState } from 'react';
 
-import { PdfParientWO } from "../../pdf-parient-WO";
+import { PdfParientWO } from '../../pdf-parient-WO';
 
-import QRGenerator from "@/components/qrCode/QRGenerator";
-import { setCurrentQrCodeLink } from "@/store/reducers/MtbSlice";
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import { IProjectResponce } from "@/models/IProject";
-import { IOrder } from "@/models/IOrder";
-import { PdfParientQOrder } from "./pdf-parient-report-qOrder";
+import QRGenerator from '@/components/qrCode/QRGenerator';
+import { setCurrentQrCodeLink } from '@/store/reducers/MtbSlice';
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import { IProjectResponce } from '@/models/IProject';
+import { IOrder } from '@/models/IOrder';
+import { PdfParientQOrder } from './pdf-parient-report-qOrder';
 
 const fieldsTypes = [
-  { title: "Nr/ №", width: 9 },
-  { title: "P/N/ Партийный номер", width: 30 },
-  { title: "Description / Описание", width: 50 },
-  { title: `QTY/${"\r\n"} Кол-во`, width: 15 },
-  { title: `Miesuring UNIT/${"\r\n"} Ед. Измерения`, width: 20 },
+  { title: 'Nr/ №', width: 9 },
+  { title: 'P/N/ Партийный номер', width: 30 },
+  { title: 'Description / Описание', width: 50 },
+  { title: `QTY/${'\r\n'} Кол-во`, width: 15 },
+  { title: `Miesuring UNIT/${'\r\n'} Ед. Измерения`, width: 20 },
 ];
 
 export interface GeneretedQuatationOrder {
   order: IOrder;
-
   scroll?: any;
 }
 const GeneretedQuotationOrder: FC<GeneretedQuatationOrder> = ({
   order,
   scroll,
 }) => {
-  const QRCodeImgRef = useRef<HTMLCanvasElement | null>(null);
   const [updatedOrder, setUpdatedOrder] = useState<any | null>(order);
 
   useEffect(() => {
@@ -76,8 +74,8 @@ const GeneretedQuotationOrder: FC<GeneretedQuatationOrder> = ({
           <>
             <PDFViewer
               style={{
-                width: "100%",
-                height: scroll ? scroll : "55vh",
+                width: '100%',
+                height: scroll ? scroll : '55vh',
                 zIndex: 150,
               }}
               showToolbar={true}

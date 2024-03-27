@@ -1,14 +1,14 @@
 //@ts-nocheck
 
 import React, { FC, useEffect, useRef, useState } from 'react';
-
+import { UploadOutlined } from '@ant-design/icons';
 import {
   ProForm,
   ProFormText,
   ProFormGroup,
   ProFormSelect,
 } from '@ant-design/pro-form';
-import { Button, Tabs } from 'antd';
+import { Button, Modal, Tabs, Upload, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IOrder, IOrderItem } from '@/models/IRequirement';
 import { ProFormDatePicker, ProFormTextArea } from '@ant-design/pro-components';
@@ -22,10 +22,14 @@ import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 import PartList from './PartList';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 import PartDetailForm from './PartDetailForm';
+import { uploadFileServer } from '@/utils/api/thunks';
+import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
+import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
 
 interface UserFormProps {
   order?: IOrder;
-  orderItem?: IOrderItem;
+  orderItem?: IOrderItem | {};
+  // requirements?:
   onSubmit: (company: IOrder) => void;
   onDelete?: (orderID: string) => void;
   onOrderItemUpdate: (orderItem: IOrderItem) => void;
@@ -58,6 +62,65 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       }
     } catch (error) {}
   };
+
+  // const handleDownload = (file: any) => {
+  //   // Здесь должен быть код для скачивания файла
+  //   console.log('Скачивание файла:', file);
+  // };
+
+  // const handleDelete = (file: any) => {
+  //   Modal.confirm({
+  //     title: 'Вы уверены, что хотите удалить этот файл?',
+  //     onOk: () => {
+  //       // Здесь должен быть код для удаления файла
+  //       console.log('Удаление файла:', file);
+  //     },
+  //   });
+  // };
+  // const [updateOrderItem, error] = useUpdateOrderItemMutation();
+  // const handleUpload = async (file: File) => {
+  //   if (!order || !order.id) {
+  //     console.error(
+  //       'Невозможно загрузить файл: Ордер не существует или не имеет id'
+  //     );
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+
+  //   try {
+  //     const response = await uploadFileServer(formData);
+
+  //     if (response) {
+  //       // Предполагается, что response содержит данные о загруженном файле
+  //       // Обновляем orderItem на сервере
+  //       const updatedOrderItem = {
+  //         ...orderItem,
+  //         files: [...(orderItem && orderItem?.files), response], // Предполагается, что response - это объект файла с метаданными
+  //       };
+
+  //       // Используем хук для обновления orderItem на сервере
+  //       const resultAction = await updateOrderItem({
+  //         updatedOrderItem,
+  //       }).unwrap();
+
+  //       if (error) {
+  //         // Обработка ошибки при обновлении orderItem на сервере
+  //         message.error('Ошибка при обновлении orderItem на сервере');
+  //       } else {
+  //         // Обработка успешного обновления orderItem на сервере
+  //         message.success('Файл успешно загружен');
+  //       }
+  //     } else {
+  //       message.error('Ошибка при загрузке файла: неверный ответ сервера');
+  //     }
+  //   } catch (error) {
+  //     message.error('Ошибка при загрузке файла');
+  //     throw error;
+  //   }
+  // };
+
   const updateTabTitle = (selectedItem: IOrderItem | null, order: IOrder) => {
     if (order) {
       setTabTitles({
@@ -68,7 +131,9 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
     if (selectedItem) {
       setTabTitles({
         ...tabTitles,
-        '3': `ORDER #№: ${order?.orderNumberNew}POS:${selectedItem?.index} - PART_NUMBER: ${selectedItem?.partID?.PART_NUMBER}`,
+        '3': `ORDER #№: ${order?.orderNumberNew}POS:${
+          selectedItem?.index + 1
+        } - PART_NUMBER: ${selectedItem?.partID?.PART_NUMBER}`,
       });
     } else {
       setTabTitles({
@@ -82,21 +147,29 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
   useEffect(() => {
     updateTabTitle(orderItem, order);
   }, [orderItem, order]);
-
+  const { data: requirements, refetch: refetchRequirements } =
+    useGetFilteredRequirementsQuery({
+      status: 'open',
+    });
   useEffect(() => {
-    if (order) {
-      form.resetFields();
-      form.setFieldsValue(order);
-      // form.setFields([{ name: 'vendorID', value: order.vendorID._id }]);
+    const updateOrderData = async () => {
+      if (order) {
+        form.resetFields();
+        form.setFieldsValue(order);
+        // form.setFields([{ name: 'vendorID', value: order.vendorID._id }]);
+        await refetchRequirements();
 
-      setOrderData(order);
-      setSelectedParts(order.parts);
-    } else {
-      form.resetFields();
-      setOrderData(null);
-      setSelectedParts([]);
-    }
-  }, [order, form]);
+        setOrderData(order);
+        setSelectedParts(order.parts);
+      } else {
+        form.resetFields();
+        setOrderData(null);
+        setSelectedParts([]);
+      }
+    };
+
+    updateOrderData();
+  }, [order, form, refetchRequirements]);
 
   useEffect(() => {
     if (orderItem) {
@@ -151,9 +224,6 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       return acc;
     }, {}) || {};
 
-  const { data: requirements } = useGetFilteredRequirementsQuery({
-    status: 'open',
-  });
   const requirementCodesValueEnum: Record<string, string> =
     reqCodes?.reduce((acc, reqCode) => {
       acc[reqCode.id] = reqCode.code;
@@ -162,6 +232,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
 
   return (
     <ProForm
+      // disabled={order && order.state === 'onQuatation'}
       onReset={() => {
         form.resetFields();
       }}
@@ -170,7 +241,14 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       onFinish={handleSubmit}
       submitter={{
         render: (_, dom) => {
-          if (showSubmitButton && parts?.length > 0) {
+          if (
+            (showSubmitButton &&
+              parts?.length > 0 &&
+              order &&
+              order?.state === !'onQuatation') ||
+            (!order?.id && parts?.length > 0) ||
+            (order?.state === 'draft' && parts?.length > 0)
+          ) {
             return [<SubmitButton key="submit" />, dom.reverse()[1]];
           }
           return null;
@@ -192,6 +270,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
           <ProFormGroup>
             <ProFormSelect
               showSearch
+              // disabled={order?.id || order?._id}
               rules={[{ required: true }]}
               name="state"
               label={t('ORDER STATUS')}
@@ -210,6 +289,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
 
             <ProFormSelect
               showSearch
+              disabled={order?.id || order?._id}
               onChange={(value: any) => setSelectedProjectType(value)}
               name="orderType"
               label={t('ORDER TYPE')}
@@ -280,16 +360,34 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
             />
           </ProFormGroup>
 
-          <ProFormTextArea
-            fieldProps={{
-              style: { resize: 'none' },
-              rows: 3,
-            }}
-            name="notes"
-            colSize={1}
-            label={t('REMARKS')}
-            width="xl"
-          ></ProFormTextArea>
+          <ProFormGroup>
+            <ProFormTextArea
+              fieldProps={{
+                style: { resize: 'none' },
+                rows: 3,
+              }}
+              name="notes"
+              colSize={1}
+              label={t('REMARKS')}
+              width="xl"
+            ></ProFormTextArea>
+            {/* <ProForm.Item label={t('UPLOAD LOGO')}>
+              <Upload
+                name="FILES"
+                fileList={orderItem?.files || []}
+                listType="picture"
+                className="upload-list-inline"
+                beforeUpload={handleUpload}
+                accept="image/*"
+                onPreview={handleDownload}
+                onRemove={handleDelete}
+              >
+                <Button icon={<UploadOutlined />}>
+                  {t('CLICK TO UPLOAD')}
+                </Button>
+              </Upload>
+            </ProForm.Item> */}
+          </ProFormGroup>
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['2']} key="2">
           <ProFormGroup>

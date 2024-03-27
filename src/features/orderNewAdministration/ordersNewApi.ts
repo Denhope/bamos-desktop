@@ -54,11 +54,16 @@ export const ordersNewApi = createApi({
       // Provide the 'Users' tag after fetching
     }),
 
-    getOrder: builder.query<IOrder, string>({
-      query: (id) => `order/companyID/${COMPANY_ID}/order/${id}`,
+    // getOrder: builder.query<IOrder, string>({
+    //   query: (id) => `order/companyID/${COMPANY_ID}/order/${id}`,
+    //   providesTags: ['Order'],
+    // }),
+    getQuotationOrderForPrint: builder.query<any, string>({
+      query: (id) =>
+        `ordersNew/companyID/${COMPANY_ID}/order/${id}/quatation/print`,
       providesTags: ['Order'],
     }),
-    addOrder: builder.mutation<IOrder, { rderItem: Partial<IOrder> }>({
+    addOrder: builder.mutation<IOrder, { order: Partial<IOrder> }>({
       query: (order) => ({
         url: `ordersNew/companyID/${COMPANY_ID}`,
         method: 'POST',
@@ -113,6 +118,7 @@ export const {
   useSendEmailMutation,
   useGetFilteredOrdersQuery,
   useUpdateOrderMutation,
-  useGetOrderQuery,
+  // useGetOrderQuery,
   useDeleteOrderMutation,
+  useGetQuotationOrderForPrintQuery,
 } = ordersNewApi;
