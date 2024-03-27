@@ -199,6 +199,7 @@ const PartList: React.FC<Props> = ({
         >
           <ProFormGroup size={'small'}>
             <ProFormSelect
+              showSearch
               // rules={[{ required: true }]}
               // name="partNumberID"
               label={t('PART')}

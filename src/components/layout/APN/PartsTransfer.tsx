@@ -8,8 +8,8 @@ import {
   Space,
   message,
 } from 'antd';
-import Sider from 'antd/es/layout/Sider';
-import React, { FC, useEffect, useState } from 'react';
+
+import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getItem } from '@/services/utilites';
 import {
@@ -21,7 +21,7 @@ import {
 import TransferFilteredForm from '../store/transfer/TransferFilteredForm';
 import BookingDetailsForm from '../store/transfer/BookingDetailsForm';
 import ShowParts from '../store/storeManagment/ShowParts';
-import { IStore } from '@/models/IStore';
+
 import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
 import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
 import { createBookingItem, updateManyMaterialItems } from '@/utils/api/thunks';

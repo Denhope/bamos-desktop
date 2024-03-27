@@ -10,9 +10,6 @@ import {
   ShoppingCartOutlined,
   SisternodeOutlined,
   SettingOutlined,
-  ProjectOutlined,
-  ExclamationCircleOutlined,
-  GroupOutlined,
 } from '@ant-design/icons';
 
 import { MenuItem, getItem } from '@/services/utilites';
@@ -54,6 +51,7 @@ import PickslipRequest from './APN/PickslipRequest';
 import UserAdministration from './APN/UserAdministration';
 import RequirementAdministration from './APN/RequirementAdministration';
 import OrderAdministration from './APN/OrderAdministration';
+import OrderViewerNew from './APN/OrderViewerNew';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -199,6 +197,19 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <OrderViewer />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.ORDER_VIEWER_NEW) {
+      tab = {
+        key,
+        title: `${t(`ORDER VIEWER!`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <OrderViewerNew />
           </div>
         ),
 

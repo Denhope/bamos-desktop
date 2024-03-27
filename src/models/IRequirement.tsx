@@ -174,7 +174,6 @@ export interface IOrderItem {
   files?: any[];
   requirementsID?: any[];
   reseivingsItemsIds?: any;
-
   backorderQty?: number;
   amout?: number;
   price?: number;

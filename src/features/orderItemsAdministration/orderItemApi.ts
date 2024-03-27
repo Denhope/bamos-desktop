@@ -9,6 +9,56 @@ export const orderItemApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['OrderItem'], // Add tag types for caching
   endpoints: (builder) => ({
+    getFilteredOrderItemsFull: builder.query<
+      IOrderItem[],
+      {
+        orderType?: string;
+        projectID?: string;
+        startDate?: any;
+        endDate?: any;
+        state?: string;
+        vendorID?: string;
+        partNumberID?: string;
+        isAlternative?: boolean;
+        orderNumberNew?: number;
+      }
+    >({
+      query: ({
+        projectID,
+        startDate,
+        state,
+        vendorID,
+        endDate,
+        partNumberID,
+        isAlternative,
+        orderNumberNew,
+        orderType,
+      }) => ({
+        url: `orderItemsNew/getFilteredFull/OrderItems/companyID/${COMPANY_ID}`,
+        params: {
+          projectID,
+          startDate,
+          state,
+          vendorID,
+          endDate,
+          partNumberID,
+          orderNumberNew,
+          isAlternative,
+          orderType,
+        },
+      }),
+      providesTags: ['OrderItem'],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          // dispatch(setZonesGroups(data));
+        } catch (error) {
+          console.error('Ошибка при выполнении запроса:', error);
+        }
+      },
+      // Provide the 'Users' tag after fetching
+    }),
     getFilteredOrderItems: builder.query<
       IOrderItem[],
       {
@@ -95,4 +145,5 @@ export const {
   useGetOrderItemQuery,
   useDeleteOrderItemMutation,
   useUpdateOrderItemMutation,
+  useGetFilteredOrderItemsFullQuery,
 } = orderItemApi;

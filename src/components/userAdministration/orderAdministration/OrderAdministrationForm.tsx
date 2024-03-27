@@ -51,6 +51,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
   const handleUpdateOrderItem = async (orderItem: IOrderItem) => {
     try {
       if (orderItem) {
+        // console.log(orderItem);
         onOrderItemUpdate({
           ...orderItem,
           partID: orderItem.partID._id,
@@ -130,7 +131,11 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
   };
 
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
+    <Button
+      disabled={order?.state == 'onQuatation'}
+      type="primary"
+      htmlType="submit"
+    >
       {order ? t('UPDATE') : t('CREATE')}
     </Button>
   );
@@ -170,7 +175,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
 
   return (
     <ProForm
-      // disabled={order && order.state === 'onQuatation'}
+      disabled={order && order.state === 'onQuatation'}
       onReset={() => {
         form.resetFields();
       }}
@@ -180,12 +185,14 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       submitter={{
         render: (_, dom) => {
           if (
-            (showSubmitButton &&
-              parts?.length > 0 &&
-              order &&
-              order?.state === !'onQuatation') ||
-            (!order?.id && parts?.length > 0) ||
-            (order?.state === 'draft' && parts?.length > 0)
+            showSubmitButton &&
+            parts?.length > 0
+            // &&
+            // order &&
+            // order?.state === !'onQuatation'
+            //    ||
+            // (!order?.id && parts?.length > 0) ||
+            // (order?.state === 'draft' && parts?.length > 0)
           ) {
             return [<SubmitButton key="submit" />, dom.reverse()[1]];
           }
@@ -205,10 +212,11 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
         type="card"
       >
         <Tabs.TabPane tab={tabTitles['1']} key="1">
-          <ProFormGroup>
+          <ProFormGroup disabled={!order || order?.state == 'onQuatation'}>
             <ProFormSelect
               showSearch
               // disabled={order?.id || order?._id}
+              disabled={!order || order?.state == 'onQuatation'}
               rules={[{ required: true }]}
               name="state"
               label={t('ORDER STATUS')}
@@ -386,6 +394,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               order={order}
               onSubmit={function (orderItem: IOrderItem): void {
                 handleUpdateOrderItem(orderItem);
+                console.log(item);
               }}
             />
           </ProFormGroup>

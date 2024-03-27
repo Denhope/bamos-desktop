@@ -104,6 +104,11 @@ const BaseLayout: React.FC = () => {
       route: RouteNames.ORDER_VIEWER,
     },
     {
+      APNNBR: '1212',
+      descriptions: `${t(`ORDER VIEWER!`)}`,
+      route: RouteNames.ORDER_VIEWER_NEW,
+    },
+    {
       APNNBR: '1201',
       descriptions: `${t(`ORDER MANAGMENT`)}`,
       route: RouteNames.ORDER_MANAGMENT,

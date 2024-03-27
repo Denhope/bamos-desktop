@@ -126,7 +126,7 @@ const PartDetailForm: FC<Props> = ({
   return (
     <>
       <ProForm
-        disabled={!orderItem}
+        disabled={!orderItem || orderItem?.state == !'onQuatation'}
         onFinish={handleSubmit}
         layout="horizontal"
         onReset={() => {
@@ -134,10 +134,11 @@ const PartDetailForm: FC<Props> = ({
         }}
         submitter={{
           render: (_, dom) => {
-            if (orderItem?.state == !'draft') {
+            if (orderItem?.state == 'onQuatation') {
               return dom;
-            }
-            return null;
+            } else if (order.orderType === 'PURCHASE_ORDER') {
+              return dom;
+            } else return null;
           },
         }}
         size="small"

@@ -45,6 +45,7 @@ import userGroupReducer from '@/features/userAdministration/userGroupSlice';
 import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
 import { acApi } from '@/features/acAdministration/acApi';
 import { ordersNewApi } from '@/features/orderNewAdministration/ordersNewApi';
+import { orderItemApi } from '@/features/orderItemsAdministration/orderItemApi';
 
 const store = configureStore({
   reducer: {
@@ -87,6 +88,7 @@ const store = configureStore({
     [partNumberApi.reducerPath]: partNumberApi.reducer,
     [projectsTaskApi.reducerPath]: projectsTaskApi.reducer,
     [ordersNewApi.reducerPath]: ordersNewApi.reducer,
+    [orderItemApi.reducerPath]: orderItemApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -112,7 +114,8 @@ const store = configureStore({
       projectsApi.middleware,
       partNumberApi.middleware,
       projectsTaskApi.middleware,
-      ordersNewApi.middleware
+      ordersNewApi.middleware,
+      orderItemApi.middleware
     ),
 });
 export default store;

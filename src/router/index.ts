@@ -24,6 +24,7 @@ export enum RouteNames {
   PROJECT_MANAGMENT = 'project/projectManagment',
   PROJECT_VIEWER = 'project/projectViewer',
   ORDER_VIEWER = 'order/orderViewer',
+  ORDER_VIEWER_NEW = 'order/orderViewerNew',
   LOGIN = '/login',
   REGISTRATION = '/registration',
   USER_ADMINISTRATION = '/user/administration',
