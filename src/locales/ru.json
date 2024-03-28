@@ -315,6 +315,7 @@
   "REQUIREMENT MANAGMENT": "УПРАВЛЕНИЕ ПОТРЕБНОСТЯМИ",
   "REQUIREMENT VIEWER": "ПРОСМОТР ПОТРЕБНОСТЕЙ",
   "ORDER VIEWER": "ПРОСМОТР ОРДЕРОВ",
+  "ORDER VIEWER!": "ПРОСМОТР ОРДЕРОВ !",
   "PICKSLIP REQUEST": " СОЗДАНИЕ ЗАЯВКИ",
   "REQUIREMENT ADMINISTRATION": "УПРАВЛЕНИЕ ПОТРЕБНОСТЯМИ !",
   "RECEIVING REMARKS": "ПРИМЕЧАНИЕ ДЛЯ ПОСТУПЛЕНИЯ",
@@ -506,11 +507,18 @@
   "ORDER SHOT NAME": "КОРОТКОЕ НАЗВАНИЕ",
   "DAY": "ДНЕЙ",
   "UNIT OF MEASURE": "ЕДЕНИЦЫ ИЗМЕРЕНИЯ",
-  "SEND TO VENDOR": "ОТПРАВИТЬ ЗАПРОС",
+  "SEND EMAIL TO VENDOR": "ОТПРАВИТЬ ЗАПРОС ПО EMAIL",
   "REASON FOR CANCEL": "ПРИЧИНА ОТМЕНЫ",
   "FILES": "ФАЙЛЫ",
   "SERVICABLE": "ИСПРАВЕН",
   "UNSERVICABLE": "НЕИСПРАВЕН",
-
+  "QUATATION": "КВОТАЦИЯ",
+  "BACKORDER": "КОЛ-ВО НЕ ПОСТАВЛ.",
+  "QUOTED": "КВОТА",
+  "POS": "ПОЗ",
+  "PRICE": "ЦЕНА",
+  "PRINT TABLE": "ПЕЧАТЬ ТАБЛИЦЫ",
+  "PRINT ORDER": "ПЕЧАТЬ ОРДЕРА",
+  "SAVE TABLE": "СОХРАНИТЬ ТАБЛИЦУ",
   "ARE YOU SURE YOU WANT TO DELETE THIS VENDOR": "ВЫ УВЕРЕНЫ ЧТО ХОТИТЕ УДАЛИТЬ ПОСТАВЩИКА"
 }

@@ -43,11 +43,32 @@ const OrderTree: FC<UserTreeProps> = ({
   };
   const convertToTreeData = (orders: IOrder[]): TreeDataNode[] => {
     return orders.map((order) => {
-      const title = `№:${order.orderNumberNew} - ${order.orderName}`;
+      let titlePrefix = '';
+      if (order.orderType === 'QUOTATION_ORDER') {
+        titlePrefix = 'Q';
+      } else if (order.orderType === 'PURCHASE_ORDER') {
+        titlePrefix = 'P';
+      }
+      let stateIndicator = '';
+      if (order.state === 'onQuatation') {
+        stateIndicator = ' \u{1F7E1}'; // Оранжевый кружок
+      } else if (order.state === 'open') {
+        stateIndicator = ' \u{1F534}'; // Красный кружок
+      } else if (order.state === 'transfer') {
+        stateIndicator = ' \u{1F7E2}'; // Желтый кружок
+      } else if (order.state === 'draft') {
+        stateIndicator = ' ⚪'; // Серый квадрат
+      }
+      if (order.state === 'RECEIVED') {
+        stateIndicator = ' 🟢'; // Оранжевый кружок
+      }
+
+      const title = `№: ${titlePrefix} ${order.orderNumberNew} - ${order.orderName}${stateIndicator}`;
       const vendorNodes = (order?.vendorID || []).map((vendorId) => {
         const vendorOrders = (order?.orderItemsID || []).filter(
           (item) => item.vendorID?._id === vendorId
         );
+
         return {
           title: vendorOrders[0]?.vendorID?.SHORT_NAME || 'Unknown Vendor',
           key: `vendor-${order.id}-${vendorId}`,
@@ -207,14 +228,16 @@ const OrderTree: FC<UserTreeProps> = ({
     const { node } = info;
     const { title, key, order, orderItem } = node;
 
-    if (title.includes(t('POS'))) {
+    if (title.includes('POS:')) {
       onOrderItemSelect && onOrderItemSelect(orderItem);
+      // console.log(orderItem);
+      // console.log(order);
       onCompanySelect(order);
     } else if (title.includes(t('FILE/'))) {
       onOrderItemSelect && onOrderItemSelect(orderItem);
       const file = orderItem.files.find((file: { id: any }) => file.id === key);
       if (file) {
-        console.log(file);
+        // console.log(file);
         handleFileSelect(file);
       }
     } else {

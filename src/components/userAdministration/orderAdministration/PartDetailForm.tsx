@@ -136,7 +136,7 @@ const PartDetailForm: FC<Props> = ({
           render: (_, dom) => {
             if (orderItem?.state == 'onQuatation') {
               return dom;
-            } else if (order.orderType === 'PURCHASE_ORDER') {
+            } else if (order?.orderType === 'PURCHASE_ORDER') {
               return dom;
             } else return null;
           },

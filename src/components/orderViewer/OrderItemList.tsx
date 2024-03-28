@@ -235,9 +235,11 @@ const OrderItemList: FC<ReceivingItemList> = ({
         } else if (record.state === 'OPEN' || record.state === 'open') {
           backgroundColor = 'red';
         } else if (record.state === 'onQuatation') {
-          backgroundColor = '#f0be37';
+          backgroundColor = 'yellow';
+        } else if (record.state === 'planned') {
+          backgroundColor = '#d3d3d3';
         } else if (record.state === 'draft') {
-          backgroundColor = 'gray';
+          backgroundColor = '#d3d3d3';
         }
         return (
           <div style={{ backgroundColor }}>{record.state && record.state}</div>
