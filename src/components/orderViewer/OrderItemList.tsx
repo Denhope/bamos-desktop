@@ -45,6 +45,7 @@ const OrderItemList: FC<ReceivingItemList> = ({
     const value = (target as HTMLDivElement).innerText;
     console.log('Добавить Pick:', value);
   };
+
   const initialColumns: ProColumns<any>[] = [
     {
       title: `${t('ORDER No')}`,
@@ -53,7 +54,18 @@ const OrderItemList: FC<ReceivingItemList> = ({
       // tooltip: 'ITEM STORE',
       ellipsis: true,
       width: '5%',
-
+      render: (text: any, record: any) => {
+        let titlePrefix = '';
+        if (record.orderID && record.orderID?.orderType === 'QUOTATION_ORDER') {
+          titlePrefix = 'Q';
+        } else if (
+          record.orderID &&
+          record.orderID?.orderType === 'PURCHASE_ORDER'
+        ) {
+          titlePrefix = 'P';
+        }
+        return `${titlePrefix} ${record.orderID?.orderNumberNew}`;
+      },
       sorter: (a: any, b: any) =>
         a.orderID.orderNumberNew - b.orderID.orderNumberNew, //
     },
