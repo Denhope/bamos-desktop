@@ -2,8 +2,10 @@ import React from 'react';
 import { Text, StyleSheet, View } from '@react-pdf/renderer';
 
 import { Style } from '@react-pdf/types';
-import { PdfBorderView, PdfView, PdfViewTable } from './wrapped-view.component';
-import { PdfRegular, PdfRegularSmall, PdfSmall } from './typography.components';
+import { PdfSmall } from '../pdf/typography.components';
+import { PdfBorderView, PdfViewTable } from '../pdf/wrapped-view.component';
+import { key } from 'localforage';
+
 const styles = StyleSheet.create({
   table: {
     borderColor: '#000',
@@ -16,20 +18,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerBg: {
-    backgroundColor: '#aaa',
+    // backgroundColor: '#aaa',
     borderStyle: 'solid',
     // borderColor: '#000',
     textAligh: 'center',
   },
   tableCellHeader: {
-    // margin: 2,
+    fontSize: 8,
     borderWidth: 1,
     fontWeight: 'bold',
     textAligh: 'center',
   },
   tableCell: {
     margin: 2,
-    fontSize: 10,
+    fontSize: 8,
     paddingLeft: 2,
   },
   textCenter: {
@@ -82,7 +84,7 @@ export const PdfTable = ({
           borderColor="#000"
           style={{ width: item.width + '%' }}
         >
-          <PdfSmall fontSize={8} style={{ textAlign: 'center' }}>
+          <PdfSmall fontSize={6} style={{ textAlign: 'center' }}>
             {item?.title}
           </PdfSmall>
         </PdfBorderView>
@@ -161,7 +163,7 @@ export const PdfTableView = ({
             // bw={0.5}
             // borderColor="#000"
           >
-            <PdfSmall fontSize={7} style={{ textAlign: 'center' }}>
+            <PdfSmall fontSize={6} style={{ textAlign: 'center' }}>
               {_item[1] || ''}
             </PdfSmall>
           </PdfViewTable>

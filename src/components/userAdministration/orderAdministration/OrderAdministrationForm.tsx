@@ -229,7 +229,6 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
                 draft: { text: t('DRAFT'), status: 'Default' },
                 closed: { text: t('CLOSED'), status: 'Default' },
                 canceled: { text: t('CANCELLED'), status: 'Error' },
-                onOrder: { text: t('ISSUED'), status: 'Processing' },
               }}
             />
 

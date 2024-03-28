@@ -96,6 +96,15 @@ export const orderItemApi = createApi({
       query: (id) => `orderItemsNew/company/${COMPANY_ID}/OrderItem/${id}`,
       providesTags: ['OrderItem'],
     }),
+    getMarketingTable: builder.query<void, { orderIDs: string }>({
+      query: ({ orderIDs }) => ({
+        url: `orderItemsNew/companyID/${COMPANY_ID}/download/table`,
+        params: {
+          orderIDs,
+        },
+      }),
+      providesTags: ['OrderItem'],
+    }),
     addOrderItem: builder.mutation<
       IOrderItem,
       { OrderItem: Partial<IOrderItem> }
@@ -146,4 +155,5 @@ export const {
   useDeleteOrderItemMutation,
   useUpdateOrderItemMutation,
   useGetFilteredOrderItemsFullQuery,
+  useGetMarketingTableQuery,
 } = orderItemApi;

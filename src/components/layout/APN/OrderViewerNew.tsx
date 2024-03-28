@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import OrderItemList from '@/components/orderViewer/OrderItemList';
 import OrdersFilterViewerForm from '@/components/orderViewer/OrdersFilterViewerForm';
-import { Button, Space } from 'antd';
+import { Button, Modal, Space } from 'antd';
 import { PrinterOutlined, SaveOutlined } from '@ant-design/icons';
 import { useGetFilteredOrderItemsFullQuery } from '@/features/orderItemsAdministration/orderItemApi';
+import GeneretedMarcketingTable from '@/components/orderViewer/GeneretedMarcketingTable';
 
 interface ReceivingTracking {
   onDoubleClick?: (record: any, rowIndex?: any) => void;
@@ -18,14 +19,8 @@ const OrderViewer: FC<ReceivingTracking> = ({
 }) => {
   const { t } = useTranslation();
   const [orderSearchValues, setOrderSearchValues] = useState<any>();
-  // const [data, setdata] = useState<any[] | []>(receivings);
-  // const [partsToPrint, setPartsToPrint] = useState<any>(null);
-  // useEffect(() => {
-  //   if (receivings) {
-  //     setdata(receivings);
-  //   }
-  // }, [receivings]);
-
+  const [completeOpenPrintTable, setOpenCompletePrintTable] = useState<any>();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const {
     data: ordersItems,
     isLoading,
@@ -35,7 +30,7 @@ const OrderViewer: FC<ReceivingTracking> = ({
     endDate: orderSearchValues?.endDate ? orderSearchValues?.endDate : '',
     state: orderSearchValues?.state || '',
     orderNumberNew: orderSearchValues?.orderNumberNew,
-    orderType: orderSearchValues?.orderType,
+    orderType: orderSearchValues?.orderType || 'QUOTATION_ORDER',
     partNumberID: orderSearchValues?.partNumberID,
   });
   const tabs = [
@@ -47,6 +42,7 @@ const OrderViewer: FC<ReceivingTracking> = ({
             onDoubleClick={onDoubleClick}
             scroll={40}
             data={ordersItems || []}
+            onSelectedIds={setSelectedRowKeys}
             onSingleRowClick={onSingleRowClick}
           />
         </>
@@ -68,12 +64,13 @@ const OrderViewer: FC<ReceivingTracking> = ({
       <div className="flex justify-between">
         <Space>
           <Button
+            disabled={!selectedRowKeys.length}
             icon={<PrinterOutlined />}
             // disabled={!rowKeys.length}
-            // onClick={() => {
-            //   setPartsToPrint(selectedParts);
-            //   setOpenLabelsPrint(true);
-            // }}
+            onClick={() => {
+              // setPartsToPrint(selectedParts);
+              setOpenCompletePrintTable(true);
+            }}
             size="small"
           >
             {t('PRINT TABLE')}
@@ -82,10 +79,6 @@ const OrderViewer: FC<ReceivingTracking> = ({
         <Space>
           <Button
             icon={<SaveOutlined />}
-            // disabled={!rowKeys.length}
-            // onClick={() => {
-            //   setPartsToPrint(selectedParts);
-            //   setOpenLabelsPrint(true);
             // }}
             size="small"
           >
@@ -93,6 +86,16 @@ const OrderViewer: FC<ReceivingTracking> = ({
           </Button>
         </Space>
       </div>
+      <Modal
+        title={t('TABLE PRINT')}
+        open={completeOpenPrintTable}
+        width={'70%'}
+        onCancel={() => setOpenCompletePrintTable(false)}
+        footer={null}
+      >
+        {/* {editingOrder && editingOrder.state === 'onQuatation' && ( */}
+        <GeneretedMarcketingTable orderIDs={selectedRowKeys} />
+      </Modal>
     </div>
   );
 };

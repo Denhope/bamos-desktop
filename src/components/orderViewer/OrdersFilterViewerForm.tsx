@@ -154,6 +154,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
           showSearch
           mode="multiple"
           name="orderType"
+          initialValue={['QUOTATION_ORDER']}
           label={t('ORDER TYPE')}
           width="sm"
           tooltip={t('ORDER TYPE')}

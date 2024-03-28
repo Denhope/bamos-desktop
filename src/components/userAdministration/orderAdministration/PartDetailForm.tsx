@@ -260,7 +260,20 @@ const PartDetailForm: FC<Props> = ({
               label={t('QUANTITY QUOTED')}
               width="sm"
             ></ProFormDigit>
-            <ProFormText name="nds" label={t('NDS')} width="sm"></ProFormText>{' '}
+            <ProFormGroup>
+              <ProFormText name="nds" label={t('NDS')} width="sm"></ProFormText>
+              <ProFormText
+                name="paymentTerms"
+                label={t('PAYMENT TERMS')}
+                width="sm"
+              ></ProFormText>
+            </ProFormGroup>
+            <ProFormText
+              showSearch
+              rules={[{ required: true }]}
+              name="delivery"
+              label={t('DELIVERY')}
+            />{' '}
             <ProFormSelect
               showSearch
               rules={[{ required: true }]}
