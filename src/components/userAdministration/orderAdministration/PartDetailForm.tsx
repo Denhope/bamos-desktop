@@ -226,7 +226,7 @@ const PartDetailForm: FC<Props> = ({
             rules={[{ required: true }]}
             label={t('UNIT')}
             name="unit"
-            width="sm"
+            width="xs"
             valueEnum={{
               EA: `EA/${t('EACH').toUpperCase()}`,
               M: `M/${t('Meters').toUpperCase()}`,
@@ -261,7 +261,7 @@ const PartDetailForm: FC<Props> = ({
               width="sm"
             ></ProFormDigit>
             <ProFormGroup>
-              <ProFormText name="nds" label={t('NDS')} width="sm"></ProFormText>
+              <ProFormText name="nds" label={t('NDS')} width="xs"></ProFormText>
               <ProFormText
                 name="paymentTerms"
                 label={t('PAYMENT TERMS')}

@@ -70,9 +70,13 @@ export const PdfParientMTable = ({
 
             const transformedData = item.items.map((item: any, index: any) => {
               return {
-                '№ П/П': `${index + 1}`, // Assuming you want to number the items
+                '№ П/П': `${index + 1}`,
+                // Assuming you want to number the items
+                '№ ОРДЕРА': item?.orderInfo
+                  ? item?.orderInfo[0]?.orderNumberNew
+                  : '',
                 'НАИМЕНОВАНИЕ ПОСТАВЩИКА': item?.vendorInfo
-                  ? item?.vendorInfo?.NAME
+                  ? item?.vendorInfo[0]?.SHORT_NAME
                   : '',
                 'ЕД. ИЗМЕРЕНИЯ': item?.partNumberInfo
                   ? item?.partNumberInfo.UNIT_OF_MEASURE
@@ -127,7 +131,6 @@ export const PdfParientMTable = ({
             );
           })}
         <PdfRegularSmall fontSize={9}>
-          {'\r\n'}
           {'\r\n'}
           {'\r\n'}
           {'\r\n'}

@@ -13,7 +13,8 @@ import {
 } from '@/features/orderItemsAdministration/orderItemApi';
 
 const fieldsTypes = [
-  { title: `№ П/П${'\r\n'}`, width: 8 },
+  { title: `№ П/П${'\r\n'}`, width: 4 },
+  { title: `№ ОРДЕРА${'\r\n'}`, width: 4 },
   { title: `НАИМЕНОВАНИЕ${'\n'}ПОСТАВЩИКА`, width: 15 },
   { title: `ЕД.${'\n'}ИЗМЕРЕНИЯ`, width: 14 },
   { title: `КОЛ-ВО`, width: 7 },
@@ -22,7 +23,7 @@ const fieldsTypes = [
   { title: `ВАЛЮТА${'\n'}`, width: 7 },
   { title: `СУММА${'\n'}ИТОГО`, width: 10 },
   { title: `УСЛОВИЯ${'\r\n'}ОПЛАТЫ`, width: 12 },
-  { title: `СРОКИ${'\r\n'}ПОСТАВКИ`, width: 12 },
+  { title: `СРОКИ${'\r\n'}ПОСТАВКИ (ДНИ)`, width: 12 },
   { title: `УСЛОВИЯ${'\r\n'}ПОСТАВКИ`, width: 12 },
   { title: `ПРИМЕЧАНИЕ`, width: 12 },
 ];
@@ -54,9 +55,6 @@ const GeneretedMarcketingTable: FC<GeneretedQuatationOrder> = ({
 
   return (
     <div className="">
-      {/* {isLoading && <div>Loading...</div>}
-      {isError && <div>Error loading order</div>} */}
-      {orderIDs && <div>{String(orderIDs)}</div>}
       {
         <>
           <PDFViewer
