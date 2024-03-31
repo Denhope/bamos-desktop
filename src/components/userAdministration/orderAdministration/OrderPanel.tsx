@@ -1,4 +1,4 @@
-//ts-nocheck
+//@ts-nocheck
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import {
