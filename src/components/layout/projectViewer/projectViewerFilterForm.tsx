@@ -156,7 +156,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
           <ProFormGroup direction="vertical" size={'small'}>
             <ProFormText
               name="planeNumber"
-              label="A/C REGISTRATION"
+              label={t('A/C REGISTRATION')}
               width="sm"
               fieldProps={{
                 // onDoubleClick: () => setOpenPickViewer(true),

@@ -25,7 +25,7 @@ const ProjectManagment: FC = () => {
   }, [projects]);
   const items: MenuItem[] = [
     getItem(
-      <>{t('PROJECT MANAGMENT')} (BAN:100)</>,
+      <>{t('PROJECT ADMINISTRATION')} (BAN:100)</>,
       'sub1',
       <ApartmentOutlined />
     ),

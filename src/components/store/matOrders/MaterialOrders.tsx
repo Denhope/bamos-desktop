@@ -149,6 +149,9 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
       title: `${t('SEND TO')}`,
       dataIndex: 'neededOn',
       key: 'neededOn',
+      render: (text: any, record: any) => {
+        return <>{record?.neededOnID?.title}</>;
+      },
 
       width: '7%',
     },
@@ -162,28 +165,11 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
     },
     {
       title: `${t('RECEIVER')}`,
-      dataIndex: 'registrationNumber',
-      key: 'registrationNumber',
-      ...useColumnSearchProps({
-        dataIndex: 'registrationNumber',
-        onSearch: (value) => {
-          if (value) {
-            // Отфильтруйте данные на основе поискового запроса
-            const filteredData = materialsRequirements.filter((item: any) =>
-              item.registrationNumber
-                .toString()
-                .toLowerCase()
-                .includes(value.toLowerCase())
-            );
-            // Обновление данных в таблице
-            setRequirements(filteredData);
-          } else {
-            // Отобразите все данные, если поисковый запрос пуст
-            setRequirements(initialMaterialsRequirements);
-          }
-        },
-        data: materialsRequirements,
-      }),
+      dataIndex: 'acRegistrationNumber',
+      key: 'acRegistrationNumber',
+      render: (text: any, record: any) => {
+        return <>{record?.projectID?.acRegistrationNumber}</>;
+      },
     },
 
     {
@@ -191,6 +177,9 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
       dataIndex: 'projectTaskWO',
       key: 'projectTaskWO',
       // responsive: ['sm'],
+      render: (text: any, record: any) => {
+        return <>{record?.projectTaskId?.projectTaskWO}</>;
+      },
 
       ...useColumnSearchProps({
         dataIndex: 'projectTaskWO',
@@ -198,7 +187,7 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
             const filteredData = materialsRequirements.filter((item: any) =>
-              String(item.projectTaskWO)
+              String(item.projectTaskId?.projectTaskWO)
                 .toString()
                 .toLowerCase()
                 .includes(value.toLowerCase())
@@ -217,14 +206,17 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
       title: `${t('PROJECT')}`,
       dataIndex: 'projectWO',
       key: 'projectWO',
-      // responsive: ['sm'],
+      responsive: ['sm'],
+      render: (text: any, record: any) => {
+        return <>{record?.projectID?.projectWO}</>;
+      },
       ...useColumnSearchProps({
         dataIndex: 'projectWO',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
             const filteredData = materialsRequirements.filter((item: any) =>
-              String(item.projectWO)
+              String(item?.projectID?.projectWO)
                 .toString()
                 .toLowerCase()
                 .includes(value.toLowerCase())

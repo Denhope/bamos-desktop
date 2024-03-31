@@ -1,6 +1,7 @@
 //ts-nocheck
 
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 import {
   ProForm,
   ProFormCheckbox,
@@ -29,6 +30,12 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
 
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
+  const { data: vendors } = useGetVendorsQuery({});
+  const vendorValueEnum: Record<string, string> =
+    vendors?.reduce((acc, vendor) => {
+      acc[vendor.id] = String(vendor.CODE).toUpperCase();
+      return acc;
+    }, {}) || {};
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
@@ -68,7 +75,7 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
         companyID: currentCompanyID || '',
         isAlternatine: isAltertative,
         orderNumber: form.getFieldValue('orderNumber'),
-
+        vendorID: form.getFieldValue('vendorID'),
         includeAlternative: isAltertative,
       };
 
@@ -180,6 +187,18 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'onOrder', label: t('ISSUED') },
           { value: 'transfer', label: t('TRANSFER') },
         ]}
+      />
+
+      <ProFormSelect
+        showSearch
+        mode="multiple"
+        name="vendorID"
+        label={`${t(`VENDORS`)}`}
+        width="sm"
+        valueEnum={vendorValueEnum}
+        onChange={async (value: any) => {
+          // setSelectedProjectId(value);
+        }}
       />
 
       <ProFormDateRangePicker

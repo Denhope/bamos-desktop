@@ -79,7 +79,11 @@ const OrderItemList: FC<ReceivingItemList> = ({
       formItemProps: {
         name: 'orderType',
       },
-      render: (text: any, record: any) => record?.orderID?.orderType,
+      valueType: 'select',
+      valueEnum: {
+        QUOTATION_ORDER: { text: t('QUOTATION_ORDER') },
+      },
+      // render: (text: any, record: any) => record?.orderID?.orderType,
 
       // responsive: ['sm'],
     },
@@ -231,33 +235,45 @@ const OrderItemList: FC<ReceivingItemList> = ({
       key: 'state',
 
       valueType: 'select',
-      filterSearch: true,
-      filters: true,
+      // filterSearch: true,
+      // filters: true,
+
       ellipsis: true,
 
       dataIndex: 'state',
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => {
-        // Определяем цвет фона в зависимости от условия
-        let backgroundColor;
-        if (record.state === 'RECEIVED') {
-          backgroundColor = '#62d156';
-        } else if (record.state === 'OPEN' || record.state === 'open') {
-          backgroundColor = 'red';
-        } else if (record.state === 'onQuatation') {
-          backgroundColor = 'yellow';
-        } else if (record.state === 'planned') {
-          backgroundColor = '#d3d3d3';
-        } else if (record.state === 'draft') {
-          backgroundColor = '#d3d3d3';
-        }
-        return (
-          <div style={{ backgroundColor }}>{record.state && record.state}</div>
-        );
+      valueEnum: {
+        inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
+        onQuatation: { text: t('QUATATION'), status: 'Warning' },
+        //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+        planned: { text: t('PLANNED'), status: 'Default' },
+        open: { text: t('NEW'), status: 'Error' },
+        closed: { text: t('CLOSED'), status: 'Default' },
+        canceled: { text: t('CANCELLED'), status: 'Error' },
+        onOrder: { text: t('ISSUED'), status: 'Processing' },
       },
+      // render: (text: any, record: any) => {
+      //   // Определяем цвет фона в зависимости от условия
+      //   let backgroundColor;
+      //   if (record.state === 'RECEIVED') {
+      //     backgroundColor = '#62d156';
+      //   } else if (record.state === 'OPEN' || record.state === 'open') {
+      //     backgroundColor = 'red';
+      //   } else if (record.state === 'onQuatation') {
+      //     backgroundColor = 'yellow';
+      //   } else if (record.state === 'planned') {
+      //     backgroundColor = '#d3d3d3';
+      //   } else if (record.state === 'draft') {
+      //     backgroundColor = '#d3d3d3';
+      //   }
+      //   return (
+      //     <div style={{ backgroundColor }}>{record.state && record.state}</div>
+      //   );
+      // },
     },
+
     {
       title: `${t('CREATE BY')}`,
       dataIndex: ['createUserID', 'name'],

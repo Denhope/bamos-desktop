@@ -33,6 +33,7 @@ export interface IRequirement {
   _id: string;
   id: string;
   projectID: string;
+  neededOnID?: string | any;
   projectTaskID: string;
   partNumberID: string | any;
   status?: string;
@@ -56,6 +57,17 @@ export interface IRequirement {
   cancelledQuntity?: number;
   pickSlipsIds?: any[];
   note?: string;
+  serialNumber?: any;
+  registrationNumber?: any;
+  taskNumber?: string;
+  unit?: string;
+  group?: string;
+  type?: string;
+  partNumber?: string;
+  issuedQuantity?: number;
+  PN?: any;
+  nameOfMaterial?: any;
+  plannedDate?: any;
 }
 
 export interface Requirement {

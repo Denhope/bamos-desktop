@@ -52,6 +52,8 @@ import UserAdministration from './APN/UserAdministration';
 import RequirementAdministration from './APN/RequirementAdministration';
 import OrderAdministration from './APN/OrderAdministration';
 import OrderViewerNew from './APN/OrderViewerNew';
+import RequirementViewerNew from './APN/RequirementViewerNew';
+import PickslipRequestNew from './APN/PickslipRequestNew';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -206,7 +208,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.ORDER_VIEWER_NEW) {
       tab = {
         key,
-        title: `${t(`ORDER VIEWER!`)}`,
+        title: `${t(`ORDER VIEWER`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <OrderViewerNew />
@@ -217,13 +219,27 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
       };
     }
 
-    if (key == RouteNames.REQUIREMENT_VIEWER) {
+    // if (key == RouteNames.REQUIREMENT_VIEWER) {
+    //   tab = {
+    //     key,
+    //     title: `${t(`REQUIREMENT VIEWER`)}`,
+    //     content: (
+    //       <div className="h-[82vh] overflow-hidden">
+    //         <RequirementViewer />
+    //       </div>
+    //     ),
+
+    //     closable: true,
+    //   };
+    // }
+
+    if (key == RouteNames.REQUIREMENT_VIEWER_VIEWER) {
       tab = {
         key,
         title: `${t(`REQUIREMENT VIEWER`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
-            <RequirementViewer />
+            <RequirementViewerNew />
           </div>
         ),
 
@@ -325,7 +341,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.PROJECT_VIEWER) {
       tab = {
         key,
-        title: `${t(` PROJECT ADMINISTRATION`)}`,
+        title: `${t(`PROJECT VIEWER`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <ProjectViewer />
@@ -388,7 +404,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.PROJECT_MANAGMENT) {
       tab = {
         key,
-        title: `${t(`PROJECT MANAGMENT`)}`,
+        title: `${t(`PROJECT ADMINISTRATION`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <ProjectManagment />
@@ -422,13 +438,26 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         closable: true,
       };
-    } else if (key === RouteNames.PICKSLIP_REQUEST) {
+    }
+    // else if (key === RouteNames.PICKSLIP_REQUEST) {
+    //   tab = {
+    //     key,
+    //     title: `${t('PICKSLIP REQUEST')}`,
+    //     content: (
+    //       <div className="h-[82vh] overflow-hidden">
+    //         <PickslipRequest />
+    //       </div>
+    //     ),
+    //     closable: true,
+    //   };
+    // }
+    else if (key === RouteNames.PICKSLIP_REQUEST_NEW) {
       tab = {
         key,
         title: `${t('PICKSLIP REQUEST')}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
-            <PickslipRequest />
+            <PickslipRequestNew />
           </div>
         ),
         closable: true,

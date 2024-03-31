@@ -95,6 +95,28 @@ export const ordersNewApi = createApi({
       }),
       invalidatesTags: ['Order'], // Invalidate the 'Users' tag after mutation
     }),
+
+    //send-order-emails-to-other  vendorIds
+
+    sendEmailToOtherVendors: builder.mutation<
+      { success: boolean; message: string },
+      { orderId: string; vendorIds: string }
+    >({
+      query: ({ orderId, vendorIds }) => ({
+        url: `ordersNew/companyID/${COMPANY_ID}/send-order-emails-to-other/${orderId}`,
+        method: 'POST',
+        body: {
+          orderId,
+          userId: USER_ID,
+          companyId: COMPANY_ID,
+        },
+        params: {
+          vendorIds,
+        },
+      }),
+      invalidatesTags: ['Order'], // Invalidate the 'Order' tag after mutation
+    }),
+
     sendEmail: builder.mutation<
       { success: boolean; message: string },
       { orderId: string }
@@ -121,4 +143,5 @@ export const {
   // useGetOrderQuery,
   useDeleteOrderMutation,
   useGetQuotationOrderForPrintQuery,
+  useSendEmailToOtherVendorsMutation,
 } = ordersNewApi;

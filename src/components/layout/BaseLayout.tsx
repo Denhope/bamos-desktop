@@ -98,31 +98,31 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`ORDER CREATOR`)}`,
     //   route: RouteNames.ORDER_CREATOR,
     // },
-    {
-      APNNBR: '1200',
-      descriptions: `${t(`ORDER VIEWER`)}`,
-      route: RouteNames.ORDER_VIEWER,
-    },
+    // {
+    //   APNNBR: '1200',
+    //   descriptions: `${t(`ORDER VIEWER`)}`,
+    //   route: RouteNames.ORDER_VIEWER,
+    // },
     {
       APNNBR: '1212',
-      descriptions: `${t(`ORDER VIEWER!`)}`,
+      descriptions: `${t(`ORDER VIEWER`)}`,
       route: RouteNames.ORDER_VIEWER_NEW,
     },
+    // {
+    //   APNNBR: '1201',
+    //   descriptions: `${t(`ORDER MANAGMENT`)}`,
+    //   route: RouteNames.ORDER_MANAGMENT,
+    // },
     {
       APNNBR: '1201',
-      descriptions: `${t(`ORDER MANAGMENT`)}`,
-      route: RouteNames.ORDER_MANAGMENT,
-    },
-    {
-      APNNBR: '12000',
       descriptions: `${t(`ORDER ADMINISTARTION`)}`,
       route: RouteNames.ORDERS_ADMINISTRATION,
     },
-    {
-      APNNBR: '1202',
-      descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
-      route: RouteNames.REQUIREMENT_MANAGMENT,
-    },
+    // {
+    //   APNNBR: '1203',
+    //   descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
+    //   route: RouteNames.REQUIREMENT_MANAGMENT,
+    // },
     {
       APNNBR: '1203',
       descriptions: `${t(`REQUIREMENT ADMINISTRATION`)}`,
@@ -147,11 +147,18 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
       route: RouteNames.PARTS_FORECAST,
     },
+    // {
+    //   APNNBR: '205',
+
+    //   descriptions: `${t(`REQUIREMENT VIEWER`)}`,
+    //   route: RouteNames.REQUIREMENT_VIEWER,
+    // },
+
     {
       APNNBR: '205',
 
       descriptions: `${t(`REQUIREMENT VIEWER`)}`,
-      route: RouteNames.REQUIREMENT_VIEWER,
+      route: RouteNames.REQUIREMENT_VIEWER_VIEWER,
     },
     {
       APNNBR: '220',
@@ -172,11 +179,17 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`PARTS TRANSFER`)}`,
       route: RouteNames.PARTS_TRANSFER,
     },
+    // {
+    //   APNNBR: '225',
+
+    //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
+    //   route: RouteNames.PICKSLIP_REQUEST,
+    // },
     {
       APNNBR: '225',
 
       descriptions: `${t(`PICKSLIP REQUEST`)}`,
-      route: RouteNames.PICKSLIP_REQUEST,
+      route: RouteNames.PICKSLIP_REQUEST_NEW,
     },
     {
       APNNBR: '230',

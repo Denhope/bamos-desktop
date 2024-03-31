@@ -60,6 +60,7 @@ export interface IProjectResponce {
 }
 
 export interface IProject {
+  _id: any;
   id: string;
   projectName: string;
   aplicationId?: string | IAplicationInfo;

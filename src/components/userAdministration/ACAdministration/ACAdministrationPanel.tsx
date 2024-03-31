@@ -18,7 +18,7 @@ import {
   useDeletePlaneMutation,
   useGetPlanesQuery,
   useUpdatePlaneMutation,
-} from '@/features/acAdministration/acApi';
+} from '@/features/ACAdministration/acApi';
 
 interface AdminPanelProps {
   values: VendorFilteredFormValues;

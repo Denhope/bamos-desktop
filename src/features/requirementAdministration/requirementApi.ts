@@ -10,6 +10,63 @@ export const requirementApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Requirement'], // Add tag types for caching
   endpoints: (builder) => ({
+    getFilteredFullRequirements: builder.query<
+      IRequirement[],
+      {
+        projectID?: string;
+        startDate?: any;
+        endDate?: any;
+        status?: string;
+        projectTaskID?: string;
+        readyStatus?: string;
+        reqTypesID?: string;
+        reqCodesID?: string;
+        partRequestNumberNew?: number;
+        partNumberID?: string;
+        neededOnID?: string;
+      }
+    >({
+      query: ({
+        projectID,
+        startDate,
+        status,
+        projectTaskID,
+        readyStatus,
+        reqTypesID,
+        reqCodesID,
+        partRequestNumberNew,
+        partNumberID,
+        neededOnID,
+        endDate,
+      }) => ({
+        url: `requirementsNew/getFilteredRequirementsFull/company/${COMPANY_ID}`,
+        params: {
+          projectID,
+          startDate,
+          status,
+          projectTaskID,
+          readyStatus,
+          reqTypesID,
+          reqCodesID,
+          partRequestNumberNew,
+          partNumberID,
+          neededOnID,
+          endDate,
+        },
+      }),
+      providesTags: ['Requirement'],
+      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data } = await queryFulfilled;
+
+      //     // dispatch(setZonesGroups(data));
+      //   } catch (error) {
+      //     console.error('Ошибка при выполнении запроса:', error);
+      //   }
+      // },
+      // Provide the 'Users' tag after fetching
+    }),
+
     getFilteredRequirements: builder.query<
       IRequirement[],
       {
@@ -116,7 +173,7 @@ export const requirementApi = createApi({
 
 export const {
   useAddRequirementMutation,
-
+  useGetFilteredFullRequirementsQuery,
   useGetFilteredRequirementsQuery,
   useGetRequirementQuery,
   useDeleteRequirementMutation,

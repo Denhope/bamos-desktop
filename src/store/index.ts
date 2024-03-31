@@ -42,8 +42,8 @@ import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
-import { acApi } from '@/features/acAdministration/acApi';
+import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
+import { acApi } from '@/features/ACAdministration/acApi';
 import { ordersNewApi } from '@/features/orderNewAdministration/ordersNewApi';
 import { orderItemApi } from '@/features/orderItemsAdministration/orderItemApi';
 

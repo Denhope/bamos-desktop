@@ -324,7 +324,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
 
           <ProFormGroup>
             <ProFormDatePicker
-              label={t('PLANNED START DATE')}
+              label={t('PLANED FINISH DATE')}
               name="planedStartDate"
               width="sm"
             ></ProFormDatePicker>

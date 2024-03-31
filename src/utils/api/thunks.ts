@@ -889,6 +889,10 @@ export const createProjectTaskMaterialAplication = createAsyncThunk(
       getFrom,
       remarks,
       neededOn,
+      neededOnID,
+      reqTypesID,
+
+      reqCodesID,
     } = data;
 
     try {
@@ -916,6 +920,9 @@ export const createProjectTaskMaterialAplication = createAsyncThunk(
         getFrom,
         remarks,
         neededOn,
+        neededOnID,
+        reqTypesID,
+        reqCodesID,
       });
       return response.data;
     } catch (error) {

@@ -1,4 +1,4 @@
-//@ts-nocheck
+//ts-nocheck
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import {
@@ -6,6 +6,7 @@ import {
   MinusSquareOutlined,
   MailOutlined,
   FilePdfOutlined,
+  PrinterOutlined,
 } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import {
   useDeleteOrderMutation,
   useGetFilteredOrdersQuery,
   useSendEmailMutation,
+  useSendEmailToOtherVendorsMutation,
   useUpdateOrderMutation,
 } from '@/features/orderNewAdministration/ordersNewApi';
 import OrderAdministrationForm from './OrderAdministrationForm';
@@ -27,6 +29,8 @@ import {
   useUpdateOrderItemMutation,
 } from '@/features/orderItemsAdministration/orderItemApi';
 import GeneretedQuotationOrder from './GeneretedQuotationOrder';
+import { ModalForm, ProForm, ProFormSelect } from '@ant-design/pro-components';
+import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 
 interface AdminPanelProps {
   orderSearchValues?: any;
@@ -35,6 +39,7 @@ interface AdminPanelProps {
 const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   const [editingOrder, setEditingOrder] = useState<IOrder | null>(null);
   const [completeOpenPrint, setOpenCompletePrint] = useState<any>();
+  const [completeOpenVendor, setOpenCompleteVendor] = useState<any>();
   const [completeOpenPrintPurshase, setOpenCompletePrintPurshase] =
     useState<any>();
   const [editingOrderItem, setEditingOrderItem] = useState<
@@ -52,6 +57,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     orderNumber: orderSearchValues?.orderNumber,
     orderType: orderSearchValues?.orderType,
     partNumberID: orderSearchValues?.partNumberID,
+    vendorID: orderSearchValues?.vendorID,
   });
 
   const [addOrder] = useAddOrderMutation({});
@@ -60,6 +66,13 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   const [updateOrder] = useUpdateOrderMutation();
   const [sentEmails] = useSendEmailMutation();
 
+  const [sentToOtherVendor] = useSendEmailToOtherVendorsMutation();
+  const { data: vendors } = useGetVendorsQuery({});
+  const vendorValueEnum: Record<string, string> =
+    vendors?.reduce((acc, vendor) => {
+      acc[vendor.id] = String(vendor.CODE).toUpperCase();
+      return acc;
+    }, {}) || {};
   const handleCreate = () => {
     setEditingOrder(null);
   };
@@ -127,6 +140,25 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
       },
     });
   };
+
+  const handleSentEmailOterVendors = async (
+    order: IOrder,
+    vendorIds: string
+  ) => {
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO SENT EMAIL TO THIS VENDORS?'),
+      onOk: async () => {
+        try {
+          await sentToOtherVendor({ orderId: order.id, vendorIds }).unwrap();
+          // await refetchOrders();
+          // message.success(t('EMAIL SUCCESSFULLY SEND'));
+        } catch (error) {
+          await refetchOrders();
+          message.error(t('EMAIL SEND ERROR'));
+        }
+      },
+    });
+  };
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -172,13 +204,13 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
             </Button>
           )}
         </Col>
-        <Col style={{ textAlign: 'right' }}>
+        {/* <Col style={{ textAlign: 'right' }}>
           {editingOrder && (
             <Button disabled size="small" icon={<MinusSquareOutlined />}>
               {t('COPY ORDER')}
             </Button>
           )}
-        </Col>
+        </Col> */}
         <Col className="ml-auto" style={{ textAlign: 'right' }}>
           {editingOrder &&
             editingOrder.orderType === 'QUOTATION_ORDER' &&
@@ -195,6 +227,30 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
                 icon={<MailOutlined />}
               >
                 {t(`SEND EMAIL TO VENDOR`)}
+              </Button>
+            )}
+        </Col>
+        <Col className="ml-auto" style={{ textAlign: 'right' }}>
+          {editingOrder &&
+            editingOrder.orderType === 'QUOTATION_ORDER' &&
+            editingOrder.parts &&
+            editingOrder.parts?.length > 0 && (
+              <Button
+                disabled={
+                  // (editingOrder && editingOrder.state! == 'onQuatation') ||
+                  editingOrder.state === 'draft' ||
+                  editingOrder.state === 'open' ||
+                  editingOrder.state === 'planned'
+                }
+                onClick={() => {
+                  setOpenCompleteVendor(true);
+                  // handleSentEmailOterVendors(editingOrder);
+                }}
+                type="primary"
+                size="small"
+                icon={<MailOutlined />}
+              >
+                {t(`SEND EMAIL TO OTHER VENDOR`)}
               </Button>
             )}
         </Col>
@@ -215,13 +271,37 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
                   editingOrder.orderType !== 'PURCHASE_ORDER') // If the state is not 'onQuatation' and the orderType is not 'PURCHASE_ORDER', the button should be disabled
               }
               size="small"
-              icon={<MinusSquareOutlined />}
+              icon={<PrinterOutlined />}
             >
               {t('PRINT ORDER')}
             </Button>
           )}
         </Col>
       </Space>
+
+      <ModalForm
+        onFinish={async (values) => {
+          editingOrder &&
+            handleSentEmailOterVendors(editingOrder, values.vendorID);
+        }}
+        title="SELECT VENDORS"
+        open={completeOpenVendor}
+        onOpenChange={setOpenCompleteVendor}
+        width={'60%'}
+      >
+        <ProFormSelect
+          showSearch
+          rules={[{ required: true }]}
+          mode="multiple"
+          name="vendorID"
+          label={`${t(`VENDORS`)}`}
+          width="lg"
+          valueEnum={vendorValueEnum}
+          onChange={async (value: any) => {
+            // setSelectedProjectId(value);
+          }}
+        />
+      </ModalForm>
 
       <Modal
         title="QUATATION ORDER"

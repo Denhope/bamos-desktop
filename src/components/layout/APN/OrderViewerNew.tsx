@@ -32,6 +32,7 @@ const OrderViewer: FC<ReceivingTracking> = ({
     orderNumberNew: orderSearchValues?.orderNumberNew,
     orderType: orderSearchValues?.orderType || 'QUOTATION_ORDER',
     partNumberID: orderSearchValues?.partNumberID,
+    vendorID: orderSearchValues?.vendorID,
   });
   const tabs = [
     {

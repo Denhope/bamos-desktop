@@ -159,7 +159,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t(' DATE IN')}`,
+      title: `${t('DATE IN')}`,
       editable: (text, record, index) => {
         return false;
       },
@@ -183,7 +183,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t(' DATE OUT')}`,
+      title: `${t('DATE OUT')}`,
       editable: (text, record, index) => {
         return false;
       },

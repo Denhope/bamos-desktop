@@ -1,4 +1,4 @@
-//ts-nocheck
+//@ts-nocheck
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import {
@@ -21,6 +21,7 @@ import { RangePickerProps } from 'antd/es/date-picker';
 
 import React, { FC, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 
 type RequirementsFilteredFormType = {
   onOrderItemsFilterSearch: (values: any) => void;
@@ -56,10 +57,14 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const [initialForm, setinitialForm] = useState<any>('');
   const [isResetForm, setIsResetForm] = useState<boolean>(false);
-
+  const { data: vendors } = useGetVendorsQuery({});
   const { t } = useTranslation();
   const currentCompanyID = localStorage.getItem('companyID');
-
+  const vendorValueEnum: Record<string, string> =
+    vendors?.reduce((acc, vendor) => {
+      acc[vendor.id] = String(vendor.CODE).toUpperCase();
+      return acc;
+    }, {}) || {};
   const [isAltertative, setIsAltertative] = useState<any>(true);
 
   const onFinish = async (values: any) => {
@@ -74,6 +79,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
         companyID: currentCompanyID || '',
         orderNumberNew: form.getFieldValue('orderNumber'),
         includeAlternative: isAltertative,
+        vendorID: form.getFieldValue('vendorID') || '',
         group: form.getFieldValue('partGroup'),
         type: form.getFieldValue('partType'),
       };
@@ -165,10 +171,22 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
           }}
         />
 
+        <ProFormSelect
+          showSearch
+          mode="multiple"
+          name="vendorID"
+          label={`${t(`VENDORS`)}`}
+          width="sm"
+          valueEnum={vendorValueEnum}
+          onChange={async (value: any) => {
+            // setSelectedProjectId(value);
+          }}
+        />
+
         <ProFormDateRangePicker
           name="plannedDate"
           label={`${t('PLANNED DATE')}`}
-          width="lg"
+          width="sm"
           tooltip="PLANNED DATE"
           fieldProps={{
             onChange: onChange,
@@ -180,7 +198,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
           mode="multiple"
           name="state"
           label={`${t('ORDER STATUS')}`}
-          width="lg"
+          width="sm"
           options={[
             { value: 'draft', label: t('DRAFT') },
             { value: 'onQuatation', label: t('QUATATION') },
