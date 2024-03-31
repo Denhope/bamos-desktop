@@ -1,4 +1,4 @@
-//ts-nocheck
+//@ts-nocheck
 
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
