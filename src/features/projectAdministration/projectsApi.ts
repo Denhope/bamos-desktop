@@ -14,11 +14,14 @@ export const projectsApi = createApi({
       {
         status?: string;
         planeId?: string;
+        projectTypesID?: string;
+        startDate?: any;
+        endDate?: any;
       }
     >({
-      query: ({ status, planeId }) => ({
+      query: ({ status, planeId, projectTypesID, startDate, endDate }) => ({
         url: `projects/getFilteredProjects/company/${COMPANY_ID}`,
-        params: { status, planeId },
+        params: { status, planeId, projectTypesID, startDate, endDate },
       }),
       providesTags: ['Projects'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -54,7 +57,9 @@ export const projectsApi = createApi({
     }),
     updateProject: builder.mutation<IProject, IProject>({
       query: (project) => ({
-        url: `projects/company/${COMPANY_ID}/project/${project.id}`,
+        url: `projects/company/${COMPANY_ID}/project/${
+          project.id || project._id
+        }`,
         method: 'PUT',
         body: {
           ...project,

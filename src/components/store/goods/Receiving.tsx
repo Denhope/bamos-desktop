@@ -6,6 +6,7 @@ import {
   ProFormGroup,
   ProFormSelect,
   ProFormText,
+  ProFormTextArea,
 } from '@ant-design/pro-components';
 import { Form, FormInstance, Modal, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
@@ -409,17 +410,17 @@ const Receiving: FC<ReceivingType> = ({
           <ProFormGroup>
             <ProFormDigit
               name="qty"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: 'Required' }]}
               label={t('QTY/BACKORDER')}
               width="xs"
               tooltip={t('QTY')}
             ></ProFormDigit>
             /<ProFormDigit disabled name="backorder" width="xs"></ProFormDigit>
             <ProFormSelect
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: 'Required' }]}
               label={t('UNIT')}
               name="unit"
-              width="sm"
+              width="xs"
               valueEnum={{
                 EA: `EA/${t('EACH').toUpperCase()}`,
                 M: `M/${t('Meters').toUpperCase()}`,
@@ -440,16 +441,6 @@ const Receiving: FC<ReceivingType> = ({
                 JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
               }}
             ></ProFormSelect>
-            <ProFormCheckbox
-              fieldProps={{
-                checked: isChangeLocationChecked,
-                onChange: (e: CheckboxChangeEvent) => {
-                  setIsChangeLocationChecked(e.target.checked);
-                },
-              }}
-            >
-              {t('PRINT LABELS')}
-            </ProFormCheckbox>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
@@ -541,7 +532,7 @@ const Receiving: FC<ReceivingType> = ({
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
               name="certificateType"
               label={`${t('CERTIFICATE TYPE')}`}
               width="sm"
@@ -562,42 +553,12 @@ const Receiving: FC<ReceivingType> = ({
               ]}
             />
             <ProFormText
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
               name="certificateNumber"
               label={t('CERTIFICATE NUMBER')}
               width="sm"
               tooltip={t('CERTIFICATE NUMBER')}
             ></ProFormText>
-          </ProFormGroup>
-          <ProFormGroup>
-            <div className="mb-5">
-              <UploadLink
-                isUploadTrue={isUpload}
-                onUpload={uploadFileServer}
-                onSuccess={async function (response: any): Promise<void> {
-                  if (response) {
-                    setisUpload(false);
-                    const updatedFiles = addedMaterialItem.FILES
-                      ? [...addedMaterialItem.FILES, response]
-                      : [response];
-
-                    const currentCompanyID =
-                      localStorage.getItem('companyID') || '';
-                    const result = await dispatch(
-                      updateManyMaterialItems({
-                        companyID: currentCompanyID || '',
-                        ids: [addedMaterialItem.id],
-                        FILES: updatedFiles,
-                      })
-                    );
-                  }
-                }}
-                acceptedFileTypes={[
-                  AcceptedFileTypes.JPG,
-                  AcceptedFileTypes.PDF,
-                ]}
-              ></UploadLink>
-            </div>
           </ProFormGroup>
 
           <ProFormGroup>
@@ -621,6 +582,36 @@ const Receiving: FC<ReceivingType> = ({
               label={t('EXPIRY DATE')}
               width="xs"
             ></ProFormDatePicker>
+            <ProFormGroup>
+              <div className="mb-5">
+                <UploadLink
+                  isUploadTrue={isUpload}
+                  onUpload={uploadFileServer}
+                  onSuccess={async function (response: any): Promise<void> {
+                    if (response) {
+                      setisUpload(false);
+                      const updatedFiles = addedMaterialItem.FILES
+                        ? [...addedMaterialItem.FILES, response]
+                        : [response];
+
+                      const currentCompanyID =
+                        localStorage.getItem('companyID') || '';
+                      const result = await dispatch(
+                        updateManyMaterialItems({
+                          companyID: currentCompanyID || '',
+                          ids: [addedMaterialItem.id],
+                          FILES: updatedFiles,
+                        })
+                      );
+                    }
+                  }}
+                  acceptedFileTypes={[
+                    AcceptedFileTypes.JPG,
+                    AcceptedFileTypes.PDF,
+                  ]}
+                ></UploadLink>
+              </div>
+            </ProFormGroup>
           </ProFormGroup>
 
           <ProFormGroup>
@@ -648,6 +639,16 @@ const Receiving: FC<ReceivingType> = ({
               locations={LOCATION}
               width={'sm'}
             />
+            <ProFormCheckbox
+              fieldProps={{
+                checked: isChangeLocationChecked,
+                onChange: (e: CheckboxChangeEvent) => {
+                  setIsChangeLocationChecked(e.target.checked);
+                },
+              }}
+            >
+              {t('PRINT LABELS')}
+            </ProFormCheckbox>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormText
@@ -664,6 +665,15 @@ const Receiving: FC<ReceivingType> = ({
               name="ownerDiscription"
               width="sm"
             ></ProFormText>
+
+            {/* <ProFormTextArea
+              disabled
+              name="notes"
+              rules={[{ required: true }]}
+              label={t('REMARKS')}
+              width="sm"
+              tooltip={t('REMARKS')}
+            ></ProFormTextArea> */}
           </ProFormGroup>
         </ProFormGroup>
 
@@ -673,7 +683,7 @@ const Receiving: FC<ReceivingType> = ({
             padding: 10,
             borderRadius: 5,
           }}
-          size={'large'}
+          size={'small'}
           direction="vertical"
         >
           <ProFormText
@@ -684,7 +694,7 @@ const Receiving: FC<ReceivingType> = ({
             tooltip={t('PART No')}
           ></ProFormText>
           <ProFormText
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: 'Required' }]}
             name="addDescription"
             label={t('1C/DESCRIPTION')}
             width="sm"
@@ -699,7 +709,7 @@ const Receiving: FC<ReceivingType> = ({
           ></ProFormDigit>
           <ProFormSelect
             showSearch
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: 'Required' }]}
             label={t('ADD UNIT')}
             name="addUnit"
             width="sm"

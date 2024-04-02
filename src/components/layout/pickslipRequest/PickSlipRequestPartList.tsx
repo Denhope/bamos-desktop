@@ -78,7 +78,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       },
     },
     {
-      title: `${t('QTY REQ ')}`,
+      title: `${t('QTY REQ')}`,
       dataIndex: 'amout',
       valueType: 'digit',
       key: 'amout',

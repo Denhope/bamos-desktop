@@ -8,7 +8,13 @@ import React, { FC, useEffect, useState } from 'react';
 import {
   UserOutlined,
   GroupOutlined,
+  ProjectOutlined,
+  HomeOutlined,
   UserSwitchOutlined,
+  EditOutlined,
+  UsergroupAddOutlined,
+  AppstoreAddOutlined,
+  ForkOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import AdminPanel from '@/components/userAdministration/accountAdminisrtation/AdminPanel';
@@ -35,6 +41,7 @@ import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import RequirementsTypesPanel from '@/components/userAdministration/requirementsTypes/RequirementsTypesPanel';
+import ProjectTypePanel from '@/components/userAdministration/projectTypesAdministaration/ProjectTypePanel';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -55,18 +62,24 @@ const UserAdministration: FC = () => {
     getItem(
       <>{t('ACCOUNTS GROUPS')}</>,
       RouteNames.USER_GROUPS,
-      <GroupOutlined />
+      <UsergroupAddOutlined />
     ),
     getItem(
       <>{t('REQUIREMENTS TYPES')}</>,
       RouteNames.REQUIREMENTS_CODES,
-      <GroupOutlined />
+      <AppstoreAddOutlined />
+    ),
+
+    getItem(
+      <>{t('PROJECT TYPES')}</>,
+      RouteNames.PROJECTS_CODES,
+      <ProjectOutlined />
     ),
     getItem(<>{t('COMPANIES')}</>, RouteNames.COMPANIES, <GroupOutlined />),
-    getItem(<>{t('VENDORS')}</>, RouteNames.VENDORS, <GroupOutlined />),
-    getItem(<>{t('AC TYPES')}</>, RouteNames.AC_TYPES, <GroupOutlined />),
+    getItem(<>{t('VENDORS')}</>, RouteNames.VENDORS, <HomeOutlined />),
+    getItem(<>{t('AC TYPES')}</>, RouteNames.AC_TYPES, <ForkOutlined />),
     getItem(<>{t('AC TASKS')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
-    getItem(<>{t('AC ADMINISTRATION')}</>, RouteNames.AC, <GroupOutlined />),
+    getItem(<>{t('AC ADMINISTRATION')}</>, RouteNames.AC, <EditOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -169,6 +182,23 @@ const UserAdministration: FC = () => {
         content: (
           <div>
             <RequirementsTypesPanel values={[]} />
+          </div>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
+
+    if (key === RouteNames.PROJECTS_CODES) {
+      const tab = {
+        key,
+        title: `${t('PROJECT TYPES')}`,
+        content: (
+          <div>
+            <ProjectTypePanel />
           </div>
         ),
         closable: true,

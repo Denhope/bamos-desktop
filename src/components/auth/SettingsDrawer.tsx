@@ -1,7 +1,7 @@
-import { Avatar, Button, Divider, Drawer, Form, Row, Space } from "antd";
-import React, { FC } from "react";
-import { useNavigate } from "react-router-dom";
-import UpdateElectron from "@/components/update";
+import { Avatar, Button, Divider, Drawer, Form, Row, Space } from 'antd';
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import UpdateElectron from '@/components/update';
 import {
   FieldTimeOutlined,
   LogoutOutlined,
@@ -9,12 +9,13 @@ import {
   UsergroupDeleteOutlined,
   StarOutlined,
   UserOutlined,
-} from "@ant-design/icons";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import AuthService from "@/services/authService";
-import { RouteNames } from "@/router";
-import { authSlice } from "@/store/reducers/AuthSlice";
-import LanguageSelector from "@/components/shared/LanguageSelector";
+} from '@ant-design/icons';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import AuthService from '@/services/authService';
+import { RouteNames } from '@/router';
+import { authSlice } from '@/store/reducers/AuthSlice';
+import LanguageSelector from '@/components/shared/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
 interface TSettingsDrawerProps {
   open: boolean;
@@ -24,23 +25,24 @@ interface TSettingsDrawerProps {
 const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
   const dispatch = useAppDispatch();
   const history = useNavigate();
+  const { t } = useTranslation();
   return (
     <Drawer
       placement="right"
-      size={"default"}
+      size={'default'}
       onClose={() => {
         setOpen(false);
       }}
       open={open}
-      title={` ${localStorage.getItem("firstName")} ${localStorage.getItem(
-        "lastName"
+      title={` ${localStorage.getItem('firstName')} ${localStorage.getItem(
+        'lastName'
       )}`}
     >
       <Row>
-        {" "}
-        <Space direction="vertical" style={{ width: "100%" }}>
+        {' '}
+        <Space direction="vertical" style={{ width: '100%' }}>
           <LanguageSelector></LanguageSelector>
-          <Button className="w-full  text-start  border-none hover:bg-gray-200">
+          {/* <Button className="w-full  text-start  border-none hover:bg-gray-200">
             <StarOutlined /> My Tasks
           </Button>
           <Button className="w-full  text-start  border-none hover:bg-gray-200">
@@ -51,7 +53,7 @@ const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
           </Button>
           <Button className="w-full  text-start  border-none hover:bg-gray-200">
             <UsergroupDeleteOutlined /> Bamos Support
-          </Button>
+          </Button> */}
 
           <UpdateElectron />
 
@@ -65,7 +67,7 @@ const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
             className="w-full  text-start  border-none hover:bg-gray-200"
           >
             <LogoutOutlined />
-            Sign Out
+            {t('Sign Out')}
           </Button>
         </Space>
       </Row>

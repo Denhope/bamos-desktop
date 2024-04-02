@@ -46,6 +46,7 @@ import acAdministrationReducer from '../../src/features/ACAdministration/acAdmin
 import { acApi } from '@/features/ACAdministration/acApi';
 import { ordersNewApi } from '@/features/orderNewAdministration/ordersNewApi';
 import { orderItemApi } from '@/features/orderItemsAdministration/orderItemApi';
+import { projectTypeApi } from '@/components/projectTypeAdministration/projectTypeApi';
 
 const store = configureStore({
   reducer: {
@@ -89,6 +90,7 @@ const store = configureStore({
     [projectsTaskApi.reducerPath]: projectsTaskApi.reducer,
     [ordersNewApi.reducerPath]: ordersNewApi.reducer,
     [orderItemApi.reducerPath]: orderItemApi.reducer,
+    [projectTypeApi.reducerPath]: projectTypeApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -115,7 +117,8 @@ const store = configureStore({
       partNumberApi.middleware,
       projectsTaskApi.middleware,
       ordersNewApi.middleware,
-      orderItemApi.middleware
+      orderItemApi.middleware,
+      projectTypeApi.middleware
     ),
 });
 export default store;

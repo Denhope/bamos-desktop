@@ -5,23 +5,23 @@ import {
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
-} from "@ant-design/pro-components";
-import { t } from "i18next";
-import React, { FC, useState } from "react";
-import FilesUpload from "./FilesUpload";
-import UserSearchForm from "@/components/shared/form/UserSearchForm";
-import { UserResponce } from "@/models/IUser";
-import UserSearchProForm from "@/components/shared/form/UserSearchProForm";
-import { Form } from "antd";
-import SearchSelect from "@/components/shared/form/SearchSelect";
-import { getFilteredProjects, getFilteredUsers } from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
+} from '@ant-design/pro-components';
+import { t } from 'i18next';
+import React, { FC, useState } from 'react';
+import FilesUpload from './FilesUpload';
+import UserSearchForm from '@/components/shared/form/UserSearchForm';
+import { UserResponce } from '@/models/IUser';
+import UserSearchProForm from '@/components/shared/form/UserSearchProForm';
+import { Form } from 'antd';
+import SearchSelect from '@/components/shared/form/SearchSelect';
+import { getFilteredProjects, getFilteredUsers } from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 const ReservingForm: FC = () => {
   const [selectedUser, setSelectedUser] = useState<UserResponce | null>();
   const [shouldReset, setShouldReset] = useState(false);
   const [form] = Form.useForm();
-  const companyID = localStorage.getItem("companyID") || ""; // Замените на ваше значение
+  const companyID = localStorage.getItem('companyID') || ''; // Замените на ваше значение
   const dispatch = useAppDispatch();
   const handleSearch = async (value: any) => {
     const result = await dispatch(
@@ -39,43 +39,43 @@ const ReservingForm: FC = () => {
     setZone(value);
     setUnit(value);
   };
-  const [subZone, setZone] = useState("");
+  const [subZone, setZone] = useState('');
 
-  const [subUnit, setUnit] = useState("");
+  const [subUnit, setUnit] = useState('');
 
   const zones: { [key: string]: string[] } = {
-    ROTABLE: ["TOOL", "ROT", "GSE"],
-    CONSUMABLE: ["CHEM", "GSE"],
+    ROTABLE: ['TOOL', 'ROT', 'GSE'],
+    CONSUMABLE: ['CHEM', 'GSE'],
   };
   const unitLabels: { [key: string]: string } = {
-    EA: "EA",
-    "m Metre": "METRE",
-    MI: "mi",
-    GRAMM: "GM",
-    YARD: "YD",
-    SI: "SI",
-    INCHE: "IN",
-    SM: "SM",
-    "x Sq Centimetre": "SQ Centimetre",
-    LITRE: "LI",
-    KT: "KT",
-    KG: "KG",
+    EA: 'EA',
+    'm Metre': 'METRE',
+    MI: 'mi',
+    GRAMM: 'GM',
+    YARD: 'YD',
+    SI: 'SI',
+    INCHE: 'IN',
+    SM: 'SM',
+    'x Sq Centimetre': 'SQ Centimetre',
+    LITRE: 'LI',
+    KT: 'KT',
+    KG: 'KG',
   };
 
   const unit: { [key: string]: string[] } = {
-    ROTABLE: ["EA"],
+    ROTABLE: ['EA'],
     CONSUMABLE: [
-      "m Metre",
-      "MI",
-      "GRAMM",
-      "YARD",
-      "SI",
-      "INCHE",
-      "SM",
-      "x Sq Centimetre",
-      "LITRE",
-      "KT",
-      "KG",
+      'm Metre',
+      'MI',
+      'GRAMM',
+      'YARD',
+      'SI',
+      'INCHE',
+      'SM',
+      'x Sq Centimetre',
+      'LITRE',
+      'KT',
+      'KG',
     ],
   };
   return (
@@ -97,20 +97,20 @@ const ReservingForm: FC = () => {
             optionLabel1="order"
             optionLabel2="projectName"
             onSelect={() => null}
-            label={`${t("ORDER")}`}
-            tooltip={`${t("ORDER")}`}
+            label={`${t('ORDER')}`}
+            tooltip={`${t('ORDER')}`}
             rules={[]}
-            name={"order"}
+            name={'order'}
           />
           <SearchSelect
             onSearch={handleSearch}
             optionLabel1="projectWO"
             optionLabel2="projectName"
             onSelect={handleSelect}
-            label={`${t("W/O")}`}
-            tooltip={`${t("W/O")}`}
+            label={`${t('W/O')}`}
+            tooltip={`${t('W/O')}`}
             rules={[]}
-            name={"projectWO"}
+            name={'projectWO'}
           />
 
           <SearchSelect
@@ -118,22 +118,22 @@ const ReservingForm: FC = () => {
             optionLabel1="store"
             optionLabel2="store"
             onSelect={() => null}
-            label={`${t("STORE")}`}
-            tooltip={`${t("STORE")}`}
+            label={`${t('STORE')}`}
+            tooltip={`${t('STORE')}`}
             rules={[
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
-            name={"store"}
+            name={'store'}
           />
 
           <ProFormSelect
             showSearch
             name="rack"
-            label={`${t("RACK")}`}
+            label={`${t('RACK')}`}
             width="sm"
             tooltip="Item RACK Number"
             // valueEnum={zones[subZone]?.reduce(
@@ -145,14 +145,14 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
           />
           <ProFormSelect
             showSearch
             name="shelf"
-            label={`${t("BIN")}`}
+            label={`${t('BIN')}`}
             width="sm"
             tooltip="Item BIN Number"
             // valueEnum={zones[subZone]?.reduce(
@@ -164,7 +164,7 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
           />
@@ -179,7 +179,7 @@ const ReservingForm: FC = () => {
             rules={[
               {
                 required: true,
-                type: "string",
+                type: 'string',
               },
             ]}
           />
@@ -192,7 +192,7 @@ const ReservingForm: FC = () => {
             rules={[
               {
                 required: true,
-                type: "string",
+                type: 'string',
               },
             ]}
           />
@@ -203,27 +203,27 @@ const ReservingForm: FC = () => {
             optionLabel1="PART_NUMBER"
             optionLabel2="DESCRIPTION"
             onSelect={() => null}
-            label={`${t("P/N")}`}
-            tooltip={`${t("P/N")}`}
+            label={`${t('P/N')}`}
+            tooltip={`${t('P/N')}`}
             rules={[
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
-            name={"PART_NUMBER"}
+            name={'PART_NUMBER'}
           />
           <ProFormText
             width="lg"
             name="DESCRIPTION"
-            label={`${t("DESCRIPTION")}`}
+            label={`${t('DESCRIPTION')}`}
             tooltip="DESCRIPTION"
             rules={[
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
             fieldProps={
@@ -231,18 +231,18 @@ const ReservingForm: FC = () => {
                 // onChange: handleAreaChange,
               }
             }
-          />{" "}
+          />{' '}
           <ProFormText
             width="sm"
             name="SERIAL_NUMBER"
-            label={`${t("SERIAL_NUMBER")}`}
+            label={`${t('SERIAL_NUMBER')}`}
             tooltip="SERIAL NUMBER"
             fieldProps={
               {
                 // onChange: handleAreaChange,
               }
             }
-          />{" "}
+          />{' '}
           <ProFormSelect
             showSearch
             name="TYPE"
@@ -250,8 +250,8 @@ const ReservingForm: FC = () => {
             width="sm"
             tooltip="Enter TYPE"
             valueEnum={{
-              ROTABLE: "ROTABLE",
-              CONSUMABLE: "CONSUMABLE",
+              ROTABLE: 'ROTABLE',
+              CONSUMABLE: 'CONSUMABLE',
             }}
             fieldProps={{
               onChange: handleAreaChange,
@@ -260,10 +260,10 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
-          />{" "}
+          />{' '}
         </ProForm.Group>
         <ProForm.Group>
           <ProFormSelect
@@ -273,12 +273,12 @@ const ReservingForm: FC = () => {
             width="sm"
             tooltip="Enter CONDITION"
             valueEnum={{
-              "NEW/": "NEW/",
-              "INS/": "INS/",
-              "REP/": "REP/",
-              "OH/": "OH/",
-              "TES/": "TES/",
-              "US/": "US/",
+              'NEW/': 'NEW/',
+              'INS/': 'INS/',
+              'REP/': 'REP/',
+              'OH/': 'OH/',
+              'TES/': 'TES/',
+              'US/': 'US/',
             }}
             // fieldProps={{
             //   onChange: handleAreaChange,
@@ -287,10 +287,10 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
-          />{" "}
+          />{' '}
           <ProFormSelect
             showSearch
             name="GROUP"
@@ -305,10 +305,10 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
-          />{" "}
+          />{' '}
           <ProFormDigit
             name="Qty"
             label="Qty"
@@ -318,7 +318,7 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "number",
+                type: 'number',
               },
             ]}
           ></ProFormDigit>
@@ -326,7 +326,7 @@ const ReservingForm: FC = () => {
             showSearch
             name="UNIT"
             label="UNIT"
-            width="sm"
+            width="xs"
             tooltip="Enter UNIT"
             // valueEnum={{
             //   EA: 'EA',
@@ -353,10 +353,10 @@ const ReservingForm: FC = () => {
               {
                 required: true,
 
-                type: "string",
+                type: 'string',
               },
             ]}
-          />{" "}
+          />{' '}
         </ProForm.Group>
         <div className="flex">
           <div className="flex flex-col w-1/2">

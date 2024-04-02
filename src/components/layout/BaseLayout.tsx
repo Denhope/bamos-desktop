@@ -68,9 +68,9 @@ const BaseLayout: React.FC = () => {
       route: RouteNames.PART_ADMINISTRATIONS,
     },
     {
-      APNNBR: '100',
+      APNNBR: '03',
       descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
-      route: RouteNames.PROJECT_MANAGMENT,
+      route: RouteNames.PROJECT_ADMINISTRATION,
     },
     {
       APNNBR: '101',
@@ -448,7 +448,7 @@ const BaseLayout: React.FC = () => {
             </a>
             <ProFormItem
               label
-              tooltip={'DOUBLE CLICK OPEN APN BOOK'}
+              tooltip={`${t(`DOUBLE CLICK OPEN APN BOOK`)}`}
               className="flex justify-center align-middle my-10"
             >
               <div style={{ width: '300px' }}>
@@ -585,7 +585,7 @@ const BaseLayout: React.FC = () => {
         }}
       >
         <div style={{ flex: 1 }}></div>
-        <div>©2023 Created by Kavalchuk D.</div>
+        {t(`©2024 Created by Kavalchuk D.`)}
         <div style={{ flex: 1, textAlign: 'right' }}>
           <UTCClock />
         </div>

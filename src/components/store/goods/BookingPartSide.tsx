@@ -68,7 +68,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
         selectedOrderType &&
           selectedOrderType === 'ORDER' && {
             content: (
-              <div className="flex h-[48vh] flex-col justify-between">
+              <div className="flex h-[46vh] flex-col justify-between">
                 <div className="flex">
                   <BookingOrderPartsList
                     onSelectedPart={handleSelectedPart}
@@ -157,37 +157,37 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 />
               </>
             ),
-            title: `${t('RECEIVING')}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
+            title: `${t('RECEIVING')}${selectedOrder?.orderNumber} ${t(
+              'POS.'
+            )} ${openPart?.index + 1}`,
           },
-        openPart &&
-          openPart?.index !== undefined && {
-            content: <ProFormTextArea></ProFormTextArea>,
-            title: `${t('REMARKS')}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
-          },
-        openPart &&
-          openPart?.index !== undefined && {
-            content: (
-              <ProFormGroup>
-                <ProFormText
-                  name="unitPrice"
-                  label={t('UNIT PRICE')}
-                  width="sm"
-                ></ProFormText>
-                <ProFormText
-                  name="unitLocalPrice"
-                  label={t('UNIT LOCAL PRICE')}
-                  width="sm"
-                ></ProFormText>
-              </ProFormGroup>
-            ),
-            title: `${t('FINANCIAL DATA')}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
-          },
+        // openPart &&
+        //   openPart?.index !== undefined && {
+        //     content: <ProFormTextArea></ProFormTextArea>,
+        //     title: `${t('REMARKS')}${selectedOrder?.orderNumber} ${t('POS.')} ${
+        //       openPart?.index + 1
+        //     }`,
+        //   },
+        // openPart &&
+        //   openPart?.index !== undefined && {
+        //     content: (
+        //       <ProFormGroup>
+        //         <ProFormText
+        //           name="unitPrice"
+        //           label={t('UNIT PRICE')}
+        //           width="sm"
+        //         ></ProFormText>
+        //         <ProFormText
+        //           name="unitLocalPrice"
+        //           label={t('UNIT LOCAL PRICE')}
+        //           width="sm"
+        //         ></ProFormText>
+        //       </ProFormGroup>
+        //     ),
+        //     title: `${t('FINANCIAL DATA')}${selectedOrder?.orderNumber} POS. ${
+        //       openPart?.index + 1
+        //     }`,
+        //   },
 
         selectedOrderType &&
           selectedOrderType === 'UN_ORDER' && {

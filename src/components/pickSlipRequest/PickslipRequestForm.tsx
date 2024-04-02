@@ -360,7 +360,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
                 setSecectedSingleProject({ projectWO: '' });
               }}
             >
-              {t('NEW ')}
+              {t('NEW')}
             </Button>{' '}
           </Space>
           <ProFormSelect

@@ -87,7 +87,7 @@ const PickslipRequest: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t('QTY REQ ')}`,
+      title: `${t('QTY REQ')}`,
       dataIndex: 'amout',
       key: 'amout',
       width: '7%',

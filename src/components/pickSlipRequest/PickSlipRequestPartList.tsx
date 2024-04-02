@@ -82,11 +82,11 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       },
     },
     {
-      title: `${t('QTY REQ ')}`,
+      title: `${t('QTY REQ')}`,
       dataIndex: 'amout',
       valueType: 'digit',
       key: 'amout',
-      width: '7%',
+      // width: '7%',
       formItemProps: {
         rules: [
           {
@@ -111,7 +111,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       title: `${t('AVAIL QTY')}`,
       dataIndex: 'availableQTY',
       key: 'availableQTY',
-      width: '7%',
+      // width: '7%',
       responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
@@ -131,7 +131,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       title: `${t('UNIT')}`,
       dataIndex: 'unit',
       key: 'unit',
-      width: '6%',
+      // width: '6%',
       responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
       editable: (text, record, index) => {
@@ -148,7 +148,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       },
 
       ellipsis: true, //
-      width: '6%',
+      // width: '6%',
     },
     {
       title: `${t('TYPE')}`,
@@ -157,7 +157,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
       // responsive: ['sm'],
 
       ellipsis: true, //
-      width: '6%',
+      // width: '6%',
       editable: (text, record, index) => {
         return false;
       },
@@ -174,7 +174,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
               action?.startEditable?.(record.id);
             }}
           >
-            EDIT
+            {t('EDIT')}
           </a>
         ),
         isCreating && (
@@ -186,7 +186,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
               );
             }}
           >
-            DELETE
+            {t('DELETE')}
           </a>
         ),
       ],
@@ -342,7 +342,7 @@ const PickSlipRequestPartList: FC<EditableTablerops> = ({
         value={dataSource}
         recordCreatorProps={
           isCreating && {
-            creatorButtonText: 'ADD NEW PART',
+            creatorButtonText: `${t('ADD NEW PART')}`,
             newRecordType: 'dataSource',
             record: (record: any) => ({
               id: Date.now().toString(),

@@ -60,28 +60,68 @@ type LoadingMethods = {
 function useLoading(): LoadingMethods {
   const className = `loaders-css__letter-spin`;
   const styleContent = `
-@keyframes letter-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-.${className} {
-  font-size: 50px;
-  color: #fff;
-  animation: letter-spin 2s linear infinite;
-}
-.app-loading-wrap {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #282c34;
-  z-index: 9;
-}
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.2);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .${className} {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.3); /* Первоначальный цвет границы */
+    border-top-color: #007BFF; /* Светло-синий цвет для верхней границы */
+    border-radius: 50%;
+    animation: spinner 1s ease-in-out infinite;
+    will-change: transform;
+  }
+  .app-loading-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #282c34;
+    z-index: 9;
+  }
   `;
+  // const styleContent = `
+  // @keyframes spinner {
+  //   0% { transform: rotate(0deg); }
+  //   100% { transform: rotate(360deg); }
+  // }
+  // .${className} {
+  //   display: inline-block;
+  //   width: 50px;
+  //   height: 50px;
+  //   border: 3px solid rgba(255,255,255,.3);
+  //   border-radius: 50%;
+  //   border-top-color: #fff;
+  //   animation: spinner 1s ease-in-out infinite;
+  //   will-change: transform;
+  // }
+  // .app-loading-wrap {
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100vw;
+  //   height: 100vh;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   background: #282c34;
+  //   z-index: 9;
+  // }
+  // `;
   const oStyle = document.createElement('style');
   const oDiv = document.createElement('div');
 
