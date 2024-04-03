@@ -55,6 +55,7 @@ export enum RouteNames {
   STATISTICS_REQUIRED = '/statistics/requiredMaterials',
   MATERIAL_STORE = '/store/materials',
   GOODS_RESERVING = '/store/goods/reserving',
+  GOODS_RESERVING_NEW = '/store/goods/reserving/new',
   CANCEL_RESERVING = '/store/goods/cancel/reserving',
   RESERVING_TRACK = '/store/goods/reserving/viewer',
   GOODS_RESERVING_ADD = '/store/goods/reserving/add',

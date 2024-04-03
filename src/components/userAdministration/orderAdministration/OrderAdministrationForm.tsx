@@ -222,14 +222,17 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               label={t('ORDER STATUS')}
               width="sm"
               initialValue={'draft'}
-              valueEnum={{
-                planned: { text: t('PLANNED'), status: 'Default' },
-                onQuatation: { text: t('QUATATION'), status: 'Processing' },
-                open: { text: t('NEW'), status: 'Error' },
-                draft: { text: t('DRAFT'), status: 'Default' },
-                closed: { text: t('CLOSED'), status: 'Default' },
-                canceled: { text: t('CANCELLED'), status: 'Error' },
-              }}
+              options={[
+                { value: 'draft', label: t('DRAFT') },
+                { value: 'onQuatation', label: t('QUATATION') },
+                { value: 'planned', label: t('PLANNED') },
+                { value: 'open', label: t('NEW') },
+                { value: 'CLOSED', label: t('CLOSED') },
+                { value: 'CANCELLED', label: t('CANCELLED') },
+                { value: 'transfer', label: t('TRANSFER') },
+                { value: 'PARTLY_RECEIVED', label: t('PARTLY_RECEIVED') },
+                { value: 'RECEIVED', label: t('RECEIVED') },
+              ]}
             />
 
             <ProFormSelect

@@ -152,12 +152,12 @@ export interface IOrder {
   id: string;
   projectID?: string;
   status?: string;
-  description: string;
-  createDate: string;
-  createUserID: string;
+  description?: string;
+  createDate?: string;
+  createUserID?: string;
   updateDate?: string;
   updateUserID?: string;
-  companyID: string;
+  companyID?: string;
   orderItemsID?: any[];
   parts?: Object[];
   vendorID?: string[];
@@ -166,7 +166,7 @@ export interface IOrder {
   orderType?: string;
   note?: string;
   state: string;
-  orderName: string;
+  orderName?: string;
   files?: any;
 }
 
@@ -198,6 +198,11 @@ export interface IOrderItem {
   qtyQuoted?: number;
   note?: string;
   orderID: string | IOrder;
+  RECEIVINGS?: any[];
+  state: string;
+  BATCH?: any;
+  SERIAL_NUMBER?: any;
+  PRICE?: any;
 }
 // const convertToTreeData = (orders: IOrder[]): TreeDataNode[] => {
 //   return orders.map((order) => {

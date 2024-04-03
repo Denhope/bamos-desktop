@@ -72,7 +72,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 <div className="flex">
                   <BookingOrderPartsList
                     onSelectedPart={handleSelectedPart}
-                    parts={selectedOrder?.parts}
+                    parts={selectedOrder?.orderItemsID}
                     scroll={20}
                   />
                 </div>
@@ -92,6 +92,9 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                           selectedOrder?.state === 'CANCELLED') ||
                         (selectedOrder &&
                           selectedOrder?.state === 'RECEIVED') ||
+                        !selecteReceiving ||
+                        (selectedOrder &&
+                          selectedOrder?.state === 'onQuatation') ||
                         !selecteReceiving
                       )
                     }
@@ -114,8 +117,8 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   currentPart={openPart.record}
                   onUpdateOrder={function (data: any): void {
                     setOpenPart(null);
-                    setSelectedOrder(data);
-                    onUpdateOrder && onUpdateOrder(data);
+                    setSelectedOrder(data.data);
+                    // onUpdateOrder && onUpdateOrder(data.data);
                   }}
                   // onReceivingPart={(data) => {
                   //   setPartsToPrint(data);
@@ -157,7 +160,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 />
               </>
             ),
-            title: `${t('RECEIVING')}${selectedOrder?.orderNumber} ${t(
+            title: `${t('RECEIVING')}${selectedOrder?.orderNumberNew} ${t(
               'POS.'
             )} ${openPart?.index + 1}`,
           },
@@ -200,7 +203,8 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   onUpdateOrder={function (data: any): void {
                     setOpenPart(null);
                     setSelectedOrder(data);
-                    // setSelectedOrderType('');
+                    setSelectedOrderType('');
+                    console.log(data);
                     onUpdateOrder && onUpdateOrder(data);
                   }}
                   onReceivingPart={async (data) => {
@@ -233,8 +237,6 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                         message.error('Error');
                       }
                     }
-
-                    //
                   }}
                 />
               </>
@@ -251,8 +253,6 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
       selectedPart,
       selecteReceiving,
       setSelectedOrderType,
-
-      t,
     ]
   );
 

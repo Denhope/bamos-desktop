@@ -179,13 +179,15 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
         label={`${t('ORDER STATUS')}`}
         width="lg"
         options={[
+          { value: 'draft', label: t('DRAFT') },
           { value: 'onQuatation', label: t('QUATATION') },
           { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
-          { value: 'closed', label: t('CLOSED') },
-          { value: 'canceled', label: t('CANCELED') },
-          { value: 'onOrder', label: t('ISSUED') },
+          { value: 'CLOSED', label: t('CLOSED') },
+          { value: 'CANCELLED', label: t('CANCELLED') },
           { value: 'transfer', label: t('TRANSFER') },
+          { value: 'PARTLY_RECEIVED', label: t('PARTLY_RECEIVED') },
+          { value: 'RECEIVED', label: t('RECEIVED') },
         ]}
       />
 

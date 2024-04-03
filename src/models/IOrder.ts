@@ -31,6 +31,8 @@ export interface IOrder {
   projectNumbers?: any;
   startDate?: any;
   finishDate?: any;
+  orderItemsID?: any;
+  orderNumberNew?: any;
 }
 export type TOrderStatus =
   | 'ARRIVED'
@@ -49,7 +51,9 @@ export type TOrderStatus =
   | 'UNKNOWN'
   | 'RECEIVED'
   | 'CANCELLED'
-  | 'RECEIVED';
+  | 'RECEIVED'
+  | 'onQuatation'
+  | 'open';
 export type OrderType =
   | 'PURCHASE_ORDER'
   | 'REPAIR_ORDER'

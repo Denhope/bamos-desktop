@@ -93,6 +93,9 @@ export interface IBookingItem {
   PART_PURCHASE_REMARKS?: string;
   pickDate?: any;
   pickSlipNumber?: any;
+  partID?: any;
+  RECEIVING_ITEMS_ID?: any;
+  RECEIVING_ID?: any;
 }
 type VaucherModelType =
   | 'ADD_NEW_PART'

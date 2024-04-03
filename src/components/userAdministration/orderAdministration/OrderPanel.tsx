@@ -267,8 +267,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
               }}
               disabled={
                 !editingOrder || // If there is no editingOrder, the button should be disabled
-                (editingOrder.state !== 'onQuatation' &&
-                  editingOrder.orderType !== 'PURCHASE_ORDER') // If the state is not 'onQuatation' and the orderType is not 'PURCHASE_ORDER', the button should be disabled
+                editingOrder.state == 'draft' // If the state is not 'onQuatation' and the orderType is not 'PURCHASE_ORDER', the button should be disabled
               }
               size="small"
               icon={<PrinterOutlined />}

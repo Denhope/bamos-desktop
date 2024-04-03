@@ -46,19 +46,32 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => {
-        // Определяем цвет фона в зависимости от условия
-        let backgroundColor;
-        if (record.state === 'RECEIVED') {
-          backgroundColor = '#62d156';
-        } else if (record.state === 'OPEN' || record.state === 'open') {
-          backgroundColor = 'red';
-        } else {
-          backgroundColor = '#f0be37';
-        }
-        return (
-          <div style={{ backgroundColor }}>{record.state && record.state}</div>
-        );
+      // render: (text: any, record: any) => {
+      //   // Определяем цвет фона в зависимости от условия
+      //   let backgroundColor;
+      //   if (record.state === 'RECEIVED') {
+      //     backgroundColor = '#62d156';
+      //   } else if (record.state === 'OPEN' || record.state === 'open') {
+      //     backgroundColor = 'red';
+      //   } else {
+      //     backgroundColor = '#f0be37';
+      //   }
+      //   return (
+      //     <div style={{ backgroundColor }}>{record.state && record.state}</div>
+      //   );
+      // },
+      valueEnum: {
+        inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
+        onQuatation: { text: t('QUATATION'), status: 'Warning' },
+        //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+        planned: { text: t('PLANNED'), status: 'Default' },
+        open: { text: t('NEW'), status: 'Error' },
+        closed: { text: t('CLOSED'), status: 'Success' },
+        CANCELLED: { text: t('CANCELLED'), status: 'Default' },
+        onOrder: { text: t('ISSUED'), status: 'Processing' },
+        draft: { text: t('DRAFT'), status: 'Default' },
+        RECEIVED: { text: t('RECEIVED'), status: 'Success' },
+        PARTLY_RECEIVED: { text: t('PARTLY_RECEIVED'), status: 'Warning' },
       },
     },
     {
@@ -72,7 +85,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => record?.PN || record?.PART_NUMBER,
+      render: (text: any, record: any) => record?.partID?.PART_NUMBER,
       width: '12%',
 
       // responsive: ['sm'],
@@ -88,8 +101,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) =>
-        record?.nameOfMaterial || record?.DESCRIPTION,
+      render: (text: any, record: any) => record?.partID?.DESCRIPTION,
     },
     {
       title: `${t('GROUP')}`,
@@ -100,7 +112,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => record?.group || record?.GROUP,
+      render: (text: any, record: any) => record?.partID?.GROUP,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
@@ -117,20 +129,20 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
     },
     {
       title: `${t('QTY')}`,
-      dataIndex: 'quantity',
-      key: 'quantity',
+      dataIndex: 'amout',
+      key: 'amout',
       responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => record?.quantity || record?.QUANTITY,
+      render: (text: any, record: any) => record?.amout,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
       title: `${t('BACKORDER')}`,
-      dataIndex: 'backorder',
-      key: 'backorder',
+      dataIndex: 'backorderQty',
+      key: 'backorbackorderQtyder',
       responsive: ['sm'],
       search: false,
       editable: (text, record, index) => {
@@ -148,7 +160,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
         return false;
       },
       render: (text: any, record: any) =>
-        record?.unit || record?.UNIT_OF_MEASURE,
+        record?.unit || record?.partID?.UNIT_OF_MEASURE,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
@@ -160,7 +172,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => record?.price || record?.PRICE,
+      render: (text: any, record: any) => record?.allPrice,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
   ];

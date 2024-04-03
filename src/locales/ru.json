@@ -305,7 +305,7 @@
   "SCRAP MATERIAL": "СПИСАНИЕ ТОВАРА",
   "SHELF EXPIRY": "СРОКИ ГОДНОСТИ",
   "PARTS TRANSFER": "ПЕРЕМЕЩЕНИЕ МАТЕРИАЛОВ",
-  "PARTS TRACKING": "КОНТРОЛЬ ПЕРЕМЕЩЕНИЯ",
+  "PARTS TRACKING": "ПРОСМОТР ИСТОРИИ",
   "RECEIVING VIEWER": "ПРОСМОТР ПОСТУПЛЕНИЙ",
   "CANCEL RECEIVING": "ОТМЕНА ПОСТУПЛЕНИЯ",
   "ADMINISTRATION": " АДМИНИСТРИРОВАНИЕ",
@@ -576,6 +576,17 @@
   "CERTIFICATE TYPE": "ТИП СЕРТИФИКАТА",
   "CERTIFICATE NUMBER": "НОМЕР СЕРТИФИКАТА",
   "OWNER DESCRIPTION": "ОПИСАНИЕ ВЛАДЕЛЬЦА",
-  "RECEIVING": "ИНФОРМАЦИЯ О ПРИХОДЕ",
-  "POS.": "ПОЗ."
+  "RECEIVING": "ИНФОРМАЦИЯ ОРДЕР №",
+  "POS.": "ПОЗ.",
+  "B/SERIAL": "СЕР.НОМЕР",
+  "REPAIRED": "ОТРЕМОНТИРОВАН",
+  "QUOTATION ORDER": "КВОТАЦИОННЫЙ ОРДЕР",
+  "PURCHASE_ORDER": "ЗАКУПОЧНЫЙ ОРДЕР",
+  "BOOKING TYPE": "ТИП ЗАПИСИ",
+  "USER SING": "ТАБЕЛЬНЫЙ НОМЕР",
+  "LIST OF BOOKING": "СПИСОК ЗАПИСЕЙ",
+  "STORE VIEW": "СКЛАДСКОЙ ВИД",
+  "TECHNICAL VIEW": "ИНЖЕНЕРНЫЙ ВИД",
+  "BOOKING": "ЗАПИСЬ",
+  "A/C": "В/С"
 }

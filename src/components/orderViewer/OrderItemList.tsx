@@ -81,7 +81,8 @@ const OrderItemList: FC<ReceivingItemList> = ({
       },
       valueType: 'select',
       valueEnum: {
-        QUOTATION_ORDER: { text: t('QUOTATION_ORDER') },
+        QUOTATION_ORDER: { text: t('QUOTATION ORDER') },
+        PURCHASE_ORDER: { text: t('PURCHASE_ORDER') },
       },
       // render: (text: any, record: any) => record?.orderID?.orderType,
 
@@ -250,9 +251,12 @@ const OrderItemList: FC<ReceivingItemList> = ({
         //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
         planned: { text: t('PLANNED'), status: 'Default' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
-        canceled: { text: t('CANCELLED'), status: 'Error' },
+        closed: { text: t('CLOSED'), status: 'Success' },
+        CANCELLED: { text: t('CANCELLED'), status: 'Default' },
         onOrder: { text: t('ISSUED'), status: 'Processing' },
+        draft: { text: t('DRAFT'), status: 'Default' },
+        RECEIVED: { text: t('RECEIVED'), status: 'Success' },
+        PARTLY_RECEIVED: { text: t('PARTLY_RECEIVED'), status: 'Warning' },
       },
       // render: (text: any, record: any) => {
       //   // Определяем цвет фона в зависимости от условия

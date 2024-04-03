@@ -72,9 +72,9 @@ export interface IProject {
   projectWO?: number | string;
   description?: string;
   createDate: string;
-  createUserID: string;
+  createUserID: string | any;
   updateDate?: string;
-  updateUserID?: string;
+  updateUserID?: string | any;
   FILES?: any[];
   workPackageIds?: any[];
   isEditing?: boolean;

@@ -15,6 +15,7 @@ import {
   useUpdateProjectMutation,
 } from '@/features/projectAdministration/projectsApi';
 import { IProject } from '@/models/IProject';
+import ProjectDiscription from './ProjectDiscription';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -85,7 +86,18 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
 
   return (
     <>
-      <Space className="gap-4 pb-3">
+      <Space>
+        <Col
+          className=" bg-white px-4 py-3 w-[158vh]  rounded-md brequierement-gray-400 "
+          sm={24}
+        >
+          <ProjectDiscription
+            // onRequirementSearch={setRequirement}
+            project={editingproject}
+          ></ProjectDiscription>
+        </Col>
+      </Space>
+      <Space className="">
         <Col>
           <Button
             size="small"

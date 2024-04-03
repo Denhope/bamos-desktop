@@ -24,13 +24,21 @@ const OrderList: FC<showOrderListType> = ({
   const initialColumns: ProColumns<any>[] = [
     {
       title: `${t('ORDER No')}`,
-      dataIndex: 'orderNumber',
+      dataIndex: ['orderID', 'orderNumberNew'],
       key: 'orderNumber',
-      // tooltip: 'LOCAL_ID',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
-      // width: '13%',
-
-      // responsive: ['sm'],
+      width: '11%',
+      render: (text: any, record: any) => {
+        let titlePrefix = '';
+        if (record && record?.orderType === 'QUOTATION_ORDER') {
+          titlePrefix = 'Q';
+        } else if (record && record?.orderType === 'PURCHASE_ORDER') {
+          titlePrefix = 'P';
+        }
+        return `${titlePrefix} ${record?.orderNumberNew}`;
+      },
+      sorter: (a: any, b: any) => a.orderNumberNew - b.orderNumberNew, //
     },
     {
       title: `${t('VENDOR')}`,
@@ -38,19 +46,11 @@ const OrderList: FC<showOrderListType> = ({
       ellipsis: true,
       render: (_, record) => {
         const vendor =
-          record.vendors && record.vendors[0]
-            ? record.vendors[0].vendor
-              ? record.vendors[0].vendor
-              : record.vendors[0]?.CODE
+          record.orderItemsID && record.orderItemsID[0]
+            ? record.orderItemsID[0].vendorID?.CODE
             : null;
-        const partsVendor =
-          record.parts &&
-          record.parts[0] &&
-          record.parts[0].vendors &&
-          record.parts[0].vendors[0]
-            ? record.parts[0].vendors[0].CODE
-            : null;
-        const data = vendor || partsVendor || 'No vendor';
+
+        const data = vendor || 'No vendor';
         return <span>{data}</span>;
       },
     },
@@ -67,20 +67,34 @@ const OrderList: FC<showOrderListType> = ({
       editable: (text, record, index) => {
         return false;
       },
-      render: (text: any, record: any) => {
-        // Определяем цвет фона в зависимости от условия
-        let backgroundColor;
-        if (record.state === 'RECEIVED') {
-          backgroundColor = '#62d156';
-        } else if (record.state === 'OPEN' || record.state === 'open') {
-          backgroundColor = 'red';
-        } else {
-          backgroundColor = '#f0be37';
-        }
-        return (
-          <div style={{ backgroundColor }}>{record.state && record.state}</div>
-        );
+
+      valueEnum: {
+        inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
+        onQuatation: { text: t('QUATATION'), status: 'Warning' },
+        //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+        planned: { text: t('PLANNED'), status: 'Default' },
+        open: { text: t('NEW'), status: 'Error' },
+        closed: { text: t('CLOSED'), status: 'Success' },
+        CANCELLED: { text: t('CANCELLED'), status: 'Default' },
+        onOrder: { text: t('ISSUED'), status: 'Processing' },
+        draft: { text: t('DRAFT'), status: 'Default' },
+        RECEIVED: { text: t('RECEIVED'), status: 'Success' },
+        PARTLY_RECEIVED: { text: t('PARTLY_RECEIVED'), status: 'Warning' },
       },
+      // render: (text: any, record: any) => {
+      //   // Определяем цвет фона в зависимости от условия
+      //   let backgroundColor;
+      //   if (record.state === 'RECEIVED') {
+      //     backgroundColor = '#62d156';
+      //   } else if (record.state === 'OPEN' || record.state === 'open') {
+      //     backgroundColor = 'red';
+      //   } else {
+      //     backgroundColor = '#f0be37';
+      //   }
+      //   return (
+      //     <div style={{ backgroundColor }}>{record.state && record.state}</div>
+      //   );
+      // },
     },
     {
       title: `${t('DATE')}`,

@@ -45,7 +45,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   useEffect(() => {
     if (order && !currentReceiving) {
       form.setFields([
-        { name: 'order', value: order?.orderNumber },
+        { name: 'order', value: order?.orderNumberNew },
         { name: 'SUPPLIES_CODE', value: order?.supplier },
         { name: 'WAREHOUSE_RECEIVED_AT', value: order?.shipTo || 'MSQ' },
       ]);

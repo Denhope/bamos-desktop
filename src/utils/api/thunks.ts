@@ -5314,7 +5314,7 @@ export const updateOrderByID = createAsyncThunk(
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.put(
-        `orders/${data._id || data.id}/companyID/${data.companyID}/`,
+        `ordersNew/companyID/${data.companyID}/order/${data._id || data.id}`,
 
         data
       );
@@ -5329,7 +5329,7 @@ export const getFilteredOrders = createAsyncThunk(
   'common/getFilteredOrders',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
-      `orders/getFilteredOrders/companyID/${params.companyID}`,
+      `ordersNew/getFilteredOrders/companyID/${params.companyID}`,
 
       API_URL
     );

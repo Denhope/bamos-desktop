@@ -62,6 +62,18 @@ const OrderTree: FC<UserTreeProps> = ({
       if (order.state === 'RECEIVED') {
         stateIndicator = ' 🟢'; // Оранжевый кружок
       }
+      if (order.state === 'CLOSED') {
+        stateIndicator = ' 🟢'; // Оранжевый кружок
+      }
+      if (order.state === 'PARTLY_RECEIVED') {
+        stateIndicator = ' \u{1F7E1}'; // Оранжевый кружок
+      }
+      if (order.state === 'CANCELED') {
+        stateIndicator = ' ⚪'; // Серый квадрат
+      }
+      if (order.state === 'CANCELLED') {
+        stateIndicator = ' ⚪'; // Серый квадрат
+      }
 
       const title = `№: ${titlePrefix} ${order.orderNumberNew} - ${order.orderName}${stateIndicator}`;
       const vendorNodes = (order?.vendorID || []).map((vendorId) => {
@@ -158,6 +170,12 @@ const OrderTree: FC<UserTreeProps> = ({
                 key: uuidv4(),
                 order: order,
               },
+              // {
+              //   title: `${t('STATUS')}:
+              //   ${stateIndicator}`,
+              //   key: uuidv4(),
+              //   order: order,
+              // },
               {
                 title: `${t('FILES')}:`,
                 key: uuidv4(),

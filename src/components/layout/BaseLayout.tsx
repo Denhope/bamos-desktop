@@ -133,7 +133,7 @@ const BaseLayout: React.FC = () => {
       APNNBR: '2121',
 
       descriptions: `${t(`GOODS RECEIVING`)}`,
-      route: RouteNames.GOODS_RESERVING,
+      route: RouteNames.GOODS_RESERVING_NEW,
     },
     {
       APNNBR: '188',

@@ -55,6 +55,7 @@ import OrderViewerNew from './APN/OrderViewerNew';
 import RequirementViewerNew from './APN/RequirementViewerNew';
 import PickslipRequestNew from './APN/PickslipRequestNew';
 import ProjectAdministration from './APN/ProjectAdministration';
+import GoodsRecivingNew from './APN/GoodsRecivingNew';
 
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -104,6 +105,20 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <RequirementManagement />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.GOODS_RESERVING_NEW) {
+      tab = {
+        key,
+
+        title: `${t(`GOODS RECEIVING`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <GoodsRecivingNew />
           </div>
         ),
 
@@ -392,18 +407,18 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         closable: true,
       };
     }
-    if (key == RouteNames.GOODS_RESERVING) {
-      tab = {
-        key,
-        title: `${t(`GOODS RECEIVING`)}`,
-        content: (
-          <div className="h-[82vh] overflow-hidden">
-            <GoodsReciving />
-          </div>
-        ),
-        closable: true,
-      };
-    }
+    // if (key == RouteNames.GOODS_RESERVING) {
+    //   tab = {
+    //     key,
+    //     title: `${t(`GOODS RECEIVING`)}`,
+    //     content: (
+    //       <div className="h-[82vh] overflow-hidden">
+    //         <GoodsReciving />
+    //       </div>
+    //     ),
+    //     closable: true,
+    //   };
+    // }
     if (key == RouteNames.ORDER_CREATOR) {
       tab = {
         key,
@@ -574,9 +589,10 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
       RouteNames.STOCK_NFORMATIONS,
       <ShoppingCartOutlined />
     ),
+
     getItem(
       t('GOODS RECEIVING'),
-      RouteNames.GOODS_RESERVING,
+      RouteNames.GOODS_RESERVING_NEW,
       <ShoppingCartOutlined />
     ),
     getItem(

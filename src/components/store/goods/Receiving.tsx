@@ -29,6 +29,9 @@ import { USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
 import ContextMenuLocationSearchSelect from '@/components/shared/form/ContextMenuLocationSearchSelect';
+import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
+import { IOrderItem } from '@/models/IRequirement';
+import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
@@ -98,47 +101,44 @@ const Receiving: FC<ReceivingType> = ({
 
   useEffect(() => {
     if (currentPart) {
-      setSecectedSinglePN(currentPart);
-      setinitialForm(currentPart?.PART_NUMBER || currentPart?.PN);
+      setSecectedSinglePN(currentPart?.partID);
+      setinitialForm(currentPart?.partID?.PART_NUMBER);
       form.setFields([
         {
           name: 'partNumber',
-          value: currentPart?.PART_NUMBER || currentPart?.PN,
+          value: currentPart?.PART_NUMBER,
         },
         {
           name: 'description',
-          value: currentPart?.DESCRIPTION || currentPart?.nameOfMaterial,
+          value: currentPart?.partID?.DESCRIPTION,
         },
         { name: 'serialNumber', value: currentPart?.serialNumber },
-        { name: 'qty', value: currentPart.requestQuantity },
-        { name: 'partGroup', value: currentPart?.GROUP || currentPart?.group },
-        { name: 'partType', value: currentPart?.TYPE || currentPart?.type },
+        // { name: 'qty', value: currentPart.amout },
+        { name: 'partGroup', value: currentPart?.partID?.GROUP },
+        {
+          name: 'partType',
+          value: currentPart?.partID?.TYPE,
+        },
         {
           name: 'backorder',
-          value: currentPart?.backorder || currentPart?.quantity,
+          value: currentPart?.backorderQty,
         },
 
         {
           name: 'unit',
-          value: currentPart?.UNIT_OF_MEASURE || currentPart?.unit,
+          value: currentPart?.unit || currentPart?.partID?.UNIT_OF_MEASURE,
         },
         {
           name: 'addPartNumber',
-          value: currentPart?.PART_NUMBER || currentPart?.PN,
+          value: currentPart?.partID?.PART_NUMBER,
         },
         {
           name: 'addDescription',
-          value:
-            currentPart?.ADD_DESCRIPTION ||
-            currentPart?.DESCRIPTION ||
-            currentPart?.nameOfMaterial,
+          value: currentPart?.partID?.ADD_DESCRIPTION,
         },
         {
           name: 'addUnit',
-          value:
-            currentPart.ADD_UNIT_OF_MEASURE ||
-            currentPart?.UNIT_OF_MEASURE ||
-            currentPart?.unit,
+          value: currentPart?.partID?.ADD_UNIT_OF_MEASURE,
         },
       ]);
     }
@@ -146,6 +146,8 @@ const Receiving: FC<ReceivingType> = ({
 
   const [isResetForm, setIsResetForm] = useState<boolean>(false);
   const [initialForm, setinitialForm] = useState<any>('');
+  const [updateOrderItem] = useUpdateOrderItemMutation();
+  const [updateOrder] = useUpdateOrderMutation();
   return (
     <ProForm
       onReset={() => {
@@ -187,11 +189,11 @@ const Receiving: FC<ReceivingType> = ({
               SHELF_NUMBER: selectedLocation.locationName,
               STOCK: selectedSingleStore?.shopShortName,
               OWNER: values?.owner,
-              PRICE: 1000,
+              PRICE: currentPart.price,
               RECEIVED_DATE: currentReceiving?.receivingDate,
-              ORDER_NUMBER: currenOrder?.orderNumber,
-              UNIT_OF_MEASURE: values.unit,
-              CURRENCY: 'USD',
+              ORDER_NUMBER: currenOrder?.orderNumberNew,
+              UNIT_OF_MEASURE: values?.unit,
+              CURRENCY: currentPart?.currency,
               COMPANY_ID: currentCompanyID,
               SUPPLIER_BATCH_NUMBER: values.batch,
               SUPPLIES_CODE: currentReceiving?.SUPPLIES_CODE || '',
@@ -221,6 +223,8 @@ const Receiving: FC<ReceivingType> = ({
               CERTIFICATE_TYPE: values?.certificateType,
               REVISION: 'C',
               IS_CUSTOMER_GOODS: isCustomerGoods,
+              partID: currentPart?.partID?._id,
+              RECEIVING_ID: currentReceiving._id,
             })
           );
           if ((await result).meta.requestStatus === 'fulfilled') {
@@ -256,7 +260,7 @@ const Receiving: FC<ReceivingType> = ({
                     SUPPLIES_ID: currentReceiving?.SUPPLIES_ID || '',
                     STOCK: selectedSingleStore?.shopShortName,
                     SHELF_NUMBER: selectedLocation.locationName,
-                    ORDER_NUMBER: currenOrder?.orderNumber,
+                    ORDER_NUMBER: currenOrder?.orderNumberNew,
                     PRICE: currentPart?.price,
                     CURRENCY: currentPart?.currency,
                     QUANTITY: values.qty,
@@ -304,85 +308,110 @@ const Receiving: FC<ReceivingType> = ({
                     projectWO: currenOrder?.projectWO,
                     planeType: currenOrder?.planeType,
                     registrationNumber: currenOrder?.registrationNumber,
-                    orderId: currenOrder?._id,
+                    orderId: currenOrder?.id,
                     orderType: currenOrder?.orderType,
-                    receivingGoodsId:
+                    RECEIVING_ITEMS_ID:
                       resultUp.payload?._id || resultUp.payload?.id,
+                    partID: currentPart?.partID?._id,
+                    RECEIVING_ID: resultUp?.payload?.RECEIVING_ID,
                   },
                 })
               );
 
-              if (currentPart && currenOrder?.parts) {
-                const updatedParts = currenOrder?.parts.map((part) => {
-                  if (part.id === currentPart.id) {
-                    const updatedBarcorder =
-                      Number(part.backorder) -
-                      Number(resultUp.payload.QUANTITY);
-                    const updatedState =
-                      updatedBarcorder > 0 ? 'PARTLY_RECEIVED' : 'RECEIVED';
-                    const updatedReceivings = part.RECEIVINGS
-                      ? [
-                          ...part.RECEIVINGS,
-                          {
-                            RECEIVING_NUMBER: resultUp.payload.RECEIVING_NUMBER,
-                            RECEIVING_ITEM_NUMBER:
-                              resultUp.payload.RECEIVING_ITEM_NUMBER,
-                          },
-                        ]
-                      : [
-                          {
-                            RECEIVING_NUMBER: resultUp.payload.RECEIVING_NUMBER,
-                            RECEIVING_ITEM_NUMBER:
-                              resultUp.payload.RECEIVING_ITEM_NUMBER,
-                          },
-                        ];
-                    return {
-                      ...part,
-                      backorder: updatedBarcorder,
-                      state: updatedState,
-                      RECEIVINGS: updatedReceivings,
-                      BATCH: resultUp.payload.SUPPLIER_BATCH_NUMBER,
-                      SERIAL_NUMBER: resultUp.payload.SERIAL_NUMBER,
-                      PRICE: resultUp.payload.PRICE,
-                    };
-                  }
-                  return part;
-                });
+              if (currentPart && currenOrder?.orderItemsID) {
+                // Обновляем части заказа
+                const updatedParts = await Promise.all(
+                  currenOrder.orderItemsID.map(async (part: IOrderItem) => {
+                    if (part._id === currentPart._id) {
+                      const updatedBarcorder =
+                        Number(part.backorderQty) -
+                        Number(resultUp.payload.QUANTITY);
+                      const updatedState =
+                        updatedBarcorder > 0 ? 'PARTLY_RECEIVED' : 'RECEIVED';
+                      const updatedReceivings = part.RECEIVINGS
+                        ? [
+                            ...part.RECEIVINGS,
+                            {
+                              RECEIVING_NUMBER:
+                                resultUp.payload.RECEIVING_NUMBER,
+                              RECEIVING_ITEM_NUMBER:
+                                resultUp.payload.RECEIVING_ITEM_NUMBER,
+                              receivingNumberID: resultUp.payload._id,
+                              receivingItemNumberID: resultUp.payload._id,
+                            },
+                          ]
+                        : [
+                            {
+                              RECEIVING_NUMBER:
+                                resultUp.payload.RECEIVING_NUMBER,
+                              RECEIVING_ITEM_NUMBER:
+                                resultUp.payload.RECEIVING_ITEM_NUMBER,
+                              receivingNumberID: resultUp.payload._id,
+                              receivingItemNumberID: resultUp.payload._id,
+                            },
+                          ];
+                      return await updateOrderItem({
+                        ...part,
+                        backorderQty: updatedBarcorder,
+                        state: updatedState,
+                        RECEIVINGS: updatedReceivings,
+                        BATCH: resultUp.payload?.SUPPLIER_BATCH_NUMBER,
+                        SERIAL_NUMBER: resultUp?.payload?.SERIAL_NUMBER,
+                        PRICE: resultUp.payload.PRICE,
+                      }).unwrap();
+                    }
+                    return part; // Если часть не была обновлена, вернуть ее без изменений
+                  })
+                );
+
+                // Сохраняем состояния всех заказов в массив
+                const orderStates = updatedParts.map((part) =>
+                  part ? part.state : null
+                );
+
+                // Выводим состояния всех заказов в консоль
+                console.log('Состояния всех заказов:', orderStates);
+
+                // Определяем новое состояние заказа на основе состояний всех частей
                 let stateNew;
-                if (
-                  updatedParts.some((part) => part.state === 'PARTLY_RECEIVED')
-                ) {
+                if (orderStates.some((state) => state === 'PARTLY_RECEIVED')) {
                   stateNew = 'PARTLY_RECEIVED';
                 } else if (
-                  updatedParts.every((part) => part.state === 'CANCELLED')
+                  orderStates.every((state) => state === 'CANCELLED')
                 ) {
                   stateNew = 'CANCELLED';
-                } else if (
-                  updatedParts.every((part) => part.state === 'RECEIVED')
-                ) {
+                } else if (orderStates.every((state) => state === 'RECEIVED')) {
                   stateNew = 'RECEIVED';
                 } else if (
-                  updatedParts.every(
-                    (part) => part.state === 'PARTLY_CANCELLED'
-                  )
+                  orderStates.every((state) => state === 'PARTLY_CANCELLED')
                 ) {
                   stateNew = 'PARTLY_CANCELLED';
                 } else if (
-                  updatedParts.some((part) => part.state === 'PARTLY_CANCELLED')
+                  orderStates.some((state) => state === 'PARTLY_CANCELLED')
                 ) {
                   stateNew = 'PARTLY_CANCELLED';
                 }
-                const result = await dispatch(
-                  updateOrderByID({
-                    id: currenOrder._id || currenOrder.id,
-                    companyID: currentCompanyID || '',
-                    parts: updatedParts,
-                    state: stateNew,
-                  })
-                );
-                if (result.meta.requestStatus === 'fulfilled') {
-                  onUpdateOrder(result.payload);
-                  // setOpenLabelsPrint(true);
+
+                // Проверяем, что stateNew определен и не равен null или undefined
+                if (stateNew !== null && stateNew !== undefined) {
+                  try {
+                    const updateResult = await updateOrder({
+                      id: currenOrder._id || currenOrder.id || '',
+                      state: stateNew,
+                      _id: currenOrder._id || currenOrder.id || '',
+                    });
+                    onUpdateOrder(updateResult);
+
+                    // Вызываем функцию onUpdateOrder с результатом обновления заказа
+                    // updateResult && onUpdateOrder(updateResult);
+                  } catch (error) {
+                    console.error('Ошибка при обновлении заказа:', error);
+                    // Здесь можно добавить обработку ошибок, если это необходимо
+                  }
+                } else {
+                  console.log(
+                    'Не удалось определить новое состояние для заказа.'
+                  );
                 }
               }
             }
@@ -572,9 +601,9 @@ const Receiving: FC<ReceivingType> = ({
               valueEnum={{
                 '/NEW': t('NEW'),
                 '/INSPECTED': t('INSPECTED'),
-                '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
-                '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
-                '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),
+                '/REPAIRED': t('REPAIRED'),
+                '/SERVICABLE': t('SERVICABLE'),
+                '/UNSERVICABLE': t('UNSERVICABLE'),
               }}
             />
             <ProFormDatePicker
