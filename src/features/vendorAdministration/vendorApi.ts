@@ -17,11 +17,12 @@ export const vendorApi = createApi({
         status?: string[];
         name?: string;
         isResident?: boolean;
+        unp?: string;
       }
     >({
-      query: ({ companyName, code, status, name, isResident }) => ({
+      query: ({ companyName, code, status, name, isResident, unp }) => ({
         url: `vendors/getFilteredVendors/company/${COMPANY_ID}`,
-        params: { code, status, name, isResident },
+        params: { code, status, name, isResident, unp },
       }),
       providesTags: ['Vendors'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

@@ -167,21 +167,20 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
               rules={[{ required: true }]}
               name="status"
               label={t('REQUIREMENT STATE')}
-              width="xs"
+              width="sm"
               initialValue={'draft'}
-              valueEnum={{
-                onQuatation: { text: t('QUATATION'), status: 'Warning' },
-                //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
-                planned: { text: t('PLANNED'), status: 'Default' },
-                open: { text: t('NEW'), status: 'Error' },
-                draft: { text: t('DRAFT'), status: 'Default' },
-                // inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
-                //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
+              options={[
+                { value: 'draft', label: t('DRAFT') },
+                { value: 'planned', label: t('PLANNED') },
+                { value: 'open', label: t('NEW') },
+                { value: 'onOrder', label: t('ISSUED') },
+                { value: 'onQuatation', label: t('QUATATION') },
+                { value: 'onShort', label: t('ON SHORT') },
 
-                closed: { text: t('CLOSED'), status: 'Default' },
-                canceled: { text: t('CANCELLED'), status: 'Error' },
-                onOrder: { text: t('ISSUED'), status: 'Processing' },
-              }}
+                { value: 'closed', label: t('CLOSED') },
+                { value: 'canceled', label: t('CANCELED') },
+                // { value: 'transfer', label: t('TRANSFER') },
+              ]}
             />
             <ProFormSelect
               showSearch
@@ -365,16 +364,15 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                   { value: 'ROTABLE', label: t('ROTABLE') },
                   { value: 'CONSUMABLE', label: t('CONSUMABLE') },
                 ]}
-              />
+              />{' '}
+              <ProFormDatePicker
+                label={t('PLANNED START DATE')}
+                name="plannedDate"
+                width="sm"
+              ></ProFormDatePicker>
             </ProFormGroup>
           </ProFormGroup>
-          <ProFormGroup>
-            <ProFormDatePicker
-              label={t('PLANNED START DATE')}
-              name="plannedDate"
-              width="sm"
-            ></ProFormDatePicker>
-          </ProFormGroup>
+
           <ProFormTextArea
             fieldProps={{
               style: { resize: 'none' },

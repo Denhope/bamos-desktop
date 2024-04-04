@@ -92,8 +92,11 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       },
 
       valueEnum: {
+        draft: { text: t('DRAFT'), status: 'Default' },
         inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
         onQuatation: { text: t('QUATATION'), status: 'Warning' },
+        onShort: { text: t('ON SHORT'), status: 'Warning' },
+
         //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },

@@ -102,7 +102,31 @@ function resizeWindow(width: number, height: number) {
     win.setSize(width, height);
   }
 }
-
+// Функция для дублирования окна
+function duplicateWindow() {
+  const focusedWindow = BrowserWindow.getFocusedWindow();
+  if (focusedWindow) {
+    let newWindow = new BrowserWindow({
+      title: 'Main window',
+      icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
+      width: focusedWindow.getSize()[0],
+      height: focusedWindow.getSize()[1],
+      webPreferences: {
+        preload: preload,
+        // nodeIntegration: true,
+        // contextIsolation: false,
+      },
+    });
+    if (url) {
+      // electron-vite-vue#298
+      newWindow.loadURL(url);
+      // Open devTool if the app is not packaged
+      newWindow.webContents.openDevTools();
+    } else {
+      newWindow.loadFile(indexHtml);
+    }
+  }
+}
 // Функция для переключения полноэкранного режима
 function toggleFullScreen() {
   const win = BrowserWindow.getFocusedWindow();
@@ -166,6 +190,11 @@ const template: Electron.MenuItemConstructorOptions[] = [
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click: reloadWindow,
+      },
+      {
+        label: 'Duplicate Window',
+        accelerator: 'CmdOrCtrl+D',
+        click: duplicateWindow,
       },
       {
         label: 'Actual Size',
@@ -319,31 +348,31 @@ ipcMain.handle('open-win', (_, arg) => {
   }
 });
 
-// function createWindowWithUrl(url: string) {
-//   let childWindow: BrowserWindow | null = new BrowserWindow({
-//     webPreferences: {
-//       preload,
-//       nodeIntegration: false,
-//       contextIsolation: true,
-//     },
-//   });
+function createWindowWithUrl(url: string) {
+  let childWindow: BrowserWindow | null = new BrowserWindow({
+    webPreferences: {
+      preload,
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
 
-//   if (process.env.VITE_DEV_SERVER_URL) {
-//     childWindow.loadURL(url);
-//   } else {
-//     childWindow.loadFile(indexHtml);
-//   }
+  if (process.env.VITE_DEV_SERVER_URL) {
+    childWindow.loadURL(url);
+  } else {
+    childWindow.loadFile(indexHtml);
+  }
 
-//   // Обработчик закрытия окна
-//   childWindow.on('closed', () => {
-//     childWindow = null;
-//   });
+  // Обработчик закрытия окна
+  childWindow.on('closed', () => {
+    childWindow = null;
+  });
 
-//   // Отображение окна
-//   childWindow.show();
-// }
+  // Отображение окна
+  childWindow.show();
+}
 
-// // Обработчик IPC для открытия нового окна с URL
-// ipcMain.handle('open-win', (_, url: string) => {
-//   createWindowWithUrl(url);
-// });
+// Обработчик IPC для открытия нового окна с URL
+ipcMain.handle('open-win', (_, url: string) => {
+  createWindowWithUrl(url);
+});

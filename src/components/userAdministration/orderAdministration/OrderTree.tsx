@@ -66,13 +66,20 @@ const OrderTree: FC<UserTreeProps> = ({
         stateIndicator = ' 🟢'; // Оранжевый кружок
       }
       if (order.state === 'PARTLY_RECEIVED') {
-        stateIndicator = ' \u{1F7E1}'; // Оранжевый кружок
+        stateIndicator = '🟤'; // Оранжевый кружок
       }
       if (order.state === 'CANCELED') {
         stateIndicator = ' ⚪'; // Серый квадрат
       }
       if (order.state === 'CANCELLED') {
         stateIndicator = ' ⚪'; // Серый квадрат
+      }
+      if (order.state === 'onOrder') {
+        stateIndicator = '🔵'; // Серый квадрат
+      }
+
+      if (order.state === 'onShort') {
+        stateIndicator = '🟠'; // Серый квадрат
       }
 
       const title = `№: ${titlePrefix} ${order.orderNumberNew} - ${order.orderName}${stateIndicator}`;

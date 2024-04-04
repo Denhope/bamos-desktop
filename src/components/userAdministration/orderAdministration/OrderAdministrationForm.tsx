@@ -175,7 +175,11 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
 
   return (
     <ProForm
-      disabled={order && order.state === 'onQuatation'}
+      disabled={
+        (order && order.state === 'onQuatation') ||
+        order?.state == 'RECEIVED' ||
+        order?.state == 'CLOSED'
+      }
       onReset={() => {
         form.resetFields();
       }}
@@ -225,6 +229,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               options={[
                 { value: 'draft', label: t('DRAFT') },
                 { value: 'onQuatation', label: t('QUATATION') },
+                { value: 'onShort', label: t('ON SHORT') },
                 { value: 'planned', label: t('PLANNED') },
                 { value: 'open', label: t('NEW') },
                 { value: 'CLOSED', label: t('CLOSED') },
@@ -396,7 +401,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               order={order}
               onSubmit={function (orderItem: IOrderItem): void {
                 handleUpdateOrderItem(orderItem);
-                console.log(item);
+                // console.log(item);
               }}
             />
           </ProFormGroup>

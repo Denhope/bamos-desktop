@@ -39,7 +39,38 @@ const RequirementTree: FC<UserTreeProps> = ({
   };
   const convertToTreeData = (requirements: IRequirement[]): TreeDataNode[] => {
     return requirements.map((requirement) => {
-      const title = `№:${requirement?.partRequestNumberNew} -/////(${requirement?.partNumberID?.PART_NUMBER})`;
+      let statusIndicator = '';
+      if (requirement.status === 'onQuatation') {
+        statusIndicator = ' \u{1F7E1}'; // Оранжевый кружок
+      } else if (requirement.status === 'open') {
+        statusIndicator = ' \u{1F534}'; // Красный кружок
+      } else if (requirement.status === 'transfer') {
+        statusIndicator = ' \u{1F7E2}'; // Желтый кружок
+      } else if (requirement.status === 'draft') {
+        statusIndicator = ' ⚪'; // Серый квадрат
+      }
+      if (requirement.status === 'RECEIVED') {
+        statusIndicator = ' 🟢'; // Оранжевый кружок
+      }
+      if (requirement.status === 'CLOSED') {
+        statusIndicator = ' 🟢'; // Оранжевый кружок
+      }
+      if (requirement.status === 'PARTLY_RECEIVED') {
+        statusIndicator = ' \u{1F7E1}'; // Оранжевый кружок
+      }
+      if (requirement.status === 'CANCELED') {
+        statusIndicator = ' ⚪'; // Серый квадрат
+      }
+      if (requirement.status === 'CANCELLED') {
+        statusIndicator = ' ⚪'; // Серый квадрат
+      }
+      if (requirement.status === 'onOrder') {
+        statusIndicator = '🔵'; // Серый квадрат
+      }
+      if (requirement.status === 'onShort') {
+        statusIndicator = '🟠'; // Серый квадрат
+      }
+      const title = `№:${requirement?.partRequestNumberNew} -/(${requirement?.partNumberID?.PART_NUMBER})${statusIndicator}`;
       // const children = [
       //   {
       //     title: `STATUS: ${requirement.status}`,
@@ -88,7 +119,7 @@ const RequirementTree: FC<UserTreeProps> = ({
       setSelectedIndex(0);
     } else {
       setSelectedIndex(
-        (prevIndex) => (prevIndex + 1) % filteredTreeData.length
+        (prevIndex: number) => (prevIndex + 1) % filteredTreeData.length
       );
     }
 

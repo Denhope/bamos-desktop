@@ -69,6 +69,7 @@ const TransferFilteredForm: FC<TransferFilteredFormType> = ({
   return (
     <>
       <ProForm
+        layout="horizontal"
         size={'small'}
         onReset={(values) => {
           setSecectedSinglePN(null);

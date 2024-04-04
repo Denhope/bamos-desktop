@@ -117,6 +117,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
         message.success(t('ORDER SUCCESSFULLY UPDATED'));
       } else {
         await addOrder(order).unwrap();
+        console.log(order);
         message.success(t('ORDER SUCCESSFULLY ADDED'));
       }
       setEditingOrder(null);

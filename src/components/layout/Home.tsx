@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Layout, Menu, Skeleton, TabPaneProps, Tabs } from 'antd';
+import { Button, Layout, Menu, Skeleton, TabPaneProps, Tabs } from 'antd';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import logoImage from '../../assets/img/407Technics_logo.png';
 // import logoImage from '../../assets/img/Image.jpg';
@@ -56,7 +56,7 @@ import RequirementViewerNew from './APN/RequirementViewerNew';
 import PickslipRequestNew from './APN/PickslipRequestNew';
 import ProjectAdministration from './APN/ProjectAdministration';
 import GoodsRecivingNew from './APN/GoodsRecivingNew';
-
+import { ipcRenderer } from 'electron';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -742,6 +742,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
   return (
     <div>
+      {/* <Button onClick={openEmptyWindow}>Открыть пустое окно</Button> */}
       {isLoading ? (
         <Skeleton active={true} paragraph={{ rows: 5 }} />
       ) : (

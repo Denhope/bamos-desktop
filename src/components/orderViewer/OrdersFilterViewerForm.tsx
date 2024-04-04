@@ -202,6 +202,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
           options={[
             { value: 'draft', label: t('DRAFT') },
             { value: 'onQuatation', label: t('QUATATION') },
+            { value: 'onShort', label: t('ON SHORT') },
             { value: 'planned', label: t('PLANNED') },
             { value: 'open', label: t('NEW') },
             { value: 'CLOSED', label: t('CLOSED') },

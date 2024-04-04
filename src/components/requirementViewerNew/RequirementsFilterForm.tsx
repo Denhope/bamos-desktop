@@ -405,8 +405,11 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         label={`${t('REQUIREMENT STATUS')}`}
         width="lg"
         options={[
-          { value: 'onQuatation', label: t('QUATATION') },
+          { value: 'draft', label: t('DRAFT') },
           { value: 'planned', label: t('PLANNED') },
+          { value: 'onQuatation', label: t('QUATATION') },
+          { value: 'onShort', label: t('ON SHORT') },
+
           { value: 'open', label: t('NEW') },
           { value: 'closed', label: t('CLOSED') },
           { value: 'canceled', label: t('CANCELED') },

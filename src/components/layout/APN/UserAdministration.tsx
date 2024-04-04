@@ -121,6 +121,7 @@ const UserAdministration: FC = () => {
     status: vendorFormValues.status,
     name: vendorFormValues.NAME,
     isResident: vendorFormValues.IS_RESIDENT,
+    unp: vendorFormValues.UNP,
   });
   const { refetch: refetchACTypes } = useGetACTypesQuery({
     code: ACTypesFormValues.code,

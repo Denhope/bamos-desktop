@@ -51,7 +51,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
       ]);
     }
     if (order && currentReceiving) {
-      form.setFields([{ name: 'order', value: order?.orderNumber }]);
+      form.setFields([{ name: 'order', value: order?.orderNumberNew }]);
     }
   }, [order]);
   useEffect(() => {
@@ -323,7 +323,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               name="awbDate"
               label={t('DOC DATE')}
               rules={[{ required: true }]}
-              width="xs"
+              width="sm"
             ></ProFormDatePicker>
             <ProFormText
               disabled={!isCreating}

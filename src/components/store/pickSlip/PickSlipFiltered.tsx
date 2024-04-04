@@ -386,7 +386,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
               label={`${t('TASK TYPE')}`}
               options={[
                 { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
-                { value: 'NRC', label: 'NRC' },
+                // { value: 'NRC', label: 'NRC' },
               ]}
               initialValue="MAIN_TASK"
             />
@@ -445,7 +445,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
 
       <ProFormDateRangePicker
         name="createDate"
-        label={`${t(' DATE')}`}
+        label={`${t('DATE')}`}
         width="lg"
         tooltip="CREATE DATE"
         fieldProps={{

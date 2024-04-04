@@ -410,7 +410,8 @@ const StockGrid: React.FC<StockGridProps> = ({
       </div>
       <div className={`flex flex-col text-sm ml-auto font-bold`}>
         <div className="ml-auto pr-24">
-          TOTAL STOCK QTY:
+          {t('TOTAL STOCK QTY:')}
+
           <span
             className={`highlight ${
               totalQuantity ? 'bg-green-500' : 'bg-red-500'
@@ -423,7 +424,7 @@ const StockGrid: React.FC<StockGridProps> = ({
 
       <div className="py-5 flex flex-col w-[99%]">
         <Title level={5}>
-          {t('DETAILS FOR STORE ')} -
+          {t('DETAILS FOR STORE')} -
           <a className="font-bold text-lg">
             {filteredCurrentStockItems && filteredCurrentStockItems.length > 0
               ? selectedKey

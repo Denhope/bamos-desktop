@@ -403,6 +403,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
     useState<UserResponce | null>();
   const [reset, setReset] = useState(false);
   const [form] = Form.useForm();
+
   return (
     <div className="flex flex-col  h-[73vh]  gap-2 w-[99%]">
       <ModalForm
@@ -446,7 +447,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                 />
               </div>
             ),
-            title: 'REQUIREMENT ITEMS',
+            title: `${t('REQUIREMENT ITEMS')}`,
           },
           {
             content: (
@@ -468,7 +469,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                 />
               </div>
             ),
-            title: 'BOOKED ITEMS',
+            title: `${t('BOOKED ITEMS')}`,
           },
         ]}
       />

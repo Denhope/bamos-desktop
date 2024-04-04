@@ -41,7 +41,7 @@ const GeneretedQuotationOrder: FC<GeneretedQuatationOrder> = ({
     <div className="">
       {isLoading && <div>Loading...</div>}
       {isError && <div>Error loading order</div>}
-      {orderID && <div>{orderID}</div>}
+
       {data && (
         <>
           <PDFViewer

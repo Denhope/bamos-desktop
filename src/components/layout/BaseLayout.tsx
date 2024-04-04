@@ -41,6 +41,7 @@ import { ModalForm, ProCard, ProFormItem } from '@ant-design/pro-components';
 import { MenuItem, getItem } from '@/services/utilites';
 import APNTable from '@/components/layout/APNTable';
 import UTCClock from '../shared/UTCClock';
+import { ipcRenderer } from 'electron';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -375,6 +376,20 @@ const BaseLayout: React.FC = () => {
     setValue('');
   };
   const [value, setValue] = useState('');
+
+  // const onRowClick = (
+  //   record: any,
+  //   rowIndex?: any,
+  //   event: React.MouseEvent<HTMLTableRowElement>
+  // ) => {
+  //   if (event.ctrlKey) {
+  //     // Send an IPC event to open the link in a new Electron window
+  //     ipcRenderer.send('open-link-in-window', record.route);
+  //   } else {
+  //     setSelectedAPN(record);
+  //     setIsModalOpen(false);
+  //   }
+  // };
   return (
     <Layout style={{ minHeight: '100vh' }}>
       {location.pathname === RouteNames.WEB ? (

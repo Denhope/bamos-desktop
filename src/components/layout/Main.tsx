@@ -8,10 +8,12 @@ import React, { FC } from 'react';
 import BaseLayout from './BaseLayout';
 import { RouteNames } from '@/router';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Main: FC = () => {
   const { isAuth } = useTypedSelector((state) => state.auth);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <>
       {!isAuth ? (
@@ -44,13 +46,15 @@ const Main: FC = () => {
                       style={{ height: '90vh' }}
                       status="403"
                       // title="403"
-                      subTitle="Sorry, you are not authorized to BAMOS."
+                      subTitle={`${t(
+                        'Sorry, you are not authorized to BAMOS.'
+                      )}`}
                       extra={
                         <Button
                           onClick={() => navigate(RouteNames.LOGIN)}
                           type="primary"
                         >
-                          LOG IN
+                          {`${t('LOG IN')}`}
                         </Button>
                       }
                     />
@@ -68,7 +72,7 @@ const Main: FC = () => {
               bottom: '0',
             }}
           >
-            ©2023 Created by Kavalchuk D.
+            {t(`©2024 Created by Kavalchuk D.`)}
           </Footer>
         </Layout>
       ) : (

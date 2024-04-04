@@ -13,6 +13,7 @@ export type VendorFilteredFormValues = {
   NAME: string;
   status: string[];
   IS_RESIDENT?: boolean;
+  UNP?: string;
 };
 
 type VendorFilteredFormProps<T> = {
@@ -67,6 +68,14 @@ const VendorFilteredForm: FC<
           }}
           name="NAME"
           label={t('NAME')}
+          width="lg"
+        />
+        <ProFormText
+          fieldProps={{
+            onKeyPress: handleKeyPress,
+          }}
+          name="UNP"
+          label={t('UNP')}
           width="lg"
         />
 

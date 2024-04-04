@@ -180,9 +180,9 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         options={[
           { value: 'draft', label: t('DRAFT') },
-          { value: 'onQuatation', label: t('QUATATION') },
           { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
+          { value: 'onQuatation', label: t('QUATATION') },
           { value: 'CLOSED', label: t('CLOSED') },
           { value: 'CANCELLED', label: t('CANCELLED') },
           { value: 'transfer', label: t('TRANSFER') },

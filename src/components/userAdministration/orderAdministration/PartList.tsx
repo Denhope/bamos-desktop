@@ -11,6 +11,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { IOrder, IRequirement } from '@/models/IRequirement';
+import OrderViewerNew from '@/components/layout/APN/OrderViewerNew';
+import OrderViewerNewModal from '@/components/layout/APN/OrderViewerNewModal';
 
 type RowState = {
   _id: any;
@@ -28,6 +30,7 @@ type Props = {
   requirements?: IRequirement[];
   requirementCodesValueEnum: Record<string, string>;
   onDataChange: (rows: RowState[]) => void; // Функция обратного вызова для родителя
+  onDataFromQuatation?: (rows: any[]) => void; // Функция обратного вызова для родителя
 };
 
 const PartList: React.FC<Props> = ({
@@ -38,6 +41,8 @@ const PartList: React.FC<Props> = ({
   order,
 }) => {
   const { t } = useTranslation();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowData, setSelectedRowData] = useState<any[]>([]);
   const [rows, setRows] = useState<RowState[]>([
     {
       partNumberID: '',
@@ -48,6 +53,8 @@ const PartList: React.FC<Props> = ({
     }, // Начальная пустая строка
   ]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisibleFromQuatation, setIsModalVisibleFromQuatation] =
+    useState(false);
   const [selectedRows, setSelectedRows] = useState<RowState[]>([]);
   useEffect(() => {
     if (order) {
@@ -99,6 +106,24 @@ const PartList: React.FC<Props> = ({
     setSelectedRows(newSelectedRows);
   };
 
+  const handleRowSelectionFoQuatation = (selectedRowData: any[]) => {
+    // Преобразуем выбранные строки в новый формат, содержащий только необходимые данные
+    const newSelectedRows: any[] = selectedRowData.map((row) => ({
+      requirementsID: row.requirementsID[0]._id,
+      partNumberID: row?.partID?._id, // Идентификатор partNumberID
+      amout: row.amout,
+      unit: row.partID.UNIT_OF_MEASURE, // Единица измерения из partNumberID
+      reqCodesID: row.reqCodesID,
+      quatationOrderID: row.id,
+      nds: row.nds || '',
+      leadTime: row?.leadTime || '',
+      price: row?.price || '',
+      allPrice: row?.allPrice || '',
+      notes: row?.notes || '',
+    }));
+    setSelectedRows(newSelectedRows);
+  };
+
   // Функция для обновления значения селекта
   const handleSelectChange = (index: number, value: string) => {
     const newRows = [...rows];
@@ -140,10 +165,14 @@ const PartList: React.FC<Props> = ({
   const showModal = () => {
     setIsModalVisible(true);
   };
+  const showModalQuatation = () => {
+    setIsModalVisibleFromQuatation(true);
+  };
 
   // Функция для закрытия модального окна
   const handleCancel = () => {
     setIsModalVisible(false);
+    setIsModalVisibleFromQuatation(false);
   };
 
   // Функция для добавления выбранных строк в таблицу
@@ -151,6 +180,7 @@ const PartList: React.FC<Props> = ({
     const newRows = [...rows, ...selectedRows];
     setRows(newRows);
     setIsModalVisible(false);
+    setIsModalVisibleFromQuatation(false);
     onDataChange(newRows); // Вызываем функцию обратного вызова с новыми данными
   };
 
@@ -186,9 +216,21 @@ const PartList: React.FC<Props> = ({
 
   return (
     <div>
-      <ProFormItem>
-        <Button onClick={showModal}>{t('SELECT REQUIREMENT')}</Button>
-      </ProFormItem>
+      <div className="flex gap-5">
+        <ProFormItem>
+          {/* {order && order.orderType !== 'PURCHASE_ORDER'  */}
+          <Button onClick={showModal}>{t('SELECT FROM REQUIREMENT')}</Button>
+          {/* } */}
+        </ProFormItem>
+        <ProFormItem>
+          {/* {order && order.orderType! == 'QUOTATION_ORDER' &&  */}
+          <Button onClick={showModalQuatation}>
+            {t('SELECT FROM QUATATION ITEMS')}
+          </Button>
+          {/* } */}
+        </ProFormItem>
+      </div>
+
       {rows.map((row, index) => (
         <div
           key={index}
@@ -295,6 +337,34 @@ const PartList: React.FC<Props> = ({
           rowKey="_id"
           pagination={false}
         />
+      </Modal>
+
+      <Modal
+        style={{ maxHeight: '80vh', overflowY: 'auto' }}
+        width={'90%'}
+        title="Выберите строки"
+        visible={isModalVisibleFromQuatation}
+        onOk={handleAddSelectedRows}
+        onCancel={handleCancel}
+      >
+        <OrderViewerNewModal
+          onSelectedRowKeys={setSelectedRowKeys}
+          onSelectedRecords={function (record: any): void {
+            setSelectedRowData(record);
+            // console.log(record);
+            handleRowSelectionFoQuatation(record);
+          }}
+        ></OrderViewerNewModal>
+        {/* <Table
+          rowSelection={{
+            type: 'checkbox',
+            onChange: handleRowSelection,
+          }}
+          dataSource={requirements}
+          columns={columns}
+          rowKey="_id"
+          pagination={false}
+        /> */}
       </Modal>
     </div>
   );

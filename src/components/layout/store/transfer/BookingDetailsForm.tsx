@@ -80,6 +80,7 @@ const BookingDetailsForm: FC<BookingDetailsFormType> = ({
   return (
     <>
       <ProForm
+        layout="horizontal"
         size="small"
         submitter={false}
         className="bg-white px-4 py-3 rounded-md border-gray-400"

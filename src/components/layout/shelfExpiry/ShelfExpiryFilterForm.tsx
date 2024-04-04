@@ -224,7 +224,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
           ]}
         />
         <Divider />
-        <ProForm.Item label="LIMIT">
+        <ProForm.Item label={`${t('LIMIT')}`}>
           <Space.Compact size="small">
             <Form.Item rules={[{ required: true }]} name="value" noStyle>
               <InputNumber

@@ -399,19 +399,21 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        initialValue={['open']}
+        initialValue={['open', 'onOrder']}
         mode="multiple"
         name="requestStatus"
         label={`${t('REQUIREMENT STATUS')}`}
         width="lg"
         options={[
-          { value: 'onQuatation', label: t('QUATATION') },
+          { value: 'draft', label: t('DRAFT') },
           { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
+          { value: 'onOrder', label: t('ISSUED') },
+          { value: 'onQuatation', label: t('QUATATION') },
+          { value: 'onShort', label: t('ON SHORT') },
           { value: 'closed', label: t('CLOSED') },
           { value: 'canceled', label: t('CANCELED') },
-          { value: 'onOrder', label: t('ISSUED') },
-          { value: 'transfer', label: t('TRANSFER') },
+          // { value: 'transfer', label: t('TRANSFER') },
         ]}
       />
       {/* <ProFormSelect
