@@ -373,6 +373,6 @@ function createWindowWithUrl(url: string) {
 }
 
 // Обработчик IPC для открытия нового окна с URL
-ipcMain.handle('open-win', (_, url: string) => {
-  createWindowWithUrl(url);
-});
+// ipcMain.handle('open-win', (_, url: string) => {
+//   createWindowWithUrl(url);
+// });

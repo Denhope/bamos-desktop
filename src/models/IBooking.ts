@@ -13,6 +13,7 @@ export interface IBookingItem {
   currency?: any;
   store?: any;
   projectID?: string;
+  projectTaskID?: string;
   orderNumber?: any;
   location?: string;
   station?: string;

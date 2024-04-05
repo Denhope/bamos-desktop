@@ -1,4 +1,4 @@
-import { MatRequestAplication } from "@/store/reducers/ProjectTaskSlise";
+import { MatRequestAplication } from '@/store/reducers/ProjectTaskSlise';
 
 export interface IPickSlip {
   id?: string;
@@ -26,6 +26,9 @@ export interface IPickSlip {
   storeManID?: string | null;
   recipientID?: string | null;
   companyID?: string;
+  projectTaskID?: any;
+  projectID?: any;
+  neededOnID: any;
 }
 export interface IReturnSlip {
   id?: string;
@@ -81,6 +84,7 @@ export interface IPickSlipResponse {
   neededOn?: string;
   getFrom?: string;
   QRCodeLink?: any;
+  neededOnID?: any;
 }
 
-export type TPickSliptatus = "открыто" | "закрыто" | "open" | "closed";
+export type TPickSliptatus = 'открыто' | 'закрыто' | 'open' | 'closed';

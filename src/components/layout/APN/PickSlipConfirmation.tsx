@@ -37,8 +37,9 @@ import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
 import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
 
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
-import { USER_ID } from '@/utils/api/http';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import FileModalList from '@/components/shared/FileModalList';
+import { useUpdateRequirementMutation } from '@/features/requirementAdministration/requirementApi';
 
 const PickSlipConfirmation: FC = () => {
   const { t } = useTranslation();
@@ -560,6 +561,7 @@ const PickSlipConfirmation: FC = () => {
   //     return acc.concat(item?.onBlock);
   //   }, []) || []
   // );
+  const [updateRequirement] = useUpdateRequirementMutation();
   const [updateValue, setUpdateValue] = useState<any>();
   const [intermediateData, setIntermediateData] = useState<any | null>(null);
   const handleButtonClick = () => {
@@ -813,6 +815,7 @@ const PickSlipConfirmation: FC = () => {
                     );
                     if (result.meta.requestStatus === 'fulfilled') {
                       setCurrenPick(result.payload);
+                      console.log(result.payload);
                       setUpdateValue(new Date());
                       const index = filteredMaterialOrders.findIndex(
                         (itemR: any) => itemR._id === result.payload._id
@@ -936,16 +939,20 @@ const PickSlipConfirmation: FC = () => {
                       recipient: selectedСonsigneeUser?.name,
                       recipientID: selectedСonsigneeUser?._id,
                       taskNumber: currentPick.taskNumber,
-                      registrationNumber: currentPick.registrationNumber,
-                      planeType: currentPick.planeType,
-                      projectWO: currentPick.projectWO,
-                      projectTaskWO: currentPick.projectTaskWO,
+                      registrationNumber:
+                        currentPick?.projectID?.acRegistrationNumber,
+                      planeType: currentPick?.projectID?.acType,
+                      projectWO: currentPick?.projectID?.projectWO,
+                      projectTaskWO: currentPick?.projectTaskId?.projectTaskWO,
                       materialAplicationNumber:
                         currentPick.materialAplicationNumber,
                       additionalTaskID: currentPick.additionalTaskID,
                       store: currentPick.getFrom,
-                      workshop: currentPick.neededOn,
+                      workshop: currentPick?.neededOnID?.title,
                       companyID: currentCompanyID,
+                      projectTaskID: currentPick?.projectTaskId,
+                      projectID: currentPick.projectID,
+                      neededOnID: currentPick.neededOnID,
                     })
                   );
                   // добавитьUpdateUser;
@@ -1052,19 +1059,25 @@ const PickSlipConfirmation: FC = () => {
                         })
                       );
                     });
-                    updatetOrderMaterials.map((item: any) => {
-                      dispatch(
-                        updateRequirementByID({
-                          id: item.requirementID?._id,
-                          // requestQuantity: -item.QUANTITY,
-                          issuedQuantity: item.QUANTITY,
-                          updateUserID: USER_ID || '',
-                          updateDate: new Date(),
-                          companyID: localStorage.getItem('companyID') || '',
-                          projectID: result.payload.projectId,
-                          // status: 'closed',
-                        })
-                      );
+                    updatetOrderMaterials.map(async (item: any) => {
+                      await updateRequirement({
+                        id: item.requirementID?._id,
+                        bookedQuantity: item?.onOrderQuantity,
+                        projectID: result.payload.projectId,
+                        _id: item.requirementID?._id,
+                      }).unwrap();
+                      // dispatch(
+                      //   updateRequirementByID({
+                      //     id: item.requirementID?._id,
+                      //     // requestQuantity: -item.QUANTITY,
+                      //     issuedQuantity: item.QUANTITY,
+                      //     updateUserID: USER_ID || '',
+                      //     updateDate: new Date(),
+                      //     companyID: localStorage.getItem('companyID') || '',
+                      //     projectID: result.payload.projectId,
+                      //     // status: 'closed',
+                      //   })
+                      // );
                     });
 
                     const result1 = await dispatch(

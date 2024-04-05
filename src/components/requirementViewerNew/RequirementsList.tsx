@@ -265,22 +265,22 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
     },
     {
       title: `${t('REQUESTED QTY')}`,
-      dataIndex: 'issuedAmout',
+      dataIndex: 'issuedQuantity',
       width: '7%',
-      key: 'issuedAmout',
+      key: 'issuedQuantity',
       editable: (text, record, index) => {
         return false;
       },
       render: (text: any, record: any) => {
         // Вычисляем разницу между record.amout и record.issuedQuantity
-        const difference = record.amout - record.issuedAmout;
+        const difference = record.amout - record.issuedQuantity;
         // Определяем цвет фона в зависимости от условия
         const backgroundColor = difference > 0 ? '#f0be37' : '';
         return (
           <div
             style={{ backgroundColor }} // Применяем цвет фона
           >
-            {record?.issuedAmout && record?.issuedAmout}
+            {record?.issuedQuantity && record?.issuedQuantity}
           </div>
         );
       },

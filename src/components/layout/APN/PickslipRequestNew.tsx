@@ -97,6 +97,27 @@ const PickslipRequest: FC = () => {
                         return item;
                       }
                     );
+
+                    updatedMaterialsData.map(async (item: any) => {
+                      await updateRequirement({
+                        id: item.requirementID,
+                        issuedQuantity: item.required,
+                        _id: item.requirementID,
+                        status: 'onOrder',
+                      }).unwrap();
+                      // dispatch(
+                      //   updateRequirementByID({
+                      //     id: item.requirementID?._id,
+                      //     // requestQuantity: -item.QUANTITY,
+                      //     issuedQuantity: item.QUANTITY,
+                      //     updateUserID: USER_ID || '',
+                      //     updateDate: new Date(),
+                      //     companyID: localStorage.getItem('companyID') || '',
+                      //     projectID: result.payload.projectId,
+                      //     // status: 'closed',
+                      //   })
+                      // );
+                    });
                     console.log(updatedMaterialsData);
                   }
                 }}
@@ -163,12 +184,13 @@ const PickslipRequest: FC = () => {
                         neededOnID: currentPickData?.neededOnID,
                         reqTypesID: currentPickData?.reqTypesID,
                         reqCodesID: currentPickData?.reqCodesID,
-                        status: currentPickData.status,
+                        status: 'open',
                         projectID: currentPickData.projectID,
                         serialNumber: part?.serialNumber,
                         partNumberID: part.partID,
                         amout: part.amout,
                         issuedAmout: 0,
+
                         projectTaskID: currentPickData?.projectTaskID
                           ? currentPickData?.projectTaskID
                           : null,
@@ -180,6 +202,7 @@ const PickslipRequest: FC = () => {
                         type: part?.type,
                         PN: part?.PN || '',
                         issuedQuantity: 0,
+                        bookedQuantity: 0,
                         nameOfMaterial: part?.description || '',
                       },
                     }).unwrap()

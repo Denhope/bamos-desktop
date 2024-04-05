@@ -1179,6 +1179,9 @@ export const createPickSlip = createAsyncThunk(
       recipientID,
       storeManID,
       companyID,
+      projectTaskID,
+      projectID,
+      neededOnID,
     } = data;
 
     try {
@@ -1206,6 +1209,9 @@ export const createPickSlip = createAsyncThunk(
         recipientID,
         storeManID,
         companyID,
+        projectTaskID,
+        projectID,
+        neededOnID,
       });
       return response.data;
     } catch (error) {
@@ -4574,6 +4580,7 @@ export const updatedMaterialOrdersById = createAsyncThunk(
       updateBy,
       updateDate,
       returnPickIDs,
+      neededOnID,
     } = data;
 
     try {
@@ -4606,6 +4613,7 @@ export const updatedMaterialOrdersById = createAsyncThunk(
         updateBy,
         updateDate,
         returnPickIDs,
+        neededOnID,
       });
       return response.data;
     } catch (error) {
