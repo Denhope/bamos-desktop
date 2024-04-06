@@ -615,5 +615,6 @@
   "MEASURE UNIT": "ЕДЕНИЦЫ ИЗМЕРЕНИЯ",
   "INCLUDE OUTGOING": "ВКЛЮЧАЯ ИСТЕКШИЕ",
   "LIMIT": "ЛИМИТ",
-  "EXPIRY RANGE": "ДАТА"
+  "EXPIRY RANGE": "ДАТА",
+  "SELECT FROM QUATATION ITEMS": "ВЫБРАТЬ ИЗ КВОТАЦИОННЫХ ПОЗИЦИЙ"
 }

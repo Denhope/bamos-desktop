@@ -168,6 +168,17 @@ const template: Electron.MenuItemConstructorOptions[] = [
           app.quit();
         },
       },
+      {
+        label: 'Print',
+        accelerator: 'CmdOrCtrl+P',
+        click: () => {
+          const win = BrowserWindow.getFocusedWindow();
+          // Вызываем стандартное окно печати
+          if (win) {
+            win.webContents.print();
+          }
+        },
+      },
     ],
   },
   // {
@@ -183,6 +194,7 @@ const template: Electron.MenuItemConstructorOptions[] = [
   //     { role: 'selectAll' }
   //   ]
   // },
+
   {
     label: 'View',
     submenu: [
@@ -271,7 +283,7 @@ async function createWindow() {
     webPreferences: {
       preload,
       // nodeIntegration: false,
-      // contextIsolation: true,
+      contextIsolation: true,
 
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
       // nodeIntegration: true,
@@ -292,15 +304,15 @@ async function createWindow() {
   }
 
   // Test actively push message to the Electron-Renderer
-  win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', new Date().toLocaleString());
-  });
+  // win.webContents.on('did-finish-load', () => {
+  //   win?.webContents.send('main-process-message', new Date().toLocaleString());
+  // });
 
-  // Make all links open with the browser, not with the application
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https:')) shell.openExternal(url);
-    return { action: 'deny' };
-  });
+  // // Make all links open with the browser, not with the application
+  // win.webContents.setWindowOpenHandler(({ url }) => {
+  //   if (url.startsWith('https:')) shell.openExternal(url);
+  //   return { action: 'deny' };
+  // });
 
   // Apply electron-updater
   update(win);
@@ -334,10 +346,11 @@ app.on('activate', () => {
 
 ipcMain.handle('open-win', (_, arg) => {
   const childWindow = new BrowserWindow({
+    icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
-      nodeIntegration: false,
-      contextIsolation: true,
+      // nodeIntegration: false,
+      // contextIsolation: true,
     },
   });
 
@@ -347,32 +360,3 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg });
   }
 });
-
-function createWindowWithUrl(url: string) {
-  let childWindow: BrowserWindow | null = new BrowserWindow({
-    webPreferences: {
-      preload,
-      nodeIntegration: false,
-      contextIsolation: true,
-    },
-  });
-
-  if (process.env.VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(url);
-  } else {
-    childWindow.loadFile(indexHtml);
-  }
-
-  // Обработчик закрытия окна
-  childWindow.on('closed', () => {
-    childWindow = null;
-  });
-
-  // Отображение окна
-  childWindow.show();
-}
-
-// Обработчик IPC для открытия нового окна с URL
-// ipcMain.handle('open-win', (_, url: string) => {
-//   createWindowWithUrl(url);
-// });

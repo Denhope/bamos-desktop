@@ -7,7 +7,7 @@ import CustomTree from '../zoneCodeAdministration/CustomTree';
 
 import { IOrder, IOrderItem } from '@/models/IRequirement';
 import { useTranslation } from 'react-i18next';
-import { handleFileSelect } from '@/services/utilites';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 
 interface TreeDataNode extends DataNode {
   color: any;
@@ -191,7 +191,10 @@ const OrderTree: FC<UserTreeProps> = ({
                   ...(vendorOrder?.files?.map((file: any, index: any) => {
                     return {
                       title: (
-                        <div className="flex gap-1">
+                        <div
+                          onDoubleClick={() => handleFileOpen(file)}
+                          className="flex gap-1"
+                        >
                           <DownloadOutlined />
                           {`FILE/${''}${index + 1}:${file?.name}`}
                         </div>

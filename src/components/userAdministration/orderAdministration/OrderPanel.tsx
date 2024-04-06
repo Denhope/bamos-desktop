@@ -195,7 +195,11 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
             <Button
               disabled={
                 (editingOrder && editingOrder.state === 'onQuatation') ||
-                editingOrder.state === 'open'
+                editingOrder.state == 'open' ||
+                editingOrder.state == 'PARTLY_RECEIVED' ||
+                editingOrder.state == 'RECEIVED' ||
+                editingOrder.state == 'CANCELLED' ||
+                editingOrder.state == 'CLOSED'
               }
               size="small"
               icon={<MinusSquareOutlined />}
@@ -260,7 +264,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
             <Button
               onClick={() => {
                 editingOrder &&
-                  editingOrder.state === 'onQuatation' &&
+                  editingOrder.orderType === 'QUOTATION_ORDER' &&
                   setOpenCompletePrint(true);
                 editingOrder &&
                   editingOrder.orderType === 'PURCHASE_ORDER' &&

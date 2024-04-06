@@ -765,6 +765,10 @@ export async function handleFileOpen(file: any): Promise<void> {
       // Открываем файл в новом окне или вкладке браузера
       const newWindow = window.open(fileURL, '_blank');
 
+      if (newWindow && mimeType.startsWith('image/')) {
+        newWindow.print();
+      }
+
       // Если браузер блокирует открытие файла, предлагаем сохранить его
       if (
         !newWindow ||

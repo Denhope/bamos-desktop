@@ -127,7 +127,6 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       : { ...values, parts };
 
     onSubmit(newUser);
-    console.log(newUser);
   };
 
   const SubmitButton = () => (
@@ -386,8 +385,12 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
               onDataChange={function (
                 rows: { partNumberID: string; quantity: number }[]
               ): void {
-                // console.log(rows);
-                setSelectedParts(rows);
+                // Фильтруем массив rows, чтобы удалить элементы без partNumberID
+                const filteredRows = rows.filter(
+                  (row) => row.partNumberID !== ''
+                );
+                // Сохраняем отфильтрованные данные в состояние
+                setSelectedParts(filteredRows);
               }}
               requirementCodesValueEnum={requirementCodesValueEnum}
             />

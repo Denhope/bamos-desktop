@@ -13,6 +13,7 @@ import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { IOrder, IRequirement } from '@/models/IRequirement';
 import OrderViewerNew from '@/components/layout/APN/OrderViewerNew';
 import OrderViewerNewModal from '@/components/layout/APN/OrderViewerNewModal';
+import RequirementViewerModal from '@/components/layout/APN/RequirementViewerNewModal';
 
 type RowState = {
   _id: any;
@@ -20,6 +21,7 @@ type RowState = {
   amout: number;
   unit?: any;
   reqCodesID?: string;
+  reqTypesID?: sdtring;
   requirementsID?: string;
 };
 
@@ -41,8 +43,7 @@ const PartList: React.FC<Props> = ({
   order,
 }) => {
   const { t } = useTranslation();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectedRowData, setSelectedRowData] = useState<any[]>([]);
+
   const [rows, setRows] = useState<RowState[]>([
     {
       partNumberID: '',
@@ -91,7 +92,7 @@ const PartList: React.FC<Props> = ({
   // Функция для обработки выбора строки в таблице
   // Функция для обработки выбора строки в таблице
   const handleRowSelection = (
-    selectedRowKeys: React.Key[],
+    // selectedRowKeys: React.Key[],
     selectedRows: RowState[]
   ) => {
     // Преобразуем выбранные строки в новый формат, содержащий только необходимые данные
@@ -101,6 +102,7 @@ const PartList: React.FC<Props> = ({
       amout: row.amout,
       unit: row.partNumberID.UNIT_OF_MEASURE, // Единица измерения из partNumberID
       reqCodesID: row.reqCodesID,
+      reqTypesID: row?.reqTypesID?._id,
     }));
 
     setSelectedRows(newSelectedRows);
@@ -122,6 +124,7 @@ const PartList: React.FC<Props> = ({
       notes: row?.notes || '',
     }));
     setSelectedRows(newSelectedRows);
+    console.log(newSelectedRows);
   };
 
   // Функция для обновления значения селекта
@@ -242,8 +245,6 @@ const PartList: React.FC<Props> = ({
           <ProFormGroup size={'small'}>
             <ProFormSelect
               showSearch
-              // rules={[{ required: true }]}
-              // name="partNumberID"
               label={t('PART')}
               width="sm"
               valueEnum={partValueEnum}
@@ -321,7 +322,7 @@ const PartList: React.FC<Props> = ({
         </div>
       ))}
 
-      <Modal
+      {/* <Modal
         title="Выберите строки"
         visible={isModalVisible}
         onOk={handleAddSelectedRows}
@@ -337,34 +338,37 @@ const PartList: React.FC<Props> = ({
           rowKey="_id"
           pagination={false}
         />
-      </Modal>
+      </Modal> */}
 
       <Modal
         style={{ maxHeight: '80vh', overflowY: 'auto' }}
         width={'90%'}
-        title="Выберите строки"
+        title="Выберите из потреностей"
+        visible={isModalVisible}
+        onOk={handleAddSelectedRows}
+        onCancel={handleCancel}
+      >
+        <RequirementViewerModal
+          onSelectedRecords={function (record: any): void {
+            console.log(record);
+            handleRowSelection(record);
+          }}
+        ></RequirementViewerModal>
+      </Modal>
+      <Modal
+        style={{ maxHeight: '80vh', overflowY: 'auto' }}
+        width={'90%'}
+        title="Выберите из ордера"
         visible={isModalVisibleFromQuatation}
         onOk={handleAddSelectedRows}
         onCancel={handleCancel}
       >
         <OrderViewerNewModal
-          onSelectedRowKeys={setSelectedRowKeys}
           onSelectedRecords={function (record: any): void {
-            setSelectedRowData(record);
-            // console.log(record);
+            console.log(record);
             handleRowSelectionFoQuatation(record);
           }}
         ></OrderViewerNewModal>
-        {/* <Table
-          rowSelection={{
-            type: 'checkbox',
-            onChange: handleRowSelection,
-          }}
-          dataSource={requirements}
-          columns={columns}
-          rowKey="_id"
-          pagination={false}
-        /> */}
       </Modal>
     </div>
   );

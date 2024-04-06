@@ -14,10 +14,14 @@ type RequirementsListPropsType = {
   onSingleRowClick?: (record: any) => void;
   onDoubleRowClick?: (record: any) => void;
   foForecast?: boolean;
+  onSelectedIds?: (record: any) => void;
+  onSelectedParts?: (record: any) => void;
 };
 const RequirementsList: FC<RequirementsListPropsType> = ({
   data,
+  onSelectedParts,
   onDoubleRowClick,
+  onSelectedIds,
   onSingleRowClick,
   isLoading,
   scroll,
@@ -368,6 +372,9 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
   ];
+  const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
+    onSelectedIds && onSelectedIds(newSelectedRowKeys);
+  };
   return (
     <div>
       <EditableTable
@@ -377,12 +384,19 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
         initialColumns={initialColumns}
         isLoading={isLoading}
         menuItems={[]}
+        onMultiSelect={(record: any, rowIndex?: any) => {
+          const materials = record.map((item: any) => item);
+          // console.log(locationNames);
+
+          onSelectedParts && onSelectedParts(materials);
+        }}
         onDoubleRowClick={function (record: any, rowIndex?: any): void {
           onDoubleRowClick && onDoubleRowClick(record);
         }}
         onRowClick={function (record: any): void {
           onSingleRowClick?.(record);
         }}
+        onSelectedRowKeysChange={handleSelectedRowKeysChange}
         yScroll={scroll}
         xScroll={scrollX}
         externalReload={function () {
