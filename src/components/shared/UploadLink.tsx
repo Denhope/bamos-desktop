@@ -59,14 +59,16 @@ const FileUploader: FC<FileUploaderProps> = ({
   return (
     <Space className="flex justify-between ">
       <Upload
+        multiple
         name="file"
+        className="upload-list-inline cursor-pointer"
         fileList={fileList as any[]}
         onChange={handleChange}
         beforeUpload={() => false}
         accept={acceptedFileTypes.join(',')}
       >
         <Button size="small" icon={<UploadOutlined />}>
-          {`${t('SELECT FILE')}`}
+          {t('CLICK TO UPLOAD')}
         </Button>
       </Upload>
     </Space>

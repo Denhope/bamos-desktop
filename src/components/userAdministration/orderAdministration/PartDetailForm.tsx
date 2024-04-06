@@ -3,7 +3,7 @@
 import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder, IOrderItem } from '@/models/IRequirement';
-import { handleFileSelect } from '@/services/utilites';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { COMPANY_ID } from '@/utils/api/http';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 import { UploadOutlined } from '@ant-design/icons';
@@ -62,7 +62,7 @@ const PartDetailForm: FC<Props> = ({
   const handleDownload = (file: any) => {
     // Здесь должен быть код для скачивания файла
 
-    handleFileSelect(file);
+    handleFileOpen(file);
   };
 
   const handleDelete = (file: any) => {
@@ -302,12 +302,19 @@ const PartDetailForm: FC<Props> = ({
               <Upload
                 name="FILES"
                 fileList={orderItem?.files || []}
-                listType="picture"
+                // listType="picture"
                 className="upload-list-inline cursor-pointer"
                 beforeUpload={handleUpload}
                 accept="image/*"
                 onPreview={handleDownload}
                 onRemove={handleDelete}
+                multiple
+                onDownload={function (file: any): void {
+                  handleFileSelect({
+                    id: file?.id,
+                    name: file?.name,
+                  });
+                }}
               >
                 <Button icon={<UploadOutlined />}>
                   {t('CLICK TO UPLOAD')}

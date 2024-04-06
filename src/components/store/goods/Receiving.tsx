@@ -8,7 +8,8 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Form, FormInstance, Modal, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Form, FormInstance, Modal, Upload, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 import UploadLink, { AcceptedFileTypes } from '@/components/shared/UploadLink';
@@ -23,15 +24,17 @@ import {
   createBookingItem,
   uploadFileServer,
   updateOrderByID,
+  deleteFile,
 } from '@/utils/api/thunks';
 
-import { USER_ID } from '@/utils/api/http';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
 import ContextMenuLocationSearchSelect from '@/components/shared/form/ContextMenuLocationSearchSelect';
 import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
 import { IOrderItem } from '@/models/IRequirement';
 import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
+import { handleFileSelect } from '@/services/utilites';
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
@@ -148,6 +151,44 @@ const Receiving: FC<ReceivingType> = ({
   const [initialForm, setinitialForm] = useState<any>('');
   const [updateOrderItem] = useUpdateOrderItemMutation();
   const [updateOrder] = useUpdateOrderMutation();
+  // const handleDelete = (file: any) => {
+  //   Modal.confirm({
+  //     title: 'Вы уверены, что хотите удалить этот файл?',
+  //     onOk: async () => {
+  //       try {
+  //         const response = await dispatch(
+  //           deleteFile({ id: file.id, companyID: COMPANY_ID })
+  //         );
+  //         if (response.meta.requestStatus === 'fulfilled') {
+  //           // Удаляем файл из массива files
+  //           const updatedFiles = addedMaterialItem.FILES.filter(
+  //             (f: { id: any }) => f.id !== file.id
+  //           );
+  //           const updatedItem = {
+  //             ...currentPart,
+  //             files: updatedFiles,
+  //           };
+  //           // await updateOrderItem(updatedItem).unwrap();
+  //           // orderItem && onSubmit(updatedItem);
+  //           const result = await dispatch(
+  //             updateManyMaterialItems({
+  //               companyID: COMPANY_ID
+  //               ids: [addedMaterialItem.id||''],
+  //               FILES: updatedFiles,
+  //             }),
+  //           );
+  //           if (result.meta.requestStatus === 'fulfilled') {
+  //             // onUpdatePart(result.payload);
+  //           }
+  //         } else {
+  //           throw new Error('Не удалось удалить файл');
+  //         }
+  //       } catch (error) {
+  //         message.error('ERROR DELETE');
+  //       }
+  //     },
+  //   });
+  // };
   return (
     <ProForm
       onReset={() => {
@@ -617,36 +658,7 @@ const Receiving: FC<ReceivingType> = ({
               label={t('EXPIRY DATE')}
               width="xs"
             ></ProFormDatePicker>
-            <ProFormGroup>
-              <div className="mb-5">
-                <UploadLink
-                  isUploadTrue={isUpload}
-                  onUpload={uploadFileServer}
-                  onSuccess={async function (response: any): Promise<void> {
-                    if (response) {
-                      setisUpload(false);
-                      const updatedFiles = addedMaterialItem.FILES
-                        ? [...addedMaterialItem.FILES, response]
-                        : [response];
-
-                      const currentCompanyID =
-                        localStorage.getItem('companyID') || '';
-                      const result = await dispatch(
-                        updateManyMaterialItems({
-                          companyID: currentCompanyID || '',
-                          ids: [addedMaterialItem.id],
-                          FILES: updatedFiles,
-                        })
-                      );
-                    }
-                  }}
-                  acceptedFileTypes={[
-                    AcceptedFileTypes.JPG,
-                    AcceptedFileTypes.PDF,
-                  ]}
-                ></UploadLink>
-              </div>
-            </ProFormGroup>
+            <ProFormGroup></ProFormGroup>
           </ProFormGroup>
 
           <ProFormGroup>
@@ -674,16 +686,6 @@ const Receiving: FC<ReceivingType> = ({
               locations={LOCATION}
               width={'sm'}
             />
-            <ProFormCheckbox
-              fieldProps={{
-                checked: isChangeLocationChecked,
-                onChange: (e: CheckboxChangeEvent) => {
-                  setIsChangeLocationChecked(e.target.checked);
-                },
-              }}
-            >
-              {t('PRINT LABELS')}
-            </ProFormCheckbox>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormText
@@ -775,6 +777,51 @@ const Receiving: FC<ReceivingType> = ({
           >
             {t('CUSTOMER GOODS')}
           </ProFormCheckbox>
+
+          <ProFormGroup>
+            <ProForm.Item label={t('UPLOAD')}>
+              <div className="overflow-y-auto max-h-64">
+                <div className="mb-5">
+                  <UploadLink
+                    isUploadTrue={isUpload}
+                    onUpload={uploadFileServer}
+                    onSuccess={async function (response: any): Promise<void> {
+                      if (response) {
+                        setisUpload(false);
+                        const updatedFiles = addedMaterialItem.FILES
+                          ? [...addedMaterialItem.FILES, response]
+                          : [response];
+
+                        const currentCompanyID =
+                          localStorage.getItem('companyID') || '';
+                        const result = await dispatch(
+                          updateManyMaterialItems({
+                            companyID: currentCompanyID || '',
+                            ids: [addedMaterialItem.id],
+                            FILES: updatedFiles,
+                          })
+                        );
+                      }
+                    }}
+                    acceptedFileTypes={[
+                      AcceptedFileTypes.JPG,
+                      AcceptedFileTypes.PDF,
+                    ]}
+                  ></UploadLink>
+                </div>
+              </div>
+            </ProForm.Item>
+            <ProFormCheckbox
+              fieldProps={{
+                checked: isChangeLocationChecked,
+                onChange: (e: CheckboxChangeEvent) => {
+                  setIsChangeLocationChecked(e.target.checked);
+                },
+              }}
+            >
+              {t('PRINT LABELS')}
+            </ProFormCheckbox>
+          </ProFormGroup>
         </ProFormGroup>
       </ProFormGroup>
     </ProForm>
