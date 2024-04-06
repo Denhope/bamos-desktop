@@ -171,22 +171,23 @@ export interface IOrder {
 }
 
 export interface IOrderItem {
-  _id: string;
-  id: string;
-  partID: string | IPartNumber;
-  vendorID: string | IVendor;
+  _id?: string;
+  id?: string;
+  partID?: string | IPartNumber;
+  vendorID?: string | IVendor;
   status?: string;
-  description: string;
-  createDate: string;
-  createUserID: string;
+  description?: string;
+  createDate?: string;
+  createUserID?: string;
   updateDate?: string;
   updateUserID?: string;
-  companyID: string;
+  companyID?: string;
   index?: number;
   files?: any[];
   requirementsID?: any[];
   reseivingsItemsIds?: any;
   backorderQty?: number;
+  cancelledQTY?: number;
   amout?: number;
   price?: number;
   currency?: string;
@@ -197,7 +198,7 @@ export interface IOrderItem {
   minQuoted?: number;
   qtyQuoted?: number;
   note?: string;
-  orderID: string | IOrder;
+  orderID?: string | IOrder;
   RECEIVINGS?: any[];
   state: string;
   BATCH?: any;

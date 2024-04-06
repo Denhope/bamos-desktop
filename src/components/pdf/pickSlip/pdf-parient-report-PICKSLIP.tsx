@@ -146,7 +146,7 @@ export const PdfParientPickSlip = ({ data, fields }: PdfPatientReportProps) => {
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={4} borderColor="#00" bw={0.5}>
               <PdfRegular fontSize={10} textAlign="center">
-                {data.workshop || ''}
+                {data?.neededOnID?.title || ''}
               </PdfRegular>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={8} borderColor="#00" bw={0.5}>

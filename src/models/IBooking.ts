@@ -92,6 +92,7 @@ export interface IBookingItem {
   PART_PICKSLIP_REMARKS?: string;
   PART_REPARE_REMARKS?: string;
   PART_PURCHASE_REMARKS?: string;
+  ORDER_ITEM_ID?: string;
   pickDate?: any;
   pickSlipNumber?: any;
   partID?: any;

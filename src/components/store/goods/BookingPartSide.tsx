@@ -160,37 +160,10 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 />
               </>
             ),
-            title: `${t('RECEIVING')}${selectedOrder?.orderNumberNew} ${t(
-              'POS.'
-            )} ${openPart?.index + 1}`,
+            title: `${t('RECEIVING')}№${
+              selecteReceiving?.receivingNumber
+            } -  ${t('POS.')} ${openPart?.index + 1}`,
           },
-        // openPart &&
-        //   openPart?.index !== undefined && {
-        //     content: <ProFormTextArea></ProFormTextArea>,
-        //     title: `${t('REMARKS')}${selectedOrder?.orderNumber} ${t('POS.')} ${
-        //       openPart?.index + 1
-        //     }`,
-        //   },
-        // openPart &&
-        //   openPart?.index !== undefined && {
-        //     content: (
-        //       <ProFormGroup>
-        //         <ProFormText
-        //           name="unitPrice"
-        //           label={t('UNIT PRICE')}
-        //           width="sm"
-        //         ></ProFormText>
-        //         <ProFormText
-        //           name="unitLocalPrice"
-        //           label={t('UNIT LOCAL PRICE')}
-        //           width="sm"
-        //         ></ProFormText>
-        //       </ProFormGroup>
-        //     ),
-        //     title: `${t('FINANCIAL DATA')}${selectedOrder?.orderNumber} POS. ${
-        //       openPart?.index + 1
-        //     }`,
-        //   },
 
         selectedOrderType &&
           selectedOrderType === 'UN_ORDER' && {

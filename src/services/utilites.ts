@@ -698,77 +698,133 @@ export async function handleFileSelect(file: {
 //   }
 // }
 
+// export async function handleFileOpen(file: any): Promise<void> {
+//   try {
+//     const companyID = localStorage.getItem('companyID') || '';
+//     const fileData = await getFileFromServer(companyID, file.id);
+
+//     // Проверяем, является ли файл PDF
+//     if (isPDF(file.name)) {
+//       // Создаем Blob из файла
+//       const blob = new Blob([fileData], { type: 'application/pdf' });
+
+//       // Создаем временный URL для Blob
+//       const fileURL = window.URL.createObjectURL(blob);
+
+//       // Открываем файл в новом окне или вкладке браузера
+//       const newWindow = window.open(fileURL, '_blank');
+
+//       // Если браузер блокирует открытие файла, предлагаем сохранить его
+//       if (
+//         !newWindow ||
+//         newWindow.closed ||
+//         typeof newWindow.closed === 'undefined'
+//       ) {
+//         alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+//       } else {
+//         newWindow.focus();
+//       }
+
+//       // Не забываем очищать URL после открытия файла
+//       window.URL.revokeObjectURL(fileURL);
+//     } else {
+//       // Если файл не PDF, предлагаем сохранить его
+//       const link = document.createElement('a');
+//       link.href = window.URL.createObjectURL(new Blob([fileData]));
+//       link.download = file.name;
+//       link.click();
+//     }
+//   } catch (error) {
+//     console.error('Не удалось открыть файл', error);
+//   }
+// }
+
+// // Функция для проверки, является ли файл PDF
+// function isPDF(fileName: string): boolean {
+//   const extension = fileName.split('.').pop()?.toLowerCase();
+//   return extension === 'pdf';
+// }
+
+////
 export async function handleFileOpen(file: any): Promise<void> {
   try {
     const companyID = localStorage.getItem('companyID') || '';
     const fileData = await getFileFromServer(companyID, file.id);
 
-    // Создайте Blob из файла
-    const blob = new Blob([fileData], { type: file.type });
+    // Определяем MIME-тип на основе расширения файла
+    const mimeType = getMimeType(file.name);
 
-    // Создайте временный URL для Blob
-    const fileURL = window.URL.createObjectURL(blob);
+    // Проверяем, можно ли файл открыть внутри браузера
+    if (isInlineViewable(mimeType)) {
+      // Создаем Blob из файла с соответствующим MIME-типом
+      const blob = new Blob([fileData], { type: mimeType });
 
-    // Откройте файл в новом окне или вкладке браузера
-    const newWindow = window.open(fileURL, '_blank');
+      // Создаем временный URL для Blob
+      const fileURL = window.URL.createObjectURL(blob);
 
-    // Если браузер блокирует открытие файла, предложите сохранить его
-    if (
-      !newWindow ||
-      newWindow.closed ||
-      typeof newWindow.closed === 'undefined'
-    ) {
-      alert('Заблокировано открытие файла. Пожалуйста загрузите файл.');
+      // Открываем файл в новом окне или вкладке браузера
+      const newWindow = window.open(fileURL, '_blank');
+
+      // Если браузер блокирует открытие файла, предлагаем сохранить его
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+      } else {
+        newWindow.focus();
+      }
+
+      // Не забываем очищать URL после открытия файла
+      window.URL.revokeObjectURL(fileURL);
     } else {
-      newWindow.focus();
+      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new Blob([fileData]));
+      link.download = file.name;
+      link.click();
     }
-
-    // Не забывайте очищать URL после открытия файла
-    window.URL.revokeObjectURL(fileURL);
   } catch (error) {
     console.error('Не удалось открыть файл', error);
   }
 }
 
-// export const valueEnumCurrency = {
-//   USD: `USD/${t('USD/US Dollar').toUpperCase()}`,
-//   EUR: `EUR/${t('EUR/Euro').toUpperCase()}`,
-//   GBP: `GBP/${t('GBP/British Pound').toUpperCase()}`,
-//   JPY: `JPY/${t('JPY/Japanese Yen').toUpperCase()}`,
-//   AUD: `AUD/${t('AUD/Australian Dollar').toUpperCase()}`,
-//   CAD: `CAD/${t('CAD/Canadian Dollar').toUpperCase()}`,
-//   CHF: `CHF/${t('CHF/Swiss Franc').toUpperCase()}`,
-//   CNY: `CNY/${t('CNY/Chinese Yuan').toUpperCase()}`,
-//   HKD: `HKD/${t('HKD/Hong Kong Dollar').toUpperCase()}`,
-//   NZD: `NZD/${t('NZD/New Zealand Dollar').toUpperCase()}`,
-//   SEK: `SEK/${t('SEK/Swedish Krona').toUpperCase()}`,
-//   KRW: `KRW/${t('KRW/South Korean Won').toUpperCase()}`,
-//   SGD: `SGD/${t('SGD/Singapore Dollar').toUpperCase()}`,
-//   NOK: `NOK/${t('NOK/Norwegian Krone').toUpperCase()}`,
-//   MXN: `MXN/${t('MXN/Mexican Peso').toUpperCase()}`,
-//   INR: `INR/${t('INR/Indian Rupee').toUpperCase()}`,
-//   RUB: `RUB/${t('RUB/Russian Ruble').toUpperCase()}`,
-//   ZAR: `ZAR/${t('ZAR/South African Rand').toUpperCase()}`,
-//   BRL: `BRL/${t('BRL/Brazilian Real').toUpperCase()}`,
-//   TWD: `TWD/${t('TWD/New Taiwan Dollar').toUpperCase()}`,
-// };
+// Функция для определения MIME-типа на основе расширения файла
+function getMimeType(fileName: string): string {
+  const extension = fileName.split('.').pop()?.toLowerCase() || '';
+  switch (extension) {
+    case 'pdf':
+      return 'application/pdf';
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return `image/${extension}`;
+    case 'txt':
+    case 'doc':
+    case 'docx':
+    case 'rtf':
+      return `text/${extension}`;
+    // Добавьте здесь другие расширения и соответствующие MIME-типы
+    default:
+      return 'application/octet-stream'; // По умолчанию для неизвестных типов
+  }
+}
 
-// export const valueEnumUnit = {
-//   EA: `EA/${t('EA/EACH').toUpperCase()}`,
-//   M: `M/${t('Meters').toUpperCase()}`,
-//   ML: `ML/${t('Milliliters').toUpperCase()}`,
-//   SI: `SI/${t('Sq Inch').toUpperCase()}`,
-//   CM: `CM/${t('Centimeters').toUpperCase()}`,
-//   GM: `GM/${t('Grams').toUpperCase()}`,
-//   YD: `YD/${t('Yards').toUpperCase()}`,
-//   FT: `FT/${t('Feet').toUpperCase()}`,
-//   SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
-//   IN: `IN/${t('Inch').toUpperCase()}`,
-//   SH: `SH/${t('Sheet').toUpperCase()}`,
-//   SM: `SM/${t('Sq Meters').toUpperCase()}`,
-//   RL: `RL/${t('Roll').toUpperCase()}`,
-//   KT: `KT/${t('Kit').toUpperCase()}`,
-//   LI: `LI/${t('Liters').toUpperCase()}`,
-//   KG: `KG/${t('Kilograms').toUpperCase()}`,
-//   JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
-// };
+// Функция для проверки, можно ли файл открыть внутри браузера
+function isInlineViewable(mimeType: string): boolean {
+  // Список MIME-типов, которые можно открывать внутри браузера
+  const inlineViewableMimeTypes = [
+    'application/pdf',
+    'image/jpg',
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    // 'text/plain',
+    // 'text/txt',
+    // 'text/doc',
+    // Добавьте здесь другие типы, которые вы хотите открывать внутри браузера
+  ];
+  return inlineViewableMimeTypes.includes(mimeType);
+}

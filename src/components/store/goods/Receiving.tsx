@@ -225,6 +225,8 @@ const Receiving: FC<ReceivingType> = ({
               IS_CUSTOMER_GOODS: isCustomerGoods,
               partID: currentPart?.partID?._id,
               RECEIVING_ID: currentReceiving._id,
+              ORDER_ITEM_ID:
+                (currentPart && currentPart?.id) || currentPart?._id,
             })
           );
           if ((await result).meta.requestStatus === 'fulfilled') {
@@ -242,6 +244,8 @@ const Receiving: FC<ReceivingType> = ({
                 voucherModel: 'RECEIVING_GOODS',
                 ORDER_TYPE: currenOrder && currenOrder?.orderType,
                 ORDER_ID: (currenOrder && currenOrder?.id) || currenOrder?._id,
+                ORDER_ITEM_ID:
+                  (currentPart && currentPart?.id) || currentPart?._id,
                 MATERIAL_STORE_ID:
                   (await result).payload?._id || (await result).payload?.id,
               })
@@ -298,6 +302,8 @@ const Receiving: FC<ReceivingType> = ({
                     CERTIFICATE_NUMBER: values?.certificateNumber,
                     CERTIFICATE_TYPE: values?.certificateType,
                     REVISION: 'C',
+                    ORDER_ITEM_ID:
+                      (currentPart && currentPart?.id) || currentPart?._id,
                     companyID: currentCompanyID || '',
                     createDate: new Date(),
                     userID: USER_ID || '',
