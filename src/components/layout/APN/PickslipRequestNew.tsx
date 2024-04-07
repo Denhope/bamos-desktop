@@ -101,7 +101,7 @@ const PickslipRequest: FC = () => {
                     updatedMaterialsData.map(async (item: any) => {
                       await updateRequirement({
                         id: item.requirementID,
-                        issuedQuantity: item.required,
+                        forIssuedQuantity: item.required,
                         _id: item.requirementID,
                         status: 'onOrder',
                       }).unwrap();

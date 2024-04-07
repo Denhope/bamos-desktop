@@ -1062,7 +1062,7 @@ const PickSlipConfirmation: FC = () => {
                     updatetOrderMaterials.map(async (item: any) => {
                       await updateRequirement({
                         id: item.requirementID?._id,
-                        bookedQuantity: item?.onOrderQuantity,
+                        forBookedQuantity: item?.onOrderQuantity,
                         projectID: result.payload.projectId,
                         _id: item.requirementID?._id,
                       }).unwrap();

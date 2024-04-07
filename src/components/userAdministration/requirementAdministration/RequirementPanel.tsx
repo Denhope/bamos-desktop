@@ -115,7 +115,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     <>
       <Space>
         <Col
-          className=" bg-white px-4 py-3 w-[158vh]  rounded-md brequierement-gray-400 "
+          className=" bg-white px-4 py-3 w-full  rounded-md brequierement-gray-400 "
           sm={24}
         >
           <RequirementsDiscription

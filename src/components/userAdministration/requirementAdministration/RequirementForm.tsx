@@ -292,16 +292,17 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                 width="md"
                 tooltip={t('DESCRIPTION')}
               ></ProFormText>
+            </ProFormGroup>
+
+            <ProFormGroup>
               <ProFormText
                 // disabled
                 // rules={[{ required: true }]}
                 name="serialNumber"
                 label={t('SERIAL NUMBER')}
                 width="sm"
-                tooltip={t('DESCRIPTION')}
+                tooltip={t('SERIAL NUMBER')}
               ></ProFormText>
-            </ProFormGroup>
-            <ProFormGroup>
               <ProFormDigit
                 name="amout"
                 rules={[{ required: true }]}

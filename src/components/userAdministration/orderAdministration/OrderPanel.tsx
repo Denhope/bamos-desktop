@@ -174,7 +174,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
     <>
       <Space>
         <Col
-          className=" bg-white px-4 py-3 w-[258vh]  rounded-md brequierement-gray-400 "
+          className=" bg-white px-4 py-3 w-full  rounded-md brequierement-gray-400 "
           sm={24}
         >
           <OrderDiscription order={editingOrder}></OrderDiscription>

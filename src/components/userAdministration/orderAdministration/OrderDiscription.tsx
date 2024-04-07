@@ -1,12 +1,6 @@
-import {
-  ModalForm,
-  ProForm,
-  ProFormDatePicker,
-  ProFormGroup,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { Button, Divider, Form, FormInstance, message } from 'antd';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { ProDescriptions } from '@ant-design/pro-components';
+import { Tag } from 'antd';
+import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type ordersDiscriptionType = {
@@ -18,71 +12,35 @@ const OrderDiscription: FC<ordersDiscriptionType> = ({
   order,
   onorderSearch,
 }) => {
-  const [form] = Form.useForm();
   const { t } = useTranslation();
-
-  const formRef = useRef<FormInstance>(null);
-  useEffect(() => {
-    if (order) {
-      // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
-      form.setFields([
-        { name: 'orderNumber', value: order?.orderNumberNew },
-        { name: 'lastModificateBy', value: order?.updateUserID?.name },
-        { name: 'modificationDate', value: order?.updateDate },
-        { name: 'createBy', value: order?.createUserID?.name },
-        { name: 'createDate', value: order.createDate },
-      ]);
-
-      // onFilterTransferprojects(form.getFieldsValue());
-    }
-  }, [order]);
 
   return (
     <div className="flex flex-col ">
-      <ProForm
-        formRef={formRef}
-        submitter={false}
-        form={form}
-        size="small"
-        layout="horizontal"
-        className="bg-white px-4 py-3 rounded-md border-gray-400"
+      <ProDescriptions
+        emptyText={''}
+        column={5}
+        size="middle"
+        // layout="horizontal"
+        className="bg-white px-4 py-3 rounded-md  align-middle"
       >
-        <ProFormGroup>
-          <ProFormText
-            disabled
-            label={t('ORDER No')}
-            name="orderNumber"
-            width="sm"
-          ></ProFormText>
-          <ProFormText
-            disabled
-            name="createBy"
-            width="sm"
-            label={t('CREATE BY')}
-          ></ProFormText>
-          <ProFormDatePicker
-            disabled
-            label={t('CREATE DATE')}
-            name="createDate"
-            width="sm"
-          ></ProFormDatePicker>
-        </ProFormGroup>
-        <ProFormGroup>
-          <ProFormText
-            disabled
-            label={t('LAST MODIFIED BY')}
-            name="lastModificateBy"
-            width="sm"
-          ></ProFormText>
+        <ProDescriptions.Item label={`${t('ORDER No')}`} valueType="text">
+          <Tag>{order?.orderNumberNew || ''}</Tag>
+        </ProDescriptions.Item>
+        <ProDescriptions.Item valueType="text" label={t('CREATE BY')}>
+          <Tag>{order?.createUserID?.name?.toUpperCase() || ''}</Tag>
+        </ProDescriptions.Item>
+        <ProDescriptions.Item valueType="date" label={t('CREATE DATE')}>
+          {order?.createDate || ''}
+        </ProDescriptions.Item>
 
-          <ProFormDatePicker
-            disabled
-            label={t('MODIFICATION DATE')}
-            name="modificationDate"
-            width="sm"
-          ></ProFormDatePicker>
-        </ProFormGroup>
-      </ProForm>
+        <ProDescriptions.Item valueType="text" label={t('LAST MODIFIED BY')}>
+          <Tag>{String(order?.updateUserID?.name || '')?.toUpperCase()}</Tag>
+        </ProDescriptions.Item>
+
+        <ProDescriptions.Item valueType="date" label={t('MODIFICATION DATE')}>
+          {order?.updateDate || ''}
+        </ProDescriptions.Item>
+      </ProDescriptions>
     </div>
   );
 };

@@ -54,6 +54,9 @@ export interface IRequirement {
   issuedAmout?: number;
   bookedQuantity?: number;
   reservedQuantity?: number;
+
+  forIssuedQuantity?: number;
+  forBookedQuantity?: number;
   cancelledQuntity?: number;
   pickSlipsIds?: any[];
   note?: string;

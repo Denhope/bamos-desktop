@@ -61,18 +61,16 @@ const indexHtml = join(process.env.DIST, 'index.html');
 // Функция для вывода информации о программе
 function showAboutInfo() {
   const message = `
-    Program: ${app.getName()}
+    Program: ${app.getName().toUpperCase()}
     Version: ${app.getVersion()}
-    
-    license: PROPRIETARY
-
-      Information: BAMOS is a software program designed to organize and manage the production processes of an aircraft repair facility. The program is specifically tailored to meet the unique needs of the aviation industry, providing a comprehensive solution for managing the repair and maintenance of aircraft.
-
-      The BAMOS program offers a range of features that enable users to streamline their production processes, improve efficiency, and reduce costs. The program includes tools for managing inventory, scheduling maintenance and repair work, tracking parts and materials, and generating reports and analytics.
-    
-      One of the key benefits of the BAMOS program is its ability to integrate with other systems and software used in the aviation industry. This allows for seamless data transfer and communication between different departments and teams, improving overall productivity and reducing the risk of errors or miscommunications.
-    
-      Overall, the BAMOS program is an essential tool for any aircraft repair facility looking to optimize their production processes and improve their bottom line. With its comprehensive features and user-friendly interface, the program is a valuable asset for any organization in the aviation industry.
+    Information: В данной версии добавлена возможночть открытия нескольких окон, открытия PDF документов и файлов изображений в отдельных окнах для  удобства просмотра и возможности печати.
+    Внесены исправления в файлы перевода.
+    Обновлена логика создания ордеров, добавлены статусы ордеров.
+    Реализовано автоматическая рассылка писем поставщикам с расслылкой отчетов об отправке.
+    Исправлены некоторые ошибки.
+    Выполнена оптимизация.
+    ВСЕМ ПРИЯТНОГО ПОЛЬЗОВАНИЯ!!!
+   
   `;
   dialog.showMessageBox({
     type: 'info',
@@ -82,6 +80,15 @@ function showAboutInfo() {
   });
 }
 
+// license: PROPRIETARY
+
+// Information: BAMOS is a software program designed to organize and manage the production processes of an aircraft repair facility. The program is specifically tailored to meet the unique needs of the aviation industry, providing a comprehensive solution for managing the repair and maintenance of aircraft.
+
+// The BAMOS program offers a range of features that enable users to streamline their production processes, improve efficiency, and reduce costs. The program includes tools for managing inventory, scheduling maintenance and repair work, tracking parts and materials, and generating reports and analytics.
+
+// One of the key benefits of the BAMOS program is its ability to integrate with other systems and software used in the aviation industry. This allows for seamless data transfer and communication between different departments and teams, improving overall productivity and reducing the risk of errors or miscommunications.
+
+// Overall, the BAMOS program is an essential tool for any aircraft repair facility looking to optimize their production processes and improve their bottom line. With its comprehensive features and user-friendly interface, the program is a valuable asset for any organization in the aviation industry.
 // Функция для проверки обновлений
 function checkForUpdates() {
   autoUpdater.checkForUpdates();

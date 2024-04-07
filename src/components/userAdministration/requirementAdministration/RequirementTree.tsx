@@ -55,6 +55,9 @@ const RequirementTree: FC<UserTreeProps> = ({
       if (requirement.status === 'CLOSED') {
         statusIndicator = ' 🟢'; // Оранжевый кружок
       }
+      if (requirement.status === 'closed') {
+        statusIndicator = ' 🟢'; // Оранжевый кружок
+      }
       if (requirement.status === 'PARTLY_RECEIVED') {
         statusIndicator = ' \u{1F7E1}'; // Оранжевый кружок
       }
