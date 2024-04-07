@@ -514,6 +514,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                     store: '10',
                     workshop: '0700',
                     companyID: currentCompanyID,
+                    neededOnID: '',
                   })
                 );
                 //добавитьUpdateUser

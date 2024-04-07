@@ -56,6 +56,8 @@ export interface User {
   _id?: string;
   id: string;
   firstName: string;
+
+  name?: string;
   login?: any;
   lastName: string;
   englishFirstName: string;

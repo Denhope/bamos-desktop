@@ -1246,6 +1246,7 @@ export const createReturnSlip = createAsyncThunk(
       recipientID,
       storeManID,
       companyID,
+      projectID,
     } = data;
 
     try {
@@ -1273,6 +1274,7 @@ export const createReturnSlip = createAsyncThunk(
         recipientID,
         storeManID,
         companyID,
+        projectID,
       });
       return response.data;
     } catch (error) {

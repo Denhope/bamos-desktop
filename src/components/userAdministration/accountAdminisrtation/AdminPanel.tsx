@@ -52,7 +52,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
         await updateUser(user).unwrap();
         message.success(t('USER  SUCCESSFULLY UPDATED'));
       } else {
-        await addUser(user).unwrap();
+        await addUser({
+          ...user,
+          name: `${user.firstName} ${user.lastName}`,
+        }).unwrap();
         message.success(t('USER  SUCCESSFULLY ADDED'));
       }
       setEditingUser(null);

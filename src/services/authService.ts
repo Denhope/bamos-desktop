@@ -10,7 +10,11 @@ export default class AuthService {
     localStorage.setItem('lastName', response.data.lastName);
     localStorage.setItem('role', response.data.role);
     localStorage.setItem('singNumber', response.data.singNumber);
-    localStorage.setItem('name', response.data.name);
+    localStorage.setItem(
+      'name',
+      response.data.name ||
+        `${response.data.firstName}  ${response.data.lastName}`
+    );
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('refreshtoken', response.data.refreshToken);
     localStorage.setItem('userId', response.data.userId);

@@ -9,21 +9,21 @@ import {
   Select,
   InputRef,
   Space,
-} from "antd";
-import Table, { ColumnType, ColumnsType, TableProps } from "antd/es/table";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC, useRef, useState } from "react";
+} from 'antd';
+import Table, { ColumnType, ColumnsType, TableProps } from 'antd/es/table';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC, useRef, useState } from 'react';
 import {
   IMatRequestAplication,
   MatRequestAplication,
-} from "@/store/reducers/ProjectTaskSlise";
-import MaterialAplicationView from "./MaterialAplucationView";
+} from '@/store/reducers/ProjectTaskSlise';
+import MaterialAplicationView from './MaterialAplucationView';
 import {
   setCurrentMaterialAplication,
   setCurrentMaterialAplicationStatus,
   setEditedMaterialAplication,
-} from "@/store/reducers/MatirialAplicationsSlise";
-import moment from "moment";
+} from '@/store/reducers/MatirialAplicationsSlise';
+import moment from 'moment';
 import {
   createPickSlip,
   createPurchaseItems,
@@ -33,7 +33,7 @@ import {
   getSelectedItems,
   updateAplicationById,
   updateForReservation,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -41,19 +41,19 @@ import {
   PlusOutlined,
   PrinterOutlined,
   SearchOutlined,
-} from "@ant-design/icons";
-import toast, { Toaster } from "react-hot-toast";
+} from '@ant-design/icons';
+import toast, { Toaster } from 'react-hot-toast';
 
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { useNavigate } from "react-router-dom";
-import { RouteNames } from "@/router";
-import { IMaterialStoreRequestItem } from "@/models/IMaterialStoreItem";
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useNavigate } from 'react-router-dom';
+import { RouteNames } from '@/router';
+import { IMaterialStoreRequestItem } from '@/models/IMaterialStoreItem';
 import {
   FilterValue,
   SorterResult,
   FilterConfirmProps,
-} from "antd/es/table/interface";
-import Highlighter from "react-highlight-words";
+} from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
 
 type AplicationsPropsType = {
   data: MatRequestAplication[];
@@ -75,20 +75,20 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
   };
   const hasSelected = selectedRowKeys.length > 0;
 
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({});
   const [sortedInfo, setSortedInfo] = useState<
     SorterResult<MatRequestAplication>
   >({});
-  const handleChange: TableProps<MatRequestAplication>["onChange"] = (
+  const handleChange: TableProps<MatRequestAplication>['onChange'] = (
     pagination,
     filters,
     sorter
   ) => {
-    console.log("Various parameters", pagination, filters, sorter);
+    console.log('Various parameters', pagination, filters, sorter);
     setFilteredInfo(filters);
     setSortedInfo(sorter as SorterResult<MatRequestAplication>);
   };
@@ -104,8 +104,8 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
 
   const setAgeSort = () => {
     setSortedInfo({
-      order: "descend",
-      columnKey: "age",
+      order: 'descend',
+      columnKey: 'age',
     });
   };
 
@@ -123,7 +123,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
-    setSearchText("");
+    setSearchText('');
   };
 
   const getColumnSearchProps = (
@@ -147,7 +147,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
           onPressEnter={() =>
             handleSearch(selectedKeys as string[], confirm, dataIndex)
           }
-          style={{ marginBottom: 8, display: "block" }}
+          style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
@@ -192,7 +192,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -207,10 +207,10 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ""}
+          textToHighlight={text ? text.toString() : ''}
         />
       ) : (
         text
@@ -221,10 +221,10 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
   const [checked, setChecked] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
   const [disabled, setDisabled] = useState(false);
-  const [searchedText, setSerchedText] = useState("");
+  const [searchedText, setSerchedText] = useState('');
 
-  const label = `${"Подтверждаю, введенную информацию"}`;
-  const [searchedStatus, setSerchedStatus] = useState("");
+  const label = `${'Подтверждаю, введенную информацию'}`;
+  const [searchedStatus, setSerchedStatus] = useState('');
   const dispatch = useAppDispatch();
 
   const { isLoading, currentMaterialsAplication } = useTypedSelector(
@@ -241,10 +241,10 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
 
   const columns: ColumnsType<MatRequestAplication> = [
     {
-      title: "Номер заявки",
-      dataIndex: "materialAplicationNumber",
-      key: "materialAplicationNumber",
-      responsive: ["sm"],
+      title: 'Номер заявки',
+      dataIndex: 'materialAplicationNumber',
+      key: 'materialAplicationNumber',
+      responsive: ['sm'],
       filteredValue: [searchedText],
       onFilter: (value: any, record: any) => {
         return (
@@ -264,17 +264,17 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
         a.materialAplicationNumber - b.materialAplicationNumber,
     },
     {
-      title: "Внутренний W/O",
-      dataIndex: "projectWO",
-      key: "projectWO",
-      responsive: ["sm"],
+      title: 'Внутренний W/O',
+      dataIndex: 'projectWO',
+      key: 'projectWO',
+      responsive: ['sm'],
     },
     {
-      title: "Номер карты",
+      title: 'Номер карты',
       // dataIndex: ['projectTaskId', 'projectTaskWO'],
-      dataIndex: "projectTaskWO",
-      key: "projectTaskWO",
-      responsive: ["sm"],
+      dataIndex: 'projectTaskWO',
+      key: 'projectTaskWO',
+      responsive: ['sm'],
       // ...getColumnSearchProps('projectTaskWO'),
     },
     // {
@@ -285,92 +285,92 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
 
     // },
     {
-      title: "Заказчик",
+      title: 'Заказчик',
       // dataIndex: ['userId', 'email'] || 'user',
-      dataIndex: "user",
-      key: "performedSing",
-      responsive: ["sm"],
+      dataIndex: 'user',
+      key: 'performedSing',
+      responsive: ['sm'],
       // ...getColumnSearchProps('user'),
       // width: 150,
     },
     {
-      title: "Дата создания",
-      dataIndex: "createDate",
-      key: "createDate",
-      responsive: ["sm"],
+      title: 'Дата создания',
+      dataIndex: 'createDate',
+      key: 'createDate',
+      responsive: ['sm'],
       render(text: Date) {
-        return moment(text).format("D.MM.YY, HH:mm");
+        return moment(text).format('D.MM.YY, HH:mm');
       },
       sorter: (a, b) =>
         moment(a.createDate).unix() - moment(b.createDate).unix(),
     },
 
     {
-      title: "Тип ВС",
-      dataIndex: "planeType",
-      key: "planeType",
-      responsive: ["sm"],
+      title: 'Тип ВС',
+      dataIndex: 'planeType',
+      key: 'planeType',
+      responsive: ['sm'],
       // width: 150,
     },
     {
-      title: "Номер ВС",
-      dataIndex: "registrationNumber",
-      key: "registrationNumber",
-      responsive: ["sm"],
+      title: 'Номер ВС',
+      dataIndex: 'registrationNumber',
+      key: 'registrationNumber',
+      responsive: ['sm'],
       // width: 150,
     },
     {
-      title: "Статус",
-      dataIndex: "status",
-      key: "status",
-      responsive: ["sm"],
+      title: 'Статус',
+      dataIndex: 'status',
+      key: 'status',
+      responsive: ['sm'],
       render(text) {
-        if (text == "расходное требование создано") {
+        if (text == 'расходное требование создано') {
           return {
             props: {
-              style: { background: "#09F600" },
+              style: { background: '#09F600' },
             },
             children: <div>закрыта</div>,
           };
-        } else if (text == "собрана") {
+        } else if (text == 'собрана') {
           return {
             props: {
-              style: { background: "#097800" },
+              style: { background: '#097800' },
             },
             children: <div>{text}</div>,
           };
-        } else if (text == "отложена") {
+        } else if (text == 'отложена') {
           return {
             props: {
-              style: { background: "" },
+              style: { background: '' },
             },
             children: <div>Новая</div>,
           };
-        } else if (text == "в работе") {
+        } else if (text == 'в работе') {
           return {
             props: {
-              style: { background: "#FBAC05" },
+              style: { background: '#FBAC05' },
             },
             children: <div>{text}</div>,
           };
-        } else if (text == "частично закрыта") {
+        } else if (text == 'частично закрыта') {
           return {
             props: {
-              style: { background: "#e63715" },
+              style: { background: '#e63715' },
             },
             children: <div>{text}</div>,
           };
-        } else if (text == "частично собрана") {
+        } else if (text == 'частично собрана') {
           return {
             props: {
-              style: { background: "#e63715" },
+              style: { background: '#e63715' },
             },
             children: <div>{text}</div>,
           };
-        } else if (text == "в закупку") {
+        } else if (text == 'в закупку') {
           return {
             props: {
-              style: { background: "#e63715" },
+              style: { background: '#e63715' },
             },
             children: <div>{text}</div>,
           };
@@ -407,7 +407,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
             style={{ width: 170 }}
             placeholder="Статус задачи"
             allowClear
-            onClear={() => setSerchedStatus("")}
+            onClear={() => setSerchedStatus('')}
             onSelect={setSerchedStatus}
           >
             <Select.Option value="отложен">Новые</Select.Option>
@@ -431,7 +431,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
         dataSource={data.length > 0 ? data : dataEmpty}
         bordered
         size="small"
-        scroll={{ y: "calc(65vh)" }}
+        scroll={{ y: 'calc(65vh)' }}
         locale={{
           emptyText: isLoading ? <Skeleton active={true} /> : <Empty />,
         }}
@@ -440,8 +440,8 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
             onClick: async (event) => {
               setOpen(true);
               dispatch(setCurrentMaterialAplication(record));
-              if (record.status == "отложена") {
-                dispatch(setCurrentMaterialAplicationStatus("в работе"));
+              if (record.status == 'отложена') {
+                dispatch(setCurrentMaterialAplicationStatus('в работе'));
               }
             },
           };
@@ -452,42 +452,42 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
         okButtonProps={{
           disabled:
             isLoading ||
-            currentMaterialsAplication?.status === "в работе" ||
-            currentMaterialsAplication?.status === "закрыта" ||
-            currentMaterialsAplication.status === "в закупку" ||
+            currentMaterialsAplication?.status === 'в работе' ||
+            currentMaterialsAplication?.status === 'закрыта' ||
+            currentMaterialsAplication.status === 'в закупку' ||
             !checked,
         }}
         title="Просмотр Заявки"
         centered
         open={open}
         cancelText="отмена"
-        okType={"default"}
+        okType={'default'}
         okText={
           currentMaterialsAplication &&
-          currentMaterialsAplication.status === "расходное требование создано"
-            ? "Перейти к рассходным требованиям"
-            : "Создать расходное требование"
+          currentMaterialsAplication.status === 'расходное требование создано'
+            ? 'Перейти к рассходным требованиям'
+            : 'Создать расходное требование'
         }
         onOk={async () => {
           if (
-            currentMaterialsAplication.status === "расходное требование создано"
+            currentMaterialsAplication.status === 'расходное требование создано'
           ) {
             history(`${RouteNames.PICKSLIPS}`);
           }
 
           if (
             buttonDisabled ||
-            ((currentMaterialsAplication.status === "собрана" ||
-              currentMaterialsAplication.status === "частично собрана") &&
+            ((currentMaterialsAplication.status === 'собрана' ||
+              currentMaterialsAplication.status === 'частично собрана') &&
               !currentMaterialsAplication.isPickSlipCreated === true &&
               currentMaterialsAplication.editedAction.editedStoreMaterials
                 .length > 0)
           ) {
             Modal.confirm({
-              title: "Вы уверены что хотите сформировать расходное требование?",
-              okText: "Да",
-              cancelText: "Отмена",
-              okType: "danger",
+              title: 'Вы уверены что хотите сформировать расходное требование?',
+              okText: 'Да',
+              cancelText: 'Отмена',
+              okType: 'danger',
               onOk: async () => {
                 function removeProperties(arr: any[]) {
                   return arr.map((obj) => {
@@ -510,8 +510,8 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                     materialAplicationId:
                       currentMaterialsAplication._id ||
                       currentMaterialsAplication.id ||
-                      "",
-                    status: "открыто",
+                      '',
+                    status: 'открыто',
                     materials: [
                       ...removeProperties(
                         currentMaterialsAplication.editedAction
@@ -530,22 +530,23 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                       currentMaterialsAplication.materialAplicationNumber,
                     additionalTaskId:
                       currentMaterialsAplication.additionalTaskId,
-                    store: "10",
-                    workshop: "0700",
+                    store: '10',
+                    workshop: '0700',
+                    neededOnID: undefined,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   dispatch(
                     updateAplicationById({
                       ...currentMaterialsAplication,
                       _id:
                         currentMaterialsAplication._id ||
                         currentMaterialsAplication.id,
-                      status: "расходное требование создано",
+                      status: 'расходное требование создано',
                       isPickSlipCreated: true,
                     })
                   );
-                  toast.success("Расходное требование создано");
+                  toast.success('Расходное требование создано');
                 }
                 // }
               },
@@ -558,20 +559,20 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
         onCancel={() => {
           setOpen(false);
         }}
-        width={"80%"}
+        width={'80%'}
       >
         <MaterialAplicationView data={currentMaterialsAplication} />
-        <p style={{ marginBottom: "20px" }}>
+        <p style={{ marginBottom: '20px' }}>
           {currentMaterialsAplication &&
           currentMaterialsAplication.status ===
-            "расходное требование создано" ? (
+            'расходное требование создано' ? (
             <Checkbox
               checked={true}
               disabled={
                 true ||
-                localStorage.getItem("role") == "boss" ||
-                localStorage.getItem("role") == "engineer" ||
-                currentMaterialsAplication.status === "в закупку"
+                localStorage.getItem('role') == 'boss' ||
+                localStorage.getItem('role') == 'engineer' ||
+                currentMaterialsAplication.status === 'в закупку'
               }
               onChange={onChange}
             >
@@ -582,10 +583,10 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
               checked={checked}
               disabled={
                 disabled ||
-                localStorage.getItem("role") == "boss" ||
-                localStorage.getItem("role") == "engineer" ||
-                localStorage.getItem("role") == "logistic" ||
-                currentMaterialsAplication.status === "в закупку"
+                localStorage.getItem('role') == 'boss' ||
+                localStorage.getItem('role') == 'engineer' ||
+                localStorage.getItem('role') == 'logistic' ||
+                currentMaterialsAplication.status === 'в закупку'
               }
               onChange={onChange}
             >
@@ -595,16 +596,16 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
         </p>
         <Button
           disabled={
-            localStorage.getItem("role") == "boss" ||
-            localStorage.getItem("role") == "logistic" ||
-            localStorage.getItem("role") == "engineer" ||
+            localStorage.getItem('role') == 'boss' ||
+            localStorage.getItem('role') == 'logistic' ||
+            localStorage.getItem('role') == 'engineer' ||
             buttonDisabled ||
             !checked ||
-            currentMaterialsAplication.status === "собрана" ||
-            currentMaterialsAplication.status === "частично собрана" ||
-            currentMaterialsAplication.status === "в закупку" ||
+            currentMaterialsAplication.status === 'собрана' ||
+            currentMaterialsAplication.status === 'частично собрана' ||
+            currentMaterialsAplication.status === 'в закупку' ||
             currentMaterialsAplication.status ===
-              "расходное требование создано" ||
+              'расходное требование создано' ||
             (!currentMaterialsAplication.editedAction.editedStoreMaterials
               .length &&
               !currentMaterialsAplication.editedAction.purchaseStoreMaterials
@@ -612,11 +613,11 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
           }
           onClick={async () => {
             Modal.confirm({
-              title: "Вы уверены, что хотите  уведомить заказчика ",
+              title: 'Вы уверены, что хотите  уведомить заказчика ',
 
-              okText: "Да",
-              cancelText: "Отмена",
-              okType: "danger",
+              okText: 'Да',
+              cancelText: 'Отмена',
+              okType: 'danger',
               onOk: async () => {
                 if (
                   !currentMaterialsAplication.editedAction
@@ -630,20 +631,20 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                       _id:
                         currentMaterialsAplication._id ||
                         currentMaterialsAplication.id,
-                      status: "собрана",
+                      status: 'собрана',
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     dispatch(getAllMaterialAplication());
                     dispatch(getCountAllprojectsAplications());
-                    toast.success("Заявка собрана");
+                    toast.success('Заявка собрана');
                     currentMaterialsAplication.editedAction.editedStoreMaterials.forEach(
                       (item: IMaterialStoreRequestItem) => {
                         dispatch(updateForReservation(item));
                       }
                     );
                   } else {
-                    toast.error("Информация не обновлена");
+                    toast.error('Информация не обновлена');
                   }
                 } else if (
                   currentMaterialsAplication.editedAction.purchaseStoreMaterials
@@ -657,10 +658,10 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                       _id:
                         currentMaterialsAplication._id ||
                         currentMaterialsAplication.id,
-                      status: "в закупку",
+                      status: 'в закупку',
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     dispatch(
                       createPurchaseItems(
                         currentMaterialsAplication.editedAction
@@ -669,14 +670,14 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                     );
                     dispatch(getAllMaterialAplication());
                     dispatch(getCountAllprojectsAplications());
-                    toast.success("Материалы отправлены в закупку");
+                    toast.success('Материалы отправлены в закупку');
                     // currentMaterialsAplication.editedAction.editedStoreMaterials.forEach(
                     //   (item: IMaterialStoreRequestItem) => {
                     //     dispatch(updateForReservation(item));
                     //   }
                     // );
                   } else {
-                    toast.error("Информация не обновлена");
+                    toast.error('Информация не обновлена');
                   }
                 } else if (
                   currentMaterialsAplication.editedAction.purchaseStoreMaterials
@@ -690,10 +691,10 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                       _id:
                         currentMaterialsAplication._id ||
                         currentMaterialsAplication.id,
-                      status: "частично собрана",
+                      status: 'частично собрана',
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     dispatch(
                       createPurchaseItems(
                         currentMaterialsAplication.editedAction
@@ -703,7 +704,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                     dispatch(getAllMaterialAplication());
                     dispatch(getCountAllprojectsAplications());
                     toast.success(
-                      "Заявка частично собрана, недастоющие материалы отправлены в закупку"
+                      'Заявка частично собрана, недастоющие материалы отправлены в закупку'
                     );
                     currentMaterialsAplication.editedAction.editedStoreMaterials.forEach(
                       (item: IMaterialStoreRequestItem) => {
@@ -711,7 +712,7 @@ const AplicationList: FC<AplicationsPropsType> = ({ data }) => {
                       }
                     );
                   } else {
-                    toast.error("Информация не обновлена");
+                    toast.error('Информация не обновлена');
                   }
                 }
               },

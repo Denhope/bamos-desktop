@@ -802,15 +802,19 @@ const PickSlipCancel: FC = () => {
                         recipient: selectedСonsigneeUser?.name,
                         recipientID: selectedСonsigneeUser?._id,
                         taskNumber: selectPickSlip.taskNumber,
-                        registrationNumber: selectPickSlip.registrationNumber,
-                        planeType: selectPickSlip.planeType,
-                        projectWO: selectPickSlip.projectWO,
-                        projectTaskWO: selectPickSlip.projectTaskWO,
+                        registrationNumber:
+                          selectPickSlip?.projectID?.acRegistrationNumber,
+                        planeType: selectPickSlip?.projectID?.acType,
+                        projectWO: selectPickSlip?.projectID?.projectWO,
+                        projectTaskWO:
+                          selectPickSlip?.projectTaskId?.projectTaskWO,
                         materialAplicationNumber:
                           selectPickSlip.materialAplicationNumber,
                         additionalTaskID: selectPickSlip.additionalTaskID,
                         store: selectPickSlip.getFrom,
-                        workshop: selectPickSlip.neededOn,
+                        workshop: selectPickSlip?.neededOnID?.title,
+                        projectID: selectPickSlip?.projectID || '',
+                        neededOnID: selectPickSlip?.neededOnID || '',
                         companyID: currentCompanyID,
                       })
                     );

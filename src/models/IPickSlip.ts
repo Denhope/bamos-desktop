@@ -57,6 +57,8 @@ export interface IReturnSlip {
   storeManID?: string | null;
   recipientID?: string | null;
   companyID?: string;
+  projectID?: string;
+  neededOnID?: string;
 }
 export interface IPickSlipResponse {
   materials?: any[];
