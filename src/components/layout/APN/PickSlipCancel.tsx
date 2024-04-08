@@ -842,7 +842,7 @@ const PickSlipCancel: FC = () => {
                                     ORDER_NUMBER: resultItem?.ORDER_NUMBER,
                                     PRICE: resultItem?.PRICE,
                                     CURRENCY: resultItem?.CURRENCY,
-                                    QUANTITY: resultItem?.QUANTITY,
+                                    QUANTITY: resultItem?.QTYCANCEL,
                                     SUPPLIER_BATCH_NUMBER:
                                       resultItem?.SUPPLIER_BATCH_NUMBER,
                                     OWNER: resultItem?.OWNER_SHORT_NAME,
