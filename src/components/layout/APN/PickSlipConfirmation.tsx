@@ -205,8 +205,8 @@ const PickSlipConfirmation: FC = () => {
 
     {
       title: `${t('OWNER')}`,
-      dataIndex: 'OWNER',
-      key: 'OWNER',
+      dataIndex: 'OWNER_SHORT_NAME',
+      key: 'OWNER_SHORT_NAME',
       responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
@@ -433,7 +433,13 @@ const PickSlipConfirmation: FC = () => {
         return false;
       },
       render: (text: any, record: any) => {
-        return <div>{record.foRealese ? record.foRealese.OWNER : text}</div>;
+        return (
+          <div>
+            {record.foRealese
+              ? record.foRealese.OWNER_SHORT_NAME
+              : record.foRealese?.OWNER}
+          </div>
+        );
       },
     },
     {
@@ -996,9 +1002,10 @@ const PickSlipConfirmation: FC = () => {
 
                                 UNIT_OF_MEASURE: resultItem.UNIT_OF_MEASURE,
 
-                                SUPPLIES_CODE: resultItem?.SUPPLIES_CODE || '',
+                                SUPPLIES_CODE:
+                                  resultItem?.SUPPLIES_CODE || 'N/A',
                                 SUPPLIES_LOCATION:
-                                  resultItem?.SUPPLIES_LOCATION || '',
+                                  resultItem?.SUPPLIES_LOCATION || 'N/A',
                                 SUPPLIER_NAME: resultItem?.SUPPLIER_NAME,
                                 SUPPLIER_SHORT_NAME:
                                   resultItem?.SUPPLIER_SHORT_NAME,
@@ -1018,22 +1025,25 @@ const PickSlipConfirmation: FC = () => {
                                   resultItem?.PRODUCT_EXPIRATION_DATE,
 
                                 APPROVED_CERT: resultItem?.APPROVED_CERT,
-                                AWB_REFERENCE: resultItem?.AWB_REFERENCE || '',
-                                AWB_TYPE: resultItem?.AWB_TYPE || '',
-                                AWB_NUMBER: resultItem?.AWB_NUMBER || '',
-                                AWB_DATE: resultItem?.AWB_DATE || '',
-                                RECEIVING_NUMBER: resultItem?.RECEIVING_NUMBER,
+                                AWB_REFERENCE:
+                                  resultItem?.AWB_REFERENCE || 'N/A',
+                                AWB_TYPE: resultItem?.AWB_TYPE || 'N/A',
+                                AWB_NUMBER: resultItem?.AWB_NUMBER || 'N/A',
+                                AWB_DATE: resultItem?.AWB_DATE || 'N/A',
+                                RECEIVING_NUMBER:
+                                  resultItem?.RECEIVING_NUMBER || 'N/A',
                                 RECEIVING_ITEM_NUMBER:
-                                  resultItem.RECEIVING_ITEM_NUMBER,
+                                  resultItem.RECEIVING_ITEM_NUMBER || 'N/A',
                                 CERTIFICATE_NUMBER:
                                   resultItem?.CERTIFICATE_NUMBER,
-                                CERTIFICATE_TYPE: resultItem?.CERTIFICATE_TYPE,
-                                REVISION: resultItem?.REVISION,
+                                CERTIFICATE_TYPE:
+                                  resultItem?.CERTIFICATE_TYPE || 'N/A',
+                                REVISION: resultItem?.REVISION || 'N/A',
                                 IS_CUSTOMER_GOODS:
                                   resultItem?.IS_CUSTOMER_GOODS,
                                 LOCAL_ID: resultItem?.LOCAL_ID,
                                 registrationNumber:
-                                  result.payload?.registrationNumber,
+                                  result.payload?.registrationNumber || 'N/A',
                                 planeType: result.payload?.registrationNumber,
                                 projectWO: result.payload?.projectWO,
                                 workshop: result.payload?.workshop,
@@ -1043,6 +1053,11 @@ const PickSlipConfirmation: FC = () => {
                                 pickDate: result.payload?.createDate,
                                 pickSlipNumber:
                                   result.payload?.materialAplicationNumber,
+                                partID: result.payload?.partID,
+                                RECEIVING_ID: result.payload?.RECEIVING_ID,
+                                ORDER_ITEM_ID: result.payload?.ORDER_ITEM_ID,
+                                RECEIVING_ITEMS_ID:
+                                  result.payload?.RECEIVING_ITEMS_ID,
                               },
                             })
                           );
