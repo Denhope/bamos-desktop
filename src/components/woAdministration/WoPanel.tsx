@@ -1,7 +1,7 @@
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
 import { Button, Col, Modal, Space, Spin, message } from 'antd';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import WODiscription from './WODiscription';
 import {
   PlusSquareOutlined,
@@ -25,15 +25,34 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     null
   );
   const { t } = useTranslation();
-  const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery({
-    status: projectSearchValues?.status,
-    startDate: projectSearchValues?.startDate,
-    finishDate: projectSearchValues?.endDate,
-    projectID: projectSearchValues?.projectID,
-    vendorID: projectSearchValues?.vendorID,
-    partNumberID: projectSearchValues?.partNumberID,
-    taskWO: projectSearchValues?.projectTaskWO,
-  });
+  const [triggerQuery, setTriggerQuery] = useState(false);
+  const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
+    {
+      status: projectSearchValues?.status,
+      startDate: projectSearchValues?.startDate,
+      finishDate: projectSearchValues?.endDate,
+      projectID: projectSearchValues?.projectID,
+      vendorID: projectSearchValues?.vendorID,
+      partNumberID: projectSearchValues?.partNumberID,
+      taskWO: projectSearchValues?.projectTaskWO,
+    },
+    {
+      skip: !triggerQuery, // Skip the query if triggerQuery is false
+    }
+  );
+
+  useEffect(() => {
+    // Check if projectSearchValues is defined and not null
+    if (projectSearchValues) {
+      // Check if there are any search values
+      const hasSearchParams = Object.values(projectSearchValues).some(
+        (value) => value !== undefined && value !== ''
+      );
+      if (hasSearchParams) {
+        setTriggerQuery(true);
+      }
+    }
+  }, [projectSearchValues]);
   if (isLoading) {
     return (
       <div>
