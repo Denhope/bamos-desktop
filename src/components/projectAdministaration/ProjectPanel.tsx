@@ -16,7 +16,7 @@ import {
 } from '@/features/projectAdministration/projectsApi';
 import { IProject } from '@/models/IProject';
 import ProjectDiscription from './ProjectDiscription';
-
+import { Split } from '@geoffcox/react-splitter';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -31,6 +31,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     status: projectSearchValues?.status,
     startDate: projectSearchValues?.startDate,
     endDate: projectSearchValues?.endDate,
+    projectWO: projectSearchValues?.projectNumber,
   });
 
   const [addProject] = useAddProjectMutation();
@@ -63,12 +64,14 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     try {
       if (editingproject) {
         await updateProject(project).unwrap();
+        handleEdit(project);
         message.success(t('PROJECT SUCCESSFULLY UPDATED'));
       } else {
         await addProject({ project }).unwrap();
         message.success(t('PROJECT SUCCESSFULLY ADDED'));
+        setEditingproject(null);
       }
-      setEditingproject(null);
+      // setEditingproject(null);
     } catch (error) {
       message.error(t('ERROR SAVING PROJECT '));
     }
@@ -88,7 +91,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     <>
       <Space>
         <Col
-          className=" bg-white px-4 py-3 w-[158vh]  rounded-md brequierement-gray-400 "
+          className=" bg-white px-4 py-3   rounded-md brequierement-gray-400 "
           sm={24}
         >
           <ProjectDiscription
@@ -112,7 +115,9 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             <Button
               size="small"
               icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingproject.id)}
+              onClick={() =>
+                handleDelete(editingproject.id || editingproject?._id)
+              }
             >
               {t('DELETE PROJECT')}
             </Button>
@@ -121,16 +126,21 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div className=" w-3/12 h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
-          <ProjectTree onProjectSelect={handleEdit} projects={projects || []} />
-        </div>
-        <div className=" w-9/12 h-[75vh] bg-white px-4 py-3  rounded-md brequierement-gray-400 p-3 ">
-          <ProjectForm
-            project={editingproject || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="25%">
+          <div className=" h-[68vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+            <ProjectTree
+              onProjectSelect={handleEdit}
+              projects={projects || []}
+            />
+          </div>
+          <div className="h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+            <ProjectForm
+              project={editingproject || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

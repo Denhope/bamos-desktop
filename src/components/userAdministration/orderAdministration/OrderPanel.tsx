@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React, { useState } from 'react';
+import { Split } from '@geoffcox/react-splitter';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import {
   PlusSquareOutlined,
@@ -346,30 +347,29 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
       /> */}
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-4/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <OrderTree
-            onCompanySelect={handleEdit}
-            orders={requirements || []}
-            onOrderItemSelect={function (orderItem: IOrderItem | {}): void {
-              setEditingOrderItem(orderItem);
-            }}
-          />
-        </div>
-        <div
-          className="w-8/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <OrderAdministrationForm
-            onOrderItemUpdate={handleUpdateOrderItem}
-            order={editingOrder || undefined}
-            orderItem={editingOrderItem || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="25%">
+          <div className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
+            <OrderTree
+              onCompanySelect={handleEdit}
+              orders={requirements || []}
+              onOrderItemSelect={function (orderItem: IOrderItem | {}): void {
+                setEditingOrderItem(orderItem);
+              }}
+            />
+          </div>
+          <div
+            className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto"
+            // sm={19}
+          >
+            <OrderAdministrationForm
+              onOrderItemUpdate={handleUpdateOrderItem}
+              order={editingOrder || undefined}
+              orderItem={editingOrderItem || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

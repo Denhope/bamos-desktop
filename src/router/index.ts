@@ -23,6 +23,7 @@ export enum RouteNames {
   REQUIREMENT_VIEWER_VIEWER = '/materialManagment/parts/requirement/viewer',
   PICKSLIP_CANCEL = '/materialManagment/stores/pickslipCancel',
   SCRAP_MATERIAL = '/materialManagment/stores/scrap',
+  WORKORDER_ADMINISTRATION = 'workOrder/administration',
   PROJECT_MANAGMENT = 'project/projectManagment',
   PROJECT_VIEWER = 'project/projectViewer',
   ORDER_VIEWER = 'order/orderViewer',

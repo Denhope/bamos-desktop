@@ -14,11 +14,12 @@ import { useTranslation } from 'react-i18next';
 
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
+import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
 };
-const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
+const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   onProjectSearch,
 }) => {
   const formRef = useRef<FormInstance>(null);
@@ -49,7 +50,14 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
   const { t } = useTranslation();
 
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
+  const { data: projects } = useGetProjectsQuery({});
   const { data: usersGroups } = useGetGroupUsersQuery({});
+
+  const projectsValueEnum: Record<string, string> =
+    projects?.reduce((acc, reqType) => {
+      acc[reqType._id] = `№:${reqType.projectWO}-${reqType.projectName}`;
+      return acc;
+    }, {}) || {};
 
   const projectTypesValueEnum: Record<string, string> =
     projectTypes?.reduce((acc, reqType) => {
@@ -61,10 +69,12 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
     try {
       const searchParams = {
         startDate: selectedStartDate || '',
-        status: form.getFieldValue('status'),
+        status: form.getFieldValue('woStatus'),
         projectNumber: form.getFieldValue('projectNumber'),
         endDate: selectedEndDate,
         projectTypesID: form.getFieldValue('projectTypesID'),
+        projectTaskWO: form.getFieldValue('projectTaskWO'),
+        projectID: form.getFieldValue('projectID'),
       };
 
       onProjectSearch(searchParams);
@@ -87,32 +97,67 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
       form={form}
       onFinish={onFinish}
     >
+      <ProFormText
+        name="projectTaskWO"
+        label={`${t('WO No')}`}
+        width="lg"
+        fieldProps={{
+          onKeyPress: handleKeyPress,
+        }}
+      />
+      <ProFormSelect
+        initialValue={['open']}
+        mode="multiple"
+        name="woStatus"
+        label={`${t('Wo STATUS')}`}
+        width="lg"
+        valueEnum={{
+          draft: { text: t('DRAFT'), status: 'DRAFT' },
+          open: { text: t('OPEN'), status: 'Processing' },
+          inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+          // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+          completed: { text: t('COMPLETED'), status: 'Default' },
+          closed: { text: t('CLOSED'), status: 'SUCCESS' },
+          cancelled: { text: t('CANCELLED'), status: 'Error' },
+        }}
+      />
       <ProForm.Group>
-        <ProFormText
-          name="projectNumber"
-          label={`${t('PROJECT No')}`}
+        <ProFormSelect
+          mode={'multiple'}
+          showSearch
+          name="projectID"
+          label={t('PROJECT No')}
           width="lg"
-          fieldProps={{
-            onKeyPress: handleKeyPress,
-          }}
+          valueEnum={projectsValueEnum}
+          onChange={(value: any) => setReqTypeID(value)}
+          // disabled={!acTypeID} // Disable the select if acTypeID is not set
         />
-        <ProForm.Group></ProForm.Group>
       </ProForm.Group>
       <ProFormSelect
         mode={'multiple'}
         showSearch
-        name="projectTypesID"
+        name="ACID"
+        label={t('A/C No')}
+        width="lg"
+        // valueEnum={projectTypesValueEnum}
+        // onChange={(value: any) => setReqTypeID(value)}
+        // disabled={!acTypeID} // Disable the select if acTypeID is not set
+      />
+      {/* <ProFormSelect
+        mode={'multiple'}
+        showSearch
+        // name="projectTypesID"
         label={t('PROJECT TYPE')}
         width="lg"
         valueEnum={projectTypesValueEnum}
         onChange={(value: any) => setReqTypeID(value)}
         // disabled={!acTypeID} // Disable the select if acTypeID is not set
-      />
+      /> */}
 
-      <ProFormSelect
+      {/* <ProFormSelect
         // initialValue={['OPEN']}
         mode="multiple"
-        name="status"
+        name="projectStatus"
         label={`${t('PROJECT STATE')}`}
         width="lg"
         valueEnum={{
@@ -124,6 +169,26 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
           CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
           CANCELLED: { text: t('CANCELLED'), status: 'Error' },
         }}
+      /> */}
+
+      <ProFormSelect
+        mode={'multiple'}
+        showSearch
+        name="userGroupID"
+        label={t('SHOP No')}
+        width="lg"
+        // valueEnum={projectsValueEnum}
+        // onChange={(value: any) => setReqTypeID(value)}
+      />
+
+      <ProFormSelect
+        mode={'multiple'}
+        showSearch
+        name="useID"
+        label={t('USER')}
+        width="lg"
+        // valueEnum={projectsValueEnum}
+        // onChange={(value: any) => setReqTypeID(value)}
       />
 
       <ProFormDateRangePicker
@@ -139,4 +204,4 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
   );
 };
 
-export default ProjectFilterForm;
+export default WoFilteredForm;

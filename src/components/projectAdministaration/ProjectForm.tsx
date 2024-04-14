@@ -2,10 +2,10 @@
 
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
-import { Button, Tabs, Upload, message } from 'antd';
-
+import { Button, Empty, Modal, Tabs, Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { uploadFileServer } from '@/utils/api/thunks';
+import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 
 import {
   ProFormDatePicker,
@@ -14,6 +14,11 @@ import {
 } from '@ant-design/pro-components';
 import { IProject } from '@/models/IProject';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
+import ProjectWPAdmin from './projectWP/ProjectWPAdmin';
+import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
+import { COMPANY_ID } from '@/utils/api/http';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 interface UserFormProps {
   project?: IProject;
@@ -30,7 +35,9 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       : { ...values, status: form.getFieldValue('status')[0] };
     onSubmit(newUser);
   };
+
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
+
   const projectTypesValueEnum: Record<string, string> =
     projectTypes?.reduce((acc, reqType) => {
       acc[reqType.id] = reqType.code;
@@ -46,7 +53,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   }, [project, form]);
 
   const handleUpload = async (file: File) => {
-    if (!project || !project.id) {
+    if (!project || !project?._id) {
       console.error(
         'Невозможно загрузить файл: компания не существует или не имеет id'
       );
@@ -63,8 +70,11 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           ...project,
           FILES: response,
         };
-
-        onSubmit({ ...project, FILES: response });
+        const updatedOrderItem = {
+          ...project,
+          FILES: [...(project?.FILES || []), response],
+        };
+        updatedOrderItem && project && onSubmit(updatedOrderItem);
       } else {
         message.error('Ошибка при загрузке файла: неверный ответ сервера');
       }
@@ -80,7 +90,41 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   );
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   const [reqTypeID, setReqTypeID] = useState<any>('');
+  const handleDelete = (file: any) => {
+    Modal.confirm({
+      title: 'Вы уверены, что хотите удалить этот файл?',
+      onOk: async () => {
+        try {
+          const response = await dispatch(
+            deleteFile({ id: file.id, companyID: COMPANY_ID })
+          );
+          if (response.meta.requestStatus === 'fulfilled') {
+            // Удаляем файл из массива files
+            const updatedFiles =
+              project &&
+              project?.FILES &&
+              project?.FILES.filter((f) => f.id !== file.id);
+            const updatedOrderItem = {
+              ...project,
+              FILES: updatedFiles,
+            };
+            // await updateProjectItem(updatedOrderItem).unwrap();
+            project && onSubmit(updatedOrderItem);
+          } else {
+            throw new Error('Не удалось удалить файл');
+          }
+        } catch (error) {
+          message.error('ERROR');
+        }
+      },
+    });
+  };
+  const handleDownload = (file: any) => {
+    // Здесь должен быть код для скачивания файла
 
+    handleFileOpen(file);
+  };
+  const dispatch = useAppDispatch();
   return (
     <ProForm
       size="small"
@@ -111,7 +155,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
               OPEN: { text: t('OPEN'), status: 'Processing' },
               inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
-              PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+              // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
               COMPLETED: { text: t('COMPLETED'), status: 'Default' },
               CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
               CANCELLED: { text: t('CANCELLED'), status: 'Error' },
@@ -166,7 +210,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 width="sm"
               ></ProFormDatePicker>
               <ProFormDatePicker
-                disabled
+                // disabled
                 label={t('START DATE')}
                 name="startDate"
                 width="sm"
@@ -179,7 +223,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 width="sm"
               ></ProFormDatePicker>
               <ProFormDatePicker
-                disabled
+                // disabled
                 label={t('FINISH DATE')}
                 name="finishDate"
                 width="sm"
@@ -191,15 +235,41 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               name="remarks"
               label={t('REMARKS')}
             />
+            <ProForm.Item label={t('UPLOAD')}>
+              <div className="overflow-y-auto max-h-64">
+                <Upload
+                  name="FILES"
+                  fileList={project?.FILES || []}
+                  // listType="picture"
+                  className="upload-list-inline cursor-pointer"
+                  beforeUpload={handleUpload}
+                  accept="image/*"
+                  onPreview={handleDownload}
+                  onRemove={handleDelete}
+                  multiple
+                  onDownload={function (file: any): void {
+                    handleFileSelect({
+                      id: file?.id,
+                      name: file?.name,
+                    });
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>
+                    {t('CLICK TO UPLOAD')}
+                  </Button>
+                </Upload>
+              </div>
+            </ProForm.Item>
           </ProFormGroup>
         </Tabs.TabPane>
+        <Tabs.TabPane tab={t('ПЕРЕЧЕНЬ РАБОТ / ПОЗИЦИЙ')} key="2">
+          {project && project._id ? (
+            <ProjectWPAdmin projectID={project?._id}></ProjectWPAdmin>
+          ) : (
+            <Empty description="No Data" />
+          )}
+        </Tabs.TabPane>
       </Tabs>
-
-      {/* <ProForm.Item>
-        <Button type="primary" htmlType="submit">
-          {project ? 'Update' : 'Create'}
-        </Button>
-      </ProForm.Item> */}
     </ProForm>
   );
 };

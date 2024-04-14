@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
-
+import { Split } from '@geoffcox/react-splitter';
 import { useTranslation } from 'react-i18next';
 
 import RequirementForm from './RequirementForm';
@@ -160,25 +160,27 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <RequirementTree
-            onCompanySelect={handleEdit}
-            requirements={requirements || []}
-          />
-        </div>
-        <div
-          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <RequirementForm
-            requierement={editingRequirement || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="30%">
+          <div
+            // sm={4}
+            className=" h-[67vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+          >
+            <RequirementTree
+              onCompanySelect={handleEdit}
+              requirements={requirements || []}
+            />
+          </div>
+          <div
+            className="h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto"
+            // sm={19}
+          >
+            <RequirementForm
+              requierement={editingRequirement || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

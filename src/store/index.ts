@@ -42,14 +42,16 @@ import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 // import  vendorReducer  from '@/features/vendorAdministration/vendorSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
-import { acApi } from '@/features/ACAdministration/acApi';
-// import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
-// import { acApi } from '@/features/acAdministration/acApi';
+// import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
+// import { acApi } from '@/features/ACAdministration/acApi';
+import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
+import { acApi } from '@/features/acAdministration/acApi';
 
 import { ordersNewApi } from '@/features/orderNewAdministration/ordersNewApi';
 import { orderItemApi } from '@/features/orderItemsAdministration/orderItemApi';
 import { projectTypeApi } from '@/components/projectTypeAdministration/projectTypeApi';
+import { projectItemWOApi } from '@/features/projectItemWO/projectItemWOApi';
+import { projectItemApi } from '@/features/projectItemAdministration/projectItemApi';
 
 const store = configureStore({
   reducer: {
@@ -94,6 +96,8 @@ const store = configureStore({
     [ordersNewApi.reducerPath]: ordersNewApi.reducer,
     [orderItemApi.reducerPath]: orderItemApi.reducer,
     [projectTypeApi.reducerPath]: projectTypeApi.reducer,
+    [projectItemWOApi.reducerPath]: projectItemWOApi.reducer,
+    [projectItemApi.reducerPath]: projectItemApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -121,7 +125,9 @@ const store = configureStore({
       projectsTaskApi.middleware,
       ordersNewApi.middleware,
       orderItemApi.middleware,
-      projectTypeApi.middleware
+      projectTypeApi.middleware,
+      projectItemApi.middleware,
+      projectItemWOApi.middleware
     ),
 });
 export default store;

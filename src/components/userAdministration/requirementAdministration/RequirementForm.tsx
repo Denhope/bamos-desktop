@@ -23,6 +23,7 @@ import { useGetProjectsQuery } from '@/features/projectAdministration/projectsAp
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
+import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 
 interface UserFormProps {
   requierement?: IRequirement;
@@ -85,7 +86,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
     },
     { skip: !reqTypeID }
   );
-  const { data: projectTasks } = useGetProjectTasksQuery(
+  const { data: projectTasks } = useGetProjectItemsWOQuery(
     { projectId },
     { skip: !projectId }
   );
@@ -119,7 +120,10 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
 
   const projectTasksCodesValueEnum: Record<string, string> =
     projectTasks?.reduce((acc, projectTask) => {
-      acc[projectTask.id] = projectTask?.taskWo || projectTask?.projectTaskWO;
+      acc[projectTask.id] =
+        projectTask?.taskWO ||
+        projectTask?.taskWo ||
+        projectTask?.projectTaskWO;
       return acc;
     }, {}) || {};
 
@@ -171,8 +175,8 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
               initialValue={'draft'}
               options={[
                 { value: 'draft', label: t('DRAFT') },
-                { value: 'planned', label: t('PLANNED') },
-                { value: 'open', label: t('NEW') },
+                // { value: 'planned', label: t('PLANNED') },
+                { value: 'open', label: t('OPEN') },
                 { value: 'onOrder', label: t('ISSUED') },
                 { value: 'onQuatation', label: t('QUATATION') },
                 { value: 'onShort', label: t('ON SHORT') },

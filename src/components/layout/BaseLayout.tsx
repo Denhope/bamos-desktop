@@ -58,6 +58,12 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`ADMINISTRATION`)}`,
       route: RouteNames.USER_ADMINISTRATION,
     },
+
+    {
+      APNNBR: '05',
+      descriptions: `${t(`WORKORDER ADMINISTARTION`)}`,
+      route: RouteNames.WORKORDER_ADMINISTRATION,
+    },
     // {
     //   APNNBR: '58',
     //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,

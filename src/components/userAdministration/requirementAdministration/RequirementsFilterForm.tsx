@@ -100,7 +100,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
               case 'PROJECT':
                 options = data.map((item: any) => ({
                   value: item._id, // замените на нужное поле для 'PROJECT'
-                  label: item.projectWO, // замените на нужное поле для 'PROJECT'
+                  label: `№:${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
               case 'AC':
@@ -406,8 +406,8 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         options={[
           { value: 'draft', label: t('DRAFT') },
-          { value: 'planned', label: t('PLANNED') },
-          { value: 'open', label: t('NEW') },
+          // { value: 'planned', label: t('PLANNED') },
+          { value: 'open', label: t('OPEN') },
           { value: 'onOrder', label: t('ISSUED') },
           { value: 'onQuatation', label: t('QUATATION') },
           { value: 'onShort', label: t('ON SHORT') },

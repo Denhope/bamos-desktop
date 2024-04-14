@@ -9,14 +9,14 @@ import {
   ProFormSelect,
 } from '@ant-design/pro-form';
 import { Button, Modal, Tabs, Upload, message } from 'antd';
-import { useTranslation } from 'react-i18next';
+
 import { IOrder, IOrderItem } from '@/models/IRequirement';
 import { ProFormDatePicker, ProFormTextArea } from '@ant-design/pro-components';
 
 import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
-
+import { useTranslation } from 'react-i18next';
 import { OrderType } from '@/models/IOrder';
 import { useGetVendorsQuery } from '@/features/vendorAdministration/vendorApi';
 import PartList from './PartList';
@@ -38,10 +38,11 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
   orderItem,
   onOrderItemUpdate,
 }) => {
+  const { t } = useTranslation();
   const [tabTitles, setTabTitles] = useState({
-    '1': 'ORDER INFO',
-    '2': 'PARTS',
-    '3': 'ORDER #№ AND PART_NUMBER',
+    '1': `${t('ORDER INFO')}`,
+    '2': `${t('PARTS')}`,
+    '3': `${t('ORDER #№ AND PART_NUMBER')}`,
   });
 
   const [form] = ProForm.useForm();
@@ -65,21 +66,21 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
     if (order) {
       setTabTitles({
         ...tabTitles,
-        '1': `ORDER #№: ${order?.orderNumberNew}`,
+        '1': `${t('ORDER #№:')} ${order?.orderNumberNew || ''}`,
       });
     }
     if (selectedItem) {
       setTabTitles({
         ...tabTitles,
-        '3': `ORDER #№: ${order?.orderNumberNew}POS:${
+        '3': `${t('ORDER #№:')} ${order?.orderNumberNew}POS:${
           selectedItem?.index + 1
-        } - PART_NUMBER: ${selectedItem?.partID?.PART_NUMBER}`,
+        } - PART_NUMBER: ${selectedItem?.partID?.PART_NUMBER || ''}`,
       });
     } else {
-      setTabTitles({
-        ...tabTitles,
-        '3': 'ORDER #№ AND PART_NUMBER',
-      });
+      // setTabTitles({
+      //   ...tabTitles,
+      //   '3': 'ORDER #№ AND PART_NUMBER',
+      // });
     }
   };
 
@@ -118,8 +119,6 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
       setOrderData(null);
     }
   }, [orderItem, form]);
-
-  const { t } = useTranslation();
 
   const handleSubmit = async (values: any) => {
     const newUser: IOrder = order

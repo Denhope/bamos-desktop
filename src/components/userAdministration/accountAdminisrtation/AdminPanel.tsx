@@ -14,7 +14,7 @@ import {
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 interface AdminPanelProps {}
-
+import { Split } from '@geoffcox/react-splitter';
 const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const { data: usersGroup, isLoading } = useGetGroupUsersQuery({});
@@ -100,28 +100,30 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <UserTree
-            onUserSelect={function (user: User): void {
-              setEditingUser(user);
-            }}
-            usersGroup={usersGroup || []}
-          />
-        </div>
-        <div
-          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <UserForm
-            user={editingUser || undefined}
-            onSubmit={handleSubmit}
-            roles={['admin']}
-            groups={groups || []}
-          />
-        </div>
+        <Split initialPrimarySize="25%">
+          <div
+            // sm={4}
+            className=" h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+          >
+            <UserTree
+              onUserSelect={function (user: User): void {
+                setEditingUser(user);
+              }}
+              usersGroup={usersGroup || []}
+            />
+          </div>
+          <div
+            className=" h-[73vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto  "
+            // sm={19}
+          >
+            <UserForm
+              user={editingUser || undefined}
+              onSubmit={handleSubmit}
+              roles={['admin']}
+              groups={groups || []}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

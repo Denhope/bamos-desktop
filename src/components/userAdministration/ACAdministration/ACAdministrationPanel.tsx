@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
-
+import { Split } from '@geoffcox/react-splitter';
 import { useTranslation } from 'react-i18next';
 
 import {} from '@/features/vendorAdministration/vendorApi';
@@ -13,18 +13,18 @@ import { ITask } from '@/models/ITask';
 import ACAdministrationlForm from './ACAdministrationlForm';
 
 import ACAdministrationTree from './ACAdministrationTree';
-import {
-  useAddPlaneMutation,
-  useDeletePlaneMutation,
-  useGetPlanesQuery,
-  useUpdatePlaneMutation,
-} from '@/features/ACAdministration/acApi';
 // import {
 //   useAddPlaneMutation,
 //   useDeletePlaneMutation,
 //   useGetPlanesQuery,
 //   useUpdatePlaneMutation,
-// } from '@/features/acAdministration/acApi';
+// } from '@/features/ACAdministration/acApi';
+import {
+  useAddPlaneMutation,
+  useDeletePlaneMutation,
+  useGetPlanesQuery,
+  useUpdatePlaneMutation,
+} from '@/features/acAdministration/acApi';
 
 interface AdminPanelProps {
   values: VendorFilteredFormValues;
@@ -114,25 +114,27 @@ const ACAdministrationPanel: React.FC<AdminPanelProps> = ({ values }) => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-2/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <ACAdministrationTree
-            onPlaneselect={handleEdit}
-            planes={planes || []}
-          />
-        </div>
-        <div
-          className="w-10/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <ACAdministrationlForm
-            task={editingvendor || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="25%">
+          <div
+            // sm={4}
+            className=" h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+          >
+            <ACAdministrationTree
+              onPlaneselect={handleEdit}
+              planes={planes || []}
+            />
+          </div>
+          <div
+            className=" h-[73vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            // sm={19}
+          >
+            <ACAdministrationlForm
+              task={editingvendor || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

@@ -1,4 +1,6 @@
 import { TStatus } from './IProject';
+import { ITask } from './ITask';
+import { IPartNumber } from './IUser';
 
 export interface IACType {
   id: string;
@@ -57,6 +59,7 @@ export interface IRequirementCode {
   maintenanceTypes?: IMaintenanceType[];
 }
 export interface IProjectType {
+  projectName: any;
   id: string;
   code: string;
   title: string;
@@ -69,6 +72,51 @@ export interface IProjectType {
   updateUserID?: string;
   files?: any[];
   maintenanceTypes?: IMaintenanceType[];
+}
+
+export interface IProjectItem {
+  DESCRIPTION: any;
+  id: string;
+  qty: number;
+  partNumberID: any;
+  notes?: string;
+  description: string;
+  companyID: string;
+  createDate: Date;
+  createUserID: string;
+  updateDate?: Date;
+  updateUserID?: string;
+  files?: any[];
+  vendorID?: string;
+  woItemsId?: any[];
+  projectItemsWOID?: any[];
+}
+export interface IProjectItemWO {
+  title: any;
+  taskWO: any;
+  closedByID: any;
+  status: string;
+  projectTaskWO?: any;
+  taskWo?: any;
+  projectItemID?: any;
+  projectID?: string | any;
+  id: string;
+  qty: number;
+  partNumberID: any;
+  notes?: string;
+  description: string;
+  companyID: string;
+  createDate?: any;
+  createUserID?: any;
+  updateDate?: any;
+  updateUserID?: any;
+  startDate?: Date;
+  finishDate?: Date;
+  planedStartDate?: Date;
+  planedFinishDate?: Date;
+  files?: any[];
+  vendorID?: string;
+  taskId?: any;
 }
 
 export interface IProject {

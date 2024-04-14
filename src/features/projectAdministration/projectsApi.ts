@@ -5,7 +5,7 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { IProject } from '@/models/IProject';
 
 export const projectsApi = createApi({
-  reducerPath: 'projectsAdministration',
+  reducerPath: 'projectsAdministrationREduser',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Projects'], // Add tag types for caching
   endpoints: (builder) => ({
@@ -17,11 +17,26 @@ export const projectsApi = createApi({
         projectTypesID?: string;
         startDate?: any;
         endDate?: any;
+        projectWO?: any;
       }
     >({
-      query: ({ status, planeId, projectTypesID, startDate, endDate }) => ({
+      query: ({
+        status,
+        planeId,
+        projectTypesID,
+        startDate,
+        endDate,
+        projectWO,
+      }) => ({
         url: `projects/getFilteredProjects/company/${COMPANY_ID}`,
-        params: { status, planeId, projectTypesID, startDate, endDate },
+        params: {
+          status,
+          planeId,
+          projectTypesID,
+          startDate,
+          endDate,
+          projectWO,
+        },
       }),
       providesTags: ['Projects'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

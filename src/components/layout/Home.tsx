@@ -56,6 +56,7 @@ import RequirementViewerNew from './APN/RequirementViewerNew';
 import PickslipRequestNew from './APN/PickslipRequestNew';
 import ProjectAdministration from './APN/ProjectAdministration';
 import GoodsRecivingNew from './APN/GoodsRecivingNew';
+import WOAdministration from './APN/WOAdmonistration';
 import { ipcRenderer } from 'electron';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
@@ -206,6 +207,17 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
           </div>
         ),
 
+        closable: true,
+      };
+    } else if (key === RouteNames.WORKORDER_ADMINISTRATION) {
+      tab = {
+        key,
+        title: `${t('WORKORDER ADMINISTRATION')}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <WOAdministration />
+          </div>
+        ),
         closable: true,
       };
     }
