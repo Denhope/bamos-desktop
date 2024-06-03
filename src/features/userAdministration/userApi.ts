@@ -29,6 +29,21 @@ export const userApi = createApi({
       },
       // Provide the 'Users' tag after fetching
     }),
+    getUsers: builder.query<User[], { singNumber?: string; pass?: string }>({
+      query: ({ singNumber, pass }) => ({
+        url: `users/getFilteredUsers/company/${COMPANY_ID}`,
+        params: { singNumber, pass },
+      }),
+      providesTags: ['Users'],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+        } catch (error) {
+          console.error('Ошибка при выполнении запроса:', error);
+        }
+      },
+      // Provide the 'Users' tag after fetching
+    }),
     getUser: builder.query<User, string>({
       query: (id) => `users/${id}`,
       providesTags: ['Users'], // Provide the 'Users' tag after fetching
@@ -65,4 +80,5 @@ export const {
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useGetUsersQuery,
 } = userApi;

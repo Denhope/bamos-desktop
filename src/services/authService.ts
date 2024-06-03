@@ -1,6 +1,9 @@
-import { $host, $authHostRefresh, $authHost } from '../utils/api/http';
+import { useNavigate } from 'react-router-dom';
+import { $host, $authHostRefresh, $authHost, USER_ID } from '../utils/api/http';
+import { RouteNames } from '@/router';
 
 export default class AuthService {
+  static hasRefreshed = false;
   static async login(email: string, password: string) {
     const response = await $host.post('/signin', {
       email,
@@ -77,5 +80,34 @@ export default class AuthService {
     localStorage.removeItem('dueINDate');
     localStorage.removeItem('taskSearchUrl');
     localStorage.removeItem('companyID');
+  }
+  static async handleAuthError(error: any) {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      return AuthService.refreshTokens()
+        .then(() => {
+          return $authHost(originalRequest);
+        })
+        .catch((e) => {
+          console.log('User is not authorized');
+          // AuthService.userLogout();
+          if (!AuthService.hasRefreshed) {
+            AuthService.hasRefreshed = true;
+            window.location.reload(); // Перезагрузка страницы
+          }
+        });
+    }
+    throw error;
+  }
+
+  static async refreshTokens() {
+    const response = await $authHostRefresh.get(
+      `/users/${USER_ID}/tokens/refresh`
+    );
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('refreshToken', response.data.refreshToken);
+
+    return response;
   }
 }

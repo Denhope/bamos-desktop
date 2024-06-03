@@ -52,6 +52,8 @@ import { orderItemApi } from '@/features/orderItemsAdministration/orderItemApi';
 import { projectTypeApi } from '@/components/projectTypeAdministration/projectTypeApi';
 import { projectItemWOApi } from '@/features/projectItemWO/projectItemWOApi';
 import { projectItemApi } from '@/features/projectItemAdministration/projectItemApi';
+import { accessCodeApi } from '@/features/accessAdministration/accessApi';
+import { bookingApi } from '@/features/bookings/bookingApi';
 
 const store = configureStore({
   reducer: {
@@ -98,6 +100,8 @@ const store = configureStore({
     [projectTypeApi.reducerPath]: projectTypeApi.reducer,
     [projectItemWOApi.reducerPath]: projectItemWOApi.reducer,
     [projectItemApi.reducerPath]: projectItemApi.reducer,
+    [accessCodeApi.reducerPath]: accessCodeApi.reducer,
+    [bookingApi.reducerPath]: bookingApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -127,7 +131,9 @@ const store = configureStore({
       orderItemApi.middleware,
       projectTypeApi.middleware,
       projectItemApi.middleware,
-      projectItemWOApi.middleware
+      projectItemWOApi.middleware,
+      accessCodeApi.middleware,
+      bookingApi.middleware
     ),
 });
 export default store;

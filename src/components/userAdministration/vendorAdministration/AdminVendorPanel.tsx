@@ -15,6 +15,7 @@ import {
 } from '@/features/vendorAdministration/vendorApi';
 import { VendorFilteredFormValues } from './VendorFilteredForm';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {
   values: VendorFilteredFormValues;
@@ -103,22 +104,21 @@ const AdminvendorPanel: React.FC<AdminPanelProps> = ({ values }) => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <VendorTree onVendorSelect={handleEdit} vendors={vendors || []} />
-        </div>
-        <div
-          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <VendorForm
-            vendor={editingvendor || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="30%" splitterSize="20px">
+          <div className=" h-[75vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
+            <VendorTree onVendorSelect={handleEdit} vendors={vendors || []} />
+          </div>
+          <div
+            className=" h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3overflow-y-auto "
+            // sm={19}
+          >
+            <VendorForm
+              vendor={editingvendor || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

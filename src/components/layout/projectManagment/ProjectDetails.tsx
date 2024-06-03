@@ -308,7 +308,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="projectName"
-              label={t('PROJECT SHOT NAME')}
+              label={t('PROJECT SHORT NAME')}
               width="sm"
             ></ProFormText>
           )}

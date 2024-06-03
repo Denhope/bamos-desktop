@@ -1,4 +1,5 @@
 import { useAppDispatch } from '@/hooks/useTypedSelector';
+import AuthService from '@/services/authService';
 import { authSlice } from '@/store/reducers/AuthSlice';
 import axios from 'axios';
 // export const API_URL = 'http://localhost:4000';
@@ -12,6 +13,7 @@ export const USER_ID = localStorage.getItem('userId');
 export const FULL_NAME = `${localStorage.getItem(
   'firstName'
 )} ${localStorage.getItem('lastName')}`;
+export const SING = `${localStorage.getItem('singNumber')}`;
 
 export const COMPANY_ID = localStorage.getItem('companyID') || '';
 
@@ -66,13 +68,14 @@ $authHost.interceptors.response.use(
       originalRequest._isRetry = true;
       try {
         const response = await $authHostRefresh.get(
-          `${API_URL}/users/${USER_ID}/tokens`
+          `${API_URL}/users/${USER_ID}/tokens/refresh`
         );
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('refreshToken', response.data.refreshToken);
         return $authHost.request(originalRequest);
       } catch (e) {
         console.log('НЕ АВТОРИЗОВАН');
+        // AuthService.handleAuthError(error);
       }
     }
     throw error;

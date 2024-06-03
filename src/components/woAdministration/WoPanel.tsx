@@ -25,6 +25,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     null
   );
   const { t } = useTranslation();
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [triggerQuery, setTriggerQuery] = useState(false);
   const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
     {
@@ -104,84 +105,82 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           </Button>
         </Col>
         <Col style={{ textAlign: 'right' }}>
-          {editingproject && (
+          {
             <Button
+              disabled={!selectedKeys.length}
               size="small"
               icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingproject.id)}
+              onClick={() => editingproject && handleDelete(editingproject.id)}
             >
               {t('DELETE WORKORDER')}
             </Button>
-          )}
+          }
         </Col>
 
         <Col>
-          {editingproject && (
+          {
             <Button
+              disabled={!selectedKeys.length}
               size="small"
               icon={<UsergroupAddOutlined />}
               // onClick={() => handleDelete(editingproject.id)}
             >
               {t('ADD WORKER')}
             </Button>
-          )}
+          }
         </Col>
 
         <Col>
-          {editingproject && (
+          {
             <Button
+              disabled={!selectedKeys.length}
               size="small"
               icon={<AlertTwoTone />}
               // onClick={() => handleDelete(editingproject.id)}
             >
               {t('COMPLETE WORKORDER')}
             </Button>
-          )}
+          }
         </Col>
         <Col>
-          {editingproject && (
+          {
             <Button
+              disabled={!selectedKeys.length}
               size="small"
               icon={<CheckCircleFilled />}
               // onClick={() => handleDelete(editingproject.id)}
             >
               {t('CLOSE WORKORDER')}
             </Button>
-          )}
+          }
         </Col>
-        <Col>
-          {editingproject && (
-            <Button
-              size="small"
-              icon={<SwitcherFilled />}
-              // onClick={() => handleDelete(editingproject.id)}
-            >
-              {t('CLOSE MANY WORKORDER')}
-            </Button>
-          )}
-        </Col>
+
         <Col style={{ textAlign: 'right' }}>
-          {editingproject && (
+          {
             <Button
+              disabled={!selectedKeys.length}
               size="small"
               icon={<PrinterOutlined />}
               // onClick={() => handleDelete(editingproject.id)}
             >
               {t('PRINT WORKORDER')}
             </Button>
-          )}
+          }
         </Col>
       </Space>
       <div className="h-[77vh] flex flex-col">
-        <Split initialPrimarySize="30%">
+        <Split initialPrimarySize="30%" splitterSize="20px">
           <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
             <WOTree
               onProjectSelect={handleEdit}
               projects={projectTasks || []}
+              onCheckItems={(selectedKeys) => {
+                setSelectedKeys(selectedKeys);
+              }}
             />
           </div>
-          <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
-            <WOAdminForm />
+          <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
+            <WOAdminForm order={editingproject} />
           </div>
           {/* <Split horizontal initialPrimarySize="60%">
             <div>This is the right-top pane.</div>

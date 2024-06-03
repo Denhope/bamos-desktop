@@ -2,64 +2,81 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
-import { IZoneCode, IZoneCodeGroup } from '@/models/ITask';
+import { IAccessCode, IZoneCode, IZoneCodeGroup } from '@/models/ITask';
 import { setZonesGroups } from './accessSlice';
 
-export const zoneCodeApi = createApi({
-  reducerPath: 'zones',
+export const accessCodeApi = createApi({
+  reducerPath: 'accessReducer',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Access'], // Add tag types for caching
   endpoints: (builder) => ({
-    getZonesByGroup: builder.query<
-      IZoneCodeGroup[],
+    getAccessCodes: builder.query<
+      IAccessCode[],
       {
-        acTypeId: string;
+        acTypeID: string;
         majoreZoneNbr?: number;
         subZoneNbr?: number;
         areaNbr?: number;
         status?: string;
+        zoneCodeID?: string;
       }
     >({
-      query: ({ acTypeId, majoreZoneNbr, subZoneNbr, areaNbr, status }) => ({
-        url: `zones/getFilteredZonesByGroup/company/${COMPANY_ID}`,
-        params: { acTypeId, majoreZoneNbr, subZoneNbr, areaNbr, status },
+      query: ({
+        acTypeID,
+        majoreZoneNbr,
+        subZoneNbr,
+        areaNbr,
+        status,
+        zoneCodeID,
+      }) => ({
+        url: `accessNew/getFilteredAccessCode/company/${COMPANY_ID}`,
+        params: {
+          acTypeID,
+          majoreZoneNbr,
+          subZoneNbr,
+          areaNbr,
+          status,
+          zoneCodeID,
+        },
       }),
       providesTags: ['Access'],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
+      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data } = await queryFulfilled;
 
-          dispatch(setZonesGroups(data));
-        } catch (error) {
-          console.error('Ошибка при выполнении запроса:', error);
-        }
-      },
+      //     dispatch(setZonesGroups(data));
+      //   } catch (error) {
+      //     console.error('Ошибка при выполнении запроса:', error);
+      //   }
+      // },
       // Provide the 'Users' tag after fetching
     }),
-    getZoneCode: builder.query<IZoneCode, string>({
-      query: (id) => `zones/company/${COMPANY_ID}/zoneCode/${id}`,
+    getAccessCode: builder.query<IAccessCode, string>({
+      query: (id) => `access/company/${COMPANY_ID}/accessCode/${id}`,
       providesTags: ['Access'], // Provide the 'Users' tag after fetching
     }),
-    addZoneCode: builder.mutation<
-      IZoneCode,
-      { zoneCode: Partial<IZoneCode>; acTypeId?: string }
+    addAccessCode: builder.mutation<
+      IAccessCode,
+      { accessCode: Partial<IAccessCode>; acTypeId?: string }
     >({
-      query: ({ zoneCode, acTypeId }) => ({
-        url: `zones/company/${COMPANY_ID}`,
+      query: ({ accessCode, acTypeId }) => ({
+        url: `accessNew/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
-          ...zoneCode,
+          ...accessCode,
           createUserID: USER_ID,
           createDate: new Date(),
           companyID: COMPANY_ID,
-          acTypeId: acTypeId,
+          acTypeID: acTypeId,
         },
       }),
       invalidatesTags: ['Access'], // Invalidate the 'Users' tag after mutation
     }),
-    updateZoneCode: builder.mutation<IZoneCode, IZoneCode>({
+    updateAccessCode: builder.mutation<IAccessCode, IAccessCode>({
       query: (zoneCode) => ({
-        url: `zones/company/${COMPANY_ID}/zoneCode/${zoneCode.id}`,
+        url: `accessNew/company/${COMPANY_ID}/accessCode/${
+          zoneCode.id || zoneCode._id
+        }`,
         method: 'PUT',
         body: {
           ...zoneCode,
@@ -69,9 +86,12 @@ export const zoneCodeApi = createApi({
       }),
       invalidatesTags: ['Access'], // Invalidate the 'Users' tag after mutation
     }),
-    deleteZoneCode: builder.mutation<{ success: boolean; id: string }, string>({
+    deleteAccessCode: builder.mutation<
+      { success: boolean; id: string },
+      string
+    >({
       query: (id) => ({
-        url: `zones/company/${COMPANY_ID}/zoneCode/${id}`,
+        url: `accessNew/company/${COMPANY_ID}/accessCode/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Access'], // Invalidate the 'Users' tag after mutation
@@ -80,9 +100,8 @@ export const zoneCodeApi = createApi({
 });
 
 export const {
-  useGetZonesByGroupQuery,
-  useAddZoneCodeMutation,
-  useDeleteZoneCodeMutation,
-  useUpdateZoneCodeMutation,
-  useGetZoneCodeQuery,
-} = zoneCodeApi;
+  useGetAccessCodesQuery,
+  useDeleteAccessCodeMutation,
+  useAddAccessCodeMutation,
+  useUpdateAccessCodeMutation,
+} = accessCodeApi;

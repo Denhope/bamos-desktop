@@ -419,7 +419,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     <ProFormText
                       rules={[{ required: true }]}
                       name="orderName"
-                      label={t('ORDER SHOT NAME')}
+                      label={t('ORDER SHORT NAME')}
                       width="sm"
                     ></ProFormText>{' '}
                     <ProFormSelect
@@ -559,7 +559,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     <ProFormText
                       rules={[{ required: true }]}
                       name="orderName"
-                      label={t('ORDER SHOT NAME')}
+                      label={t('ORDER SHORT NAME')}
                       width="sm"
                     ></ProFormText>{' '}
                     {/* <ProFormSelect

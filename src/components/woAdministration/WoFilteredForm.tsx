@@ -123,6 +123,11 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
       <ProForm.Group>
         <ProFormSelect
+          rules={[
+            {
+              required: true,
+            },
+          ]}
           mode={'multiple'}
           showSearch
           name="projectID"

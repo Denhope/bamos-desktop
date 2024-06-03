@@ -160,7 +160,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <Split initialPrimarySize="30%">
+        <Split initialPrimarySize="30%" splitterSize="20px">
           <div
             // sm={4}
             className=" h-[67vh] bg-white px-4 rounded-md border-gray-400 p-3 "

@@ -262,7 +262,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
                 <ProFormText
                   rules={[{ required: true }]}
                   name="orderName"
-                  label={t('ORDER SHOT NAME')}
+                  label={t('ORDER SHORT NAME')}
                   width="sm"
                 ></ProFormText>{' '}
                 <ProFormSelect
@@ -290,7 +290,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
                 <ProFormText
                   rules={[{ required: true }]}
                   name="orderName"
-                  label={t('ORDER SHOT NAME')}
+                  label={t('ORDER SHORT NAME')}
                   width="sm"
                 ></ProFormText>{' '}
               </ProFormGroup>

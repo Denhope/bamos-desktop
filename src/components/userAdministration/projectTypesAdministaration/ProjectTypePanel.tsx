@@ -13,6 +13,7 @@ import {
   useUpdateProjectTypeMutation,
 } from '@/features/projectTypeAdministration/projectTypeApi';
 import ProjectTypeTree from './ProjectTypeTree';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {}
 
@@ -100,19 +101,21 @@ const ProjectTypePanel: React.FC<AdminPanelProps> = () => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div className=" w-3/12 h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
-          <ProjectTypeTree
-            onCompanySelect={handleEdit}
-            companies={companies || []}
-          />
-        </div>
-        <div className=" w-9/12 h-[75vh] bg-white px-4 py-3  rounded-md brequierement-gray-400 p-3 ">
-          <ProjectTypeForm
-            project={editingCompany || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="30%" splitterSize="20px">
+          <div className=" h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+            <ProjectTypeTree
+              onCompanySelect={handleEdit}
+              companies={companies || []}
+            />
+          </div>
+          <div className="h-[75vh] bg-white px-4 py-3  rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+            <ProjectTypeForm
+              project={editingCompany || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

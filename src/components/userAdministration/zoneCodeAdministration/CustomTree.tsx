@@ -1,95 +1,17 @@
-// import React, { useState, useEffect } from 'react';
-// import { Tree } from 'antd';
-// import type { DataNode } from 'antd/lib/tree';
-
-// interface CustomTreeProps {
-//   treeData: DataNode[];
-//   onSelect: (selectedKeys: React.Key[], info: any) => void;
-//   height: number;
-//   checkable: boolean;
-//   searchQuery: string;
-// }
-
-// const highlightText = (text: string, query: string) => {
-//   if (!query) return text;
-//   const regex = new RegExp(`(${query})`, 'gi');
-//   const parts = text.split(regex);
-//   return parts.map((part, i) =>
-//     regex.test(part) ? <mark key={i}>{part}</mark> : part
-//   );
-// };
-
-// const CustomTree: React.FC<CustomTreeProps> = ({
-//   treeData,
-//   onSelect,
-//   height,
-//   checkable,
-//   searchQuery,
-// }) => {
-//   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-//   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-//   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-//   const [filteredTreeData, setFilteredTreeData] =
-//     useState<DataNode[]>(treeData);
-
-//   useEffect(() => {
-//     if (searchQuery) {
-//       const searchTreeData = (data: DataNode[]): DataNode[] => {
-//         return data.map((node) => {
-//           const title = highlightText(node.title as string, searchQuery);
-//           const children = node.children ? searchTreeData(node.children) : [];
-//           return { ...node, title, children };
-//         });
-//       };
-//       setFilteredTreeData(searchTreeData(treeData));
-//     } else {
-//       setFilteredTreeData(treeData);
-//     }
-//   }, [treeData, searchQuery]);
-
-//   const onExpand = (expandedKeysValue: React.Key[]) => {
-//     setExpandedKeys(expandedKeysValue);
-//     setAutoExpandParent(false);
-//   };
-
-//   const onCheck = (checkedKeysValue: any) => {
-//     setSelectedKeys(checkedKeysValue);
-//   };
-
-//   const onNodeSelect = (selectedKeysValue: React.Key[], info: any) => {
-//     setSelectedKeys(selectedKeysValue);
-//     onSelect(selectedKeysValue, info);
-//   };
-
-//   return (
-//     <Tree
-//       checkable={checkable}
-//       onExpand={onExpand}
-//       expandedKeys={expandedKeys}
-//       autoExpandParent={autoExpandParent}
-//       onCheck={onCheck}
-//       checkedKeys={selectedKeys}
-//       onSelect={onNodeSelect}
-//       selectedKeys={selectedKeys}
-//       treeData={filteredTreeData}
-//       showLine
-//       height={height}
-//     />
-//   );
-// };
-
-// export default CustomTree;
-
 import React, { useState, useEffect } from 'react';
-import { Tree } from 'antd';
+import { Checkbox, Tree } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
+import { useTranslation } from 'react-i18next';
 
 interface CustomTreeProps {
   treeData: DataNode[];
   onSelect: (selectedKeys: React.Key[], info: any) => void;
+  onCheckItems?: (selectedKeys: React.Key[]) => void;
+  isAllChecked?: boolean;
   height: number;
   checkable: boolean;
   searchQuery: string;
+  selectedKeys: React.Key[];
 }
 
 const highlightText = (text: string, query: string) => {
@@ -107,12 +29,20 @@ const CustomTree: React.FC<CustomTreeProps> = ({
   height,
   checkable,
   searchQuery,
+  onCheckItems,
+  isAllChecked,
+  selectedKeys: propSelectedKeys, // Изменено
 }) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
   const [filteredTreeData, setFilteredTreeData] =
     useState<DataNode[]>(treeData);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    setSelectedKeys(propSelectedKeys); // Обновление selectedKeys при изменении propSelectedKeys
+  }, [propSelectedKeys]);
 
   useEffect(() => {
     const searchTreeData = (data: DataNode[]): DataNode[] => {
@@ -133,29 +63,67 @@ const CustomTree: React.FC<CustomTreeProps> = ({
     setAutoExpandParent(false);
   };
 
-  const onCheck = (checkedKeysValue: any) => {
-    setSelectedKeys(checkedKeysValue);
-  };
-
   const onNodeSelect = (selectedKeysValue: React.Key[], info: any) => {
     setSelectedKeys(selectedKeysValue);
     onSelect(selectedKeysValue, info);
   };
 
+  const selectAllKeys = () => {
+    const allKeys = getAllKeys(treeData);
+    setSelectedKeys(allKeys);
+    onCheckItems && onCheckItems(allKeys);
+  };
+
+  const getAllKeys = (nodes: DataNode[]): React.Key[] => {
+    let keys: React.Key[] = [];
+    nodes.forEach((node) => {
+      keys.push(node.key);
+      if (node.children) {
+        keys = keys.concat(getAllKeys(node.children));
+      }
+    });
+    return keys;
+  };
+
+  const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
+
+  const onCheck = (checkedKeysValue: any) => {
+    setSelectedKeys(checkedKeysValue);
+    onCheckItems && onCheckItems(checkedKeysValue);
+    setIsCheckAll(checkedKeysValue.length === getAllKeys(treeData).length);
+  };
+
+  const onCheckAllChange = (e: any) => {
+    if (e.target.checked) {
+      selectAllKeys();
+    } else {
+      setSelectedKeys([]);
+      onCheckItems && onCheckItems([]);
+    }
+    setIsCheckAll(e.target.checked);
+  };
+
   return (
-    <Tree
-      checkable={checkable}
-      onExpand={onExpand}
-      expandedKeys={expandedKeys}
-      autoExpandParent={autoExpandParent}
-      onCheck={onCheck}
-      checkedKeys={selectedKeys}
-      onSelect={onNodeSelect}
-      selectedKeys={selectedKeys}
-      treeData={filteredTreeData}
-      showLine
-      height={height}
-    />
+    <>
+      {isAllChecked && filteredTreeData.length > 0 && (
+        <Checkbox onChange={onCheckAllChange} checked={isCheckAll}>
+          {t('SELECT ALL')}
+        </Checkbox>
+      )}
+      <Tree
+        checkable={checkable}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        autoExpandParent={autoExpandParent}
+        onCheck={onCheck}
+        checkedKeys={selectedKeys}
+        onSelect={onNodeSelect}
+        selectedKeys={selectedKeys}
+        treeData={filteredTreeData}
+        showLine
+        height={height}
+      />
+    </>
   );
 };
 

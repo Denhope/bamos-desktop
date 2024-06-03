@@ -347,7 +347,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
       /> */}
 
       <div className="  flex gap-4 justify-between">
-        <Split initialPrimarySize="25%">
+        <Split initialPrimarySize="25%" splitterSize="20px">
           <div className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
             <OrderTree
               onCompanySelect={handleEdit}

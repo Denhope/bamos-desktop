@@ -9,8 +9,13 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-form';
 import { IZoneCode, IZoneCodeGroup } from '@/models/ITask';
-import { ProFormGroup, ProFormSelect } from '@ant-design/pro-components';
+import {
+  ProFormDigit,
+  ProFormGroup,
+  ProFormSelect,
+} from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
+import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
 
 interface UserFormProps {
   zoneCode?: IZoneCode;
@@ -22,7 +27,7 @@ interface UserFormProps {
 const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
-
+  const [areaID, setAreaID] = useState<any>('');
   const handleSubmit = async (values: IZoneCode) => {
     const newUser: IZoneCode = zoneCode
       ? { ...zoneCode, ...values }
@@ -38,6 +43,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
       if (zoneCode.subZoneNbr) return 'subZoneNbr';
 
       if (zoneCode.majoreZoneNbr) return 'majoreZoneNbr';
+      if (zoneCode.accessNbr) return 'accessNbr';
     }
     return 'majoreZoneNbr';
   };
@@ -61,7 +67,22 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
       });
     }
   }, [form, zoneCode]);
+  const { data: zones, isLoading: loading } = useGetZonesByGroupQuery(
+    { acTypeId: (zoneCode && zoneCode?.acTypeId) || '' },
+    { skip: !(zoneCode && zoneCode?.acTypeId) }
+  );
 
+  const zonesValueEnum: Record<string, string> =
+    zones?.reduce((acc1, majorZone) => {
+      return majorZone?.subZonesCode.reduce((acc2, subZone) => {
+        return subZone?.areasCode.reduce((acc3, area) => {
+          acc3[area.id] = `${String(area.areaNbr).toUpperCase()}-${String(
+            area?.areaDescription
+          ).toUpperCase()}`;
+          return acc3;
+        }, acc2);
+      }, acc1);
+    }, {}) || {};
   const majoreZoneOptions =
     zoneCodes?.map((value) => ({
       label: value.majoreZoneNbr,
@@ -89,6 +110,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
         value: subZoneCode.subZoneNbr?.toString(),
       }))
     ) || [];
+
   return (
     <ProForm
       size="small"
@@ -103,9 +125,10 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
           name="zoneType"
           layout="horizontal"
           options={[
-            { label: 'MAJOR ZONE', value: 'majoreZoneNbr' },
-            { label: 'SUB ZONE', value: 'subZoneNbr' },
-            { label: 'AREA', value: 'areaNbr' },
+            { label: `${t('MAJORE ZONE')}`, value: 'majoreZoneNbr' },
+            { label: `${t('SUB ZONE')}`, value: 'subZoneNbr' },
+            { label: `${t('AREA')}`, value: 'areaNbr' },
+            { label: `${t('ACCESS')}`, value: 'accessNbr' },
           ]}
           onChange={(e: any) => setSearchQuery(e.target.value)}
         />
@@ -114,7 +137,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormText
               width={'sm'}
               name="majoreZoneNbr"
-              label="MAJOREZONE NUMBER"
+              label={t('MAJORE ZONE')}
               rules={[
                 {
                   required: form.getFieldValue('zoneType') === 'majoreZoneNbr',
@@ -124,7 +147,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormText
               width={'lg'}
               name="majoreZoneDescription"
-              label="MAJOREZONE DESCRIPTION"
+              label={t('MAJORE ZONE DESCRIPTION')}
               rules={[
                 {
                   required: form.getFieldValue('zoneType') === 'majoreZoneNbr',
@@ -142,7 +165,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
                 disabled={isDisabled}
                 width={'sm'}
                 name="majoreZoneNbr"
-                label="MAJOREZONE NUMBER"
+                label={t('MAJORE ZONE')}
                 rules={[
                   {
                     required: true,
@@ -154,7 +177,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
                 disabled={isDisabled}
                 width={'lg'}
                 name="majoreZoneDescription"
-                label="MAJOREZONE DESCRIPTION"
+                label={t('MAJORE ZONE DESCRIPTION')}
                 rules={[
                   {
                     required: true,
@@ -165,7 +188,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormText
               width={'sm'}
               name="subZoneNbr"
-              label="SUBZONE NUMBER"
+              label={t('SUBZONE NUMBER')}
               rules={[
                 {
                   required: true,
@@ -175,7 +198,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormText
               width={'lg'}
               name="subZoneDescription"
-              label="SUBZONE DESCRIPTION"
+              label={t('SUBZONE DESCRIPTION')}
               rules={[
                 {
                   required: true,
@@ -191,7 +214,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               disabled={isDisabled}
               width={'sm'}
               name="majoreZoneNbr"
-              label="MAJOREZONE NUMBER"
+              label={t('MAJORE ZONE')}
               rules={[
                 {
                   required: true,
@@ -203,7 +226,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               disabled={isDisabled}
               width={'lg'}
               name="majoreZoneDescription"
-              label="MAJOREZONE DESCRIPTION"
+              label={t('MAJORE ZONE DESCRIPTION')}
               rules={[
                 {
                   required: true,
@@ -215,7 +238,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               options={subZoneNbrOptions}
               width={'sm'}
               name="subZoneNbr"
-              label="SUBZONE NUMBER"
+              label={t('SUBZONE NUMBER')}
               rules={[
                 {
                   required: true,
@@ -227,7 +250,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
               options={subZoneDescriptionOptions}
               width={'lg'}
               name="subZoneDescription"
-              label="SUBZONE DESCRIPTION"
+              label={t('SUBZONE DESCRIPTION')}
               rules={[
                 {
                   required: true,
@@ -237,7 +260,7 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormText
               width={'sm'}
               name="areaNbr"
-              label="AREA NUMBER"
+              label={t('AREA NUMBER')}
               rules={[
                 {
                   required: true,
@@ -247,13 +270,87 @@ const ZoneCodeForm: FC<UserFormProps> = ({ zoneCode, onSubmit, zoneCodes }) => {
             <ProFormTextArea
               width={'lg'}
               name="areaDescription"
-              label="AREA DESCRIPTION"
+              label={t('AREA DESCRIPTION')}
               rules={[
                 {
                   required: true,
                 },
               ]}
             />
+          </>
+        )}
+        {searchQuery === 'accessNbr' && (
+          <>
+            <ProFormSelect
+              disabled={isDisabled}
+              valueEnum={zonesValueEnum}
+              width={'lg'}
+              name="areaCodeID"
+              label={t('AREA NUMBER')}
+              onChange={(value: any, option: any) => {
+                // console.log(option);
+                // form.setFieldsValue({
+                //   areaDescription: option?.areaDescription,
+                // });
+                setAreaID(value);
+              }}
+              // rules={[
+              //   {
+              //     required: true,
+              //   },
+              // ]}
+            />
+            {/* <ProFormSelect
+              disabled
+              // options={areasNbrOptions}
+              width={'lg'}
+              name="areaDescription"
+              label={t('AREA DESCRIPTION')}
+              // rules={[
+              //   {
+              //     required: true,
+              //   },
+              // ]}
+            /> */}
+            <ProFormText
+              // disabled={isDisabled}
+              width={'sm'}
+              name="accessNbr"
+              label={t('ACCESS NUMBER')}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            />
+            <ProFormText
+              // disabled={isDisabled}
+              width={'lg'}
+              name="accessDescription"
+              label={t('ACCESS DESCRIPTION')}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            />
+            <ProFormGroup>
+              <ProFormDigit
+                width={'xs'}
+                name="closingTime"
+                label={t('TIME TO CLOSE (MPD)')}
+              />
+              <ProFormDigit
+                width={'xs'}
+                name="openingTime"
+                label={t('TIME TO OPEN (MPD)')}
+              />
+              <ProFormDigit
+                width={'xs'}
+                name="takeOfOnTime"
+                label={t('TIME OPEN/CLOSE (MPD)')}
+              />
+            </ProFormGroup>
           </>
         )}
         <ProFormGroup>

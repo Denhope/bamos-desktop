@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
@@ -20,7 +20,11 @@ import {
   useGetProjectItemsQuery,
   useUpdateProjectItemsMutation,
 } from '@/features/projectItemAdministration/projectItemApi';
-import { useAddProjectItemWOMutation } from '@/features/projectItemWO/projectItemWOApi';
+import {
+  useAddProjectItemWOMutation,
+  useAddProjectPanelsMutation,
+  useUpdateProjectPanelsMutation,
+} from '@/features/projectItemWO/projectItemWOApi';
 // import projectItemsAdministrationForm from './projectItemsAdministrationForm';
 // import projectItemsAdministrationTree from './projectItemsAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
@@ -49,6 +53,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
   isLoading = loading;
   // }
   const [createWO] = useAddProjectItemWOMutation({});
+  const [createPanels] = useAddProjectPanelsMutation({});
   const [addProjectItem] = useAddProjectItemMutation({});
   const [updateProjectItem] = useUpdateProjectItemsMutation();
   const [deleteProjectItem] = useDeleteProjectItemMutation();
@@ -79,66 +84,98 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
       title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ЗАКАЗЫ ДЛЯ ВЫДЕЛЕННЫХ ПОЗИЦИЙ?'),
       onOk: async () => {
         try {
-          Modal.confirm({
-            width: 550,
-            title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
-            footer: [
-              <Space>
-                <Button
-                  key="single"
-                  onClick={async () => {
-                    try {
-                      await createWO({
-                        isSingleWO: false,
-                        isMultiWO: true,
-                        projectItemID: ids,
-                      }).unwrap();
-                      refetchProjectItems();
-                      message.success(t('ОДИН ЗАКАЗ УСПЕШНО СОЗДАН'));
-                      refetchProjectItems();
-                      Modal.destroyAll();
-                    } catch (error) {
-                      message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗА'));
-                      Modal.destroyAll();
-                    }
-                  }}
-                >
-                  {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
-                </Button>
-                <Button
-                  key="multiple"
-                  type="primary"
-                  onClick={async () => {
-                    try {
-                      await createWO({
-                        isSingleWO: true,
-                        isMultiWO: false,
-                        projectItemID: ids,
-                      }).unwrap();
-                      refetchProjectItems();
-                      message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
-                      Modal.destroyAll();
-                    } catch (error) {
-                      message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗОВ'));
-                      Modal.destroyAll();
-                    }
-                  }}
-                >
-                  {t('ПОД КАЖДУЮ ПОЗИЦИЮ')}
-                </Button>
-                <Button
-                  key="cancel"
-                  onClick={() => {
-                    Modal.destroyAll(); // Закрываем все модальные окна
-                  }}
-                >
-                  {t('Отмена')}
-                </Button>
-              </Space>,
-            ],
-          });
+          await createWO({
+            isSingleWO: true,
+            isMultiWO: false,
+            projectItemID: ids,
+            projectID: projectID,
+          }).unwrap();
+          refetchProjectItems();
+          message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+          Modal.destroyAll();
         } catch (error) {
-          message.error(t('ОШИБКА '));
+          message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗОВ'));
+          Modal.destroyAll();
+        }
+        // try {
+        //   Modal.confirm({
+        //     width: 550,
+        //     title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
+        //     footer: [
+        //       <Space>
+        //         <Button
+        //           key="single"
+        //           onClick={async () => {
+        //             try {
+        //               await createWO({
+        //                 isSingleWO: false,
+        //                 isMultiWO: true,
+        //                 projectItemID: ids,
+        //               }).unwrap();
+        //               refetchProjectItems();
+        //               message.success(t('ОДИН ЗАКАЗ УСПЕШНО СОЗДАН'));
+        //               refetchProjectItems();
+        //               Modal.destroyAll();
+        //             } catch (error) {
+        //               message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗА'));
+        //               Modal.destroyAll();
+        //             }
+        //           }}
+        //         >
+        //           {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
+        //         </Button>
+        //         <Button
+        //           key="multiple"
+        //           type="primary"
+        //           onClick={async () => {
+        //             try {
+        //               await createWO({
+        //                 isSingleWO: true,
+        //                 isMultiWO: false,
+        //                 projectItemID: ids,
+        //               }).unwrap();
+        //               refetchProjectItems();
+        //               message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+        //               Modal.destroyAll();
+        //             } catch (error) {
+        //               message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗОВ'));
+        //               Modal.destroyAll();
+        //             }
+        //           }}
+        //         >
+        //           {t('ПОД КАЖДУЮ ПОЗИЦИЮ')}
+        //         </Button>
+        //         <Button
+        //           key="cancel"
+        //           onClick={() => {
+        //             Modal.destroyAll(); // Закрываем все модальные окна
+        //           }}
+        //         >
+        //           {t('Отмена')}
+        //         </Button>
+        //       </Space>,
+        //     ],
+        //   });
+        // } catch (error) {
+        //   message.error(t('ОШИБКА '));
+        // }
+      },
+    });
+  };
+  const handleGenerateWOPanels = async (projectID: string) => {
+    Modal.confirm({
+      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ПЕНЕЛИ ДЛЯ ВЫДЕЛЕННЫХ ПОЗИЦИЙ?'),
+      onOk: async () => {
+        try {
+          await createPanels({
+            projectID: projectID,
+          }).unwrap();
+          refetchProjectItems();
+          message.success(t('ПАНЕЛИ УСПЕШНО СОЗДАНЫ'));
+          // Modal.destroyAll();
+        } catch (error) {
+          message.error(t('ОШИБКА ПРИ СОЗДАНИИ ПАНЕЛЕЙ'));
+          Modal.destroyAll();
         }
       },
     });
@@ -194,8 +231,9 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
           </Button>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
-          {editingReqCode && (
+          {
             <Button
+              disabled={!selectedKeys.length}
               size="small"
               icon={<MinusSquareOutlined />}
               onClick={() => {
@@ -221,7 +259,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             >
               {t('УДАЛИТЬ ЗАПИСЬ')}
             </Button>
-          )}
+          }
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           <Button
@@ -233,13 +271,23 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             {t('СФОРМИРОВАТЬ ЗАКАЗЫ')}
           </Button>
         </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          <Button
+            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            size="small"
+            icon={<ProjectOutlined />}
+            onClick={() => handleGenerateWOPanels(projectID)}
+          >
+            {t('СФОРМИРОВАТЬ ПАНЕЛИ')}
+          </Button>
+        </Col>
       </Space>
 
-      <div className="  flex gap-4 justify-between">
-        <Split initialPrimarySize="25%">
+      <div className="  flex gap-4 justify-between bg-gray-100 rounded-lg">
+        <Split initialPrimarySize="35%" splitterSize="20px">
           <div
             // sm={12}
-            className="h-[48vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+            className="h-[52vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 overflow-hidden "
           >
             <ProjectWPAdministrationTree
               projectItems={projectItems || []}
@@ -250,7 +298,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             />
           </div>
           <div
-            className="h-[53vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[52vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3  overflow-y-auto "
             // sm={11}
           >
             <ProjectWPAdministrationForm

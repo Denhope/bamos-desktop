@@ -259,7 +259,9 @@ export interface ITaskCodeGroup {
 }
 
 export interface IZoneCode {
+  accessCodes?: IAccessCode[];
   id: string;
+  _id?: string;
   majoreZoneNbr: number;
   majoreZoneDescription: string;
   majoreZoneShortDescription: string;
@@ -267,8 +269,12 @@ export interface IZoneCode {
   subZoneDescription?: string;
   subZoneShortDescription?: string;
   areaNbr?: string | number;
+  accessNbr?: string | number;
   areaDescription?: string;
+  accessDescription?: string;
   acTypeId: string;
+  accessID?: string;
+  areaCodeID?: string;
   acTypeTitle: string;
   acType: string;
   createDate: string;
@@ -308,6 +314,36 @@ export interface IAreaCode {
   updateUserID?: string;
   companyID: string;
   zoneCodeId: string;
+  status?: string;
+}
+
+export interface IAccessCode {
+  accessProjectNumber: any;
+  areaCode: any;
+  _id: any;
+  accessNbr: any;
+  id: string;
+  majoreZoneNbr: number;
+  majoreZoneDescription: string;
+  majoreZoneShortDescription: string;
+  subZoneNbr?: number;
+  subZoneDescription?: string;
+  subZoneShortDescription?: string;
+  areaNbr?: string | number;
+  areaDescription?: string;
+  accessDescription?: string;
+  acTypeId: string;
+  acTypeTitle: string;
+  acType: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  zoneCodeId: string;
+  areaCodeId: string;
+  accessNumber?: string | number;
+  accessCodeId: string;
   status?: string;
 }
 

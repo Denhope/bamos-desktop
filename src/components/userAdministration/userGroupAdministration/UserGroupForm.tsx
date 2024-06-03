@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
 import { User, Permission, UserGroup } from '@/models/IUser';
-import { ProFormSelect } from '@ant-design/pro-components';
+import { ProFormSelect, ProFormTextArea } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
 
 interface UserFormProps {
@@ -70,7 +70,7 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
                   },
                 ]}
               />
-              <ProFormText
+              <ProFormTextArea
                 width={'lg'}
                 name="description"
                 label={t('DESCRIPTION')}

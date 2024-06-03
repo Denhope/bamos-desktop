@@ -106,7 +106,7 @@ const AdminTaskFilterdForm: FC<
         />
         <ProFormSelect
           showSearch
-          initialValue={['65f1a33071106bb8e027f359']}
+          // initialValue={['65f1a33071106bb8e027f359']}
           name="acTypeId"
           label={t('AC TYPE')}
           width="sm"

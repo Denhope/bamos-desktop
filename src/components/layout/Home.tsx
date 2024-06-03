@@ -58,6 +58,7 @@ import ProjectAdministration from './APN/ProjectAdministration';
 import GoodsRecivingNew from './APN/GoodsRecivingNew';
 import WOAdministration from './APN/WOAdmonistration';
 import { ipcRenderer } from 'electron';
+import AccessTracking from './APN/AccessTracking';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -216,6 +217,17 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <WOAdministration />
+          </div>
+        ),
+        closable: true,
+      };
+    } else if (key === RouteNames.ACCESS_TRACKING) {
+      tab = {
+        key,
+        title: `${t('ACCESS TRACKING')}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <AccessTracking />
           </div>
         ),
         closable: true,

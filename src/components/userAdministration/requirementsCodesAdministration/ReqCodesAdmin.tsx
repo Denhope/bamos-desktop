@@ -14,6 +14,7 @@ import {
 } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import ReqCodesAdministrationForm from './ReqCodesAdministrationForm';
 import ReqCodesAdministrationTree from './ReqCodesAdministrationTree';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelRProps {
   reqTypeID: string;
@@ -109,27 +110,23 @@ const ReqCodesAdmin: React.FC<AdminPanelRProps> = ({ reqTypeID }) => {
         </Col>
       </Space>
 
-      <Row justify={'space-between'} className="gap-4">
-        <Col
-          sm={12}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
-        >
-          <ReqCodesAdministrationTree
-            reqCodes={reqCodes || []}
-            onReqCodeselect={handleEdit}
-          />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
-          sm={11}
-        >
-          <ReqCodesAdministrationForm
-            reqCode={editingReqCode || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </Col>
-      </Row>
+      <div className="  flex gap-4 pt-4 bg-gray-100 justify-between">
+        <Split initialPrimarySize="25%" splitterSize="20px">
+          <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+            <ReqCodesAdministrationTree
+              reqCodes={reqCodes || []}
+              onReqCodeselect={handleEdit}
+            />
+          </div>
+          <div className="h-[60vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+            <ReqCodesAdministrationForm
+              reqCode={editingReqCode || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
+      </div>
     </>
   );
 };

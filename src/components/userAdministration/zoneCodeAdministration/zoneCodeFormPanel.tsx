@@ -16,6 +16,12 @@ import {
 // import ZoneCodeTree from './zoneCodeTree';
 import ZoneCodeForm from './ZoneCodeForm';
 import ZoneCodeTree from './ZoneCodeTree';
+import { Split } from '@geoffcox/react-splitter';
+import {
+  useAddAccessCodeMutation,
+  useDeleteAccessCodeMutation,
+  useUpdateAccessCodeMutation,
+} from '@/features/accessAdministration/accessApi';
 
 interface AdminPanelProps {
   acTypeId: string;
@@ -29,15 +35,22 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
   let isLoading = false;
 
   // if (acTypeId) {
-  const { data, isLoading: loading } = useGetZonesByGroupQuery({
+  const {
+    data,
+    isLoading: loading,
+    refetch,
+  } = useGetZonesByGroupQuery({
     acTypeId,
   });
   zoneCodesGroup = data;
   isLoading = loading;
   // }
   const [addZoneCode] = useAddZoneCodeMutation({});
+  const [addAccessCode] = useAddAccessCodeMutation({});
+  const [updateAccessCode] = useUpdateAccessCodeMutation({});
   const [updateZoneCode] = useUpdateZoneCodeMutation();
   const [deleteZoneCode] = useDeleteZoneCodeMutation();
+  const [deleteAccessCode] = useDeleteAccessCodeMutation();
 
   const handleCreate = () => {
     setEditingZoneCode(null);
@@ -54,26 +67,56 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
         try {
           await deleteZoneCode(zoneCodeId).unwrap();
           message.success(t('ZONE CODE SUCCESSFULLY DELETED'));
+          setEditingZoneCode(null);
         } catch (error) {
           message.error(t('ERROR DELETING ZONE CODE'));
         }
       },
     });
   };
+  const handleDeleteAccess = async (zoneCodeId: string) => {
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS ACCESS CODE?'),
+      onOk: async () => {
+        try {
+          await deleteAccessCode(zoneCodeId).unwrap();
+          message.success(t('ACCESS CODE SUCCESSFULLY DELETED'));
+          refetch();
+          setEditingZoneCode(null);
+        } catch (error) {
+          message.error(t('ERROR DELETING ACCESS CODE'));
+        }
+      },
+    });
+  };
 
-  const handleSubmit = async (zoneCode: IZoneCode) => {
+  const handleSubmit = async (zoneCode: any) => {
     try {
       if (editingZoneCode) {
-        await updateZoneCode(zoneCode).unwrap();
-        message.success(t('TASK ZONE SUCCESSFULLY UPDATED'));
-        setEditingZoneCode(null);
+        if (zoneCode.areaCodeID) {
+          await updateAccessCode(zoneCode).unwrap();
+          message.success(t('ACCESS SUCCESSFULLY UPDATED'));
+          refetch();
+          setEditingZoneCode(null);
+        } else {
+          await updateZoneCode(zoneCode).unwrap();
+          message.success(t('ZONE SUCCESSFULLY UPDATED'));
+          setEditingZoneCode(null);
+        }
       } else {
-        await addZoneCode({ zoneCode, acTypeId }).unwrap();
-        message.success(t('TASK ZONE SUCCESSFULLY ADDED'));
-        setEditingZoneCode(null);
+        if (zoneCode.areaCodeID) {
+          await addAccessCode({ accessCode: zoneCode, acTypeId }).unwrap();
+          message.success(t('ACCESS SUCCESSFULLY ADDED'));
+          refetch();
+          setEditingZoneCode(null);
+        } else {
+          await addZoneCode({ zoneCode, acTypeId }).unwrap();
+          message.success(t(' ZONE SUCCESSFULLY ADDED'));
+          setEditingZoneCode(null);
+        }
       }
     } catch (error) {
-      message.error(t('ERROR SAVING TASK ZONE'));
+      message.error(t('ERROR SAVING  ZONE/ACCESS'));
     }
   };
 
@@ -95,7 +138,7 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
             icon={<UserAddOutlined />}
             onClick={handleCreate}
           >
-            {t('ADD ZONE CODE')}
+            {t('ADD ZONE/ACCESS CODE')}
           </Button>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
@@ -103,36 +146,38 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
             <Button
               size="small"
               icon={<UserDeleteOutlined />}
-              onClick={() => handleDelete(editingZoneCode.id)}
+              onClick={() => {
+                if (editingZoneCode.areaCodeID) {
+                  handleDeleteAccess(
+                    editingZoneCode.id || editingZoneCode._id || ''
+                  );
+                } else handleDelete(editingZoneCode.id);
+              }}
             >
-              {t('DELETE ZONE CODE')}
+              {t('DELETE ZONE/ACCESS CODE')}
             </Button>
           )}
         </Col>
       </Space>
 
-      <Row justify={'space-between'} className="gap-6">
-        <Col
-          sm={12}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
-        >
-          <ZoneCodeTree
-            zoneCodesGroup={zoneCodesGroup || []}
-            onZoneCodeSelect={handleEdit}
-          />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
-          sm={11}
-        >
-          <ZoneCodeForm
-            zoneCode={editingZoneCode || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-            zoneCodes={zoneCodesGroup || []}
-          />
-        </Col>
-      </Row>
+      <div className="py-4 flex gap-4 justify-between bg-gray-100 rounded-lg">
+        <Split initialPrimarySize="25%" splitterSize="20px">
+          <div className="h-[64vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+            <ZoneCodeTree
+              zoneCodesGroup={zoneCodesGroup || []}
+              onZoneCodeSelect={handleEdit}
+            />
+          </div>
+          <div className="h-[64vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3  overflow-y-auto ">
+            <ZoneCodeForm
+              zoneCode={editingZoneCode || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              zoneCodes={zoneCodesGroup || []}
+            />
+          </div>
+        </Split>
+      </div>
     </>
   );
 };

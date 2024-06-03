@@ -160,7 +160,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
               case 'MAIN_TASK':
                 options = data.map((item: IProjectTaskAll) => ({
                   value: item.id || item._id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.projectTaskWO}`, // замените на нужное поле для 'PROJECT'
+                  label: `${item.taskWO || item.taskWO}`, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
               case 'NRC':

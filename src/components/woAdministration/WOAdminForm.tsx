@@ -1,5 +1,5 @@
 import { ProForm } from '@ant-design/pro-components';
-import { Tabs } from 'antd';
+import { Button, Tabs } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 interface UserFormProps {
@@ -14,7 +14,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
   const [form] = ProForm.useForm();
 
   const { t } = useTranslation();
-  const [activeTabKey, setActiveTabKey] = useState('1'); // Default to the first tab
+
   const [tabTitles, setTabTitles] = useState({
     '1': `${t('WORKORDER INFO')}`,
     '2': `${t('PARTS')}`,
@@ -45,8 +45,27 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
   useEffect(() => {
     updateTabTitle(orderItem, order);
   }, [orderItem, order]);
+  const SubmitButton = () => (
+    <Button type="primary" htmlType="submit">
+      {order ? t('UPDATE') : t('CREATE')}
+    </Button>
+  );
+  const [activeTabKey, setActiveTabKey] = useState('1'); // Default to the first tab
+  const [showSubmitButton, setShowSubmitButton] = useState(true);
+
   return (
-    <ProForm size="small" form={form}>
+    <ProForm
+      submitter={{
+        render: (_, dom) => {
+          if (showSubmitButton) {
+            return [<SubmitButton key="submit" />, dom.reverse()[1]];
+          }
+          return null;
+        },
+      }}
+      size="small"
+      form={form}
+    >
       <Tabs
         activeKey={activeTabKey}
         onChange={(key) => {

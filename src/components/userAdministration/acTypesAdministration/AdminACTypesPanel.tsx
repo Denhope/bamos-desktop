@@ -15,6 +15,7 @@ import {
   useGetACTypesQuery,
   useUpdateACTypeMutation,
 } from '@/features/acTypeAdministration/acTypeApi';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {
   values: ACTypesFilteredFormValues;
@@ -102,22 +103,24 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <ACTypesTree onACTypeSelect={handleEdit} acTypes={acTypes || []} />
-        </div>
-        <div
-          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <ACTypesForm
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-            acType={editingACType || undefined}
-          />
-        </div>
+        <Split initialPrimarySize="20%" splitterSize="20px">
+          <div
+            // sm={4}
+            className=" h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+          >
+            <ACTypesTree onACTypeSelect={handleEdit} acTypes={acTypes || []} />
+          </div>
+          <div
+            className="h-[78vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto"
+            // sm={19}
+          >
+            <ACTypesForm
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              acType={editingACType || undefined}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

@@ -250,13 +250,13 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   const { data: projects } = useGetProjectsQuery({});
   const projectTasksCodesValueEnum: Record<string, string> =
     projectTasks?.reduce((acc, projectTask) => {
-      acc[projectTask.id] = projectTask?.taskWo || projectTask?.projectTaskWO;
+      acc[projectTask.id] = projectTask?.taskWO || projectTask?.projectTaskWO;
       return acc;
     }, {}) || {};
 
   const projectsValueEnum: Record<string, string> =
     projects?.reduce((acc, project) => {
-      acc[project._id] = `${project.projectWO}- ${project.projectName}`;
+      acc[project._id] = `№:${project.projectWO}- ${project.projectName}`;
       return acc;
     }, {}) || {};
   const requirementTypesValueEnum: Record<string, string> =

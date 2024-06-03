@@ -1,6 +1,8 @@
 export interface IBookingItem {
   voucherModel: VaucherModelType;
   createDate?: any;
+  accessProjectID?: any;
+  accessProjectStatus?: string;
   createUserID?: any;
   state?: any;
   partNumber?: string;
@@ -144,4 +146,9 @@ type VaucherModelType =
   | 'TOOL_LOST_NOTICE'
   | 'VENDOR_INSTALATION'
   | 'INCOMING_SHIPMENT_SENT'
+  | 'OPEN_ACCESS'
+  | 'CLOSE_ACCESS'
+  | 'INSPECT_ACCESS'
+  | 'ADD_PROJECT_ACCESS'
+  | 'ADD_TASK_ACCESS'
   | 'OUTGOIN SHIPMENT ARRIVED';

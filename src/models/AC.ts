@@ -75,6 +75,9 @@ export interface IProjectType {
 }
 
 export interface IProjectItem {
+  reqCode: any;
+  taskNumber?: any;
+  taskDescription?: any;
   DESCRIPTION: any;
   id: string;
   qty: number;
@@ -92,6 +95,8 @@ export interface IProjectItem {
   projectItemsWOID?: any[];
 }
 export interface IProjectItemWO {
+  taskNumber: string;
+  taskDescription: string;
   title: any;
   taskWO: any;
   closedByID: any;

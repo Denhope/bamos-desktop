@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
@@ -19,6 +19,7 @@ import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 
 interface UserFormProps {
   project?: IProject;
@@ -32,11 +33,32 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const handleSubmit = async (values: IProject) => {
     const newUser: IProject = project
       ? { ...project, ...values }
-      : { ...values, status: form.getFieldValue('status')[0] };
+      : {
+          ...values,
+          status: form.getFieldValue('status')[0],
+          acTypeID: selectedAcTypeID,
+        };
     onSubmit(newUser);
   };
 
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
+  const { data: planes } = useGetPlanesQuery({});
+
+  // Инициализация состояния для хранения выбранного acTypeID
+  const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
+
+  // Формирование объекта planesValueEnum
+  const planesValueEnum: Record<string, { text: string; value: string }> =
+    planes?.reduce((acc, reqType) => {
+      // Check if reqType.acTypeID exists and has at least one element
+      if (reqType.acTypeID && reqType.acTypeID.length > 0) {
+        acc[reqType.id] = { text: reqType.regNbr, value: reqType.acTypeID[0] };
+      } else {
+        // If reqType.acTypeID is undefined or empty, set value to an empty string or handle it as appropriate for your use case
+        acc[reqType.id] = { text: reqType.regNbr, value: '' };
+      }
+      return acc;
+    }, {}) || {};
 
   const projectTypesValueEnum: Record<string, string> =
     projectTypes?.reduce((acc, reqType) => {
@@ -47,6 +69,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     if (project) {
       form.resetFields();
       form.setFieldsValue(project);
+      form.setFieldsValue({ planeId: project?.planeId?._id });
     } else {
       form.resetFields();
     }
@@ -88,7 +111,12 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       {project ? t('UPDATE') : t('CREATE')}
     </Button>
   );
+  const [activeTabKey, setActiveTabKey] = useState('1'); // Default to the first tab
   const [showSubmitButton, setShowSubmitButton] = useState(true);
+
+  useEffect(() => {
+    setShowSubmitButton(activeTabKey === '1');
+  }, [activeTabKey]);
   const [reqTypeID, setReqTypeID] = useState<any>('');
   const handleDelete = (file: any) => {
     Modal.confirm({
@@ -141,7 +169,13 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       initialValues={project}
       layout="horizontal"
     >
-      <Tabs defaultActiveKey="1" type="card">
+      <Tabs
+        onChange={(key) => {
+          setActiveTabKey(key);
+        }}
+        defaultActiveKey="1"
+        type="card"
+      >
         <Tabs.TabPane tab={t('MAIN')} key="1">
           <ProFormSelect
             showSearch
@@ -261,8 +295,17 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               </div>
             </ProForm.Item>
           </ProFormGroup>
+          <ProFormSelect
+            showSearch
+            name="planeId"
+            label={t('PROJECT A/C')}
+            width="lg"
+            valueEnum={planesValueEnum}
+            onChange={(value: any) => setSelectedAcTypeID(value)}
+            // disabled={!acTypeID} // Disable the select if acTypeID is not set
+          />
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('ПЕРЕЧЕНЬ РАБОТ / ПОЗИЦИЙ')} key="2">
+        <Tabs.TabPane tab={t('TASK LIST')} key="2">
           {project && project._id ? (
             <ProjectWPAdmin projectID={project?._id}></ProjectWPAdmin>
           ) : (

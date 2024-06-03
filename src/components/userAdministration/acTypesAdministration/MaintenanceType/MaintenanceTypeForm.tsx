@@ -85,7 +85,7 @@ const MaintenanceTypeForm: FC<IACTypeFormProps> = ({
                 },
                 rows: 10,
               }}
-              width={'lg'}
+              width={'xl'}
               name="description"
               label={t('DESCRIPTION')}
               rules={[

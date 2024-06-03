@@ -78,6 +78,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
   };
 
   const { t } = useTranslation();
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
 
   if (isLoading) {
     return (
@@ -126,14 +127,17 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <Split initialPrimarySize="25%">
+        <Split initialPrimarySize="15%" splitterSize="20px">
           <div className=" h-[68vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             <ProjectTree
               onProjectSelect={handleEdit}
               projects={projects || []}
+              onCheckItems={(selectedKeys) => {
+                setSelectedKeys(selectedKeys);
+              }}
             />
           </div>
-          <div className="h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+          <div className="h-[68vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <ProjectForm
               project={editingproject || undefined}
               onSubmit={handleSubmit}

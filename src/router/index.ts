@@ -33,6 +33,7 @@ export enum RouteNames {
   LOGIN = '/login',
   REGISTRATION = '/registration',
   USER_ADMINISTRATION = '/user/administration',
+  ACCESS_TRACKING = '/access/tracking',
   REQUIREMENT_ADMINISTRATION = '/requirement/administration',
   USER_ROLES = '/user/administration/roles',
   USER_PERMISSIONS = '/user/administration/permissions',

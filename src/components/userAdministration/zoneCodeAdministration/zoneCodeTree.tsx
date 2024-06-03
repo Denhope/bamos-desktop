@@ -3,6 +3,7 @@ import { Tree, Typography, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 
 import {
+  IAccessCode,
   IAreaCode,
   ISubZoneCode,
   IZoneCode,
@@ -14,10 +15,13 @@ interface TreeDataNode extends DataNode {
   zoneCode?: IZoneCode;
   subZoneCode?: ISubZoneCode;
   areaCode?: IAreaCode;
+  accessCode?: IAccessCode;
 }
 
 interface ZoneTreeProps {
-  onZoneCodeSelect: (zoneCode: IZoneCode | ISubZoneCode | IAreaCode) => void;
+  onZoneCodeSelect: (
+    zoneCode: IZoneCode | ISubZoneCode | IAreaCode | IAccessCode
+  ) => void;
   zoneCodesGroup: IZoneCodeGroup[] | [];
 }
 
@@ -57,6 +61,16 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
                   }`,
                   key: areaCode.id,
                   areaCode,
+                  children:
+                    areaCode.accessCodes &&
+                    areaCode.accessCodes.map((accessCode) => ({
+                      title: `${accessCode.accessNbr} - ${
+                        accessCode?.accessDescription &&
+                        accessCode?.accessDescription.toUpperCase()
+                      }`,
+                      key: accessCode?._id,
+                      accessCode,
+                    })),
                 })),
             };
             return subZoneNode;
@@ -83,6 +97,8 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
       onZoneCodeSelect(selectedNode.subZoneCode);
     } else if (selectedNode.areaCode) {
       onZoneCodeSelect(selectedNode.areaCode);
+    } else if (selectedNode.accessCode) {
+      onZoneCodeSelect(selectedNode.accessCode);
     }
   };
 
@@ -173,7 +189,7 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
         checkable={false}
         treeData={filteredTreeData}
         onSelect={onSelect}
-        height={560}
+        height={620}
         searchQuery={searchQuery}
       />
     </div>

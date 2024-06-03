@@ -12,6 +12,7 @@ import {
 } from '@/features/acTypeAdministration/acTypeApi';
 import MaintenanceTypeTree from './MaintenanceTypeTree';
 import MaintenanceTypeForm from './MaintenanceTypeForm';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {
   values: any;
@@ -130,57 +131,57 @@ const MaintenanceTypeTab: React.FC<AdminPanelProps> = ({ acType }) => {
         </Col>
       </Space>
 
-      <Row justify={'space-between'} className="  gap-5">
-        <Col
-          sm={8}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 "
-        >
-          <MaintenanceTypeTree
-            maintenanceTypes={types || []}
-            onMaintananceTypeSelect={function (type: IMaintenanceType): void {
-              handleEdit(type);
-            }}
-          />
-        </Col>
-        <Col className="h-[75vh] bg-white  rounded-md " sm={15}>
-          <MaintenanceTypeForm
-            acType={acType}
-            onSubmit={function (maintenanceType: IMaintenanceType): void {
-              if (acType && acType?.maintenanceTypes) {
-                const updatedACType: IACType = {
-                  ...acType,
-                  maintenanceTypes:
-                    acType?.maintenanceTypes?.map((mt) =>
-                      mt.id === maintenanceType.id ? maintenanceType : mt
-                    ) || [],
-                };
+      <div className="  flex gap-4 justify-between py-4 bg-gray-100">
+        <Split initialPrimarySize="25%" splitterSize="20px">
+          <Col className="h-[64vh] bg-white px-4 py-3 rounded-md border-gray-400 ">
+            <MaintenanceTypeTree
+              maintenanceTypes={types || []}
+              onMaintananceTypeSelect={function (type: IMaintenanceType): void {
+                handleEdit(type);
+              }}
+            />
+          </Col>
+          <Col className="h-[64vh] bg-white  rounded-md overflow-y-auto ">
+            <MaintenanceTypeForm
+              acType={acType}
+              onSubmit={function (maintenanceType: IMaintenanceType): void {
+                if (acType && acType?.maintenanceTypes) {
+                  const updatedACType: IACType = {
+                    ...acType,
+                    maintenanceTypes:
+                      acType?.maintenanceTypes?.map((mt) =>
+                        mt.id === maintenanceType.id ? maintenanceType : mt
+                      ) || [],
+                  };
 
-                const existingMaintenanceType = acType?.maintenanceTypes?.find(
-                  (mt) => mt.id === maintenanceType.id
-                );
+                  const existingMaintenanceType =
+                    acType?.maintenanceTypes?.find(
+                      (mt) => mt.id === maintenanceType.id
+                    );
 
-                if (existingMaintenanceType) {
-                  // Если существует, обновляем его
-                  updatedACType.maintenanceTypes = acType.maintenanceTypes?.map(
-                    (mt) =>
-                      mt.id === maintenanceType.id ? maintenanceType : mt
-                  );
-                  handleSubmit(updatedACType);
-                  setEditingMaintenanceType(null);
-                } else {
-                  updatedACType.maintenanceTypes = [
-                    ...(acType.maintenanceTypes || []),
-                    maintenanceType,
-                  ];
-                  handleSubmit(updatedACType);
-                  setEditingMaintenanceType(null);
+                  if (existingMaintenanceType) {
+                    // Если существует, обновляем его
+                    updatedACType.maintenanceTypes =
+                      acType.maintenanceTypes?.map((mt) =>
+                        mt.id === maintenanceType.id ? maintenanceType : mt
+                      );
+                    handleSubmit(updatedACType);
+                    setEditingMaintenanceType(null);
+                  } else {
+                    updatedACType.maintenanceTypes = [
+                      ...(acType.maintenanceTypes || []),
+                      maintenanceType,
+                    ];
+                    handleSubmit(updatedACType);
+                    setEditingMaintenanceType(null);
+                  }
                 }
-              }
-            }}
-            maintenanceType={editingMaintenanceType || null}
-          />
-        </Col>
-      </Row>
+              }}
+              maintenanceType={editingMaintenanceType || null}
+            />
+          </Col>
+        </Split>
+      </div>
     </>
   );
 };

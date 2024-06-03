@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Document>
+  <Label>
+    <title>Product Labels</title>
+    <Name>${data.name}</Name>
+    <Price>${data.price}</Price>
+    <Description>${data.description}</Description>
+    <Barcode>${data.barcode}</Barcode>
+  </Label>
+</Document>

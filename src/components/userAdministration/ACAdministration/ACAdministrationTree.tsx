@@ -87,6 +87,7 @@ const ACAdministrationTree: FC<UserTreeProps> = ({ onPlaneselect, planes }) => {
         }}
         height={660}
         searchQuery={searchQuery}
+        selectedKeys={[]}
       />
     </div>
   );

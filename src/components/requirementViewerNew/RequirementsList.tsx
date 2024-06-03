@@ -112,7 +112,7 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       dataIndex: 'status',
     },
     {
-      title: `${t('WO No')}`,
+      title: `${t('TASK WO No')}`,
       dataIndex: 'taskWO',
       key: 'taskWO',
       width: '7%',
@@ -120,7 +120,7 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
         return false;
       },
       render: (text: any, record: any) => {
-        return <>{record?.projectTaskID?.projectTaskWO}</>;
+        return <>{record?.projectTaskID?.taskWO}</>;
       },
     },
     {
@@ -129,19 +129,19 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       key: 'projectWO',
       width: '5%',
       render: (text: any, record: any) => {
-        return <>{record?.projectTaskID?.projectWO}</>;
+        return <>{record?.projectID?.projectWO}</>;
       },
     },
-    {
-      title: `${t('RECEIVER')}`,
-      dataIndex: 'planeNumber',
-      width: '5%',
-      key: 'planeNumber',
-      responsive: ['sm'],
-      render: (text: any, record: any) => {
-        return <>{record?.projectTaskID?.plane?.registrationNumber}</>;
-      },
-    },
+    // {
+    //   title: `${t('RECEIVER')}`,
+    //   dataIndex: 'planeNumber',
+    //   width: '5%',
+    //   key: 'planeNumber',
+    //   responsive: ['sm'],
+    //   render: (text: any, record: any) => {
+    //     return <>{record?.projectTaskID?.plane?.registrationNumber}</>;
+    //   },
+    // },
 
     {
       title: `${t('PART No')}`,

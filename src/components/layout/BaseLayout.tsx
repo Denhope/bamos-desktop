@@ -54,6 +54,11 @@ const BaseLayout: React.FC = () => {
     //  route: RouteNames.WORKORDER_INFORMATION,
     //},
     {
+      APNNBR: '100500',
+      descriptions: `${t(`ACCESS TRACKING`)}`,
+      route: RouteNames.ACCESS_TRACKING,
+    },
+    {
       APNNBR: '01',
       descriptions: `${t(`ADMINISTRATION`)}`,
       route: RouteNames.USER_ADMINISTRATION,

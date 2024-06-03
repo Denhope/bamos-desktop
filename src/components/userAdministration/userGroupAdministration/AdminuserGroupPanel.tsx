@@ -12,6 +12,7 @@ import {
   useGetGroupsUserQuery,
   useUpdateGroupUserMutation,
 } from '@/features/userAdministration/userGroupApi';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {}
 
@@ -97,25 +98,21 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-2/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <UserGroupTree
-            usersGroup={usersGroup || []}
-            onUsersGroupSelect={handleEdit}
-          />
-        </div>
-        <div
-          className="w-10/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <UserGroupForm
-            userGroup={editingUserGroup || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </div>
+        <Split initialPrimarySize="20%" splitterSize="20px">
+          <div className="h-[74vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
+            <UserGroupTree
+              usersGroup={usersGroup || []}
+              onUsersGroupSelect={handleEdit}
+            />
+          </div>
+          <div className="h-[74vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  overflow-y-auto ">
+            <UserGroupForm
+              userGroup={editingUserGroup || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

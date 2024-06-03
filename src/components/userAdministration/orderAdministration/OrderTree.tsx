@@ -295,7 +295,7 @@ const OrderTree: FC<UserTreeProps> = ({
         onSelect={(selectedKeys, info) => {
           onSelect(selectedKeys, info);
         }}
-        height={540}
+        height={670}
         searchQuery={searchQuery}
       />
     </div>

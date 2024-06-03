@@ -15,6 +15,7 @@ import {
   useUpdateREQTypeMutation,
 } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import RequirementsTypesForm from './RequirementsTypesForm';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {
   values?: any;
@@ -104,25 +105,27 @@ const RequirementsTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <div
-          // sm={4}
-          className="w-3/12 h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-        >
-          <RequirementsTypesTree
-            onreqTypeselect={handleEdit}
-            reqTypes={reqTypes || []}
-          />
-        </div>
-        <div
-          className="w-9/12  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  "
-          // sm={19}
-        >
-          <RequirementsTypesForm
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-            reqType={editingACType || undefined}
-          />
-        </div>
+        <Split initialPrimarySize="30%" splitterSize="20px">
+          <div
+            // sm={4}
+            className=" h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
+          >
+            <RequirementsTypesTree
+              onreqTypeselect={handleEdit}
+              reqTypes={reqTypes || []}
+            />
+          </div>
+          <div
+            className="  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            // sm={19}
+          >
+            <RequirementsTypesForm
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              reqType={editingACType || undefined}
+            />
+          </div>
+        </Split>
       </div>
     </>
   );

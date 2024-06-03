@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
+import { Button, Col, Modal, message, Space, Spin } from 'antd';
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import {
   useUpdateMPDCodeMutation,
   useDeleteMPDCodeMutation,
 } from '@/features/MPDAdministration/mpdCodesApi';
+import { Split } from '@geoffcox/react-splitter';
 
 interface AdminPanelProps {
   acTypeID: string;
@@ -110,27 +111,23 @@ const MPDAdministrationFormPanel: React.FC<AdminPanelProps> = ({
         </Col>
       </Space>
 
-      <Row justify={'space-between'} className="gap-4">
-        <Col
-          sm={12}
-          className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
-        >
-          <MPDAdministrationTree
-            MPDCodes={mpdCodes || []}
-            onMPDCodeSelect={handleEdit}
-          />
-        </Col>
-        <Col
-          className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 "
-          sm={11}
-        >
-          <MPDAdministrationForm
-            taskCode={editingmpdCode || undefined}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-          />
-        </Col>
-      </Row>
+      <div className=" flex  py-4 gap-4 justify-between bg-gray-100 rounded-sm">
+        <Split initialPrimarySize="25%" splitterSize="20px">
+          <div className="h-[64vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+            <MPDAdministrationTree
+              MPDCodes={mpdCodes || []}
+              onMPDCodeSelect={handleEdit}
+            />
+          </div>
+          <div className="h-[64vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto ">
+            <MPDAdministrationForm
+              taskCode={editingmpdCode || undefined}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </Split>
+      </div>
     </>
   );
 };

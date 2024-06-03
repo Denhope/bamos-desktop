@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useMemo } from 'react';
 import { Tree, Input } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 import { IProject } from '@/models/IProject';
+import CustomTree from '../userAdministration/zoneCodeAdministration/CustomTree';
 
 // Убедитесь, что вы импортировали правильный тип project
 
@@ -12,12 +13,17 @@ interface TreeDataNode extends DataNode {
 interface UserTreeProps {
   onProjectSelect: (project: IProject) => void;
   projects: IProject[] | [];
+  onCheckItems?: (selectedKeys: React.Key[]) => void;
 }
 
 const { TreeNode } = Tree;
 const { Search } = Input;
 
-const ProjectTree: FC<UserTreeProps> = ({ onProjectSelect, projects }) => {
+const ProjectTree: FC<UserTreeProps> = ({
+  onCheckItems,
+  onProjectSelect,
+  projects,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
@@ -87,10 +93,15 @@ const ProjectTree: FC<UserTreeProps> = ({ onProjectSelect, projects }) => {
         enterButton
         onPressEnter={handleEnterPress}
       />
-      <Tree
-        showLine
+      <CustomTree
+        onCheckItems={(selectedKeys: any[]) => {
+          // console.log(selectedKeys);
+          return onCheckItems && onCheckItems(selectedKeys);
+        }}
+        // showLine
         height={680}
-        defaultExpandedKeys={['group1']}
+        treeData={filteredTreeData}
+        // defaultExpandedKeys={['group1']}
         onSelect={(selectedKeys, info) => {
           const project = projects.find(
             (project) => project._id === selectedKeys[0]
@@ -99,9 +110,11 @@ const ProjectTree: FC<UserTreeProps> = ({ onProjectSelect, projects }) => {
             onProjectSelect(project);
           }
         }}
+        checkable={false}
+        searchQuery={searchQuery}
       >
-        {renderTreeNodes(filteredTreeData)}
-      </Tree>
+        {/* {renderTreeNodes(filteredTreeData)} */}
+      </CustomTree>
     </div>
   );
 };

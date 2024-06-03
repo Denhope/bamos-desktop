@@ -79,4 +79,5 @@ export interface IProject {
   workPackageIds?: any[];
   isEditing?: boolean;
   planeId?: string | any;
+  acTypeID?: string;
 }
