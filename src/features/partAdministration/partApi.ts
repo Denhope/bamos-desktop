@@ -14,22 +14,35 @@ export const partNumberApi = createApi({
       IPartNumber[],
       {
         partNumber?: string;
+        partNumberID?: string;
         description?: string;
         type?: string;
         group?: string;
         unit?: string;
         status?: string;
+        acTypeID?: string;
       }
     >({
-      query: ({ partNumber, description, type, group, unit, status }) => ({
+      query: ({
+        partNumber,
+        description,
+        type,
+        group,
+        unit,
+        status,
+        partNumberID,
+        acTypeID,
+      }) => ({
         url: `partNumbers/getFilteredPartNumber/company/${COMPANY_ID}`,
         params: {
           partNumber,
+          partNumberID,
           description,
           type,
           group,
           unit,
           status,
+          acTypeID,
         },
       }),
       providesTags: ['PartNumber'],
@@ -50,10 +63,10 @@ export const partNumberApi = createApi({
     }),
     addPartNumber: builder.mutation<
       IPartNumber,
-      { partNumber: Partial<IPartNumber>; acTypeId?: string }
+      { partNumber: Partial<IPartNumber>; acTypeID?: string }
     >({
-      query: ({ partNumber, acTypeId }) => ({
-        url: `partNumbers/company/${COMPANY_ID}`,
+      query: ({ partNumber, acTypeID }) => ({
+        url: `partNumbers/companyID/${COMPANY_ID}/new`,
         method: 'POST',
         body: {
           ...partNumber,
@@ -64,9 +77,27 @@ export const partNumberApi = createApi({
       }),
       invalidatesTags: ['PartNumber'], // Invalidate the 'Users' tag after mutation
     }),
+    addMultiPartNumber: builder.mutation<
+      IPartNumber[],
+      {
+        partNumberDTO: Partial<IPartNumber[]>;
+      }
+    >({
+      query: ({ partNumberDTO }) => ({
+        url: `partNumbers/multi/companyID/${COMPANY_ID}`,
+        method: 'POST',
+        body: {
+          partNumberDTO,
+          createUserID: USER_ID,
+          createDate: new Date(),
+          companyID: COMPANY_ID,
+        },
+      }),
+      invalidatesTags: ['PartNumber'], // Указываем, что это мутация недействительна тега 'UserGroups'
+    }),
     updatePartNumber: builder.mutation<IPartNumber, IPartNumber>({
       query: (partNumber) => ({
-        url: `partNumbers/company/${COMPANY_ID}/partNumber/${partNumber._id}`,
+        url: `partNumbers/updatePart/company/${COMPANY_ID}/partID/${partNumber._id}`,
         method: 'PUT',
         body: {
           ...partNumber,
@@ -81,7 +112,7 @@ export const partNumberApi = createApi({
       string
     >({
       query: (id) => ({
-        url: `partNumbers/company/${COMPANY_ID}/partNumber/${id}`,
+        url: `partNumbers/company/${COMPANY_ID}/partNumberID/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['PartNumber'], // Invalidate the 'Users' tag after mutation
@@ -95,4 +126,5 @@ export const {
   useGetPartNumberQuery,
   useGetPartNumbersQuery,
   useUpdatePartNumberMutation,
+  useAddMultiPartNumberMutation,
 } = partNumberApi;

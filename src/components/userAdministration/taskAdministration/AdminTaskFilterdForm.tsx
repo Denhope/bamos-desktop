@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import React, { FC, useRef, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,23 +9,27 @@ import {
 } from '@ant-design/pro-components';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
+import { notification } from 'antd';
 
-export type VendorFilteredFormValues = {
-  CODE: string;
-  NAME: string;
-  status: string[];
-  IS_RESIDENT?: boolean;
+export type TaskFilteredFormValues = {
+  taskNumber?: string;
+  AMM?: string;
+  taskType?: string[];
+  acTypeId?: string;
+  mpdDocumentationId?: string[];
+  status?: string[];
 };
 
 type VendorFilteredFormProps<T> = {
-  onSubmit: (values: VendorFilteredFormValues) => void;
+  onSubmit: (values: TaskFilteredFormValues) => void;
 };
 
-const AdminTaskFilterdForm: FC<
-  VendorFilteredFormProps<VendorFilteredFormValues>
+const AdminTaskFilteredForm: FC<
+  VendorFilteredFormProps<TaskFilteredFormValues>
 > = ({ onSubmit }) => {
-  const formRef = useRef<FormInstance<VendorFilteredFormValues>>(null);
+  const formRef = useRef<FormInstance<TaskFilteredFormValues>>(null);
   const [acTypeID, setACTypeID] = useState<any>('');
+
   const handleKeyPress = useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       formRef.current?.submit();
@@ -43,25 +45,37 @@ const AdminTaskFilterdForm: FC<
     }),
     [t]
   );
+
   const handleSubmit = useCallback(
-    (values: VendorFilteredFormValues) => {
-      return Promise.resolve(onSubmit(values));
+    async (values: TaskFilteredFormValues) => {
+      if (Object.values(values).every((value) => value === '')) {
+        // Показываем уведомление, если все значения формы пустые
+        notification.warning({
+          message: 'Предупреждение',
+          description: 'Пожалуйста, введите хотя бы одно значение',
+        });
+        return false;
+      } else {
+        // Вызываем onSubmit только если хотя бы одно поле заполнено
+        const success = await onSubmit(values);
+        return success;
+      }
     },
     [onSubmit]
   );
-  const { data: mpdCodes, isLoading: mpdCodesLoading } = useGetMPDCodesQuery(
-    { acTypeID },
-    { skip: !acTypeID } // Skip the query if acTypeID is not set
-  );
-  const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
+
+  const { data: mpdCodes } = useGetMPDCodesQuery({ acTypeID });
+
+  const { data: acTypes } = useGetACTypesQuery({});
+
   const mpdCodesValueEnum: Record<string, string> =
-    mpdCodes?.reduce((acc, mpdCode) => {
+    (mpdCodes || []).reduce((acc: Record<string, string>, mpdCode) => {
       acc[mpdCode.id] = mpdCode.code;
       return acc;
     }, {}) || {};
 
   const acTypeValueEnum: Record<string, string> =
-    acTypes?.reduce((acc, acType) => {
+    (acTypes || []).reduce((acc: Record<string, string>, acType) => {
       acc[acType.id] = acType.name;
       return acc;
     }, {}) || {};
@@ -102,14 +116,16 @@ const AdminTaskFilterdForm: FC<
             ADP: { text: t('ADP') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
+            PART_PRODUCE: { text: t('PART PRODUCE') },
+            NRC: { text: t('NRC') },
+            ADD_HOC: { text: t('ADD HOC') },
           }}
         />
         <ProFormSelect
           showSearch
-          // initialValue={['65f1a33071106bb8e027f359']}
           name="acTypeId"
           label={t('AC TYPE')}
-          width="sm"
+          width="lg"
           valueEnum={acTypeValueEnum}
           onChange={(value: any) => setACTypeID(value)}
         />
@@ -121,7 +137,9 @@ const AdminTaskFilterdForm: FC<
           width="lg"
           valueEnum={mpdCodesValueEnum}
           disabled={!acTypeID}
-          // Disable the select if acTypeID is not set
+          onChange={(value: any) => {
+            formRef.current?.setFieldsValue({ mpdDocumentationId: value });
+          }}
         />
 
         <ProFormSelect
@@ -129,8 +147,7 @@ const AdminTaskFilterdForm: FC<
           mode="multiple"
           name="status"
           label={t('STATUS')}
-          width="sm"
-          // initialValue={['ACTIVE']}
+          width="lg"
           valueEnum={statusOptions}
         />
         {/* <ProFormCheckbox name="IS_RESIDENT" label={t('RESIDENT')} /> */}
@@ -139,4 +156,4 @@ const AdminTaskFilterdForm: FC<
   );
 };
 
-export default AdminTaskFilterdForm;
+export default AdminTaskFilteredForm;

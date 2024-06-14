@@ -23,7 +23,13 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
 
   const convertToTreeData = (tasks: ITask[]): TreeDataNode[] => {
     return tasks.map((task) => ({
-      title: String(task.taskNumber).toUpperCase(),
+      title: `№:${String(task.taskNumber).toUpperCase()}/${String(
+        task.taskDescription
+      ).toUpperCase()}/${
+        String(
+          task?.partNumber || task.partNumberID?.PART_NUMBER
+        ).toUpperCase() || ''
+      }`,
       key: task.id,
       task: task,
     }));

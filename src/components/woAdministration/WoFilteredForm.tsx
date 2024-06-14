@@ -8,7 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { DatePickerProps, Form, FormInstance, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
-
+import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -82,6 +82,12 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       message.error('Failed to fetch requirements');
     }
   };
+  const { data: stores } = useGetStoresQuery({});
+  const storeCodesValueEnum: Record<string, string> =
+    stores?.reduce((acc, mpdCode) => {
+      acc[mpdCode.id] = `${String(mpdCode?.storeShortName)?.toUpperCase()}`;
+      return acc;
+    }, {}) || {};
   return (
     <ProForm
       formRef={formRef}
@@ -123,11 +129,6 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
       <ProForm.Group>
         <ProFormSelect
-          rules={[
-            {
-              required: true,
-            },
-          ]}
           mode={'multiple'}
           showSearch
           name="projectID"
@@ -177,13 +178,11 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       /> */}
 
       <ProFormSelect
-        mode={'multiple'}
         showSearch
-        name="userGroupID"
-        label={t('SHOP No')}
+        name="storeID"
+        label={t('STORE')}
         width="lg"
-        // valueEnum={projectsValueEnum}
-        // onChange={(value: any) => setReqTypeID(value)}
+        valueEnum={storeCodesValueEnum || []}
       />
 
       <ProFormSelect

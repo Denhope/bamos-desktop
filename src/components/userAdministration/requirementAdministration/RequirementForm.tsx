@@ -46,7 +46,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
       form.setFieldsValue(requierement);
       // setinitialFormPN(requierement.PN);
       setReqTypeID(requierement.reqTypesID);
-      setSelectedProjectId(requierement.projectID);
+      setSelectedProjectId(requierement.projectID?._id);
       setPartNumberId(requierement.partNumberID?._id);
       form.setFieldsValue({
         partNumberID: requierement.partNumberID?._id,
@@ -54,6 +54,8 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
         group: requierement.partNumberID?.GROUP,
         nameOfMaterial: requierement.partNumberID?.DESCRIPTION,
         unit: requierement.partNumberID?.UNIT_OF_MEASURE,
+        projectTaskID: requierement.projectTaskID?._id,
+        projectID: requierement.projectID?._id,
       });
     } else {
       form.resetFields();
@@ -218,7 +220,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                 }}
               />
               <ProFormSelect
-                showSearchv
+                showSearch
                 rules={[{ required: true }]}
                 name="neededOnID"
                 label={t('NEEDED ON')}

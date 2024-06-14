@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
-import { Tree, Input } from 'antd';
+import { Tree, Input, Empty } from 'antd';
 import type { DataNode } from 'antd/lib/tree';
 import { IProjectItemWO } from '@/models/AC';
 import CustomTree from '../userAdministration/zoneCodeAdministration/CustomTree';
@@ -20,9 +20,9 @@ const { TreeNode } = Tree;
 const { Search } = Input;
 
 const WOTree: FC<UserTreeProps> = ({
-  onCheckItems,
   onProjectSelect,
   projects,
+  onCheckItems,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -42,8 +42,8 @@ const WOTree: FC<UserTreeProps> = ({
       } else if (requirement.status === 'draft') {
         statusIndicator = ' ⚪'; // Серый квадрат
       }
-      if (requirement.status === 'inProgress') {
-        statusIndicator = ' 🔵'; // Оранжевый кружок
+      if (requirement.status === 'RECEIVED') {
+        statusIndicator = ' 🟢'; // Оранжевый кружок
       }
       if (requirement.status === 'CLOSED') {
         statusIndicator = ' 🟢'; // Оранжевый кружок
@@ -66,20 +66,28 @@ const WOTree: FC<UserTreeProps> = ({
       if (requirement.status === 'onShort') {
         statusIndicator = '🟠'; // Серый квадрат
       }
-      // const title = `${
-      //   requirement?.taskWO || requirement?.projectTaskWO
-      // } \u{1F31F} -/${requirement?.taskId?.taskNumber || ''}(${
-      //   requirement?.title || ''
-      // }/${requirement?.taskId?.taskDescription || ''}/${
-      //   requirement?.partNumberID?.PART_NUMBER || ''
-      // })${statusIndicator}`;
-      const title = `${
-        requirement?.taskWO || requirement?.projectTaskWO
-      } \u{1F31F} -/${requirement?.taskNumber || ''}\u{1F31F} -/${
-        requirement?.taskDescription || ''
-      }
-      })${statusIndicator}`;
-
+      const title = `№:${requirement?.taskWO} -/${
+        requirement?.taskId?.taskNumber || ''
+      }(${requirement?.title || ''}/${
+        requirement?.partNumberID?.PART_NUMBER || ''
+      })${statusIndicator}/${requirement?.qty}${
+        requirement?.partNumberID?.UNIT_OF_MEASURE || ''
+      }`;
+      // const children = [
+      //   {
+      //     title: `STATUS: ${requirement.status}`,
+      //     key: `${requirement._id!.toString()}-status`,
+      //     requirement,
+      //     color: getColor(requirement),
+      //   },
+      //   {
+      //     title: `DESCRIPTION: ${requirement.remarks || ''}`,
+      //     key: `${requirement._id!.toString()}-description`,
+      //     requirement,
+      //     color: getColor(requirement),
+      //   },
+      //   // Добавьте другие вложенные поля, если они есть
+      // ];
       return {
         title,
         key: requirement.id!.toString(),
@@ -98,7 +106,6 @@ const WOTree: FC<UserTreeProps> = ({
     }
     return treeData.filter((node) => {
       if (typeof node.title === 'string') {
-        // Проверяем, содержит ли title поисковой запрос
         return node.title.toLowerCase().includes(searchQuery.toLowerCase());
       }
       return false;
@@ -134,39 +141,45 @@ const WOTree: FC<UserTreeProps> = ({
 
   return (
     <div className="flex flex-col gap-2 ">
-      <Search
-        size="small"
-        allowClear
-        onSearch={(value) => {
-          setSearchQuery(value);
-          handleEnterPress();
-        }}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: 8 }}
-        enterButton
-        onPressEnter={handleEnterPress}
-      />
-      <CustomTree
-        isAllChecked={true}
-        treeData={filteredTreeData}
-        checkable={true}
-        searchQuery={searchQuery}
-        onCheckItems={(selectedKeys: any[]) => {
-          // console.log(selectedKeys);
-          return onCheckItems && onCheckItems(selectedKeys);
-        }}
-        height={570}
-        onSelect={(selectedKeys, info) => {
-          const project = projects.find(
-            (project) => project.id === selectedKeys[0]
-          );
-          if (project) {
-            onProjectSelect(project);
-          }
-        }}
-      >
-        {/* {renderTreeNodes(filteredTreeData)} */}
-      </CustomTree>
+      {projects ? (
+        <>
+          <Search
+            size="small"
+            allowClear
+            onSearch={(value) => {
+              setSearchQuery(value);
+              handleEnterPress();
+            }}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ marginBottom: 8 }}
+            enterButton
+            onPressEnter={handleEnterPress}
+          />
+          <CustomTree
+            treeData={filteredTreeData}
+            checkable={true}
+            isAllChecked
+            searchQuery={searchQuery}
+            height={560}
+            onCheckItems={(selectedKeys: any[]) => {
+              // console.log(selectedKeys);
+              return onCheckItems && onCheckItems(selectedKeys);
+            }}
+            onSelect={(selectedKeys, info) => {
+              const project = projects.find(
+                (project) => project.id === selectedKeys[0]
+              );
+              if (project) {
+                onProjectSelect(project);
+              }
+            }}
+          >
+            {/* {renderTreeNodes(filteredTreeData)} */}
+          </CustomTree>
+        </>
+      ) : (
+        <Empty></Empty>
+      )}
     </div>
   );
 };

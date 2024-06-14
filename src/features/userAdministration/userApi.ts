@@ -38,6 +38,8 @@ export const userApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+
+          // dispatch(setUsersGroup(data));
         } catch (error) {
           console.error('Ошибка при выполнении запроса:', error);
         }

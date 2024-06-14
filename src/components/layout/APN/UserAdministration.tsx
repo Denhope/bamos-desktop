@@ -44,6 +44,7 @@ import ACAdministrationPanel from '@/components/userAdministration/ACAdministrat
 import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import RequirementsTypesPanel from '@/components/userAdministration/requirementsTypes/RequirementsTypesPanel';
 import ProjectTypePanel from '@/components/userAdministration/projectTypesAdministaration/ProjectTypePanel';
+import AdminPanelSkills from '@/components/userAdministration/skillAdminisrtation/AdminPanelSkills';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -59,13 +60,20 @@ const UserAdministration: FC = () => {
       RouteNames.USER_ADMINISTRATION,
       <UserSwitchOutlined />
     ),
-    getItem(<>{t('ACCOUNTS')}</>, RouteNames.USER_ACCOUNTS, <UserOutlined />),
-    // getItem(<>{t('ROLES')}</>, RouteNames.USER_ROLES, <ControlOutlined />),
-    getItem(
-      <>{t('ACCOUNTS GROUPS')}</>,
-      RouteNames.USER_GROUPS,
-      <UsergroupAddOutlined />
-    ),
+    getItem(<>{t('ACCOUNTS')}</>, '', <UserOutlined />, [
+      getItem(<>{t('USERS')}</>, RouteNames.USER_ACCOUNTS, <UserOutlined />),
+      getItem(
+        <>{t('ACCOUNTS GROUPS')}</>,
+        RouteNames.USER_GROUPS,
+        <UsergroupAddOutlined />
+      ),
+      getItem(
+        <>{t('SKILLS')}</>,
+        RouteNames.SKILLS_ACCOUNTS,
+        <UsergroupAddOutlined />
+      ),
+    ]),
+
     getItem(
       <>{t('REQUIREMENTS TYPES')}</>,
       RouteNames.REQUIREMENTS_CODES,
@@ -96,10 +104,7 @@ const UserAdministration: FC = () => {
       NAME: '',
       status: [''],
     });
-  const [tasksFormValues, setTasksFormValues] = useState<any>({
-    taskNumber: '',
-    status: [''],
-  });
+  const [tasksFormValues, setTasksFormValues] = useState<any>({});
   const [ACTypesFormValues, setACTypesFormValues] =
     useState<ACTypesFilteredFormValues>({
       code: '',
@@ -266,7 +271,7 @@ const UserAdministration: FC = () => {
         title: `${t('AC TASKS')}`,
         content: (
           <div>
-            <AdminTaskPanel values={vendorFormValues} />
+            <AdminTaskPanel values={vendorFormValues} isLoading={undefined} />
           </div>
         ),
         closable: true,
@@ -329,6 +334,21 @@ const UserAdministration: FC = () => {
         setPanes((prevPanes) => [...prevPanes, tab]);
       }
       setActiveKey(tab.key);
+    } else if (key === RouteNames.SKILLS_ACCOUNTS) {
+      const tab = {
+        key,
+        title: `${t('SKILLS')}`,
+        content: (
+          <>
+            <AdminPanelSkills />
+          </>
+        ),
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
     }
   };
 
@@ -337,7 +357,7 @@ const UserAdministration: FC = () => {
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={300}
+        width={360}
         collapsible
         collapsed={collapsed}
         onCollapse={(value: boolean | ((prevState: boolean) => boolean)) =>
@@ -355,8 +375,9 @@ const UserAdministration: FC = () => {
         )}
         {activeKey === RouteNames.AC_TASKS && !collapsed && (
           <AdminTaskFilterdForm
-            onSubmit={function (values: VendorFilteredFormValues): void {
+            onSubmit={function (values: any): void {
               setTasksFormValues(values);
+              refetchTasks();
             }}
           />
         )}

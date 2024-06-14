@@ -1,5 +1,6 @@
 export enum RouteNames {
   PART_ADMINISTRATIONS = '/materialManagment/parts/partAdministrations',
+  PART_ADMINISTRATIONS_NEW = '/materialManagment/parts/partAdministrations/new',
   ROTABLELES_ADMINISTRATIONS = '/materialManagment/parts/rotablesdministrations',
   PART_REPORTS = '/materialManagment/parts/part/reports',
   ORDERS_REPORTS = '/materialManagment/orders/reports',
@@ -119,6 +120,7 @@ export enum RouteNames {
   WORKPACKGEN = '/planning/wpgeneration',
   PLANNINGFORECAST = '/planning/forecast',
   APLICATIONS = '/aplications',
+  SKILLS_ACCOUNTS = 'SKILLS_ACCOUNTS',
 
   // CHEACK_MATERIAL_TASKS = '/materials',wwwwwwwwwwwwwwwww
 }

@@ -21,8 +21,6 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
-  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-
   const { Text } = Typography;
   const { TreeNode } = Tree;
   const { Search } = Input;
@@ -52,18 +50,10 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
         }
       }
 
-      // return {
-      //   title: `${reqCode?.partNumberID?.PART_NUMBER?.toUpperCase()} - ${reqCode?.partNumberID?.DESCRIPTION?.toUpperCase()} - ${
-      //     reqCode?.qty || ''
-      //   } ${reqCode?.partNumberID?.UNIT_OF_MEASURE?.toUpperCase()}${stateIndicator}`,
-      //   key: reqCode.id,
-      //   reqCode: reqCode,
-      // };
-
       return {
-        title: `${
-          reqCode?.taskNumber
-        } - ${reqCode?.taskDescription?.toUpperCase()} ${stateIndicator}`,
+        title: `${reqCode?.partNumberID?.PART_NUMBER?.toUpperCase()} - ${reqCode?.partNumberID?.DESCRIPTION?.toUpperCase()} - ${
+          reqCode?.qty || ''
+        } ${reqCode?.partNumberID?.UNIT_OF_MEASURE?.toUpperCase()}${stateIndicator}`,
         key: reqCode.id,
         reqCode: reqCode,
       };
@@ -103,6 +93,15 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
     }
   };
 
+  const renderTreeNodes = (data: TreeDataNode[]) => {
+    return data.map((item, index) => (
+      <TreeNode
+        title={item.title}
+        key={item.key}
+        className={index === selectedIndex ? 'ant-tree-node-selected' : ''}
+      />
+    ));
+  };
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault(); // Отменяем действие по умолчанию
@@ -125,13 +124,12 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
         onKeyDown={handleKeyDown}
       />
       <CustomTree
-        selectedKeys={selectedKeys}
-        isAllChecked={true}
+        isAllChecked
         checkable={true}
         treeData={filteredTreeData}
-        onCheckItems={(selectedKeys: any[]) => {
-          // console.log(selectedKeys);
-          return onCheckItems && onCheckItems(selectedKeys);
+        onCheckItems={(selectedKeys) => {
+          console.log(selectedKeys);
+          onCheckItems && onCheckItems(selectedKeys);
         }}
         onSelect={(selectedKeys, info) => {
           const reqGroup = projectItems.find(
@@ -141,7 +139,7 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
             onProjectItemSelect(reqGroup);
           }
         }}
-        height={470}
+        height={480}
         searchQuery={searchQuery}
       />
     </div>

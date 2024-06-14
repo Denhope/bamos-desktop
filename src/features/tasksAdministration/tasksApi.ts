@@ -64,6 +64,24 @@ export const taskApi = createApi({
       }),
       invalidatesTags: ['TaskTypes'], // Invalidate the 'taskCodes' tag after mutation
     }),
+    addMultiTaskItems: builder.mutation<
+      ITask[],
+      {
+        taskNumberDTO: Partial<ITask[]>;
+      }
+    >({
+      query: ({ taskNumberDTO }) => ({
+        url: `tasks/administration/multi/company/${COMPANY_ID}`,
+        method: 'POST',
+        body: {
+          taskNumberDTO,
+          createUserID: USER_ID,
+          createDate: new Date(),
+          companyID: COMPANY_ID,
+        },
+      }),
+      invalidatesTags: ['TaskTypes'], // Указываем, что это мутация недействительна тега 'UserGroups'
+    }),
     updateTask: builder.mutation<ITask, ITask>({
       query: (taskCode) => ({
         url: `tasks/administration/company/${COMPANY_ID}/task/${taskCode.id}`,
@@ -88,4 +106,5 @@ export const {
   useGetTaskQuery,
   useUpdateTaskMutation,
   useGetTasksQuery,
+  useAddMultiTaskItemsMutation,
 } = taskApi;

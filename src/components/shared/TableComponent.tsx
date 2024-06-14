@@ -9,7 +9,7 @@ interface DataType {
 
 interface TableProps {
   columns: ColumnsType<DataType>;
-  data?: DataType[];
+  data?: any[];
 }
 
 const TableComponent: React.FC<TableProps> = ({ columns, data }) => {

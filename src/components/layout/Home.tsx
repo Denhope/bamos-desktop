@@ -59,6 +59,10 @@ import GoodsRecivingNew from './APN/GoodsRecivingNew';
 import WOAdministration from './APN/WOAdmonistration';
 import { ipcRenderer } from 'electron';
 import AccessTracking from './APN/AccessTracking';
+import PartAdministrationNew from './APN/PartAdministrationNew';
+import ShelfExpiryNew from './APN/ShelfExpiryNew';
+import PartsTransferNew from './APN/PartsTransferNew';
+import StoreAdministration from './APN/StoreAdministration';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -93,6 +97,20 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <WorkOrder />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.STORES_ADMINISTRATIONS) {
+      tab = {
+        key,
+
+        title: `${t(`STORES ADMINISTRATION`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <StoreAdministration />
           </div>
         ),
 
@@ -154,6 +172,18 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
 
         closable: true,
       };
+    } else if (key == RouteNames.PART_ADMINISTRATIONS_NEW) {
+      tab = {
+        key,
+        title: `${t(`PROJECT ADMINISTRATION`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <PartAdministrationNew />
+          </div>
+        ),
+
+        closable: true,
+      };
     }
     if (key == RouteNames.PROJECT_ADMINISTRATION) {
       tab = {
@@ -190,7 +220,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         title: `${t(`PARTS TRANSFER`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
-            <PartsTransfer />
+            <PartsTransferNew />
           </div>
         ),
 
@@ -424,7 +454,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         title: `${t(`SHELF EXPIRY`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
-            <ShelfExpiry />
+            <ShelfExpiryNew />
           </div>
         ),
 
@@ -602,12 +632,16 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
   const { t } = useTranslation();
   const { isLoading } = useTypedSelector((state) => state.auth);
   const itemsHorisontal: MenuItem[] = [
+    // getItem(
+    //   t('PART ADMINISTRATION'),
+    //   RouteNames.PART_ADMINISTRATIONS,
+    //   <SettingOutlined />
+    // ),
     getItem(
-      t('PART ADMINISTRATION'),
-      RouteNames.PART_ADMINISTRATIONS,
-      <SettingOutlined />
+      t('STORES ADMINISTRATION'),
+      RouteNames.STORES_ADMINISTRATIONS,
+      <HomeOutlined />
     ),
-    getItem(t('STORE MANAGMENT'), RouteNames.STORE_MANAGMENT, <HomeOutlined />),
     getItem(
       t('STOCK INFORMATION'),
       RouteNames.STOCK_NFORMATIONS,

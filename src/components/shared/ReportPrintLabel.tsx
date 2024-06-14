@@ -7,64 +7,39 @@ import JsBarcode from 'jsbarcode';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
+
+import moment from 'moment';
+import { SING } from '@/utils/api/http';
+import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 interface ReportGeneratorProps {
   xmlTemplate: string; // XML-шаблон для генерации PDF
   data: any[]; // Массив данных для заполнения шаблона
-  isDdisabled?: boolean;
+  isDisabled?: boolean;
+  ids?: any;
 }
 
 const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   xmlTemplate,
   data,
-  isDdisabled,
+  isDisabled,
+  ids,
 }) => {
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const {
+    data: parts,
+    isLoading: partsLoading,
+    refetch,
+  } = useGetStorePartsQuery(
+    ids ? { ids: ids } : {}, // This will prevent the query from running if reqCode is null or does not have an id
+    {
+      skip: !ids, // Skip the query if reqCode is null or does not have an id
+    }
+  );
+
   const { t } = useTranslation();
-  const productsData = [
-    {
-      label: 1222,
-      company: '407 TECHNICS',
-      nomenclature: 'HL97DU5',
-      batchNumber: '123466DF',
-      mcQty: 100,
-      group: 'CONS',
-      unit: 'EA',
-      state: 'NEW',
-      expDate: 'N/A',
-      description: 'COLLAR',
-      certNo: 'N/A',
-      orderNo: 'P0000016',
-      recDate: '12th. Mar. 2021',
-      store: 'MSQ',
-      location: 'A-54',
-      printBy: '1199',
-      printDate: new Date(),
-      restriction: 'standart',
-    },
-    {
-      label: 1223,
-      company: '407 TECHNICS',
-      nomenclature: 'HL97DU5',
-      batchNumber: '123466DF',
-      mcQty: 100,
-      group: 'CONS',
-      unit: 'EA',
-      state: 'NEW',
-      expDate: 'N/A',
-      description: 'COLLAR',
-      certNo: 'N/A',
-      orderNo: 'P0000016',
-      recDate: '12th. Mar. 2021',
-      store: 'MSQ',
-      location: 'A-54',
-      printBy: '1199',
-      printDate: new Date(),
-      restriction: 'restricted',
-    },
-  ];
 
   const generatePdfFile = async () => {
     setLoading(true);
@@ -117,133 +92,154 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           height: 280,
           unit: 'mm', // Установка единиц измерения в миллиметрах
         },
-        content: productsData.map((product) => ({
-          pageBreak: 'after',
-          columns: [
-            {
-              stack: [
-                [
-                  { text: product.company, bold: true, alignment: 'right' }, // Выравнивание текста по левому краю
-                  // Пустая строка для создания отступа между текстом и штрихкодом
+        content:
+          parts &&
+          parts.map((product: any, index: number) => ({
+            pageBreak: index < parts.length - 1 ? 'after' : '',
+            columns: [
+              {
+                stack: [
+                  [
+                    {
+                      columns: [
+                        {
+                          image: generateBarcode(product.LOCAL_ID),
+                          width: 60,
+                          height: 15,
+                          alignment: 'left',
+                          margin: [0, 0, 0, 1],
+                        },
+                        {
+                          text: product.COMPANY_ID?.title,
+                          fontSize: 15,
+                          bold: true,
+                          alignment: 'right',
+                          width: '62%',
+                        },
+                      ],
+                    },
+                    {
+                      text: `L: ${product.LOCAL_ID}`,
+                      fontSize: 8,
+                      alignment: 'left',
+                      margin: [0, 0, 0, 5],
+                    },
+                  ],
                   {
-                    image: generateBarcode(product.label),
-                    width: 60,
-                    height: 15,
-                    alignment: 'left',
-                    margin: [0, 0, 0, 1], // Отступ от нижнего края страницы
-                  }, // Генерация штрихкода
-                  {
-                    text: `L: ${product.LOCAL_ID}`,
-                    fontSize: 8,
-                    alignment: 'left',
+                    text: `${
+                      product?.locationID?.restrictionID === 'standart'
+                        ? `${t('SERVICABLE TAG')}`
+                        : `${t('UNSERVICEABLE TAG')}`
+                    }`,
+                    fontSize: 13,
+                    bold: true,
                     margin: [0, 0, 0, 5],
                   },
-                ],
-                {
-                  text: `${
-                    product.restriction === 'standart'
-                      ? 'SERVICABLE TAG'
-                      : 'UNSERVICEABLE TAG'
-                  }`,
-                  fontSize: 13,
-                  bold: true,
-                  margin: [0, 0, 0, 5],
-                },
-                {
-                  text: `${t('PART No')}: ${product.PART_NUMBER}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('BATCH No')}: ${product.SUPPLIER_BATCH_NUMBER}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('MC/QTY')}: ${data?.GROUP} / ${
-                    bookedQty || data?.QUANTITY
-                  }
-                  {"\r"}
-                  ${data.UNIT_OF_MEASURE}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('CONDITION')}: ${product.CONDITION}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('EXP.DATE')}: ${
-                    (product.PRODUCT_EXPIRATION_DATE &&
-                      moment(product.PRODUCT_EXPIRATION_DATE).format(
-                        'Do. MMM. YYYY'
-                      )) ||
-                    'N/A'
-                  }`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('DESCRIPTION')}: ${product?.NAME_OF_MATERIAL}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('CERT No')}: ${product?.APPROVED_CERT || 'N/A'}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('ORDER No')}: ${product?.ORDER_NUMBER || 'N/A'}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  text: `${t('REC.DATE')}: ${
-                    data.RECEIVED_DATE &&
-                    moment(data.RECEIVED_DATE).format('Do. MMM. YYYY')
-                  }}`,
-                  margin: [0, 0, 0, 2],
-                },
-                {
-                  canvas: [
-                    {
-                      type: 'rect',
-                      x: 0,
-                      y: 0,
-                      w: 165,
-                      h: 45,
+                  {
+                    text: `${t('PART No')}: ${product?.PART_NUMBER}`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('BATCH No')}: ${
+                      product?.SUPPLIER_BATCH_NUMBER || 'N/A'
+                    }`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('MC/QTY')}: ${product?.GROUP} / ${
+                      product?.QUANTITY
+                    }/${product.UNIT_OF_MEASURE}`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('CONDITION')}: ${product?.CONDITION || 'N/A'} `,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('EXP.DATE')}: ${
+                      (product.PRODUCT_EXPIRATION_DATE &&
+                        moment(product.PRODUCT_EXPIRATION_DATE).format(
+                          'Do. MMM. YYYY'
+                        )) ||
+                      'N/A'
+                    }`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('DESCRIPTION')}: ${String(
+                      product?.NAME_OF_MATERIAL
+                    ).toUpperCase()}`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('CERT No')}: ${product?.APPROVED_CERT || 'N/A'}`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('ORDER No')}: ${product?.ORDER_NUMBER || 'N/A'}`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    text: `${t('REC.DATE')}: ${
+                      (product.RECEIVED_DATE &&
+                        moment(product.RECEIVED_DATE).format('DD. MM. YYYY')) ||
+                      'N/A'
+                    }`,
+                    margin: [0, 0, 0, 2],
+                  },
+                  {
+                    canvas: [
+                      {
+                        type: 'rect',
+                        x: 0,
+                        y: 0,
+                        w: 165,
+                        h: 30,
 
-                      border: [true, true, true, true], // Установите границу для всех сторон
-                      alignment: 'left',
-                    },
-                  ],
-                },
-                {
-                  stack: [
-                    {
-                      text: 'MATERIAL INCOMING INSPECTION',
-                      bold: true,
-                      // decoration: 'underline',
-                      border: [true, true, true, false],
-                      margin: [2, -30, 2, 2],
-                    },
-                    {
-                      text: '1799',
-                      bold: true,
-                      // border: [true, false, true, true],
-                      margin: [5, 0, 5, 5],
-                    },
-                  ],
-                  margin: [0, 0, 0, 10],
-                },
-                { text: `${product.store}/${product.location}`, bold: true },
-                {
-                  text: `Printed by ${
-                    product.printBy
-                  } ${product.printDate.toLocaleString('ru-RU')}`,
-                  alignment: 'left',
-                  fontSize: 8,
-                  margin: [0, 10, 0, 0],
-                }, // Выравнивание текста по правому краю и установка отступа от нижнего края страницы
-              ],
-              alignment: 'left', // Выравнивание текста по центру
-            },
-          ],
-        })),
+                        border: [true, true, true, true], // Установите границу для всех сторон
+                        alignment: 'left',
+                      },
+                    ],
+                  },
+                  {
+                    stack: [
+                      {
+                        text: `${t('MATERIAL INCOMING INSPECTION')}`,
+                        bold: true,
+                        // decoration: 'underline',
+                        border: [true, true, true, false],
+                        margin: [2, -30, 2, 2],
+                      },
+                      {
+                        text: '1799',
+                        bold: true,
+                        // border: [true, false, true, true],
+                        margin: [5, 0, 5, 5],
+                      },
+                    ],
+                    margin: [0, 0, 0, 5],
+                  },
+                  {
+                    text: `${String(
+                      product?.storeID?.storeShortName
+                    ).toUpperCase()}/${
+                      product?.locationID?.locationName || 'N/A'
+                    }`,
+                    bold: true,
+                  },
+                  {
+                    text: `${t('PRINT BY')} ${SING} ${new Date().toLocaleString(
+                      'ru-RU'
+                    )}`,
+                    alignment: 'left',
+                    fontSize: 6,
+                    margin: [0, 5, 0, 0],
+                  }, // Выравнивание текста по правому краю и установка отступа от нижнего края страницы
+                ],
+                alignment: 'left', // Выравнивание текста по центру
+              },
+            ],
+          })),
         styles: {
           header: {
             fontSize: 8,
@@ -287,15 +283,10 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         icon={<PrinterOutlined />}
         size="small"
         onClick={generatePdfFile}
-        disabled={loading || isDdisabled}
+        disabled={loading || isDisabled}
       >
         {loading ? 'Processing' : ` ${t('PRINT LABEL')}`}
       </Button>
-      {/* {pdfBlob && (
-        <a href={URL.createObjectURL(pdfBlob)} download="report.pdf">
-          Скачать PDF
-        </a>
-      )} */}
     </div>
   );
 };

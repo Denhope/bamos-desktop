@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Tree } from 'antd';
+import { Checkbox, Tree, Space } from 'antd'; // Импортируем Space из antd
 import type { DataNode } from 'antd/lib/tree';
 import { useTranslation } from 'react-i18next';
 
 interface CustomTreeProps {
   treeData: DataNode[];
   onSelect: (selectedKeys: React.Key[], info: any) => void;
-  onCheckItems?: (selectedKeys: React.Key[]) => void;
+  onCheckItems?: (checkedKeys: React.Key[]) => void;
   isAllChecked?: boolean;
   height: number;
   checkable: boolean;
   searchQuery: string;
-  selectedKeys: React.Key[];
+  selectedKeys?: React.Key[];
 }
 
 const highlightText = (text: string, query: string) => {
@@ -31,7 +31,7 @@ const CustomTree: React.FC<CustomTreeProps> = ({
   searchQuery,
   onCheckItems,
   isAllChecked,
-  selectedKeys: propSelectedKeys, // Изменено
+  selectedKeys: propSelectedKeys,
 }) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
@@ -41,7 +41,9 @@ const CustomTree: React.FC<CustomTreeProps> = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    setSelectedKeys(propSelectedKeys); // Обновление selectedKeys при изменении propSelectedKeys
+    if (propSelectedKeys !== undefined) {
+      setSelectedKeys(propSelectedKeys);
+    }
   }, [propSelectedKeys]);
 
   useEffect(() => {
@@ -85,15 +87,18 @@ const CustomTree: React.FC<CustomTreeProps> = ({
     return keys;
   };
 
+  const numTotal = getAllKeys(treeData).length;
+  const numSelected = selectedKeys.length;
+
   const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
 
   const onCheck = (checkedKeysValue: any) => {
     setSelectedKeys(checkedKeysValue);
     onCheckItems && onCheckItems(checkedKeysValue);
-    setIsCheckAll(checkedKeysValue.length === getAllKeys(treeData).length);
+    setIsCheckAll(checkedKeysValue.length === numTotal);
   };
 
-  const onCheckAllChange = (e: any) => {
+  const onCheckAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       selectAllKeys();
     } else {
@@ -105,11 +110,19 @@ const CustomTree: React.FC<CustomTreeProps> = ({
 
   return (
     <>
-      {isAllChecked && filteredTreeData.length > 0 && (
-        <Checkbox onChange={onCheckAllChange} checked={isCheckAll}>
-          {t('SELECT ALL')}
-        </Checkbox>
-      )}
+      <Space>
+        {isAllChecked && filteredTreeData.length > 0 && (
+          <>
+            <Checkbox onChange={onCheckAllChange} checked={isCheckAll}>
+              {t('SELECT ALL')}
+            </Checkbox>
+            <div>
+              {t('Total')}: {numTotal}, {t('Selected')}: {numSelected}
+            </div>
+          </>
+        )}
+      </Space>
+
       <Tree
         checkable={checkable}
         onExpand={onExpand}
@@ -122,6 +135,7 @@ const CustomTree: React.FC<CustomTreeProps> = ({
         treeData={filteredTreeData}
         showLine
         height={height}
+        style={{ '--tree-selected-bg': 'orange' } as React.CSSProperties} // Изменяем цвет выделения
       />
     </>
   );

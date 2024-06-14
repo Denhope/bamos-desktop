@@ -1,4 +1,4 @@
-//ts-nocheck
+//@ts-nocheck
 
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
@@ -6,13 +6,12 @@ import {
   ProForm,
   ProFormDigit,
   ProFormGroup,
-  ProFormRadio,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Upload, Button, message, Modal, Tabs } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
+import { Upload, Button, message, Modal } from 'antd';
+import React, { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UploadOutlined } from '@ant-design/icons';
 import { IProjectItem } from '@/models/AC';
@@ -126,10 +125,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({ reqCode, onSubmit }) => {
   };
 
   const dispatch = useAppDispatch();
-  const [searchQuery, setSearchQuery] = useState('woTask');
+
   return (
     <ProForm
-      className=""
+      className="bg-gray-100 p-5 rounded"
       size="small"
       form={form}
       onFinish={handleSubmit}
@@ -137,175 +136,95 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({ reqCode, onSubmit }) => {
       initialValues={reqCode}
       layout="horizontal"
     >
-      {/* <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab={t('TASK INFO')} key="1"> */}
       <ProForm.Group>
-        {/* <ProFormRadio.Group
-          initialValue={'woTask'}
-          // disabled={isDisabled}
-          name="taskType"
-          layout="horizontal"
-          disabled
-          options={[
-            { label: `${t('WOTASK')}`, value: 'woTask' },
-            // { label: `${t('PART')}`, value: 'partTask' },
-            // { label: `${t('AREA')}`, value: 'areaNbr' },
-            // { label: `${t('ACCESS')}`, value: 'accessNbr' },
-          ]}
-          onChange={(e: any) => setSearchQuery(e.target.value)}
-        /> */}
         <ProForm.Group>
           <ProFormSelect
             disabled
             width={'xl'}
-            label={`${t(`ЗАКАЗ`)}`}
+            label={`${t(`W/O`)}`}
             mode="tags"
             name="projectItemNumberID"
           ></ProFormSelect>
+          <ProFormGroup>
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              width={'lg'}
+              name="partNumberID"
+              label={`${t(`PART No`)}`}
+              // value={partNumber}
+              onChange={(value, data) => {
+                // console.log(data);
+                form.setFields([
+                  { name: 'nameOfMaterial', value: data.data.DESCRIPTION },
+                  { name: 'unit', value: data.data.UNIT_OF_MEASURE },
+                  { name: 'type', value: data.data.TYPE },
+                  { name: 'group', value: data.data.GROUP },
+                ]);
+              }}
+              options={Object.entries(partValueEnum).map(([key, part]) => ({
+                label: part.PART_NUMBER,
+                value: key,
+                data: part,
+              }))}
+            />
 
-          {searchQuery === 'partTask' && (
-            <>
-              <ProFormGroup>
-                <ProFormSelect
-                  showSearch
-                  rules={[{ required: true }]}
-                  width={'lg'}
-                  name="partNumberID"
-                  label={`${t(`PART No`)}`}
-                  // value={partNumber}
-                  onChange={(value, data) => {
-                    // console.log(data);
-                    form.setFields([
-                      {
-                        name: 'nameOfMaterial',
-                        value: data.data.DESCRIPTION,
-                      },
-                      { name: 'unit', value: data.data.UNIT_OF_MEASURE },
-                      { name: 'type', value: data.data.TYPE },
-                      { name: 'group', value: data.data.GROUP },
-                    ]);
-                  }}
-                  options={Object.entries(partValueEnum).map(([key, part]) => ({
-                    label: part.PART_NUMBER,
-                    value: key,
-                    data: part,
-                  }))}
-                />
+            <ProFormText
+              disabled
+              rules={[{ required: true }]}
+              name="nameOfMaterial"
+              label={t('DESCRIPTION')}
+              width="md"
+              tooltip={t('DESCRIPTION')}
+            ></ProFormText>
+          </ProFormGroup>
 
-                <ProFormText
-                  disabled
-                  rules={[{ required: true }]}
-                  name="nameOfMaterial"
-                  label={t('DESCRIPTION')}
-                  width="md"
-                  tooltip={t('DESCRIPTION')}
-                ></ProFormText>
-              </ProFormGroup>
-              <ProFormTextArea
-                width={'xl'}
-                fieldProps={{
-                  style: {
-                    resize: 'none',
-                  },
-                  rows: 3,
-                  // This is the correct way to set colSize within fieldProps
-                }}
-                name="notes"
-                label={t('REMARKS')}
-              />
-              <ProFormGroup>
-                <ProFormDigit
-                  rules={[{ required: true }]}
-                  name="qty"
-                  label={t('QUANTITY')}
-                  width="xs"
-                ></ProFormDigit>
-                <ProFormSelect
-                  showSearch
-                  rules={[{ required: true }]}
-                  label={t('UNIT')}
-                  name="unit"
-                  width="xs"
-                  valueEnum={{
-                    EA: `EA/${t('EACH').toUpperCase()}`,
-                    M: `M/${t('Meters').toUpperCase()}`,
-                    ML: `ML/${t('Milliliters').toUpperCase()}`,
-                    SI: `SI/${t('Sq Inch').toUpperCase()}`,
-                    CM: `CM/${t('Centimeters').toUpperCase()}`,
-                    GM: `GM/${t('Grams').toUpperCase()}`,
-                    YD: `YD/${t('Yards').toUpperCase()}`,
-                    FT: `FT/${t('Feet').toUpperCase()}`,
-                    SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
-                    IN: `IN/${t('Inch').toUpperCase()}`,
-                    SH: `SH/${t('Sheet').toUpperCase()}`,
-                    SM: `SM/${t('Sq Meters').toUpperCase()}`,
-                    RL: `RL/${t('Roll').toUpperCase()}`,
-                    KT: `KT/${t('Kit').toUpperCase()}`,
-                    LI: `LI/${t('Liters').toUpperCase()}`,
-                    KG: `KG/${t('Kilograms').toUpperCase()}`,
-                    JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
-                  }}
-                ></ProFormSelect>
-              </ProFormGroup>
-            </>
-          )}
-
-          {searchQuery === 'woTask' && (
-            <>
-              <ProFormText
-                disabled={!!reqCode?.projectItemsWOID?.length}
-                rules={[{ required: true }]}
-                name="taskNumber"
-                label={t('TASK NUMBER')}
-                width="lg"
-                tooltip={t('DESCRIPTION')}
-              ></ProFormText>
-              <ProFormTextArea
-                disabled={!!reqCode?.projectItemsWOID?.length}
-                rules={[{ required: true }]}
-                name="taskDescription"
-                label={t('TASK DESCRIPTION')}
-                width={'xl'}
-                fieldProps={{
-                  style: {
-                    // resize: 'none',
-                  },
-                  rows: 3,
-                  // This is the correct way to set colSize within fieldProps
-                }}
-                tooltip={t('DESCRIPTION')}
-              ></ProFormTextArea>
-              <ProFormText
-                // disabled={!!reqCode?.projectItemsWOID?.length}
-                // rules={[{ required: true }]}
-                name="WOType"
-                label={t('WO TYPE')}
-                width="sm"
-                tooltip={t('WO TYPE')}
-              ></ProFormText>
-              <ProFormText
-                // disabled={!!reqCode?.projectItemsWOID?.length}
-                // rules={[{ required: true }]}
-                name="WOCustomer"
-                label={t('WO Customer')}
-                width="sm"
-                tooltip={t('WO Customer')}
-              ></ProFormText>
-
-              <ProFormTextArea
-                width={'lg'}
-                fieldProps={{
-                  style: {
-                    resize: 'none',
-                  },
-                  rows: 2,
-                  // This is the correct way to set colSize within fieldProps
-                }}
-                name="notes"
-                label={t('REMARKS')}
-              />
-            </>
-          )}
+          <ProFormTextArea
+            width={'xl'}
+            fieldProps={{
+              style: {
+                resize: 'none',
+              },
+              rows: 3,
+              // This is the correct way to set colSize within fieldProps
+            }}
+            name="notes"
+            label={t('REMARKS')}
+          />
+          <ProFormGroup>
+            <ProFormDigit
+              rules={[{ required: true }]}
+              name="qty"
+              label={t('QUANTITY')}
+              width="xs"
+            ></ProFormDigit>
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              label={t('UNIT')}
+              name="unit"
+              width="xs"
+              valueEnum={{
+                EA: `EA/${t('EACH').toUpperCase()}`,
+                M: `M/${t('Meters').toUpperCase()}`,
+                ML: `ML/${t('Milliliters').toUpperCase()}`,
+                SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                CM: `CM/${t('Centimeters').toUpperCase()}`,
+                GM: `GM/${t('Grams').toUpperCase()}`,
+                YD: `YD/${t('Yards').toUpperCase()}`,
+                FT: `FT/${t('Feet').toUpperCase()}`,
+                SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                IN: `IN/${t('Inch').toUpperCase()}`,
+                SH: `SH/${t('Sheet').toUpperCase()}`,
+                SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                RL: `RL/${t('Roll').toUpperCase()}`,
+                KT: `KT/${t('Kit').toUpperCase()}`,
+                LI: `LI/${t('Liters').toUpperCase()}`,
+                KG: `KG/${t('Kilograms').toUpperCase()}`,
+                JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+              }}
+            ></ProFormSelect>
+          </ProFormGroup>
 
           {/* <ProFormGroup>
             <ProFormSelect
@@ -346,8 +265,6 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({ reqCode, onSubmit }) => {
           </ProForm.Item>
         </ProForm.Group>
       </ProForm.Group>
-      {/* </Tabs.TabPane>
-      </Tabs> */}
     </ProForm>
   );
 };

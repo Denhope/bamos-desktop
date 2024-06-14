@@ -375,13 +375,18 @@ export interface ITaskResponce {
   preparationCode?: any;
 }
 export interface ITask {
+  _id: any;
+  instrumentID: any;
+  partNumberID: any;
+  partNumber: any;
+  taskDescription: any;
   taskNumber?: string;
   id?: any;
   description: string;
-  createDate: string;
-  createUserID: string;
+  createDate: any;
+  createUserID: any;
   updateDate?: string;
-  updateUserID?: string;
+  updateUserID?: any;
   companyID: string;
   acTypeId?: IACType | string;
   zonesID?: IAreaCode[] | string[];
@@ -415,5 +420,14 @@ export interface ITask {
   toleranceDAY?: number;
   toleranceMHS?: string;
   status?: string;
-  taskType?: 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
+  quantity?: any;
+  taskType?:
+    | 'SB'
+    | 'SMC'
+    | 'ADP'
+    | 'AD'
+    | 'PN'
+    | 'PART_PRODUCE'
+    | 'NRC'
+    | 'ADD_HOC';
 }

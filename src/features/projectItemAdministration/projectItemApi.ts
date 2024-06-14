@@ -3,7 +3,7 @@ import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 
-import { IProjectItem } from '@/models/AC';
+import { IProjectItem, IProjectItemDTO } from '@/models/AC';
 
 export const projectItemApi = createApi({
   reducerPath: 'projectItemReducer',
@@ -68,6 +68,28 @@ export const projectItemApi = createApi({
       }),
       invalidatesTags: ['ProjectItem'], // Указываем, что это мутация недействительна тега 'UserGroups'
     }),
+    addMultiProjectItems: builder.mutation<
+      IProjectItemDTO[],
+      {
+        projectItemsDTO: Partial<IProjectItemDTO[]>;
+        projectID: string;
+        vendorID?: string;
+      }
+    >({
+      query: ({ projectItemsDTO, projectID, vendorID }) => ({
+        url: `projectItems/multi/company/${COMPANY_ID}`,
+        method: 'POST',
+        body: {
+          projectItemsDTO,
+          createUserID: USER_ID,
+          createDate: new Date(),
+          companyID: COMPANY_ID,
+          projectID: projectID,
+          vendorID: vendorID,
+        },
+      }),
+      invalidatesTags: ['ProjectItem'], // Указываем, что это мутация недействительна тега 'UserGroups'
+    }),
     updateProjectItems: builder.mutation<IProjectItem, IProjectItem>({
       query: (projectItem) => ({
         url: `projectItems/company/${COMPANY_ID}/projectItem/${projectItem.id}`,
@@ -95,4 +117,5 @@ export const {
   useGetProjectItemQuery,
   useGetProjectItemsQuery,
   useUpdateProjectItemsMutation,
+  useAddMultiProjectItemsMutation,
 } = projectItemApi;

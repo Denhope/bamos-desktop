@@ -18,7 +18,32 @@ import { IPurchaseMaterial } from '@/types/TypesData';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { $authHost, API_URL } from './http';
+export const generateReport = async (
+  companyID: any,
+  queryParams: any,
+  token: any
+) => {
+  const url = `${API_URL}/reports/generate-report/companyID/${companyID}/`;
 
+  try {
+    const response = await $authHost.get(url, {
+      params: queryParams,
+      // headers,
+      responseType: 'blob',
+    });
+    const contentType = response.headers['content-type'];
+
+    if (contentType !== 'application/pdf') {
+      throw new Error(`Неверный тип содержимого: ${contentType}`);
+    }
+
+    console.log('Отчет успешно сгенерирован:', response.data); // После проверки типа содержимого
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при загрузке отчета:', error);
+    throw error;
+  }
+};
 //Auth
 export const registration = createAsyncThunk(
   'auth/createUser',

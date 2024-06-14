@@ -16,7 +16,16 @@ export interface IUser {
   nameEnglish: string;
   pass: string;
 }
-
+export interface ISkill {
+  id: string;
+  code: string;
+  description: string;
+  companyID: string;
+  createDate: string;
+  createByID: string;
+  updateDate?: string;
+  updateByID?: string;
+}
 export type UserResponce = {
   name: string;
   email: string;
@@ -73,9 +82,11 @@ export interface User {
   password: string;
   pass: string;
   userGroupID: any;
+  userSkillID?: any;
   userGroupname?: string;
   singNumber?: string;
   accountStatus: AccountStatus;
+  skillID?: any;
 }
 
 export interface UserGroup {
@@ -128,6 +139,10 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
+  QUANTITY?: any;
+  quantity?: number;
+  id: any;
+  status: string;
   _id: string;
   PART_NUMBER: string;
   DESCRIPTION: string;
@@ -148,10 +163,11 @@ export interface IPartNumber {
   COUNTRY_OF_ORIGIN?: string;
   RESOURCE_TYPE?: string;
   companyID: string;
-  createDate: Date;
-  createUserID: string;
-  updateDate?: Date;
-  updateUserID?: string;
+  createDate: any;
+  createUserID: string | any;
+  updateDate?: any;
+  updateUserID?: string | any;
+  acTypeID?: string | any;
 }
 
 export interface IProjectTask {
@@ -197,3 +213,112 @@ export type TStatus =
   | 'completed'
   | 'canceled'
   | 'planed';
+
+export interface IStore {
+  id?: string;
+  description: string;
+  storeShortName: string;
+  storeLongName: string;
+  stationID?: string;
+  ownerID: string | ICompany;
+  companyID: string | ICompany;
+  createDate: any;
+  createUserID: any;
+  updateDate?: any;
+  updateUserID?: any;
+  adress: string;
+  country: string;
+  remarks?: string;
+  status: any;
+  restrictionID?: any;
+  storemanID?: any;
+  files?: any[];
+}
+
+export interface ILocation {
+  id?: string;
+  description: string;
+  locationName: string;
+  stationID?: string;
+  ownerID: string | any;
+  companyID: string | ICompany;
+  createDate: any;
+  createUserID: any;
+  updateDate?: any;
+  updateUserID?: any;
+  adress: string;
+  country: string;
+  remarks?: string;
+  status: any;
+  restriction: 'standart' | 'inaccessible' | 'restricted';
+  locationTypeID?: any;
+  storeID?: any;
+  storageTypeID?: any;
+  files?: any[];
+}
+
+export interface ILocationType {
+  id?: string;
+  description: string;
+  code: string;
+  companyID: string | ICompany;
+  createDate: any;
+  createUserID: any;
+  updateDate?: any;
+  updateUserID?: any;
+  remarks?: string;
+  status?: any;
+  storeID?: any;
+  files?: any[];
+}
+
+export interface IRestriction {
+  id?: string;
+  description: string;
+  code: string;
+  companyID: string | ICompany;
+  createDate: any;
+  createUserID: any;
+  updateDate?: any;
+  updateUserID?: any;
+  remarks?: string;
+  status?: any;
+  files?: any[];
+}
+
+export interface IStorePartItem {
+  UNIT_LIMIT: IStorePartItem[] | undefined;
+  CONDITION: string;
+  intervalMOS: IStorePartItem[] | undefined;
+  estimatedDueDate: IStorePartItem[] | undefined;
+  _id: string | undefined;
+  nextDueMOS: IStorePartItem[] | undefined;
+  FILES: IStorePartItem[] | undefined;
+  RECEIVING_NUMBER: string;
+  QUANTITY: string;
+  LOCAL_ID: IStorePartItem[];
+  OWNER_SHORT_NAME: IStorePartItem[];
+  PRODUCT_EXPIRATION_DATE: any;
+  SERIAL_NUMBER: string;
+  SUPPLIER_BATCH_NUMBER: string;
+  storeID: any;
+  GROUP: IStorePartItem[];
+  id?: string;
+  locationID?: any;
+  NAME_OF_MATERIAL: string;
+  UNIT_OF_MEASURE: string;
+  PART_NUMBER: string;
+  RACK_NUMBER: string;
+  SHELF_NUMBER: string;
+  ownerID: string | ICompany;
+  companyID: string | ICompany;
+  createDate: any;
+  createUserID: any;
+  updateDate?: any;
+  updateUserID?: any;
+
+  remarks?: string;
+  status: any;
+
+  files?: any[];
+}

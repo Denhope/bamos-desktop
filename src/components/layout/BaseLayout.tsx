@@ -74,10 +74,15 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,
     //   route: RouteNames.BASE,
     // },
+    // {
+    //   APNNBR: '59',
+    //   descriptions: `${t(`PART ADMINISTRATION`)}`,
+    //   route: RouteNames.PART_ADMINISTRATIONS,
+    // },
     {
-      APNNBR: '59',
+      APNNBR: '02',
       descriptions: `${t(`PART ADMINISTRATION`)}`,
-      route: RouteNames.PART_ADMINISTRATIONS,
+      route: RouteNames.PART_ADMINISTRATIONS_NEW,
     },
     {
       APNNBR: '03',
@@ -166,17 +171,17 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.REQUIREMENT_VIEWER,
     // },
 
-    {
-      APNNBR: '205',
+    // {
+    //   APNNBR: '205',
 
-      descriptions: `${t(`REQUIREMENT VIEWER`)}`,
-      route: RouteNames.REQUIREMENT_VIEWER_VIEWER,
-    },
+    //   descriptions: `${t(`REQUIREMENT VIEWER`)}`,
+    //   route: RouteNames.REQUIREMENT_VIEWER_VIEWER,
+    // },
     {
       APNNBR: '220',
 
-      descriptions: `${t(`STORE MANAGEMENT`)}`,
-      route: RouteNames.STORE_MANAGMENT,
+      descriptions: `${t(`STORES ADMINISTRATION`)}`,
+      route: RouteNames.STORES_ADMINISTRATIONS,
     },
     {
       APNNBR: '221',
@@ -186,7 +191,7 @@ const BaseLayout: React.FC = () => {
     },
 
     {
-      APNNBR: '222',
+      APNNBR: '11',
 
       descriptions: `${t(`PARTS TRANSFER`)}`,
       route: RouteNames.PARTS_TRANSFER,
@@ -228,7 +233,7 @@ const BaseLayout: React.FC = () => {
       route: RouteNames.CANCEL_RESERVING,
     },
     {
-      APNNBR: '359',
+      APNNBR: '12',
 
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,

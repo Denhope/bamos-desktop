@@ -1,4 +1,6 @@
 export interface IBookingItem {
+  data?: any;
+  restriction?: string;
   voucherModel: VaucherModelType;
   createDate?: any;
   accessProjectID?: any;
@@ -98,10 +100,20 @@ export interface IBookingItem {
   pickDate?: any;
   pickSlipNumber?: any;
   partID?: any;
+  locationID?: string;
+  ownerID?: string;
+  storeID?: string;
+  partsIDs?: any[];
   RECEIVING_ITEMS_ID?: any;
   RECEIVING_ID?: any;
 }
 type VaucherModelType =
+  | 'ADD_STEP'
+  | 'DELETE_STEP'
+  | 'EDIT_STEP'
+  | 'ADD_ACTION'
+  | 'DELETE_ACTION'
+  | 'EDIT_ACTION'
   | 'ADD_NEW_PART'
   | 'STORE_TO_A/C'
   | 'CHANGE_LOCATION'

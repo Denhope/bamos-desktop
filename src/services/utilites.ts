@@ -19,6 +19,9 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { MenuProps } from 'antd';
 import { getFileFromServer } from '@/utils/api/thunks';
+import { $authHost } from '@/utils/api/http';
+import { IPartNumber } from '@/models/IUser';
+import { ITask } from '@/models/ITask';
 // import { fileTypeFromBuffer } from 'file-type';
 export const includeTasks = (
   arrayOfAllObjectsData: ITaskType[],
@@ -679,73 +682,6 @@ export async function handleFileSelect(file: {
   }
 }
 
-// export async function handleFileOpen(file: any): Promise<void> {
-//   try {
-//     const companyID = localStorage.getItem('companyID') || '';
-//     const fileData = await getFileFromServer(companyID, file.id);
-
-//     // Создайте Blob из файла
-//     const blob = new Blob([fileData], { type: file.type });
-
-//     // Создайте временный URL для Blob
-//     const fileURL = window.URL.createObjectURL(blob);
-
-//     // Откройте файл в новой вкладке или окне
-//     window.open(fileURL, '_blank');
-//     console.log(fileURL);
-//   } catch (error) {
-//     console.error('Не удалось открыть файл', error);
-//   }
-// }
-
-// export async function handleFileOpen(file: any): Promise<void> {
-//   try {
-//     const companyID = localStorage.getItem('companyID') || '';
-//     const fileData = await getFileFromServer(companyID, file.id);
-
-//     // Проверяем, является ли файл PDF
-//     if (isPDF(file.name)) {
-//       // Создаем Blob из файла
-//       const blob = new Blob([fileData], { type: 'application/pdf' });
-
-//       // Создаем временный URL для Blob
-//       const fileURL = window.URL.createObjectURL(blob);
-
-//       // Открываем файл в новом окне или вкладке браузера
-//       const newWindow = window.open(fileURL, '_blank');
-
-//       // Если браузер блокирует открытие файла, предлагаем сохранить его
-//       if (
-//         !newWindow ||
-//         newWindow.closed ||
-//         typeof newWindow.closed === 'undefined'
-//       ) {
-//         alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
-//       } else {
-//         newWindow.focus();
-//       }
-
-//       // Не забываем очищать URL после открытия файла
-//       window.URL.revokeObjectURL(fileURL);
-//     } else {
-//       // Если файл не PDF, предлагаем сохранить его
-//       const link = document.createElement('a');
-//       link.href = window.URL.createObjectURL(new Blob([fileData]));
-//       link.download = file.name;
-//       link.click();
-//     }
-//   } catch (error) {
-//     console.error('Не удалось открыть файл', error);
-//   }
-// }
-
-// // Функция для проверки, является ли файл PDF
-// function isPDF(fileName: string): boolean {
-//   const extension = fileName.split('.').pop()?.toLowerCase();
-//   return extension === 'pdf';
-// }
-
-////
 export async function handleFileOpen(file: any): Promise<void> {
   try {
     const companyID = localStorage.getItem('companyID') || '';
@@ -794,7 +730,48 @@ export async function handleFileOpen(file: any): Promise<void> {
   }
 }
 
-// Функция для определения MIME-типа на основе расширения файла
+export async function handleOpenReport(
+  fileData: any,
+  linkD?: any,
+  loading?: boolean
+): Promise<void> {
+  try {
+    const mimeType = getMimeType('pdf');
+    if (isInlineViewable(mimeType)) {
+      // Create a Blob from the file data with the MIME type 'application/pdf'
+      const blob = new Blob([fileData], { type: mimeType });
+
+      // Create a URL for the Blob
+      const fileURL = URL.createObjectURL(blob);
+
+      // Open the PDF in a new window or tab
+      const newWindow = window.open(fileURL, '_blank');
+
+      // If the window was blocked, alert the user to save the file
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('The PDF file could not be opened. Please save the file.');
+      } else {
+        newWindow.focus();
+      }
+
+      // Revoke the URL to free up memory
+      URL.revokeObjectURL(fileURL);
+    } else {
+      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new Blob([fileData]));
+      link.download = fileData.name;
+      link.click();
+    }
+  } catch (error) {
+    console.error('Failed to open PDF file', error);
+  }
+}
+
 function getMimeType(fileName: string): string {
   const extension = fileName.split('.').pop()?.toLowerCase() || '';
   switch (extension) {
@@ -825,6 +802,7 @@ function isInlineViewable(mimeType: string): boolean {
     'image/jpeg',
     'image/png',
     'image/gif',
+
     // 'text/plain',
     // 'text/txt',
     // 'text/doc',
@@ -832,3 +810,100 @@ function isInlineViewable(mimeType: string): boolean {
   ];
   return inlineViewableMimeTypes.includes(mimeType);
 }
+export const transformToIPartNumber = (
+  data: any[],
+  isToolArray?: string[]
+): IPartNumber[] => {
+  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data
+    .filter(
+      (item) => isToolArray && isToolArray.includes(item.partNumberID?.GROUP)
+    )
+    .map((item) => ({
+      QUANTITY: item.quantity,
+      id: item._id,
+      status: '',
+      _id: item._id,
+      partId: item.partNumberID?._id,
+      PART_NUMBER: item.partNumberID?.PART_NUMBER,
+      DESCRIPTION: item.partNumberID?.DESCRIPTION,
+      TYPE: item.partNumberID?.TYPE,
+      GROUP: item.partNumberID?.GROUP,
+      UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+      UNIT_OF_MEASURE_LONG: item.partNumberID?.UNIT_OF_MEASURE,
+      ADD_DESCRIPTION: item.partNumberID?.ADD_DESCRIPTION,
+      ADD_UNIT_OF_MEASURE: item.partNumberID?.ADD_UNIT_OF_MEASURE,
+      companyID: item.companyID,
+      createDate: item.createDate,
+      createUserID: item.createUserID?._id,
+      updateDate: item.updateDate,
+      updateUserID: item.updateUserID?._id,
+      acTypeID: '',
+    }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export interface ValueEnumType {
+  onQuatation: string;
+  open: string;
+  closed: string;
+  canceled: string;
+  onOrder: string;
+  onShort: string;
+  draft: string;
+}
+
+export const getStatusColor = (status: keyof ValueEnumType): string => {
+  switch (status) {
+    case 'draft':
+      return '#D3D3D3'; // Light Gray
+    case 'onShort':
+      return '#90EE90'; // Light Green
+    case 'onQuatation':
+      return '#FFD700'; // Gold
+    case 'open':
+      return '#87CEEB'; // Sky Blue
+    case 'closed':
+      return '#32CD32'; // Lime Green
+    case 'canceled':
+      return '#FF6347'; // Tomato Red
+    case 'onOrder':
+      return '#FFA07A'; // Light Salmon
+    default:
+      return ''; // Default color
+  }
+};
+
+export const transformToITask = (data: ITask[]): any[] => {
+  const result = data.map((item: ITask) => ({
+    QUANTITY: item.quantity,
+    id: item._id,
+    status: item?.status,
+    _id: item._id,
+    taskNumber: item?.taskNumber,
+    description: item?.taskDescription,
+    allTaskTime: item?.allTaskTime,
+    partId: item.partNumberID?._id,
+    PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    TYPE: item.partNumberID?.TYPE,
+    GROUP: item.partNumberID?.GROUP,
+    UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+    UNIT_OF_MEASURE_LONG: item.partNumberID?.UNIT_OF_MEASURE,
+    ADD_DESCRIPTION: item.partNumberID?.ADD_DESCRIPTION,
+    ADD_UNIT_OF_MEASURE: item.partNumberID?.ADD_UNIT_OF_MEASURE,
+    companyID: item.companyID,
+    createDate: item.createDate,
+    createUserID: item.createUserID?._id,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+    acTypeID: item?.acTypeId,
+    partNumberID: item?.partNumberID,
+  }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};

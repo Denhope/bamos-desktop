@@ -1,8 +1,5 @@
-import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
-import { IProjectItemWO } from '@/models/AC';
-import { Button, Col, Modal, Space, Spin, message } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
-import WODiscription from './WODiscription';
+import { Button, Col, Modal, Space, Spin, message, Switch } from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
@@ -10,21 +7,25 @@ import {
   AlertTwoTone,
   UsergroupAddOutlined,
   CheckCircleFilled,
-  SwitcherFilled,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { Split } from '@geoffcox/react-splitter';
 import WOTree from './WOTree';
 import WOAdminForm from './WOAdminForm';
+import MyTable from '../shared/Table/MyTable';
+import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
+import { IProjectItemWO } from '@/models/AC';
+import WODiscription from './WODiscription';
 
-import { Split } from '@geoffcox/react-splitter';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
+
 const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
-  const [editingproject, setEditingproject] = useState<IProjectItemWO | null>(
+  const { t } = useTranslation();
+  const [editingProject, setEditingProject] = useState<IProjectItemWO | null>(
     null
   );
-  const { t } = useTranslation();
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [triggerQuery, setTriggerQuery] = useState(false);
   const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
@@ -38,14 +39,13 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       taskWO: projectSearchValues?.projectTaskWO,
     },
     {
-      skip: !triggerQuery, // Skip the query if triggerQuery is false
+      skip: !triggerQuery,
     }
   );
+  const [isTreeView, setIsTreeView] = useState(true);
 
   useEffect(() => {
-    // Check if projectSearchValues is defined and not null
     if (projectSearchValues) {
-      // Check if there are any search values
       const hasSearchParams = Object.values(projectSearchValues).some(
         (value) => value !== undefined && value !== ''
       );
@@ -54,18 +54,13 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       }
     }
   }, [projectSearchValues]);
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
+
   const handleEdit = (project: IProjectItemWO) => {
-    setEditingproject(project);
+    setEditingProject(project);
   };
+
   const handleCreate = () => {
-    setEditingproject(null);
+    setEditingProject(null);
   };
 
   const handleDelete = async (companyId: string) => {
@@ -73,7 +68,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS WORKORDER?'),
       onOk: async () => {
         try {
-          // await deleteRequirement(companyId).unwrap();
           message.success(t('WORKORDER SUCCESSFULLY DELETED'));
         } catch (error) {
           message.error(t('WORKORDER DELETING REQUIREMENT'));
@@ -81,6 +75,127 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
     });
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <Spin />
+      </div>
+    );
+  }
+  interface ColumnDef {
+    field: keyof IProjectItemWO;
+    headerName: string;
+    resizable?: boolean;
+    filter?: boolean;
+    hide?: boolean;
+    valueGetter?: any;
+    valueFormatter?: any;
+  }
+  const columnDefs: ColumnDef[] = [
+    {
+      field: 'taskWO',
+      headerName: `${t('TASK WO')}`,
+      filter: true,
+      // hide: true,
+    },
+    { field: 'title', headerName: `${t('DESCRIPTION')}`, filter: true },
+    // { field: 'closedByID', headerName: 'Closed By ID' },
+    {
+      field: 'status',
+      headerName: `${t('STATUS')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return '';
+        return params.value.toUpperCase();
+      },
+    },
+    // { field: 'projectTaskWO', headerName: 'Project Task WO' },
+    { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
+    {
+      field: 'partNumberID',
+      headerName: `${t('PART No')}`,
+      filter: true,
+      valueGetter: (params: any) => params.data.partNumberID?.PART_NUMBER || '',
+    },
+
+    // { field: 'companyID', headerName: 'Company ID' },
+    {
+      field: 'createDate',
+      headerName: `${t('CREATE DATE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+
+    // { field: 'updateDate', headerName: 'Update Date' },
+
+    {
+      field: 'startDate',
+      headerName: `${t('START DATE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'finishDate',
+      headerName: `${t('FINISH DATE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'planedStartDate',
+      headerName: `${t('PLANNED START DATE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'planedFinishDate',
+      headerName: `${t('PLANNED FINISH DATE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    // Добавьте дополнительные поля по мере необходимости
+  ];
+
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       <Space>
@@ -90,13 +205,14 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         >
           <WODiscription
             // onRequirementSearch={setRequirement}
-            project={editingproject}
+            project={editingProject}
           ></WODiscription>
         </Col>
       </Space>
       <Space className="">
         <Col>
           <Button
+            disabled={!selectedKeys.length}
             size="small"
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
@@ -104,88 +220,100 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             {t('ADD WORKORDER')}
           </Button>
         </Col>
-        <Col style={{ textAlign: 'right' }}>
-          {
+        {/* <Col style={{ textAlign: 'right' }}>
+          {editingProject && (
             <Button
               disabled={!selectedKeys.length}
               size="small"
               icon={<MinusSquareOutlined />}
-              onClick={() => editingproject && handleDelete(editingproject.id)}
+              onClick={() => handleDelete(editingProject.id)}
             >
               {t('DELETE WORKORDER')}
             </Button>
-          }
-        </Col>
-
-        <Col>
-          {
-            <Button
-              disabled={!selectedKeys.length}
-              size="small"
-              icon={<UsergroupAddOutlined />}
-              // onClick={() => handleDelete(editingproject.id)}
-            >
-              {t('ADD WORKER')}
-            </Button>
-          }
-        </Col>
-
-        <Col>
-          {
-            <Button
-              disabled={!selectedKeys.length}
-              size="small"
-              icon={<AlertTwoTone />}
-              // onClick={() => handleDelete(editingproject.id)}
-            >
-              {t('COMPLETE WORKORDER')}
-            </Button>
-          }
+          )}
         </Col>
         <Col>
-          {
-            <Button
-              disabled={!selectedKeys.length}
-              size="small"
-              icon={<CheckCircleFilled />}
-              // onClick={() => handleDelete(editingproject.id)}
-            >
-              {t('CLOSE WORKORDER')}
-            </Button>
-          }
+          <Button
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<UsergroupAddOutlined />}
+          >
+            {t('ADD WORKER')}
+          </Button>
+        </Col> */}
+        <Col>
+          <Button
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<AlertTwoTone />}
+          >
+            {t('COMPLETE WORKORDER')}
+          </Button>
         </Col>
-
+        <Col>
+          <Button
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<AlertTwoTone />}
+          >
+            {t('INSPECT WORKORDER')}
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<CheckCircleFilled />}
+          >
+            {t('CLOSE WORKORDER')}
+          </Button>
+        </Col>
         <Col style={{ textAlign: 'right' }}>
-          {
-            <Button
-              disabled={!selectedKeys.length}
-              size="small"
-              icon={<PrinterOutlined />}
-              // onClick={() => handleDelete(editingproject.id)}
-            >
-              {t('PRINT WORKORDER')}
-            </Button>
-          }
+          <Button
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<PrinterOutlined />}
+          >
+            {t('PRINT WORKORDER')}
+          </Button>
+        </Col>
+        <Col>
+          <Switch
+            checkedChildren="Table"
+            unCheckedChildren="Tree"
+            defaultChecked
+            onChange={() => setIsTreeView(!isTreeView)}
+          />
         </Col>
       </Space>
-      <div className="h-[77vh] flex flex-col">
+      <div className="h-[78vh] flex flex-col">
         <Split initialPrimarySize="30%" splitterSize="20px">
           <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
-            <WOTree
-              onProjectSelect={handleEdit}
-              projects={projectTasks || []}
-              onCheckItems={(selectedKeys) => {
-                setSelectedKeys(selectedKeys);
-              }}
-            />
+            {isTreeView ? (
+              <WOTree
+                onProjectSelect={handleEdit}
+                projects={projectTasks || []}
+                onCheckItems={(selectedKeys) => {
+                  setSelectedKeys(selectedKeys);
+                }}
+              />
+            ) : (
+              <MyTable
+                columnDefs={columnDefs}
+                rowData={projectTasks || []}
+                onRowSelect={function (rowData: IProjectItemWO | null): void {
+                  setEditingProject(rowData);
+                }}
+                onCheckItems={function (selectedKeys: React.Key[]): void {
+                  setSelectedKeys(selectedKeys);
+                }}
+                height={'64vh'}
+              />
+            )}
           </div>
-          <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
-            <WOAdminForm order={editingproject} />
+          <div className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 ">
+            <WOAdminForm order={editingProject} />
           </div>
-          {/* <Split horizontal initialPrimarySize="60%">
-            <div>This is the right-top pane.</div>
-            <div>This is the right-bottom pane.</div>
-          </Split> */}
         </Split>
       </div>
     </div>

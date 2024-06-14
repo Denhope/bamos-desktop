@@ -7,23 +7,24 @@ import JsBarcode from 'jsbarcode';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
-import { useGetProjectPanelsQuery } from '@/features/projectItemWO/projectItemWOApi';
+
 import { SING, USER_ID } from '@/utils/api/http';
 import moment from 'moment';
+import { useGetProjectPanelsQuery } from '@/features/projectItemWO/projectItemWOApi';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 interface ReportGeneratorProps {
   xmlTemplate: string; // XML-шаблон для генерации PDF
   data: any[]; // Массив данных для заполнения шаблона
-  isDdisabled?: boolean;
+  isDisabled?: boolean;
   ids?: any;
 }
 
 const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
   xmlTemplate,
   data,
-  isDdisabled,
+  isDisabled,
   ids,
 }) => {
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
@@ -34,48 +35,6 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
     isLoading,
     refetch,
   } = useGetProjectPanelsQuery({ accessIds: ids });
-  const productsData = [
-    {
-      label: 1222,
-      company: '407 TECHNICS',
-      nomenclature: 'HL97DU5',
-      batchNumber: '123466DF',
-      mcQty: 100,
-      group: 'CONS',
-      unit: 'EA',
-      state: 'NEW',
-      expDate: 'N/A',
-      description: 'COLLAR',
-      certNo: 'N/A',
-      orderNo: 'P0000016',
-      recDate: '12th. Mar. 2021',
-      store: 'MSQ',
-      location: 'A-54',
-      printBy: '1199',
-      printDate: new Date(),
-      restriction: 'standart',
-    },
-    {
-      label: 1223,
-      company: '407 TECHNICS',
-      nomenclature: 'HL97DU5',
-      batchNumber: '123466DF',
-      mcQty: 100,
-      group: 'CONS',
-      unit: 'EA',
-      state: 'NEW',
-      expDate: 'N/A',
-      description: 'COLLAR',
-      certNo: 'N/A',
-      orderNo: 'P0000016',
-      recDate: '12th. Mar. 2021',
-      store: 'MSQ',
-      location: 'A-54',
-      printBy: '1199',
-      printDate: new Date(),
-      restriction: 'restricted',
-    },
-  ];
 
   const generatePdfFile = async () => {
     setLoading(true);
@@ -140,7 +99,9 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
                 stack: [
                   [
                     {
-                      text: product?.companyID?.companyName,
+                      text:
+                        product?.companyID?.companyName ||
+                        product?.COMPANY_ID?.title,
                       bold: true,
                       alignment: 'right',
                     }, // Выравнивание текста по левому краю
@@ -343,7 +304,7 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         size="small"
         icon={<PrinterOutlined />}
         onClick={generatePdfFile}
-        disabled={loading || isDdisabled}
+        disabled={loading || isDisabled}
       >
         {loading ? 'Processing' : ` ${t('PRINT TAG')}`}
       </Button>

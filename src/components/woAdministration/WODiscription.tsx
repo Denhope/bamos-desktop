@@ -26,12 +26,10 @@ const WODiscription: FC<projectsDiscriptionType> = ({
         className="bg-white px-4 py-3 rounded-md  align-middle"
       >
         <ProDescriptions.Item label={`${t('WORKORDER No')}`} valueType="text">
-          {(project?.taskWO || project?.projectTaskWO) && (
-            <Tag>{project?.taskWO || project?.projectTaskWO}</Tag>
-          )}
+          {project?.taskWO && <Tag color="#fc9601">{project?.taskWO}</Tag>}
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CREATE BY')}>
-          {(project?.taskWO || project?.projectTaskWO) && (
+          {project?.taskWO && (
             <Tag>{project?.createUserID?.name?.toUpperCase()}</Tag>
           )}
         </ProDescriptions.Item>
@@ -40,7 +38,7 @@ const WODiscription: FC<projectsDiscriptionType> = ({
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="text" label={t('LAST MODIFIED BY')}>
-          {(project?.taskWO || project?.projectTaskWO) && (
+          {project?.taskWO && (
             <Tag>{project?.updateUserID?.name?.toUpperCase()}</Tag>
           )}
         </ProDescriptions.Item>
@@ -49,14 +47,12 @@ const WODiscription: FC<projectsDiscriptionType> = ({
           {project?.updateDate}
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('STATE')}>
-          {(project?.taskWO || project?.projectTaskWO) && (
-            <Tag>{project?.status?.toUpperCase()}</Tag>
+          {project?.taskWO && (
+            <Tag color="#fc9601">{project?.status?.toUpperCase()}</Tag>
           )}
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CLOSED BY')}>
-          {(project?.taskWO || project?.projectTaskWO) && (
-            <Tag>{project?.closedByID?.toUpperCase()}</Tag>
-          )}
+          {project?.taskWO && <Tag>{project?.closedByID?.toUpperCase()}</Tag>}
         </ProDescriptions.Item>
       </ProDescriptions>
     </div>
