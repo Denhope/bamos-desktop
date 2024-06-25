@@ -1,4 +1,4 @@
-//ts-nocheck
+//@ts-nocheck
 
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
@@ -8,6 +8,7 @@ import {
   ProFormGroup,
   ProFormSelect,
 } from '@ant-design/pro-form';
+
 import { Button, Space, Tabs } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IRequirement, Requirement } from '@/models/IRequirement';
@@ -21,7 +22,7 @@ import { useGetREQTypesQuery } from '@/features/requirementsTypeAdministration/r
 import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
-
+// import BookedPartContainer from '../../layout/APN/PickSlipConfirmationNew';
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import PartContainer from '@/components/woAdministration/PartContainer';
@@ -33,10 +34,12 @@ import {
 import {
   transformToIAltPartNumber,
   transformToIRequirement,
+  transformToPickSlipItemBooked,
   transformToPickSlipItemItem,
 } from '@/services/utilites';
 import { Split } from '@geoffcox/react-splitter';
 import Title from 'antd/lib/typography/Title';
+import BookedPartContainer from '@/components/layout/pickSlipConfirmationNew/BookedPartContainer';
 
 interface UserFormProps {
   requierement?: any;
@@ -113,9 +116,22 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
     { pickSlipID: requierement?.id },
     { skip: !requierement }
   );
-
+  const transformedBooked = useMemo(() => {
+    return (
+      requierement?.id && transformToPickSlipItemBooked(pickSlipItems || [])
+    );
+  }, [requierement?.id, pickSlipItems]);
   const { data: partNumbers, isLoading, isError } = useGetPartNumbersQuery({});
+  const [rowDataForSecondContainer, setRowDataForSecondContainer] = useState<
+    any[]
+  >([]);
 
+  useEffect(() => {
+    if (transformedBooked && transformedBooked.length > 0) {
+      setRowDataForSecondContainer(transformedBooked);
+      // onUpdateData(fetchData);
+    }
+  }, [transformedBooked]);
   const { data: projects } = useGetProjectsQuery({});
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   useEffect(() => {
@@ -208,7 +224,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
     },
     {
       headerName: `${t('PART No')}`,
-      field: 'PART_NUMBER',
+      field: 'PART_NUMBER_REQUEST',
       editable: false,
 
       cellDataType: 'text',
@@ -262,7 +278,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
       },
     },
     {
-      field: 'STOCK',
+      field: 'STORE',
       editable: false,
       filter: false,
       headerName: `${t('STORE')}`,
@@ -296,43 +312,43 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
       headerName: `${t('OWNER')}`,
       cellDataType: 'text',
     },
-    {
-      field: 'RECEIVING_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('RECEIVING')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'RECEIVED_DATE',
-      editable: false,
-      filter: false,
-      headerName: `${t('RECEIVED DATE')}`,
-      cellDataType: 'date',
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-    {
-      field: 'DOC_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('DOC_NUMBER')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'DOC_TYPE',
-      editable: false,
-      filter: false,
-      headerName: `${t('DOC_TYPE')}`,
-      cellDataType: 'text',
-    },
+    // {
+    //   field: 'RECEIVING_NUMBER',
+    //   editable: false,
+    //   filter: false,
+    //   headerName: `${t('RECEIVING')}`,
+    //   cellDataType: 'text',
+    // },
+    // {
+    //   field: 'RECEIVED_DATE',
+    //   editable: false,
+    //   filter: false,
+    //   headerName: `${t('RECEIVED DATE')}`,
+    //   cellDataType: 'date',
+    //   valueFormatter: (params: any) => {
+    //     if (!params.value) return ''; // Проверка отсутствия значения
+    //     const date = new Date(params.value);
+    //     return date.toLocaleDateString('ru-RU', {
+    //       year: 'numeric',
+    //       month: '2-digit',
+    //       day: '2-digit',
+    //     });
+    //   },
+    // },
+    // {
+    //   field: 'DOC_NUMBER',
+    //   editable: false,
+    //   filter: false,
+    //   headerName: `${t('DOC_NUMBER')}`,
+    //   cellDataType: 'text',
+    // },
+    // {
+    //   field: 'DOC_TYPE',
+    //   editable: false,
+    //   filter: false,
+    //   headerName: `${t('DOC_TYPE')}`,
+    //   cellDataType: 'text',
+    // },
     // Добавьте другие колонки по необходимости
   ]);
   const transformedRequirements = useMemo(() => {
@@ -489,10 +505,10 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
               <Title className="my-0" level={4}>
                 {t('BOOKED PARTS')}
               </Title>
-              <PartContainer
+              <BookedPartContainer
                 isFilesVisiable={true}
                 isChekboxColumn={false}
-                isVisible={true}
+                isVisible={false}
                 pagination={false}
                 isAddVisiable={true}
                 isButtonVisiable={false}
@@ -500,8 +516,11 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                 height={'55vh'}
                 columnDefs={columnBookedDefs}
                 partNumbers={[]}
+                onRowSelect={(data: any[]): void => {
+                  console.log(data);
+                }}
                 onUpdateData={(data: any[]): void => {}}
-                rowData={transformedBookedItems}
+                fetchData={rowDataForSecondContainer}
               />
             </div>
           </Split>

@@ -1,4 +1,4 @@
-//@ts-nocheck
+//ts-nocheck
 
 import {
   handleFileOpen,
@@ -14,7 +14,7 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-components';
 import { Upload, Button, message, Modal, Tabs, Empty } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -79,7 +79,7 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
     },
 
     {
-      field: 'DESCRIPTION',
+      field: 'NAME_OF_MATERIAL',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
     },
@@ -205,6 +205,9 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
       return acc;
     }, {}) || {};
   const dispatch = useAppDispatch();
+  const transformedParts = useMemo(() => {
+    return reqCode?.id && transformToIPartNumber(parts || []);
+  }, [reqCode?.id, parts]);
 
   return (
     <Tabs defaultActiveKey="1" type="card">
@@ -370,13 +373,15 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
       <Tabs.TabPane tab={t('PARTS')} key="2">
         {reqCode ? (
           <PartContainer
+            isButtonVisiable={false}
+            isFilesVisiable={true}
             isButtonColumn={false}
             isAddVisiable={true}
             height={'45vh'}
             columnDefs={columnDefs}
             partNumbers={[]}
             onUpdateData={(data: any[]): void => {}}
-            rowData={parts && transformToIPartNumber(parts || [])}
+            rowData={parts || []}
           />
         ) : (
           <Empty />

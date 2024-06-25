@@ -312,7 +312,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       </ProForm.Group>
 
       <ProFormSelect
-        initialValue={['open', 'issued']}
+        initialValue={['open']}
         mode="multiple"
         name="pickSlipStatus"
         label={`${t('PICKSLIP STATUS')}`}
@@ -321,7 +321,8 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
           { value: 'draft', label: t('DRAFT') },
           // { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('OPEN') },
-          { value: 'issued', label: t('ISSUED') },
+          { value: 'progress', label: t('PROGRESS') },
+          { value: 'complete', label: t('COMPLETE') },
           { value: 'onQuatation', label: t('QUATATION') },
           { value: 'onShort', label: t('ON SHORT') },
           { value: 'closed', label: t('CLOSED') },

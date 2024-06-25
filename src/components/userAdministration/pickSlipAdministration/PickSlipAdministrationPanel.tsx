@@ -113,6 +113,8 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
+    complete: t('COMPLETE'),
+    progress: t('IN PROGRESS'),
   };
 
   const columnpickSlips = [

@@ -17,7 +17,10 @@ import {
 } from '@/features/pickSlipAdministration/pickSlipApi';
 import { useGetPickSlipItemsQuery } from '@/features/pickSlipAdministration/pickSlipItemsApi';
 import { Button, Modal, Space, notification } from 'antd';
-import { useAddPickSlipBookingsItemMutation } from '@/features/pickSlipAdministration/pickSlipBookingsItemsApi';
+import {
+  useAddPickSlipBookingsItemMutation,
+  useUpdatePickSlipBookingsItemMutation,
+} from '@/features/pickSlipAdministration/pickSlipBookingsItemsApi';
 import BookedPartContainer from '../pickSlipConfirmationNew/BookedPartContainer';
 import { USER_ID } from '@/utils/api/http';
 import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
@@ -54,6 +57,7 @@ const PickSlipConfirmationNew: FC = () => {
 
   const [addBookingsPickslip] = useAddPickSlipBookingsItemMutation({});
   const [updatePickSlip] = useUpdatePickSlipMutation({});
+  const [updateBookingsPickslip] = useUpdatePickSlipBookingsItemMutation({});
   const [openPickSlip, setOpenPickSlip] = useState(false);
   const {
     data: parts,
@@ -385,6 +389,7 @@ const PickSlipConfirmationNew: FC = () => {
   const [issuedData, setIssuedRowData] = useState<any[]>([]);
   const handleSubmitINProgress = async () => {
     console.log('progressParts:', issuedData);
+
     const hasInvalidData = issuedData.some((item) => {
       if (item.bookedQty === undefined || item.bookedQty === null) {
         return true;
@@ -397,6 +402,7 @@ const PickSlipConfirmationNew: FC = () => {
       }
       return false;
     });
+
     if (hasInvalidData) {
       notification.error({
         message: t('ERROR'),
@@ -406,45 +412,60 @@ const PickSlipConfirmationNew: FC = () => {
       });
       return false;
     }
+
     try {
       for (const item of issuedData) {
         console.log(item);
-        await addBookingsPickslip({
-          pickSlipItem: {
-            status: item?.status,
-            bookedQty: item?.bookedQty,
-            storeItemID: item?.storeItemID,
-            requirementID: item?.requirementID,
-            partNumberID: item.partNumberID,
-            requestedQty: item?.requestQuantity,
-            requestedPartNumberID: item?.requestedPartNumberID,
-            partNumberIDBooked: item?.partNumberIDBooked,
-            pickSlipItemID: item?.pickSlipItemID,
-            pickSlipID: item?.pickSlipID,
-            storeManID: USER_ID,
-          },
-          projectID: item?.projectID,
-          projectTaskID: item?.projectTaskID,
-        }).unwrap();
+        if (item.createUserID) {
+          // Если есть createUserID, вызываем updateBookingsPickslip
+          await updateBookingsPickslip({
+            pickSlipBokingsItem: {
+              id: item?.id || item?._id,
+              status: 'progress',
+              bookedQty: item?.bookedQty,
+              storeItemID: item?.storeItemID?._id,
+              requirementID: item?.requirementID?._id,
+              partNumberID: item.partNumberID,
+              requestedQty: item?.requestQuantity,
+              requestedPartNumberID: item?.requestedPartNumberID,
+              partNumberIDBooked: item?.partNumberIDBooked,
+              pickSlipItemID: item?.pickSlipItemID,
+              pickSlipID: item?.pickSlipID,
+            },
+            projectID: item?.projectID,
+            projectTaskID: item?.projectTaskID,
+          }).unwrap();
+        } else {
+          // Если нет createUserID, вызываем addBookingsPickslip
+          await addBookingsPickslip({
+            pickSlipItem: {
+              status: item?.status,
+              bookedQty: item?.bookedQty,
+              storeItemID: item?.storeItemID,
+              requirementID: item?.requirementID,
+              partNumberID: item.partNumberID,
+              requestedQty: item?.requestQuantity,
+              requestedPartNumberID: item?.requestedPartNumberID,
+              partNumberIDBooked: item?.partNumberIDBooked,
+              pickSlipItemID: item?.pickSlipItemID,
+              pickSlipID: item?.pickSlipID,
+              storeManID: USER_ID,
+            },
+            projectID: item?.projectID,
+            projectTaskID: item?.projectTaskID,
+          }).unwrap();
+        }
         pickSlipRefetch();
         refetchItems();
         notification.info({
           message: t('PARTS IN PROGRESS'),
-          description: t('Parts in Projress'),
+          description: t('Parts in Progress'),
         });
-        // if (item) {
-        //   await updateRequirement({
-        //     requestQuantity: item.requestQuantity,
-        //     status: 'issued',
-        //     _id: item._id,
-        //     id: item._id,
-        //   }).unwrap();
-        // }
       }
     } catch (error) {
       notification.error({
         message: t('ERROR'),
-        description: t('Error creating pick slip or pick slip items.'),
+        description: t('Error creating or updating pick slip items.'),
       });
       return false;
     }
@@ -483,9 +504,56 @@ const PickSlipConfirmationNew: FC = () => {
       }).unwrap();
       pickSlipRefetch();
       refetchItems();
+      refetch();
       notification.info({
         message: t('PARTS COMPLETED'),
         description: t('Parts COMPLETED'),
+      });
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Error update pick slip or pick slip items.'),
+      });
+      return false;
+    }
+  };
+  const handleClose = async () => {
+    console.log('progressParts:', issuedData);
+    const hasInvalidData = issuedData.some((item) => {
+      if (item.bookedQty === undefined || item.bookedQty === null) {
+        return true;
+      }
+      if (item.bookedQty > item.availableQty) {
+        return true;
+      }
+      if (item.bookedQty > item.requestQuantity) {
+        return true;
+      }
+      return false;
+    });
+    if (hasInvalidData) {
+      notification.error({
+        message: t('ERROR'),
+        description: t(
+          'Invalid data in the table. Please check the bookedQty quantities.'
+        ),
+      });
+      return false;
+    }
+    try {
+      await updatePickSlip({
+        pickSlip: {
+          state: 'closed',
+          id:
+            (pickSlips && pickSlips[0]?._id) || (pickSlips && pickSlips[0]?.id),
+        },
+      }).unwrap();
+      pickSlipRefetch();
+      refetchItems();
+      refetch();
+      notification.info({
+        message: t('CLOSE PICKSLIP'),
+        description: t('PICKSLIP CLOSE'),
       });
     } catch (error) {
       notification.error({
@@ -501,20 +569,39 @@ const PickSlipConfirmationNew: FC = () => {
       <Split initialPrimarySize="48%" horizontal splitterSize="20px">
         <div className="flex flex-col ">
           <Split initialPrimarySize="36%" splitterSize="20px">
-            <div className="flex flex-col rounded-md p-3 h-[35vh] bg-white overflow-y-auto  ">
-              <PickslipRequestFilterForm
-                pickSlip={pickSlips && pickSlips[0]}
-                onpickSlipSearchValues={function (values: any): void {
-                  setpickSlipSearchValues(values);
-                }}
-              ></PickslipRequestFilterForm>
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col rounded-md p-3 h-[35vh] bg-white overflow-y-auto  ">
+                <PickslipRequestFilterForm
+                  pickSlip={pickSlips && pickSlips[0]}
+                  onpickSlipSearchValues={function (values: any): void {
+                    setpickSlipSearchValues(values);
+                  }}
+                ></PickslipRequestFilterForm>
+              </div>
+              <Space>
+                <Button
+                  disabled={
+                    !pickSlips ||
+                    (pickSlips && pickSlips[0]?.state == 'closed') ||
+                    (pickSlips && pickSlips[0]?.state == 'complete') ||
+                    (pickSlips && pickSlips[0]?.state == 'canceled')
+                    // ||
+                    // (pickSlips && pickSlips[0]?.state == 'complete')
+                  }
+                  onClick={async () => {}}
+                  size="small"
+                  icon={<SaveOutlined />}
+                >
+                  {t('COPY TABLE DATA and TAKE')}
+                </Button>
+              </Space>
             </div>
 
             <div className="flex flex-col rounded-md p-3 h-[40vh] bg-white overflow-y-auto  ">
               <PartContainer
                 isFilesVisiable={true}
                 isVisible={true}
-                pagination={true}
+                pagination={false}
                 isAddVisiable={true}
                 isButtonVisiable={false}
                 isEditable={true}
@@ -528,7 +615,7 @@ const PickSlipConfirmationNew: FC = () => {
             </div>
           </Split>
         </div>
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col gap-3 justify-between">
           <BookedPartContainer
             isFilesVisiable={true}
             isChekboxColumn={false}
@@ -553,7 +640,10 @@ const PickSlipConfirmationNew: FC = () => {
                 disabled={
                   !pickSlips ||
                   (pickSlips && pickSlips[0]?.state == 'closed') ||
-                  (pickSlips && pickSlips[0]?.state == 'complete')
+                  (pickSlips && pickSlips[0]?.state == 'complete') ||
+                  (pickSlips && pickSlips[0]?.state == 'canceled')
+                  // ||
+                  // (pickSlips && pickSlips[0]?.state == 'complete')
                 }
                 icon={<PrinterOutlined />}
                 onClick={() => {
@@ -571,13 +661,6 @@ const PickSlipConfirmationNew: FC = () => {
                 icon={<PrinterOutlined />}
                 onClick={() => {
                   if (pickSlips && pickSlips[0]?.state) {
-                    // console.log(updatetOrderMaterials);
-                    // const newData = {
-                    //   ...currentPick,
-                    //   materials: updatetOrderMaterials,
-                    // };
-                    // setIntermediateData(newData);
-                    // setOpenCompleteWorkPrint(true);
                   } else if (pickSlips && pickSlips[0]?.state) {
                     // setOpenCompletePrint(true);
                   } else {
@@ -607,7 +690,9 @@ const PickSlipConfirmationNew: FC = () => {
                   !pickSlips ||
                   (pickSlips && pickSlips[0]?.state !== 'complete')
                 }
-                onClick={async () => {}}
+                onClick={async () => {
+                  handleClose();
+                }}
                 size="small"
                 icon={<SaveOutlined />}
               >

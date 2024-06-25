@@ -69,11 +69,11 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`WORKORDER ADMINISTARTION`)}`,
       route: RouteNames.WORKORDER_ADMINISTRATION,
     },
-    {
-      APNNBR: '58',
-      descriptions: `${t(`VIEW WORKPACKAGE`)}`,
-      route: RouteNames.BASE,
-    },
+    // {
+    //   APNNBR: '58',
+    //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,
+    //   route: RouteNames.BASE,
+    // },
     // {
     //   APNNBR: '59',
     //   descriptions: `${t(`PART ADMINISTRATION`)}`,
@@ -89,11 +89,11 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
       route: RouteNames.PROJECT_ADMINISTRATION,
     },
-    {
-      APNNBR: '101',
-      descriptions: `${t(`PROJECT VIEWER`)}`,
-      route: RouteNames.PROJECT_VIEWER,
-    },
+    // {
+    //   APNNBR: '101',
+    //   descriptions: `${t(`PROJECT VIEWER`)}`,
+    //   route: RouteNames.PROJECT_VIEWER,
+    // },
     // {
     //   APNNBR: '1001',
     //   descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
@@ -158,12 +158,12 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`PARTS TRACKING`)}`,
       route: RouteNames.PARTS_TRACKING,
     },
-    {
-      APNNBR: '204',
+    // {
+    //   APNNBR: '204',
 
-      descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
-      route: RouteNames.PARTS_FORECAST,
-    },
+    //   descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
+    //   route: RouteNames.PARTS_FORECAST,
+    // },
     // {
     //   APNNBR: '205',
 
@@ -208,16 +208,16 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
     //   route: RouteNames.PICKSLIP_REQUEST_NEW,
     // },
-    {
-      APNNBR: '230',
+    // {
+    //   APNNBR: '230',
 
-      descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
-      route: RouteNames.PICKSLIP_CONFIRMATIONS,
-    },
+    //   descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
+    //   route: RouteNames.PICKSLIP_CONFIRMATIONS,
+    // },
     {
       APNNBR: '267',
 
-      descriptions: `${t(`PICKSLIP CONFIRMATION NEW`)}`,
+      descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
       route: RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
     },
     {

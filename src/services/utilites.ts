@@ -980,6 +980,8 @@ export interface ValueEnumType {
   onShort: string;
   draft: string;
   issued: string;
+  progress: string;
+  complete: string;
 }
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
@@ -989,7 +991,11 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
       return '#90EE90'; // Light Green
     case 'issued':
       return '#800080'; // Dark Blue
+    case 'progress':
+      return '#800080'; // Dark Blue
     case 'onQuatation':
+      return '#FFD700'; // Gold
+    case 'complete':
       return '#FFD700'; // Gold
     case 'open':
       return '#00008B'; // Sky Blue
@@ -1044,25 +1050,25 @@ export const transformToIORderItem = (data: any[]): any[] => {
     orderID: item?.orderID,
     orderType: item?.orderID?.orderType,
     index: item?.index,
-    PART_NUMBER: item.partID?.PART_NUMBER,
+    PART_NUMBER: item?.partID?.PART_NUMBER,
     DESCRIPTION: item.partID?.DESCRIPTION,
-    TYPE: item.partID?.TYPE,
+    TYPE: item?.partID?.TYPE,
     GROUP: item.partID?.GROUP,
     UNIT_OF_MEASURE: item.partID?.UNIT_OF_MEASURE,
-    vendorCode: item.vendorID.CODE,
-    companyID: item.companyID,
-    createDate: item.createDate,
-    createUserID: item.createUserID?._id,
-    createUserName: item.createUserID?.name,
+    vendorCode: item?.vendorID?.CODE,
+    companyID: item?.companyID,
+    createDate: item?.createDate,
+    createUserID: item?.createUserID?._id,
+    createUserName: item?.createUserID?.name,
     updateDate: item.updateDate,
-    updateUserID: item.updateUserID?._id,
+    updateUserID: item?.updateUserID?._id,
     partNumberID: item?.partID,
     amout: item?.amout,
     allPrice: item?.allPrice,
     currency: item.currency,
     backorderQty: item?.backorderQty,
     paymentTerms: item?.paymentTerms,
-    leadTime: item.leadTime,
+    leadTime: item?.leadTime,
     requirementsID: item?.requirementsID,
     nds: item?.nds,
     price: item?.price,

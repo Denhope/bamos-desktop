@@ -55,6 +55,12 @@ const PickSlipAdministrationTree: FC<UserTreeProps> = ({
       if (requirement.state === 'CLOSED') {
         stateIndicator = ' 🟢'; // Оранжевый кружок
       }
+      if (requirement.state === 'progress') {
+        stateIndicator = ' 🟣'; // Оранжевый кружок
+      }
+      if (requirement.state === 'complete') {
+        stateIndicator = ' 🟠'; // Оранжевый кружок
+      }
       if (requirement.state === 'closed') {
         stateIndicator = ' 🟢'; // Оранжевый кружок
       }

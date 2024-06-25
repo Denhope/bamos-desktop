@@ -115,10 +115,14 @@ export const pickSlipBookingsItemsApi = createApi({
       invalidatesTags: ['PickSlipBookingItem'], // Указываем, что это мутация недействительна тега 'UserGroups'
     }),
     updatePickSlipBookingsItem: builder.mutation<any, any>({
-      query: (projectItem) => ({
-        url: `pickSlipBokingsItems/company/${COMPANY_ID}/partBookingsPickSlipItem/${projectItem.id}`,
+      query: (pickSlipBokingsItem) => ({
+        url: `pickSlipBokingsItems/company/${COMPANY_ID}/partBookingsPickSlipItem/${pickSlipBokingsItem?.pickSlipBokingsItem?.id}`,
         method: 'PUT',
-        body: { ...projectItem, updateUserID: USER_ID, updateDate: new Date() },
+        body: {
+          ...pickSlipBokingsItem,
+          updateUserID: USER_ID,
+          updateDate: new Date(),
+        },
       }),
       invalidatesTags: ['PickSlipBookingItem'],
     }),
@@ -140,4 +144,5 @@ export const {
   useGetPickSlipBookingsItemQuery,
   useDeletePickSlipBookingsItemMutation,
   useGetPickSlipBookingsItemsQuery,
+  useUpdatePickSlipBookingsItemMutation,
 } = pickSlipBookingsItemsApi;

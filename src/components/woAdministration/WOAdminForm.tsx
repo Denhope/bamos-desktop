@@ -107,6 +107,8 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
+    complete: t('COMPLETE'),
+    progress: t('IN PROGRESS'),
   };
   const [columnRequirements, setColumnDefsRequirements] = useState<
     ExtendedColDef[]

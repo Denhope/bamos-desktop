@@ -699,13 +699,13 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
       <ShoppingCartOutlined />
     ),
     getItem(
-      t('PICKSLIP VIEWER'),
-      RouteNames.PICKSLIP_VIEWER,
+      t('PICKSLIP ADMINISTRATION'),
+      RouteNames.PICKSLIP_ADMINISTRATION,
       <ShoppingCartOutlined />
     ),
     getItem(
       t('PICKSLIP CONFIRMATION'),
-      RouteNames.PICKSLIP_CONFIRMATIONS,
+      RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
       <ShoppingCartOutlined />
     ),
     getItem(
@@ -720,11 +720,11 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     ),
     getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
 
-    getItem(
-      t('PARTS CONSUMPTION FORECAST'),
-      RouteNames.PARTS_FORECAST,
-      <SisternodeOutlined />
-    ),
+    // getItem(
+    //   t('PARTS CONSUMPTION FORECAST'),
+    //   RouteNames.PARTS_FORECAST,
+    //   <SisternodeOutlined />
+    // ),
     getItem(t('SHELF EXPIRY'), RouteNames.SHELF_LIFE, <SisternodeOutlined />),
     // getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
   ];

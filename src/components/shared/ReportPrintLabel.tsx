@@ -138,7 +138,9 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                     text: `${
                       product?.locationID?.restrictionID === 'standart' ||
                       product?.storeItemID?.locationID?.restrictionID ===
-                        'standart'
+                        'standart' ||
+                      product?.storeItemID?.locationID?.locationType ===
+                        'reservation'
                         ? `${t('SERVICABLE TAG')}`
                         : `${t('UNSERVICEABLE TAG')}`
                     }`,
