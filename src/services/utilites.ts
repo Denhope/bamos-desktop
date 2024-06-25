@@ -1,5 +1,5 @@
 import { Excel } from 'antd-table-saveas-excel';
-
+import { v4 as uuidv4 } from 'uuid';
 import { IProjectTaskAll } from '@/models/IProjectTask';
 
 import {
@@ -22,6 +22,7 @@ import { getFileFromServer } from '@/utils/api/thunks';
 import { $authHost } from '@/utils/api/http';
 import { IPartNumber } from '@/models/IUser';
 import { ITask } from '@/models/ITask';
+import { IOrderItem, IRequirement } from '@/models/IRequirement';
 // import { fileTypeFromBuffer } from 'file-type';
 export const includeTasks = (
   arrayOfAllObjectsData: ITaskType[],
@@ -813,7 +814,7 @@ function isInlineViewable(mimeType: string): boolean {
 export const transformToIPartNumber = (
   data: any[],
   isToolArray?: string[]
-): IPartNumber[] => {
+): any[] => {
   console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
   const result = data
@@ -845,7 +846,131 @@ export const transformToIPartNumber = (
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
+export const transformToIAltPartNumber = (data: any[]): any[] => {
+  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
+  const result = data?.map((item) => ({
+    id: item._id,
+    _id: item._id,
+    partId: item?.altPartNumberID?._id,
+    altPartNumberID: item?.altPartNumberID,
+    partNumberID: item?.partNumberID?._id,
+    ALTERNATIVE: item?.altPartNumberID?.PART_NUMBER,
+    ALTERNATIVE_REMARKS: item.ALTERNATIVE_REMARKS,
+    ALTERNATIVE_DESCRIPTION: item?.altPartNumberID?.DESCRIPTION,
+    PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    PART_DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    PART_GROUP: item.partNumberID?.GROUP,
+    PART_TYPE: item.partNumberID?.TYPE,
+    PART_UNIT_OF_MEASURE: item?.partNumberID?.UNIT_OF_MEASURE,
+    ISTWOWAY: item.ISTWOWAYS,
+    TYPE: item.altPartNumberID?.TYPE,
+    GROUP: item.altPartNumberID?.GROUP,
+    APPROVED: item.createUserID?.name,
+    UNIT_OF_MEASURE: item.altPartNumberID?.UNIT_OF_MEASURE,
+    ADD_DESCRIPTION: item.altPartNumberID?.ADD_DESCRIPTION,
+    ADD_UNIT_OF_MEASURE: item.altPartNumberID?.ADD_UNIT_OF_MEASURE,
+    companyID: item.companyID,
+    createDate: item?.createDate,
+    createUserID: item.createUserID?._id,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+  }));
+
+  console.log('Output data from transformToALTIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIStockPartNumber = (data: any[]): any[] => {
+  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    STOCK: item?.storeID?.storeShortName,
+    STORE_ID: item?.storeID?._id,
+    LOCATION: item?.locationID?.locationName,
+    files: item?.FILES,
+    OWNER: item?.locationID?.ownerID?.title,
+    restrictionID: item?.locationID?.restrictionID,
+    locationType: item?.locationID?.locationType,
+    SERIAL_NUMBER: item?.SERIAL_NUMBER || item?.SUPPLIER_BATCH_NUMBER,
+    RECEIVING_NUMBER: item?.RECEIVING_ID?.receivingNumber,
+    DOC_NUMBER: item?.RECEIVING_ID?.awbNumber,
+    DOC_TYPE: item?.RECEIVING_ID?.awbType,
+    DOC_DATE: item?.RECEIVING_ID?.awbDate,
+    RECEIVING_DATE: item?.RECEIVING_ID?.receivingDate,
+  }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIRequirement = (data: any[]): any[] => {
+  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  const result = data?.map((item) => ({
+    // ...item,
+    QUANTITY: item.quantity,
+    availableAllStoreQTY: item?.availableAllStoreQTY,
+    restrictedAllStoreQTY: item?.restrictedAllStoreQTY,
+    requestQuantity: item?.requestQuantity,
+    amout: item.amout,
+    availableQTY: item?.availableQTY,
+    _id: item?.id || item?._id,
+    plannedDate: item?.plannedDate,
+    note: item?.note,
+    status: item?.status,
+    reqTypesID: item.reqTypesID,
+    neededOnID: item?.neededOnID,
+    neededOnIDTitle: item?.neededOnID?.title,
+    projectID: item?.projectID,
+    projectTaskID: item?.projectTaskID,
+    partNumberID: item?.partNumberID,
+    serialNumber: item?.serialNumber,
+    partRequestNumberNew: item?.partRequestNumberNew,
+    projectWO: item?.projectID?.projectWO,
+    projectTaskWO: item.projectTaskID?.taskWO,
+    partId: item.partNumberID?._id,
+    PART_NUMBER: item?.partNumberID?.PART_NUMBER,
+    DESCRIPTION: item?.partNumberID?.DESCRIPTION,
+    TYPE: item?.partNumberID?.TYPE,
+    GROUP: item?.partNumberID?.GROUP,
+    UNIT_OF_MEASURE: item?.partNumberID?.UNIT_OF_MEASURE,
+    UNIT_OF_MEASURE_LONG: item?.partNumberID?.UNIT_OF_MEASURE,
+    ADD_DESCRIPTION: '', // Добавить описание, если требуется
+    ADD_UNIT_OF_MEASURE: item?.partNumberID?.ADD_UNIT_OF_MEASURE,
+    companyID: item?.companyID,
+    createDate: item?.createDate,
+    createUserID: item?.createUserID?._id,
+    updateDate: item?.updateDate,
+    updateUserID: item?.updateUserID ? item.updateUserID?._id : '',
+    acTypeID: item?.acTypeID, // Добавить тип AC, если требуется
+  }));
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+export const transformToIPickSlip = (data: any[]): any[] => {
+  console.log('Input data to transformToIPickslipr:', data); // Вывод входных данных
+  const result = data?.map((item) => ({
+    ...item,
+    status: item?.state,
+    getFromID: item?.getFromID?._id,
+    store: item?.getFromID?.storeShortName,
+    // neededOnID: item?.neededOnID?._id,
+    neededOnIDTitle: item?.neededOnID?.title,
+    // projectID: item?.projectID?._id,
+    // projectTaskID: item?.projectTaskID?._id,
+    projectWO: item?.projectID?.projectWO,
+    projectTaskWO: item.projectTaskID?.taskWO,
+    companyID: item?.companyID,
+    createDate: item?.createDate,
+    createUserID: item?.createUserID,
+    createUserName: item?.createUserID?.name,
+    updateDate: item?.updateDate,
+    updateUserID: item?.updateUserID ? item.updateUserID : '',
+  }));
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
 export interface ValueEnumType {
   onQuatation: string;
   open: string;
@@ -854,18 +979,20 @@ export interface ValueEnumType {
   onOrder: string;
   onShort: string;
   draft: string;
+  issued: string;
 }
-
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
     case 'draft':
       return '#D3D3D3'; // Light Gray
     case 'onShort':
       return '#90EE90'; // Light Green
+    case 'issued':
+      return '#800080'; // Dark Blue
     case 'onQuatation':
       return '#FFD700'; // Gold
     case 'open':
-      return '#87CEEB'; // Sky Blue
+      return '#00008B'; // Sky Blue
     case 'closed':
       return '#32CD32'; // Lime Green
     case 'canceled':
@@ -905,5 +1032,124 @@ export const transformToITask = (data: ITask[]): any[] => {
   }));
 
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIORderItem = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    id: item._id,
+    status: item?.state,
+    _id: item._id,
+    orderNumber: item.orderID?.orderNumberNew,
+    orderID: item?.orderID,
+    orderType: item?.orderID?.orderType,
+    index: item?.index,
+    PART_NUMBER: item.partID?.PART_NUMBER,
+    DESCRIPTION: item.partID?.DESCRIPTION,
+    TYPE: item.partID?.TYPE,
+    GROUP: item.partID?.GROUP,
+    UNIT_OF_MEASURE: item.partID?.UNIT_OF_MEASURE,
+    vendorCode: item.vendorID.CODE,
+    companyID: item.companyID,
+    createDate: item.createDate,
+    createUserID: item.createUserID?._id,
+    createUserName: item.createUserID?.name,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+    partNumberID: item?.partID,
+    amout: item?.amout,
+    allPrice: item?.allPrice,
+    currency: item.currency,
+    backorderQty: item?.backorderQty,
+    paymentTerms: item?.paymentTerms,
+    leadTime: item.leadTime,
+    requirementsID: item?.requirementsID,
+    nds: item?.nds,
+    price: item?.price,
+    files: item?.files,
+  }));
+
+  return result;
+};
+export const transformToPickSlipItemItem = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    // id: item?._id || item?.id,
+    status: item?.state,
+    // _id: item?._id || item?.id,
+    orderID: item?.orderID,
+    orderType: item?.orderID?.orderType,
+    index: item?.index,
+    PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    TYPE: item.partNumberID?.TYPE,
+    GROUP: item.partNumberID?.GROUP,
+    UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+
+    companyID: item.companyID,
+    createDate: item.createDate,
+    createUserID: item.createUserID?._id,
+    createUserName: item.createUserID?.name,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+    partNumberID: item?.partNumberID,
+    requirementsID: item?.requirementsID,
+
+    files: item?.files,
+  }));
+
+  return result;
+};
+
+export const transformToPickSlipItemBooked = (data: any[]): any[] => {
+  const result = data.flatMap((item: any) => {
+    // Создаем новый объект с теми же свойствами, что и item
+    const newItem = { ...item };
+
+    // Проверяем, пустой ли bookedItems
+    if (!newItem.bookedItems || newItem.bookedItems.length === 0) {
+      console.log(item);
+      newItem.bookedItems = [
+        {
+          id: uuidv4(), // Добавляем уникальный идентификатор
+          requestedPartNumberID: newItem.partNumberID._id,
+          PART_NUMBER_REQUEST: newItem.partNumberID?.PART_NUMBER,
+          requestedQty: newItem.requestedQty,
+          pickSlipItemID: newItem.id,
+          pickSlipID: newItem.pickSlipID,
+          projectID: newItem.projectID?._id,
+          projectTaskID: newItem.projectTaskID?._id,
+          requirementID: newItem?.requirementID?._id,
+          status: 'progress',
+        },
+      ];
+    } else {
+      // Если bookedItems не пустой, добавляем уникальный идентификатор к каждому элементу
+      newItem.bookedItems = newItem.bookedItems.map((bookedItem: any) => ({
+        ...bookedItem,
+        PART_NUMBER_REQUEST: bookedItem?.requestedPartNumberID?.PART_NUMBER,
+        requestedPartNumberID: bookedItem?.requestedPartNumberID?._id,
+        requestedQty: bookedItem?.requestedQty || newItem.requestedQty,
+        canceledQty: bookedItem.canceledQty,
+        projectID: bookedItem.projectID?._id,
+        projectTaskID: bookedItem.projectTaskID?._id,
+        PART_NUMBER_BOOKED: bookedItem?.storeItemID?.PART_NUMBER,
+        DESCRIPTION: bookedItem?.storeItemID?.NAME_OF_MATERIAL,
+        SERIAL_NUMBER:
+          bookedItem?.storeItemID?.SERIAL_NUMBER ||
+          bookedItem?.storeItemID?.SUPPLIER_BATCH_NUMBER,
+        PRODUCT_EXPIRATION_DATE:
+          bookedItem?.storeItemID?.PRODUCT_EXPIRATION_DATE,
+        UNIT_OF_MEASURE: bookedItem?.storeItemID?.UNIT_OF_MEASURE,
+        LOCAL_ID: bookedItem?.storeItemID?.LOCAL_ID,
+        OWNER: bookedItem?.storeItemID?.locationID?.ownerID?.title,
+        STORE: bookedItem?.storeItemID?.storeID?.storeShortName,
+        LOCATION: bookedItem?.storeItemID?.locationID?.locationName,
+      }));
+    }
+
+    return newItem.bookedItems;
+  });
+  console.log(result);
   return result;
 };

@@ -235,6 +235,10 @@ import { skillApi } from '@/features/userAdministration/skillApi';
 import { taskStepApi } from '@/features/tasksAdministration/stepApi';
 import { partTaskNumberApi } from '@/features/tasksAdministration/partApi';
 import { accessCodeApi } from '@/features/accessAdministration/accessApi';
+import { altPartNumberApi } from '@/features/partAdministration/altPartApi';
+import { pickSlipApi } from '@/features/pickSlipAdministration/pickSlipApi';
+import { pickSlipItemsApi } from '@/features/pickSlipAdministration/pickSlipItemsApi';
+import { pickSlipBookingsItemsApi } from '@/features/pickSlipAdministration/pickSlipBookingsItemsApi';
 
 const store = configureStore({
   reducer: {
@@ -293,6 +297,10 @@ const store = configureStore({
     [skillApi.reducerPath]: skillApi.reducer,
     [taskStepApi.reducerPath]: taskStepApi.reducer,
     [partTaskNumberApi.reducerPath]: partTaskNumberApi.reducer,
+    [altPartNumberApi.reducerPath]: altPartNumberApi.reducer,
+    [pickSlipApi.reducerPath]: pickSlipApi.reducer,
+    [pickSlipItemsApi.reducerPath]: pickSlipItemsApi.reducer,
+    [pickSlipBookingsItemsApi.reducerPath]: pickSlipBookingsItemsApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -335,7 +343,11 @@ const store = configureStore({
       taskStepApi.middleware,
       partTaskNumberApi.middleware,
       projectItemWOApi.middleware,
-      accessCodeApi.middleware
+      accessCodeApi.middleware,
+      altPartNumberApi.middleware,
+      pickSlipItemsApi.middleware,
+      pickSlipApi.middleware,
+      pickSlipBookingsItemsApi.middleware
     ),
 });
 export default store;

@@ -1,5 +1,14 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Button, Col, Modal, Space, Spin, message, Switch } from 'antd';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import {
+  Button,
+  Col,
+  Modal,
+  Space,
+  Spin,
+  message,
+  Switch,
+  Divider,
+} from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
@@ -7,6 +16,7 @@ import {
   AlertTwoTone,
   UsergroupAddOutlined,
   CheckCircleFilled,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { Split } from '@geoffcox/react-splitter';
@@ -16,6 +26,28 @@ import MyTable from '../shared/Table/MyTable';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
 import WODiscription from './WODiscription';
+import RequarementsList from './requirements/RequarementsList';
+import { IRequirement } from '@/models/IRequirement';
+import {
+  ModalForm,
+  ProForm,
+  ProFormDatePicker,
+  ProFormGroup,
+  ProFormSelect,
+} from '@ant-design/pro-components';
+import {
+  ValueEnumType,
+  getStatusColor,
+  transformToIRequirement,
+} from '@/services/utilites';
+import { ColDef } from 'ag-grid-community';
+import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
+import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
+import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
+import {
+  useGetStorePartStockQTYQuery,
+  useGetStorePartsQuery,
+} from '@/features/storeAdministration/PartsApi';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -26,7 +58,14 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const [editingProject, setEditingProject] = useState<IProjectItemWO | null>(
     null
   );
+  const [selectedStoreID, setSelectedStoreID] = useState<any | undefined>(
+    undefined
+  );
+  const [createPickSlip, setOpenCreatePickSlip] = useState<boolean>(false);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+  const [selectedKeysRequirements, setSelectedKeysRequirements] = useState<
+    React.Key[]
+  >([]);
   const [triggerQuery, setTriggerQuery] = useState(false);
   const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
     {
@@ -42,6 +81,52 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       skip: !triggerQuery,
     }
   );
+  // const { data: quantity, refetch } = useGetStorePartStockQTYQuery(
+  //   {
+  //     partNumberID: '',
+  //     storeID: selectedStoreID,
+  //     includeAlternates: true,
+  //   },
+  //   {
+  //     skip: !selectedStoreID,
+  //   }
+  // );
+
+  let storesIDString = '';
+  if (Array.isArray(editingProject?.projectID?.storesID)) {
+    storesIDString = editingProject?.projectID.storesID.join(',');
+  }
+
+  const { data: stores } = useGetStoresQuery(
+    {
+      ids: storesIDString,
+    },
+    {
+      skip: !editingProject?.projectID.storesID,
+    }
+  );
+  const { data: requirements } = useGetFilteredRequirementsQuery(
+    {
+      projectTaskID: editingProject?.id,
+      ifStockCulc: true,
+      includeAlternates: true,
+    },
+    {
+      skip: !editingProject?.id,
+    }
+  );
+
+  const storeCodesValueEnum: Record<string, string> =
+    stores?.reduce((acc, mpdCode) => {
+      if (mpdCode.id && mpdCode.storeShortName) {
+        acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
+
+  const transformedRequirements = useMemo(() => {
+    return transformToIRequirement(requirements || []);
+  }, [requirements]);
   const [isTreeView, setIsTreeView] = useState(true);
 
   useEffect(() => {
@@ -57,6 +142,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
   const handleEdit = (project: IProjectItemWO) => {
     setEditingProject(project);
+  };
+  const handleStoreChange = (value: string) => {
+    setSelectedStoreID(value);
   };
 
   const handleCreate = () => {
@@ -110,7 +198,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         return params.value.toUpperCase();
       },
     },
-    // { field: 'projectTaskWO', headerName: 'Project Task WO' },
+
     { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
     {
       field: 'partNumberID',
@@ -134,8 +222,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         });
       },
     },
-
-    // { field: 'updateDate', headerName: 'Update Date' },
 
     {
       field: 'startDate',
@@ -193,9 +279,104 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         });
       },
     },
-    // Добавьте дополнительные поля по мере необходимости
   ];
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType; // Обязательное свойство
+  }
 
+  const columnRequirements = [
+    {
+      field: 'partRequestNumberNew',
+      headerName: `${t('REQUIREMENT No')}`,
+      cellDataType: 'number',
+    },
+
+    {
+      headerName: `${t('PART No')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+    },
+    {
+      field: 'DESCRIPTION',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'amout',
+      editable: false,
+      cellDataType: 'number',
+      headerName: `${t('ВОЗМОЖНОЕ КОЛ-ВО К ЗАКАЗУ')}`,
+    },
+    {
+      field: 'issuedQuantity',
+      editable: true,
+      cellDataType: 'number',
+      headerName: `${t('REQUESTED QTY')}`,
+      // valueSetter: (params: any) => {
+      //   // Получаем текущее значение поля и значение amout
+      //   const newValue = Number(params.newValue);
+      //   const amout = params.data.amout || 0;
+      //   const bookedQuantity = params.data.bookedQuantity || 0;
+
+      //   // Проверка: значение issuedQuantity не должно превышать (amout - bookedQuantity)
+      //   if (newValue <= amout - bookedQuantity) {
+      //     // Устанавливаем новое значение
+      //     params.data.issuedQuantity = newValue;
+      //     return true; // Указываем, что значение было изменено
+      //   } else {
+      //     // Отображаем предупреждение, если значение некорректно
+      //     alert(
+      //       `${t('Значение не может превышать')} ${amout - bookedQuantity}`
+      //     );
+      //     return false; // Указываем, что значение не было изменено
+      //   }
+      // },
+    },
+    {
+      field: 'bookedQuantity',
+      editable: false,
+      cellDataType: 'number',
+      headerName: `${t('BOOKED QTY')}`,
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'plannedDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('PLANNED DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+
+    {
+      field: 'availableQTY',
+      editable: false,
+      cellDataType: 'number',
+      headerName: `${t('ДОСТУПНОЕ НА СКЛАДЕ')}`,
+    },
+    // {
+    //   field: 'materialAplicationNumber',
+    //   editable: false,
+    //   cellDataType: 'number',
+    //   headerName: `${t('PICKSLIP No')}`,
+    // },
+    // Добавьте другие колонки по необходимости
+  ];
+  const handleSubmit = () => {};
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       <Space>
@@ -312,7 +493,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             )}
           </div>
           <div className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 ">
-            <WOAdminForm order={editingProject} />
+            <WOAdminForm
+              order={editingProject}
+              onCheckItems={function (selectedKeys: React.Key[]): void {
+                setSelectedKeysRequirements(selectedKeys);
+              }}
+            />
           </div>
         </Split>
       </div>

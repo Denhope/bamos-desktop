@@ -63,6 +63,9 @@ import PartAdministrationNew from './APN/PartAdministrationNew';
 import ShelfExpiryNew from './APN/ShelfExpiryNew';
 import PartsTransferNew from './APN/PartsTransferNew';
 import StoreAdministration from './APN/StoreAdministration';
+import StockInformationNew from './APN/StockInformationNew';
+import PickSlipAdministration from './APN/PickSlipAdministration';
+import PickSlipConfirmationNew from './APN/PickSlipConfirmationNew';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -175,7 +178,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     } else if (key == RouteNames.PART_ADMINISTRATIONS_NEW) {
       tab = {
         key,
-        title: `${t(`PROJECT ADMINISTRATION`)}`,
+        title: `${t(`PART ADMINISTRATION`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <PartAdministrationNew />
@@ -206,7 +209,21 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         title: `${t(`STOCK INFORMATION`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
-            <StockInformstion />
+            <StockInformationNew />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.PICKSLIP_ADMINISTRATION) {
+      tab = {
+        key,
+
+        title: `${t(`PICKSLIP ADMINISTRATION`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <PickSlipAdministration />
           </div>
         ),
 
@@ -377,6 +394,19 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <PickSlipConfirmation />
+          </div>
+        ),
+
+        closable: true,
+      };
+    }
+    if (key == RouteNames.PICKSLIP_CONFIRMATIONS_NEW) {
+      tab = {
+        key,
+        title: `${t(`PICKSLIP CONFIRMATION NEW`)}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <PickSlipConfirmationNew />
           </div>
         ),
 

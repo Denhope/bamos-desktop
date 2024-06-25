@@ -222,23 +222,11 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
             valueEnum={acTypeValueEnum}
             // onChange={(value: any) => setACTypeID(value)}
           />
-          {/* <ProFormText
-            // rules={[{ required: true }]}
-            label={t('COUNTRY OF ORIGIN')}
-            name="country"
-            width="lg"
-          ></ProFormText>
-          <ProFormText
-            // rules={[{ required: true }]}
-            label={t('RESOURCE TYPE')}
-            name="resourceType"
-            width="lg"
-          ></ProFormText> */}
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['2']} key="2">
-          <Alternates />
+          <Alternates currentPart={order} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab={tabTitles['3']} key="3"></Tabs.TabPane>
+        {/* <Tabs.TabPane tab={tabTitles['3']} key="3"></Tabs.TabPane> */}
       </Tabs>
     </ProForm>
   );

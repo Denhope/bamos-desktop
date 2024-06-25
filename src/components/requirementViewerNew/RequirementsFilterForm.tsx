@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import {
   ProForm,
@@ -27,6 +27,7 @@ import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 import { useGetREQTypesQuery } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
+import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (values: any) => void;
   nonCalculate?: boolean;
@@ -130,62 +131,62 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     }
   }, [receiverType, dispatch]);
 
-  useEffect(() => {
-    const currentCompanyID = localStorage.getItem('companyID');
-    if (receiverTaskType) {
-      let action;
-      let url;
-      switch (receiverTaskType) {
-        case 'MAIN_TASK':
-          action = getFilteredProjectTasks({
-            projectId: selectedProjectId,
-          });
+  // useEffect(() => {
+  //   const currentCompanyID = localStorage.getItem('companyID');
+  //   if (receiverTaskType) {
+  //     let action;
+  //     let url;
+  //     switch (receiverTaskType) {
+  //       case 'MAIN_TASK':
+  //         action = getFilteredProjectTasks({
+  //           projectId: selectedProjectId,
+  //         });
 
-          break;
-        case 'NRC':
-          action = getFilteredAditionalTasks({
-            projectId: selectedProjectId,
-            companyID: currentCompanyID || '',
-          });
+  //         break;
+  //       case 'NRC':
+  //         action = getFilteredAditionalTasks({
+  //           projectId: selectedProjectId,
+  //           companyID: currentCompanyID || '',
+  //         });
 
-          break;
-      }
+  //         break;
+  //     }
 
-      if (action) {
-        dispatch(action)
-          .then((action) => {
-            const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
-            let options;
-            switch (receiverTaskType) {
-              case 'MAIN_TASK':
-                options = data.map((item: IProjectTaskAll) => ({
-                  value: item.id || item._id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.taskWO || item.taskWO}`, // замените на нужное поле для 'PROJECT'
-                }));
-                break;
-              case 'NRC':
-                options = data.map((item: IAdditionalTaskMTBCreate) => ({
-                  value: item._id || item.id, // замените на нужное поле для 'PROJECT'
-                  label: `${item.additionalNumberId}`, // замените на нужное поле для 'PROJECT'
-                }));
-                break;
+  //     if (action) {
+  //       dispatch(action)
+  //         .then((action) => {
+  //           const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
+  //           let options;
+  //           switch (receiverTaskType) {
+  //             case 'MAIN_TASK':
+  //               options = data.map((item: IProjectTaskAll) => ({
+  //                 value: item.id || item._id, // замените на нужное поле для 'PROJECT'
+  //                 label: `${item.taskWO || item.taskWO}`, // замените на нужное поле для 'PROJECT'
+  //               }));
+  //               break;
+  //             case 'NRC':
+  //               options = data.map((item: IAdditionalTaskMTBCreate) => ({
+  //                 value: item._id || item.id, // замените на нужное поле для 'PROJECT'
+  //                 label: `${item.additionalNumberId}`, // замените на нужное поле для 'PROJECT'
+  //               }));
+  //               break;
 
-              default:
-                options = data.map((item: any) => ({
-                  value: item.defaultField1, // замените на нужное поле для 'default'
-                  label: item.defaultField2, // замените на нужное поле для 'default'
-                }));
-            }
-            setTaskOptions(options);
-          })
-          .catch((error) => {
-            console.error('Ошибка при получении данных:', error);
-          });
-      }
-    }
-  }, [selectedProjectId, receiverTaskType, dispatch]);
+  //             default:
+  //               options = data.map((item: any) => ({
+  //                 value: item.defaultField1, // замените на нужное поле для 'default'
+  //                 label: item.defaultField2, // замените на нужное поле для 'default'
+  //               }));
+  //           }
+  //           setTaskOptions(options);
+  //         })
+  //         .catch((error) => {
+  //           console.error('Ошибка при получении данных:', error);
+  //         });
+  //     }
+  //   }
+  // }, [selectedProjectId, receiverTaskType, dispatch]);
   const [isAltertative, setIsAltertative] = useState<any>(true);
-  const { data: reqTypes, isLoading } = useGetREQTypesQuery({});
+  const { data: reqTypes } = useGetREQTypesQuery({});
 
   const { data: reqCodes } = useGetREQCodesQuery({
     reqTypeID,
@@ -193,21 +194,38 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
 
   const { data: usersGroups } = useGetGroupUsersQuery({});
   const neededCodesValueEnum: Record<string, string> =
-    usersGroups?.reduce((acc, usersGroup) => {
+    usersGroups?.reduce<Record<string, string>>((acc, usersGroup) => {
       acc[usersGroup.id] = usersGroup.title;
       return acc;
     }, {}) || {};
   const requirementCodesValueEnum: Record<string, string> =
-    reqCodes?.reduce((acc, reqCode) => {
+    reqCodes?.reduce<Record<string, string>>((acc, reqCode) => {
       acc[reqCode.id] = reqCode.code;
       return acc;
     }, {}) || {};
   const requirementTypesValueEnum: Record<string, string> =
-    reqTypes?.reduce((acc, reqType) => {
+    reqTypes?.reduce<Record<string, string>>((acc, reqType) => {
       acc[reqType.id] = reqType.code;
       return acc;
     }, {}) || {};
+  const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
+    {
+      projectID: selectedProjectId,
+    },
+    {
+      skip: !selectedProjectId,
+    }
+  );
 
+  const projectTasksCodesValueEnum: Record<string, string> =
+    projectTasks?.reduce<Record<string, string>>((acc, projectTask) => {
+      acc[projectTask.id] =
+        projectTask.taskWO ||
+        projectTask.taskWo ||
+        projectTask.projectTaskWO ||
+        '';
+      return acc;
+    }, {}) || {};
   const onFinish = async (values: any) => {
     try {
       const searchParams = {
@@ -216,7 +234,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         group: form.getFieldValue('partGroup'),
         type: form.getFieldValue('partType'),
         status: form.getFieldValue('requestStatus'),
-        projectTaskID: receiverTaskType === 'MAIN_TASK' && selectedTask,
+        projectTaskID: form.getFieldValue('projectTaskID'),
         additionalTaskID: receiverTaskType === 'NRC' && selectedTask,
         partRequestNumber: form.getFieldValue('partRequestNumber'),
         foForecast: foForecact,
@@ -349,7 +367,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           />
         </ProForm.Group>
 
-        {receiverType === 'PROJECT' && (
+        {/* {receiverType === 'PROJECT' && (
           <ProForm.Group>
             <ProFormRadio.Group
               disabled={!selectedProjectId}
@@ -376,7 +394,21 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
               />
             )}
           </ProForm.Group>
-        )}
+        )} */}
+
+        <ProFormSelect
+          showSearch
+          // rules={[{ required: true }]}
+          disabled={!selectedProjectId}
+          mode="single"
+          name="projectTaskID"
+          label={`${t(`TASK`)}`}
+          width="sm"
+          valueEnum={projectTasksCodesValueEnum}
+          onChange={(value: any) => {
+            setSelectedTask(value);
+          }}
+        />
       </ProForm.Group>
       <ProFormSelect
         // mode={'multiple'}

@@ -38,6 +38,7 @@
     "antd": "^5.13.2",
     "antd-table-saveas-excel": "^2.2.1",
     "axios": "^1.6.5",
+    "date-fns": "^3.6.0",
     "electron-updater": "^6.1.1",
     "file-saver": "^2.0.5",
     "i18next": "^23.7.19",

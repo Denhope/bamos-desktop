@@ -325,19 +325,19 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               rules={[{ required: true }]}
               width="sm"
             ></ProFormDatePicker>
-            <ProFormText
-              disabled={!isCreating}
-              name="awbReference"
-              label={t('CONTRACT')}
-              width="sm"
-              tooltip={t('CONTRACT')}
-            ></ProFormText>
           </ProFormGroup>
         </Space>
         <ProFormGroup>
+          <ProFormText
+            disabled={!isCreating}
+            name="awbReference"
+            label={t('CONTRACT')}
+            width="sm"
+            tooltip={t('CONTRACT')}
+          ></ProFormText>
           <ContextMenuVendorsSearchSelect
             disabled={!isCreating}
-            width="lg"
+            width="sm"
             rules={[{ required: true }]}
             name={'SUPPLIES_CODE'}
             onSelectedVendor={function (record: any, rowIndex?: any): void {

@@ -1,6 +1,10 @@
 //@ts-nocheck
 
-import { handleFileOpen, handleFileSelect } from '@/services/utilites';
+import {
+  handleFileOpen,
+  handleFileSelect,
+  transformToIPartNumber,
+} from '@/services/utilites';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 import {
   ProForm,
@@ -27,6 +31,8 @@ import { useGetCompaniesQuery } from '@/features/companyAdministration/companyAp
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import PartsList from './PartsList';
 import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
+import { ColDef } from 'ag-grid-community';
+import PartContainer from '@/components/woAdministration/PartContainer';
 interface FormProps {
   reqCode?: ILocation;
   onSubmit: (reqCode: ILocation) => void;
@@ -54,6 +60,54 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
     onSubmit(newUser);
   };
 
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType; // Обязательное свойство
+  }
+
+  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
+    {
+      headerName: `${t('PART No')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+      // cellEditor: AutoCompleteEditor,
+      // cellEditorParams: {
+      //   options: [],
+      // },
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'DESCRIPTION',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'GROUP',
+      headerName: `${t('GROUP')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'TYPE',
+      headerName: `${t('TYPE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'QUANTITY',
+      editable: true,
+      cellDataType: 'number',
+      headerName: `${t('QUANTITY')}`,
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    // Добавьте другие колонки по необходимости
+  ]);
   useEffect(() => {
     if (reqCode) {
       form.resetFields();
@@ -314,7 +368,21 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
         </ProForm>
       </Tabs.TabPane>
       <Tabs.TabPane tab={t('PARTS')} key="2">
-        {reqCode ? <PartsList parts={parts}></PartsList> : <Empty></Empty>}
+        {reqCode ? (
+          <PartContainer
+            isButtonColumn={false}
+            isAddVisiable={true}
+            height={'45vh'}
+            columnDefs={columnDefs}
+            partNumbers={[]}
+            onUpdateData={(data: any[]): void => {}}
+            rowData={parts && transformToIPartNumber(parts || [])}
+          />
+        ) : (
+          <Empty />
+        )}
+
+        {/* // <PartsList parts={parts}></PartsList> : <Empty></Empty> */}
       </Tabs.TabPane>
     </Tabs>
   );

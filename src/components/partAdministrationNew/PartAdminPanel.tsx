@@ -256,6 +256,8 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               />
             ) : (
               <PartContainer
+                isChekboxColumn={true}
+                isVisible={true}
                 onRowSelect={handleEdit}
                 pagination={true}
                 isAddVisiable={true}

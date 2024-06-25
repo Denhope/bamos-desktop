@@ -17,6 +17,7 @@ export enum RouteNames {
   STORE_MANAGMENT = '/materialManagment/stores/storemanagment',
   PICKSLIP_CONFIRMATIONS = '/materialManagment/stores/pickslipConfirmation',
   PICKSLIP_VIEWER = '/materialManagment/stores/pickslipViewer',
+  PICKSLIP_ADMINISTRATION = '/materialManagment/stores/pickslipAdministration',
   PICKSLIP_REQUEST = '/materialManagment/stores/pickslipRequest',
   PICKSLIP_REQUEST_NEW = '/materialManagment/stores/pickslipRequest/new',
   PARTS_FORECAST = '/materialManagment/parts/forecast',
@@ -121,6 +122,7 @@ export enum RouteNames {
   PLANNINGFORECAST = '/planning/forecast',
   APLICATIONS = '/aplications',
   SKILLS_ACCOUNTS = 'SKILLS_ACCOUNTS',
+  PICKSLIP_CONFIRMATIONS_NEW = "PICKSLIP_CONFIRMATIONS_NEW",
 
   // CHEACK_MATERIAL_TASKS = '/materials',wwwwwwwwwwwwwwwww
 }

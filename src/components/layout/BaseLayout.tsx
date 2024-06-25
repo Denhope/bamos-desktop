@@ -69,11 +69,11 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`WORKORDER ADMINISTARTION`)}`,
       route: RouteNames.WORKORDER_ADMINISTRATION,
     },
-    // {
-    //   APNNBR: '58',
-    //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,
-    //   route: RouteNames.BASE,
-    // },
+    {
+      APNNBR: '58',
+      descriptions: `${t(`VIEW WORKPACKAGE`)}`,
+      route: RouteNames.BASE,
+    },
     // {
     //   APNNBR: '59',
     //   descriptions: `${t(`PART ADMINISTRATION`)}`,
@@ -202,17 +202,23 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
     //   route: RouteNames.PICKSLIP_REQUEST,
     // },
-    {
-      APNNBR: '225',
+    // {
+    //   APNNBR: '225',
 
-      descriptions: `${t(`PICKSLIP REQUEST`)}`,
-      route: RouteNames.PICKSLIP_REQUEST_NEW,
-    },
+    //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
+    //   route: RouteNames.PICKSLIP_REQUEST_NEW,
+    // },
     {
       APNNBR: '230',
 
       descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
       route: RouteNames.PICKSLIP_CONFIRMATIONS,
+    },
+    {
+      APNNBR: '267',
+
+      descriptions: `${t(`PICKSLIP CONFIRMATION NEW`)}`,
+      route: RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
     },
     {
       APNNBR: '309',
@@ -238,11 +244,17 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,
     },
+    // {
+    //   APNNBR: '375',
+
+    //   descriptions: `${t(`PICKSLIP VIEWER`)}`,
+    //   route: RouteNames.PICKSLIP_VIEWER,
+    // },
     {
       APNNBR: '375',
 
-      descriptions: `${t(`PICKSLIP VIEWER`)}`,
-      route: RouteNames.PICKSLIP_VIEWER,
+      descriptions: `${t(`PICKSLIP ADMINISTRATION`)}`,
+      route: RouteNames.PICKSLIP_ADMINISTRATION,
     },
 
     // {

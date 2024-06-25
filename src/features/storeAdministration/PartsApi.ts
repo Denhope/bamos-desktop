@@ -10,6 +10,57 @@ export const storePartsApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['StoreItem'], // Add tag types for caching
   endpoints: (builder) => ({
+    getStorePartStockQTY: builder.query<
+      IStorePartItem[],
+      {
+        status?: string;
+        ownerID?: string;
+        stationID?: string;
+        locationID?: string;
+        storeID?: string[];
+        partNumberID?: string;
+        localID?: any;
+        ids?: any[];
+
+        includeAlternates?: boolean;
+      }
+    >({
+      query: ({
+        status,
+        ownerID,
+        stationID,
+        partNumberID,
+        locationID,
+        storeID,
+        localID,
+        ids,
+        includeAlternates,
+      }) => ({
+        url: `/materialStore/getFilteredStockQty/company/${COMPANY_ID}`,
+        params: {
+          status,
+          ownerID,
+          stationID,
+          partNumberID,
+          locationID,
+          storeID,
+          localID,
+          ids,
+          includeAlternates,
+        },
+      }),
+      providesTags: ['StoreItem'],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          // dispatch(setstoresGroups(data));
+        } catch (error) {
+          console.error('Ошибка при выполнении запроса:', error);
+        }
+      },
+      // Provide the 'Users' tag after fetching
+    }),
     getStoreParts: builder.query<
       IStorePartItem[],
       {
@@ -55,6 +106,8 @@ export const storePartsApi = createApi({
         AWB_TYPE?: any;
         AWB_NUMBER?: any;
         IS_CUSTOMER_GOODS?: any;
+        includeAlternates?: boolean;
+        ifStockCulc?: boolean;
       }
     >({
       query: ({
@@ -97,6 +150,8 @@ export const storePartsApi = createApi({
         AWB_TYPE,
         AWB_NUMBER,
         IS_CUSTOMER_GOODS,
+        includeAlternates,
+        ifStockCulc,
       }) => ({
         url: `/materialStore/getFilteredItems/company/${COMPANY_ID}`,
         params: {
@@ -139,6 +194,8 @@ export const storePartsApi = createApi({
           AWB_TYPE,
           AWB_NUMBER,
           IS_CUSTOMER_GOODS,
+          includeAlternates,
+          ifStockCulc,
         },
       }),
       providesTags: ['StoreItem'],
@@ -305,6 +362,7 @@ export const storePartsApi = createApi({
 
 export const {
   useGetStorePartsQuery,
+  useGetStorePartStockQTYQuery,
   useAddStoreMutation,
   useUpdateStorePartsMutation,
 } = storePartsApi;

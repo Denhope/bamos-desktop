@@ -1,5 +1,12 @@
 // ts-nocheck
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   ProForm,
   ProFormDigit,
@@ -32,57 +39,64 @@ import {
   ValueEnumType,
   getStatusColor,
   transformToIPartNumber,
+  transformToIRequirement,
 } from '@/services/utilites';
 import PartContainer from './PartContainer';
 import { IPartNumber } from '@/models/IUser';
 import RequarementsList from './requirements/RequarementsList';
 import { IRequirement } from '@/models/IRequirement';
 import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
+import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
+import CircleRenderer from '../userAdministration/requirementAdministration/CircleRenderer';
 
 interface UserFormProps {
   order?: any;
   orderItem?: any | {};
+  onCheckItems: (selectedKeys: React.Key[]) => void;
 }
 
-const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
+const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
   type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
   const { t } = useTranslation();
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType; // Обязательное свойство
   }
 
-  const { data: partNumbers, isError } = useGetPartNumbersQuery({});
-  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
-    {
-      field: 'DESCRIPTION',
-      headerName: `${t('DESCRIPTION')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'GROUP',
-      headerName: `${t('GROUP')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'TYPE',
-      headerName: `${t('TYPE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'QUANTITY',
-      editable: true,
-      cellDataType: 'number',
-      headerName: `${t('QUANTITY')}`,
-    },
-    {
-      field: 'UNIT_OF_MEASURE',
-      editable: false,
-      filter: false,
-      headerName: `${t('UNIT OF MEASURE')}`,
-      cellDataType: 'text',
-    },
-    // Добавьте другие колонки по необходимости
-  ]);
+  const { data: partNumbers } = useGetPartNumbersQuery({});
+  const columnDefs = useMemo(
+    () => [
+      {
+        field: 'DESCRIPTION',
+        headerName: `${t('DESCRIPTION')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'GROUP',
+        headerName: `${t('GROUP')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'TYPE',
+        headerName: `${t('TYPE')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'QUANTITY',
+        editable: true,
+        cellDataType: 'number',
+        headerName: `${t('QUANTITY')}`,
+      },
+      {
+        field: 'UNIT_OF_MEASURE',
+        editable: false,
+        filter: false,
+        headerName: `${t('UNIT OF MEASURE')}`,
+        cellDataType: 'text',
+      },
+      // Добавьте другие колонки по необходимости
+    ],
+    []
+  );
 
   const valueEnum: ValueEnumType = {
     onShort: t('ON SHORT'),
@@ -90,8 +104,9 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
     open: t('OPEN'),
     closed: t('CLOSED'),
     canceled: t('CANCELLED'),
-    onOrder: t('ISSUED'),
+    onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
+    issued: t('ISSUED'),
   };
   const [columnRequirements, setColumnDefsRequirements] = useState<
     ExtendedColDef[]
@@ -99,9 +114,13 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
     {
       field: 'readyStatus',
       headerName: ``,
-      cellDataType: 'text',
-      width: 50,
+      cellRenderer: CircleRenderer, // Использование кастомного рендерера
+      width: 60,
       filter: false,
+      cellRendererParams: {
+        color: '', // Параметры, если необходимы
+      },
+      cellDataType: 'number',
     },
 
     {
@@ -126,16 +145,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
         color: '#ffffff', // Text color
       }),
     },
-    {
-      field: 'projectTaskWO',
-      headerName: `${t('WO No')}`,
-      cellDataType: 'number',
-    },
-    {
-      field: 'projectWO',
-      headerName: `${t('PROJECT')}`,
-      cellDataType: 'number',
-    },
+
     {
       headerName: `${t('PART No')}`,
       field: 'PART_NUMBER',
@@ -180,9 +190,18 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
       editable: true,
       cellDataType: 'date',
       headerName: `${t('PLANNED DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
     },
     {
-      field: 'issuedQuantity',
+      field: 'requestQuantity',
 
       cellDataType: 'number',
       headerName: `${t('REQUESTED QTY')}`,
@@ -203,8 +222,21 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
       field: 'availableQTY',
 
       cellDataType: 'number',
-      headerName: `${t('AVAIL QTY')}`,
+      headerName: `${t('STOCK QTY')}`,
     },
+    {
+      field: 'availableAllStoreQTY',
+
+      cellDataType: 'number',
+      headerName: `${t('AVAIL. ALL STORES QTY')}`,
+    },
+    {
+      field: 'restrictedAllStoreQTY',
+
+      cellDataType: 'number',
+      headerName: `${t('RESTRICTED ALL STORES QTY')}`,
+    },
+
     {
       field: 'materialAplicationNumber',
 
@@ -216,6 +248,8 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
   const [form] = ProForm.useForm();
 
   const [addBooking] = useAddBookingMutation({});
+
+  const [stepsSelected, setStepsSelected] = useState<React.Key[]>([]);
   const [activeTabKey, setActiveTabKey] = useState('3');
   const [tabTitles, setTabTitles] = useState({
     '1': `${t('WORKORDER INFO')}`,
@@ -393,6 +427,28 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
     <Button type="primary" htmlType="submit">
       {order ? t('UPDATE') : t('CREATE')}
     </Button>
+  );
+  const { data: requirements, isLoading } = useGetFilteredRequirementsQuery(
+    {
+      projectTaskID: order?.id,
+      ifStockCulc: true,
+      includeAlternates: true,
+    },
+    {
+      skip: !order?.id,
+    }
+  );
+  const transformedRequirements = useMemo(() => {
+    return transformToIRequirement(requirements || []);
+  }, [requirements]);
+
+  const handleCheckItems = useCallback(
+    (selectedKeys: React.Key[]) => {
+      // Управляем локальным состоянием, чтобы минимизировать вызовы onCheckItems
+      setStepsSelected(selectedKeys);
+      // onCheckItems(selectedKeys);
+    },
+    [onCheckItems]
   );
   return (
     <ProForm
@@ -842,20 +898,32 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['5']} key="5">
           <RequarementsList
+            isIssueVisibale={true}
+            order={order}
+            isAddVisiable={false}
+            isChekboxColumn={true}
+            fetchData={transformedRequirements}
             columnDefs={columnRequirements}
             partNumbers={partNumbers || []}
             taskId={order?.id}
             onUpdateData={function (data: any[]): void {}}
-            height={'59Vh'}
-            onRowSelect={function (rowData: IRequirement | null): void {
-              t;
+            height={'54Vh'}
+            onRowSelect={function (rowData: IRequirement | null): void {}}
+            onCheckItems={function (selectedKeys: any[]): void {
+              handleCheckItems(selectedKeys);
             }}
-            onCheckItems={function (selectedKeys: React.Key[]): void {}}
+            onDelete={function (reqID: string): void {
+              throw new Error('Function not implemented.');
+            }}
+            onSave={function (rowData: IRequirement): void {
+              throw new Error('Function not implemented.');
+            }}
           ></RequarementsList>
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['2']} key="2">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
             <PartContainer
+              isAddVisiable={true}
               height={'58vh'}
               columnDefs={columnDefs}
               partNumbers={partNumbers || []}
@@ -873,6 +941,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem }) => {
         <Tabs.TabPane tab={tabTitles['4']} key="4">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
             <PartContainer
+              isAddVisiable={true}
               height={'58vh'}
               columnDefs={columnDefs}
               partNumbers={partNumbers || []}

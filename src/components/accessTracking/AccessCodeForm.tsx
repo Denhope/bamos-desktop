@@ -63,11 +63,12 @@ const AccessCodeForm: FC<UserFormProps> = ({
     }, {}) || {};
 
   const projectTasksCodesValueEnum: Record<string, string> =
-    projectTasks?.reduce((acc, projectTask) => {
+    projectTasks?.reduce<Record<string, string>>((acc, projectTask) => {
       acc[projectTask.id] =
-        projectTask?.taskWO ||
-        projectTask?.taskWo ||
-        projectTask?.projectTaskWO;
+        projectTask.taskWO ||
+        projectTask.taskWo ||
+        projectTask.projectTaskWO ||
+        '';
       return acc;
     }, {}) || {};
   useEffect(() => {

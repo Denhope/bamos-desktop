@@ -43,7 +43,7 @@ const RequirementTree: FC<UserTreeProps> = ({
       if (requirement.status === 'onQuatation') {
         statusIndicator = ' \u{1F7E1}'; // Оранжевый кружок
       } else if (requirement.status === 'open') {
-        statusIndicator = ' \u{1F534}'; // Красный кружок
+        statusIndicator = ' 🔵'; // Красный кружок
       } else if (requirement.status === 'transfer') {
         statusIndicator = ' \u{1F7E2}'; // Желтый кружок
       } else if (requirement.status === 'draft') {
@@ -67,8 +67,8 @@ const RequirementTree: FC<UserTreeProps> = ({
       if (requirement.status === 'CANCELLED') {
         statusIndicator = ' ⚪'; // Серый квадрат
       }
-      if (requirement.status === 'onOrder') {
-        statusIndicator = '🔵'; // Серый квадрат
+      if (requirement.status === 'issued') {
+        statusIndicator = '🟣'; // Серый квадрат
       }
       if (requirement.status === 'onShort') {
         statusIndicator = '🟠'; // Серый квадрат

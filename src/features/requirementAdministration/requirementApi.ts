@@ -81,6 +81,8 @@ export const requirementApi = createApi({
         partRequestNumberNew?: number;
         partNumberID?: string;
         neededOnID?: string;
+        ifStockCulc?: boolean;
+        includeAlternates?: boolean;
       }
     >({
       query: ({
@@ -95,6 +97,8 @@ export const requirementApi = createApi({
         partNumberID,
         neededOnID,
         endDate,
+        ifStockCulc,
+        includeAlternates,
       }) => ({
         url: `requirementsNew/getFilteredRequirements/company/${COMPANY_ID}`,
         params: {
@@ -109,6 +113,8 @@ export const requirementApi = createApi({
           partNumberID,
           neededOnID,
           endDate,
+          ifStockCulc,
+          includeAlternates,
         },
       }),
       providesTags: ['Requirement'],

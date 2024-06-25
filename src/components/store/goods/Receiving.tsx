@@ -8,8 +8,8 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Form, FormInstance, Modal, Upload, message } from 'antd';
+
+import { Button, Form, Modal, Upload, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 import UploadLink, { AcceptedFileTypes } from '@/components/shared/UploadLink';
@@ -35,6 +35,12 @@ import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/
 import { IOrderItem } from '@/models/IRequirement';
 import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
 import { handleFileSelect } from '@/services/utilites';
+import { useGetLocationsQuery } from '@/features/storeAdministration/LocationApi';
+import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
+import { Split } from '@geoffcox/react-splitter';
+import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+// import ReportGenerator from '@/components/shared/GeneratedLabel';
+import ReportPrintQR from '@/components/shared/ReportPrintQR';
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
@@ -50,57 +56,61 @@ const Receiving: FC<ReceivingType> = ({
   onUpdateOrder,
   onReceivingPart,
 }) => {
+  const [isPrintQRChecked, setIsPrintQRChecked] = useState(false); // Состояние для галки "Печать QR"
+  const [printData, setPrintData] = useState(null); // Данные для печати
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [selectedSinglePNID, setSecectedSinglePNID] = useState<string | null>(
+    null
+  );
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
-  const formRef = useRef<FormInstance>(null);
-  const [selectedStore, setSecectedStore] = useState<any>(null);
-  const [selectedSingleStore, setSecectedSingleStore] = useState<any>(null);
+
   const [addedMaterialItem, setAddedMaterialItem] = useState<any>(null);
 
   const [isUpload, setisUpload] = useState<boolean>(false);
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
+  const [isChangeQRPrintChecked, setIsChangeQRPrintChecked] = useState(true);
 
   const dispatch = useAppDispatch();
   const [isCustomerGoods, setIsCustomerGoods] = useState(false);
-  const [LOCATION, setLOCATION] = useState([]); //
-  const [selectedLocation, setSecectedLocation] = useState<any>(null);
-  const [selectedSingleLocation, setSecectedSingleLocation] =
-    useState<any>(null);
+  const [selectedLocationName, setSelectedLocationName] = useState<any>(null);
+
+  useState<any>(null);
+  const [selectedOwnerID, setSelectedOwnerID] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (isUpload) {
       setisUpload(isUpload);
     }
   }, [isUpload]);
-  useEffect(() => {
-    if (selectedStore) {
-      form.setFields([{ name: 'store', value: selectedStore.APNNBR }]);
-      const transformedData = selectedStore?.locations.map((item: any) => ({
-        ...item,
-        APNNBR: item.locationName, // Преобразуем shopShortName в APNNBR
-      }));
 
-      setLOCATION(transformedData);
-    }
-  }, [selectedStore]);
-  useEffect(() => {
-    if (selectedLocation) {
-      form.setFields([
-        { name: 'location', value: selectedLocation.APNNBR },
-        {
-          name: 'ownerShotName',
-          value: selectedLocation?.ownerShotName,
-        },
-        {
-          name: 'ownerDiscription',
-          value: selectedLocation?.ownerLongName,
-        },
-        { name: 'store', value: selectedStore.shopShortName },
-      ]);
-    }
-  }, [selectedLocation]);
+  const { data: stores } = useGetStoresQuery({});
+  const [selectedStoreID, setSelectedStoreID] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedLocationID, setSelectedLocationID] = useState<
+    string | undefined
+  >(undefined);
+  const [selectedStoreName, setSelectedStoreName] = useState<
+    string | undefined
+  >(undefined);
+  const {
+    data: locations,
+    isLoading,
+    refetch: refetchLocations,
+  } = useGetLocationsQuery({
+    storeID: selectedStoreID,
+  });
+  const locationsCodesValueEnum: Record<string, string> =
+    locations?.reduce((acc, mpdCode) => {
+      if (mpdCode.id && mpdCode.locationName) {
+        acc[mpdCode.id] = `${String(mpdCode.locationName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
 
   useEffect(() => {
     if (currentPart) {
@@ -151,55 +161,47 @@ const Receiving: FC<ReceivingType> = ({
   const [initialForm, setinitialForm] = useState<any>('');
   const [updateOrderItem] = useUpdateOrderItemMutation();
   const [updateOrder] = useUpdateOrderMutation();
-  // const handleDelete = (file: any) => {
-  //   Modal.confirm({
-  //     title: 'Вы уверены, что хотите удалить этот файл?',
-  //     onOk: async () => {
-  //       try {
-  //         const response = await dispatch(
-  //           deleteFile({ id: file.id, companyID: COMPANY_ID })
-  //         );
-  //         if (response.meta.requestStatus === 'fulfilled') {
-  //           // Удаляем файл из массива files
-  //           const updatedFiles = addedMaterialItem.FILES.filter(
-  //             (f: { id: any }) => f.id !== file.id
-  //           );
-  //           const updatedItem = {
-  //             ...currentPart,
-  //             files: updatedFiles,
-  //           };
-  //           // await updateOrderItem(updatedItem).unwrap();
-  //           // orderItem && onSubmit(updatedItem);
-  //           const result = await dispatch(
-  //             updateManyMaterialItems({
-  //               companyID: COMPANY_ID
-  //               ids: [addedMaterialItem.id||''],
-  //               FILES: updatedFiles,
-  //             }),
-  //           );
-  //           if (result.meta.requestStatus === 'fulfilled') {
-  //             // onUpdatePart(result.payload);
-  //           }
-  //         } else {
-  //           throw new Error('Не удалось удалить файл');
-  //         }
-  //       } catch (error) {
-  //         message.error('ERROR DELETE');
-  //       }
-  //     },
-  //   });
-  // };
+
+  const storeCodesValueEnum: Record<string, string> =
+    stores?.reduce((acc, mpdCode) => {
+      if (mpdCode?.id && mpdCode.storeShortName) {
+        acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
+
+  const handleStoreChange = (value: string) => {
+    setSelectedStoreID(value);
+    const selectedStore = stores?.find((store) => store.id === value);
+    setSelectedStoreName(selectedStore?.storeShortName);
+  };
+  const handleLocationChange = (value: string) => {
+    setSelectedLocationID(value);
+    const selectedLocation = locations?.find((store) => store.id === value);
+    setSelectedLocationName(selectedLocation?.locationName);
+
+    form.setFields([
+      {
+        name: 'ownerDiscription',
+        value: selectedLocation?.ownerID?.companyName,
+      },
+      {
+        name: 'ownerShotName',
+        value: selectedLocation?.ownerID?.title,
+      },
+    ]);
+  };
   return (
     <ProForm
       onReset={() => {
         setIsResetForm(true);
-        setTimeout(() => {
-          setIsResetForm(false);
-        }, 0);
-        setinitialForm('');
-        setSecectedSinglePN(null);
-        setSecectedSingleStore({ shopShortName: '' });
-        setSecectedSingleLocation({ locationName: '' });
+        setSelectedStoreID(undefined);
+        setSelectedLocationID(undefined);
+        setSecectedSinglePNID(null);
+        setSelectedOwnerID(undefined);
+        setSelectedStoreName(undefined);
+        setSelectedLocationName(null);
+        form.resetFields();
       }}
       submitter={{
         submitButtonProps: {
@@ -227,10 +229,10 @@ const Receiving: FC<ReceivingType> = ({
               GROUP: values.partGroup,
               TYPE: values.partType,
               CONDITION: values.condition,
-              SHELF_NUMBER: selectedLocation.locationName,
-              STOCK: selectedSingleStore?.shopShortName,
+              SHELF_NUMBER: selectedLocationName,
+              STOCK: selectedStoreName,
               OWNER: values?.owner,
-              PRICE: currentPart.price,
+              PRICE: currentPart?.price,
               RECEIVED_DATE: currentReceiving?.receivingDate,
               ORDER_NUMBER: currenOrder?.orderNumberNew,
               UNIT_OF_MEASURE: values?.unit,
@@ -264,7 +266,10 @@ const Receiving: FC<ReceivingType> = ({
               CERTIFICATE_TYPE: values?.certificateType,
               REVISION: 'C',
               IS_CUSTOMER_GOODS: isCustomerGoods,
-              partID: currentPart?.partID?._id,
+              partID: selectedSinglePNID || currentPart?.partID?._id,
+              locationID: selectedLocationID,
+              ownerID: selectedOwnerID,
+              storeID: selectedStoreID,
               RECEIVING_ID: currentReceiving._id,
               ORDER_ITEM_ID:
                 (currentPart && currentPart?.id) || currentPart?._id,
@@ -274,6 +279,9 @@ const Receiving: FC<ReceivingType> = ({
             setAddedMaterialItem((await result).payload);
             onReceivingPart && onReceivingPart([(await result).payload]);
             message.success('SUCCESS');
+            setPrintData((await result).payload.id);
+
+            // Устанавливаем галку "Печать QR" в true
 
             const resultUp = await dispatch(
               postNewReceivingItem({
@@ -293,6 +301,9 @@ const Receiving: FC<ReceivingType> = ({
             );
             if (resultUp.meta.requestStatus === 'fulfilled') {
               setisUpload(true);
+              // setIsPrintQRChecked(true);
+
+              // Устанавливаем данные для
               dispatch(
                 createBookingItem({
                   companyID: currentCompanyID,
@@ -303,8 +314,8 @@ const Receiving: FC<ReceivingType> = ({
                       currentReceiving?.WAREHOUSE_RECEIVED_AT || '',
                     SUPPLIES_CODE: currentReceiving?.SUPPLIES_CODE || '',
                     SUPPLIES_ID: currentReceiving?.SUPPLIES_ID || '',
-                    STOCK: selectedSingleStore?.shopShortName,
-                    SHELF_NUMBER: selectedLocation.locationName,
+                    STOCK: selectedStoreName,
+                    SHELF_NUMBER: selectedLocationName,
                     ORDER_NUMBER: currenOrder?.orderNumberNew,
                     PRICE: currentPart?.price,
                     CURRENCY: currentPart?.currency,
@@ -359,7 +370,10 @@ const Receiving: FC<ReceivingType> = ({
                     orderType: currenOrder?.orderType,
                     RECEIVING_ITEMS_ID:
                       resultUp.payload?._id || resultUp.payload?.id,
-                    partID: currentPart?.partID?._id,
+                    partID: selectedSinglePNID || currentPart?.partID?._id,
+                    locationID: selectedLocationID,
+                    ownerID: selectedOwnerID,
+                    storeID: selectedStoreID,
                     RECEIVING_ID: resultUp?.payload?.RECEIVING_ID,
                   },
                 })
@@ -477,353 +491,366 @@ const Receiving: FC<ReceivingType> = ({
         width={'30%'}
         onCancel={() => setOpenLabelsPrint(false)}
         footer={null}
-      >
-        {/* <GeneretedTransferPdf parts={partsToPrint} /> */}
-      </Modal>
-      {/* <>    {t('RECEIVE')}</> */}
-      <ProFormGroup>
-        <ProFormGroup direction="vertical">
-          <ProFormGroup>
-            <ProFormDigit
-              name="qty"
+      ></Modal>
+      <div className="flex flex-col">
+        <Split initialPrimarySize="65%" splitterSize="20px">
+          <div className="h-[49vh] overflow-y-auto">
+            <ProFormGroup direction="vertical">
+              <ProFormGroup>
+                <ProFormDigit
+                  name="qty"
+                  rules={[{ required: true, message: 'Required' }]}
+                  label={t('QTY/BACKORDER')}
+                  width="xs"
+                  tooltip={t('QTY')}
+                ></ProFormDigit>
+                /
+                <ProFormDigit
+                  disabled
+                  name="backorder"
+                  width="xs"
+                ></ProFormDigit>
+                <ProFormSelect
+                  rules={[{ required: true, message: 'Required' }]}
+                  label={t('UNIT')}
+                  name="unit"
+                  width="sm"
+                  valueEnum={{
+                    EA: `EA/${t('EACH').toUpperCase()}`,
+                    M: `M/${t('Meters').toUpperCase()}`,
+                    ML: `ML/${t('Milliliters').toUpperCase()}`,
+                    SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                    CM: `CM/${t('Centimeters').toUpperCase()}`,
+                    GM: `GM/${t('Grams').toUpperCase()}`,
+                    YD: `YD/${t('Yards').toUpperCase()}`,
+                    FT: `FT/${t('Feet').toUpperCase()}`,
+                    SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                    IN: `IN/${t('Inch').toUpperCase()}`,
+                    SH: `SH/${t('Sheet').toUpperCase()}`,
+                    SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                    RL: `RL/${t('Roll').toUpperCase()}`,
+                    KT: `KT/${t('Kit').toUpperCase()}`,
+                    LI: `LI/${t('Liters').toUpperCase()}`,
+                    KG: `KG/${t('Kilograms').toUpperCase()}`,
+                    JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+                  }}
+                ></ProFormSelect>
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormSelect
+                  rules={[{ required: true }]}
+                  name="partGroup"
+                  label={`${t('PART GROUP')}`}
+                  width="sm"
+                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  options={[
+                    { value: 'CONS', label: t('CONS') },
+                    { value: 'TOOL', label: t('TOOL') },
+                    { value: 'CHEM', label: t('CHEM') },
+                    { value: 'ROT', label: t('ROT') },
+                    { value: 'GSE', label: t('GSE') },
+                  ]}
+                />
+                <ProFormSelect
+                  rules={[{ required: true }]}
+                  name="partType"
+                  label={`${t('PART TYPE')}`}
+                  width="sm"
+                  tooltip={`${t('SELECT PART TYPE')}`}
+                  options={[
+                    { value: 'ROTABLE', label: t('ROTABLE') },
+                    { value: 'CONSUMABLE', label: t('CONSUMABLE') },
+                  ]}
+                />
+              </ProFormGroup>
+              <ProFormGroup direction="horizontal">
+                <ProFormGroup>
+                  <ContextMenuPNSearchSelect
+                    label={t('PART No')}
+                    isResetForm={isResetForm}
+                    rules={[{ required: true }]}
+                    onSelectedPN={function (PN: any): void {
+                      console.log(PN);
+                      setSecectedSinglePN(PN);
+                      setSecectedSinglePNID(PN?._id);
+                      form.setFields([
+                        { name: 'description', value: PN?.DESCRIPTION },
+                      ]);
+                      form.setFields([
+                        { name: 'unit', value: PN?.UNIT_OF_MEASURE },
+                      ]);
+                      form.setFields([
+                        { name: 'addPartNumber', value: PN?.PART_NUMBER },
+                      ]);
+                      form.setFields([
+                        {
+                          name: 'addDescription',
+                          value: PN?.ADD_DESCRIPTION || PN?.DESCRIPTION,
+                        },
+                      ]);
+                      form.setFields([
+                        {
+                          name: 'addUnit',
+                          value: PN?.ADD_UNIT_OF_MEASURE || PN?.UNIT_OF_MEASURE,
+                        },
+                      ]);
+                      form.setFields([{ name: 'partGroup', value: PN?.GROUP }]);
+                      form.setFields([{ name: 'partType', value: PN?.TYPE }]);
+                    }}
+                    name={'partNumber'}
+                    initialFormPN={initialForm}
+                    width={'sm'}
+                  ></ContextMenuPNSearchSelect>
+
+                  <ProFormText
+                    rules={[{ required: true }]}
+                    name="description"
+                    label={t('DESCRIPTION')}
+                    width="lg"
+                    tooltip={t('DESCRIPTION')}
+                  ></ProFormText>
+                </ProFormGroup>
+              </ProFormGroup>
+
+              <ProFormGroup>
+                <ProFormText
+                  name="batch"
+                  label={t('BATCH NUMBER')}
+                  width="sm"
+                  tooltip={t('BATCH NUMBER')}
+                ></ProFormText>
+                <ProFormText
+                  name="serialNumber"
+                  label={t('SERIAL NUMBER')}
+                  width="sm"
+                  tooltip={t('SERIAL NUMBER')}
+                ></ProFormText>
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormSelect
+                  // rules={[{ required: true }]}
+                  name="certificateType"
+                  label={`${t('CERTIFICATE TYPE')}`}
+                  width="sm"
+                  options={[
+                    { value: 'B1', label: t('BCAA SRC FORM 2.2.2 V2') },
+                    { value: 'B2', label: t('BCAA FORM (CONTRACTED AMO)') },
+                    { value: 'C1', label: t('CERTIFICATE OF CONFORMANCE') },
+                    {
+                      value: 'CAAC',
+                      label: t('CHINA AUTHORIZED RELEASE CERTIFICATE'),
+                    },
+                    { value: 'E1', label: t('EASA-145 APPROVAL') },
+                    { value: 'F100', label: t('ANAC BRAZIL FORM F-100-01') },
+                    { value: 'JAA', label: t(' JAA FORM ONE') },
+                    { value: 'T1', label: t('TCCA FORM ONE CANADA') },
+                    { value: 'UK1', label: t('CAA UK FORM 1') },
+                    {
+                      value: 'Ф-1',
+                      label: t('ТАЛОН ГОДНОСТИ КОМПОНЕНТА ФАВТ'),
+                    },
+                    { value: 'Ф-2', label: t('СЕРТИФИКАТ') },
+                  ]}
+                />
+                <ProFormText
+                  // rules={[{ required: true }]}
+                  name="certificateNumber"
+                  label={t('CERTIFICATE NUMBER')}
+                  width="sm"
+                  tooltip={t('CERTIFICATE NUMBER')}
+                ></ProFormText>
+              </ProFormGroup>
+
+              <ProFormGroup>
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  name="condition"
+                  label={t('CONDITION')}
+                  width="sm"
+                  tooltip={t('CONDITION')}
+                  valueEnum={{
+                    '/NEW': t('NEW'),
+                    '/INSPECTED': t('INSPECTED'),
+                    '/REPAIRED': t('REPAIRED'),
+                    '/SERVICABLE': t('SERVICABLE'),
+                    '/UNSERVICABLE': t('UNSERVICABLE'),
+                  }}
+                />
+                <ProFormDatePicker
+                  name="expiryDate"
+                  label={t('EXPIRY DATE')}
+                  width="xs"
+                ></ProFormDatePicker>
+                <ProFormGroup></ProFormGroup>
+              </ProFormGroup>
+
+              <ProFormGroup>
+                <ProFormSelect
+                  showSearch
+                  name="storeID"
+                  rules={[{ required: true }]}
+                  label={t('STORE')}
+                  width="sm"
+                  valueEnum={storeCodesValueEnum || []}
+                  onChange={handleStoreChange}
+                />
+
+                <ProFormSelect
+                  showSearch
+                  name="locationID"
+                  rules={[{ required: true }]}
+                  label={t('LOCATION')}
+                  width="sm"
+                  valueEnum={locationsCodesValueEnum || []}
+                  disabled={!selectedStoreID}
+                  onChange={handleLocationChange}
+                />
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormText
+                  disabled
+                  name="ownerShotName"
+                  rules={[{ required: true }]}
+                  label={t('OWNER')}
+                  width="sm"
+                  tooltip={t('OWNER')}
+                ></ProFormText>
+                <ProFormText
+                  disabled
+                  label={t('OWNER DESCRIPTION')}
+                  name="ownerDiscription"
+                  width="sm"
+                ></ProFormText>
+
+                <ProFormText
+                  name="notes"
+                  label={t('REMARKS')}
+                  width="lg"
+                  tooltip={t('REMARKS')}
+                ></ProFormText>
+              </ProFormGroup>
+            </ProFormGroup>
+          </div>
+
+          <ProFormGroup
+            style={{
+              background: '#F0F0F0',
+              padding: 10,
+              borderRadius: 5,
+            }}
+            size={'small'}
+            direction="vertical"
+          >
+            <ProFormText
+              rules={[{ required: true }]}
+              name="addPartNumber"
+              label={t('1C/PART No')}
+              width="lg"
+              tooltip={t('PART No')}
+            ></ProFormText>
+            <ProFormText
               rules={[{ required: true, message: 'Required' }]}
-              label={t('QTY/BACKORDER')}
-              width="xs"
+              name="addDescription"
+              label={t('1C/DESCRIPTION')}
+              width="lg"
+              tooltip={t('DESCRIPTION')}
+            ></ProFormText>
+            <ProFormDigit
+              name="addQty"
+              rules={[{ required: true }]}
+              label={t('1C/QUANTITY')}
+              width="sm"
               tooltip={t('QTY')}
             ></ProFormDigit>
-            /<ProFormDigit disabled name="backorder" width="xs"></ProFormDigit>
-            <ProFormSelect
-              rules={[{ required: true, message: 'Required' }]}
-              label={t('UNIT')}
-              name="unit"
-              width="xs"
-              valueEnum={{
-                EA: `EA/${t('EACH').toUpperCase()}`,
-                M: `M/${t('Meters').toUpperCase()}`,
-                ML: `ML/${t('Milliliters').toUpperCase()}`,
-                SI: `SI/${t('Sq Inch').toUpperCase()}`,
-                CM: `CM/${t('Centimeters').toUpperCase()}`,
-                GM: `GM/${t('Grams').toUpperCase()}`,
-                YD: `YD/${t('Yards').toUpperCase()}`,
-                FT: `FT/${t('Feet').toUpperCase()}`,
-                SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
-                IN: `IN/${t('Inch').toUpperCase()}`,
-                SH: `SH/${t('Sheet').toUpperCase()}`,
-                SM: `SM/${t('Sq Meters').toUpperCase()}`,
-                RL: `RL/${t('Roll').toUpperCase()}`,
-                KT: `KT/${t('Kit').toUpperCase()}`,
-                LI: `LI/${t('Liters').toUpperCase()}`,
-                KG: `KG/${t('Kilograms').toUpperCase()}`,
-                JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
-              }}
-            ></ProFormSelect>
-          </ProFormGroup>
-          <ProFormGroup>
-            <ProFormSelect
-              rules={[{ required: true }]}
-              name="partGroup"
-              label={`${t('PART GROUP')}`}
-              width="sm"
-              tooltip={`${t('SELECT SPESIAL GROUP')}`}
-              options={[
-                { value: 'CONS', label: t('CONS') },
-                { value: 'TOOL', label: t('TOOL') },
-                { value: 'CHEM', label: t('CHEM') },
-                { value: 'ROT', label: t('ROT') },
-                { value: 'GSE', label: t('GSE') },
-              ]}
-            />
-            <ProFormSelect
-              rules={[{ required: true }]}
-              name="partType"
-              label={`${t('PART TYPE')}`}
-              width="sm"
-              tooltip={`${t('SELECT PART TYPE')}`}
-              options={[
-                { value: 'ROTABLE', label: t('ROTABLE') },
-                { value: 'CONSUMABLE', label: t('CONSUMABLE') },
-              ]}
-            />
-          </ProFormGroup>
-          <ProFormGroup direction="horizontal">
-            <ProFormGroup>
-              <ContextMenuPNSearchSelect
-                label={t('PART No')}
-                isResetForm={isResetForm}
-                rules={[{ required: true }]}
-                onSelectedPN={function (PN: any): void {
-                  setSecectedSinglePN(PN);
-                  form.setFields([
-                    { name: 'description', value: PN?.DESCRIPTION },
-                  ]);
-                  form.setFields([
-                    { name: 'unit', value: PN?.UNIT_OF_MEASURE },
-                  ]);
-                  form.setFields([
-                    { name: 'addPartNumber', value: PN?.PART_NUMBER },
-                  ]);
-                  form.setFields([
-                    {
-                      name: 'addDescription',
-                      value: PN?.ADD_DESCRIPTION || PN?.DESCRIPTION,
-                    },
-                  ]);
-                  form.setFields([
-                    {
-                      name: 'addUnit',
-                      value: PN?.ADD_UNIT_OF_MEASURE || PN?.UNIT_OF_MEASURE,
-                    },
-                  ]);
-                  form.setFields([{ name: 'partGroup', value: PN?.GROUP }]);
-                  form.setFields([{ name: 'partType', value: PN?.TYPE }]);
-                }}
-                name={'partNumber'}
-                initialFormPN={initialForm}
-                width={'sm'}
-              ></ContextMenuPNSearchSelect>
-
-              <ProFormText
-                rules={[{ required: true }]}
-                name="description"
-                label={t('DESCRIPTION')}
-                width="sm"
-                tooltip={t('DESCRIPTION')}
-              ></ProFormText>
-            </ProFormGroup>
-          </ProFormGroup>
-
-          <ProFormGroup>
-            <ProFormText
-              name="batch"
-              label={t('BATCH NUMBER')}
-              width="sm"
-              tooltip={t('BATCH NUMBER')}
-            ></ProFormText>
-            <ProFormText
-              name="serialNumber"
-              label={t('SERIAL NUMBER')}
-              width="sm"
-              tooltip={t('SERIAL NUMBER')}
-            ></ProFormText>
-          </ProFormGroup>
-          <ProFormGroup>
-            <ProFormSelect
-              // rules={[{ required: true }]}
-              name="certificateType"
-              label={`${t('CERTIFICATE TYPE')}`}
-              width="sm"
-              options={[
-                { value: 'B1', label: t('BCAA SRC FORM 2.2.2 V2') },
-                { value: 'B2', label: t('BCAA FORM (CONTRACTED AMO)') },
-                { value: 'C1', label: t('CERTIFICATE OF CONFORMANCE') },
-                {
-                  value: 'CAAC',
-                  label: t('CHINA AUTHORIZED RELEASE CERTIFICATE'),
-                },
-                { value: 'E1', label: t('EASA-145 APPROVAL') },
-                { value: 'F100', label: t('ANAC BRAZIL FORM F-100-01') },
-                { value: 'JAA', label: t(' JAA FORM ONE') },
-                { value: 'T1', label: t('TCCA FORM ONE CANADA') },
-                { value: 'UK1', label: t('CAA UK FORM 1') },
-                { value: 'Ф-1', label: t('ТАЛОН ГОДНОСТИ КОМПОНЕНТА ФАВТ') },
-              ]}
-            />
-            <ProFormText
-              // rules={[{ required: true }]}
-              name="certificateNumber"
-              label={t('CERTIFICATE NUMBER')}
-              width="sm"
-              tooltip={t('CERTIFICATE NUMBER')}
-            ></ProFormText>
-          </ProFormGroup>
-
-          <ProFormGroup>
             <ProFormSelect
               showSearch
-              rules={[{ required: true }]}
-              name="condition"
-              label={t('CONDITION')}
-              width="sm"
-              tooltip={t('CONDITION')}
+              rules={[{ required: true, message: 'Required' }]}
+              label={t('ADD UNIT')}
+              name="addUnit"
+              width="lg"
               valueEnum={{
-                '/NEW': t('NEW'),
-                '/INSPECTED': t('INSPECTED'),
-                '/REPAIRED': t('REPAIRED'),
-                '/SERVICABLE': t('SERVICABLE'),
-                '/UNSERVICABLE': t('UNSERVICABLE'),
+                шт: `${t('шт').toUpperCase()}`,
+                м: `${t('м').toUpperCase()}`,
+                мл: `${t('мл').toUpperCase()}`,
+                дюйм2: `${t('дюйм2').toUpperCase()}`,
+                см: `${t('см').toUpperCase()}`,
+                г: `${t('г').toUpperCase()}`,
+                ярд: `${t('ярд').toUpperCase()}`,
+                фут: `${t('фут').toUpperCase()}`,
+                см2: `${t('см2').toUpperCase()}`,
+                дюйм: `${t('дюйм').toUpperCase()}`,
+                м2: `${t('м2').toUpperCase()}`,
+                рул: `${t('рул').toUpperCase()}`,
+                л: `${t('л').toUpperCase()}`,
+                кг: `${t('кг').toUpperCase()}`,
               }}
-            />
-            <ProFormDatePicker
-              name="expiryDate"
-              label={t('EXPIRY DATE')}
-              width="xs"
-            ></ProFormDatePicker>
-            <ProFormGroup></ProFormGroup>
-          </ProFormGroup>
-
-          <ProFormGroup>
-            <ContextMenuStoreSearchSelect
-              rules={[{ required: true }]}
-              name={'store'}
-              onSelectedStore={function (record: any): void {
-                setSecectedSingleStore(record);
-                setSecectedStore(record);
-              }}
-              initialFormStore={selectedSingleStore?.shopShortName || ''}
-              width={'xs'}
-              label={t('STORE')}
-            />
-
-            <ContextMenuLocationSearchSelect
-              isResetForm={isResetForm}
-              rules={[{ required: false }]}
-              name={'location'}
-              onSelectedLocation={function (record: any): void {
-                setSecectedLocation(record);
-                setSecectedSingleLocation(record);
-              }}
-              initialFormStore={selectedSingleLocation?.locationName || ''}
-              locations={LOCATION}
-              width={'sm'}
-            />
-          </ProFormGroup>
-          <ProFormGroup>
-            <ProFormText
-              disabled
-              name="ownerShotName"
-              rules={[{ required: true }]}
-              label={t('OWNER')}
-              width="sm"
-              tooltip={t('OWNER')}
-            ></ProFormText>
-            <ProFormText
-              disabled
-              label={t('OWNER DESCRIPTION')}
-              name="ownerDiscription"
-              width="sm"
-            ></ProFormText>
-
-            {/* <ProFormTextArea
-              disabled
-              name="notes"
-              rules={[{ required: true }]}
-              label={t('REMARKS')}
-              width="sm"
-              tooltip={t('REMARKS')}
-            ></ProFormTextArea> */}
-          </ProFormGroup>
-        </ProFormGroup>
-
-        <ProFormGroup
-          style={{
-            background: '#F0F0F0',
-            padding: 10,
-            borderRadius: 5,
-          }}
-          size={'small'}
-          direction="vertical"
-        >
-          <ProFormText
-            rules={[{ required: true }]}
-            name="addPartNumber"
-            label={t('1C/PART No')}
-            width="sm"
-            tooltip={t('PART No')}
-          ></ProFormText>
-          <ProFormText
-            rules={[{ required: true, message: 'Required' }]}
-            name="addDescription"
-            label={t('1C/DESCRIPTION')}
-            width="sm"
-            tooltip={t('DESCRIPTION')}
-          ></ProFormText>
-          <ProFormDigit
-            name="addQty"
-            rules={[{ required: true }]}
-            label={t('1C/QUANTITY')}
-            width="xs"
-            tooltip={t('QTY')}
-          ></ProFormDigit>
-          <ProFormSelect
-            showSearch
-            rules={[{ required: true, message: 'Required' }]}
-            label={t('ADD UNIT')}
-            name="addUnit"
-            width="sm"
-            valueEnum={{
-              шт: `${t('шт').toUpperCase()}`,
-              м: `${t('м').toUpperCase()}`,
-              мл: `${t('мл').toUpperCase()}`,
-              дюйм2: `${t('дюйм2').toUpperCase()}`,
-              см: `${t('см').toUpperCase()}`,
-              г: `${t('г').toUpperCase()}`,
-              ярд: `${t('ярд').toUpperCase()}`,
-              фут: `${t('фут').toUpperCase()}`,
-              см2: `${t('см2').toUpperCase()}`,
-              дюйм: `${t('дюйм').toUpperCase()}`,
-              м2: `${t('м2').toUpperCase()}`,
-              рул: `${t('рул').toUpperCase()}`,
-              л: `${t('л').toUpperCase()}`,
-              кг: `${t('кг').toUpperCase()}`,
-            }}
-          ></ProFormSelect>
-          <ProFormCheckbox
-            fieldProps={{
-              checked: isCustomerGoods,
-              onChange: (e: CheckboxChangeEvent) => {
-                setIsCustomerGoods(e.target.checked);
-              },
-            }}
-          >
-            {t('CUSTOMER GOODS')}
-          </ProFormCheckbox>
-
-          <ProFormGroup>
-            <ProForm.Item label={t('UPLOAD')}>
-              <div className="overflow-y-auto max-h-64">
-                <div className="mb-5">
-                  <UploadLink
-                    isUploadTrue={isUpload}
-                    onUpload={uploadFileServer}
-                    onSuccess={async function (response: any): Promise<void> {
-                      if (response) {
-                        setisUpload(false);
-                        const updatedFiles = addedMaterialItem.FILES
-                          ? [...addedMaterialItem.FILES, response]
-                          : [response];
-
-                        const currentCompanyID =
-                          localStorage.getItem('companyID') || '';
-                        const result = await dispatch(
-                          updateManyMaterialItems({
-                            companyID: currentCompanyID || '',
-                            ids: [addedMaterialItem.id],
-                            FILES: updatedFiles,
-                          })
-                        );
-                      }
-                    }}
-                    acceptedFileTypes={[
-                      AcceptedFileTypes.JPG,
-                      AcceptedFileTypes.PDF,
-                    ]}
-                  ></UploadLink>
-                </div>
-              </div>
-            </ProForm.Item>
+            ></ProFormSelect>
             <ProFormCheckbox
               fieldProps={{
-                checked: isChangeLocationChecked,
+                checked: isCustomerGoods,
                 onChange: (e: CheckboxChangeEvent) => {
-                  setIsChangeLocationChecked(e.target.checked);
+                  setIsCustomerGoods(e.target.checked);
                 },
               }}
             >
-              {t('PRINT LABELS')}
+              {t('CUSTOMER GOODS')}
             </ProFormCheckbox>
+
+            <ProFormGroup>
+              <ProForm.Item label={t('UPLOAD')}>
+                <div className="overflow-y-auto max-h-64">
+                  <div className="mb-5">
+                    <UploadLink
+                      isUploadTrue={isUpload}
+                      onUpload={uploadFileServer}
+                      onSuccess={async function (response: any): Promise<void> {
+                        if (response) {
+                          setisUpload(false);
+                          const updatedFiles = addedMaterialItem.FILES
+                            ? [...addedMaterialItem.FILES, response]
+                            : [response];
+
+                          const currentCompanyID =
+                            localStorage.getItem('companyID') || '';
+                          const result = await dispatch(
+                            updateManyMaterialItems({
+                              companyID: currentCompanyID || '',
+                              ids: [addedMaterialItem.id],
+                              FILES: updatedFiles,
+                            })
+                          );
+                        }
+                      }}
+                      acceptedFileTypes={[
+                        AcceptedFileTypes.JPG,
+                        AcceptedFileTypes.PDF,
+                      ]}
+                    ></UploadLink>
+                  </div>
+                </div>
+              </ProForm.Item>
+              <ProFormGroup>
+                <ReportPrintLabel
+                  xmlTemplate={''}
+                  data={[]}
+                  ids={[printData]}
+                  isDisabled={!printData}
+                ></ReportPrintLabel>
+                <ReportPrintQR
+                  openSettingsModal
+                  pageBreakAfter={false}
+                  // qrCodeSize={32}
+                  // fontSize={5}
+                  isDisabled={!printData}
+                  data={[printData]}
+                  ids={[printData]}
+                ></ReportPrintQR>
+              </ProFormGroup>
+            </ProFormGroup>
           </ProFormGroup>
-        </ProFormGroup>
-      </ProFormGroup>
+        </Split>
+      </div>
     </ProForm>
   );
 };

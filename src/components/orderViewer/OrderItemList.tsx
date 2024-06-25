@@ -2,35 +2,53 @@ import { ProColumns } from '@ant-design/pro-components';
 import { TimePicker } from 'antd';
 import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
 import EditableTable from '@/components/shared/Table/EditableTable';
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FileModalList from '@/components/shared/FileModalList';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { IOrder, IOrderItem } from '@/models/IRequirement';
+import { ColDef } from 'ag-grid-community';
+import PartsTable from '../shared/Table/PartsTable';
 type ReceivingItemList = {
-  scroll: number;
-  data: IOrderItem[] | [];
-  loding: boolean;
-  onSelectedParts?: (record: any) => void;
-  onSelectedIds?: (record: any) => void;
-  onDoubleClick?: (record: any, rowIndex?: any) => void;
-  onSingleRowClick?: (record: any, rowIndex?: any) => void;
+  columnDefs: ColDef[];
+  isLoading?: boolean;
+  taskId?: string;
+  fetchData?: IOrderItem[] | [];
+  onUpdateData: (data: any[]) => void;
+  height: string;
+  isAddVisiable?: boolean;
+  isVisible?: boolean;
+  isButtonVisiable?: boolean;
+  isEditable?: boolean;
+  pagination?: boolean;
+  onRowSelect?: (rowData: any | null) => void;
+  isButtonColumn?: boolean;
+  isChekboxColumn?: boolean;
+  onCheckItems?: (selectedKeys: React.Key[]) => void;
+
+  rowData?: any[];
 };
 const OrderItemList: FC<ReceivingItemList> = ({
-  data,
-  scroll,
-  onSelectedParts,
-  onSelectedIds,
-  onDoubleClick,
-  onSingleRowClick,
-  loding,
+  columnDefs,
+  isLoading,
+  height,
+  rowData,
+  isButtonVisiable = true,
+  isEditable = true,
+  isAddVisiable,
+  isVisible = false,
+  pagination,
+  onRowSelect,
+  isChekboxColumn,
+  isButtonColumn,
+  onCheckItems,
 }) => {
-  const [selectedMaterials, setSelectedMaterials] = useState<any>([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    onSelectedIds && onSelectedIds(newSelectedRowKeys);
-  };
+  // const [selectedMaterials, setSelectedMaterials] = useState<any>([]);
+  // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  // const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
+  //   setSelectedRowKeys(newSelectedRowKeys);
+  //   onSelectedIds && onSelectedIds(newSelectedRowKeys);
+  // };
   const { t } = useTranslation();
   const handleCopy = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
@@ -345,9 +363,11 @@ const OrderItemList: FC<ReceivingItemList> = ({
       },
     },
   ];
+  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
   return (
     <div>
-      <EditableTable
+      {/* <EditableTable
         data={data}
         showSearchInput
         initialColumns={initialColumns}
@@ -382,7 +402,38 @@ const OrderItemList: FC<ReceivingItemList> = ({
         externalReload={function () {
           throw new Error('Function not implemented.');
         }}
-      ></EditableTable>
+      ></EditableTable> */}
+      <div style={containerStyle}>
+        <div style={gridStyle} className={'ag-theme-alpine'}>
+          <PartsTable
+            isFilesVisiable={true}
+            isChekboxColumn={isChekboxColumn}
+            isVisible={isVisible}
+            isButtonColumn={isButtonColumn}
+            pagination={pagination}
+            isEditable={isEditable}
+            isAddVisiable={isAddVisiable}
+            isButtonVisiable={isButtonVisiable}
+            height={height}
+            isLoading={isLoading}
+            rowData={rowData || []}
+            columnDefs={columnDefs}
+            partNumbers={[]}
+            onAddRow={function (): void {}}
+            onDelete={function (id: string): void {}}
+            onSave={function (data: any): void {}}
+            onCellValueChanged={function (params: any): void {}} // onAddRow={onAddRow}
+            onRowSelect={function (rowData: any): void {
+              onRowSelect && onRowSelect(rowData);
+            }}
+            onCheckItems={function (selectedKeys: React.Key[]): void {
+              onCheckItems && onCheckItems(selectedKeys);
+            }} // onDelete={onDelete}
+            // onSave={onSave}
+            // onCellValueChanged={onCellValueChanged}
+          />
+        </div>
+      </div>
     </div>
   );
 };

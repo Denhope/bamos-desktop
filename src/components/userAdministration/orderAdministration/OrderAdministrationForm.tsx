@@ -166,7 +166,7 @@ const OrderAdministrationForm: FC<UserFormProps> = ({
     }, {}) || {};
 
   const requirementCodesValueEnum: Record<string, string> =
-    reqCodes?.reduce((acc, reqCode) => {
+    reqCodes?.reduce<Record<string, string>>((acc, reqCode) => {
       acc[reqCode.id] = reqCode.code;
       return acc;
     }, {}) || {};

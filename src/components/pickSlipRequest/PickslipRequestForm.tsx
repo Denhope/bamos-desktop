@@ -260,19 +260,19 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
       return acc;
     }, {}) || {};
   const requirementTypesValueEnum: Record<string, string> =
-    reqTypes?.reduce((acc, reqType) => {
+    reqTypes?.reduce<Record<string, string>>((acc, reqType) => {
       acc[reqType.id] = reqType.code;
       return acc;
     }, {}) || {};
 
   const requirementCodesValueEnum: Record<string, string> =
-    reqCodes?.reduce((acc, reqCode) => {
+    reqCodes?.reduce<Record<string, string>>((acc, reqCode) => {
       acc[reqCode.id] = reqCode.code;
       return acc;
     }, {}) || {};
 
   const neededCodesValueEnum: Record<string, string> =
-    usersGroups?.reduce((acc, usersGroup) => {
+    usersGroups?.reduce<Record<string, string>>((acc, usersGroup) => {
       acc[usersGroup.id] = usersGroup.title;
       return acc;
     }, {}) || {};

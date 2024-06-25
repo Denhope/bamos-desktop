@@ -30,6 +30,7 @@ interface ColumnDef {
 
 interface MyTableProps {
   height: string;
+  isVisible?: boolean;
   columnDefs: ColumnDef[];
   rowData: IProjectItemWO[];
   onRowSelect: (rowData: IProjectItemWO | null) => void;
@@ -42,6 +43,7 @@ const MyTable: React.FC<MyTableProps> = ({
   onRowSelect,
   onCheckItems,
   height,
+  isVisible = true,
 }) => {
   const gridRef = useRef<AgGridReact>(null);
   const { t, i18n } = useTranslation();
@@ -255,21 +257,23 @@ const MyTable: React.FC<MyTableProps> = ({
       className="pb-5 ag-theme-alpine"
       style={{ height: height, width: '100%' }}
     >
-      <div className="pb-2 flex justify-between">
-        <div className="mr-5">
-          {t('Total Selected Rows')}: {selectedRowCount}
+      {isVisible && (
+        <div className="pb-2 flex justify-between">
+          <div className="mr-5">
+            {t('Total Selected Rows')}: {selectedRowCount}
+          </div>
+          <div style={{ flexGrow: 1 }}>
+            <Input
+              allowClear
+              size="small"
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              style={{ width: '100%' }}
+            />
+          </div>
         </div>
-        <div style={{ flexGrow: 1 }}>
-          <Input
-            allowClear
-            size="small"
-            type="text"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: '100%' }}
-          />
-        </div>
-      </div>
+      )}
 
       <AgGridReact
         columnHoverHighlight={true}

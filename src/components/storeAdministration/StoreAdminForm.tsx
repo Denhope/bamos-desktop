@@ -1,5 +1,3 @@
-//ts-nocheck
-
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 import { IStore } from '@/models/IUser';
@@ -62,9 +60,9 @@ const StoreAdminForm: FC<UserFormProps> = ({ store, storeItem, onSubmit }) => {
     updateTabTitle(storeItem, store);
   }, [storeItem, store]);
   const usersCodesValueEnum: Record<string, string> =
-    users?.reduce((acc, mpdCode) => {
+    users?.reduce<Record<string, string>>((acc, mpdCode) => {
       acc[
-        mpdCode._id
+        mpdCode.id
       ] = `${mpdCode.firstName?.toUpperCase()} ${mpdCode.lastName?.toUpperCase()}`;
       return acc;
     }, {}) || {};
@@ -73,7 +71,7 @@ const StoreAdminForm: FC<UserFormProps> = ({ store, storeItem, onSubmit }) => {
     setShowSubmitButton(activeTabKey === '1');
   }, [activeTabKey]);
   const companiesCodesValueEnum: Record<string, string> =
-    companies?.reduce((acc, mpdCode) => {
+    companies?.reduce<Record<string, string>>((acc, mpdCode) => {
       acc[mpdCode.id] = mpdCode.companyName;
       return acc;
     }, {}) || {};

@@ -139,9 +139,10 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
+  REMARKS: any;
   QUANTITY?: any;
   quantity?: number;
-  id: any;
+  id?: any;
   status: string;
   _id: string;
   PART_NUMBER: string;
@@ -167,6 +168,23 @@ export interface IPartNumber {
   createUserID: string | any;
   updateDate?: any;
   updateUserID?: string | any;
+  acTypeID?: string | any;
+}
+export interface IAltPartNumber {
+  ISTWOWAY: any;
+  ISTWOWAYS: any;
+  altPartNumberID: any;
+  ALTERNATIVE: any;
+  id?: any;
+  status: string;
+  _id: string;
+  partNumberId?: string | Object;
+  altPartNumberId?: string | Object;
+  companyID: string;
+  createDate: any;
+  createUserID: string | Object;
+  updateDate?: any;
+  updateUserID?: string | Object;
   acTypeID?: string | any;
 }
 
@@ -215,6 +233,7 @@ export type TStatus =
   | 'planed';
 
 export interface IStore {
+  _id: string;
   id?: string;
   description: string;
   storeShortName: string;

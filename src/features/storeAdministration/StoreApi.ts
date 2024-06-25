@@ -17,11 +17,12 @@ export const storesTaskApi = createApi({
         ownerID?: string;
         stationID?: string;
         storeShortName?: string;
+        ids?: string;
       }
     >({
-      query: ({ status, ownerID, stationID, storeShortName }) => ({
+      query: ({ status, ownerID, stationID, storeShortName, ids }) => ({
         url: `/storesNew/getFilteredStores/company/${COMPANY_ID}`,
-        params: { status, ownerID, stationID, storeShortName },
+        params: { status, ownerID, stationID, storeShortName, ids },
       }),
       providesTags: ['StoreItem'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

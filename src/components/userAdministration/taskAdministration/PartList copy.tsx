@@ -197,6 +197,12 @@ const PartList: React.FC<ExampleComponentProps> = ({
           onDelete={onDelete}
           onSave={onSave}
           onCellValueChanged={onCellValueChanged}
+          onRowSelect={function (rowData: any): void {
+            throw new Error('Function not implemented.');
+          }}
+          onCheckItems={function (selectedKeys: React.Key[]): void {
+            throw new Error('Function not implemented.');
+          }}
         />
       </div>
     </div>

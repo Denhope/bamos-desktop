@@ -68,6 +68,7 @@ export interface IRequirement {
   type?: string;
   partNumber?: string;
   issuedQuantity?: number;
+  requestQuantity?: number;
   PN?: any;
   nameOfMaterial?: any;
   plannedDate?: any;
@@ -174,6 +175,8 @@ export interface IOrder {
 }
 
 export interface IOrderItem {
+  allPrice: any;
+  partNumberID: any;
   _id?: string;
   id?: string;
   partID?: string | IPartNumber;

@@ -189,7 +189,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
   }
   return (
     <>
-      <Space className="gap-6 pb-3">
+      <Space className="gap-6 pb-3 flex justify-between flex-wrap">
         <Col span={20}>
           <Button
             size="small"
@@ -256,6 +256,46 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             {t('CREATE WO')}
           </Button>
         </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          <Button
+            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            size="small"
+            icon={<ProjectOutlined />}
+            // onClick={() => handleGenerateWOTasks(selectedKeys)}
+          >
+            {t('GENERATE REQUIREMENTS')}
+          </Button>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          <Button
+            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            size="small"
+            icon={<ProjectOutlined />}
+            // onClick={() => handleGenerateWOTasks(selectedKeys)}
+          >
+            {t('GENERATE ACCEESS')}
+          </Button>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          <Button
+            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            size="small"
+            icon={<ProjectOutlined />}
+            // onClick={() => handleGenerateWOTasks(selectedKeys)}
+          >
+            {t('LINK REQUIREMENTS')}
+          </Button>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          <Button
+            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            size="small"
+            icon={<ProjectOutlined />}
+            // onClick={() => handleGenerateWOTasks(selectedKeys)}
+          >
+            {t('CANCEL LINK')}
+          </Button>
+        </Col>
       </Space>
 
       <div className="  flex gap-4 justify-between">
@@ -273,7 +313,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             />
           </div>
           <div
-            className="h-[53vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[48vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
             // sm={11}
           >
             <ProjectWPAdministrationForm

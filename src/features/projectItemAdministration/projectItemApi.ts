@@ -3,7 +3,7 @@ import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 
-import { IProjectItem, IProjectItemDTO } from '@/models/AC';
+import { IProjectItem } from '@/models/AC';
 
 export const projectItemApi = createApi({
   reducerPath: 'projectItemReducer',
@@ -69,9 +69,9 @@ export const projectItemApi = createApi({
       invalidatesTags: ['ProjectItem'], // Указываем, что это мутация недействительна тега 'UserGroups'
     }),
     addMultiProjectItems: builder.mutation<
-      IProjectItemDTO[],
+      any[],
       {
-        projectItemsDTO: Partial<IProjectItemDTO[]>;
+        projectItemsDTO: Partial<any[]>;
         projectID: string;
         vendorID?: string;
       }

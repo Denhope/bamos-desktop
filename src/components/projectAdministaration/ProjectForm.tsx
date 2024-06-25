@@ -1,4 +1,4 @@
-// ts-nocheck
+// @ts-nocheck
 
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
@@ -20,6 +20,7 @@ import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 
 interface UserFormProps {
   project?: IProject;
@@ -46,6 +47,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
 
   // Инициализация состояния для хранения выбранного acTypeID
   const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
+  const { data: stores } = useGetStoresQuery({});
 
   // Формирование объекта planesValueEnum
   const planesValueEnum: Record<string, { text: string; value: string }> =
@@ -59,6 +61,13 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       }
       return acc;
     }, {}) || {};
+  const storeCodesValueEnum: Record<string, string> =
+    stores?.reduce((acc, mpdCode) => {
+      if (mpdCode.id && mpdCode.storeShortName) {
+        acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
 
   const projectTypesValueEnum: Record<string, string> =
     projectTypes?.reduce((acc, reqType) => {
@@ -262,6 +271,17 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 name="finishDate"
                 width="sm"
               ></ProFormDatePicker>
+            </ProFormGroup>
+            <ProFormGroup>
+              <ProFormSelect
+                showSearch
+                mode="multiple"
+                name="storesID"
+                label={t('STORE FOR PARTS')}
+                width="lg"
+                valueEnum={storeCodesValueEnum || []}
+                // onChange={handleStoreChange}
+              />
             </ProFormGroup>
             <ProFormTextArea
               width={'xl'}
