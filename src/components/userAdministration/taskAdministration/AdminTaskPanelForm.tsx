@@ -32,6 +32,7 @@ import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import PartList from './PartList';
 import AutoCompleteEditor from '@/components/shared/Table/ag-grid/AutoCompleteEditor';
+import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 
 interface UserFormProps {
   task?: ITask;
@@ -117,7 +118,10 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
     { skip: !acTypeID }
   );
   const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
-
+  const { data: accessesData } = useGetAccessCodesQuery(
+    { acTypeID: acTypeID },
+    { skip: acTypeID }
+  );
   const zonesValueEnum: Record<string, string> =
     zones?.reduce((acc1, majorZone) => {
       if (majorZone.subZonesCode) {
@@ -150,6 +154,11 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
     { acTypeID },
     { skip: !acTypeID }
   );
+  const accessCodesValueEnum: Record<string, string> =
+    accessesData?.reduce((acc, mpdCode) => {
+      acc[mpdCode.id] = mpdCode.accessNbr;
+      return acc;
+    }, {} as Record<string, string>) || {};
   const taskCodesValueEnum: Record<string, string> =
     taskCodes?.reduce((acc, mpdCode) => {
       acc[mpdCode.id] = mpdCode.code;
@@ -608,7 +617,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       mode={'multiple'}
                       label={t('ACCESS')}
                       width="sm"
-                      // valueEnum={[]}
+                      valueEnum={accessCodesValueEnum}
                       disabled={!acTypeID}
                     />
                     <ProFormSelect
@@ -641,7 +650,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   </>
                 )}
               </ProFormGroup>
-              {taskType !== 'PART_PRODUCE' && (
+              {/* {taskType !== 'PART_PRODUCE' && (
                 <ProFormGroup>
                   <ProFormDigit
                     width={'xs'}
@@ -689,7 +698,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                     label={t('INTERVAL APUS')}
                   />
                 </ProFormGroup>
-              )}
+              )} */}
             </ProFormGroup>
           </div>
         </Tabs.TabPane>

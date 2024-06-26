@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -71,7 +72,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
         createUserID: item.createUserID._id,
         updateDate: item.updateDate,
         updateUserID: item.updateUserID ? item.updateUserID._id : '',
-        acTypeID: '', // Добавить тип AC, если требуется
+        acTypeID: item.acTypeID, // Добавить тип AC, если требуется
       }));
   };
 

@@ -67,11 +67,13 @@ const WOTree: FC<UserTreeProps> = ({
         statusIndicator = '🟠'; // Серый квадрат
       }
       const title = `№:${requirement?.taskWO} -/${
-        requirement?.taskId?.taskNumber || ''
+        requirement?.taskId?.taskNumber || requirement?.taskNumber || ''
       }(${requirement?.title || ''}/${
         requirement?.partNumberID?.PART_NUMBER || ''
-      })${statusIndicator}/${requirement?.qty}${
-        requirement?.partNumberID?.UNIT_OF_MEASURE || ''
+      })${statusIndicator}/${requirement?.qty || ''}${
+        requirement?.partNumberID?.UNIT_OF_MEASURE ||
+        requirement?.taskDescription ||
+        ''
       }`;
       // const children = [
       //   {

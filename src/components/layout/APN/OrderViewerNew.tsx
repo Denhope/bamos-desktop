@@ -27,17 +27,6 @@ interface ReceivingTracking {
 const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
   const { t } = useTranslation();
 
-  const SimpleFileList = ({ files }) => (
-    <div>
-      {files.map((file, index) => (
-        <div key={index}>
-          <a href="#" onClick={() => handleFileOpen(file)}>
-            {file.name}
-          </a>
-        </div>
-      ))}
-    </div>
-  );
   const valueEnum: ValueEnumType = {
     onShort: t('ON SHORT'),
     onQuatation: t('QUATATION'),
@@ -46,6 +35,9 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
     canceled: t('CANCELLED'),
     onOrder: t('ISSUED'),
     draft: t('DRAFT'),
+    issued: t('ISSUED'),
+    progress: t('IN PROGRESS'),
+    complete: t('COMPLETE'),
   };
   const columnOrderItems = [
     {
