@@ -94,7 +94,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
   let storesIDString = '';
   if (Array.isArray(editingProject?.projectID?.storesID)) {
-    storesIDString = editingProject?.projectID.storesID.join(',');
+    storesIDString = editingProject?.projectID?.storesID.join(',');
   }
 
   const { data: stores } = useGetStoresQuery(
@@ -102,7 +102,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       ids: storesIDString,
     },
     {
-      skip: !editingProject?.projectID.storesID,
+      skip: !editingProject?.projectID?.storesID,
     }
   );
   const { data: requirements } = useGetFilteredRequirementsQuery(
@@ -118,8 +118,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
   const storeCodesValueEnum: Record<string, string> =
     stores?.reduce((acc, mpdCode) => {
-      if (mpdCode.id && mpdCode.storeShortName) {
-        acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
+      if (mpdCode.id && mpdCode?.storeShortName) {
+        acc[mpdCode.id] = `${String(mpdCode?.storeShortName).toUpperCase()}`;
       }
       return acc;
     }, {} as Record<string, string>) || {};

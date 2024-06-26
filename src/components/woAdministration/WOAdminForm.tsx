@@ -48,6 +48,7 @@ import { IRequirement } from '@/models/IRequirement';
 import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 import CircleRenderer from '../userAdministration/requirementAdministration/CircleRenderer';
+import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 
 interface UserFormProps {
   order?: any;
@@ -389,7 +390,15 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
       }
       return acc1;
     }, {} as Record<string, string>) || {};
-
+  const { data: accessesData } = useGetAccessCodesQuery(
+    { acTypeID: acTypeID },
+    { skip: acTypeID }
+  );
+  const accessCodesValueEnum: Record<string, string> =
+    accessesData?.reduce((acc, mpdCode) => {
+      acc[mpdCode.id] = mpdCode.accessNbr;
+      return acc;
+    }, {} as Record<string, string>) || {};
   const partValueEnum: Record<string, any> = useMemo(() => {
     return (
       partNumbers?.reduce(
@@ -796,7 +805,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         mode={'multiple'}
                         label={t('ACCESS')}
                         width="sm"
-                        // valueEnum={[]}
+                        valueEnum={accessCodesValueEnum}
                         // disabled={!acTypeID}
                       />
                       <ProFormSelect
@@ -830,7 +839,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                     </>
                   )}
                 </ProFormGroup>
-                {taskType !== 'PART_PRODUCE' && (
+                {/* {taskType !== 'PART_PRODUCE' && (
                   <ProFormGroup>
                     <ProFormDigit
                       width={'xs'}
@@ -878,7 +887,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                       label={t('INTERVAL APUS')}
                     />
                   </ProFormGroup>
-                )}
+                )} */}
               </ProFormGroup>
             </div>
           ) : (
