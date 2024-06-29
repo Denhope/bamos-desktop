@@ -44,6 +44,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
             content: (
               <div className="flex relative overflow-hidden">
                 <StockGridNew
+                  isLoading={partsQueryLoading || partsLoadingF}
                   transformedStokPartNumbers={transformedPartNumbers || []}
                   partNumber={partNumber}
                 ></StockGridNew>
@@ -54,6 +55,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
           {
             content: (
               <StockDetailsNew
+                isLoading={partsQueryLoading || partsLoadingF}
                 transformedStokPartNumbers={transformedPartNumbers || []}
                 isDescription={true}
                 height="54vh"
@@ -67,6 +69,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
           {
             content: (
               <StockDetailsNew
+                isLoading={partsQueryLoading || partsLoadingF}
                 transformedStokPartNumbers={
                   transformedPartNumbers.filter(
                     (item) => item.locationType === 'transfer'
@@ -83,6 +86,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
           {
             content: (
               <StockDetailsNew
+                isLoading={partsQueryLoading || partsLoadingF}
                 transformedStokPartNumbers={
                   transformedPartNumbers.filter(
                     (item) => item?.restrictionID === 'inaccessible'

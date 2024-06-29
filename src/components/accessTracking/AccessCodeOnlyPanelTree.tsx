@@ -149,7 +149,7 @@ const AccessCodeOnlyPanelTree: FC<ZoneTreeProps> = ({
             onZoneCodeSelect(access);
           }
         }}
-        height={660}
+        height={560}
         searchQuery={searchQuery}
         onCheckItems={(selectedKeys: any[]) => {
           setSelectedKeys(selectedKeys); // Установите выбранные ключи при выборе элементов

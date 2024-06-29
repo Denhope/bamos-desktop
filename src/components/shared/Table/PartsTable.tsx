@@ -15,7 +15,7 @@ import {
 import { saveAs } from 'file-saver';
 import { IPartNumber } from '@/models/IUser';
 import AutoCompleteEditor from './ag-grid/AutoCompleteEditor';
-import { Button, Space } from 'antd';
+import { Button, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import localeTextRu from '@/locales/localeTextRu';
 import localeTextEn from '@/locales/localeTextEn';
@@ -392,6 +392,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
         : null
     );
     onCheckItems(selectedKeys);
+    console.log(selectedKeys);
     setSelectedRowCount(selectedNodes?.length || 0);
   };
   const checkboxColumn = {
@@ -402,7 +403,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
   const gridOptions = {
     domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
   };
-  const updatedColumnDefs = [checkboxColumn, ...columnDefs];
+  const updatedColumnDefs = [checkboxColumn, ...(columnDefs || [])];
 
   const baseColumnDefs = isChekboxColumn ? updatedColumnDefs : columnDefs;
   const buttonColumnDef = isButtonVisiable
@@ -482,39 +483,60 @@ const PartsTable: React.FC<PartsTableProps> = ({
           </div>
         </div>
       )}
-      <AgGridReact
-        rowClassRules={rowClassRules}
-        columnHoverHighlight={true}
-        defaultColDef={{
-          menuTabs: ['filterMenuTab', 'generalMenuTab'],
-          resizable: true,
-        }}
-        // gridOptions={gridOptions}
-        localeText={localeText}
-        paginationPageSize={50}
-        clipboardDelimiter={'\t'}
-        pagination={pagination}
-        loadingOverlayComponent={isLoading}
-        ref={gridRef}
-        rowSelection="multiple"
-        rowHeight={30}
-        quickFilterText={searchText}
-        // suppressRowClickSelection={true}
-        // isRowSelectable={isRowSelectable}
-        onSelectionChanged={handleRowSelection}
-        onCellContextMenu={handleCellContextMenu}
-        onRowEditingStarted={handleRowEditingStarted} // Обработчик начала редактирования
-        onRowEditingStopped={handleRowEditingStopped} // Обработчик завершения редактирования
-        columnDefs={[
-          ...baseColumnDefs,
-          ...buttonColumnDef,
-          ...filesColumnDef, // Условно добавленная колонка
-        ]}
-        // defaultColDef={defaultColDef}
-        rowData={rowData}
-        editType={'fullRow'}
-        onCellValueChanged={handleCellValueChanged}
-      />
+      <div
+        className="ag-theme-alpine"
+        style={{ height: height, width: '100%' }}
+      >
+        {isLoading ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <Spin size="large" />
+          </div>
+        ) : (
+          <AgGridReact
+            rowClassRules={rowClassRules}
+            columnHoverHighlight={true}
+            defaultColDef={{
+              menuTabs: ['filterMenuTab', 'generalMenuTab'],
+              resizable: true,
+            }}
+            // gridOptions={gridOptions}
+            // loadingOverlayComponent="agLoadingOverlay"
+
+            localeText={localeText}
+            paginationPageSize={50}
+            clipboardDelimiter={'\t'}
+            pagination={pagination}
+            // loadingOverlayComponent={isLoading}
+            ref={gridRef}
+            rowSelection="multiple"
+            rowHeight={30}
+            quickFilterText={searchText}
+            // suppressRowClickSelection={true}
+            // isRowSelectable={isRowSelectable}
+            onSelectionChanged={handleRowSelection}
+            onCellContextMenu={handleCellContextMenu}
+            onRowEditingStarted={handleRowEditingStarted} // Обработчик начала редактирования
+            onRowEditingStopped={handleRowEditingStopped} // Обработчик завершения редактирования
+            columnDefs={[
+              ...(baseColumnDefs || []),
+              ...buttonColumnDef,
+              ...filesColumnDef, // Условно добавленная колонка
+            ]}
+            // defaultColDef={defaultColDef}
+            rowData={rowData}
+            editType={'fullRow'}
+            onCellValueChanged={handleCellValueChanged}
+          />
+        )}
+      </div>
+
       {!isAddVisiable && (
         <Button type="primary" size="small" onClick={onAddRow}>
           {t('ADD PART')}

@@ -324,7 +324,7 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
         checkable={true}
         treeData={filteredTreeData}
         onSelect={onSelect}
-        height={660}
+        height={560}
         searchQuery={searchQuery}
         onCheckItems={(selectedKeys: any[]) => {
           console.log(selectedKeys);

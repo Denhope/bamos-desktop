@@ -1,3 +1,5 @@
+//@ts-nocheck
+import { Split } from '@geoffcox/react-splitter';
 import {
   useGetProjectGroupPanelsQuery,
   useGetProjectItemsWOQuery,
@@ -6,7 +8,7 @@ import {
 } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
 import { Button, Col, Modal, Space, Spin, message } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 // import data from '../../data/reports/label.xml';
 
 // Читаем содержимое файла label.xml
@@ -23,13 +25,12 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
-import { Split } from '@geoffcox/react-splitter';
 import AccessCodeTree from './AccessCodeTree';
 import AccessCodeForm from './AccessCodeForm';
 import { IAccessCode } from '@/models/ITask';
-import ReportGenerator from '../shared/ReportPrintLabel';
-import ReportEXEL from '../shared/ReportEXEL';
-import ReportPrintTag from '../shared/ReportPrintTag';
+// import ReportGenerator from '../shared/ReportPrintLabel';
+// import ReportEXEL from '../shared/ReportEXEL';
+// import ReportPrintTag from '../shared/ReportPrintTag';
 import {
   useAddBookingMutation,
   useGetFilteredBookingsQuery,
@@ -40,6 +41,10 @@ import { useGetGroupTaskCodesQuery } from '@/features/tasksAdministration/taskCo
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { USER_ID } from '@/utils/api/http';
 import AccessCodeOnlyPanelTree from './AccessCodeOnlyPanelTree';
+import { ColDef } from 'ag-grid-community';
+import { transformedAccessToIAssess } from '@/services/utilites';
+import PartContainer from '../woAdministration/PartContainer';
+import ReportPrintTag from '../shared/ReportPrintTag';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -79,6 +84,10 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
     { projectId: projectSearchValues?.projectID || '' },
     { skip: !projectSearchValues?.projectID }
   );
+
+  const transformedAccess = useMemo(() => {
+    return transformedAccessToIAssess(bookings || []);
+  }, [bookings]);
 
   const [pdfData, setPdfData] = useState<string | null>(null);
   // const {
@@ -383,6 +392,53 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       key: 'createUserID',
     },
   ];
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType;
+  }
+
+  const columnDefs = [
+    {
+      headerName: `${t('ACCESS No')}`,
+      field: 'accessNbr',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      headerName: `${t('BOOKING TYPE')}`,
+      field: 'voucherModel',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'accessProjectStatus',
+      headerName: `${t('STATUS')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'createDate',
+      editable: false,
+      filter: false,
+      headerName: `${t('DATE')}`,
+      cellDataType: 'date',
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'userName',
+      headerName: `${t('CREATE BY')}`,
+      cellDataType: 'text',
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
@@ -488,9 +544,10 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           )}
         </Col>
       </Space>
+
       <div className="h-[77vh] flex flex-col">
         <Split initialPrimarySize="30%" splitterSize="20px">
-          <div className="h-[71vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
+          <div className="h-[69vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
             {!projectSearchValues?.isOnlyPanels && (
               <AccessCodeTree
                 onZoneCodeSelect={handleEdit}
@@ -512,7 +569,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           </div>
           <div className="h-[69vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
             {/* <WOAdminForm /> */}
-            <Split horizontal initialPrimarySize="60%">
+            <Split horizontal initialPrimarySize="45%">
               <div className="overflow-auto h-[57vh]">
                 <AccessCodeForm
                   accessesData={accessesData || []}
@@ -524,10 +581,24 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                 ></AccessCodeForm>
               </div>
               <div className="py-5">
-                <TableComponent
+                <PartContainer
+                  isFilesVisiable={false}
+                  isVisible={false}
+                  pagination={false}
+                  isAddVisiable={true}
+                  isButtonVisiable={false}
+                  isEditable={false}
+                  height={'30vh'}
+                  columnDefs={columnDefs}
+                  partNumbers={[]}
+                  isChekboxColumn={false}
+                  onUpdateData={(data: any[]): void => {}}
+                  rowData={transformedAccess}
+                />
+                {/* <TableComponent
                   columns={columns}
                   data={editingproject?.accessNbr ? bookings : []}
-                ></TableComponent>
+                ></TableComponent> */}
               </div>
             </Split>
           </div>

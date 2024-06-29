@@ -22,6 +22,7 @@ interface Stock {
 interface StockGridProps {
   partNumber: IPartNumber;
   storeID?: string;
+  isLoading: boolean;
   transformedStokPartNumbers: any[];
 }
 
@@ -29,6 +30,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
   partNumber,
   storeID,
   transformedStokPartNumbers,
+  isLoading,
 }) => {
   const { t } = useTranslation();
 
@@ -214,6 +216,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
             key: '1',
             children: selectedKey ? (
               <StockDetailsNew
+                isLoading={isLoading}
                 transformedStokPartNumbers={
                   transformedStokPartNumbers.filter(
                     (item) =>

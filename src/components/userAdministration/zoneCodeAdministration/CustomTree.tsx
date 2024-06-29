@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import { Checkbox, Tree, Space } from 'antd'; // Импортируем Space из antd
 import type { DataNode } from 'antd/lib/tree';

@@ -299,7 +299,7 @@ const PartsList: FC<PartListTypes> = ({ parts }) => {
     <div>
       <EditableTable
         isNoneRowSelection={true}
-        showSelectedInput={false}
+        // showSelectedInput={false}
         data={parts || []}
         initialColumns={initialColumns}
         isLoading={false}

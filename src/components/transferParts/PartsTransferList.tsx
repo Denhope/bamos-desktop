@@ -341,7 +341,7 @@ const PartsTransferList: FC<PartListTypes> = ({
       <EditableTable
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         isNoneRowSelection={false}
-        showSelectedInput={true}
+        // showSelectedInput={true}
         data={parts || []}
         initialColumns={initialColumns}
         isLoading={isLoading}

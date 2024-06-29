@@ -1,8 +1,12 @@
 import { Button, Col, MenuProps, Modal, Row, Space, message } from 'antd';
 
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
-import { getItem, handleOpenReport } from '@/services/utilites';
+import {
+  getItem,
+  handleOpenReport,
+  transformToIStockPartNumber,
+} from '@/services/utilites';
 import {
   TransactionOutlined,
   EditOutlined,
@@ -16,15 +20,19 @@ import {
   useUpdateStorePartsMutation,
 } from '@/features/storeAdministration/PartsApi';
 
-import PartsTransferList from '@/components/transferParts/PartsTransferList';
 import { useAddBookingMutation } from '@/features/bookings/bookingApi';
-import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+
 import ReportEXEL from '@/components/shared/ReportEXEL';
-import ReportPrintQR from '@/components/shared/ReportPrintQR';
+
 import OriginalStoreEntry from '@/components/transferParts/OriginalStoreEntry';
 
 import { generateReport } from '@/utils/api/thunks';
 import { useTranslation } from 'react-i18next';
+import PartContainer from '@/components/woAdministration/PartContainer';
+import { ColDef } from 'ag-grid-community';
+import { format } from 'date-fns';
+import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+import ReportPrintQR from '@/components/shared/ReportPrintQR';
 
 const PartsTransferNew: FC = () => {
   const { t } = useTranslation();
@@ -64,6 +72,8 @@ const PartsTransferNew: FC = () => {
       skip: !selectedSerchValues,
     }
   );
+  console.log('partsQueryLoading:', partsQueryLoading);
+  console.log('partsLoadingF:', partsLoadingF);
 
   const [addAccessBooking] = useAddBookingMutation({});
   const handleSubmit = async (store: any) => {
@@ -148,6 +158,157 @@ const PartsTransferNew: FC = () => {
 
     fetchData();
   }, [selectedSerchValues, reportData]);
+
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType;
+  }
+
+  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
+    {
+      headerName: `${t('LOCAL_ID')}`,
+      field: 'LOCAL_ID',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      headerName: `${t('PART No')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'NAME_OF_MATERIAL',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'GROUP',
+      headerName: `${t('GROUP')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'TYPE',
+      headerName: `${t('TYPE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'QUANTITY',
+      editable: false,
+      filter: false,
+      headerName: `${t('QTY')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'STOCK',
+      editable: false,
+      filter: false,
+      headerName: `${t('STORE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'LOCATION',
+      editable: false,
+      filter: false,
+      headerName: `${t('LOCATION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SERIAL_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('BATCH/SERIAL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CONDITION',
+      editable: false,
+      filter: false,
+      headerName: `${t('CONDITION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'PRODUCT_EXPIRATION_DATE',
+      editable: false,
+      filter: false,
+      headerName: `${t('EXPIRY DATE')}`,
+      cellDataType: 'date',
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+
+    // {
+    //   field: 'reservedQTY',
+    //   editable: false,
+    //   filter: false,
+    //   headerName: `${t('RESERVED QTY')}`,
+    //   cellDataType: 'number',
+    // },
+
+    {
+      field: 'OWNER',
+      editable: false,
+      filter: false,
+      headerName: `${t('OWNER')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'RECEIVING_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('RECEIVING')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'RECEIVED_DATE',
+      editable: false,
+      filter: false,
+      headerName: `${t('RECEIVED DATE')}`,
+      cellDataType: 'date',
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'DOC_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('DOC_NUMBER')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'DOC_TYPE',
+      editable: false,
+      filter: false,
+      headerName: `${t('DOC_TYPE')}`,
+      cellDataType: 'text',
+    },
+  ]);
+
+  const transformedPartNumbers = useMemo(() => {
+    return transformToIStockPartNumber(parts || []);
+  }, [parts]);
   return (
     <div className="h-[82vh]    overflow-hidden flex flex-col justify-between ">
       <div className="flex flex-col gap-5 overflow-hidden ">
@@ -243,7 +404,7 @@ const PartsTransferNew: FC = () => {
         </Row>
 
         <div className="">
-          <PartsTransferList
+          {/* <PartsTransferList
             onSelectedParts={function (record: any): void {
               setSecectedParts(record);
             }}
@@ -253,7 +414,27 @@ const PartsTransferNew: FC = () => {
             onSelectedIds={function (record: any): void {
               setselectedRowKeys(record);
             }}
-          ></PartsTransferList>
+          ></PartsTransferList> */}
+
+          <PartContainer
+            isLoading={partsQueryLoading || partsLoadingF}
+            isFilesVisiable={true}
+            isVisible={true}
+            pagination={true}
+            isAddVisiable={true}
+            isButtonVisiable={false}
+            isEditable={true}
+            height={'52vh'}
+            columnDefs={columnDefs}
+            partNumbers={[]}
+            isChekboxColumn={true}
+            onUpdateData={(data: any[]): void => {}}
+            rowData={transformedPartNumbers}
+            onCheckItems={setselectedRowKeys}
+            onRowSelect={(data: any[]): void => {
+              setSecectedParts([data]);
+            }}
+          />
         </div>
       </div>
 

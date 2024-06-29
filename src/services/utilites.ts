@@ -895,10 +895,23 @@ export const transformToIStockPartNumber = (data: any[]): any[] => {
     locationType: item?.locationID?.locationType,
     SERIAL_NUMBER: item?.SERIAL_NUMBER || item?.SUPPLIER_BATCH_NUMBER,
     RECEIVING_NUMBER: item?.RECEIVING_ID?.receivingNumber,
-    DOC_NUMBER: item?.RECEIVING_ID?.awbNumber,
-    DOC_TYPE: item?.RECEIVING_ID?.awbType,
-    DOC_DATE: item?.RECEIVING_ID?.awbDate,
-    RECEIVING_DATE: item?.RECEIVING_ID?.receivingDate,
+    DOC_NUMBER: item?.RECEIVING_ID?.awbNumber || item?.DOC_NUMBER,
+    DOC_TYPE: item?.RECEIVING_ID?.awbType || item?.DOC_TYPE,
+    DOC_DATE: item?.RECEIVING_ID?.awbDate || item?.DOC_DATE,
+    RECEIVING_DATE: item?.RECEIVING_ID?.receivingDate || item?.RECEIVING_DATE,
+  }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformedAccessToIAssess = (data: any[]): any[] => {
+  console.log('Input data to Access:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    accessNbr: item?.accessProjectID?.accessNbr,
+    userName: item?.createUserID?.name,
   }));
 
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
@@ -982,14 +995,17 @@ export interface ValueEnumType {
   issued: string;
   progress: string;
   complete: string;
+  RECEIVED?: string;
+  PARTLY_RECEIVED?: string;
+  CANCELLED?: string;
+  partyCancelled?: string;
 }
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
     case 'draft':
       return '#D3D3D3'; // Light Gray
     case 'onShort':
-      return '#90EE90'; // Light Green
-    case 'issued':
+      return '#FFA07A'; // Light Salmon
       return '#800080'; // Dark Blue
     case 'progress':
       return '#800080'; // Dark Blue
@@ -1001,10 +1017,20 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
       return '#00008B'; // Sky Blue
     case 'closed':
       return '#32CD32'; // Lime Green
+    case 'RECEIVED':
+      return '#32CD32'; // Lime Green
+    case 'PARTLY_RECEIVED':
+      return '#90EE90'; // Light Green
     case 'canceled':
+      return '#FF6347'; // Tomato Red
+    case 'CANCELLED':
+      return '#FF6347'; // Tomato Red
+    case 'partyCancelled':
       return '#FF6347'; // Tomato Red
     case 'onOrder':
       return '#FFA07A'; // Light Salmon
+    case 'issued':
+      return '#800080'; // Dark Blue
     default:
       return ''; // Default color
   }
@@ -1043,13 +1069,13 @@ export const transformToITask = (data: ITask[]): any[] => {
 
 export const transformToIORderItem = (data: any[]): any[] => {
   const result = data.map((item: any) => ({
-    id: item._id,
+    id: item._id || item.id,
     status: item?.state,
-    _id: item._id,
+    _id: item._id || item.id,
     orderNumber: item.orderID?.orderNumberNew,
     orderID: item?.orderID,
     orderType: item?.orderID?.orderType,
-    index: item?.index,
+    index: item?.index + 1,
     PART_NUMBER: item?.partID?.PART_NUMBER,
     DESCRIPTION: item.partID?.DESCRIPTION,
     TYPE: item?.partID?.TYPE,
@@ -1107,6 +1133,41 @@ export const transformToPickSlipItemItem = (data: any[]): any[] => {
   return result;
 };
 
+export const transformToPartBooking = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item.MATERIAL_STORE_ID,
+
+    // index: item?.index,
+    // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,
+    // DESCRIPTION: item.MATERIAL_STORE_ID?.NAME_OF_MATERIAL,
+    // TYPE: item.MATERIAL_STORE_ID?.TYPE,
+    // GROUP: item.MATERIAL_STORE_ID?.GROUP,
+    // UNIT_OF_MEASURE: item.MATERIAL_STORE_ID?.UNIT_OF_MEASURE,
+
+    // companyID: item.companyID,
+    // createDate: item.createDate,
+    // createUserID: item.createUserID?._id,
+    // createUserName: item.createUserID?.name,
+    // updateDate: item.updateDate,
+    // updateUserID: item.updateUserID?._id,
+    // partNumberID: item?.partNumberID,
+    // requirementsID: item?.requirementsID,
+
+    // files: item?.files,
+  }));
+
+  return result;
+};
+export const transformToIRecevingItems = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item?.MATERIAL_STORE_ID,
+  }));
+
+  return result;
+};
+
 export const transformToPickSlipItemBooked = (data: any[]): any[] => {
   const result = data.flatMap((item: any) => {
     // Создаем новый объект с теми же свойствами, что и item
@@ -1141,6 +1202,9 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
         projectTaskID: bookedItem.projectTaskID?._id,
         PART_NUMBER_BOOKED: bookedItem?.storeItemID?.PART_NUMBER,
         DESCRIPTION: bookedItem?.storeItemID?.NAME_OF_MATERIAL,
+        GROUP: bookedItem?.storeItemID?.GROUP,
+        CONDITION: bookedItem?.storeItemID?.CONDITION,
+        TYPE: bookedItem?.storeItemID?.TYPE,
         SERIAL_NUMBER:
           bookedItem?.storeItemID?.SERIAL_NUMBER ||
           bookedItem?.storeItemID?.SUPPLIER_BATCH_NUMBER,

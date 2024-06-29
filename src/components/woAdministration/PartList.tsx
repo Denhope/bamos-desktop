@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -194,7 +196,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
   return (
     <div style={containerStyle}>
       <div style={gridStyle} className={'ag-theme-alpine'}>
-        <PartsTable
+        <PartsTable 
           isEditable={isEditable}
           height="65vh"
           isLoading={isLoading}

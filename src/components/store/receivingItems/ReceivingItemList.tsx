@@ -2,10 +2,18 @@ import { ProColumns } from '@ant-design/pro-components';
 import { TimePicker } from 'antd';
 import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
 import EditableTable from '@/components/shared/Table/EditableTable';
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FileModalList from '@/components/shared/FileModalList';
-import { handleFileOpen, handleFileSelect } from '@/services/utilites';
+import {
+  ValueEnumType,
+  getStatusColor,
+  handleFileOpen,
+  handleFileSelect,
+  transformToIRecevingItems,
+} from '@/services/utilites';
+import PartContainer from '@/components/woAdministration/PartContainer';
+import { ColDef } from 'ag-grid-community';
 type ReceivingItemList = {
   scroll: number;
   data: any[];
@@ -13,6 +21,8 @@ type ReceivingItemList = {
   onSelectedIds?: (record: any) => void;
   onDoubleClick?: (record: any, rowIndex?: any) => void;
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
+  isLoading: boolean;
+  hight: string;
 };
 const ReceivingItemList: FC<ReceivingItemList> = ({
   data,
@@ -21,6 +31,8 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
   onSelectedIds,
   onDoubleClick,
   onSingleRowClick,
+  isLoading,
+  hight,
 }) => {
   const [selectedMaterials, setSelectedMaterials] = useState<any>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -29,6 +41,22 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     onSelectedIds && onSelectedIds(newSelectedRowKeys);
   };
   const { t } = useTranslation();
+  const valueEnum: ValueEnumType = {
+    onShort: t('ON SHORT'),
+    onQuatation: t('QUATATION'),
+    open: t('OPEN'),
+    closed: t('CLOSED'),
+    canceled: t('CANCELLED'),
+    onOrder: t('ISSUED'),
+    draft: t('DRAFT'),
+    issued: t('ISSUED'),
+    progress: t('IN PROGRESS'),
+    complete: t('COMPLETE'),
+    RECEIVED: t('RECEIVED'),
+    PARTLY_RECEIVED: t('PARTLY RECEIVED'),
+    CANCELLED: t('PARTLY RECEIVED'),
+    partyCancelled: t('PARTLY CANCELLED'),
+  };
   const handleCopy = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
     navigator.clipboard.writeText(value);
@@ -405,44 +433,183 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       },
     },
   ];
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType;
+  }
+  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
+    {
+      headerName: `${t('RECEIVING No')}`,
+      field: 'RECEIVING_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+
+    {
+      headerName: `${t('RECEIVING ITEM No')}`,
+      field: 'RECEIVING_ITEM_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      headerName: `${t('PART_NUMBER')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'NAME_OF_MATERIAL',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'SUPPLIER_BATCH_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('BATCH')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SERIAL_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('SERIAL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'LOCAL_ID',
+      editable: false,
+      filter: false,
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CONDITION',
+      editable: false,
+      filter: false,
+      headerName: `${t('CONDITION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'QUANTITY',
+      editable: false,
+      filter: false,
+      headerName: `${t('QUANTITY')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'AWB_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('AWB No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'STOCK',
+      editable: false,
+      filter: false,
+      headerName: `${t('STORE')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'SHELF_NUMBER',
+      headerName: `${t('LOCATION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'RECEIVED_DATE',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('RECEIVED_DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'SUPPLIES_CODE',
+      headerName: `${t('VENDOR')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'PRICE',
+      headerName: `${t('PRICE')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'CURRENCY',
+      headerName: `${t('CURRENCY')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'state',
+      headerName: `${t('Status')}`,
+      cellDataType: 'text',
+      width: 150,
+      filter: true,
+      valueGetter: (params: { data: { state: keyof ValueEnumType } }) =>
+        params.data.state,
+      valueFormatter: (params: { value: keyof ValueEnumType }) => {
+        const status = params.value;
+        return valueEnum[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumType }) => ({
+        backgroundColor: getStatusColor(params.value),
+        color: '#ffffff', // Text color
+      }),
+    },
+  ]);
+  const transformedPartNumbers = useMemo(() => {
+    return transformToIRecevingItems(data || []);
+  }, [data]);
   return (
     <div>
-      <EditableTable
-        data={data}
-        showSearchInput
-        initialColumns={initialColumns}
-        isLoading={false}
-        menuItems={undefined}
-        recordCreatorProps={false}
-        onMultiSelect={(record: any, rowIndex?: any) => {
-          const materials = record.map((item: any) => item);
-          // console.log(locationNames);
-          setSelectedMaterials(materials);
-          onSelectedParts && onSelectedParts(materials);
-        }}
-        onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        // onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        onRowClick={function (record: any, rowIndex?: any): void {
-          onSingleRowClick && onSingleRowClick(record);
+      <PartContainer
+        isLoading={isLoading}
+        isFilesVisiable={true}
+        isVisible={true}
+        pagination={true}
+        isAddVisiable={true}
+        isButtonVisiable={false}
+        isEditable={true}
+        height={hight}
+        columnDefs={columnDefs}
+        partNumbers={[]}
+        isChekboxColumn={true}
+        onUpdateData={(data: any[]): void => {}}
+        rowData={transformedPartNumbers}
+        onCheckItems={handleSelectedRowKeysChange}
+        onRowSelect={(data: any): void => {
+          onSingleRowClick && onSingleRowClick(data);
+
           setSelectedMaterials((prevSelectedItems: (string | undefined)[]) =>
-            prevSelectedItems && prevSelectedItems.includes(record._id)
+            prevSelectedItems && prevSelectedItems.includes(data?._id)
               ? []
-              : [record]
+              : [data]
           );
           onSelectedParts &&
             onSelectedParts((prevSelectedItems: (string | undefined)[]) =>
-              prevSelectedItems && prevSelectedItems.includes(record._id)
+              prevSelectedItems && prevSelectedItems.includes(data?._id)
                 ? []
-                : [record]
+                : [data]
             );
         }}
-        onDoubleRowClick={onDoubleClick}
-        onSave={function (rowKey: any, data: any, row: any): void {}}
-        yScroll={scroll}
-        externalReload={function () {
-          throw new Error('Function not implemented.');
-        }}
-      ></EditableTable>
+      />
     </div>
   );
 };

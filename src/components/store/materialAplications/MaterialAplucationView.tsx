@@ -38,7 +38,7 @@ import {
   updateAplicationById,
 } from "@/utils/api/thunks";
 import { setInitialMaterial } from "@/store/reducers/MaterialStoreSlice";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
+
 import toast, { Toaster } from "react-hot-toast";
 import Paragraph from "antd/es/typography/Paragraph";
 import { IMaterialStoreRequestItem } from "@/models/IMaterialStoreItem";

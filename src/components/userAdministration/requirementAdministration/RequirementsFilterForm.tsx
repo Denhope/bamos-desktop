@@ -349,7 +349,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        initialValue={['open', 'onOrder']}
+        initialValue={['open']}
         mode="multiple"
         name="requestStatus"
         label={`${t('REQUIREMENT STATUS')}`}

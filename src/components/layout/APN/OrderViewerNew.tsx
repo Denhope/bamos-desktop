@@ -38,6 +38,8 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
     issued: t('ISSUED'),
     progress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
+    RECEIVED: t('RECEIVED'),
+    PARTLY_RECEIVED: t('PARTLY RECEIVED'),
   };
   const columnOrderItems = [
     {
@@ -76,7 +78,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
     {
       headerName: `${t('PART No')}`,
       field: 'PART_NUMBER',
-      editable: true,
+      editable: false,
     },
     {
       field: 'DESCRIPTION',

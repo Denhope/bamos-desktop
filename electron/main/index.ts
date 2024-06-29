@@ -52,6 +52,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 let win: BrowserWindow | null = null;
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.mjs');
+// const preload= fileURLToPath(new URL('../preload/index.mjs', import.meta.url)) /
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, 'index.html');
 
@@ -62,14 +63,7 @@ const indexHtml = join(process.env.DIST, 'index.html');
 function showAboutInfo() {
   const message = `
     Program: ${app.getName().toUpperCase()}
-    Version: ${app.getVersion()}
-    Information: В данной версии добавлена возможночть открытия нескольких окон, открытия PDF документов и файлов изображений в отдельных окнах для  удобства просмотра и возможности печати.
-    Внесены исправления в файлы перевода.
-    Обновлена логика создания ордеров, добавлены статусы ордеров.
-    Реализовано автоматическая рассылка писем поставщикам с расслылкой отчетов об отправке.
-    Исправлены некоторые ошибки.
-    Выполнена оптимизация.
-    ВСЕМ ПРИЯТНОГО ПОЛЬЗОВАНИЯ!!!
+    Version: ${app.getVersion()}    
    
   `;
   dialog.showMessageBox({
@@ -206,6 +200,16 @@ const template: Electron.MenuItemConstructorOptions[] = [
     label: 'View',
     submenu: [
       {
+        label: 'Toggle Developer Tools',
+        accelerator: 'CmdOrCtrl+Shift+I',
+        click: () => {
+          const win = BrowserWindow.getFocusedWindow();
+          if (win) {
+            win.webContents.toggleDevTools();
+          }
+        },
+      },
+      {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click: reloadWindow,
@@ -288,9 +292,10 @@ async function createWindow() {
     title: 'Main window',
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
-      preload,
+      preload: preload,
       // nodeIntegration: false,
-      contextIsolation: true,
+      // contextIsolation: true,
+      plugins: true,
 
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
       // nodeIntegration: true,
@@ -356,6 +361,7 @@ ipcMain.handle('open-win', (_, arg) => {
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
+      plugins: true,
       // nodeIntegration: false,
       // contextIsolation: true,
     },

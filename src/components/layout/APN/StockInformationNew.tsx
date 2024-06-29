@@ -10,6 +10,7 @@ import {
   Row,
   Space,
   Tabs,
+  Divider,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -177,14 +178,15 @@ const StockInformationNew: FC = () => {
   useEffect(() => {
     onMenuClick({ key: activeKey });
   }, [data]); // Зависимость от data
-  const { data: altPartNumbers } = useGetAltsPartNumbersQuery(
-    {
-      partNumberID: selectedPN?._id,
-    },
-    {
-      skip: !selectedPN?._id,
-    }
-  );
+  const { data: altPartNumbers, isLoading: altLoading } =
+    useGetAltsPartNumbersQuery(
+      {
+        partNumberID: selectedPN?._id,
+      },
+      {
+        skip: !selectedPN?._id,
+      }
+    );
   const transformedAltPartNumbers = useMemo(() => {
     return transformToIAltPartNumber(altPartNumbers || []);
   }, [altPartNumbers]);
@@ -192,7 +194,7 @@ const StockInformationNew: FC = () => {
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
   const {
     data: partNumbers,
-    isLoading,
+    isLoading: partLoading,
     isError,
   } = useGetPartNumbersQuery({
     group: form.getFieldValue('GROUP'),
@@ -371,8 +373,10 @@ const StockInformationNew: FC = () => {
               />
             </ProForm>
             <div className="h-[69vh] px-5 overflow-hidden flex flex-col justify-between">
+              <Divider></Divider>
               {selectedPN ? (
                 <PartContainer
+                  isLoading={altLoading}
                   isVisible={false}
                   pagination={false}
                   isAddVisiable={true}

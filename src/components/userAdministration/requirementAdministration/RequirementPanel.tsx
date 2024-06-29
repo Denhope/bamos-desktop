@@ -501,6 +501,8 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
+    progress: t('PROGRESS'),
+    complete: t('COMPLETE'),
   };
 
   const columnRequirements = [

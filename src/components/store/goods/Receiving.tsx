@@ -38,9 +38,9 @@ import { handleFileSelect } from '@/services/utilites';
 import { useGetLocationsQuery } from '@/features/storeAdministration/LocationApi';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { Split } from '@geoffcox/react-splitter';
-import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+// import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
 // import ReportGenerator from '@/components/shared/GeneratedLabel';
-import ReportPrintQR from '@/components/shared/ReportPrintQR';
+// import ReportPrintQR from '@/components/shared/ReportPrintQR';
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
@@ -831,13 +831,13 @@ const Receiving: FC<ReceivingType> = ({
                 </div>
               </ProForm.Item>
               <ProFormGroup>
-                <ReportPrintLabel
+                {/* <ReportPrintLabel
                   xmlTemplate={''}
                   data={[]}
                   ids={[printData]}
                   isDisabled={!printData}
-                ></ReportPrintLabel>
-                <ReportPrintQR
+                ></ReportPrintLabel> */}
+                {/* <ReportPrintQR
                   openSettingsModal
                   pageBreakAfter={false}
                   // qrCodeSize={32}
@@ -845,7 +845,7 @@ const Receiving: FC<ReceivingType> = ({
                   isDisabled={!printData}
                   data={[printData]}
                   ids={[printData]}
-                ></ReportPrintQR>
+                ></ReportPrintQR> */}
               </ProFormGroup>
             </ProFormGroup>
           </ProFormGroup>

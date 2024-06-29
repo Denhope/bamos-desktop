@@ -333,7 +333,23 @@ const PickSlipConfirmationNew: FC = () => {
   ]);
 
   const transformedPartNumbers = useMemo(() => {
-    return transformToIStockPartNumber(parts || []);
+    // Получаем текущую дату
+    const currentDate = new Date();
+
+    // Фильтруем части по дате и restrictionID
+    const filteredParts = (parts || []).filter((part) => {
+      // Преобразуем дату истечения срока годности в объект Date
+      const expirationDate = new Date(part.PRODUCT_EXPIRATION_DATE);
+
+      // Проверяем, что дата не прошла и restrictionID не равно "standart"
+      return (
+        expirationDate >= currentDate &&
+        part?.locationID?.restrictionID == 'standart'
+      );
+    });
+
+    // Применяем функцию transformToIStockPartNumber к отфильтрованным частям
+    return transformToIStockPartNumber(filteredParts);
   }, [parts]);
 
   const transformedRequirements = useMemo(() => {
@@ -373,7 +389,7 @@ const PickSlipConfirmationNew: FC = () => {
               }
             : rowOld
         );
-        // console.log(updatedData);
+        console.log(updatedData);
         setRowDataForSecondContainer(updatedData); // Убедитесь, что этот вызов не закомментирован
       }
     },
@@ -611,6 +627,7 @@ const PickSlipConfirmationNew: FC = () => {
                 onRowSelect={handleRowSelectStoreParts}
                 onUpdateData={(data: any[]): void => {}}
                 rowData={transformedPartNumbers}
+                isLoading={isLoading}
               />
             </div>
           </Split>

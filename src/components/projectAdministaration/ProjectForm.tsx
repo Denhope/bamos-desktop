@@ -19,8 +19,9 @@ import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 
 interface UserFormProps {
   project?: IProject;

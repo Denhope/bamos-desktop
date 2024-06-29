@@ -68,6 +68,11 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
 
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
+      field: 'LOCAL_ID',
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'number',
+    },
+    {
       headerName: `${t('PART No')}`,
       field: 'PART_NUMBER',
       editable: false,

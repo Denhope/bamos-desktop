@@ -1,7 +1,6 @@
 //@ts-nocheck
 import React, { useState } from 'react';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+
 import xml2js from 'xml2js';
 import JsBarcode from 'jsbarcode';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +10,7 @@ import { PrinterOutlined } from '@ant-design/icons';
 import { SING, USER_ID } from '@/utils/api/http';
 import moment from 'moment';
 import { useGetProjectPanelsQuery } from '@/features/projectItemWO/projectItemWOApi';
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { createPdf } from '@/services/createPdf';
 
 interface ReportGeneratorProps {
   xmlTemplate: string; // XML-шаблон для генерации PDF
@@ -270,8 +268,8 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         },
       };
 
-      const pdfDoc = pdfMake.createPdf(docDefinition);
-      pdfDoc.getBlob((blob: Blob) => {
+      const pdfDoc = createPdf(docDefinition);
+      (await pdfDoc).getBlob((blob: Blob) => {
         const fileURL = window.URL.createObjectURL(blob);
         const newWindow = window.open(fileURL, '_blank');
 
@@ -308,11 +306,6 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
       >
         {loading ? 'Processing' : ` ${t('PRINT TAG')}`}
       </Button>
-      {/* {pdfBlob && (
-        <a href={URL.createObjectURL(pdfBlob)} download="report.pdf">
-          Скачать PDF
-        </a>
-      )} */}
     </div>
   );
 };

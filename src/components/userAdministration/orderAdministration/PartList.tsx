@@ -109,12 +109,13 @@ const PartList: React.FC<Props> = ({
   };
 
   const handleRowSelectionFoQuatation = (selectedRowData: any[]) => {
+    console.log(newSelectedRows);
     // Преобразуем выбранные строки в новый формат, содержащий только необходимые данные
     const newSelectedRows: any[] = selectedRowData.map((row) => ({
       requirementsID: row.requirementsID[0]._id,
-      partNumberID: row?.partID?._id, // Идентификатор partNumberID
+      partNumberID: row?.partID?._id || row?.partNumberID?._id, // Идентификатор partNumberID
       amout: row.amout,
-      unit: row.partID.UNIT_OF_MEASURE, // Единица измерения из partNumberID
+      unit: row.partID.UNIT_OF_MEASURE || row?.partNumberID?.UNIT_OF_MEASURE, // Единица измерения из partNumberID
       reqCodesID: row.reqCodesID,
       quatationOrderID: row.id,
       nds: row.nds || '',
@@ -365,8 +366,24 @@ const PartList: React.FC<Props> = ({
       >
         <OrderViewerNewModal
           onSelectedRecords={function (record: any): void {
-            console.log(record);
-            handleRowSelectionFoQuatation(record);
+            // console.log(record);
+            // setSelectedRows([
+            //   {
+            //     requirementsID: record.requirementsID[0]._id,
+            //     partNumberID: record?.partID?._id || record?.partNumberID?._id, // Идентификатор partNumberID
+            //     amout: record.amout,
+            //     unit:
+            //       row.partID.UNIT_OF_MEASURE ||
+            //       row?.partNumberID?.UNIT_OF_MEASURE, // Единица измерения из partNumberID
+            //     reqCodesID: row.reqCodesID,
+            //     quatationOrderID: row.id,
+            //     nds: row.nds || '',
+            //     leadTime: row?.leadTime || '',
+            //     price: row?.price || '',
+            //     allPrice: row?.allPrice || '',
+            //     notes: row?.notes || '',
+            //   },
+            // ]);
           }}
         ></OrderViewerNewModal>
       </Modal>

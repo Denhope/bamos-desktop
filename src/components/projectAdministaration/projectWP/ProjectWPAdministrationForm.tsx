@@ -53,6 +53,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({ reqCode, onSubmit }) => {
         projectItemNumberID: reqCode?.projectItemsWOID?.map(
           (item) => item?.taskWO
         ),
+        taskNumberID: reqCode?.taskNumberID?._id,
       });
     } else {
       form.resetFields();

@@ -45,16 +45,35 @@ const PartsTracking: FC<PartsTracking> = ({
           onSingleRowClick={function (part?: any): void {
             setSelectedMaterial(part);
           }}
+          isLoading={false}
         />
       ),
       title: `${t('LIST OF BOOKING')}`,
     },
     {
-      content: <StoreView scroll={48} data={data} />,
+      content: (
+        <StoreView
+          onSingleRowClick={function (part?: any): void {
+            setSelectedMaterial(part);
+          }}
+          scroll={48}
+          data={data}
+          isLoading={false}
+        />
+      ),
       title: `${t('STORE VIEW')}`,
     },
     {
-      content: <TechnicalView scroll={48} data={data} />,
+      content: (
+        <TechnicalView
+          onSingleRowClick={function (part?: any): void {
+            setSelectedMaterial(part);
+          }}
+          scroll={48}
+          data={data}
+          isLoading={false}
+        />
+      ),
       title: `${t('TECHNICAL VIEW')}`,
     },
     // {

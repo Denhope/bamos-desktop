@@ -20,7 +20,8 @@ type ExampleComponentProps = {
   isChekboxColumn?: boolean;
   isFilesVisiable?: boolean;
   rowClassRules?: any;
-
+  onCheckItems?: (selectedKeys: React.Key[]) => void;
+  isLoading: boolean;
   rowData?: any[];
 };
 const PartContainer: FC<ExampleComponentProps> = ({
@@ -38,6 +39,8 @@ const PartContainer: FC<ExampleComponentProps> = ({
   isButtonColumn,
   isFilesVisiable,
   rowClassRules,
+  onCheckItems,
+  isLoading,
 }) => {
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
@@ -46,6 +49,7 @@ const PartContainer: FC<ExampleComponentProps> = ({
     <div style={containerStyle}>
       <div style={gridStyle} className={'ag-theme-alpine'}>
         <PartsTable
+          isLoading={isLoading}
           rowClassRules={rowClassRules}
           isFilesVisiable={isFilesVisiable}
           isChekboxColumn={isChekboxColumn}
@@ -66,10 +70,11 @@ const PartContainer: FC<ExampleComponentProps> = ({
           onCellValueChanged={function (params: any): void {}} // onAddRow={onAddRow}
           onRowSelect={function (rowData: any): void {
             onRowSelect && onRowSelect(rowData);
+            console.log(rowData);
           }}
-          onCheckItems={function (selectedKeys: React.Key[]): void {}} // onDelete={onDelete}
-          // onSave={onSave}
-          // onCellValueChanged={onCellValueChanged}
+          onCheckItems={function (keys: any): void {
+            onCheckItems && onCheckItems(keys);
+          }}
         />
       </div>
     </div>

@@ -51,9 +51,15 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
       }
 
       return {
-        title: `${reqCode?.partNumberID?.PART_NUMBER?.toUpperCase()} - ${reqCode?.partNumberID?.DESCRIPTION?.toUpperCase()} - ${
-          reqCode?.qty || ''
-        } ${reqCode?.partNumberID?.UNIT_OF_MEASURE?.toUpperCase()}${stateIndicator}`,
+        title: `${
+          reqCode?.partNumberID?.PART_NUMBER?.toUpperCase() ||
+          reqCode?.taskNumber?.toUpperCase()
+        } - ${
+          reqCode?.partNumberID?.DESCRIPTION?.toUpperCase() ||
+          reqCode?.taskDescription?.toUpperCase()
+        } - ${reqCode?.qty || ''} ${
+          reqCode?.partNumberID?.UNIT_OF_MEASURE?.toUpperCase() || ''
+        }${stateIndicator}`,
         key: reqCode.id,
         reqCode: reqCode,
       };

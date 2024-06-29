@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 import { ProColumns, ProForm, ProFormSelect } from '@ant-design/pro-components';
 import {
   Button,
@@ -15,9 +15,10 @@ import {
 } from 'antd';
 const { Option } = Select;
 import Sider from 'antd/es/layout/Sider';
+import PartContainer from '@/components/woAdministration/PartContainer';
 import { Content } from 'antd/es/layout/layout';
 import RequirementItems from '@/components/store/RequirementItems';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RouteNames } from '@/router';
 import {
@@ -25,6 +26,7 @@ import {
   handleFileOpen,
   handleFileSelect,
   handleOpenReport,
+  transformToIStockPartNumber,
 } from '@/services/utilites';
 import { WarningOutlined } from '@ant-design/icons';
 
@@ -41,10 +43,14 @@ import {
   useUpdateStorePartsMutation,
 } from '@/features/storeAdministration/PartsApi';
 import ReportEXEL from '@/components/shared/ReportEXEL';
-import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
-import ReportPrintQR from '@/components/shared/ReportPrintQR';
+// import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+// import ReportPrintQR from '@/components/shared/ReportPrintQR';
 import { useAddBookingMutation } from '@/features/bookings/bookingApi';
 import { useGetLocationsQuery } from '@/features/storeAdministration/LocationApi';
+
+import { ColDef } from 'ag-grid-community';
+import ReportPrintQR from '@/components/shared/ReportPrintQR';
+import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
 
 const ShelfExpiryNew: FC = () => {
   const [reportData, setReportData] = useState<any>(false);
@@ -77,298 +83,425 @@ const ShelfExpiryNew: FC = () => {
     const value = (target as HTMLDivElement).innerText;
     console.log('Добавить Pick:', value);
   };
-  const initialColumns: ProColumns<any>[] = [
+  // const initialColumns: ProColumns<any>[] = [
+  //   {
+  //     title: `${t('LOCAL_ID')}`,
+  //     dataIndex: 'LOCAL_ID',
+  //     key: 'LOCAL_ID',
+  //     // tooltip: 'LOCAL_ID',
+  //     ellipsis: true,
+  //     width: 100,
+  //     formItemProps: {
+  //       name: 'LOCAL_ID',
+  //     },
+  //     sorter: (a: any, b: any) => a.LOCAL_ID - b.LOCAL_ID, //
+
+  //     // responsive: ['sm'],
+  //   },
+
+  //   {
+  //     title: `${t('PN')}`,
+  //     dataIndex: 'PART_NUMBER',
+  //     key: 'PART_NUMBER',
+  //     //tooltip: 'ITEM PART_NUMBER',
+  //     // ellipsis: true,
+  //     width: 100,
+  //     formItemProps: {
+  //       name: 'PART_NUMBER',
+  //     },
+  //     render: (text: any, record: any) => {
+  //       return (
+  //         <ContextMenuWrapper
+  //           items={[
+  //             {
+  //               label: 'Copy',
+  //               action: handleCopy,
+  //             },
+  //             {
+  //               label: 'Open with',
+  //               action: () => {},
+  //               submenu: [
+  //                 { label: 'PART TRACKING', action: handleAdd },
+  //                 { label: 'PICKSLIP REQUEST', action: handleAddPick },
+  //               ],
+  //             },
+  //           ]}
+  //         >
+  //           <a
+  //             onClick={() => {
+  //               // dispatch(setCurrentProjectTask(record));
+  //               // setOpenRequirementDrawer(true);
+  //               // onReqClick(record);
+  //             }}
+  //           >
+  //             {record.PART_NUMBER}
+  //           </a>
+  //         </ContextMenuWrapper>
+  //       );
+  //     },
+
+  //     // responsive: ['sm'],
+  //   },
+  //   {
+  //     title: `${t('DESCRIPTION')}`,
+  //     dataIndex: 'NAME_OF_MATERIAL',
+  //     key: 'NAME_OF_MATERIAL',
+  //     // tooltip: 'ITEM STORE',
+  //     ellipsis: true,
+
+  //     formItemProps: {
+  //       name: 'NAME_OF_MATERIAL',
+  //     },
+
+  //     // responsive: ['sm'],
+  //   },
+  //   {
+  //     title: `${t('STORE')}`,
+  //     dataIndex: 'SHELF_NUMBER',
+  //     key: 'SHELF_NUMBER',
+  //     //tooltip: 'ITEM LOCATION',
+  //     ellipsis: true,
+  //     width: '7%',
+
+  //     render: (text: any, record: any) => record?.storeID?.storeShortName,
+  //     // остальные свойства...
+
+  //     responsive: ['sm'],
+  //   },
+  //   {
+  //     title: `${t('CONDITION')}`,
+  //     dataIndex: 'CONDITION',
+  //     key: 'CONDITION',
+  //     //tooltip: 'CONDITION',
+  //     ellipsis: true,
+  //     width: 100,
+  //     formItemProps: {
+  //       name: 'CONDITION',
+  //     },
+  //     render: (text: any, record: any) => {
+  //       return (
+  //         <div
+  //           onClick={() => {
+  //             // dispatch(setCurrentProjectTask(record));
+  //             // setOpenRequirementDrawer(true);
+  //             // onReqClick(record);
+  //           }}
+  //         >
+  //           {record.CONDITION}
+  //         </div>
+  //       );
+  //     },
+
+  //     // responsive: ['sm'],
+  //   },
+
+  //   {
+  //     title: `${t('LOCATION')}`,
+  //     dataIndex: 'SHELF_NUMBER',
+  //     key: 'SHELF_NUMBER',
+  //     //tooltip: 'ITEM LOCATION',
+  //     ellipsis: true,
+  //     width: 100,
+  //     formItemProps: {
+  //       name: 'SHELF_NUMBER',
+  //     },
+  //     render: (text: any, record: any) => record?.locationID?.locationName,
+
+  //     responsive: ['sm'],
+  //   },
+
+  //   {
+  //     title: `${t('BATCH/SERIAL')}`,
+  //     dataIndex: 'SERIAL_NUMBER',
+  //     width: 100,
+  //     key: 'SERIAL_NUMBER',
+  //     render: (text: any, record: any) =>
+  //       record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
+  //     // остальные свойства...
+  //   },
+  //   {
+  //     title: `${t('RESEIVING')}`,
+  //     dataIndex: 'ORDER_NUMBER',
+  //     key: 'ORDER_NUMBER',
+  //     //tooltip: 'ITEM ORDER_NUMBER',
+  //     ellipsis: true,
+  //     width: 100,
+  //     formItemProps: {
+  //       name: 'ORDER_NUMBER',
+  //     },
+
+  //     // responsive: ['sm'],
+  //   },
+  //   {
+  //     title: `${t('LAST INSPECT')}`,
+  //     dataIndex: 'estimatedDueDate',
+  //     key: 'estimatedDueDate',
+  //     responsive: ['sm'],
+  //     ellipsis: true,
+  //     valueType: 'date',
+  //     width: 100,
+  //     search: false,
+  //     // sorter: (a, b) => a.unit.length - b.unit.length,
+  //   },
+
+  //   {
+  //     title: `${t('INTERVAL')}`,
+  //     dataIndex: 'intervalMOS',
+  //     key: 'intervalMOS',
+  //     responsive: ['sm'],
+
+  //     ellipsis: true,
+  //     width: 100,
+  //     search: false,
+  //     // sorter: (a, b) => a.unit.length - b.unit.length,
+  //   },
+  //   {
+  //     title: `${t('EXPIRY DATE')}`,
+  //     dataIndex: 'PRODUCT_EXPIRATION_DATE',
+  //     key: 'PRODUCT_EXPIRATION_DATE',
+  //     //tooltip: 'ITEM EXPIRY DATE',
+  //     ellipsis: true,
+  //     valueType: 'date',
+  //     width: 100,
+  //     responsive: ['sm'],
+
+  //     sorter: (a, b) => {
+  //       if (
+  //         a.PRODUCT_EXPIRATION_DATE ||
+  //         (a?.nextDueMOS && b.PRODUCT_EXPIRATION_DATE) ||
+  //         b?.nextDueMOS
+  //       ) {
+  //         const aFinishDate = new Date(
+  //           a.PRODUCT_EXPIRATION_DATE || a?.nextDueMOS
+  //         );
+  //         const bFinishDate = new Date(
+  //           b.PRODUCT_EXPIRATION_DATE || b?.nextDueMOS
+  //         );
+  //         return aFinishDate.getTime() - bFinishDate.getTime();
+  //       } else {
+  //         return 0; // default value
+  //       }
+  //     },
+  //     render(value: any, record: any) {
+  //       // Преобразование даты в более читаемый формат
+  //       const date = new Date(
+  //         record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS
+  //       );
+  //       const formattedDate =
+  //         (record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS) &&
+  //         date.toLocaleDateString();
+  //       return formattedDate;
+  //     },
+  //   },
+  //   {
+  //     title: `${t('QTY')}`,
+  //     dataIndex: 'QUANTITY',
+  //     key: 'QUANTITY',
+  //     width: 100,
+  //     responsive: ['sm'],
+  //     search: false,
+  //     render: (text, record) => {
+  //       let backgroundColor;
+  //       if (
+  //         record?.PRODUCT_EXPIRATION_DATE ||
+  //         (record?.nextDueMOS &&
+  //           new Date(record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS) >=
+  //             new Date())
+  //       ) {
+  //         backgroundColor = '#32CD32'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
+  //       } // Зеленый фон по умолчанию
+  //       if (record?.SHELF_NUMBER === 'TRANSFER') {
+  //         backgroundColor = '#FFDB58'; // Желтый фон для SHELF_NUMBER 'TRANSFER'
+  //       }
+  //       if (
+  //         record?.PRODUCT_EXPIRATION_DATE ||
+  //         (record?.nextDueMOS &&
+  //           new Date(record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS) <
+  //             new Date())
+  //       ) {
+  //         backgroundColor = '#FF0000'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
+  //       }
+  //       return <div style={{ backgroundColor }}>{text}</div>;
+  //     },
+  //     // sorter: (a, b) => a.unit.length - b.unit.length,
+  //   },
+  //   {
+  //     title: `${t('UNIT')}`,
+  //     dataIndex: 'UNIT_OF_MEASURE',
+  //     key: 'UNIT_OF_MEASURE',
+  //     responsive: ['sm'],
+  //     width: 100,
+  //     search: false,
+  //     // sorter: (a, b) => a.unit.length - b.unit.length,
+  //   },
+
+  //   {
+  //     title: `${t('OWNER')}`,
+  //     dataIndex: 'OWNER_SHORT_NAME',
+  //     key: 'OWNER_SHORT_NAME',
+  //     width: 100,
+  //     ellipsis: true,
+  //     editable: (text, record, index) => {
+  //       return false;
+  //     },
+  //     search: false,
+  //   },
+  //   {
+  //     title: `${t('DOC')}`,
+  //     dataIndex: 'DOC',
+  //     key: 'DOC',
+  //     width: 100,
+  //     ellipsis: true,
+  //     editable: (text, record, index) => {
+  //       return false;
+  //     },
+  //     render: (text, record, index) => {
+  //       return record.FILES && record.FILES.length > 0 ? (
+  //         <FileModalList
+  //           files={record?.FILES}
+  //           onFileSelect={function (file: any): void {
+  //             handleFileSelect({
+  //               id: file?.id,
+  //               name: file?.name,
+  //             });
+  //           }}
+  //           onFileOpen={function (file: any): void {
+  //             handleFileOpen(file);
+  //           }}
+  //         />
+  //       ) : (
+  //         <></>
+  //       );
+  //     },
+  //   },
+  // ];
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType;
+  }
+
+  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
-      title: `${t('LOCAL_ID')}`,
-      dataIndex: 'LOCAL_ID',
-      key: 'LOCAL_ID',
-      // tooltip: 'LOCAL_ID',
-      ellipsis: true,
-      width: 100,
-      formItemProps: {
-        name: 'LOCAL_ID',
+      headerName: `${t('LOCAL_ID')}`,
+      field: 'LOCAL_ID',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      headerName: `${t('PART No')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'NAME_OF_MATERIAL',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'GROUP',
+      headerName: `${t('GROUP')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'TYPE',
+      headerName: `${t('TYPE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'QUANTITY',
+      editable: false,
+      filter: false,
+      headerName: `${t('QTY')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'STOCK',
+      editable: false,
+      filter: false,
+      headerName: `${t('STORE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'LOCATION',
+      editable: false,
+      filter: false,
+      headerName: `${t('LOCATION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SERIAL_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('BATCH/SERIAL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CONDITION',
+      editable: false,
+      filter: false,
+      headerName: `${t('CONDITION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'PRODUCT_EXPIRATION_DATE',
+      editable: false,
+      filter: false,
+      headerName: `${t('EXPIRY DATE')}`,
+      cellDataType: 'date',
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
       },
-      sorter: (a: any, b: any) => a.LOCAL_ID - b.LOCAL_ID, //
+    },
 
-      // responsive: ['sm'],
+    // {
+    //   field: 'reservedQTY',
+    //   editable: false,
+    //   filter: false,
+    //   headerName: `${t('RESERVED QTY')}`,
+    //   cellDataType: 'number',
+    // },
+
+    {
+      field: 'OWNER',
+      editable: false,
+      filter: false,
+      headerName: `${t('OWNER')}`,
+      cellDataType: 'text',
     },
 
     {
-      title: `${t('PN')}`,
-      dataIndex: 'PART_NUMBER',
-      key: 'PART_NUMBER',
-      //tooltip: 'ITEM PART_NUMBER',
-      // ellipsis: true,
-      width: 100,
-      formItemProps: {
-        name: 'PART_NUMBER',
-      },
-      render: (text: any, record: any) => {
-        return (
-          <ContextMenuWrapper
-            items={[
-              {
-                label: 'Copy',
-                action: handleCopy,
-              },
-              {
-                label: 'Open with',
-                action: () => {},
-                submenu: [
-                  { label: 'PART TRACKING', action: handleAdd },
-                  { label: 'PICKSLIP REQUEST', action: handleAddPick },
-                ],
-              },
-            ]}
-          >
-            <a
-              onClick={() => {
-                // dispatch(setCurrentProjectTask(record));
-                // setOpenRequirementDrawer(true);
-                // onReqClick(record);
-              }}
-            >
-              {record.PART_NUMBER}
-            </a>
-          </ContextMenuWrapper>
-        );
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('DESCRIPTION')}`,
-      dataIndex: 'NAME_OF_MATERIAL',
-      key: 'NAME_OF_MATERIAL',
-      // tooltip: 'ITEM STORE',
-      ellipsis: true,
-
-      formItemProps: {
-        name: 'NAME_OF_MATERIAL',
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('STORE')}`,
-      dataIndex: 'SHELF_NUMBER',
-      key: 'SHELF_NUMBER',
-      //tooltip: 'ITEM LOCATION',
-      ellipsis: true,
-      width: '7%',
-
-      render: (text: any, record: any) => record?.storeID?.storeShortName,
-      // остальные свойства...
-
-      responsive: ['sm'],
-    },
-    {
-      title: `${t('CONDITION')}`,
-      dataIndex: 'CONDITION',
-      key: 'CONDITION',
-      //tooltip: 'CONDITION',
-      ellipsis: true,
-      width: 100,
-      formItemProps: {
-        name: 'CONDITION',
-      },
-      render: (text: any, record: any) => {
-        return (
-          <div
-            onClick={() => {
-              // dispatch(setCurrentProjectTask(record));
-              // setOpenRequirementDrawer(true);
-              // onReqClick(record);
-            }}
-          >
-            {record.CONDITION}
-          </div>
-        );
-      },
-
-      // responsive: ['sm'],
-    },
-
-    {
-      title: `${t('LOCATION')}`,
-      dataIndex: 'SHELF_NUMBER',
-      key: 'SHELF_NUMBER',
-      //tooltip: 'ITEM LOCATION',
-      ellipsis: true,
-      width: 100,
-      formItemProps: {
-        name: 'SHELF_NUMBER',
-      },
-      render: (text: any, record: any) => record?.locationID?.locationName,
-
-      responsive: ['sm'],
-    },
-
-    {
-      title: `${t('BATCH/SERIAL')}`,
-      dataIndex: 'SERIAL_NUMBER',
-      width: 100,
-      key: 'SERIAL_NUMBER',
-      render: (text: any, record: any) =>
-        record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
-      // остальные свойства...
-    },
-    {
-      title: `${t('RESEIVING')}`,
-      dataIndex: 'ORDER_NUMBER',
-      key: 'ORDER_NUMBER',
-      //tooltip: 'ITEM ORDER_NUMBER',
-      ellipsis: true,
-      width: 100,
-      formItemProps: {
-        name: 'ORDER_NUMBER',
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('LAST INSPECT')}`,
-      dataIndex: 'estimatedDueDate',
-      key: 'estimatedDueDate',
-      responsive: ['sm'],
-      ellipsis: true,
-      valueType: 'date',
-      width: 100,
-      search: false,
-      // sorter: (a, b) => a.unit.length - b.unit.length,
-    },
-
-    {
-      title: `${t('INTERVAL')}`,
-      dataIndex: 'intervalMOS',
-      key: 'intervalMOS',
-      responsive: ['sm'],
-
-      ellipsis: true,
-      width: 100,
-      search: false,
-      // sorter: (a, b) => a.unit.length - b.unit.length,
-    },
-    {
-      title: `${t('EXPIRY DATE')}`,
-      dataIndex: 'PRODUCT_EXPIRATION_DATE',
-      key: 'PRODUCT_EXPIRATION_DATE',
-      //tooltip: 'ITEM EXPIRY DATE',
-      ellipsis: true,
-      valueType: 'date',
-      width: 100,
-      responsive: ['sm'],
-
-      sorter: (a, b) => {
-        if (
-          a.PRODUCT_EXPIRATION_DATE ||
-          (a?.nextDueMOS && b.PRODUCT_EXPIRATION_DATE) ||
-          b?.nextDueMOS
-        ) {
-          const aFinishDate = new Date(
-            a.PRODUCT_EXPIRATION_DATE || a?.nextDueMOS
-          );
-          const bFinishDate = new Date(
-            b.PRODUCT_EXPIRATION_DATE || b?.nextDueMOS
-          );
-          return aFinishDate.getTime() - bFinishDate.getTime();
-        } else {
-          return 0; // default value
-        }
-      },
-      render(value: any, record: any) {
-        // Преобразование даты в более читаемый формат
-        const date = new Date(
-          record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS
-        );
-        const formattedDate =
-          (record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS) &&
-          date.toLocaleDateString();
-        return formattedDate;
+      field: 'RECEIVED_DATE',
+      editable: false,
+      filter: false,
+      headerName: `${t('RECEIVED DATE')}`,
+      cellDataType: 'date',
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
       },
     },
-    {
-      title: `${t('QTY')}`,
-      dataIndex: 'QUANTITY',
-      key: 'QUANTITY',
-      width: 100,
-      responsive: ['sm'],
-      search: false,
-      render: (text, record) => {
-        let backgroundColor;
-        if (
-          record?.PRODUCT_EXPIRATION_DATE ||
-          (record?.nextDueMOS &&
-            new Date(record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS) >=
-              new Date())
-        ) {
-          backgroundColor = '#32CD32'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
-        } // Зеленый фон по умолчанию
-        if (record?.SHELF_NUMBER === 'TRANSFER') {
-          backgroundColor = '#FFDB58'; // Желтый фон для SHELF_NUMBER 'TRANSFER'
-        }
-        if (
-          record?.PRODUCT_EXPIRATION_DATE ||
-          (record?.nextDueMOS &&
-            new Date(record.PRODUCT_EXPIRATION_DATE || record?.nextDueMOS) <
-              new Date())
-        ) {
-          backgroundColor = '#FF0000'; // Красный фон, если PRODUCT_EXPIRATION_DATE меньше текущей даты
-        }
-        return <div style={{ backgroundColor }}>{text}</div>;
-      },
-      // sorter: (a, b) => a.unit.length - b.unit.length,
-    },
-    {
-      title: `${t('UNIT')}`,
-      dataIndex: 'UNIT_OF_MEASURE',
-      key: 'UNIT_OF_MEASURE',
-      responsive: ['sm'],
-      width: 100,
-      search: false,
-      // sorter: (a, b) => a.unit.length - b.unit.length,
-    },
+  ]);
 
-    {
-      title: `${t('OWNER')}`,
-      dataIndex: 'OWNER_SHORT_NAME',
-      key: 'OWNER_SHORT_NAME',
-      width: 100,
-      ellipsis: true,
-      editable: (text, record, index) => {
-        return false;
-      },
-      search: false,
-    },
-    {
-      title: `${t('DOC')}`,
-      dataIndex: 'DOC',
-      key: 'DOC',
-      width: 100,
-      ellipsis: true,
-      editable: (text, record, index) => {
-        return false;
-      },
-      render: (text, record, index) => {
-        return record.FILES && record.FILES.length > 0 ? (
-          <FileModalList
-            files={record?.FILES}
-            onFileSelect={function (file: any): void {
-              handleFileSelect({
-                id: file?.id,
-                name: file?.name,
-              });
-            }}
-            onFileOpen={function (file: any): void {
-              handleFileOpen(file);
-            }}
-          />
-        ) : (
-          <></>
-        );
-      },
-    },
-  ];
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
   const [rowKeys, setselectedRowKeys] = useState<any[]>([]);
 
@@ -478,37 +611,29 @@ const ShelfExpiryNew: FC = () => {
     }
   );
 
-  const loctionsCodesValueEnum =
-    locations &&
-    locations.reduce((enumObj, location) => {
-      enumObj[location.id] = String(location.locationName).toUpperCase();
-      return enumObj;
-    }, {});
-  const columns = [
-    {
-      Header: 'Name',
-      accessor: 'name',
-    },
-    {
-      Header: 'Age',
-      accessor: 'age',
-    },
-    {
-      Header: 'Address',
-      accessor: 'address',
-    },
-  ];
+  const loctionsCodesValueEnum = locations
+    ? locations.reduce((enumObj, location) => {
+        if (location && location.id !== undefined) {
+          enumObj[location.id] = String(location.locationName).toUpperCase();
+        }
+        return enumObj;
+      }, {} as { [key: string]: string })
+    : {};
 
   const data = [
     { name: 'John Doe', age: 28, address: '123 Main St' },
     { name: 'Jane Smith', age: 34, address: '456 Maple Ave' },
     { name: 'Sam Johnson', age: 45, address: '789 Elm St' },
   ];
+
+  const transformedPartNumbers = useMemo(() => {
+    return transformToIStockPartNumber(parts || []);
+  }, [parts]);
   const [reportDataLoading, setReportDataLoading] = useState<boolean>(false);
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
       <Sider
-        className="h-[85vh] overflow-hidden"
+        className="h-screen overflow-hidden"
         theme="light"
         width={370}
         // trigger
@@ -535,7 +660,7 @@ const ShelfExpiryNew: FC = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[84vh] overflow-hidden flex flex-col justify-between gap-5">
+        <div className="h-screen overflow-hidden flex flex-col justify-between gap-5">
           <div className="flex flex-col gap-5 overflow-hidden">
             <Row justify={'space-between'}>
               <Button
@@ -638,7 +763,7 @@ const ShelfExpiryNew: FC = () => {
                       ids={rowKeys}
                       isDisabled={!rowKeys.length}
                     ></ReportPrintLabel>
-                    <ReportEXEL
+                    {/* <ReportEXEL
                       isDisabled={!rowKeys.length}
                       headers={{
                         LOCAL_ID: `${t('LABEL')}`,
@@ -659,7 +784,7 @@ const ShelfExpiryNew: FC = () => {
                       }}
                       data={selectedMaterials}
                       fileName={'EXPIRES_REPORT_'}
-                    ></ReportEXEL>
+                    ></ReportEXEL> */}
                   </Space>
                 </Col>
                 <Col>
@@ -685,38 +810,34 @@ const ShelfExpiryNew: FC = () => {
               </div>
             </Row>
 
-            <EditableTable
-              showSearchInput={true}
-              data={parts}
-              initialColumns={initialColumns}
-              isLoading={partsLoadingF}
-              menuItems={undefined}
-              recordCreatorProps={false}
-              onSelectedRowKeysChange={handleSelectedRowKeysChange}
-              onMultiSelect={(record: any, rowIndex?: any) => {
-                const materials = record.map((item: any) => item);
-                // console.log(locationNames);
-                setSelectedMaterials(materials);
+            <PartContainer
+              isLoading={partsQueryLoading || partsLoadingF}
+              isFilesVisiable={true}
+              isVisible={true}
+              pagination={true}
+              isAddVisiable={true}
+              isButtonVisiable={false}
+              isEditable={true}
+              height={'100%'}
+              columnDefs={columnDefs}
+              partNumbers={[]}
+              isChekboxColumn={true}
+              onUpdateData={(data: any[]): void => {}}
+              rowData={transformedPartNumbers}
+              onCheckItems={setselectedRowKeys}
+              // onRowSelect={(data: any): void => {
+              //   setSelectedMaterials(
+              //     (prevSelectedItems: (string | undefined)[]) =>
+              //       prevSelectedItems && prevSelectedItems.includes(data?._id)
+              //         ? []
+              //         : [data]
+              //   );
+              // }}
+              onRowSelect={(data: any): void => {
+                setSelectedMaterials(data);
               }}
-              onRowClick={function (record: any, rowIndex?: any): void {
-                setSelectedMaterials(
-                  (prevSelectedItems: (string | undefined)[]) =>
-                    prevSelectedItems && prevSelectedItems.includes(record._id)
-                      ? []
-                      : [record]
-                );
-              }}
-              onSave={function (rowKey: any, data: any, row: any): void {}}
-              yScroll={61}
-              externalReload={function () {}}
             />
           </div>
-          {/* <TableWithCopyOptions
-            data={parts || []}
-            initialColumns={initialColumns}
-          ></TableWithCopyOptions> */}
-          {/* <h2>Resizable Table Example</h2> */}
-          {/* <ResizableTable columns={columns} data={data} /> */}
         </div>
       </Content>
     </Layout>

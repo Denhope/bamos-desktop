@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { ProForm, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Form, Modal, Space, message } from 'antd';
 import CancelReceivingForm from '@/components/store/cancelReceiving/CancelReceivingForm';
@@ -23,14 +25,24 @@ const CancelReceiving: FC = () => {
   const [data, setdata] = useState<any[] | []>(receivings);
   const [partsToPrint, setPartsToPrint] = useState<any>(null);
   const [updateOrderItem] = useUpdateOrderItemMutation();
-
   const [updateOrder] = useUpdateOrderMutation();
+  const dispatch = useAppDispatch();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
   useEffect(() => {
     if (receivings) {
       setdata(receivings);
     }
   }, [receivings]);
-  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setIsButtonDisabled(
+      !(selectedRowKeys && selectedRowKeys.length === 1) ||
+        !form.getFieldValue('reasonCancel') ||
+        (partsToPrint[0]?.IS_CANCELLED ?? false)
+    );
+  }, [partsToPrint, form.getFieldValue('reasonCancel')]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   return (
     <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
@@ -38,14 +50,26 @@ const CancelReceiving: FC = () => {
           onFilterReceiving={setReceiving}
         ></CancelReceivingForm>
         <ReceivingItemList
+          hight="56vh"
           onSelectedParts={setPartsToPrint}
-          // onDoubleClick={onDoubleClick}
           scroll={40}
           data={data}
+          isLoading={false}
+          onSelectedIds={setSelectedRowKeys}
         />
       </div>
       <div className="flex justify-between">
-        <ProForm form={form} submitter={false}>
+        <ProForm
+          form={form}
+          submitter={false}
+          onValuesChange={() => {
+            setIsButtonDisabled(
+              !(selectedRowKeys && selectedRowKeys.length === 1) ||
+                !form.getFieldValue('reasonCancel') ||
+                (partsToPrint[0]?.IS_CANCELLED ?? false)
+            );
+          }}
+        >
           <ProFormTextArea
             width={'xl'}
             fieldProps={{ style: { resize: 'none' } }}
@@ -57,12 +81,8 @@ const CancelReceiving: FC = () => {
 
         <Space align="center">
           <Button
-            disabled={
-              !(partsToPrint && partsToPrint.length === 1) ||
-              !form.getFieldValue('reasonCancel') ||
-              partsToPrint[0].IS_CANCELLED
-            }
-            onClick={async (values: any) => {
+            disabled={isButtonDisabled}
+            onClick={async () => {
               Modal.confirm({
                 title: t('CONFIRM CANCEL'),
                 onOk: async () => {

@@ -139,6 +139,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                 partNumbers={[]}
                 onUpdateData={(data: any[]): void => {}}
                 rowData={transformedAltPartNumbers}
+                isLoading={isLoading}
               />
             ) : (
               <Empty />

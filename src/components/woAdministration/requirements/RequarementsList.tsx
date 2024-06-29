@@ -267,7 +267,11 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
     storesIDString = order?.projectID.storesID.join(',');
     console.log(order);
   }
-  const { data: requirements, refetch } = useGetFilteredRequirementsQuery(
+  const {
+    data: requirements,
+    isLoading,
+    refetch,
+  } = useGetFilteredRequirementsQuery(
     {
       projectTaskID: order?.id,
       ifStockCulc: true,
@@ -407,6 +411,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
 
       <div style={gridStyle} className={'ag-theme-alpine'}>
         <PartsTable
+          isLoading={isLoading}
           isChekboxColumn={isChekboxColumn}
           isVisible={isVisible}
           isButtonColumn={isButtonColumn}

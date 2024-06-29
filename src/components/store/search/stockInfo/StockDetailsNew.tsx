@@ -12,6 +12,7 @@ import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 type StockDetailsType = {
   partNumberID?: any;
   isAlternatives?: boolean;
+  isLoading: boolean;
   isDescription?: boolean;
   storeID?: string;
   height: string;
@@ -22,6 +23,7 @@ const StockDetailsNew: FC<StockDetailsType> = ({
   isAlternatives,
   storeID,
   height,
+  isLoading,
   isDescription = false,
   transformedStokPartNumbers,
 }) => {
@@ -245,6 +247,7 @@ const StockDetailsNew: FC<StockDetailsType> = ({
             partNumbers={[]}
             onUpdateData={(data: any[]): void => {}}
             rowData={transformedStokPartNumbers}
+            isLoading={isLoading}
           />
         ) : (
           <Empty />

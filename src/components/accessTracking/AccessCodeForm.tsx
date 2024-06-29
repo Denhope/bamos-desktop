@@ -1,4 +1,4 @@
-// ts-nocheck
+// @ts-nocheck
 
 // The rest of your code here will not be type-checked by TypeScript
 import React, { FC, useEffect, useState } from 'react';

@@ -61,15 +61,16 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
     onUpdatePart && onUpdatePart(data);
     setDataPart(data);
   };
+  console.log(currentPart);
   const {
     data: parts,
     isLoading: partsQueryLoading,
     isFetching: partsLoadingF,
     refetch,
   } = useGetStorePartsQuery(
-    currentPart._id ? { ids: currentPart._id } : {}, // This will prevent the query from running if reqCode is null or does not have an id
+    currentPart?._id ? { ids: currentPart?._id || currentPart?.id } : {}, // This will prevent the query from running if reqCode is null or does not have an id
     {
-      skip: !currentPart._id,
+      skip: !currentPart?._id,
 
       // Skip the query if reqCode is null or does not have an id
     }

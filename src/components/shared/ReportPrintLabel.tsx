@@ -1,7 +1,6 @@
 //@ts-nocheck
 import React, { useState } from 'react';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+
 import xml2js from 'xml2js';
 import JsBarcode from 'jsbarcode';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +10,7 @@ import { PrinterOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { SING } from '@/utils/api/http';
 import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { createPdf } from '@/services/createPdf';
 
 interface ReportGeneratorProps {
   xmlTemplate: string; // XML-шаблон для генерации PDF
@@ -34,7 +32,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   const { data: parts, isLoading: partsLoading } = useGetStorePartsQuery(
     ids ? { ids: ids } : {}, // Выполнение запроса только если переданы ID
     {
-      skip: !ids || data.length > 0, // Пропуск запроса, если нет ID или если переданы данные `data`
+      skip: !ids || data?.length > 0, // Пропуск запроса, если нет ID или если переданы данные `data`
     }
   );
 
@@ -55,6 +53,9 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
   // Генерация PDF
   const generatePdfFile = async () => {
+    // const pdfMake = (await import('pdfmake/build/pdfmake')).default;
+    // const pdfFonts = (await import('pdfmake/build/vfs_fonts')).default;
+    // pdfMake.vfs = pdfFonts.pdfMake.vfs;
     setLoading(true);
 
     try {
@@ -106,7 +107,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                       columns: [
                         {
                           image: generateBarcode(
-                            product.LOCAL_ID || product?.locationID?.LOCAL_ID
+                            product?.LOCAL_ID || product?.locationID?.LOCAL_ID
                           ),
                           width: 60,
                           height: 15,
@@ -117,7 +118,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                           text:
                             product.COMPANY_ID?.title ||
                             product?.storeItemID?.COMPANY_ID?.title,
-                          fontSize: 15,
+                          fontSize: 14,
                           bold: true,
                           alignment: 'right',
                           width: '62%',
@@ -217,12 +218,14 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                   {
                     text: `${t('REC.DATE')}: ${
                       product.RECEIVED_DATE ||
-                      (product?.storeItemID?.RECEIVED_DATE &&
-                        moment(
-                          product.RECEIVED_DATE ||
-                            product?.storeItemID?.RECEIVED_DATE
-                        ).format('DD. MM. YYYY')) ||
-                      'N/A'
+                      product?.storeItemID?.RECEIVED_DATE
+                        ? moment(
+                            product.RECEIVED_DATE ||
+                              product?.storeItemID?.RECEIVED_DATE
+                          )
+                            .locale('en')
+                            .format('DD.MM.YYYY') // Установка локали и форматирование даты
+                        : 'N/A'
                     }`,
                     margin: [0, 0, 0, 2],
                   },
@@ -288,8 +291,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         },
       };
 
-      const pdfDoc = pdfMake.createPdf(docDefinition);
-      pdfDoc.getBlob((blob: Blob) => {
+      const pdfDoc = createPdf(docDefinition);
+      (await pdfDoc).getBlob((blob: Blob) => {
         const fileURL = window.URL.createObjectURL(blob);
         const newWindow = window.open(fileURL, '_blank');
 

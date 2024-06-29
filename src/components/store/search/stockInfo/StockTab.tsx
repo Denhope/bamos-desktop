@@ -35,7 +35,7 @@ const StockTab: FC<IGroupTaskListPrors> = ({
             title: `${t('STOCK INFO')}`,
           },
           {
-            content: <StockDetails></StockDetails>,
+            content: <StockDetails ></StockDetails>,
             title: `${t('STOCK DETAIL')}`,
           },
 

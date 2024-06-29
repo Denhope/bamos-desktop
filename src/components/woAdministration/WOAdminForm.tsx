@@ -946,12 +946,14 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                   ['CONS', 'ROT'] // Ваши группы инструментов
                 )
               }
+              isLoading={isLoading}
             />
           </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['4']} key="4">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
             <PartContainer
+              isLoading={isLoading}
               isAddVisiable={true}
               height={'58vh'}
               columnDefs={columnDefs}

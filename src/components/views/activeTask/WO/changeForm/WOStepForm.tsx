@@ -1,18 +1,18 @@
-import { Button, Checkbox, Form, Input, Radio, RadioChangeEvent } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import Title from "antd/es/typography/Title";
-import { IAdditionalTask } from "@/models/IAdditionalTask";
-import React, { FC, useState } from "react";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import { Button, Checkbox, Form, Input, Radio, RadioChangeEvent } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import Title from 'antd/es/typography/Title';
+import { IAdditionalTask } from '@/models/IAdditionalTask';
+import React, { FC, useState } from 'react';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 import {
   addDoubleInspectionRequired,
   setOptinal,
   updateWorkStepDescription,
   updateWorkStepHeadLine,
-} from "@/store/reducers/AdditionalTaskSlice";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { IProjectTask, IProjectTaskAll } from "@/models/IProjectTask";
+} from '@/store/reducers/AdditionalTaskSlice';
+
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { IProjectTask, IProjectTaskAll } from '@/models/IProjectTask';
 
 export interface IWorkStepFormProps {
   onFinish?: () => void;
@@ -23,12 +23,12 @@ const WOWorkStepForm: FC<IWorkStepFormProps> = ({ taskData, onFinish }) => {
   const { currentProjectTask } = useTypedSelector((state) => state.projectTask);
   const { currentProject } = useTypedSelector((state) => state.projects);
   const dispatch = useAppDispatch();
-  const [taskHeadLine, setTaskHeadline] = useState("");
-  const [ata, setTaskAta] = useState("");
-  const [position, setPosition] = useState("");
-  const [zone, setZone] = useState("");
-  const [area, setArea] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
+  const [taskHeadLine, setTaskHeadline] = useState('');
+  const [ata, setTaskAta] = useState('');
+  const [position, setPosition] = useState('');
+  const [zone, setZone] = useState('');
+  const [area, setArea] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
   const onFinishHeadLine = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTaskHeadline(e.target.value);
   };

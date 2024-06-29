@@ -428,6 +428,7 @@ const OrderItemList: FC<ReceivingItemList> = ({
             }}
             onCheckItems={function (selectedKeys: React.Key[]): void {
               onCheckItems && onCheckItems(selectedKeys);
+              console.log(selectedKeys);
             }} // onDelete={onDelete}
             // onSave={onSave}
             // onCellValueChanged={onCellValueChanged}
