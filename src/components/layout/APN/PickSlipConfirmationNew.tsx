@@ -6,6 +6,7 @@ import PartContainer from '@/components/woAdministration/PartContainer';
 import { useTranslation } from 'react-i18next';
 import { ColDef } from 'ag-grid-community';
 import {
+  handleOpenReport,
   transformToIStockPartNumber,
   transformToPickSlipItemBooked,
   transformToPickSlipItemItem,
@@ -16,7 +17,7 @@ import {
   useUpdatePickSlipMutation,
 } from '@/features/pickSlipAdministration/pickSlipApi';
 import { useGetPickSlipItemsQuery } from '@/features/pickSlipAdministration/pickSlipItemsApi';
-import { Button, Modal, Space, notification } from 'antd';
+import { Button, Col, Modal, Space, notification } from 'antd';
 import {
   useAddPickSlipBookingsItemMutation,
   useUpdatePickSlipBookingsItemMutation,
@@ -26,6 +27,9 @@ import { USER_ID } from '@/utils/api/http';
 import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
 import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
 import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+import { useAddBookingMutation } from '@/features/bookings/bookingApi';
+import { generateReport } from '@/utils/api/thunks';
+import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 
 type CellDataType = 'text' | 'number' | 'date' | 'boolean' | 'Object';
 
@@ -54,7 +58,25 @@ const PickSlipConfirmationNew: FC = () => {
       skip: !pickSlipSearchValues,
     }
   );
+  const [addBooking] = useAddBookingMutation({});
+  const { data: requirements, refetch: refetchRequirements } =
+    useGetFilteredRequirementsQuery(
+      {
+        projectID: pickSlips && pickSlips[0]?.projectID?._id,
+      },
+      {
+        refetchOnMountOrArgChange: true, // Пример альтернативного подхода для кэширования
+      }
+    );
 
+  // Обновление других частей приложения после вызова refetchRequirements
+  useEffect(() => {
+    // Логика обновления других частей приложения
+  }, [requirements]); // Обновление при изменении requirements
+
+  // const { refetch: refetchRequirements } = useGetFilteredRequirementsQuery({
+  //   projectID: pickSlips && pickSlips[0]?.projectID?._id,
+  // });
   const [addBookingsPickslip] = useAddPickSlipBookingsItemMutation({});
   const [updatePickSlip] = useUpdatePickSlipMutation({});
   const [updateBookingsPickslip] = useUpdatePickSlipBookingsItemMutation({});
@@ -353,6 +375,7 @@ const PickSlipConfirmationNew: FC = () => {
   }, [parts]);
 
   const transformedRequirements = useMemo(() => {
+    // console.log(transformToPickSlipItemBooked(pickSlipItems));
     return (
       pickSlips &&
       pickSlips[0] &&
@@ -361,14 +384,30 @@ const PickSlipConfirmationNew: FC = () => {
   }, [pickSlips && pickSlips[0], pickSlipItems]);
 
   const handleRowSelect = useCallback((row: any) => {
+    // if (
+    //   row
+    //   // currentPickSlipItem
+    //   // &&
+    //   // row?.state === 'progress' ||
+    //   // row?.state === 'open' ||
+    //   // row?.status === 'progress' ||
+    //   // row?.status === 'open'
+    // ) {
+    // }   setCurrentPickSlipItem(row);
     setCurrentPickSlipItem(row);
-    console.log(row);
+    // console.log(row);
   }, []);
 
   const handleRowSelectStoreParts = useCallback(
     (row: any) => {
       // console.log(row);
-      if (currentPickSlipItem) {
+      if (
+        currentPickSlipItem &&
+        (currentPickSlipItem?.state === 'progress' ||
+          currentPickSlipItem?.state === 'open' ||
+          currentPickSlipItem?.status === 'progress' ||
+          currentPickSlipItem?.status === 'open')
+      ) {
         const updatedData = rowDataForSecondContainer.map((rowOld) =>
           rowOld.id === currentPickSlipItem.id
             ? {
@@ -404,182 +443,275 @@ const PickSlipConfirmationNew: FC = () => {
   }, [transformedRequirements]);
   const [issuedData, setIssuedRowData] = useState<any[]>([]);
   const handleSubmitINProgress = async () => {
-    console.log('progressParts:', issuedData);
+    Modal.confirm({
+      title: t('Confirm Save'),
+      content: t('Are you sure you want to save this pick slip?'),
+      okText: t('Yes'),
+      cancelText: t('No'),
+      onOk: async () => {
+        console.log('progressParts:', issuedData);
 
-    const hasInvalidData = issuedData.some((item) => {
-      if (item.bookedQty === undefined || item.bookedQty === null) {
-        return true;
-      }
-      if (item.bookedQty > item.availableQty) {
-        return true;
-      }
-      if (item.bookedQty > item.requestQuantity) {
-        return true;
-      }
-      return false;
-    });
-
-    if (hasInvalidData) {
-      notification.error({
-        message: t('ERROR'),
-        description: t(
-          'Invalid data in the table. Please check the bookedQty quantities.'
-        ),
-      });
-      return false;
-    }
-
-    try {
-      for (const item of issuedData) {
-        console.log(item);
-        if (item.createUserID) {
-          // Если есть createUserID, вызываем updateBookingsPickslip
-          await updateBookingsPickslip({
-            pickSlipBokingsItem: {
-              id: item?.id || item?._id,
-              status: 'progress',
-              bookedQty: item?.bookedQty,
-              storeItemID: item?.storeItemID?._id,
-              requirementID: item?.requirementID?._id,
-              partNumberID: item.partNumberID,
-              requestedQty: item?.requestQuantity,
-              requestedPartNumberID: item?.requestedPartNumberID,
-              partNumberIDBooked: item?.partNumberIDBooked,
-              pickSlipItemID: item?.pickSlipItemID,
-              pickSlipID: item?.pickSlipID,
-            },
-            projectID: item?.projectID,
-            projectTaskID: item?.projectTaskID,
-          }).unwrap();
-        } else {
-          // Если нет createUserID, вызываем addBookingsPickslip
-          await addBookingsPickslip({
-            pickSlipItem: {
-              status: item?.status,
-              bookedQty: item?.bookedQty,
-              storeItemID: item?.storeItemID,
-              requirementID: item?.requirementID,
-              partNumberID: item.partNumberID,
-              requestedQty: item?.requestQuantity,
-              requestedPartNumberID: item?.requestedPartNumberID,
-              partNumberIDBooked: item?.partNumberIDBooked,
-              pickSlipItemID: item?.pickSlipItemID,
-              pickSlipID: item?.pickSlipID,
-              storeManID: USER_ID,
-            },
-            projectID: item?.projectID,
-            projectTaskID: item?.projectTaskID,
-          }).unwrap();
-        }
-        pickSlipRefetch();
-        refetchItems();
-        notification.info({
-          message: t('PARTS IN PROGRESS'),
-          description: t('Parts in Progress'),
+        const hasInvalidData = issuedData.some((item) => {
+          if (item.bookedQty === undefined || item.bookedQty === null) {
+            return true;
+          }
+          if (item.bookedQty > item.availableQty) {
+            return true;
+          }
+          if (item.bookedQty > item.requestQuantity) {
+            return true;
+          }
+          return false;
         });
-      }
-    } catch (error) {
-      notification.error({
-        message: t('ERROR'),
-        description: t('Error creating or updating pick slip items.'),
-      });
-      return false;
-    }
+
+        if (hasInvalidData) {
+          notification.error({
+            message: t('ERROR'),
+            description: t(
+              'Invalid data in the table. Please check the bookedQty quantities.'
+            ),
+          });
+          return false;
+        }
+
+        try {
+          for (const item of issuedData) {
+            console.log(item);
+            if (item.createUserID) {
+              // Если есть createUserID, вызываем updateBookingsPickslip
+              await updateBookingsPickslip({
+                pickSlipBokingsItem: {
+                  id: item?.id,
+                  status: 'progress',
+                  bookedQty: item?.bookedQty,
+                  storeItemID: item?.storeItemID?._id,
+                  requirementID: item?.requirementID?._id,
+                  partNumberID: item.partNumberID,
+                  requestedQty: item?.requestQuantity,
+                  requestedPartNumberID: item?.requestedPartNumberID,
+                  partNumberIDBooked: item?.partNumberIDBooked,
+                  pickSlipItemID: item?.pickSlipItemID,
+                  pickSlipID: item?.pickSlipID,
+                },
+                // projectID: item?.projectID,
+                // projectTaskID: item?.projectTaskID,
+              }).unwrap();
+            } else {
+              // Если нет createUserID, вызываем addBookingsPickslip
+              await addBookingsPickslip({
+                pickSlipItem: {
+                  status: item?.status,
+                  bookedQty: item?.bookedQty,
+                  storeItemID: item?.storeItemID,
+                  requirementID: item?.requirementID,
+                  partNumberID: item?.partNumberID,
+                  requestedQty: item?.requestQuantity,
+                  requestedPartNumberID: item?.requestedPartNumberID,
+                  partNumberIDBooked: item?.partNumberIDBooked,
+                  pickSlipItemID: item?.pickSlipItemID,
+                  pickSlipID: item?.pickSlipID,
+                  storeManID: USER_ID,
+                  projectID: item?.projectID,
+                  projectTaskID: item?.projectTaskID,
+                  projectTaskWO: item?.projectTaskWO,
+                  projectWO: item?.projectWO,
+                },
+                // projectID: item?.projectID,
+                // projectTaskID: item?.projectTaskID,
+              }).unwrap();
+            }
+            pickSlipRefetch();
+            refetchItems();
+            notification.info({
+              message: t('PARTS IN PROGRESS'),
+              description: t('Parts in Progress'),
+            });
+          }
+        } catch (error) {
+          notification.error({
+            message: t('ERROR'),
+            description: t('Error creating or updating pick slip items.'),
+          });
+          // return false;
+        }
+      },
+    });
   };
 
   const handleSubmitComplete = async () => {
-    console.log('progressParts:', issuedData);
-    const hasInvalidData = issuedData.some((item) => {
-      if (item.bookedQty === undefined || item.bookedQty === null) {
-        return true;
-      }
-      if (item.bookedQty > item.availableQty) {
-        return true;
-      }
-      if (item.bookedQty > item.requestQuantity) {
-        return true;
-      }
-      return false;
+    Modal.confirm({
+      title: t('Confirm Complete'),
+      content: t('Are you sure you want to complete this pick slip?'),
+      okText: t('Yes'),
+      cancelText: t('No'),
+      onOk: async () => {
+        console.log('progressParts:', issuedData);
+        const hasInvalidData = issuedData.some((item) => {
+          if (item.bookedQty === undefined || item.bookedQty === null) {
+            return true;
+          }
+          if (item.bookedQty > item.availableQty) {
+            return true;
+          }
+          if (item.bookedQty > item.requestQuantity) {
+            return true;
+          }
+          return false;
+        });
+        if (hasInvalidData) {
+          notification.error({
+            message: t('ERROR'),
+            description: t(
+              'Invalid data in the table. Please check the bookedQty quantities.'
+            ),
+          });
+          // return false;
+        }
+        try {
+          await updatePickSlip({
+            pickSlip: {
+              state: 'complete',
+              id:
+                (pickSlips && pickSlips[0]?._id) ||
+                (pickSlips && pickSlips[0]?.id),
+            },
+          }).unwrap();
+
+          pickSlipRefetch();
+          refetchItems();
+          // setCurrentPickSlipItem(null)
+          refetch().unwrap();
+          notification.info({
+            message: t('PARTS COMPLETED'),
+            description: t('Parts COMPLETED'),
+          });
+        } catch (error) {
+          console.log(error);
+          notification.error({
+            message: t('ERROR'),
+            description: t('Error update pick slip or pick slip items.'),
+          });
+          // return false;
+        }
+      },
     });
-    if (hasInvalidData) {
-      notification.error({
-        message: t('ERROR'),
-        description: t(
-          'Invalid data in the table. Please check the bookedQty quantities.'
-        ),
-      });
-      return false;
-    }
-    try {
-      await updatePickSlip({
-        pickSlip: {
-          state: 'complete',
-          id:
-            (pickSlips && pickSlips[0]?._id) || (pickSlips && pickSlips[0]?.id),
-        },
-      }).unwrap();
-      pickSlipRefetch();
-      refetchItems();
-      refetch();
-      notification.info({
-        message: t('PARTS COMPLETED'),
-        description: t('Parts COMPLETED'),
-      });
-    } catch (error) {
-      notification.error({
-        message: t('ERROR'),
-        description: t('Error update pick slip or pick slip items.'),
-      });
-      return false;
-    }
   };
   const handleClose = async () => {
-    console.log('progressParts:', issuedData);
-    const hasInvalidData = issuedData.some((item) => {
-      if (item.bookedQty === undefined || item.bookedQty === null) {
-        return true;
-      }
-      if (item.bookedQty > item.availableQty) {
-        return true;
-      }
-      if (item.bookedQty > item.requestQuantity) {
-        return true;
-      }
-      return false;
+    Modal.confirm({
+      title: t('Confirm Book'),
+      content: t('Are you sure you want to book this pick slip?'),
+      okText: t('Yes'),
+      cancelText: t('No'),
+      onOk: async () => {
+        const hasInvalidData = issuedData.some((item) => {
+          if (item.bookedQty === undefined || item.bookedQty === null) {
+            return true;
+          }
+          if (item.bookedQty > item.availableQty) {
+            return true;
+          }
+          if (item.bookedQty > item.requestQuantity) {
+            return true;
+          }
+          return false;
+        });
+        if (hasInvalidData) {
+          notification.error({
+            message: t('ERROR'),
+            description: t(
+              'Invalid data in the table. Please check the bookedQty quantities.'
+            ),
+          });
+          return false;
+        }
+        try {
+          await updatePickSlip({
+            pickSlip: {
+              state: 'closed',
+              id:
+                (pickSlips && pickSlips[0]?._id) ||
+                (pickSlips && pickSlips[0]?.id),
+            },
+          }).unwrap();
+          try {
+            for (const item of issuedData) {
+              const addBookingResponse = await addBooking({
+                booking: {
+                  voucherModel: 'STORE_TO_A/C',
+                  ...item,
+                  ...item?.storeItemID,
+                  QUANTITY: -item?.QUANTITY,
+                },
+              });
+            }
+          } catch (error) {
+            notification.error({
+              message: t('ERROR'),
+              description: t('Error update pick slip or pick slip items.'),
+            });
+            return false;
+          }
+          pickSlipRefetch();
+          refetchItems();
+          refetch();
+          refetchRequirements().unwrap();
+
+          notification.info({
+            message: t('CLOSE PICKSLIP'),
+            description: t('PICKSLIP CLOSE'),
+          });
+        } catch (error) {
+          notification.error({
+            message: t('ERROR'),
+            description: t('Error update pick slip or pick slip items.'),
+          });
+          return false;
+        }
+      },
     });
-    if (hasInvalidData) {
-      notification.error({
-        message: t('ERROR'),
-        description: t(
-          'Invalid data in the table. Please check the bookedQty quantities.'
-        ),
-      });
-      return false;
-    }
-    try {
-      await updatePickSlip({
-        pickSlip: {
-          state: 'closed',
-          id:
-            (pickSlips && pickSlips[0]?._id) || (pickSlips && pickSlips[0]?.id),
-        },
-      }).unwrap();
-      pickSlipRefetch();
-      refetchItems();
-      refetch();
-      notification.info({
-        message: t('CLOSE PICKSLIP'),
-        description: t('PICKSLIP CLOSE'),
-      });
-    } catch (error) {
-      notification.error({
-        message: t('ERROR'),
-        description: t('Error update pick slip or pick slip items.'),
-      });
-      return false;
-    }
+  };
+  const [reportData, setReportData] = useState<any>(false);
+  const [reportDataLoading, setReportDataLoading] = useState<any>(false);
+  const fetchAndHandleReport = async (reportTitle: string) => {
+    setReportData(true);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (reportData && pickSlips && pickSlips[0]?.id) {
+        const companyID = localStorage.getItem('companyID');
+        const queryParams = {
+          title: 'PICKSLIP_REPORT',
+          token: localStorage.getItem('token'),
+          pickSlipID: pickSlips && pickSlips[0]?.id,
+        };
+
+        try {
+          // Вызываем функцию для генерации отчета
+          setReportDataLoading(true);
+          const reportDataQ = await generateReport(
+            companyID,
+            queryParams,
+            localStorage.getItem('token')
+          );
+
+          handleOpenReport(reportDataQ);
+          setReportDataLoading(false);
+
+          // Устанавливаем состояние reportData в false
+          setReportData(false);
+          // return reportDataQ;
+        } catch (error) {
+          // Обрабатываем ошибку при загрузке отчета
+          console.error('Ошибка при загрузке отчета:', error);
+          setReportDataLoading(false);
+          setReportData(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [pickSlips && pickSlips[0]?.id, reportData]);
   return (
     <div className="h-[82vh]    overflow-hidden flex flex-col justify-between ">
       <Split initialPrimarySize="48%" horizontal splitterSize="20px">
@@ -671,7 +803,7 @@ const PickSlipConfirmationNew: FC = () => {
                 {' '}
                 {t('SAVE')}
               </Button>
-              <Button
+              {/* <Button
                 disabled={
                   !pickSlips || (pickSlips && pickSlips[0]?.state == 'open')
                 }
@@ -688,7 +820,18 @@ const PickSlipConfirmationNew: FC = () => {
               >
                 {' '}
                 {t('PRINT')}
-              </Button>
+              </Button> */}
+              <Col>
+                <Button
+                  loading={reportDataLoading}
+                  icon={<PrinterOutlined />}
+                  size="small"
+                  onClick={() => fetchAndHandleReport('PICKSLIP_REPORT')}
+                  disabled={!(pickSlips && pickSlips[0]?.id)}
+                >
+                  {`${t('PRINT PICKSLIP')}`}
+                </Button>
+              </Col>
               <Button
                 disabled={
                   !pickSlips ||

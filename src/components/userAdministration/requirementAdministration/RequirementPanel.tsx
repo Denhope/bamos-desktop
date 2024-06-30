@@ -440,6 +440,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     },
     {
       skip: !requirementsSearchValues,
+      refetchOnMountOrArgChange: true,
     }
   );
 
@@ -503,6 +504,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     issued: t('ISSUED'),
     progress: t('PROGRESS'),
     complete: t('COMPLETE'),
+    partlyClosed: t('PARTLY CLOSED'),
   };
 
   const columnRequirements = [
@@ -639,7 +641,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       headerName: `${t('RESRICTED ALL STORES QTY')}`,
     },
     {
-      field: 'materialAplicationNumber',
+      field: 'pickSlipNumber',
       editable: false,
       cellDataType: 'number',
       headerName: `${t('PICKSLIP No')}`,

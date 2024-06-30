@@ -482,8 +482,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               <MyTable
                 columnDefs={columnDefs}
                 rowData={projectTasks || []}
-                onRowSelect={function (rowData: IProjectItemWO | null): void {
-                  setEditingProject(rowData);
+                onRowSelect={function (rowData: any | null): void {
+                  handleEdit(rowData);
                 }}
                 onCheckItems={function (selectedKeys: React.Key[]): void {
                   setSelectedKeys(selectedKeys);

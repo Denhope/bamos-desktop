@@ -110,6 +110,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     issued: t('ISSUED'),
     complete: t('COMPLETE'),
     progress: t('IN PROGRESS'),
+    partlyClosed: t('PARTLY CLOSED'),
   };
   const [columnRequirements, setColumnDefsRequirements] = useState<
     ExtendedColDef[]
@@ -241,7 +242,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     },
 
     {
-      field: 'materialAplicationNumber',
+      field: 'pickSlipNumber',
 
       cellDataType: 'number',
       headerName: `${t('PICKSLIP No')}`,
@@ -447,6 +448,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     },
     {
       skip: !order?.id,
+      refetchOnMountOrArgChange: true,
     }
   );
   const transformedRequirements = useMemo(() => {

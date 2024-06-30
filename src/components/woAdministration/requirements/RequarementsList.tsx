@@ -90,6 +90,10 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
     if (fetchData && fetchData.length > 0) {
       setRowData(fetchData);
       onUpdateData(fetchData);
+      setSelectedKeysRequirements([]);
+      setStepsSelected([]);
+    } else {
+      setRowData([]);
     }
   }, [fetchData, onUpdateData]);
 
@@ -186,6 +190,11 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
     setStepsSelected(keys);
     // onCheckItems(stepsSelected);
   };
+  const handleRowSelect = (data: any) => {
+    onRowSelect(data);
+    // console.log(data);
+    // onCheckItems(stepsSelected);
+  };
   const [selectedStoreID, setSelectedStoreID] = useState<any | undefined>(
     undefined
   );
@@ -270,6 +279,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   const {
     data: requirements,
     isLoading,
+    isFetching,
     refetch,
   } = useGetFilteredRequirementsQuery(
     {
@@ -286,7 +296,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
       ids: storesIDString,
     },
     {
-      skip: !order?.projectID.storesID,
+      skip: !order?.projectID?.storesID,
     }
   );
   const storeCodesValueEnum: Record<string, string> =
@@ -306,6 +316,19 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   };
 
   const filteredRequirements = useMemo(() => {
+    // const hasClosedOrCanceled = transformedRequirements.some(
+    //   (req) => req.status === 'closed' || req.status === 'canceled'
+    // );
+
+    // if (hasClosedOrCanceled) {
+    //   notification.warning({
+    //     message: t('WARNING'),
+    //     description: t(
+    //       'Some requirements have a status of closed or canceled.'
+    //     ),
+    //   });
+    // }
+
     return transformedRequirements.filter((req) =>
       stepsSelected.includes(req._id)
     );
@@ -372,6 +395,8 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
             status: 'issued',
             _id: item._id,
             id: item._id,
+            pickSlipID: pickSlipID,
+            neededOnID: values.neededOnID,
           }).unwrap();
         }
       }
@@ -398,7 +423,20 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
         <Col style={{ textAlign: 'right' }}>
           <Button
             onClick={() => {
-              setOpenCreatePickSlip(true);
+              const hasClosedOrCanceled = filteredRequirements.some(
+                (req) => req.status === 'closed' || req.status === 'canceled'
+              );
+
+              if (hasClosedOrCanceled) {
+                notification.warning({
+                  message: t('WARNING'),
+                  description: t(
+                    'Some requirements have a status of closed or canceled.'
+                  ),
+                });
+              } else {
+                setOpenCreatePickSlip(true);
+              }
             }}
             disabled={!stepsSelected?.length}
             size="small"
@@ -411,7 +449,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
 
       <div style={gridStyle} className={'ag-theme-alpine'}>
         <PartsTable
-          isLoading={isLoading}
+          isLoading={isLoading || isFetching}
           isChekboxColumn={isChekboxColumn}
           isVisible={isVisible}
           isButtonColumn={isButtonColumn}
@@ -427,7 +465,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
           onDelete={onDelete}
           onSave={handleSubmit}
           onCellValueChanged={onCellValueChanged}
-          onRowSelect={onRowSelect}
+          onRowSelect={handleRowSelect}
           onCheckItems={handleRowSheck}
         />
       </div>

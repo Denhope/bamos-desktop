@@ -74,7 +74,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
       // setinitialFormPN(requierement.PN);
 
       form.setFieldsValue({
-        projectTaskID: pickSlip.projectTaskID?._id,
+        projectTaskID: pickSlip.projectTaskID?.taskWO,
         projectID: pickSlip.projectID?._id,
         neededOnID: pickSlip?.neededOnID?._id,
         getFromID: pickSlip?.getFromID?._id,

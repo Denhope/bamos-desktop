@@ -1,14 +1,12 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
-
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
-
-import { IRequirement, Requirement } from '@/models/IRequirement';
+import { IRequirement } from '@/models/IRequirement';
 
 export const requirementApi = createApi({
   reducerPath: 'requirements',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Requirement'], // Add tag types for caching
+  tagTypes: ['Requirement'],
   endpoints: (builder) => ({
     getFilteredFullRequirements: builder.query<
       IRequirement[],
@@ -54,17 +52,16 @@ export const requirementApi = createApi({
           endDate,
         },
       }),
-      providesTags: ['Requirement'],
-      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data } = await queryFulfilled;
-
-      //     // dispatch(setZonesGroups(data));
-      //   } catch (error) {
-      //     console.error('Ошибка при выполнении запроса:', error);
-      //   }
-      // },
-      // Provide the 'Users' tag after fetching
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: 'Requirement' as const,
+                id: _id,
+              })),
+              { type: 'Requirement' as const, id: 'LIST' },
+            ]
+          : [{ type: 'Requirement' as const, id: 'LIST' }],
     }),
 
     getFilteredRequirements: builder.query<
@@ -117,23 +114,33 @@ export const requirementApi = createApi({
           includeAlternates,
         },
       }),
-      providesTags: ['Requirement'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: 'Requirement' as const,
+                id: _id,
+              })),
+              { type: 'Requirement' as const, id: 'LIST' },
+            ]
+          : [{ type: 'Requirement' as const, id: 'LIST' }],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-
-          // dispatch(setZonesGroups(data));
+          // Дополнительные действия с данными
         } catch (error) {
           console.error('Ошибка при выполнении запроса:', error);
         }
       },
-      // Provide the 'Users' tag after fetching
     }),
 
     getRequirement: builder.query<IRequirement, string>({
       query: (id) => `requirementsNew/company/${COMPANY_ID}/requirement/${id}`,
-      providesTags: ['Requirement'],
+      providesTags: (result, error, id) => [
+        { type: 'Requirement' as const, id },
+      ],
     }),
+
     addRequirement: builder.mutation<
       IRequirement,
       { requirement: Partial<IRequirement> }
@@ -148,12 +155,13 @@ export const requirementApi = createApi({
           companyID: COMPANY_ID,
         },
       }),
-      invalidatesTags: ['Requirement'],
+      invalidatesTags: [{ type: 'Requirement' as const, id: 'LIST' }],
     }),
+
     updateRequirement: builder.mutation<IRequirement, IRequirement>({
       query: (requirement) => ({
         url: `requirementsNew/company/${COMPANY_ID}/requirement/${
-          requirement.id || requirement._id
+          requirement._id || requirement.id
         }`,
         method: 'PUT',
         body: {
@@ -162,8 +170,12 @@ export const requirementApi = createApi({
           updateDate: new Date(),
         },
       }),
-      invalidatesTags: ['Requirement'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: (result, error, { _id }) => [
+        { type: 'Requirement' as const, id: _id },
+        { type: 'Requirement' as const, id: 'LIST' },
+      ],
     }),
+
     deleteRequirement: builder.mutation<
       { success: boolean; id: string },
       string
@@ -172,7 +184,10 @@ export const requirementApi = createApi({
         url: `requirementsNew/company/${COMPANY_ID}/requirement/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Requirement'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: [
+        // { type: 'Requirement' as const, id },
+        { type: 'Requirement' as const, id: 'LIST' },
+      ],
     }),
   }),
 });

@@ -90,7 +90,7 @@ const CancelReceiving: FC = () => {
                   const result = await dispatch(
                     updateReceivingByID({
                       companyID: currentCompanyID,
-                      id: partsToPrint[0]._id,
+                      id: partsToPrint[0]?._id,
                       state: 'CANCELLED',
                       IS_CANCELLED: true,
                       reason: form.getFieldValue('reasonCancel'),
@@ -201,6 +201,9 @@ const CancelReceiving: FC = () => {
                             LOCAL_ID: resultDelete.payload?.LOCAL_ID,
                             ORDER_ITEM_ID:
                               result && result?.payload?.ORDER_ITEM_ID,
+                            MATERIAL_STORE_ID:
+                              partsToPrint[0].MATERIAL_STORE_ID,
+                            partID: partsToPrint[0].partID,
                           },
                         })
                       );

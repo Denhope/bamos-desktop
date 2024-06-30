@@ -818,7 +818,7 @@ const ShelfExpiryNew: FC = () => {
               isAddVisiable={true}
               isButtonVisiable={false}
               isEditable={true}
-              height={'100%'}
+              height={'77vh'}
               columnDefs={columnDefs}
               partNumbers={[]}
               isChekboxColumn={true}

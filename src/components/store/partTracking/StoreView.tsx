@@ -100,8 +100,8 @@ const StoreView: FC<StoreViewType> = ({
       cellDataType: 'text',
     },
     {
-      field: 'ORDER No',
-      headerName: `${t('ORDER_NUMBER')}`,
+      field: 'ORDER_NUMBER',
+      headerName: `${t('ORDER No')}`,
       cellDataType: 'text',
     },
 

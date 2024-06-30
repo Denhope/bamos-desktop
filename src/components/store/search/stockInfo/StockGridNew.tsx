@@ -224,7 +224,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
                       item?.restrictionID === 'standart'
                   ) || []
                 }
-                height="30vh"
+                height="28vh"
                 partNumberID={partNumber?._id}
                 storeID={selectedKey}
               />

@@ -921,11 +921,13 @@ export const transformedAccessToIAssess = (data: any[]): any[] => {
 export const transformToIRequirement = (data: any[]): any[] => {
   console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
   const result = data?.map((item) => ({
-    // ...item,
+    ...item,
     QUANTITY: item.quantity,
+
     availableAllStoreQTY: item?.availableAllStoreQTY,
     restrictedAllStoreQTY: item?.restrictedAllStoreQTY,
     requestQuantity: item?.requestQuantity,
+    pickSlipNumber: item?.pickSlipID?.pickSlipNumberNew,
     amout: item.amout,
     availableQTY: item?.availableQTY,
     _id: item?.id || item?._id,
@@ -999,6 +1001,7 @@ export interface ValueEnumType {
   PARTLY_RECEIVED?: string;
   CANCELLED?: string;
   partyCancelled?: string;
+  partlyClosed?: string;
 }
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
@@ -1020,6 +1023,8 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
     case 'RECEIVED':
       return '#32CD32'; // Lime Green
     case 'PARTLY_RECEIVED':
+      return '#90EE90'; // Light Green
+    case 'partlyClosed':
       return '#90EE90'; // Light Green
     case 'canceled':
       return '#FF6347'; // Tomato Red
@@ -1171,11 +1176,11 @@ export const transformToIRecevingItems = (data: any[]): any[] => {
 export const transformToPickSlipItemBooked = (data: any[]): any[] => {
   const result = data.flatMap((item: any) => {
     // Создаем новый объект с теми же свойствами, что и item
+
     const newItem = { ...item };
 
     // Проверяем, пустой ли bookedItems
     if (!newItem.bookedItems || newItem.bookedItems.length === 0) {
-      console.log(item);
       newItem.bookedItems = [
         {
           id: uuidv4(), // Добавляем уникальный идентификатор
@@ -1187,6 +1192,9 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
           projectID: newItem.projectID?._id,
           projectTaskID: newItem.projectTaskID?._id,
           requirementID: newItem?.requirementID?._id,
+          projectWO: newItem?.projectID?.projectWO,
+          projectTaskWO: newItem.projectTaskID?.taskWO,
+          registrationNumber: newItem?.projectID?.acRegistrationNumber,
           status: 'progress',
         },
       ];
@@ -1194,12 +1202,20 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
       // Если bookedItems не пустой, добавляем уникальный идентификатор к каждому элементу
       newItem.bookedItems = newItem.bookedItems.map((bookedItem: any) => ({
         ...bookedItem,
+        ...bookedItem?.storeItemID,
+        // ...bookedItem?.projectID,
+        // ...bookedItem.projectTaskID,
+        id: bookedItem._id || bookedItem.id,
+
         PART_NUMBER_REQUEST: bookedItem?.requestedPartNumberID?.PART_NUMBER,
         requestedPartNumberID: bookedItem?.requestedPartNumberID?._id,
         requestedQty: bookedItem?.requestedQty || newItem.requestedQty,
         canceledQty: bookedItem.canceledQty,
-        projectID: bookedItem.projectID?._id,
-        projectTaskID: bookedItem.projectTaskID?._id,
+        // projectID: bookedItem.projectID?._id,
+        // projectTaskID: bookedItem.projectTaskID?._id,
+        projectWO: bookedItem?.projectID?.projectWO,
+        projectTaskWO: bookedItem.projectTaskID?.taskWO,
+        registrationNumber: bookedItem?.projectID?.acRegistrationNumber,
         PART_NUMBER_BOOKED: bookedItem?.storeItemID?.PART_NUMBER,
         DESCRIPTION: bookedItem?.storeItemID?.NAME_OF_MATERIAL,
         GROUP: bookedItem?.storeItemID?.GROUP,
@@ -1215,6 +1231,7 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
         OWNER: bookedItem?.storeItemID?.locationID?.ownerID?.title,
         STORE: bookedItem?.storeItemID?.storeID?.storeShortName,
         LOCATION: bookedItem?.storeItemID?.locationID?.locationName,
+        state: bookedItem.status,
       }));
     }
 

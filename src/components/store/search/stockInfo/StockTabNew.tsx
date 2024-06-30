@@ -58,7 +58,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
                 isLoading={partsQueryLoading || partsLoadingF}
                 transformedStokPartNumbers={transformedPartNumbers || []}
                 isDescription={true}
-                height="54vh"
+                height="50vh"
                 isAlternatives={searchValues.isAlternates}
                 partNumberID={partNumber?._id}
               ></StockDetailsNew>
@@ -76,7 +76,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
                   ) || []
                 }
                 isDescription={false}
-                height="64vh"
+                height="61vh"
                 isAlternatives={searchValues.isAlternates}
                 partNumberID={partNumber?._id}
               ></StockDetailsNew>
@@ -93,7 +93,7 @@ const StockTabNew: FC<IGroupTaskListPrors> = ({ partNumber, searchValues }) => {
                   ) || []
                 }
                 isDescription={false}
-                height="57vh"
+                height="55vh"
               ></StockDetailsNew>
             ),
             title: `${t('UNSERVICE PARTS')}`,

@@ -85,8 +85,8 @@ export const pickSlipBookingsItemsApi = createApi({
           createUserID: USER_ID,
           createDate: new Date(),
           companyID: COMPANY_ID,
-          projectID: projectID,
-          projectTaskID: projectTaskID,
+          // projectID: projectID,
+          // projectTaskID: projectTaskID,
           vendorID: vendorID,
         },
       }),
@@ -116,7 +116,9 @@ export const pickSlipBookingsItemsApi = createApi({
     }),
     updatePickSlipBookingsItem: builder.mutation<any, any>({
       query: (pickSlipBokingsItem) => ({
-        url: `pickSlipBokingsItems/company/${COMPANY_ID}/partBookingsPickSlipItem/${pickSlipBokingsItem?.pickSlipBokingsItem?.id}`,
+        url: `pickSlipBokingsItems/company/${COMPANY_ID}/partBookingsPickSlipItem/${
+          pickSlipBokingsItem?.pickSlipBokingsItem?.id || pickSlipBokingsItem.id
+        }`,
         method: 'PUT',
         body: {
           ...pickSlipBokingsItem,
