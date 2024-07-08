@@ -14,6 +14,7 @@ interface UserTreeProps {
   onProjectSelect: (project: IProject) => void;
   projects: IProject[] | [];
   onCheckItems?: (selectedKeys: React.Key[]) => void;
+  isLoading?: boolean;
 }
 
 const { TreeNode } = Tree;
@@ -23,6 +24,7 @@ const ProjectTree: FC<UserTreeProps> = ({
   onCheckItems,
   onProjectSelect,
   projects,
+  isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -94,6 +96,7 @@ const ProjectTree: FC<UserTreeProps> = ({
         onPressEnter={handleEnterPress}
       />
       <CustomTree
+        isLoading={isLoading}
         onCheckItems={(selectedKeys: any[]) => {
           // console.log(selectedKeys);
           return onCheckItems && onCheckItems(selectedKeys);

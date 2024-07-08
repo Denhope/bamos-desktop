@@ -18,6 +18,8 @@ export const projectsApi = createApi({
         startDate?: any;
         endDate?: any;
         projectWO?: any;
+        projectType?: any;
+        customerID?: string;
       }
     >({
       query: ({
@@ -27,6 +29,8 @@ export const projectsApi = createApi({
         startDate,
         endDate,
         projectWO,
+        projectType,
+        customerID,
       }) => ({
         url: `projects/getFilteredProjects/company/${COMPANY_ID}`,
         params: {
@@ -36,6 +40,8 @@ export const projectsApi = createApi({
           startDate,
           endDate,
           projectWO,
+          projectType,
+          customerID,
         },
       }),
       providesTags: ['Projects'],

@@ -23,8 +23,8 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
 
   const convertToTreeData = (taskCodes: ITaskCode[]): TreeDataNode[] => {
     return taskCodes.map((taskCode) => ({
-      title: `${taskCode.code.toUpperCase()} - ${taskCode.description.toUpperCase()}`,
-      key: taskCode.id,
+      title: `${taskCode?.code?.toUpperCase()} - ${taskCode?.description?.toUpperCase()}`,
+      key: taskCode?.id,
       taskCode: taskCode,
     }));
   };

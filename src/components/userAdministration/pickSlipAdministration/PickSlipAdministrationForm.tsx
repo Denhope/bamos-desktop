@@ -94,7 +94,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
   };
 
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
+    <Button disabled type="primary" htmlType="submit">
       {requierement ? t('UPDATE') : t('CREATE')}
     </Button>
   );
@@ -390,6 +390,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
           <div className=" h-[57vh] flex flex-col overflow-auto">
             <ProFormGroup>
               <ProFormSelect
+                disabled
                 showSearch
                 rules={[{ required: true }]}
                 name="status"
@@ -457,7 +458,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                       disabled
                       mode="single"
                       name="projectTaskID"
-                      label={`${t(`TASK`)}`}
+                      label={`${t(`TRACE No`)}`}
                       width="sm"
                       valueEnum={projectTasksCodesValueEnum}
                       onChange={(value: any) => {

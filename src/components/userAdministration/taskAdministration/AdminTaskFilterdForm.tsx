@@ -113,12 +113,11 @@ const AdminTaskFilteredForm: FC<
           valueEnum={{
             SB: { text: t('SERVICE BULLETIN') },
             SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
-            ADP: { text: t('ADP') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
-            PART_PRODUCE: { text: t('PART PRODUCE') },
-            NRC: { text: t('NRC') },
-            ADD_HOC: { text: t('ADD HOC') },
+            // PART_PRODUCE: { text: t('PART PRODUCE') },
+            // NRC: { text: t('NRC') },
+            // ADD_HOC: { text: t('ADD HOC') },
           }}
         />
         <ProFormSelect

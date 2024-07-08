@@ -320,7 +320,7 @@ const StockInformationNew: FC = () => {
                     style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
                   }))}
                 />
-                <ProFormCheckbox.Group
+                {/* <ProFormCheckbox.Group
                   className="my-0 py-0"
                   //initialValue={['false']}
                   labelAlign="left"
@@ -334,7 +334,7 @@ const StockInformationNew: FC = () => {
                       style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
                     })
                   )}
-                />
+                /> */}
               </Space>
 
               <ProFormCheckbox.Group

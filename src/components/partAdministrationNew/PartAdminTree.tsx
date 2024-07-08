@@ -15,6 +15,7 @@ interface UserTreeProps {
   onProjectSelect: (project: IPartNumber) => void;
   onCheckItems?: (selectedKeys: React.Key[]) => void;
   parts: IPartNumber[] | [];
+  isLoading?: boolean;
 }
 
 const { TreeNode } = Tree;
@@ -24,6 +25,7 @@ const PartAdminTree: FC<UserTreeProps> = ({
   onProjectSelect,
   parts,
   onCheckItems,
+  isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -133,6 +135,7 @@ const PartAdminTree: FC<UserTreeProps> = ({
         onPressEnter={handleEnterPress}
       />
       <CustomTree
+        isLoading={isLoading}
         isAllChecked
         treeData={filteredTreeData}
         checkable={true}

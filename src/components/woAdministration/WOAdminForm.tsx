@@ -22,9 +22,10 @@ import {
   useDeleteStepMutation,
   useGetFilteredStepsQuery,
 } from '@/features/projectItemWO/stepApi';
+import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useAddBookingMutation } from '@/features/bookings/bookingApi';
 import StepContainer from './StepContainer';
-
+import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import InstrumentContainer from './InstrumentContainer';
 import WODescriptionSummary from './WODescriptionSummary';
 import { IStep } from '@/models/IStep';
@@ -32,7 +33,10 @@ import { ITask } from '@/models/ITask';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { useGetGroupTaskCodesQuery } from '@/features/tasksAdministration/taskCodesApi';
 import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
-import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
+import {
+  useGetFilteredZonesQuery,
+  useGetZonesByGroupQuery,
+} from '@/features/zoneAdministration/zonesApi';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { ColDef } from 'ag-grid-community';
 import {
@@ -49,6 +53,7 @@ import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 import CircleRenderer from '../userAdministration/requirementAdministration/CircleRenderer';
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
+import { useGetPartTaskNumbersQuery } from '@/features/tasksAdministration/partApi';
 
 interface UserFormProps {
   order?: any;
@@ -66,6 +71,16 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const columnDefs = useMemo(
     () => [
+      {
+        headerName: `${t('PART No')}`,
+        field: 'PART_NUMBER',
+        editable: true,
+        // cellEditor: AutoCompleteEditor,
+        // cellEditorParams: {
+        //   options: partNumbers,
+        // },
+        cellDataType: 'text',
+      },
       {
         field: 'DESCRIPTION',
         headerName: `${t('DESCRIPTION')}`,
@@ -92,6 +107,13 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
         editable: false,
         filter: false,
         headerName: `${t('UNIT OF MEASURE')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'notes',
+        editable: false,
+        filter: false,
+        headerName: `${t('IF REQURTED')}`,
         cellDataType: 'text',
       },
       // Добавьте другие колонки по необходимости
@@ -254,7 +276,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
   const [addBooking] = useAddBookingMutation({});
 
   const [stepsSelected, setStepsSelected] = useState<React.Key[]>([]);
-  const [activeTabKey, setActiveTabKey] = useState('3');
+  const [activeTabKey, setActiveTabKey] = useState('1');
   const [tabTitles, setTabTitles] = useState({
     '1': `${t('WORKORDER INFO')}`,
     '2': `${t('PARTS')}`,
@@ -272,7 +294,11 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
       skip: !projectItemID,
     }
   );
-
+  const { data: usersSkill } = useGetSkillsQuery({});
+  const groupSlills = usersSkill?.map((skill: any) => ({
+    label: skill?.code,
+    value: skill?.id, // Use the _id as the value
+  }));
   const [addStep] = useAddStepMutation();
   const [deleteStep] = useDeleteStepMutation();
 
@@ -341,10 +367,19 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
       });
     }
   };
-
+  const { data: partsTask } = useGetPartTaskNumbersQuery(
+    { taskId: order?.taskId?._id },
+    {
+      skip: !order?.taskId?._id,
+    }
+  );
   const [acTypeID, setACTypeID] = useState<any>(order?.acTypeId || '');
   const [taskType, setTaskType] = useState<string>(order?.taskType || '');
-  const { data: zones, isLoading: loading } = useGetZonesByGroupQuery(
+  // const { data: zones, isLoading: loading } = useGetZonesByGroupQuery(
+  //   { acTypeId: acTypeID },
+  //   { skip: !acTypeID }
+  // );
+  const { data: zones, isLoading: loading } = useGetFilteredZonesQuery(
     { acTypeId: acTypeID },
     { skip: !acTypeID }
   );
@@ -367,7 +402,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
 
   const taskCodesValueEnum: Record<string, string> =
     taskCodes?.reduce((acc, mpdCode) => {
-      acc[mpdCode.id] = mpdCode.code;
+      acc[mpdCode.id || mpdCode?._id] = mpdCode.code;
       return acc;
     }, {} as Record<string, string>) || {};
   const mpdCodesValueEnum: Record<string, string> =
@@ -377,20 +412,26 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     }, {} as Record<string, string>) || {};
 
   const zonesValueEnum: Record<string, string> =
-    zones?.reduce((acc1, majorZone) => {
-      if (majorZone.subZonesCode) {
-        return majorZone.subZonesCode.reduce((acc2, subZone) => {
-          if (subZone.areasCode) {
-            return subZone.areasCode.reduce((acc3, area) => {
-              acc3[area.id] = String(area.areaNbr);
-              return acc3;
-            }, acc2);
-          }
-          return acc2;
-        }, acc1);
-      }
-      return acc1;
+    zones?.reduce((acc: any, zone: any) => {
+      acc[zone?._id] = zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
+      return acc;
     }, {} as Record<string, string>) || {};
+
+  // const zonesValueEnum: Record<string, string> =
+  //   zones?.reduce((acc1, majorZone) => {
+  //     if (majorZone.subZonesCode) {
+  //       return majorZone.subZonesCode.reduce((acc2, subZone) => {
+  //         if (subZone.areasCode) {
+  //           return subZone.areasCode.reduce((acc3, area) => {
+  //             acc3[area.id] = String(area.areaNbr);
+  //             return acc3;
+  //           }, acc2);
+  //         }
+  //         return acc2;
+  //       }, acc1);
+  //     }
+  //     return acc1;
+  //   }, {} as Record<string, string>) || {};
   const { data: accessesData } = useGetAccessCodesQuery(
     { acTypeID: acTypeID },
     { skip: acTypeID }
@@ -411,6 +452,12 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
       ) || {}
     );
   }, [partNumbers]);
+  const { data: restriction } = useGetFilteredRestrictionsQuery({});
+  const restrictionValueEnum: Record<string, string> =
+    restriction?.reduce((acc, reqType) => {
+      acc[reqType.id || reqType?._id] = `${reqType.code}`;
+      return acc;
+    }, {}) || {};
   useEffect(() => {
     if (order) {
       form.resetFields();
@@ -432,6 +479,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
       form.resetFields();
       setACTypeID(undefined);
       setTaskType('PART_PRODUCE');
+      console.log(order);
     }
   }, [order, form]);
 
@@ -469,7 +517,8 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
       form={form}
       submitter={{
         render: (_, dom) => [
-          activeTabKey !== '3' &&
+          order &&
+            activeTabKey !== '3' &&
             activeTabKey !== '4' &&
             activeTabKey !== '5' &&
             activeTabKey !== '2' && <SubmitButton key="submit" />,
@@ -760,13 +809,13 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         <ProFormDigit
                           disabled
                           width={'xs'}
-                          name="allTaskTime"
+                          name="mainWorkTime"
                           label={t('MHS')}
                         />
                         <ProFormTextArea
                           fieldProps={{
                             style: { resize: 'none' },
-                            rows: 6,
+                            rows: 5,
                           }}
                           width="xl"
                           name="taskDescription"
@@ -819,16 +868,36 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         valueEnum={taskCodesValueEnum}
                         // disabled={!acTypeID}
                       />
+                      <ProFormSelect
+                        disabled
+                        showSearch
+                        name="restrictionID"
+                        label={t('RESTRICTION')}
+                        width="sm"
+                        valueEnum={restrictionValueEnum}
+                        // disabled={!acTypeID}
+                      />
+                      <ProFormSelect
+                        disabled
+                        mode="multiple"
+                        showSearch
+                        name="skillCodeID"
+                        label={t('SKILL')}
+                        width="sm"
+                        options={groupSlills}
+                        // valueEnum={taskCodesValueEnum}
+                        // disabled={!acTypeID}
+                      />
                       <ProFormTextArea
                         fieldProps={{
                           style: { resize: 'none' },
                           rows: 1,
                         }}
-                        name="note"
+                        name="notes"
                         label={t('REMARKS')}
                         width="lg"
                       />
-                      <ProFormSelect
+                      {/* <ProFormSelect
                         showSearch
                         name="status"
                         label={t('STATE')}
@@ -837,7 +906,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                           ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
                           INACTIVE: { text: t('INACTIVE'), status: 'Error' },
                         }}
-                      />
+                      /> */}
                     </>
                   )}
                 </ProFormGroup>
@@ -910,65 +979,81 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
           )}
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['5']} key="5">
-          <RequarementsList
-            isIssueVisibale={true}
-            order={order}
-            isAddVisiable={false}
-            isChekboxColumn={true}
-            fetchData={transformedRequirements}
-            columnDefs={columnRequirements}
-            partNumbers={partNumbers || []}
-            taskId={order?.id}
-            onUpdateData={function (data: any[]): void {}}
-            height={'54Vh'}
-            onRowSelect={function (rowData: IRequirement | null): void {}}
-            onCheckItems={function (selectedKeys: any[]): void {
-              handleCheckItems(selectedKeys);
-            }}
-            onDelete={function (reqID: string): void {
-              throw new Error('Function not implemented.');
-            }}
-            onSave={function (rowData: IRequirement): void {
-              throw new Error('Function not implemented.');
-            }}
-          ></RequarementsList>
+          {order ? (
+            <RequarementsList
+              isIssueVisibale={true}
+              order={order}
+              isAddVisiable={false}
+              isChekboxColumn={true}
+              fetchData={transformedRequirements}
+              columnDefs={columnRequirements}
+              partNumbers={partNumbers || []}
+              taskId={order?.id}
+              onUpdateData={function (data: any[]): void {}}
+              height={'54Vh'}
+              onRowSelect={function (rowData: IRequirement | null): void {}}
+              onCheckItems={function (selectedKeys: any[]): void {
+                handleCheckItems(selectedKeys);
+              }}
+              onDelete={function (reqID: string): void {
+                throw new Error('Function not implemented.');
+              }}
+              onSave={function (rowData: IRequirement): void {
+                throw new Error('Function not implemented.');
+              }}
+            ></RequarementsList>
+          ) : (
+            <Empty></Empty>
+          )}
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['2']} key="2">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-            <PartContainer
-              isAddVisiable={true}
-              height={'58vh'}
-              columnDefs={columnDefs}
-              partNumbers={partNumbers || []}
-              onUpdateData={(data: any[]): void => {}}
-              rowData={
-                order?.partTaskID &&
-                transformToIPartNumber(
-                  order?.partTaskID || [], // Передаем массив `order.partTaskID`
-                  ['CONS', 'ROT'] // Ваши группы инструментов
-                )
-              }
-              isLoading={isLoading}
-            />
+            {order ? (
+              <PartContainer
+                isButtonColumn={false}
+                isButtonVisiable={false}
+                isAddVisiable={true}
+                height={'58vh'}
+                columnDefs={columnDefs}
+                partNumbers={partNumbers || []}
+                onUpdateData={(data: any[]): void => {}}
+                rowData={
+                  order?.partTaskID &&
+                  transformToIPartNumber(
+                    partsTask || [], // Передаем массив `order.partTaskID`
+                    ['TOOL', 'GSE'] // Ваши группы инструментов
+                  )
+                }
+                isLoading={isLoading}
+              />
+            ) : (
+              <Empty></Empty>
+            )}
           </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['4']} key="4">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-            <PartContainer
-              isLoading={isLoading}
-              isAddVisiable={true}
-              height={'58vh'}
-              columnDefs={columnDefs}
-              partNumbers={partNumbers || []}
-              onUpdateData={(data: any[]): void => {}}
-              rowData={
-                order?.partTaskID &&
-                transformToIPartNumber(
-                  order?.partTaskID || [], // Передаем массив `order.partTaskID`
-                  ['TOOL', 'GSE'] // Ваши группы инструментов
-                )
-              }
-            />
+            {order ? (
+              <PartContainer
+                isButtonColumn={false}
+                isButtonVisiable={false}
+                isLoading={isLoading}
+                isAddVisiable={true}
+                height={'58vh'}
+                columnDefs={columnDefs}
+                partNumbers={partNumbers || []}
+                onUpdateData={(data: any[]): void => {}}
+                rowData={
+                  order?.partTaskID &&
+                  transformToIPartNumber(
+                    partsTask || [],
+                    ['ROT', 'CONS', 'CHEM'] // Ваши группы инструментов
+                  )
+                }
+              />
+            ) : (
+              <Empty></Empty>
+            )}
           </div>
         </Tabs.TabPane>
       </Tabs>

@@ -82,9 +82,11 @@ export const taskApi = createApi({
       }),
       invalidatesTags: ['TaskTypes'], // Указываем, что это мутация недействительна тега 'UserGroups'
     }),
-    updateTask: builder.mutation<ITask, ITask>({
+    updateTask: builder.mutation<any, any>({
       query: (taskCode) => ({
-        url: `tasks/administration/company/${COMPANY_ID}/task/${taskCode.id}`,
+        url: `tasks/administration/company/${COMPANY_ID}/task/${
+          taskCode?.id || taskCode?._id
+        }`,
         method: 'PUT',
         body: { ...taskCode, updateUserID: USER_ID, updateDate: new Date() },
       }),

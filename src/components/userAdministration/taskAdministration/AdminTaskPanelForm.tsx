@@ -11,7 +11,10 @@ import { useTranslation } from 'react-i18next';
 import { ITask } from '@/models/ITask';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
-import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
+import {
+  useGetFilteredZonesQuery,
+  useGetZonesByGroupQuery,
+} from '@/features/zoneAdministration/zonesApi';
 import { useGetGroupTaskCodesQuery } from '@/features/tasksAdministration/taskCodesApi';
 import { ProFormDigit, ProFormTextArea } from '@ant-design/pro-components';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
@@ -33,6 +36,7 @@ import { AgGridReact } from 'ag-grid-react';
 import PartList from './PartList';
 import AutoCompleteEditor from '@/components/shared/Table/ag-grid/AutoCompleteEditor';
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
+import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 
 interface UserFormProps {
   task?: ITask;
@@ -49,31 +53,32 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   const { t } = useTranslation();
   const [acTypeID, setACTypeID] = useState<any>(task?.acTypeId || '');
   const [taskType, setTaskType] = useState<string>(task?.taskType || '');
-  const { data: partNumbers, isError } = useGetPartNumbersQuery({});
-  const { data: tools } = useGetPartNumbersQuery({ group: 'TOOL' });
+  const { data: partNumbers } = useGetPartNumbersQuery({});
+
+  // const { data: tools } = useGetPartNumbersQuery({ group: 'TOOL,GSE' });
   const [addStep] = useAddStepMutation({});
   const [deleteStep] = useDeleteStepMutation();
-  const [activeTabKey, setActiveTabKey] = useState('3');
-  const partValueEnum: Record<string, any> = useMemo(() => {
-    return (
-      partNumbers?.reduce(
-        (acc: Record<string, any>, partNumber: IPartNumber) => {
-          acc[partNumber._id] = partNumber;
-          return acc;
-        },
-        {}
-      ) || {}
-    );
-  }, [partNumbers]);
+  const [activeTabKey, setActiveTabKey] = useState('1');
+  // const partValueEnum: Record<string, any> = useMemo(() => {
+  //   return (
+  //     partNumbers?.reduce(
+  //       (acc: Record<string, any>, partNumber: IPartNumber) => {
+  //         acc[partNumber?._id || partNumber?.id] = partNumber;
+  //         return acc;
+  //       },
+  //       {}
+  //     ) || {}
+  //   );
+  // }, [partNumbers]);
 
-  const toolValueEnum: Record<string, IPartNumber> =
-    tools?.reduce(
-      (acc: Record<string, IPartNumber>, partNumber: IPartNumber) => {
-        acc[partNumber.id] = partNumber; // Используйте id вместо _id
-        return acc;
-      },
-      {}
-    ) || {};
+  // const toolValueEnum: Record<string, IPartNumber> =
+  //   tools?.reduce(
+  //     (acc: Record<string, IPartNumber>, partNumber: IPartNumber) => {
+  //       acc[partNumber?._id || partNumber?.id] = partNumber; // Используйте id вместо _id
+  //       return acc;
+  //     },
+  //     {}
+  //   ) || {};
   const handleSubmit = async (values: ITask) => {
     const newUser: ITask = task ? { ...task, ...values } : { ...values };
     onSubmit(newUser);
@@ -112,30 +117,52 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       {task ? t('UPDATE') : t('CREATE')}
     </Button>
   );
-
-  const { data: zones, isLoading: loading } = useGetZonesByGroupQuery(
+  const { data: usersSkill } = useGetSkillsQuery({});
+  const groupSlills = usersSkill?.map((skill: any) => ({
+    label: skill?.code,
+    value: skill?.id, // Use the _id as the value
+  }));
+  const { data: zones, isLoading: loading } = useGetFilteredZonesQuery(
     { acTypeId: acTypeID },
     { skip: !acTypeID }
   );
+  // const { data: zones, isLoading: loading } = useGetZonesByGroupQuery(
+  //   { acTypeId: acTypeID },
+  //   { skip: !acTypeID }
+  // );
+  const { data: restriction } = useGetFilteredRestrictionsQuery({});
+  const restrictionValueEnum: Record<string, string> =
+    restriction?.reduce((acc, reqType) => {
+      acc[reqType.id || reqType?._id] = `${reqType.code}`;
+      return acc;
+    }, {}) || {};
+
   const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
   const { data: accessesData } = useGetAccessCodesQuery(
     { acTypeID: acTypeID },
     { skip: acTypeID }
   );
+  // const zonesValueEnum: Record<string, string> =
+  //   zones?.reduce((acc1, majorZone) => {
+  //     if (majorZone.subZonesCode) {
+  //       return majorZone.subZonesCode.reduce((acc2, subZone) => {
+  //         if (subZone.areasCode) {
+  //           return subZone.areasCode.reduce((acc3, area) => {
+  //             acc3[area.id] = String(area.areaNbr);
+  //             return acc3;
+  //           }, acc2);
+  //         }
+  //         return acc2;
+  //       }, acc1);
+  //     }
+  //     return acc1;
+  //   }, {} as Record<string, string>) || {};
+
   const zonesValueEnum: Record<string, string> =
-    zones?.reduce((acc1, majorZone) => {
-      if (majorZone.subZonesCode) {
-        return majorZone.subZonesCode.reduce((acc2, subZone) => {
-          if (subZone.areasCode) {
-            return subZone.areasCode.reduce((acc3, area) => {
-              acc3[area.id] = String(area.areaNbr);
-              return acc3;
-            }, acc2);
-          }
-          return acc2;
-        }, acc1);
-      }
-      return acc1;
+    zones?.reduce((acc: any, zone: any) => {
+      acc[zone?.id || zone?._id] =
+        zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
+      return acc;
     }, {} as Record<string, string>) || {};
 
   const acTypeValueEnum: Record<string, string> =
@@ -322,12 +349,8 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       valueEnum={{
                         SB: { text: t('SERVICE BULLETIN') },
                         SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
-                        ADP: { text: t('ADP') },
                         AD: { text: t('AIRWORTHINESS DIRECTIVE') },
                         PN: { text: t('COMPONENT') },
-                        PART_PRODUCE: { text: t('PART PRODUCE') },
-                        NRC: { text: t('NRC') },
-                        ADD_HOC: { text: t('ADD HOC') },
                       }}
                       onChange={(value: any) => setTaskType(value)}
                     />
@@ -460,13 +483,13 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                             },
                           ]);
                         }}
-                        options={Object.entries(partValueEnum).map(
-                          ([key, part]) => ({
-                            label: part.PART_NUMBER,
-                            value: key,
-                            data: part,
-                          })
-                        )}
+                        // options={Object.entries(partValueEnum).map(
+                        //   ([key, part]) => ({
+                        //     label: part.PART_NUMBER,
+                        //     value: key,
+                        //     data: part,
+                        //   })
+                        // )}
                       />
 
                       <ProFormText
@@ -573,7 +596,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       />
                       <ProFormDigit
                         width={'xs'}
-                        name="allTaskTime"
+                        name="mainWorkTime"
                         label={t('MHS')}
                       />
                       <ProFormTextArea
@@ -627,6 +650,27 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       width="sm"
                       valueEnum={taskCodesValueEnum}
                       disabled={!acTypeID}
+                    />
+                    <ProFormSelect
+                      // disabled
+                      showSearch
+                      mode="multiple"
+                      name="restrictionID"
+                      label={t('RESTRICTION')}
+                      width="sm"
+                      valueEnum={restrictionValueEnum}
+                      // disabled={!acTypeID}
+                    />
+                    <ProFormSelect
+                      // disabled
+                      mode="multiple"
+                      showSearch
+                      name="skillCodeID"
+                      label={t('SKILL')}
+                      width="sm"
+                      options={groupSlills}
+                      // valueEnum={taskCodesValueEnum}
+                      // disabled={!acTypeID}
                     />
                     <ProFormTextArea
                       fieldProps={{
@@ -727,7 +771,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 style={{ width: '100%', height: '60vh' }}
               >
                 <PartList
-                  isTool="ROT,CONS"
+                  isTool="TOOL,GSE"
                   fetchData={[]}
                   taskId={task.id}
                   columnDefs={columnDefs}
@@ -750,11 +794,10 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 style={{ width: '100%', height: '60vh' }}
               >
                 <PartList
-                  isTool="TOOL,GSE"
+                  isTool="ROT,CONS,CHEM"
                   fetchData={[]}
                   taskId={task.id}
                   columnDefs={columnDefs}
-                  partNumbers={partNumbers || []}
                   onUpdateData={function (data: any[]): void {}}
                 ></PartList>
               </div>

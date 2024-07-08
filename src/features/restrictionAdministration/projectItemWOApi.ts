@@ -28,13 +28,6 @@ export const projectItemWOApi = createApi({
         projectId?: string;
         taskWO?: any;
         planeId?: any;
-        restrictionID?: any;
-        phasesID?: any;
-        useID?: any;
-        skillCodeID?: any;
-        accessID?: any;
-        zonesID?: any;
-        preparationID?: any;
       }
     >({
       query: ({
@@ -53,13 +46,6 @@ export const projectItemWOApi = createApi({
         finishDate,
         taskWO,
         planeId,
-        restrictionID,
-        phasesID,
-        useID,
-        skillCodeID,
-        accessID,
-        zonesID,
-        preparationID,
       }) => ({
         url: `projectsTasksNew/getFilteredProjectsTasks/company/${COMPANY_ID}`,
         params: {
@@ -78,13 +64,6 @@ export const projectItemWOApi = createApi({
           projectId,
           taskWO,
           planeId,
-          restrictionID,
-          phasesID,
-          useID,
-          skillCodeID,
-          accessID,
-          zonesID,
-          preparationID,
         },
       }),
       providesTags: ['ProjectItemWO'],

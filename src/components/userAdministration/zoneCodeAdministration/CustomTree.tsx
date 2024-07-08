@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Tree, Space } from 'antd'; // Импортируем Space из antd
+import { Checkbox, Tree, Space, Spin } from 'antd'; // Импортируем Space из antd
 import type { DataNode } from 'antd/lib/tree';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +14,7 @@ interface CustomTreeProps {
   checkable: boolean;
   searchQuery: string;
   selectedKeys?: React.Key[];
+  isLoading?: boolean;
 }
 
 const highlightText = (text: string, query: string) => {
@@ -33,6 +34,7 @@ const CustomTree: React.FC<CustomTreeProps> = ({
   searchQuery,
   onCheckItems,
   isAllChecked,
+  isLoading,
   selectedKeys: propSelectedKeys,
 }) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
@@ -124,21 +126,33 @@ const CustomTree: React.FC<CustomTreeProps> = ({
           </>
         )}
       </Space>
-
-      <Tree
-        checkable={checkable}
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        autoExpandParent={autoExpandParent}
-        onCheck={onCheck}
-        checkedKeys={selectedKeys}
-        onSelect={onNodeSelect}
-        selectedKeys={selectedKeys}
-        treeData={filteredTreeData}
-        showLine
-        height={height}
-        style={{ '--tree-selected-bg': 'orange' } as React.CSSProperties} // Изменяем цвет выделения
-      />
+      {isLoading ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Tree
+          checkable={checkable}
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          autoExpandParent={autoExpandParent}
+          onCheck={onCheck}
+          checkedKeys={selectedKeys}
+          onSelect={onNodeSelect}
+          selectedKeys={selectedKeys}
+          treeData={filteredTreeData}
+          showLine
+          height={height}
+          style={{ '--tree-selected-bg': 'orange' } as React.CSSProperties} // Изменяем цвет выделения
+        />
+      )}
     </>
   );
 };

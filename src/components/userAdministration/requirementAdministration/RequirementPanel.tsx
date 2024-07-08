@@ -423,7 +423,11 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   const [editingRequirement, setEditingRequirement] =
     useState<IRequirement | null>(null);
   const [isCreating, setIsCreating] = useState<boolean>(false);
-  const { data: requirements, isLoading } = useGetFilteredRequirementsQuery(
+  const {
+    data: requirements,
+    isLoading,
+    isFetching,
+  } = useGetFilteredRequirementsQuery(
     {
       projectID: requirementsSearchValues?.projectID || '',
       projectTaskID: requirementsSearchValues?.projectTaskID || '',
@@ -724,11 +728,13 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
           <div className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3">
             {isTreeView ? (
               <RequirementTree
+                loading={isLoading || isFetching}
                 onCompanySelect={(rowData: any) => handleEdit(rowData)}
                 requirements={requirements || []}
               />
             ) : (
               <RequarementsList
+                loading={isLoading || isFetching}
                 pagination={false}
                 isEditable={false}
                 height={'64vh'}
@@ -745,7 +751,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
               />
             )}
           </div>
-          <div className="h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+          <div className="h-[68vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <RequirementForm
               requierement={editingRequirement || undefined}
               onSubmit={handleSubmit}

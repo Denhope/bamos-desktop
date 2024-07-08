@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Row,
@@ -32,16 +32,26 @@ import FileUploader from '@/components/shared/FileUploader';
 import MyTable from '@/components/shared/Table/MyTable';
 import TaskList from '@/components/shared/Table/TaskList';
 import { transformToITask } from '@/services/utilites';
+import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 
 interface AdminPanelProps {
   values: TaskFilteredFormValues;
-  isLoading: any;
+  isLoadingF?: boolean;
 }
 
-const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
-  const [editingvendor, setEditingvendor] = useState<ITask | null>(null);
-  const { tasks } = useTypedSelector((state) => state.tasksAdministration);
+const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
+  useEffect(() => {
+    console.log(values);
+  }, [values]);
 
+  const [editingvendor, setEditingvendor] = useState<ITask | null>(null);
+  const { tasks, isLoading } = useTypedSelector(
+    (state) => state.tasksAdministration
+  );
+  // const { data: tasks } = useGetTasksQuery(
+  //   { taskNumber: values?.taskNumber },
+  //   { skip: !values }
+  // );
   const [addTask] = useAddTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
@@ -80,7 +90,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
         console.log(task);
         message.success(t('TASK SUCCESSFULLY ADDED'));
       }
-      setEditingvendor(null);
+      // setEditingvendor(null);
     } catch (error) {
       message.error(t('ERROR SAVING TASK GROUP'));
     }
@@ -88,13 +98,13 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
 
   const { t } = useTranslation();
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <Spin />
+  //     </div>
+  //   );
+  // }
   interface ColumnDef {
     field: keyof ITask;
     headerName: string;
@@ -111,22 +121,70 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
       filter: true,
       // hide: true,
     },
+    {
+      field: 'taskType',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      // hide: true,
+    },
     { field: 'description', headerName: `${t('DESCRIPTION')}`, filter: true },
+    { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
+    { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
+    { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+    { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
+    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    { field: 'SKILL_CODE1', headerName: `${t('SKILL_CODE')}`, filter: true },
+    { field: 'TASK_CODE', headerName: `${t('TASK_CODE')}`, filter: true },
+    {
+      field: 'SUB TASK_CODE',
+      headerName: `${t('SUB TASK_CODE')}`,
+      filter: true,
+    },
+
+    { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    {
+      field: 'RESTRICTION_1',
+      headerName: `${t('RESTRICTION_1')}`,
+      filter: true,
+    },
+    {
+      field: 'PREPARATION_CODE',
+      headerName: `${t('PREPARATION_CODE')}`,
+      filter: true,
+    },
+    {
+      field: 'REFERENCE_2',
+      headerName: `${t('REFERENCE_2')}`,
+      filter: true,
+    },
+    {
+      field: 'mainWorkTime',
+      headerName: `${t('MHS')}`,
+      filter: true,
+    },
+    {
+      field: 'IDENTIFICATOR',
+      headerName: `${t('IDENTIFICATOR')}`,
+      filter: true,
+    },
+
     // { field: 'closedByID', headerName: 'Closed By ID' },
+
     {
       field: 'PART_NUMBER',
       headerName: `${t('PART No')}`,
       filter: true,
     },
-    {
-      field: 'status',
-      headerName: `${t('STATUS')}`,
-      filter: true,
-      valueFormatter: (params: any) => {
-        if (!params.value) return '';
-        return params.value.toUpperCase();
-      },
-    },
+
+    // {
+    //   field: 'status',
+    //   headerName: `${t('STATUS')}`,
+    //   filter: true,
+    //   valueFormatter: (params: any) => {
+    //     if (!params.value) return '';
+    //     return params.value.toUpperCase();
+    //   },
+    // },
     // { field: 'projectTaskWO', headerName: 'Project Task WO' },
 
     // { field: 'companyID', headerName: 'Company ID' },
@@ -163,6 +221,10 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
     }
   };
 
+  const transformedTasks = useMemo(() => {
+    return transformToITask(tasks || []);
+  }, [tasks]);
+  const { data: partNumbers } = useGetPartNumbersQuery({});
   return (
     <>
       <Space className="gap-6 pb-3">
@@ -232,7 +294,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
                 pagination={true}
                 isChekboxColumn={false}
                 columnDefs={columnDefs}
-                rowData={transformToITask(tasks) || []}
+                rowData={transformedTasks || []}
                 onRowSelect={function (rowData: any | null): void {
                   handleEdit(rowData);
                 }}
@@ -240,6 +302,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoading }) => {
                 onCheckItems={function (selectedKeys: React.Key[]): void {
                   throw new Error('Function not implemented.');
                 }}
+                isLoading={isLoading || isLoadingF}
               />
             )}
           </div>

@@ -75,6 +75,8 @@ export interface IProjectType {
 }
 
 export interface IProjectItem {
+  taskNumberID: any;
+  woType: any;
   reqCode: any;
   taskNumber?: any;
   taskDescription?: any;
@@ -93,6 +95,7 @@ export interface IProjectItem {
   vendorID?: string;
   woItemsId?: any[];
   projectItemsWOID?: any[];
+  planeID?: string;
 }
 export interface IProjectItemWO {
   taskNumber: string;

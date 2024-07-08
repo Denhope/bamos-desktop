@@ -33,7 +33,7 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
         // layout="horizontal"
         className="bg-white px-4 py-3 rounded-md  align-middle"
       >
-        <ProDescriptions.Item label={`${t('REQUIREMENT No')}`} valueType="text">
+        <ProDescriptions.Item label={`${t('PICKSLIP No')}`} valueType="text">
           <Tag>{requirement?.pickSlipNumberNew}</Tag>
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CREATE BY')}>

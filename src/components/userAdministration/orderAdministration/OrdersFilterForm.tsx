@@ -159,7 +159,7 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
         name="orderType"
         label={t('ORDER TYPE')}
         width="lg"
-        // initialValue={['PURCHASE_ORDER']}
+        // initialValue={['PURCHASE_ORDER', 'QUATATION']}
         tooltip={t('ORDER TYPE')}
         valueEnum={{
           QUOTATION_ORDER: t('QUATATION ORDER'),
@@ -173,7 +173,7 @@ const OrdersFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        // initialValue={['open']}
+        initialValue={['open', 'onQuatation', 'PARTLY_RECEIVED']}
         mode="multiple"
         name="state"
         label={`${t('ORDER STATUS')}`}

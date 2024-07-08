@@ -37,7 +37,11 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   const [editingRequirement, setEditingRequirement] =
     useState<IRequirement | null>(null);
   const [isCreating, setIsCreating] = useState<boolean>(false);
-  const { data: pickSlips, isLoading } = useGetPickSlipsQuery(
+  const {
+    data: pickSlips,
+    isLoading,
+    isFetching,
+  } = useGetPickSlipsQuery(
     {
       projectID: pickSlipSearchValues?.projectID || '',
       projectTaskID: pickSlipSearchValues?.projectTaskID || '',
@@ -186,13 +190,13 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     return pickSlipSearchValues && transformToIPickSlip(pickSlips || []);
   }, [pickSlipSearchValues, pickSlips]);
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <Spin />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -244,11 +248,13 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
           <div className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3">
             {isTreeView ? (
               <PickSlipAdministrationTree
+                isLoading={isLoading || isFetching}
                 onCompanySelect={(rowData: any) => handleEdit(rowData)}
                 pickSlips={pickSlips || []}
               />
             ) : (
               <PickSlipContainer
+                isLoading={isLoading || isFetching}
                 rowData={transformedPickSlips}
                 isFilesVisiable={true}
                 isVisible={true}

@@ -20,7 +20,7 @@ const WODiscription: FC<projectsDiscriptionType> = ({
   return (
     <div className="flex flex-col ">
       <ProDescriptions
-        column={7}
+        column={6}
         size="middle"
         // layout="horizontal"
         className="bg-white px-4 py-3 rounded-md  align-middle"
@@ -51,9 +51,9 @@ const WODiscription: FC<projectsDiscriptionType> = ({
             <Tag color="#fc9601">{project?.status?.toUpperCase()}</Tag>
           )}
         </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="text" label={t('CLOSED BY')}>
+        {/* <ProDescriptions.Item valueType="text" label={t('CLOSED BY')}>
           {project?.taskWO && <Tag>{project?.closedByID?.toUpperCase()}</Tag>}
-        </ProDescriptions.Item>
+        </ProDescriptions.Item> */}
       </ProDescriptions>
     </div>
   );

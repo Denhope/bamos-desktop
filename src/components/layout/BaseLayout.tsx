@@ -66,7 +66,7 @@ const BaseLayout: React.FC = () => {
 
     {
       APNNBR: '05',
-      descriptions: `${t(`WORKORDER ADMINISTARTION`)}`,
+      descriptions: `${t(`WORKORDER ADMINISTRATION`)}`,
       route: RouteNames.WORKORDER_ADMINISTRATION,
     },
     // {

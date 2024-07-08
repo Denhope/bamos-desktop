@@ -11,9 +11,16 @@ interface UserFormProps {
   onSubmit: (user: User) => void;
   roles: string[];
   groups: UserGroup[];
+  skilss: any;
 }
 
-const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
+const UserForm: FC<UserFormProps> = ({
+  user,
+  onSubmit,
+  groups,
+  roles,
+  skilss,
+}) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
   const handleSubmit = async (values: User) => {
@@ -37,6 +44,11 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
   const groupOptions = groups.map((group) => ({
     label: group.title,
     value: group.id, // Use the _id as the value
+  }));
+
+  const groupSlills = skilss?.map((skill: any) => ({
+    label: skill?.code,
+    value: skill?.id, // Use the _id as the value
   }));
   const SubmitButton = () => (
     <Button type="primary" htmlType="submit">
@@ -148,6 +160,12 @@ const UserForm: FC<UserFormProps> = ({ user, onSubmit, groups, roles }) => {
                 name="userGroupID"
                 label={t('GROUP')}
                 options={groupOptions}
+                rules={[{ required: true }]}
+              />{' '}
+              <ProFormSelect
+                name="skillID"
+                label={t('SKILL')}
+                options={groupSlills}
                 rules={[{ required: true }]}
               />
             </ProForm.Group>

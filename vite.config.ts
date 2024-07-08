@@ -16,6 +16,9 @@ export default defineConfig(({ command }) => {
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
 
   return {
+    optimizeDeps: {
+      include: ['pdfmake', 'pdfmake/build/vfs_fonts'],
+    },
     resolve: {
       alias: {
         '@': path.join(__dirname, 'src'),

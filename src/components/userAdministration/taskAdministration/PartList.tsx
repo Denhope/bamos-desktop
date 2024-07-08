@@ -15,12 +15,12 @@ import {
 import { Modal, notification } from 'antd';
 
 type ExampleComponentProps = {
-  columnDefs: ColDef[];
-  partNumbers: IPartNumber[] | [];
+  columnDefs?: any[] | [];
   taskId?: string;
   fetchData?: IPartNumber[] | [];
   onUpdateData: (data: any[]) => void;
   isTool?: string;
+  partNumbers?: any;
 };
 
 const PartList: React.FC<ExampleComponentProps> = ({
@@ -51,28 +51,29 @@ const PartList: React.FC<ExampleComponentProps> = ({
   const transformToIPartNumber = (data: any[]): IPartNumber[] => {
     return data
       .filter(
-        (item) => isToolArray && isToolArray.includes(item.partNumberID.GROUP)
+        (item) =>
+          isToolArray && !isToolArray.includes(item?.partNumberID?.GROUP)
       ) // Фильтруем объекты с GROUP не равным "TOOL"
       .map((item) => ({
-        QUANTITY: item.quantity,
-        id: item.id,
+        QUANTITY: item?.quantity,
+        id: item?.id || item?._id,
         status: '', // Здесь можно добавить нужный статус, если требуется
-        _id: item.id,
-        partId: item.partNumberID._id,
-        PART_NUMBER: item.partNumberID.PART_NUMBER,
-        DESCRIPTION: item.partNumberID.DESCRIPTION,
-        TYPE: item.partNumberID.TYPE,
-        GROUP: item.partNumberID.GROUP,
-        UNIT_OF_MEASURE: item.partNumberID.UNIT_OF_MEASURE,
-        UNIT_OF_MEASURE_LONG: item.partNumberID.UNIT_OF_MEASURE,
+        _id: item?.id || item?._id,
+        partId: item?.partNumberID?._id,
+        PART_NUMBER: item?.partNumberID?.PART_NUMBER,
+        DESCRIPTION: item?.partNumberID?.DESCRIPTION,
+        TYPE: item?.partNumberID?.TYPE,
+        GROUP: item?.partNumberID?.GROUP,
+        UNIT_OF_MEASURE: item?.partNumberID?.UNIT_OF_MEASURE,
+        UNIT_OF_MEASURE_LONG: item?.partNumberID?.UNIT_OF_MEASURE,
         ADD_DESCRIPTION: '', // Добавить описание, если требуется
-        ADD_UNIT_OF_MEASURE: item.partNumberID.ADD_UNIT_OF_MEASURE,
-        companyID: item.companyID,
-        createDate: item.createDate,
-        createUserID: item.createUserID._id,
-        updateDate: item.updateDate,
-        updateUserID: item.updateUserID ? item.updateUserID._id : '',
-        acTypeID: item.acTypeID, // Добавить тип AC, если требуется
+        ADD_UNIT_OF_MEASURE: item?.partNumberID?.ADD_UNIT_OF_MEASURE,
+        companyID: item?.companyID,
+        createDate: item?.createDate,
+        createUserID: item?.createUserID?._id,
+        updateDate: item?.updateDate,
+        updateUserID: item?.updateUserID ? item?.updateUserID?._id : '',
+        acTypeID: item?.acTypeID, // Добавить тип AC, если требуется
       }));
   };
 

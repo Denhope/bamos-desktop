@@ -14,6 +14,7 @@ interface TreeDataNode extends DataNode {
 interface UserTreeProps {
   onCompanySelect: (requirement: IRequirement) => void;
   requirements: IRequirement[] | [];
+  loading?: boolean;
 }
 
 const { TreeNode } = Tree;
@@ -22,6 +23,7 @@ const { Search } = Input;
 const RequirementTree: FC<UserTreeProps> = ({
   onCompanySelect,
   requirements,
+  loading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -168,6 +170,7 @@ const RequirementTree: FC<UserTreeProps> = ({
       />
 
       <CustomTree
+        isLoading={loading}
         checkable={true}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {

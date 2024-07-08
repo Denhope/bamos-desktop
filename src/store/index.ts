@@ -239,6 +239,7 @@ import { altPartNumberApi } from '@/features/partAdministration/altPartApi';
 import { pickSlipApi } from '@/features/pickSlipAdministration/pickSlipApi';
 import { pickSlipItemsApi } from '@/features/pickSlipAdministration/pickSlipItemsApi';
 import { pickSlipBookingsItemsApi } from '@/features/pickSlipAdministration/pickSlipBookingsItemsApi';
+import { restrictionApi } from '@/features/restrictionAdministration/restrictionApi';
 
 const store = configureStore({
   reducer: {
@@ -301,6 +302,7 @@ const store = configureStore({
     [pickSlipApi.reducerPath]: pickSlipApi.reducer,
     [pickSlipItemsApi.reducerPath]: pickSlipItemsApi.reducer,
     [pickSlipBookingsItemsApi.reducerPath]: pickSlipBookingsItemsApi.reducer,
+    [restrictionApi.reducerPath]: restrictionApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -347,7 +349,8 @@ const store = configureStore({
       altPartNumberApi.middleware,
       pickSlipItemsApi.middleware,
       pickSlipApi.middleware,
-      pickSlipBookingsItemsApi.middleware
+      pickSlipBookingsItemsApi.middleware,
+      restrictionApi.middleware
     ),
 });
 export default store;

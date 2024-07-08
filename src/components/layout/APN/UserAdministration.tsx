@@ -45,6 +45,7 @@ import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import RequirementsTypesPanel from '@/components/userAdministration/requirementsTypes/RequirementsTypesPanel';
 import ProjectTypePanel from '@/components/userAdministration/projectTypesAdministaration/ProjectTypePanel';
 import AdminPanelSkills from '@/components/userAdministration/skillAdminisrtation/AdminPanelSkills';
+import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -98,32 +99,38 @@ const UserAdministration: FC = () => {
   const [acrFormValues, setACFormValues] = useState<any>({
     status: [''],
   });
-  const [vendorFormValues, setVendorFormValues] =
-    useState<VendorFilteredFormValues>({
-      CODE: '',
-      NAME: '',
-      status: [''],
-    });
-  const [tasksFormValues, setTasksFormValues] = useState<any>({});
+  const [vendorFormValues, setVendorFormValues] = useState<any>({});
+  const [tasksFormValues, setTasksFormValues] = useState<any>(null);
   const [ACTypesFormValues, setACTypesFormValues] =
     useState<ACTypesFilteredFormValues>({
       code: '',
       name: '',
       status: [''],
     });
-  const { refetch: refetchPlanes } = useGetPlanesQuery({
-    status: tasksFormValues.status,
-    // planeNumber: tasksFormValues.taskNumber,
-    acTypeID: tasksFormValues.acTypeId,
-  });
-  const { refetch: refetchTasks } = useGetTasksQuery({
-    status: tasksFormValues.status,
-    taskNumber: tasksFormValues.taskNumber,
-    acTypeID: tasksFormValues.acTypeId,
-    taskType: tasksFormValues.taskType,
-  });
+  const { refetch: refetchPlanes } = useGetPlanesQuery(
+    {
+      status: tasksFormValues?.status,
+      // planeNumber: tasksFormValues.taskNumber,
+      acTypeID: tasksFormValues?.acTypeId,
+    },
+    { skip: !tasksFormValues }
+  );
+  const {
+    refetch: refetchTasks,
+    isFetching,
+    isLoading,
+  } = useGetTasksQuery(
+    {
+      status: tasksFormValues?.status,
+      taskNumber: tasksFormValues?.taskNumber,
+      acTypeID: tasksFormValues?.acTypeId,
+      taskType: tasksFormValues?.taskType,
+    },
+    { skip: !tasksFormValues }
+  );
+
   const { refetch: refetchVendors } = useGetVendorsQuery({
-    code: vendorFormValues.CODE,
+    code: vendorFormValues?.CODE,
     status: vendorFormValues.status,
     name: vendorFormValues.NAME,
     isResident: vendorFormValues.IS_RESIDENT,
@@ -139,15 +146,15 @@ const UserAdministration: FC = () => {
     refetchVendors();
   }, [vendorFormValues, refetchVendors]);
 
-  useEffect(() => {
-    refetchTasks();
-  }, [tasksFormValues, refetchTasks]);
+  // useEffect(() => {
+  //   refetchTasks();
+  // }, [tasksFormValues, refetchTasks]);
   useEffect(() => {
     refetchACTypes();
   }, [ACTypesFormValues, refetchACTypes]);
-  useEffect(() => {
-    refetchPlanes();
-  }, [acrFormValues, refetchPlanes]);
+  // useEffect(() => {
+  //   refetchPlanes();
+  // }, [acrFormValues, refetchPlanes]);
   const onEdit = (
     targetKey:
       | string
@@ -271,7 +278,10 @@ const UserAdministration: FC = () => {
         title: `${t('AC TASKS')}`,
         content: (
           <div>
-            <AdminTaskPanel values={vendorFormValues} isLoading={undefined} />
+            <AdminTaskPanel
+              values={tasksFormValues}
+              isLoadingF={isLoading || isFetching}
+            />
           </div>
         ),
         closable: true,
@@ -377,7 +387,8 @@ const UserAdministration: FC = () => {
           <AdminTaskFilterdForm
             onSubmit={function (values: any): void {
               setTasksFormValues(values);
-              refetchTasks();
+              console.log(values);
+              // refetchTasks();
             }}
           />
         )}

@@ -60,6 +60,7 @@ export interface IProjectResponce {
 }
 
 export interface IProject {
+  projectType: string;
   _id: any;
   id: string;
   projectName: string;
@@ -80,4 +81,5 @@ export interface IProject {
   isEditing?: boolean;
   planeId?: string | any;
   acTypeID?: string;
+  customerID?: string;
 }

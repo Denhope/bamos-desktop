@@ -819,7 +819,7 @@ export const transformToIPartNumber = (
 
   const result = data
     .filter(
-      (item) => isToolArray && isToolArray.includes(item.partNumberID?.GROUP)
+      (item) => isToolArray && !isToolArray.includes(item.partNumberID?.GROUP)
     )
     .map((item) => ({
       QUANTITY: item.quantity,
@@ -996,6 +996,7 @@ export interface ValueEnumType {
   draft: string;
   issued: string;
   progress: string;
+  inProgress?: string;
   complete: string;
   RECEIVED?: string;
   PARTLY_RECEIVED?: string;
@@ -1011,6 +1012,8 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
       return '#FFA07A'; // Light Salmon
       return '#800080'; // Dark Blue
     case 'progress':
+      return '#800080'; // Dark Blue
+    case 'inProgress':
       return '#800080'; // Dark Blue
     case 'onQuatation':
       return '#FFD700'; // Gold
@@ -1043,13 +1046,15 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
 
 export const transformToITask = (data: ITask[]): any[] => {
   const result = data.map((item: ITask) => ({
+    ...item,
     QUANTITY: item.quantity,
-    id: item._id,
+    id: item._id || item?.id,
     status: item?.status,
-    _id: item._id,
+    _id: item._id || item?.id,
     taskNumber: item?.taskNumber,
     description: item?.taskDescription,
     allTaskTime: item?.allTaskTime,
+    mainWorkTime: item?.mainWorkTime,
     partId: item.partNumberID?._id,
     PART_NUMBER: item.partNumberID?.PART_NUMBER,
     DESCRIPTION: item.partNumberID?.DESCRIPTION,
@@ -1238,5 +1243,53 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
     return newItem.bookedItems;
   });
   console.log(result);
+  return result;
+};
+
+export const transformToIProjectItem = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item?.taskNumberID,
+    zonesID: item?.zonesID,
+  }));
+
+  console.log('Output data from transformToIProjectItem:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIProjectTask = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item.taskId,
+    // QUANTITY: item.quantity,
+    // id: item._id || item?.id,
+    // status: item?.status,
+    // _id: item._id || item?.id,
+    zonesID: item?.zonesID,
+    projectWO: item?.projectID?.projectWO,
+    mainWorkTime: item?.taskId?.mainWorkTime,
+
+    // taskNumber: item?.taskNumber,
+    // description: item?.taskDescription,
+    // allTaskTime: item?.allTaskTime,
+    // partId: item.partNumberID?._id,
+    // PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    // DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    // TYPE: item.partNumberID?.TYPE,
+    // GROUP: item.partNumberID?.GROUP,
+    // UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+    // UNIT_OF_MEASURE_LONG: item.partNumberID?.UNIT_OF_MEASURE,
+    // ADD_DESCRIPTION: item.partNumberID?.ADD_DESCRIPTION,
+    // ADD_UNIT_OF_MEASURE: item.partNumberID?.ADD_UNIT_OF_MEASURE,
+    // companyID: item.companyID,
+    // createDate: item.createDate,
+    // createUserID: item.createUserID?._id,
+    // updateDate: item.updateDate,
+    // updateUserID: item.updateUserID?._id,
+    // acTypeID: item?.acTypeId,
+    // partNumberID: item?.partNumberID,
+  }));
+
+  console.log('Output data from transformToIProjectTask:', result); // Вывод результата
   return result;
 };

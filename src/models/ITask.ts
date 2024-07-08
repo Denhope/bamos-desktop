@@ -226,6 +226,7 @@ type PlaneType = 'ERJ-190' | '737-600/700/800/900' | 'RRJ-95';
 type Status = 'permormed' | 'delete' | 'in Maintenance';
 
 export interface ITaskCode {
+  _id: string;
   id: string;
   title: string;
   code: string;
@@ -375,6 +376,7 @@ export interface ITaskResponce {
   preparationCode?: any;
 }
 export interface ITask {
+  mainWorkTime: any;
   _id: any;
   instrumentID: any;
   partNumberID: any;

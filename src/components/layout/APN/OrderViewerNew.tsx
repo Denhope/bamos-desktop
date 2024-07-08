@@ -211,16 +211,25 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
   const {
     data: ordersItems,
     isLoading,
+    isFetching,
     refetch: refetchOrders,
-  } = useGetFilteredOrderItemsFullQuery({
-    startDate: orderSearchValues?.startDate ? orderSearchValues?.startDate : '',
-    endDate: orderSearchValues?.endDate ? orderSearchValues?.endDate : '',
-    state: orderSearchValues?.state || '',
-    orderNumberNew: orderSearchValues?.orderNumberNew,
-    orderType: orderSearchValues?.orderType || 'QUOTATION_ORDER',
-    partNumberID: orderSearchValues?.partNumberID,
-    vendorID: orderSearchValues?.vendorID,
-  });
+  } = useGetFilteredOrderItemsFullQuery(
+    {
+      startDate: orderSearchValues?.startDate
+        ? orderSearchValues?.startDate
+        : '',
+      endDate: orderSearchValues?.endDate ? orderSearchValues?.endDate : '',
+      state: orderSearchValues?.state || '',
+      orderNumberNew: orderSearchValues?.orderNumberNew,
+      orderType: orderSearchValues?.orderType || 'QUOTATION_ORDER',
+      partNumberID: orderSearchValues?.partNumberID,
+      vendorID: orderSearchValues?.vendorID,
+    },
+    {
+      skip: !orderSearchValues,
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const transformedRequirements = useMemo(() => {
     console.log(transformToIORderItem(ordersItems || []));
@@ -231,7 +240,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       content: (
         <>
           <OrderItemList
-            isLoading={isLoading}
+            isLoading={isLoading || isFetching}
             rowData={transformedRequirements}
             onCheckItems={setSelectedRowKeys}
             onRowSelect={onSingleRowClick}

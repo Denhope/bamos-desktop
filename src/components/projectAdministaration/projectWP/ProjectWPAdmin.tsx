@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
 import {
   ProjectOutlined,
   PlusSquareOutlined,
@@ -23,36 +23,41 @@ import { useAddProjectItemWOMutation } from '@/features/projectItemWO/projectIte
 // import projectItemsAdministrationForm from './projectItemsAdministrationForm';
 // import projectItemsAdministrationTree from './projectItemsAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
+import PartContainer from '@/components/woAdministration/PartContainer';
+import { transformToIProjectItem } from '@/services/utilites';
 interface AdminPanelRProps {
   projectID: string;
+  project: any;
 }
 
-const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
+const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   const [editingReqCode, setEditingReqCode] = useState<IProjectItem | null>(
     null
   );
-
+  const [isTreeView, setIsTreeView] = useState(true);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-  let projectItems = null;
-  let isLoading = false;
+  // let projectItems = null;
+  // let isLoading = false;
 
   // if (projectID) {
   const {
-    data,
+    data: projectItems,
     isLoading: loading,
     refetch: refetchProjectItems,
   } = useGetProjectItemsQuery({
     projectID,
   });
-  projectItems = data;
-  isLoading = loading;
+  // projectItems = data;
+  // isLoading = loading;
   // }
   const [createWO] = useAddProjectItemWOMutation({});
   const [addProjectItem] = useAddProjectItemMutation({});
   const [addMultiProjectItems] = useAddMultiProjectItemsMutation({});
   const [updateProjectItem] = useUpdateProjectItemsMutation();
   const [deleteProjectItem] = useDeleteProjectItemMutation();
-
+  const transformedItems = useMemo(() => {
+    return transformToIProjectItem(projectItems || []);
+  }, [projectItems]);
   const handleCreate = () => {
     setEditingReqCode(null);
   };
@@ -84,7 +89,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
             footer: [
               <Space>
-                <Button
+                {/* <Button
                   key="single"
                   onClick={async () => {
                     try {
@@ -105,7 +110,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
                   }}
                 >
                   {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
-                </Button>
+                </Button> */}
                 <Button
                   key="multiple"
                   type="primary"
@@ -169,6 +174,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
         await addMultiProjectItems({
           projectItemsDTO: data,
           projectID: projectID,
+          planeID: project?.planeId._id,
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
         setEditingReqCode(null);
@@ -180,13 +186,27 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
 
   const { t } = useTranslation();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div>
         <Spin />
       </div>
     );
   }
+
+  const columnItems = [
+    {
+      field: 'taskNumber',
+      headerName: `${t('TASK No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskDescription',
+      headerName: `${t('TASK DESCREIPTION')}`,
+      cellDataType: 'text',
+    },
+  ];
+
   return (
     <>
       <Space className="gap-6 pb-3 flex justify-between flex-wrap">
@@ -204,14 +224,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             onFileProcessed={function (data: any[]): void {
               handleAddMultiItems(data);
             }}
-            requiredFields={
-              [
-                // 'НОМЕНКЛАТУРА',
-                // 'ОПИСАНИЕ',
-                // 'КОЛ-ВО',
-                // 'ПРИМЕЧАНИЕ',
-              ]
-            }
+            requiredFields={['taskNumber']}
           ></FileUploader>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
@@ -296,27 +309,52 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID }) => {
             {t('CANCEL LINK')}
           </Button>
         </Col>
+        <Col>
+          <Switch
+            size="default"
+            checkedChildren="Table"
+            unCheckedChildren="Tree"
+            defaultChecked
+            onChange={() => setIsTreeView(!isTreeView)}
+          />
+        </Col>
       </Space>
 
       <div className="  flex gap-4 justify-between">
         <Split initialPrimarySize="40%">
           <div
             // sm={12}
-            className="h-[48vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+            className="h-[50vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
           >
-            <ProjectWPAdministrationTree
-              projectItems={projectItems || []}
-              onProjectItemSelect={handleEdit}
-              onCheckItems={(selectedKeys) => {
-                setSelectedKeys(selectedKeys);
-              }}
-            />
+            {isTreeView ? (
+              <ProjectWPAdministrationTree
+                projectItems={projectItems || []}
+                onProjectItemSelect={handleEdit}
+                onCheckItems={(selectedKeys) => {
+                  setSelectedKeys(selectedKeys);
+                }}
+              />
+            ) : (
+              <PartContainer
+                isVisible
+                isButtonVisiable={false}
+                isAddVisiable={true}
+                isLoading={loading}
+                columnDefs={columnItems}
+                partNumbers={[]}
+                rowData={transformedItems || []}
+                onUpdateData={function (data: any[]): void {}}
+                height={'49vh'}
+                onRowSelect={handleEdit}
+              ></PartContainer>
+            )}
           </div>
           <div
-            className="h-[48vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[50vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
             // sm={11}
           >
             <ProjectWPAdministrationForm
+              project={project}
               reqCode={editingReqCode || undefined}
               onSubmit={handleSubmit}
               onDelete={handleDelete}

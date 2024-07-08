@@ -22,7 +22,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-
+import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
@@ -49,6 +49,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   // Инициализация состояния для хранения выбранного acTypeID
   const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
   const { data: stores } = useGetStoresQuery({});
+  const { data: companies } = useGetCompaniesQuery({});
 
   // Формирование объекта planesValueEnum
   const planesValueEnum: Record<string, { text: string; value: string }> =
@@ -73,6 +74,12 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const projectTypesValueEnum: Record<string, string> =
     projectTypes?.reduce((acc, reqType) => {
       acc[reqType.id] = reqType.code;
+      return acc;
+    }, {}) || {};
+
+  const companiesCodesValueEnum: Record<string, string> =
+    companies?.reduce<Record<string, string>>((acc, mpdCode) => {
+      acc[mpdCode.id] = mpdCode.companyName;
       return acc;
     }, {}) || {};
   useEffect(() => {
@@ -192,7 +199,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             disabled={!project}
             rules={[{ required: true }]}
             name="status"
-            label={t('PROJECT STATE')}
+            label={t('WO STATE')}
             width="sm"
             initialValue={['DRAFT']}
             valueEnum={{
@@ -207,13 +214,37 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           />
           <ProFormSelect
             showSearch
+            // disabled={!project}
+            rules={[{ required: true }]}
+            name="projectType"
+            label={t('WO TYPE')}
+            width="lg"
+            // initialValue={['baseMaintanance']}
+            valueEnum={{
+              baseMaintanance: {
+                text: t('BASE MAINTANENCE'),
+              },
+              lineMaintanance: {
+                text: t('LINE MAINTANENCE'),
+              },
+
+              // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+              partCange: { text: t('COMPONENT CHANGE') },
+              addWork: { text: t('ADD WORK') },
+              enginiring: { text: t('ENGINIRING SERVICESES') },
+              nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+            }}
+          />
+
+          {/* <ProFormSelect
+            showSearch
             name="projectTypesID"
             label={t('PROJECT TYPE')}
             width="lg"
             valueEnum={projectTypesValueEnum}
             onChange={(value: any) => setReqTypeID(value)}
             // disabled={!acTypeID} // Disable the select if acTypeID is not set
-          />
+          /> */}
           <ProFormGroup>
             <ProFormText
               width={'xl'}
@@ -284,6 +315,32 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 // onChange={handleStoreChange}
               />
             </ProFormGroup>
+            <ProFormGroup>
+              <ProFormText
+                width={'xl'}
+                fieldProps={{ style: { resize: 'none' } }}
+                name="customerWO"
+                label={t('CUSTOMER WO')}
+              />
+              <ProFormSelect
+                showSearch
+                rules={[{ required: true }]}
+                name="customerID"
+                label={t('CUSTOMER')}
+                width="sm"
+                valueEnum={companiesCodesValueEnum || []}
+                // disabled={!projectId}
+              />
+              <ProFormSelect
+                showSearch
+                name="planeId"
+                label={t('PROJECT A/C')}
+                width="sm"
+                valueEnum={planesValueEnum}
+                onChange={(value: any) => setSelectedAcTypeID(value)}
+                // disabled={!acTypeID} // Disable the select if acTypeID is not set
+              />
+            </ProFormGroup>
             <ProFormTextArea
               width={'xl'}
               fieldProps={{ style: { resize: 'none' } }}
@@ -316,19 +373,13 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               </div>
             </ProForm.Item>
           </ProFormGroup>
-          <ProFormSelect
-            showSearch
-            name="planeId"
-            label={t('PROJECT A/C')}
-            width="lg"
-            valueEnum={planesValueEnum}
-            onChange={(value: any) => setSelectedAcTypeID(value)}
-            // disabled={!acTypeID} // Disable the select if acTypeID is not set
-          />
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('TASK LIST')} key="2">
-          {project && project._id ? (
-            <ProjectWPAdmin projectID={project?._id}></ProjectWPAdmin>
+          {project && project?._id ? (
+            <ProjectWPAdmin
+              project={project}
+              projectID={project?._id}
+            ></ProjectWPAdmin>
           ) : (
             <Empty description="No Data" />
           )}

@@ -12,7 +12,7 @@ import copy from 'copy-to-clipboard';
 
 import { CellContextMenuEvent, DomLayoutType } from 'ag-grid-community';
 import { IProjectItemWO } from '@/models/AC';
-import { Input } from 'antd';
+import { Input, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import localeTextRu from '@/locales/localeTextRu';
 import localeTextEn from '@/locales/localeTextEn';
@@ -37,6 +37,7 @@ interface MyTableProps {
   onCheckItems: (selectedKeys: React.Key[]) => void;
   pagination?: boolean;
   isChekboxColumn?: boolean;
+  isLoading?: boolean;
 }
 
 const TaskList: React.FC<MyTableProps> = ({
@@ -47,6 +48,7 @@ const TaskList: React.FC<MyTableProps> = ({
   height,
   pagination = false,
   isChekboxColumn = false,
+  isLoading,
 }) => {
   const gridRef = useRef<AgGridReact>(null);
   const { t, i18n } = useTranslation();
@@ -275,45 +277,57 @@ const TaskList: React.FC<MyTableProps> = ({
           />
         </div>
       </div>
-
-      <AgGridReact
-        columnHoverHighlight={true}
-        localeText={localeText}
-        ref={gridRef}
-        defaultColDef={{
-          menuTabs: ['filterMenuTab', 'generalMenuTab'],
-          resizable: true,
-        }}
-        // gridOptions={gridOptions}
-        columnDefs={[...(isChekboxColumn ? updatedColumnDefs : columnDefs)]}
-        rowHeight={30}
-        rowData={rowData}
-        rowSelection="multiple"
-        onCellContextMenu={handleCellContextMenu}
-        onSelectionChanged={handleRowSelection}
-        clipboardDelimiter={'\t'}
-        pagination={pagination}
-        quickFilterText={searchText}
-        paginationPageSize={50}
-        sideBar={{
-          toolPanels: [
-            {
-              id: 'columns',
-              labelDefault: 'Columns',
-              labelKey: 'columns',
-              iconKey: 'columns',
-              toolPanel: 'agColumnsToolPanel',
-              toolPanelParams: {
-                suppressRowGroups: true,
-                suppressValues: true,
-                suppressPivots: true,
-                suppressPivotMode: true,
+      {isLoading ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      ) : (
+        <AgGridReact
+          columnHoverHighlight={true}
+          localeText={localeText}
+          ref={gridRef}
+          defaultColDef={{
+            menuTabs: ['filterMenuTab', 'generalMenuTab'],
+            resizable: true,
+          }}
+          // gridOptions={gridOptions}
+          columnDefs={[...(isChekboxColumn ? updatedColumnDefs : columnDefs)]}
+          rowHeight={30}
+          rowData={rowData}
+          rowSelection="multiple"
+          onCellContextMenu={handleCellContextMenu}
+          onSelectionChanged={handleRowSelection}
+          clipboardDelimiter={'\t'}
+          pagination={pagination}
+          quickFilterText={searchText}
+          paginationPageSize={50}
+          sideBar={{
+            toolPanels: [
+              {
+                id: 'columns',
+                labelDefault: 'Columns',
+                labelKey: 'columns',
+                iconKey: 'columns',
+                toolPanel: 'agColumnsToolPanel',
+                toolPanelParams: {
+                  suppressRowGroups: true,
+                  suppressValues: true,
+                  suppressPivots: true,
+                  suppressPivotMode: true,
+                },
               },
-            },
-          ],
-          defaultToolPanel: 'columns',
-        }}
-      />
+            ],
+            defaultToolPanel: 'columns',
+          }}
+        />
+      )}
 
       {contextMenuVisible && (
         <div

@@ -50,16 +50,22 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   const {
     data: requirements,
     isLoading,
+    isFetching,
     refetch: refetchOrders,
-  } = useGetFilteredOrdersQuery({
-    startDate: orderSearchValues?.startDate ? orderSearchValues?.startDate : '',
-    endDate: orderSearchValues?.endDate ? orderSearchValues?.endDate : '',
-    state: orderSearchValues?.state || '',
-    orderNumber: orderSearchValues?.orderNumber,
-    orderType: orderSearchValues?.orderType,
-    partNumberID: orderSearchValues?.partNumberID,
-    vendorID: orderSearchValues?.vendorID,
-  });
+  } = useGetFilteredOrdersQuery(
+    {
+      startDate: orderSearchValues?.startDate
+        ? orderSearchValues?.startDate
+        : '',
+      endDate: orderSearchValues?.endDate ? orderSearchValues?.endDate : '',
+      state: orderSearchValues?.state || '',
+      orderNumber: orderSearchValues?.orderNumber,
+      orderType: orderSearchValues?.orderType,
+      partNumberID: orderSearchValues?.partNumberID,
+      vendorID: orderSearchValues?.vendorID,
+    },
+    { skip: !orderSearchValues }
+  );
 
   const [addOrder] = useAddOrderMutation({});
   const [deleteOrder] = useDeleteOrderMutation();
@@ -163,13 +169,13 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
   };
   const { t } = useTranslation();
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <Spin />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -350,6 +356,7 @@ const OrderPanel: React.FC<AdminPanelProps> = ({ orderSearchValues }) => {
         <Split initialPrimarySize="25%" splitterSize="20px">
           <div className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
             <OrderTree
+              isLoading={isLoading || isFetching}
               onCompanySelect={handleEdit}
               orders={requirements || []}
               onOrderItemSelect={function (orderItem: IOrderItem | {}): void {

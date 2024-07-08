@@ -72,15 +72,17 @@ export const projectItemApi = createApi({
       any[],
       {
         projectItemsDTO: Partial<any[]>;
+        planeID?: any;
         projectID: string;
         vendorID?: string;
       }
     >({
-      query: ({ projectItemsDTO, projectID, vendorID }) => ({
+      query: ({ projectItemsDTO, projectID, vendorID, planeID }) => ({
         url: `projectItems/multi/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
           projectItemsDTO,
+          planeID,
           createUserID: USER_ID,
           createDate: new Date(),
           companyID: COMPANY_ID,

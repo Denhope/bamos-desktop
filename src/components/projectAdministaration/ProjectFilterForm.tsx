@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
-
+import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
 };
@@ -47,10 +47,14 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
   const [reqTypeID, setReqTypeID] = useState<any>('');
 
   const { t } = useTranslation();
-
+  const { data: companies } = useGetCompaniesQuery({});
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
   const { data: usersGroups } = useGetGroupUsersQuery({});
-
+  const companiesCodesValueEnum: Record<string, string> =
+    companies?.reduce<Record<string, string>>((acc, mpdCode) => {
+      acc[mpdCode.id] = mpdCode.companyName;
+      return acc;
+    }, {}) || {};
   const projectTypesValueEnum: Record<string, string> =
     projectTypes?.reduce((acc, reqType) => {
       acc[reqType.id] = reqType.code;
@@ -65,6 +69,8 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         projectNumber: form.getFieldValue('projectNumber'),
         endDate: selectedEndDate,
         projectTypesID: form.getFieldValue('projectTypesID'),
+        projectType: form.getFieldValue('projectType'),
+        customerID: form.getFieldValue('customerID'),
       };
 
       onProjectSearch(searchParams);
@@ -98,7 +104,7 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         />
         <ProForm.Group></ProForm.Group>
       </ProForm.Group>
-      <ProFormSelect
+      {/* <ProFormSelect
         mode={'multiple'}
         showSearch
         name="projectTypesID"
@@ -107,6 +113,30 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={projectTypesValueEnum}
         onChange={(value: any) => setReqTypeID(value)}
         // disabled={!acTypeID} // Disable the select if acTypeID is not set
+      /> */}
+      <ProFormSelect
+        showSearch
+        // disabled={!project}
+        // rules={[{ required: true }]}
+        mode="multiple"
+        name="projectType"
+        label={t('WO TYPE')}
+        width="lg"
+        // initialValue={['baseMaintanance']}
+        valueEnum={{
+          baseMaintanance: {
+            text: t('BASE MAINTANENCE'),
+          },
+          lineMaintanance: {
+            text: t('LINE MAINTANENCE'),
+          },
+
+          // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+          partCange: { text: t('COMPONENT CHANGE') },
+          addWork: { text: t('ADD WORK') },
+          enginiring: { text: t('ENGINIRING SERVICESES') },
+          nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+        }}
       />
 
       <ProFormSelect
@@ -124,6 +154,14 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
           CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
           CANCELLED: { text: t('CANCELLED'), status: 'Error' },
         }}
+      />
+      <ProFormSelect
+        showSearch
+        name="customerID"
+        label={t('CUSTOMER')}
+        width="lg"
+        valueEnum={companiesCodesValueEnum || []}
+        // disabled={!projectId}
       />
 
       <ProFormDateRangePicker

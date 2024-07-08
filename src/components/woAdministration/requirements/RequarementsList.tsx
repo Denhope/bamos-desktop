@@ -50,6 +50,7 @@ type ExampleComponentProps = {
   onSave: (rowData: IRequirement) => void;
   order?: any;
   isIssueVisibale?: boolean;
+  loading?: boolean;
 };
 
 const RequarementsList: React.FC<ExampleComponentProps> = ({
@@ -67,6 +68,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   isEditable,
   onRowSelect,
   onCheckItems,
+  loading,
   pagination,
   onDelete,
   onSave,
@@ -449,7 +451,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
 
       <div style={gridStyle} className={'ag-theme-alpine'}>
         <PartsTable
-          isLoading={isLoading || isFetching}
+          isLoading={isLoading || isFetching || loading}
           isChekboxColumn={isChekboxColumn}
           isVisible={isVisible}
           isButtonColumn={isButtonColumn}

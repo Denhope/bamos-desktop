@@ -14,6 +14,7 @@ interface TreeDataNode extends DataNode {
 interface UserTreeProps {
   onCompanySelect: (requirement: any) => void;
   pickSlips: any[] | [];
+  isLoading?: boolean;
 }
 
 const { TreeNode } = Tree;
@@ -22,6 +23,7 @@ const { Search } = Input;
 const PickSlipAdministrationTree: FC<UserTreeProps> = ({
   onCompanySelect,
   pickSlips,
+  isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -174,6 +176,7 @@ const PickSlipAdministrationTree: FC<UserTreeProps> = ({
       />
 
       <CustomTree
+        isLoading={isLoading}
         checkable={true}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {

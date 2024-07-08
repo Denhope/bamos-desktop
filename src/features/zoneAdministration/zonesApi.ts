@@ -10,6 +10,28 @@ export const zoneCodeApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Zones'], // Add tag types for caching
   endpoints: (builder) => ({
+    getFilteredZones: builder.query<
+      any[],
+      {
+        acTypeId: string;
+        majoreZoneNbr?: number;
+        subZoneNbr?: number;
+        areaNbr?: number;
+        status?: string;
+      }
+    >({
+      query: ({ acTypeId, majoreZoneNbr, subZoneNbr, areaNbr, status }) => ({
+        url: `zones/getFilteredZones/company/${COMPANY_ID}`,
+        params: {
+          acTypeId,
+          majoreZoneNbr,
+          subZoneNbr,
+          areaNbr,
+          status,
+        },
+      }),
+      providesTags: ['Zones'],
+    }),
     getZonesByGroup: builder.query<
       IZoneCodeGroup[],
       {
@@ -85,4 +107,5 @@ export const {
   useDeleteZoneCodeMutation,
   useUpdateZoneCodeMutation,
   useGetZoneCodeQuery,
+  useGetFilteredZonesQuery,
 } = zoneCodeApi;

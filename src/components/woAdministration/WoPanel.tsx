@@ -38,7 +38,9 @@ import {
 import {
   ValueEnumType,
   getStatusColor,
+  transformToIProjectTask,
   transformToIRequirement,
+  transformToITask,
 } from '@/services/utilites';
 import { ColDef } from 'ag-grid-community';
 import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
@@ -48,6 +50,7 @@ import {
   useGetStorePartStockQTYQuery,
   useGetStorePartsQuery,
 } from '@/features/storeAdministration/PartsApi';
+import TaskList from '../shared/Table/TaskList';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -67,7 +70,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     React.Key[]
   >([]);
   const [triggerQuery, setTriggerQuery] = useState(false);
-  const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
+  const {
+    data: projectTasks,
+    isLoading,
+    isFetching,
+  } = useGetProjectItemsWOQuery(
     {
       status: projectSearchValues?.status,
       startDate: projectSearchValues?.startDate,
@@ -76,6 +83,13 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       vendorID: projectSearchValues?.vendorID,
       partNumberID: projectSearchValues?.partNumberID,
       taskWO: projectSearchValues?.projectTaskWO,
+      planeId: projectSearchValues?.planeId,
+      restrictionID: projectSearchValues?.restrictionID,
+      phasesID: projectSearchValues?.phasesID,
+      useID: projectSearchValues?.useID,
+      skillCodeID: projectSearchValues?.skillCodeID,
+      accessID: projectSearchValues?.accessID,
+      zonesID: projectSearchValues?.zonesID,
     },
     {
       skip: !triggerQuery,
@@ -128,7 +142,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     return transformToIRequirement(requirements || []);
   }, [requirements]);
   const [isTreeView, setIsTreeView] = useState(true);
-
+  const transformedTasks = useMemo(() => {
+    return transformToIProjectTask(projectTasks || []);
+  }, [projectTasks]);
   useEffect(() => {
     if (projectSearchValues) {
       const hasSearchParams = Object.values(projectSearchValues).some(
@@ -164,13 +180,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     });
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
   interface ColumnDef {
     field: keyof IProjectItemWO;
     headerName: string;
@@ -180,32 +189,95 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     valueGetter?: any;
     valueFormatter?: any;
   }
-  const columnDefs: ColumnDef[] = [
+  const columnDefs: any[] = [
     {
       field: 'taskWO',
-      headerName: `${t('TASK WO')}`,
+      headerName: `${t('TRACE No')}`,
       filter: true,
       // hide: true,
     },
-    { field: 'title', headerName: `${t('DESCRIPTION')}`, filter: true },
-    // { field: 'closedByID', headerName: 'Closed By ID' },
     {
-      field: 'status',
-      headerName: `${t('STATUS')}`,
+      field: 'taskNumber',
+      headerName: `${t('TASK NUMBER')}`,
       filter: true,
-      valueFormatter: (params: any) => {
-        if (!params.value) return '';
-        return params.value.toUpperCase();
-      },
+      // hide: true,
     },
+    {
+      field: 'taskDescription',
+      headerName: `${t('DESCRIPTION')}`,
+      filter: true,
+      // hide: true,
+    },
+    {
+      field: 'projectWO',
+      headerName: `${t('WO NUMBER')}`,
+      filter: true,
+      // hide: true,
+    },
+    {
+      field: 'taskType',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      // hide: true,
+    },
+    { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
+    { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
+    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
+    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
+    { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
+    // {
+    //   field: 'SUB TASK_CODE',
+    //   headerName: `${t('SUB TASK_CODE')}`,
+    //   filter: true,
+    // },
 
-    { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
-    {
-      field: 'partNumberID',
-      headerName: `${t('PART No')}`,
-      filter: true,
-      valueGetter: (params: any) => params.data.partNumberID?.PART_NUMBER || '',
-    },
+    // { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    // {
+    //   field: 'RESTRICTION_1',
+    //   headerName: `${t('RESTRICTION_1')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'PREPARATION_CODE',
+    //   headerName: `${t('PREPARATION_CODE')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'REFERENCE_2',
+    //   headerName: `${t('REFERENCE_2')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'mainWorkTime',
+    //   headerName: `${t('MHS')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'IDENTIFICATOR',
+    //   headerName: `${t('IDENTIFICATOR')}`,
+    //   filter: true,
+    // },
+
+    // { field: 'closedByID', headerName: 'Closed By ID' },
+
+    // {
+    //   field: 'PART_NUMBER',
+    //   headerName: `${t('PART No')}`,
+    //   filter: true,
+    // },
+
+    // {
+    //   field: 'status',
+    //   headerName: `${t('STATUS')}`,
+    //   filter: true,
+    //   valueFormatter: (params: any) => {
+    //     if (!params.value) return '';
+    //     return params.value.toUpperCase();
+    //   },
+    // },
+    // { field: 'projectTaskWO', headerName: 'Project Task WO' },
 
     // { field: 'companyID', headerName: 'Company ID' },
     {
@@ -223,62 +295,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
     },
 
-    {
-      field: 'startDate',
-      headerName: `${t('START DATE')}`,
-      filter: true,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-    {
-      field: 'finishDate',
-      headerName: `${t('FINISH DATE')}`,
-      filter: true,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-    {
-      field: 'planedStartDate',
-      headerName: `${t('PLANNED START DATE')}`,
-      filter: true,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-    {
-      field: 'planedFinishDate',
-      headerName: `${t('PLANNED FINISH DATE')}`,
-      filter: true,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
+    // { field: 'updateDate', headerName: 'Update Date' },
+
+    // Добавьте дополнительные поля по мере необходимости
   ];
   type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
   interface ExtendedColDef extends ColDef {
@@ -376,6 +395,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     // },
     // Добавьте другие колонки по необходимости
   ];
+
   const handleSubmit = () => {};
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
@@ -398,7 +418,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
-            {t('ADD WORKORDER')}
+            {t('ADD NRC')}
           </Button>
         </Col>
         {/* <Col style={{ textAlign: 'right' }}>
@@ -472,24 +492,39 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
             {isTreeView ? (
               <WOTree
+                isLoading={isLoading || isFetching}
                 onProjectSelect={handleEdit}
-                projects={projectTasks || []}
+                projects={transformedTasks || []}
                 onCheckItems={(selectedKeys) => {
                   setSelectedKeys(selectedKeys);
                 }}
               />
             ) : (
-              <MyTable
+              <TaskList
+                isLoading={isLoading || isFetching}
+                pagination={true}
+                isChekboxColumn={false}
                 columnDefs={columnDefs}
-                rowData={projectTasks || []}
+                rowData={transformedTasks || []}
                 onRowSelect={function (rowData: any | null): void {
                   handleEdit(rowData);
                 }}
+                height={'69vh'}
                 onCheckItems={function (selectedKeys: React.Key[]): void {
-                  setSelectedKeys(selectedKeys);
+                  throw new Error('Function not implemented.');
                 }}
-                height={'64vh'}
               />
+              // <MyTable
+              //   columnDefs={columnDefs}
+              //   rowData={projectTasks || []}
+              //   onRowSelect={function (rowData: any | null): void {
+              //     handleEdit(rowData);
+              //   }}
+              //   onCheckItems={function (selectedKeys: React.Key[]): void {
+              //     setSelectedKeys(selectedKeys);
+              //   }}
+              //   height={'64vh'}
+              // />
             )}
           </div>
           <div className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 ">

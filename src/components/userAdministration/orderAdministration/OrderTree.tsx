@@ -18,6 +18,7 @@ interface UserTreeProps {
   onCompanySelect: (order: IOrder) => void;
   onOrderItemSelect: (order: IOrderItem | {}) => void;
   orders: IOrder[] | [];
+  isLoading?: boolean;
 }
 
 const { TreeNode } = Tree;
@@ -27,6 +28,7 @@ const OrderTree: FC<UserTreeProps> = ({
   onCompanySelect,
   orders,
   onOrderItemSelect,
+  isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -290,6 +292,7 @@ const OrderTree: FC<UserTreeProps> = ({
       />
 
       <CustomTree
+        isLoading={isLoading}
         checkable={false}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {

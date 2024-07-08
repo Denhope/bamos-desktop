@@ -43,12 +43,13 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const { t } = useTranslation();
   const [triggerQuery, setTriggerQuery] = useState(false);
-  const { data: projectTasks, isLoading } = useGetPartNumbersQuery(
-    projectSearchValues,
-    {
-      skip: !projectSearchValues, // Skip the query if triggerQuery is false
-    }
-  );
+  const {
+    data: projectTasks,
+    isLoading,
+    isFetching,
+  } = useGetPartNumbersQuery(projectSearchValues, {
+    skip: !projectSearchValues, // Skip the query if triggerQuery is false
+  });
 
   const [addPartNumber] = useAddPartNumberMutation({});
   const [updatePartNumber] = useUpdatePartNumberMutation();
@@ -245,6 +246,7 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             <div className="h-[77vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
               {isTreeView ? (
                 <PartAdminTree
+                  isLoading={isLoading || isFetching}
                   onProjectSelect={handleEdit}
                   parts={projectTasks || []}
                   onCheckItems={(selectedKeys) => {
@@ -253,7 +255,7 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 />
               ) : (
                 <PartContainer
-                  isLoading={isLoading}
+                  isLoading={isLoading || isFetching}
                   isChekboxColumn={true}
                   isVisible={true}
                   onRowSelect={handleEdit}

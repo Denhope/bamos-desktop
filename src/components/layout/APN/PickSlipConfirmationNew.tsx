@@ -615,6 +615,20 @@ const PickSlipConfirmationNew: FC = () => {
           }
           return false;
         });
+        const hasNotUserData =
+          !pickSlipSearchValues.storeManID ||
+          !pickSlipSearchValues.userID ||
+          !pickSlipSearchValues.bookingDate;
+
+        if (hasNotUserData) {
+          notification.error({
+            message: t('ERROR'),
+            description:
+              'Пожалуйста, заполните все обязательные поля: STOREMAN, MECH, и BOOKING DATE.',
+            duration: 3,
+          });
+          return;
+        }
         if (hasInvalidData) {
           notification.error({
             message: t('ERROR'),
@@ -628,6 +642,9 @@ const PickSlipConfirmationNew: FC = () => {
           await updatePickSlip({
             pickSlip: {
               state: 'closed',
+              storeManID: pickSlipSearchValues.storeManID,
+              userID: pickSlipSearchValues.userID,
+              bookingDate: pickSlipSearchValues.bookingDate,
               id:
                 (pickSlips && pickSlips[0]?._id) ||
                 (pickSlips && pickSlips[0]?.id),
@@ -723,6 +740,7 @@ const PickSlipConfirmationNew: FC = () => {
                   pickSlip={pickSlips && pickSlips[0]}
                   onpickSlipSearchValues={function (values: any): void {
                     setpickSlipSearchValues(values);
+                    console.log(values);
                   }}
                 ></PickslipRequestFilterForm>
               </div>

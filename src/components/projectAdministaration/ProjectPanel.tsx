@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin } from 'antd';
+import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,9 @@ import {
 import { IProject } from '@/models/IProject';
 import ProjectDiscription from './ProjectDiscription';
 import { Split } from '@geoffcox/react-splitter';
+import PartList from '../woAdministration/PartList';
+import PartContainer from '../woAdministration/PartContainer';
+import { ValueEnumType, getStatusColor } from '@/services/utilites';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -25,14 +28,23 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
   projectSearchValues,
 }) => {
   const [editingproject, setEditingproject] = useState<IProject | null>(null);
-
-  const { data: projects, isLoading } = useGetProjectsQuery({
-    projectTypesID: projectSearchValues?.projectTypesID,
-    status: projectSearchValues?.status,
-    startDate: projectSearchValues?.startDate,
-    endDate: projectSearchValues?.endDate,
-    projectWO: projectSearchValues?.projectNumber,
-  });
+  const [isTreeView, setIsTreeView] = useState(true);
+  const {
+    data: projects,
+    isLoading,
+    isFetching,
+  } = useGetProjectsQuery(
+    {
+      projectTypesID: projectSearchValues?.projectTypesID,
+      projectType: projectSearchValues?.projectType,
+      status: projectSearchValues?.status,
+      startDate: projectSearchValues?.startDate,
+      endDate: projectSearchValues?.endDate,
+      projectWO: projectSearchValues?.projectNumber,
+      customerID: projectSearchValues?.customerID,
+    },
+    { skip: !projectSearchValues }
+  );
 
   const [addProject] = useAddProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
@@ -79,15 +91,136 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
 
   const { t } = useTranslation();
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
-
+  const valueEnum: ValueEnumType = {
+    onShort: t('ON SHORT'),
+    onQuatation: t('QUATATION'),
+    open: t('OPEN'),
+    closed: t('CLOSED'),
+    canceled: t('CANCELLED'),
+    onOrder: t('ISSUED'),
+    draft: t('DRAFT'),
+    issued: t('ISSUED'),
+    progress: t('IN PROGRESS'),
+    inProgress: t('IN PROGRESS'),
+    complete: t('COMPLETE'),
+    RECEIVED: t('RECEIVED'),
+    PARTLY_RECEIVED: t('PARTLY RECEIVED'),
+  };
+  const columnItems = [
+    {
+      field: 'projectWO',
+      headerName: `${t('PROJECT No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectName',
+      headerName: `${t('WO NAME')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectType',
+      headerName: `${t('WO TYPE')}`,
+      cellDataType: 'text',
+      valueFormatter: (params: any) => params.value.toUpperCase(),
+    },
+    {
+      field: 'customerWO',
+      headerName: `${t('CUSTOMER No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'status',
+      headerName: `${t('Status')}`,
+      cellDataType: 'text',
+      width: 150,
+      filter: true,
+      valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
+        params.data.status,
+      valueFormatter: (params: { value: keyof ValueEnumType }) => {
+        const status = params.value;
+        return valueEnum[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumType }) => ({
+        backgroundColor: getStatusColor(params.value),
+        color: '#ffffff', // Text color
+      }),
+    },
+    {
+      field: 'createDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('CREATE DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'planedStartDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('PLANNED START DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'planedFinishDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('PLANNED FINISH DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'startDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('START DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'finishDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('FINISH DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+  ];
   return (
     <>
       <Space>
@@ -124,18 +257,42 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             </Button>
           )}
         </Col>
+        <Col>
+          <Switch
+            checkedChildren="Table"
+            unCheckedChildren="Tree"
+            defaultChecked
+            onChange={() => setIsTreeView(!isTreeView)}
+          />
+        </Col>
       </Space>
 
       <div className="  flex gap-4 justify-between">
         <Split initialPrimarySize="15%" splitterSize="20px">
           <div className=" h-[68vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
-            <ProjectTree
-              onProjectSelect={handleEdit}
-              projects={projects || []}
-              onCheckItems={(selectedKeys) => {
-                setSelectedKeys(selectedKeys);
-              }}
-            />
+            {isTreeView ? (
+              <ProjectTree
+                isLoading={isFetching || isLoading}
+                onProjectSelect={handleEdit}
+                projects={projects || []}
+                onCheckItems={(selectedKeys) => {
+                  setSelectedKeys(selectedKeys);
+                }}
+              />
+            ) : (
+              <PartContainer
+                isVisible
+                isButtonVisiable={false}
+                isAddVisiable={true}
+                isLoading={isFetching || isLoading}
+                columnDefs={columnItems}
+                partNumbers={[]}
+                rowData={projects || []}
+                onUpdateData={function (data: any[]): void {}}
+                height={'64vh'}
+                onRowSelect={handleEdit}
+              ></PartContainer>
+            )}
           </div>
           <div className="h-[68vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <ProjectForm

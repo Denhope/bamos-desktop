@@ -53,6 +53,7 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
       return {
         title: `${
           reqCode?.partNumberID?.PART_NUMBER?.toUpperCase() ||
+          reqCode?.taskNumberID?.taskNumber?.toUpperCase() ||
           reqCode?.taskNumber?.toUpperCase()
         } - ${
           reqCode?.partNumberID?.DESCRIPTION?.toUpperCase() ||
@@ -145,7 +146,7 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
             onProjectItemSelect(reqGroup);
           }
         }}
-        height={480}
+        height={420}
         searchQuery={searchQuery}
       />
     </div>

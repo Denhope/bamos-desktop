@@ -1,7 +1,10 @@
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
+import {
+  useGetGroupUsersQuery,
+  useGetUsersQuery,
+} from '@/features/userAdministration/userApi';
 import {
   ProForm,
   ProFormDatePicker,
@@ -25,12 +28,20 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
   const [projectId, setSelectedProjectId] = useState<any>();
   const [partNumberId, setPartNumberId] = useState<any>();
   const { data: projects } = useGetProjectsQuery({});
+  const { data: users } = useGetUsersQuery({});
   const { data: usersGroups } = useGetGroupUsersQuery({});
   const formRef = useRef<FormInstance>(null);
   const { data: projectTasks } = useGetProjectItemsWOQuery(
     { projectId },
     { skip: !projectId }
   );
+  const usersCodesValueEnum: Record<string, string> =
+    users?.reduce<Record<string, string>>((acc, mpdCode) => {
+      acc[
+        mpdCode.id
+      ] = `${mpdCode.firstName?.toUpperCase()} ${mpdCode.lastName?.toUpperCase()}`;
+      return acc;
+    }, {}) || {};
   const { data: stores } = useGetStoresQuery({});
   const storeCodesValueEnum: Record<string, string> =
     stores?.reduce((acc, mpdCode) => {
@@ -67,6 +78,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
       pickSlipNumberNew: form.getFieldValue('pickSlipNumberNew'),
     });
   };
+
   useEffect(() => {
     if (pickSlip) {
       form.resetFields();
@@ -79,7 +91,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         neededOnID: pickSlip?.neededOnID?._id,
         getFromID: pickSlip?.getFromID?._id,
         type: pickSlip?.type,
-        mechID: pickSlip?.createUserID?.name,
+        // mechID: pickSlip?.createUserID?.name,
       });
     } else {
       form.resetFields();
@@ -91,6 +103,16 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
+
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    if (
+      changedValues.bookingDate ||
+      changedValues.mechID ||
+      changedValues.storeManID
+    ) {
+      onpickSlipSearchValues(allValues);
+    }
+  };
   return (
     <div>
       <ProForm
@@ -100,6 +122,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         className="bg-white px-4 py-3 rounded-md border-gray-400"
         form={form}
         onFinish={onFinish}
+        onValuesChange={handleValuesChange}
       >
         <ProFormGroup size={'small'}>
           <ProFormText
@@ -186,22 +209,26 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         <ProFormGroup>
           <ProFormSelect
             showSearch
-            disabled
+            disabled={pickSlip && pickSlip.state !== 'complete'}
             name="storeManID"
             label={t('STOREMAN')}
             width="sm"
-            // valueEnum={neededCodesValueEnum || []}
+            valueEnum={usersCodesValueEnum || []}
           />
           <ProFormSelect
             showSearch
-            name="mechID"
+            name="userID"
             label={t('MECH')}
             width="sm"
-            // valueEnum={neededCodesValueEnum || []}
-            disabled
+            valueEnum={usersCodesValueEnum || []}
+            disabled={pickSlip && pickSlip.state !== 'complete'}
           />
         </ProFormGroup>{' '}
-        <ProFormDatePicker name="bookingDate" label={`${t('BOOKING DATE')}`} />
+        <ProFormDatePicker
+          disabled={pickSlip && pickSlip.state !== 'complete'}
+          name="bookingDate"
+          label={`${t('BOOKING DATE')}`}
+        />
       </ProForm>
     </div>
   );

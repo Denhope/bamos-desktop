@@ -15,11 +15,12 @@ import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupAp
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 interface AdminPanelProps {}
 import { Split } from '@geoffcox/react-splitter';
+import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const { data: usersGroup, isLoading } = useGetGroupUsersQuery({});
   const { data: groups } = useGetGroupsUserQuery({});
-
+  const { data: usersSkill } = useGetSkillsQuery({});
   const [addUser] = useAddUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -121,6 +122,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
               onSubmit={handleSubmit}
               roles={['admin']}
               groups={groups || []}
+              skilss={usersSkill}
             />
           </div>
         </Split>
