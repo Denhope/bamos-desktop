@@ -4,16 +4,8 @@
   directories: {
     output: 'release/${version}',
   },
-  asarUnpack: [
-    'node_modules/pdfmake',
-    'node_modules/pdfmake/build/vfs_fonts.js',
-  ],
-  files: [
-    'dist-electron',
-    'dist',
-    'node_modules/pdfmake',
-    'node_modules/pdfmake/build/vfs_fonts.js',
-  ],
+  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
+  files: ['dist-electron', 'dist'],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
     target: ['dmg', 'zip'],
@@ -33,10 +25,9 @@
     allowToChangeInstallationDirectory: true,
     deleteAppDataOnUninstall: false,
   },
-
   publish: {
     provider: 'generic',
     channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.18/',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.19/',
   },
 }

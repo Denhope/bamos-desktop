@@ -162,13 +162,13 @@ const ZoneCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeId }) => {
 
       <div className="py-4 flex gap-4 justify-between bg-gray-100 rounded-lg">
         <Split initialPrimarySize="25%" splitterSize="20px">
-          <div className="h-[64vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+          <div className="h-[62vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             <ZoneCodeTree
               zoneCodesGroup={zoneCodesGroup || []}
               onZoneCodeSelect={handleEdit}
             />
           </div>
-          <div className="h-[64vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3  overflow-y-auto ">
+          <div className="h-[62vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3  overflow-y-auto ">
             <ZoneCodeForm
               zoneCode={editingZoneCode || undefined}
               onSubmit={handleSubmit}

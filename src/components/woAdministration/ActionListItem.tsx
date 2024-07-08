@@ -17,13 +17,13 @@ interface ActionListProps {
 
 const getActionColor = (type: string) => {
   switch (type) {
-    case 'done':
+    case 'pfmd':
       return 'bg-green-50';
     case 'inspect':
       return 'bg-orange-50';
     case 'doubleInspect':
       return 'bg-red-50';
-    case 'close':
+    case 'closed':
       return 'bg-gray-50';
     default:
       return 'bg-yellow-50';
@@ -68,10 +68,10 @@ const ActionList: React.FC<ActionListProps> = ({
               >
                 <Space style={{ width: '100%' }}>
                   <div style={{ fontWeight: 'bold', fontSize: '14px' }}>
-                    {action?.type === 'done' && `${t('DONE')}`}
+                    {action?.type === 'pfmd' && `${t('PFMD')}`}
                     {action?.type === 'inspect' && `${t('INSPECTED')}`}
                     {action?.type === 'doubleInspect' && `${t('DINSPECTED')}`}
-                    {action?.type === 'close' && `${t('CLOSE')}`}
+                    {action?.type === 'closed' && `${t('CLOSED')}`}
                   </div>
                   <Space
                     className="ml-auto font-bold"

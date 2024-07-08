@@ -121,28 +121,28 @@ const StepContainer: React.FC<Props> = ({
         onCancel={handleModalCancel}
       >
         <Form form={form} layout="vertical">
-          <Form.Item
+          {/* <Form.Item
             name="stepType"
-            label={`${t('STEP TYPE')}`}
+            label={`${t('STEP_TYPE')}`}
             rules={[{ required: true }]}
           >
             <Select>
               <Option value="incomingInspection">
-                {t('INCOMING INSPECTION')}
+                {t('INCOMING_INSPECTION')}
               </Option>
-              <Option value="mechanicsProcess">{t('MECHANIC PROCESS')}</Option>
+              <Option value="mechanicsProcess">{t('MECHANIC_PROCESS')}</Option>
 
               <Option value="inspection">{t('INSPECTION')}</Option>
-              <Option value="diInspection">{t('DI INSPECTION')}</Option>
-              <Option value="mechanicsProcess">{t('MECHANIC PROCESS')}</Option>
-              <Option value="technicalControl">{t('TECHNICAL CONTROL')}</Option>
+              <Option value="diInspection">{t('DI_INSPECTION')}</Option>
+
+              <Option value="technicalControl">{t('TECHNICAL_CONTROL')}</Option>
               <Option value="coating">{t('COATING')}</Option>
               <Option value="marking">{t('MARKERING')}</Option>
               <Option value="package">{t('PACKAGE')}</Option>
-              <Option value="additionalWorks">{t('ADD WORKS')}</Option>
+              <Option value="additionalWorks">{t('ADD_WORKS')}</Option>
               <Option value="store">{t('STORE')}</Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <ProFormSelect
             name="userGroupID"

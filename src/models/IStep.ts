@@ -20,7 +20,7 @@ export interface IStep {
   userGroupID?: string[];
 }
 
-type ActionType = 'done' | 'inspect' | 'doubleInspect' | 'close';
+type ActionType = 'pfmd' | 'inspect' | 'doubleInspect' | 'closed';
 
 export interface Action {
   projectStepId?: any;

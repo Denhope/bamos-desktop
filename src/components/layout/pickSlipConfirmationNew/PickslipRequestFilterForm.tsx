@@ -202,6 +202,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
             name="getFromID"
             label={t('GET FROM')}
             width="xs"
+            mode="multiple"
             valueEnum={storeCodesValueEnum || []}
             disabled
           />

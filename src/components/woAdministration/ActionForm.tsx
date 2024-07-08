@@ -143,10 +143,10 @@ const ActionForm: React.FC<ActionFormProps> = ({
               rules={[{ required: true }]}
             >
               <Select>
-                <Option value="done">{t('PERFOM')}</Option>
+                <Option value="pfmd">{t('PERFOM')}</Option>
                 <Option value="inspect">{t('INSPECT')}</Option>
                 <Option value="doubleInspect">{t('DINSPECT')}</Option>
-                <Option value="close">{t('CLOSE')}</Option>
+                <Option value="closed">{t('CLOSE')}</Option>
               </Select>
             </Form.Item>
             {/* <Form.Item

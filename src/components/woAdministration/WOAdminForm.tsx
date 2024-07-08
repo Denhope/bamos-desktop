@@ -281,7 +281,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     '1': `${t('WORKORDER INFO')}`,
     '2': `${t('PARTS')}`,
     '3': `${t('STEPS')}`,
-    '4': `${t('INSTRUMENTS')}`,
+    '4': `${t('TOOL')}`,
     '5': `${t('REQUIREMENTS')}`,
   });
 
@@ -513,6 +513,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
   );
   return (
     <ProForm
+      disabled={order && order.status === 'closed'}
       size="small"
       form={form}
       submitter={{
@@ -983,7 +984,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
             <RequarementsList
               isIssueVisibale={true}
               order={order}
-              isAddVisiable={false}
+              isAddVisiable={order && order.status === 'closed' ? true : false}
               isChekboxColumn={true}
               fetchData={transformedRequirements}
               columnDefs={columnRequirements}

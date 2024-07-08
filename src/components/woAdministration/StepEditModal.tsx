@@ -91,7 +91,7 @@ const StepEditModal: React.FC<{
             }}
             onFinish={handleFinish}
           >
-            <Form.Item
+            {/* <Form.Item
               name="stepType"
               label={`${t('STEP_TYPE')}`}
               rules={[{ required: true }]}
@@ -116,7 +116,7 @@ const StepEditModal: React.FC<{
                 <Option value="additionalWorks">{t('ADD_WORKS')}</Option>
                 <Option value="store">{t('STORE')}</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             <ProFormSelect
               name="userGroupID"
               mode="multiple"

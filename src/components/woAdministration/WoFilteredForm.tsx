@@ -158,7 +158,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         }}
       />
       <ProFormSelect
-        initialValue={['open']}
+        initialValue={['open', 'inspect', 'inProgress']}
         mode="multiple"
         name="woStatus"
         label={`${t('Wo STATUS')}`}
@@ -166,9 +166,12 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={{
           draft: { text: t('DRAFT'), status: 'DRAFT' },
           open: { text: t('OPEN'), status: 'Processing' },
+          inspect: { text: t('INSPECTED'), status: 'inspect' },
           inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-          completed: { text: t('COMPLETED'), status: 'Default' },
+          // completed: { text: t('COMPLETED'), status: 'Default' },
+          performed: { text: t('PERFORMED'), status: 'Default' },
+
           closed: { text: t('CLOSED'), status: 'SUCCESS' },
           cancelled: { text: t('CANCELLED'), status: 'Error' },
         }}

@@ -786,7 +786,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
             )}
           </div>
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('INSTRUMENTS')} key="4">
+        <Tabs.TabPane tab={t('TOOL')} key="4">
           <div>
             {task ? (
               <div

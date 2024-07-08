@@ -1003,12 +1003,16 @@ export interface ValueEnumType {
   CANCELLED?: string;
   partyCancelled?: string;
   partlyClosed?: string;
+  inspect?: string;
+  performed?: string;
 }
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
     case 'draft':
       return '#D3D3D3'; // Light Gray
     case 'onShort':
+      return '#FFA07A'; // Light Salmon
+    case 'inspect':
       return '#FFA07A'; // Light Salmon
       return '#800080'; // Dark Blue
     case 'progress':
@@ -1026,6 +1030,8 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
     case 'RECEIVED':
       return '#32CD32'; // Lime Green
     case 'PARTLY_RECEIVED':
+      return '#90EE90'; // Light Green
+    case 'performed':
       return '#90EE90'; // Light Green
     case 'partlyClosed':
       return '#90EE90'; // Light Green
@@ -1251,6 +1257,7 @@ export const transformToIProjectItem = (data: any[]): any[] => {
     ...item,
     ...item?.taskNumberID,
     zonesID: item?.zonesID,
+    _id: item._id || item?.id,
   }));
 
   console.log('Output data from transformToIProjectItem:', result); // Вывод результата

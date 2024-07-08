@@ -204,6 +204,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       field: 'taskDescription',
       headerName: `${t('TASK DESCREIPTION')}`,
       cellDataType: 'text',
+      with: 450,
     },
   ];
 
@@ -271,7 +272,8 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           <Button
-            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            disabled
+            // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
             icon={<ProjectOutlined />}
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
@@ -281,7 +283,8 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           <Button
-            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            disabled
+            // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
             icon={<ProjectOutlined />}
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
@@ -291,7 +294,8 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           <Button
-            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            disabled
+            // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
             icon={<ProjectOutlined />}
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
@@ -301,7 +305,8 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           <Button
-            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            disabled
+            // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
             icon={<ProjectOutlined />}
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
@@ -337,6 +342,8 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             ) : (
               <PartContainer
                 isVisible
+                onCheckItems={setSelectedKeys}
+                isChekboxColumn={true}
                 isButtonVisiable={false}
                 isAddVisiable={true}
                 isLoading={loading}

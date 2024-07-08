@@ -35,6 +35,25 @@ export const actionApi = createApi({
       }),
       invalidatesTags: ['Actions'],
     }),
+    addMultiAction: builder.mutation<
+      any,
+      {
+        ids: any;
+        actionType: string;
+      }
+    >({
+      query: ({ actionType, ids }) => ({
+        url: `projectTaskStepsActions/multi-actions/company/${COMPANY_ID}`,
+        method: 'POST',
+        body: {
+          actionType,
+          createUserID: USER_ID,
+          companyID: COMPANY_ID,
+          ids,
+        },
+      }),
+      invalidatesTags: ['Actions'],
+    }),
     updateAction: builder.mutation<Action, { action: Action }>({
       query: ({ action }) => ({
         url: `projectTaskStepsActions/company/${COMPANY_ID}/projectTaskStepAction/${action.id}`,
@@ -71,4 +90,5 @@ export const {
   useUpdateActionMutation,
   useGetFilteredActionsQuery,
   useDeleteActionMutation,
+  useAddMultiActionMutation,
 } = actionApi;

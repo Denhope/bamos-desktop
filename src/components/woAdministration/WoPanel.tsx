@@ -8,6 +8,7 @@ import {
   message,
   Switch,
   Divider,
+  notification,
 } from 'antd';
 import {
   PlusSquareOutlined,
@@ -51,6 +52,7 @@ import {
   useGetStorePartsQuery,
 } from '@/features/storeAdministration/PartsApi';
 import TaskList from '../shared/Table/TaskList';
+import { useAddMultiActionMutation } from '@/features/projectItemWO/actionsApi';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -74,6 +76,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     data: projectTasks,
     isLoading,
     isFetching,
+    refetch,
   } = useGetProjectItemsWOQuery(
     {
       status: projectSearchValues?.status,
@@ -93,6 +96,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     },
     {
       skip: !triggerQuery,
+      refetchOnMountOrArgChange: true,
     }
   );
   // const { data: quantity, refetch } = useGetStorePartStockQTYQuery(
@@ -110,7 +114,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   if (Array.isArray(editingProject?.projectID?.storesID)) {
     storesIDString = editingProject?.projectID?.storesID.join(',');
   }
-
+  const [addMultiAction] = useAddMultiActionMutation({});
   const { data: stores } = useGetStoresQuery(
     {
       ids: storesIDString,
@@ -145,6 +149,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const transformedTasks = useMemo(() => {
     return transformToIProjectTask(projectTasks || []);
   }, [projectTasks]);
+  console.log(transformedTasks);
   useEffect(() => {
     if (projectSearchValues) {
       const hasSearchParams = Object.values(projectSearchValues).some(
@@ -191,6 +196,23 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   }
   const columnDefs: any[] = [
     {
+      field: 'status',
+      headerName: `${t('Status')}`,
+      cellDataType: 'text',
+      width: 150,
+      filter: true,
+      valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
+        params.data.status,
+      valueFormatter: (params: { value: keyof ValueEnumType }) => {
+        const status = params.value;
+        return valueEnum[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumType }) => ({
+        backgroundColor: getStatusColor(params.value),
+        color: '#ffffff', // Text color
+      }),
+    },
+    {
       field: 'taskWO',
       headerName: `${t('TRACE No')}`,
       filter: true,
@@ -214,6 +236,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       filter: true,
       // hide: true,
     },
+
     {
       field: 'taskType',
       headerName: `${t('TASK TYPE')}`,
@@ -397,6 +420,66 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   ];
 
   const handleSubmit = () => {};
+
+  const valueEnum: ValueEnumType = {
+    inspect: t('INSPECTED'),
+    onQuatation: t('QUATATION'),
+    open: t('OPEN'),
+    closed: t('CLOSED'),
+    canceled: t('CANCELLED'),
+    inProgress: t('IN PROGRESS'),
+    complete: t('COMPLETE'),
+    RECEIVED: t('RECEIVED'),
+    PARTLY_RECEIVED: t('PARTLY RECEIVED'),
+    performed: t('PERFORMED'),
+    onOrder: '',
+    onShort: '',
+    draft: '',
+    issued: '',
+    progress: '',
+  };
+  const handleAddAction = async (
+    actionType: string,
+    ids: any,
+    invalidStates: string[]
+  ) => {
+    const hasInvalidData = transformedTasks.some((item) => {
+      if (selectedKeys.includes(item.id)) {
+        if (invalidStates.includes(item.status)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (hasInvalidData) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Invalid status in the table. Please check the status.'),
+      });
+      return false;
+    }
+
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO MAKE THIS TRACE PRFMD?'),
+      onOk: async () => {
+        try {
+          await addMultiAction({ actionType, ids });
+          refetch();
+          notification.success({
+            message: t('SUCCESS'),
+            description: t('ACTIONS COMPLETED'),
+          });
+        } catch (error) {
+          notification.error({
+            message: t('ERROR'),
+            description: t('ACTIONS ERROR'),
+          });
+        }
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       <Space>
@@ -413,7 +496,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       <Space className="">
         <Col>
           <Button
-            disabled={!selectedKeys.length}
+            disabled={
+              !selectedKeys.length ||
+              selectedKeys.length > 1 ||
+              editingProject?.status == 'closed'
+            }
             size="small"
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
@@ -444,6 +531,13 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         </Col> */}
         <Col>
           <Button
+            onClick={() => {
+              handleAddAction('pfmd', selectedKeys, [
+                'inspect',
+                'performed',
+                'closed',
+              ]);
+            }}
             disabled={!selectedKeys.length}
             size="small"
             icon={<AlertTwoTone />}
@@ -453,6 +547,15 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         </Col>
         <Col>
           <Button
+            onClick={() => {
+              handleAddAction('inspect', selectedKeys, [
+                'inspect',
+                'doubleInspect',
+                'closed',
+                'inProgress',
+                'open',
+              ]);
+            }}
             disabled={!selectedKeys.length}
             size="small"
             icon={<AlertTwoTone />}
@@ -462,6 +565,14 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         </Col>
         <Col>
           <Button
+            onClick={() => {
+              handleAddAction('closed', selectedKeys, [
+                'closed',
+                'inProgress',
+                'performed',
+                'open',
+              ]);
+            }}
             disabled={!selectedKeys.length}
             size="small"
             icon={<CheckCircleFilled />}
@@ -503,7 +614,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               <TaskList
                 isLoading={isLoading || isFetching}
                 pagination={true}
-                isChekboxColumn={false}
+                isChekboxColumn={true}
                 columnDefs={columnDefs}
                 rowData={transformedTasks || []}
                 onRowSelect={function (rowData: any | null): void {
@@ -511,7 +622,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 }}
                 height={'69vh'}
                 onCheckItems={function (selectedKeys: React.Key[]): void {
-                  throw new Error('Function not implemented.');
+                  setSelectedKeys(selectedKeys);
                 }}
               />
               // <MyTable

@@ -103,7 +103,7 @@ const TaskCodeTree: FC<UserTreeProps> = ({ onTaskCodeSelect, taskCodes }) => {
             onTaskCodeSelect(userGroup);
           }
         }}
-        height={680}
+        height={640}
         searchQuery={searchQuery}
       />
       {/* <Tree

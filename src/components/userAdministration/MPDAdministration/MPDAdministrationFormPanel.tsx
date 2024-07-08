@@ -113,13 +113,13 @@ const MPDAdministrationFormPanel: React.FC<AdminPanelProps> = ({
 
       <div className=" flex  py-4 gap-4 justify-between bg-gray-100 rounded-sm">
         <Split initialPrimarySize="25%" splitterSize="20px">
-          <div className="h-[64vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+          <div className="h-[62vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             <MPDAdministrationTree
               MPDCodes={mpdCodes || []}
               onMPDCodeSelect={handleEdit}
             />
           </div>
-          <div className="h-[64vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto ">
+          <div className="h-[62vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto ">
             <MPDAdministrationForm
               taskCode={editingmpdCode || undefined}
               onSubmit={handleSubmit}

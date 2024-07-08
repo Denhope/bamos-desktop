@@ -112,13 +112,13 @@ const TaskCodeFormPanel: React.FC<AdminPanelProps> = ({ acTypeID }) => {
 
       <div className=" flex gap-4 justify-between py-4 bg-gray-100 rounded-sm">
         <Split initialPrimarySize="30%" splitterSize="20px">
-          <div className="h-[65vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+          <div className="h-[62vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             <TaskCodeTree
               taskCodes={taskCodes || []}
               onTaskCodeSelect={handleEdit}
             />
           </div>
-          <div className="h-[65vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 ">
+          <div className="h-[62vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 ">
             <TaskCodeForm
               taskCode={editingTaskCode || undefined}
               onSubmit={handleSubmit}

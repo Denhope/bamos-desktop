@@ -446,8 +446,8 @@ const StepCard: React.FC<Props> = ({
               </div>
               <Space className="ml-auto font-bold" style={{ fontSize: '12px' }}>
                 <div>{t('added by')}</div>
-                <Tag color="#778D45">{step.createUserID.singNumber}</Tag>
-                <Tag color="#778D45">{step.createUserID.name}</Tag>
+                <Tag color="#778D45">{step.createUserID?.singNumber}</Tag>
+                <Tag color="#778D45">{step.createUserID?.name}</Tag>
               </Space>
               <Space className="font-bold" style={{ fontSize: '12px' }}>
                 {moment(step.createDate).format('YYYY-MM-DD HH:mm')}

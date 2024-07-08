@@ -37,9 +37,11 @@ const WOTree: FC<UserTreeProps> = ({
       let statusIndicator = '';
       if (requirement.status === 'onQuatation') {
         statusIndicator = ' \u{1F7E1}'; // Оранжевый кружок
-      } else if (requirement.status === 'open') {
-        statusIndicator = ' \u{1F534}'; // Красный кружок
-      } else if (requirement.status === 'transfer') {
+      }
+      // else if (requirement.status === 'open') {
+      //   statusIndicator = ' \u{1F534}'; // Красный кружок
+      // }
+      else if (requirement.status === 'transfer') {
         statusIndicator = ' \u{1F7E2}'; // Желтый кружок
       } else if (requirement.status === 'draft') {
         statusIndicator = ' ⚪'; // Серый квадрат
@@ -53,6 +55,10 @@ const WOTree: FC<UserTreeProps> = ({
       if (requirement.status === 'closed') {
         statusIndicator = ' 🟢'; // Оранжевый кружок
       }
+      if (requirement.status === 'performed') {
+        statusIndicator = ' 📗'; // Оранжевый кружок
+      }
+
       if (requirement.status === 'PARTLY_RECEIVED') {
         statusIndicator = ' \u{1F7E1}'; // Оранжевый кружок
       }
@@ -62,10 +68,13 @@ const WOTree: FC<UserTreeProps> = ({
       if (requirement.status === 'CANCELLED') {
         statusIndicator = ' ⚪'; // Серый квадрат
       }
-      if (requirement.status === 'onOrder') {
+      if (requirement.status === 'open') {
         statusIndicator = '🔵'; // Серый квадрат
       }
       if (requirement.status === 'onShort') {
+        statusIndicator = '🟠'; // Серый квадрат
+      }
+      if (requirement.status === 'inspect') {
         statusIndicator = '🟠'; // Серый квадрат
       }
       const title = `№:${requirement?.taskWO} -/${

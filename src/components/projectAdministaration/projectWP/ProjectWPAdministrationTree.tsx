@@ -46,6 +46,8 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
             break; // Прерываем цикл, так как уже нашли открытый заказ
           } else if (item.status === 'CLOSED') {
             stateIndicator = ' 🟢'; // Если все заказы закрыты, устанавливаем зеленый кружок
+          } else if (item.status === 'closed') {
+            stateIndicator = ' 🟢'; // Если все заказы закрыты, устанавливаем зеленый кружок
           }
         }
       }
@@ -146,7 +148,7 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
             onProjectItemSelect(reqGroup);
           }
         }}
-        height={420}
+        height={460}
         searchQuery={searchQuery}
       />
     </div>
