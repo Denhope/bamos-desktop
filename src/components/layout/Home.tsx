@@ -683,11 +683,11 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
       RouteNames.GOODS_RESERVING_NEW,
       <ShoppingCartOutlined />
     ),
-    getItem(
-      t('SCRAP MATERIAL'),
-      RouteNames.SCRAP_MATERIAL,
-      <ShoppingCartOutlined />
-    ),
+    // getItem(
+    //   t('SCRAP MATERIAL'),
+    //   RouteNames.SCRAP_MATERIAL,
+    //   <ShoppingCartOutlined />
+    // ),
     getItem(
       t('CANCEL RECEIVING'),
       RouteNames.CANCEL_RESERVING,

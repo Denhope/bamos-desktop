@@ -1,6 +1,6 @@
 {
   "name": "bamos",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "private": true,
   "description": "Bamos.",
   "license": "MIT",
@@ -40,6 +40,8 @@
     "electron-pdf-window": "^1.0.0",
     "electron-updater": "^6.1.1",
     "file-saver": "^2.0.5",
+    "handlebars": "^4.7.8",
+    "html-to-pdfmake": "^2.5.10",
     "i18next": "^23.7.19",
     "jsbarcode": "^3.11.6",
     "jspdf": "^2.5.1",
@@ -70,6 +72,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
+    "@types/html-to-pdfmake": "^2.4.4",
     "@types/jsbarcode": "^3.11.4",
     "@types/pdfmake": "^0.2.9",
     "@types/react": "^18.2.48",

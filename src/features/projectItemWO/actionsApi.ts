@@ -19,9 +19,10 @@ export const actionApi = createApi({
         stepId: string;
         projectItemID: string;
         projectId: string;
+        projectTaskID?: string;
       }
     >({
-      query: ({ action, stepId, projectItemID, projectId }) => ({
+      query: ({ action, stepId, projectItemID, projectId, projectTaskID }) => ({
         url: `projectTaskStepsActions/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
@@ -31,6 +32,7 @@ export const actionApi = createApi({
           companyID: COMPANY_ID,
           projectId,
           projectItemID,
+          projectTaskID,
         },
       }),
       invalidatesTags: ['Actions'],

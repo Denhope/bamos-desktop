@@ -7,6 +7,7 @@ import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import WoFilteredForm from '@/components/woAdministration/WoFilteredForm';
 import WoPanel from '@/components/woAdministration/WoPanel';
+import { GlobalStateProvider } from '@/components/woAdministration/GlobalStateContext';
 
 const WOAdministration: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -49,7 +50,9 @@ const WOAdministration: FC = () => {
       </Sider>
       <Content className="pl-4">
         <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-5">
-          <WoPanel projectSearchValues={requirementsSearch}></WoPanel>
+          <GlobalStateProvider>
+            <WoPanel projectSearchValues={requirementsSearch}></WoPanel>
+          </GlobalStateProvider>
         </div>
       </Content>
     </Layout>

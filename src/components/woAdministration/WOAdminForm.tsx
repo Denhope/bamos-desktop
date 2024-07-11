@@ -54,14 +54,21 @@ import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministr
 import CircleRenderer from '../userAdministration/requirementAdministration/CircleRenderer';
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { useGetPartTaskNumbersQuery } from '@/features/tasksAdministration/partApi';
+import { useGlobalState } from './GlobalStateContext';
 
 interface UserFormProps {
   order?: any;
   orderItem?: any | {};
   onCheckItems: (selectedKeys: React.Key[]) => void;
+  onSubmit: (task: any) => void;
 }
 
-const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
+const WOAdminForm: FC<UserFormProps> = ({
+  order,
+  orderItem,
+  onCheckItems,
+  onSubmit,
+}) => {
   type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
   const { t } = useTranslation();
   interface ExtendedColDef extends ColDef {
@@ -287,11 +294,13 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
 
   const projectId = order?.projectId;
   const projectItemID = order?.projectItemID;
-
+  const projectTaskID = order?.id;
+  const { currentTime } = useGlobalState();
   const { data: steps, refetch } = useGetFilteredStepsQuery(
     { projectItemID: projectItemID },
     {
       skip: !projectItemID,
+      refetchOnMountOrArgChange: true,
     }
   );
   const { data: usersSkill } = useGetSkillsQuery({});
@@ -299,6 +308,12 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     label: skill?.code,
     value: skill?.id, // Use the _id as the value
   }));
+  useEffect(() => {
+    steps && order && order?.id && refetch();
+    // setEditingProject(editingProject);
+
+    // console.log(currentTime);
+  }, [currentTime]); //
   const [addStep] = useAddStepMutation();
   const [deleteStep] = useDeleteStepMutation();
 
@@ -310,7 +325,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
     if (order) {
       setTabTitles((prevTitles) => ({
         ...prevTitles,
-        '1': `${t('WORKORDER')} №: ${order?.taskWO}`,
+        '1': `${t('WORKORDER')} №: ${order?.taskWO || 'DRAFT'}`,
       }));
     }
     if (selectedItem) {
@@ -329,6 +344,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
         step: newStep,
         projectId,
         projectItemID,
+        projectTaskID,
       }).unwrap();
       await refetch();
       await addBooking({
@@ -475,6 +491,8 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
         WORKPIECE_WEIGHT: order.partNumberID?.WORKPIECE_WEIGHT,
         WORKPIECE_MATERIAL_TYPE: order.partNumberID?.WORKPIECE_MATERIAL_TYPE,
       });
+      if (!order.id) {
+      }
     } else {
       form.resetFields();
       setACTypeID(undefined);
@@ -485,7 +503,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
 
   const SubmitButton = () => (
     <Button type="primary" htmlType="submit">
-      {order ? t('UPDATE') : t('CREATE')}
+      {order && order?.id ? t('UPDATE') : t('CREATE')}
     </Button>
   );
   const { data: requirements, isLoading } = useGetFilteredRequirementsQuery(
@@ -513,7 +531,33 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
   );
   return (
     <ProForm
-      disabled={order && order.status === 'closed'}
+      onFinish={(values) => {
+        onSubmit({
+          ...values,
+          projectTaskReferenceID: order?.projectTaskReferenceID,
+          projectID: order?.projectID,
+          projectId: order?.projectId,
+          projectItemReferenceID: order?.projectItemReferenceID,
+          removeInslallItemsIds: order?.removeInslallItemsIds,
+          status: order?.status,
+          PHASES: order?.PHASES,
+          MPD_REFERENCE: order?.MPD,
+          id: order.id,
+        });
+        // console.log({
+        //   ...values,
+        //   projectTaskReferenceID: order?.projectTaskReferenceID,
+        //   projectID: order?.projectID,
+        //   projectId: order?.projectId,
+        //   projectItemReferenceID: order?.projectItemReferenceID,
+        //   removeInslallItemsIds: order?.removeInslallItemsIds,
+        //   status: order?.status,
+        //   projectWO: order?.projectWO,
+        //   PHASES: order?.PHASES,
+        //   MPD_REFERENCE: order?.MPD,
+        // });
+      }}
+      disabled={order && order?.status === 'closed'}
       size="small"
       form={form}
       submitter={{
@@ -570,16 +614,23 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         disabled
                         showSearch
                         // initialValue={['PART_PRODUCE']}
-                        name="taskType"
+                        name="projectItemType"
                         label={t('TASK TYPE')}
                         width="xl"
                         valueEnum={{
-                          SB: { text: t('SERVICE BULLETIN') },
-                          SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
-                          ADP: { text: t('ADP') },
-                          AD: { text: t('AIRWORTHINESS DIRECTIVE') },
-                          PN: { text: t('COMPONENT') },
-                          PART_PRODUCE: { text: t('PART PRODUCE') },
+                          RC: {
+                            text: t(
+                              'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                            ),
+                          },
+                          RC_ADD: {
+                            text: t('RC (Critical Task, Double Inspection)'),
+                          },
+
+                          NRC: { text: t('NRC (AdHoc, Defect)') },
+                          MJC: { text: 'MJC (Extended MPD) ' },
+                          CMJC: { text: t('CMJC (Component maintenance) ') },
+                          FC: { text: t('FC (Fabrication card)') },
                         }}
                         onChange={(value: string) => setTaskType(value)}
                       />
@@ -590,7 +641,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                       <ProFormSelect
                         disabled
                         showSearch
-                        name="taskType"
+                        name="projectItemType"
                         rules={[
                           {
                             required: true,
@@ -599,12 +650,19 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         label={t('TASK TYPE')}
                         width="xl"
                         valueEnum={{
-                          SB: { text: t('SERVICE BULLETIN') },
-                          SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
-                          ADP: { text: t('ADP') },
-                          AD: { text: t('AIRWORTHINESS DIRECTIVE') },
-                          PN: { text: t('COMPONENT') },
-                          PART_PRODUCE: { text: t('PART PRODUCE') },
+                          RC: {
+                            text: t(
+                              'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                            ),
+                          },
+                          RC_ADD: {
+                            text: t('RC (Critical Task, Double Inspection)'),
+                          },
+
+                          NRC: { text: t('NRC (AdHoc, Defect)') },
+                          MJC: { text: 'MJC (Extended MPD) ' },
+                          CMJC: { text: t('CMJC (Component maintenance) ') },
+                          FC: { text: t('FC (Fabrication card)') },
                         }}
                         onChange={(value: string) => setTaskType(value)}
                       />
@@ -796,7 +854,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                     <>
                       <ProFormGroup>
                         <ProFormText
-                          disabled
+                          disabled={!order?.projectTaskReferenceID}
                           width={'xl'}
                           name="taskNumber"
                           label={t('TASK NUMBER')}
@@ -808,7 +866,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                           label={t('REVISION')}
                         />
                         <ProFormDigit
-                          disabled
+                          disabled={!order?.projectTaskReferenceID}
                           width={'xs'}
                           name="mainWorkTime"
                           label={t('MHS')}
@@ -829,7 +887,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         />
                       </ProFormGroup>
                       <ProFormTextArea
-                        disabled
+                        disabled={!order?.projectTaskReferenceID}
                         width={'sm'}
                         fieldProps={{ style: { resize: 'none' } }}
                         name="amtoss"
@@ -841,7 +899,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         ]}
                       />
                       <ProFormSelect
-                        disabled
+                        disabled={!order?.projectTaskReferenceID}
                         showSearch
                         name="zonesID"
                         mode={'multiple'}
@@ -851,7 +909,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         // disabled={!acTypeID}
                       />
                       <ProFormSelect
-                        disabled
+                        disabled={!order?.projectTaskReferenceID}
                         showSearch
                         name="accessID"
                         mode={'multiple'}
@@ -861,7 +919,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         // disabled={!acTypeID}
                       />
                       <ProFormSelect
-                        disabled
+                        disabled={!order?.projectTaskReferenceID}
                         showSearch
                         name="code"
                         label={t('TASK CODE')}
@@ -870,8 +928,9 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         // disabled={!acTypeID}
                       />
                       <ProFormSelect
-                        disabled
+                        disabled={!order?.projectTaskReferenceID}
                         showSearch
+                        mode="multiple"
                         name="restrictionID"
                         label={t('RESTRICTION')}
                         width="sm"
@@ -879,7 +938,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
                         // disabled={!acTypeID}
                       />
                       <ProFormSelect
-                        disabled
+                        disabled={!order?.projectTaskReferenceID}
                         mode="multiple"
                         showSearch
                         name="skillCodeID"
@@ -980,7 +1039,7 @@ const WOAdminForm: FC<UserFormProps> = ({ order, orderItem, onCheckItems }) => {
           )}
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['5']} key="5">
-          {order ? (
+          {order && order?.id ? (
             <RequarementsList
               isIssueVisibale={true}
               order={order}

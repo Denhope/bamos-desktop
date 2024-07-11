@@ -366,8 +366,8 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                 /> */}
                 <ProFormTextArea
                   fieldProps={{
-                    style: { resize: 'none' },
-                    rows: 6,
+                    // style: { resize: 'none' },
+                    rows: 4,
                   }}
                   width="xl"
                   name="taskDescription"
@@ -381,7 +381,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
               </ProFormGroup>
               <ProFormTextArea
                 width={'sm'}
-                fieldProps={{ style: { resize: 'none' } }}
+                fieldProps={{
+                  // style: { resize: 'none' },
+                  rows: 2,
+                }}
                 name="amtoss"
                 label={t('AMM')}
                 rules={[

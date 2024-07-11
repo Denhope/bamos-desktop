@@ -226,12 +226,12 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`CANCEL PICKSLIP`)}`,
       route: RouteNames.PICKSLIP_CANCEL,
     },
-    {
-      APNNBR: '334',
+    // {
+    //   APNNBR: '334',
 
-      descriptions: `${t(`SCRAP MATERIAL`)}`,
-      route: RouteNames.SCRAP_MATERIAL,
-    },
+    //   descriptions: `${t(`SCRAP MATERIAL`)}`,
+    //   route: RouteNames.SCRAP_MATERIAL,
+    // },
     {
       APNNBR: '335',
 

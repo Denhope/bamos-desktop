@@ -917,6 +917,20 @@ export const transformedAccessToIAssess = (data: any[]): any[] => {
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
+export const transformedAccessToTable = (data: any[]): any[] => {
+  console.log('Input data to Access:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    ...item?.areaCodeID,
+    status: item.status,
+    _id: item?.id || item?._id,
+    id: item?.id || item?._id,
+  }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
 
 export const transformToIRequirement = (data: any[]): any[] => {
   console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
@@ -1005,6 +1019,7 @@ export interface ValueEnumType {
   partlyClosed?: string;
   inspect?: string;
   performed?: string;
+  inspected?: string;
 }
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
@@ -1013,6 +1028,8 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
     case 'onShort':
       return '#FFA07A'; // Light Salmon
     case 'inspect':
+      return '#FFA07A'; // Light Salmon
+    case 'inspected':
       return '#FFA07A'; // Light Salmon
       return '#800080'; // Dark Blue
     case 'progress':
@@ -1206,6 +1223,7 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
           projectWO: newItem?.projectID?.projectWO,
           projectTaskWO: newItem.projectTaskID?.taskWO,
           registrationNumber: newItem?.projectID?.acRegistrationNumber,
+
           status: 'progress',
         },
       ];
@@ -1243,6 +1261,7 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
         STORE: bookedItem?.storeItemID?.storeID?.storeShortName,
         LOCATION: bookedItem?.storeItemID?.locationID?.locationName,
         state: bookedItem.status,
+        files: bookedItem?.storeItemID?.files || bookedItem?.storeItemID?.FILES,
       }));
     }
 
@@ -1258,6 +1277,7 @@ export const transformToIProjectItem = (data: any[]): any[] => {
     ...item?.taskNumberID,
     zonesID: item?.zonesID,
     _id: item._id || item?.id,
+    ...item.createUserID,
   }));
 
   console.log('Output data from transformToIProjectItem:', result); // Вывод результата

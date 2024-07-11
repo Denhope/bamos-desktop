@@ -5,6 +5,7 @@ import PickslipRequestFilterForm from '../pickSlipConfirmationNew/PickslipReques
 import PartContainer from '@/components/woAdministration/PartContainer';
 import { useTranslation } from 'react-i18next';
 import { ColDef } from 'ag-grid-community';
+import { $authHost, API_URL } from '@/utils/api/http';
 import {
   handleOpenReport,
   transformToIStockPartNumber,
@@ -16,21 +17,25 @@ import {
   useGetPickSlipsQuery,
   useUpdatePickSlipMutation,
 } from '@/features/pickSlipAdministration/pickSlipApi';
-import { useGetPickSlipItemsQuery } from '@/features/pickSlipAdministration/pickSlipItemsApi';
+import {
+  useAddPickSlipItemMutation,
+  useGetPickSlipItemQuery,
+  useGetPickSlipItemsQuery,
+} from '@/features/pickSlipAdministration/pickSlipItemsApi';
 import { Button, Col, Modal, Space, notification } from 'antd';
 import {
   useAddPickSlipBookingsItemMutation,
   useUpdatePickSlipBookingsItemMutation,
 } from '@/features/pickSlipAdministration/pickSlipBookingsItemsApi';
 import BookedPartContainer from '../pickSlipConfirmationNew/BookedPartContainer';
-import { USER_ID } from '@/utils/api/http';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
 import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
 import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
 import { useAddBookingMutation } from '@/features/bookings/bookingApi';
 import { generateReport } from '@/utils/api/thunks';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
-
+import { v4 as uuidv4 } from 'uuid';
 type CellDataType = 'text' | 'number' | 'date' | 'boolean' | 'Object';
 
 interface ExtendedColDef extends ColDef {
@@ -59,6 +64,7 @@ const PickSlipConfirmationNew: FC = () => {
     }
   );
   const [addBooking] = useAddBookingMutation({});
+  // const { data: item } = useGetPickSlipItemQuery({});
   const { data: requirements, refetch: refetchRequirements } =
     useGetFilteredRequirementsQuery(
       {
@@ -80,6 +86,7 @@ const PickSlipConfirmationNew: FC = () => {
   const [addBookingsPickslip] = useAddPickSlipBookingsItemMutation({});
   const [updatePickSlip] = useUpdatePickSlipMutation({});
   const [updateBookingsPickslip] = useUpdatePickSlipBookingsItemMutation({});
+  const [addPickSlipItem] = useAddPickSlipItemMutation({});
   const [openPickSlip, setOpenPickSlip] = useState(false);
   const {
     data: parts,
@@ -395,7 +402,7 @@ const PickSlipConfirmationNew: FC = () => {
     // ) {
     // }   setCurrentPickSlipItem(row);
     setCurrentPickSlipItem(row);
-    // console.log(row);
+    console.log(row);
   }, []);
 
   const handleRowSelectStoreParts = useCallback(
@@ -441,6 +448,17 @@ const PickSlipConfirmationNew: FC = () => {
       // onUpdateData(fetchData);
     }
   }, [transformedRequirements]);
+  const fetchPickSlipItemData = async (id: string) => {
+    try {
+      const response = await $authHost.get(
+        `pickSlipItem/company/${COMPANY_ID}/item/${id}`
+      );
+      return response.data; // Возвращаем только данные из ответа
+    } catch (error) {
+      console.error('Error fetching pick slip item data:', error);
+      throw error; // Пробрасываем ошибку для обработки в вызывающем коде
+    }
+  };
   const [issuedData, setIssuedRowData] = useState<any[]>([]);
   const handleSubmitINProgress = async () => {
     Modal.confirm({
@@ -476,7 +494,7 @@ const PickSlipConfirmationNew: FC = () => {
 
         try {
           for (const item of issuedData) {
-            console.log(item);
+            // console.log(item);
             if (item.createUserID) {
               // Если есть createUserID, вызываем updateBookingsPickslip
               await updateBookingsPickslip({
@@ -496,8 +514,65 @@ const PickSlipConfirmationNew: FC = () => {
                 // projectID: item?.projectID,
                 // projectTaskID: item?.projectTaskID,
               }).unwrap();
+              pickSlipRefetch();
+              refetchItems();
+              notification.info({
+                message: t('PARTS IN PROGRESS'),
+                description: t('Parts in Progress'),
+              });
+            } else if (item.isCopy) {
+              console.log('llll');
+              // Если isCopy равен true
+              const pickSlipItemData = await fetchPickSlipItemData(
+                item?.pickSlipItemID
+              );
+              console.log(pickSlipItemData);
+              if (pickSlipItemData) {
+                const addedItem = await addPickSlipItem({
+                  pickSlipID: item.pickSlipID,
+                  pickSlipItem: {
+                    partNumberID: pickSlipItemData.partNumberID,
+                    requestedQty: pickSlipItemData.requestQuantity,
+                    neededOnID: pickSlipItemData.neededOnID,
+                    getFromID: pickSlipItemData.getFromID,
+                    plannedDate: pickSlipItemData.plannedDate,
+                    requirementID: pickSlipItemData?._id,
+                    state: pickSlipItemData?.state,
+                    type: pickSlipItemData?.type,
+                  },
+                  projectID: pickSlipItemData?.projectID,
+                  projectTaskID: pickSlipItemData?.projectTaskID,
+                }).unwrap();
+                // Устанавливаем значение _id в item.pickSlipItemID
+                // item.pickSlipItemID = addedItem._id;
+                await addBookingsPickslip({
+                  pickSlipItem: {
+                    status: item?.status,
+                    bookedQty: item?.bookedQty,
+                    storeItemID: item?.storeItemID,
+                    requirementID: item?.requirementID,
+                    partNumberID: item?.partNumberID,
+                    requestedQty: item?.requestedQty,
+                    requestedPartNumberID: item?.requestedPartNumberID,
+                    partNumberIDBooked: item?.partNumberIDBooked,
+                    pickSlipItemID: addedItem._id,
+                    pickSlipID: item?.pickSlipID,
+                    storeManID: USER_ID,
+                    projectID: item?.projectID,
+                    projectTaskID: item?.projectTaskID,
+                    projectTaskWO: item?.projectTaskWO,
+                    projectWO: item?.projectWO,
+                  },
+                }).unwrap();
+                // pickSlipRefetch();
+                // refetchItems();
+                // notification.info({
+                //   message: t('PARTS IN PROGRESS'),
+                //   description: t('Parts in Progress'),
+                // });
+              }
+              // Вызываем addBookingsPickslip после обновления pickSlipItemID
             } else {
-              // Если нет createUserID, вызываем addBookingsPickslip
               await addBookingsPickslip({
                 pickSlipItem: {
                   status: item?.status,
@@ -516,16 +591,15 @@ const PickSlipConfirmationNew: FC = () => {
                   projectTaskWO: item?.projectTaskWO,
                   projectWO: item?.projectWO,
                 },
-                // projectID: item?.projectID,
-                // projectTaskID: item?.projectTaskID,
               }).unwrap();
+              // pickSlipRefetch();
+              // refetchItems();
+              // notification.info({
+              //   message: t('PARTS IN PROGRESS'),
+              //   description: t('Parts in Progress'),
+              // });
             }
-            pickSlipRefetch();
-            refetchItems();
-            notification.info({
-              message: t('PARTS IN PROGRESS'),
-              description: t('Parts in Progress'),
-            });
+            // После установки item.pickSlipItemID вызываем addBookingsPickslip
           }
         } catch (error) {
           notification.error({
@@ -729,6 +803,21 @@ const PickSlipConfirmationNew: FC = () => {
 
     fetchData();
   }, [pickSlips && pickSlips[0]?.id, reportData]);
+  const handleCopyTableData = () => {
+    if (pickSlips && pickSlips[0]) {
+      // setIssuedRowData(selectedRow);
+      const { pickSlipItemID, ...rest } = currentPickSlipItem; // Убираем pickSlipItemID
+      const copyPickSlipItem = {
+        ...currentPickSlipItem,
+        id: uuidv4(),
+        isCopy: true,
+      };
+      setRowDataForSecondContainer([
+        ...rowDataForSecondContainer,
+        copyPickSlipItem,
+      ]);
+    }
+  };
   return (
     <div className="h-[82vh]    overflow-hidden flex flex-col justify-between ">
       <Split initialPrimarySize="48%" horizontal splitterSize="20px">
@@ -750,11 +839,12 @@ const PickSlipConfirmationNew: FC = () => {
                     !pickSlips ||
                     (pickSlips && pickSlips[0]?.state == 'closed') ||
                     (pickSlips && pickSlips[0]?.state == 'complete') ||
+                    (pickSlips && pickSlips[0]?.state == 'progress') ||
                     (pickSlips && pickSlips[0]?.state == 'canceled')
                     // ||
                     // (pickSlips && pickSlips[0]?.state == 'complete')
                   }
-                  onClick={async () => {}}
+                  onClick={handleCopyTableData}
                   size="small"
                   icon={<SaveOutlined />}
                 >
@@ -765,6 +855,7 @@ const PickSlipConfirmationNew: FC = () => {
 
             <div className="flex flex-col rounded-md p-3 h-[40vh] bg-white overflow-y-auto  ">
               <PartContainer
+                isChekboxColumn={true}
                 isFilesVisiable={true}
                 isVisible={true}
                 pagination={false}

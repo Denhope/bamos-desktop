@@ -1,12 +1,15 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
-import { Button, Empty, Modal, Tabs, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Empty, Modal, Tabs, Upload, message, Col, Space } from 'antd';
+import { UploadOutlined, ProjectOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
-
+import {
+  useAddProjectItemWOMutation,
+  useAddProjectPanelsMutation,
+} from '@/features/projectItemWO/projectItemWOApi';
 import {
   ProFormDatePicker,
   ProFormSelect,
@@ -50,6 +53,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
   const { data: stores } = useGetStoresQuery({});
   const { data: companies } = useGetCompaniesQuery({});
+  const [addPanels] = useAddProjectPanelsMutation({});
 
   // Формирование объекта planesValueEnum
   const planesValueEnum: Record<string, { text: string; value: string }> =
@@ -71,11 +75,11 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       return acc;
     }, {} as Record<string, string>) || {};
 
-  const projectTypesValueEnum: Record<string, string> =
-    projectTypes?.reduce((acc, reqType) => {
-      acc[reqType.id] = reqType.code;
-      return acc;
-    }, {}) || {};
+  // const projectTypesValueEnum: Record<string, string> =
+  //   projectTypes?.reduce((acc, reqType) => {
+  //     acc[reqType.id] = reqType.code;
+  //     return acc;
+  //   }, {}) || {};
 
   const companiesCodesValueEnum: Record<string, string> =
     companies?.reduce<Record<string, string>>((acc, mpdCode) => {
@@ -170,6 +174,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     handleFileOpen(file);
   };
   const dispatch = useAppDispatch();
+
   return (
     <ProForm
       size="small"
@@ -194,49 +199,50 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         type="card"
       >
         <Tabs.TabPane tab={t('MAIN')} key="1">
-          <ProFormSelect
-            showSearch
-            disabled={!project}
-            rules={[{ required: true }]}
-            name="status"
-            label={t('WO STATE')}
-            width="sm"
-            initialValue={['DRAFT']}
-            valueEnum={{
-              DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
-              OPEN: { text: t('OPEN'), status: 'Processing' },
-              inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
-              // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-              COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-              CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-              CANCELLED: { text: t('CANCELLED'), status: 'Error' },
-            }}
-          />
-          <ProFormSelect
-            showSearch
-            // disabled={!project}
-            rules={[{ required: true }]}
-            name="projectType"
-            label={t('WO TYPE')}
-            width="lg"
-            // initialValue={['baseMaintanance']}
-            valueEnum={{
-              baseMaintanance: {
-                text: t('BASE MAINTANENCE'),
-              },
-              lineMaintanance: {
-                text: t('LINE MAINTANENCE'),
-              },
+          <div className=" h-[57vh] flex flex-col overflow-auto">
+            <ProFormSelect
+              showSearch
+              disabled={!project}
+              rules={[{ required: true }]}
+              name="status"
+              label={t('WO STATE')}
+              width="sm"
+              initialValue={['DRAFT']}
+              valueEnum={{
+                DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
+                OPEN: { text: t('OPEN'), status: 'Processing' },
+                inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+                // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                COMPLETED: { text: t('COMPLETED'), status: 'Default' },
+                CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+                CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+              }}
+            />
+            <ProFormSelect
+              showSearch
+              // disabled={!project}
+              rules={[{ required: true }]}
+              name="projectType"
+              label={t('WO TYPE')}
+              width="lg"
+              // initialValue={['baseMaintanance']}
+              valueEnum={{
+                baseMaintanance: {
+                  text: t('BASE MAINTANENCE'),
+                },
+                lineMaintanance: {
+                  text: t('LINE MAINTANENCE'),
+                },
 
-              // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-              partCange: { text: t('COMPONENT CHANGE') },
-              addWork: { text: t('ADD WORK') },
-              enginiring: { text: t('ENGINIRING SERVICESES') },
-              nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
-            }}
-          />
+                // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                partCange: { text: t('COMPONENT CHANGE') },
+                addWork: { text: t('ADD WORK') },
+                enginiring: { text: t('ENGINIRING SERVICESES') },
+                nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+              }}
+            />
 
-          {/* <ProFormSelect
+            {/* <ProFormSelect
             showSearch
             name="projectTypesID"
             label={t('PROJECT TYPE')}
@@ -245,18 +251,18 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             onChange={(value: any) => setReqTypeID(value)}
             // disabled={!acTypeID} // Disable the select if acTypeID is not set
           /> */}
-          <ProFormGroup>
-            <ProFormText
-              width={'xl'}
-              name="projectName"
-              label={t('TITLE')}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            />
-            {/* <ProFormText
+            <ProFormGroup>
+              <ProFormText
+                width={'xl'}
+                name="projectName"
+                label={t('TITLE')}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              />
+              {/* <ProFormText
               width={'sm'}
               name="code"
               label={t('CODE')}
@@ -267,112 +273,113 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               ]}
             /> */}
 
-            <ProFormText
-              width={'xl'}
-              name="description"
-              label={t('DESCRIPTION')}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            />
-
-            <ProFormGroup>
-              <ProFormDatePicker
-                label={t('PLANED START DATE')}
-                name="planedStartDate"
-                width="sm"
-              ></ProFormDatePicker>
-              <ProFormDatePicker
-                // disabled
-                label={t('START DATE')}
-                name="startDate"
-                width="sm"
-              ></ProFormDatePicker>
-            </ProFormGroup>
-            <ProFormGroup>
-              <ProFormDatePicker
-                label={t('PLANED FINISH DATE')}
-                name="planedFinishDate"
-                width="sm"
-              ></ProFormDatePicker>
-              <ProFormDatePicker
-                // disabled
-                label={t('FINISH DATE')}
-                name="finishDate"
-                width="sm"
-              ></ProFormDatePicker>
-            </ProFormGroup>
-            <ProFormGroup>
-              <ProFormSelect
-                showSearch
-                mode="multiple"
-                name="storesID"
-                label={t('STORE FOR PARTS')}
-                width="lg"
-                valueEnum={storeCodesValueEnum || []}
-                // onChange={handleStoreChange}
-              />
-            </ProFormGroup>
-            <ProFormGroup>
               <ProFormText
                 width={'xl'}
+                name="description"
+                label={t('DESCRIPTION')}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              />
+
+              <ProFormGroup>
+                <ProFormDatePicker
+                  label={t('PLANED START DATE')}
+                  name="planedStartDate"
+                  width="sm"
+                ></ProFormDatePicker>
+                <ProFormDatePicker
+                  // disabled
+                  label={t('START DATE')}
+                  name="startDate"
+                  width="sm"
+                ></ProFormDatePicker>
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormDatePicker
+                  label={t('PLANED FINISH DATE')}
+                  name="planedFinishDate"
+                  width="sm"
+                ></ProFormDatePicker>
+                <ProFormDatePicker
+                  // disabled
+                  label={t('FINISH DATE')}
+                  name="finishDate"
+                  width="sm"
+                ></ProFormDatePicker>
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormSelect
+                  showSearch
+                  mode="multiple"
+                  name="storesID"
+                  label={t('STORE FOR PARTS')}
+                  width="lg"
+                  valueEnum={storeCodesValueEnum || []}
+                  // onChange={handleStoreChange}
+                />
+              </ProFormGroup>
+              <ProFormGroup>
+                <ProFormText
+                  width={'xl'}
+                  fieldProps={{ style: { resize: 'none' } }}
+                  name="customerWO"
+                  label={t('CUSTOMER WO')}
+                />
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  name="customerID"
+                  label={t('CUSTOMER')}
+                  width="sm"
+                  valueEnum={companiesCodesValueEnum || []}
+                  // disabled={!projectId}
+                />
+                <ProFormSelect
+                  showSearch
+                  name="planeId"
+                  label={t('PROJECT A/C')}
+                  width="sm"
+                  valueEnum={planesValueEnum}
+                  onChange={(value: any) => setSelectedAcTypeID(value)}
+                  // disabled={!acTypeID} // Disable the select if acTypeID is not set
+                />
+              </ProFormGroup>
+              <ProFormTextArea
+                width={'xl'}
                 fieldProps={{ style: { resize: 'none' } }}
-                name="customerWO"
-                label={t('CUSTOMER WO')}
+                name="remarks"
+                label={t('REMARKS')}
               />
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                name="customerID"
-                label={t('CUSTOMER')}
-                width="sm"
-                valueEnum={companiesCodesValueEnum || []}
-                // disabled={!projectId}
-              />
-              <ProFormSelect
-                showSearch
-                name="planeId"
-                label={t('PROJECT A/C')}
-                width="sm"
-                valueEnum={planesValueEnum}
-                onChange={(value: any) => setSelectedAcTypeID(value)}
-                // disabled={!acTypeID} // Disable the select if acTypeID is not set
-              />
+              <ProForm.Item label={t('UPLOAD')}>
+                <div className="overflow-y-auto max-h-64">
+                  <Upload
+                    name="FILES"
+                    fileList={project?.FILES || []}
+                    // listType="picture"
+                    className="upload-list-inline cursor-pointer"
+                    beforeUpload={handleUpload}
+                    accept="image/*"
+                    onPreview={handleDownload}
+                    onRemove={handleDelete}
+                    multiple
+                    onDownload={function (file: any): void {
+                      handleFileSelect({
+                        id: file?.id,
+                        name: file?.name,
+                      });
+                    }}
+                  >
+                    <Button icon={<UploadOutlined />}>
+                      {t('CLICK TO UPLOAD')}
+                    </Button>
+                  </Upload>
+                </div>
+              </ProForm.Item>
             </ProFormGroup>
-            <ProFormTextArea
-              width={'xl'}
-              fieldProps={{ style: { resize: 'none' } }}
-              name="remarks"
-              label={t('REMARKS')}
-            />
-            <ProForm.Item label={t('UPLOAD')}>
-              <div className="overflow-y-auto max-h-64">
-                <Upload
-                  name="FILES"
-                  fileList={project?.FILES || []}
-                  // listType="picture"
-                  className="upload-list-inline cursor-pointer"
-                  beforeUpload={handleUpload}
-                  accept="image/*"
-                  onPreview={handleDownload}
-                  onRemove={handleDelete}
-                  multiple
-                  onDownload={function (file: any): void {
-                    handleFileSelect({
-                      id: file?.id,
-                      name: file?.name,
-                    });
-                  }}
-                >
-                  <Button icon={<UploadOutlined />}>
-                    {t('CLICK TO UPLOAD')}
-                  </Button>
-                </Upload>
-              </div>
-            </ProForm.Item>
-          </ProFormGroup>
+          </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('TASK LIST')} key="2">
           {project && project?._id ? (
@@ -381,8 +388,46 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               projectID={project?._id}
             ></ProjectWPAdmin>
           ) : (
-            <Empty description="No Data" />
+            <Empty />
           )}
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={t('ACTIONS')} key="3">
+          <Empty />
+          {/* <Space>
+            {' '}
+            <Col span={4} style={{ textAlign: 'right' }}>
+              <Button
+                // disabled={!selectedKeys.length && selectedKeys.length < 1}
+                size="small"
+                icon={<ProjectOutlined />}
+                // onClick={() => handleGenerateWOTasks(selectedKeys)}
+              >
+                {t('CREATE TRACE')}
+              </Button>
+            </Col>
+            <Col span={4} style={{ textAlign: 'right' }}>
+              <Button
+                disabled
+                // disabled={!selectedKeys.length && selectedKeys.length < 1}
+                size="small"
+                icon={<ProjectOutlined />}
+                // onClick={() => handleGenerateWOTasks(selectedKeys)}
+              >
+                {t('LINK REQUIREMENTS')}
+              </Button>
+            </Col>
+            <Col span={4} style={{ textAlign: 'right' }}>
+              <Button
+                disabled
+                // disabled={!selectedKeys.length && selectedKeys.length < 1}
+                size="small"
+                icon={<ProjectOutlined />}
+                // onClick={() => handleGenerateWOTasks(selectedKeys)}
+              >
+                {t('CANCEL LINK')}
+              </Button>
+            </Col>
+          </Space> */}
         </Tabs.TabPane>
       </Tabs>
     </ProForm>

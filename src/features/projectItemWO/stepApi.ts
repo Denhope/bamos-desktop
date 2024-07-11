@@ -16,15 +16,21 @@ export const projectStepApi = createApi({
     }),
     addStep: builder.mutation<
       IStep,
-      { step: Partial<IStep>; projectId: string; projectItemID: string }
+      {
+        step: Partial<IStep>;
+        projectId: string;
+        projectItemID: string;
+        projectTaskID?: string;
+      }
     >({
-      query: ({ step, projectId, projectItemID }) => ({
+      query: ({ step, projectId, projectItemID, projectTaskID }) => ({
         url: `projectTaskSteps/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
           ...step,
           projectId,
           projectItemID,
+          projectTaskID,
           companyID: COMPANY_ID,
           createUserID: USER_ID,
           createDate: new Date(),

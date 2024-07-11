@@ -35,6 +35,7 @@ export const projectItemWOApi = createApi({
         accessID?: any;
         zonesID?: any;
         preparationID?: any;
+        projectItemType?: any;
       }
     >({
       query: ({
@@ -60,6 +61,7 @@ export const projectItemWOApi = createApi({
         accessID,
         zonesID,
         preparationID,
+        projectItemType,
       }) => ({
         url: `projectsTasksNew/getFilteredProjectsTasks/company/${COMPANY_ID}`,
         params: {
@@ -85,6 +87,7 @@ export const projectItemWOApi = createApi({
           accessID,
           zonesID,
           preparationID,
+          projectItemType,
         },
       }),
       providesTags: ['ProjectItemWO'],

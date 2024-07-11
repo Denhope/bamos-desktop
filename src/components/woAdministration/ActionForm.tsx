@@ -128,7 +128,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
               description: currentAction?.description || '',
               date: currentAction ? moment(currentAction.createDate) : null,
               time: currentAction ? moment(currentAction.createDate) : null,
-              type: currentAction?.type || 'done',
+              type: currentAction?.type || 'pfmd',
               userDurations: currentAction?.userDurations.map(
                 (userDuration: any) => ({
                   ...userDuration,

@@ -1,10 +1,12 @@
 import { User } from './IUser';
 
 export interface IStep {
+  projectTaskID?: string;
   stepType: any;
   projectId?: any;
   projectID?: any;
   projectItemID?: any;
+
   id?: string;
   stepNumber: number;
   createUserID?: any;

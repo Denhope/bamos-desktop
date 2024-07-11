@@ -46,7 +46,7 @@ export const projectsTaskApi = createApi({
       { project: Partial<IProjectTask>; acTypeId?: string }
     >({
       query: ({ project, acTypeId }) => ({
-        url: `projectsTasks/company/${COMPANY_ID}`,
+        url: `projectsTasksNew/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
           ...project,
@@ -59,12 +59,13 @@ export const projectsTaskApi = createApi({
     }),
     updateProjectTask: builder.mutation<IProjectTask, IProjectTask>({
       query: (project) => ({
-        url: `projectsTasksNew/company/${COMPANY_ID}/project/${project.id}`,
+        url: `projectsTasksNew/company/${COMPANY_ID}/projectTask/${project?.id}`,
         method: 'PUT',
         body: {
           ...project,
           updateUserID: USER_ID,
           updateDate: new Date(),
+          companyID: COMPANY_ID,
         },
       }),
       invalidatesTags: ['ProjectTask'], // Invalidate the 'Users' tag after mutation

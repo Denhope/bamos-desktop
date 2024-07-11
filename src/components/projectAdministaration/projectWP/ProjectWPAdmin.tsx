@@ -19,7 +19,10 @@ import {
   useGetProjectItemsQuery,
   useUpdateProjectItemsMutation,
 } from '@/features/projectItemAdministration/projectItemApi';
-import { useAddProjectItemWOMutation } from '@/features/projectItemWO/projectItemWOApi';
+import {
+  useAddProjectItemWOMutation,
+  useAddProjectPanelsMutation,
+} from '@/features/projectItemWO/projectItemWOApi';
 // import projectItemsAdministrationForm from './projectItemsAdministrationForm';
 // import projectItemsAdministrationTree from './projectItemsAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
@@ -65,7 +68,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   const handleEdit = (reqCode: IProjectItem) => {
     setEditingReqCode(reqCode);
   };
-
+  const [addPanels] = useAddProjectPanelsMutation({});
   const handleDelete = async (id: string) => {
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS PROJECT ITEM?'),
@@ -84,65 +87,93 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ЗАКАЗЫ ДЛЯ ВЫДЕЛЕННЫХ ПОЗИЦИЙ?'),
       onOk: async () => {
         try {
-          Modal.confirm({
-            width: 550,
-            title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
-            footer: [
-              <Space>
-                {/* <Button
-                  key="single"
-                  onClick={async () => {
-                    try {
-                      await createWO({
-                        isSingleWO: false,
-                        isMultiWO: true,
-                        projectItemID: ids,
-                        projectID: projectID,
-                      }).unwrap();
-                      refetchProjectItems();
-                      message.success(t('ОДИН ЗАКАЗ УСПЕШНО СОЗДАН'));
-                      refetchProjectItems();
-                      Modal.destroyAll();
-                    } catch (error) {
-                      message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗА'));
-                      Modal.destroyAll();
-                    }
-                  }}
-                >
-                  {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
-                </Button> */}
-                <Button
-                  key="multiple"
-                  type="primary"
-                  onClick={async () => {
-                    try {
-                      await createWO({
-                        isSingleWO: true,
-                        isMultiWO: false,
-                        projectItemID: ids,
-                      }).unwrap();
-                      refetchProjectItems();
-                      message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
-                      Modal.destroyAll();
-                    } catch (error) {
-                      message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗОВ'));
-                      Modal.destroyAll();
-                    }
-                  }}
-                >
-                  {t('ПОД КАЖДУЮ ПОЗИЦИЮ')}
-                </Button>
-                <Button
-                  key="cancel"
-                  onClick={() => {
-                    Modal.destroyAll(); // Закрываем все модальные окна
-                  }}
-                >
-                  {t('Отмена')}
-                </Button>
-              </Space>,
-            ],
-          });
+          await createWO({
+            isSingleWO: true,
+            isMultiWO: false,
+            projectItemID: ids,
+          }).unwrap();
+          refetchProjectItems();
+          message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+          Modal.destroyAll();
+          // Modal.confirm({
+          //   width: 550,
+          //   title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
+          //   footer: [
+          //     <Space>
+          //       {/* <Button
+          //         key="single"
+          //         onClick={async () => {
+          //           try {
+          //             await createWO({
+          //               isSingleWO: false,
+          //               isMultiWO: true,
+          //               projectItemID: ids,
+          //               projectID: projectID,
+          //             }).unwrap();
+          //             refetchProjectItems();
+          //             message.success(t('ОДИН ЗАКАЗ УСПЕШНО СОЗДАН'));
+          //             refetchProjectItems();
+          //             Modal.destroyAll();
+          //           } catch (error) {
+          //             message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗА'));
+          //             Modal.destroyAll();
+          //           }
+          //         }}
+          //       >
+          //         {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
+          //       </Button> */}
+          //       <Button
+          //         key="multiple"
+          //         type="primary"
+          //         onClick={async () => {
+          //           try {
+          //             await createWO({
+          //               isSingleWO: true,
+          //               isMultiWO: false,
+          //               projectItemID: ids,
+          //             }).unwrap();
+          //             refetchProjectItems();
+          //             message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+          //             Modal.destroyAll();
+          //           } catch (error) {
+          //             message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗОВ'));
+          //             Modal.destroyAll();
+          //           }
+          //         }}
+          //       >
+          //         {t('ПОД КАЖДУЮ ПОЗИЦИЮ')}
+          //       </Button>
+          //       <Button
+          //         key="cancel"
+          //         onClick={() => {
+          //           Modal.destroyAll(); // Закрываем все модальные окна
+          //         }}
+          //       >
+          //         {t('Отмена')}
+          //       </Button>
+          //     </Space>,
+          //   ],
+          // });
+        } catch (error) {
+          message.error(t('ОШИБКА '));
+        }
+      },
+    });
+  };
+
+  const handleGenerateWOPanels = async (ids: any[]) => {
+    Modal.confirm({
+      title: t(
+        ' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ ДЛЯ ВЫДЕЛЕННЫХ ПОЗИЦИЙ?'
+      ),
+      onOk: async () => {
+        try {
+          await addPanels({
+            projectID: projectID,
+          }).unwrap();
+          refetchProjectItems();
+          message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+          Modal.destroyAll();
         } catch (error) {
           message.error(t('ОШИБКА '));
         }
@@ -204,14 +235,33 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       field: 'taskDescription',
       headerName: `${t('TASK DESCREIPTION')}`,
       cellDataType: 'text',
-      with: 450,
+    },
+    {
+      field: 'createDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('CREATE DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'name',
+      headerName: `${t('CREATE BY')}`,
+      cellDataType: 'text',
     },
   ];
 
   return (
     <>
-      <Space className="gap-6 pb-3 flex justify-between flex-wrap">
-        <Col span={20}>
+      <Space className=" pb-3 ">
+        <Col>
           <Button
             size="small"
             icon={<PlusSquareOutlined />}
@@ -220,15 +270,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             {t('ADD ITEM')}
           </Button>
         </Col>
-        <Col span={20}>
-          <FileUploader
-            onFileProcessed={function (data: any[]): void {
-              handleAddMultiItems(data);
-            }}
-            requiredFields={['taskNumber']}
-          ></FileUploader>
-        </Col>
-        <Col span={4} style={{ textAlign: 'right' }}>
+        <Col style={{ textAlign: 'right' }}>
           {
             <Button
               disabled={!selectedKeys.length && selectedKeys.length < 1}
@@ -256,22 +298,42 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
                 }
               }}
             >
-              {t('REMOVE ITEM')}
+              {t('DELETE ITEM')}
             </Button>
           }
         </Col>
-        <Col span={4} style={{ textAlign: 'right' }}>
+        <Col>
+          <FileUploader
+            onFileProcessed={function (data: any[]): void {
+              handleAddMultiItems(data);
+            }}
+            requiredFields={['taskNumber']}
+          ></FileUploader>
+        </Col>
+        <Col style={{ textAlign: 'right' }}>
+          <Button
+            // disabled
+            // disabled={!selectedKeys.length && selectedKeys.length < 1}
+            size="small"
+            icon={<ProjectOutlined />}
+            onClick={() => handleGenerateWOPanels(selectedKeys)}
+          >
+            {t('GENERATE ACCEESS')}
+          </Button>
+        </Col>
+
+        <Col style={{ textAlign: 'right' }}>
           <Button
             disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
             icon={<ProjectOutlined />}
             onClick={() => handleGenerateWOTasks(selectedKeys)}
           >
-            {t('CREATE WO')}
+            {t('CREATE TRACE')}
           </Button>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
-          <Button
+          {/* <Button
             disabled
             // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
@@ -279,21 +341,11 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
           >
             {t('GENERATE REQUIREMENTS')}
-          </Button>
+          </Button> */}
         </Col>
+
         <Col span={4} style={{ textAlign: 'right' }}>
-          <Button
-            disabled
-            // disabled={!selectedKeys.length && selectedKeys.length < 1}
-            size="small"
-            icon={<ProjectOutlined />}
-            // onClick={() => handleGenerateWOTasks(selectedKeys)}
-          >
-            {t('GENERATE ACCEESS')}
-          </Button>
-        </Col>
-        <Col span={4} style={{ textAlign: 'right' }}>
-          <Button
+          {/* <Button
             disabled
             // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
@@ -301,10 +353,10 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
           >
             {t('LINK REQUIREMENTS')}
-          </Button>
+          </Button> */}
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
-          <Button
+          {/* <Button
             disabled
             // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
@@ -312,7 +364,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             // onClick={() => handleGenerateWOTasks(selectedKeys)}
           >
             {t('CANCEL LINK')}
-          </Button>
+          </Button> */}
         </Col>
         <Col>
           <Switch
@@ -351,13 +403,13 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
                 partNumbers={[]}
                 rowData={transformedItems || []}
                 onUpdateData={function (data: any[]): void {}}
-                height={'49vh'}
+                height={'55vh'}
                 onRowSelect={handleEdit}
               ></PartContainer>
             )}
           </div>
           <div
-            className="h-[50vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[57vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
             // sm={11}
           >
             <ProjectWPAdministrationForm

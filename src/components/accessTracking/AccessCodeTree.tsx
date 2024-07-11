@@ -37,7 +37,7 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
   const { TreeNode } = Tree;
 
   const convertToTreeData = (zoneCodes: IZoneCodeGroup[]): any[] => {
-    return zoneCodes.map((zoneCode) => {
+    return zoneCodes?.map((zoneCode) => {
       const zoneIndicator = getIndicator(zoneCode);
       return {
         title: `${

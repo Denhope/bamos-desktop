@@ -7,6 +7,7 @@ import SkillTimeAggregate from './SkillTimeAggregate';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
+import { useGlobalState } from './GlobalStateContext';
 
 interface Props {
   steps: IStep[];
@@ -25,10 +26,11 @@ const StepContainer: React.FC<Props> = ({ steps, onAddStep, onDeleteStep }) => {
   ) => {
     console.log('Step clicked:', step);
   };
-
+  const { setCurrentTime } = useGlobalState();
   const handleAddStep = () => {
     form.resetFields();
     setIsModalVisible(true);
+    // setCurrentTime(Date.now());
   };
   const { data: groups } = useGetGroupsUserQuery({});
   const { data: skills } = useGetSkillsQuery({});

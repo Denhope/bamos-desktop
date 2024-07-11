@@ -224,7 +224,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
     },
     {
       headerName: `${t('PART No')}`,
-      field: 'PART_NUMBER_REQUEST',
+      field: 'PART_NUMBER_BOOKED',
       editable: false,
 
       cellDataType: 'text',
@@ -387,7 +387,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
         }}
       >
         <Tabs.TabPane tab={t('PICKSLIP INFORMATION')} key="1">
-          <div className=" h-[57vh] flex flex-col overflow-auto">
+          <div className=" h-[56vh] flex flex-col overflow-auto">
             <ProFormGroup>
               <ProFormSelect
                 disabled
@@ -483,48 +483,50 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
           </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('PICKSLIP PARTS')} key="2">
-          <Split initialPrimarySize="50%" splitterSize="20px">
-            <div className="flex flex-col">
-              <Title className="my-0" level={4}>
-                {t('REQUESTED PARTS')}
-              </Title>
-              <PartContainer
-                isChekboxColumn={false}
-                isVisible={true}
-                pagination={false}
-                isAddVisiable={true}
-                isButtonVisiable={false}
-                isEditable={true}
-                height={'55vh'}
-                columnDefs={columnDefs}
-                partNumbers={[]}
-                onUpdateData={(data: any[]): void => {}}
-                rowData={transformedRequirements}
-              />
-            </div>
-            <div className="flex flex-col">
-              <Title className="my-0" level={4}>
-                {t('BOOKED PARTS')}
-              </Title>
-              <BookedPartContainer
-                isFilesVisiable={true}
-                isChekboxColumn={false}
-                isVisible={false}
-                pagination={false}
-                isAddVisiable={true}
-                isButtonVisiable={false}
-                isEditable={true}
-                height={'55vh'}
-                columnDefs={columnBookedDefs}
-                partNumbers={[]}
-                onRowSelect={(data: any[]): void => {
-                  console.log(data);
-                }}
-                onUpdateData={(data: any[]): void => {}}
-                fetchData={rowDataForSecondContainer}
-              />
-            </div>
-          </Split>
+          <div className=" h-[59vh] flex flex-col overflow-auto">
+            <Split initialPrimarySize="50%" splitterSize="20px">
+              <div className="flex flex-col">
+                <Title className="my-0" level={4}>
+                  {t('REQUESTED PARTS')}
+                </Title>
+                <PartContainer
+                  isChekboxColumn={false}
+                  isVisible={true}
+                  pagination={false}
+                  isAddVisiable={true}
+                  isButtonVisiable={false}
+                  isEditable={true}
+                  height={'55vh'}
+                  columnDefs={columnDefs}
+                  partNumbers={[]}
+                  onUpdateData={(data: any[]): void => {}}
+                  rowData={transformedRequirements}
+                />
+              </div>
+              <div className="flex flex-col">
+                <Title className="my-0" level={4}>
+                  {t('BOOKED PARTS')}
+                </Title>
+                <BookedPartContainer
+                  isFilesVisiable={true}
+                  isChekboxColumn={false}
+                  isVisible={true}
+                  pagination={false}
+                  isAddVisiable={true}
+                  isButtonVisiable={false}
+                  isEditable={true}
+                  height={'55vh'}
+                  columnDefs={columnBookedDefs}
+                  partNumbers={[]}
+                  onRowSelect={(data: any[]): void => {
+                    console.log(data);
+                  }}
+                  onUpdateData={(data: any[]): void => {}}
+                  fetchData={rowDataForSecondContainer}
+                />
+              </div>
+            </Split>
+          </div>
         </Tabs.TabPane>
       </Tabs>
     </ProForm>

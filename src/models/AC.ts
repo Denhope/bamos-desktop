@@ -108,7 +108,11 @@ export interface IProjectItemWO {
   taskWo?: any;
   projectItemID?: any;
   projectID?: string | any;
+  restrictionID?: any;
   id: string;
+  skillCodeID?: any;
+  stepID?: any;
+  _id?: string;
   qty: number;
   partNumberID: any;
   notes?: string;
@@ -125,6 +129,12 @@ export interface IProjectItemWO {
   files?: any[];
   vendorID?: string;
   taskId?: any;
+  projectTaskReferenceID?: string;
+  projectTaskID?: string;
+  preparationID?: any;
+  projectItemType?: any;
+  projectItemReferenceID?: any;
+  partTaskID?: any;
 }
 
 export interface IProject {

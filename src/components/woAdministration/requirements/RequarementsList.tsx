@@ -440,7 +440,12 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
                 setOpenCreatePickSlip(true);
               }
             }}
-            disabled={!stepsSelected?.length}
+            disabled={
+              !stepsSelected?.length ||
+              order.status == 'closed' ||
+              order.status == 'cancelled' ||
+              order.status == 'deleted'
+            }
             size="small"
             icon={<ShoppingCartOutlined />}
           >

@@ -148,7 +148,7 @@ const ProjectWPAdministrationTree: FC<reqTreeProps> = ({
             onProjectItemSelect(reqGroup);
           }
         }}
-        height={460}
+        height={480}
         searchQuery={searchQuery}
       />
     </div>

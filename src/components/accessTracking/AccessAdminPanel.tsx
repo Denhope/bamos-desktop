@@ -7,12 +7,16 @@ import {
   useUpdateProjectPanelsMutation,
 } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
-import { Button, Col, Modal, Space, Spin, message } from 'antd';
+import { Button, Col, Modal, Space, Spin, Switch, message } from 'antd';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 // import data from '../../data/reports/label.xml';
 
 // Читаем содержимое файла label.xml
-
+import {
+  ValueEnumType,
+  getStatusColor,
+  transformedAccessToTable,
+} from '@/services/utilites';
 import AccessDiscription from './AccessDiscription';
 import {
   PlusSquareOutlined,
@@ -57,7 +61,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [updateAccess] = useUpdateProjectPanelsMutation({});
   const [addAccessBooking] = useAddBookingMutation({});
-
+  const [isTreeView, setIsTreeView] = useState(true);
   const [triggerQueryBook, setTriggerQueryBook] = useState(false);
 
   // Проверяем, есть ли accessProjectID и устанавливаем триггер для запроса
@@ -84,10 +88,6 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
     { projectId: projectSearchValues?.projectID || '' },
     { skip: !projectSearchValues?.projectID }
   );
-
-  const transformedAccess = useMemo(() => {
-    return transformedAccessToIAssess(bookings || []);
-  }, [bookings]);
 
   const [pdfData, setPdfData] = useState<string | null>(null);
   // const {
@@ -118,6 +118,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   const {
     data: accesses,
     isLoading,
+    isFetching,
     refetch,
   } = projectSearchValues?.isOnlyPanels
     ? useGetProjectPanelsQuery(
@@ -166,7 +167,12 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
     { acTypeID: accesses && accesses?.length && accesses[0]?.acTypeID },
     { skip: accesses && !accesses[0]?.acTypeID }
   );
-
+  const transformedAccess = useMemo(() => {
+    return transformedAccessToIAssess(bookings || []);
+  }, [bookings]);
+  const transformedTaleAccess = useMemo(() => {
+    return transformedAccessToTable(accesses || []);
+  }, [accesses]);
   // const [xmlTemplate, setXmlTemplate] = useState<string>('');
 
   // useEffect(() => {
@@ -228,13 +234,13 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       }
     }
   }, [projectSearchValues]);
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <Spin />
+  //     </div>
+  //   );
+  // }
   const handleEdit = (project: any) => {
     setEditingproject(project);
   };
@@ -397,7 +403,24 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType;
   }
-
+  const valueEnum: ValueEnumType = {
+    inspect: t('INSPECTED'),
+    inspected: t('INSPECTED'),
+    onQuatation: t('QUATATION'),
+    open: t('OPEN'),
+    closed: t('CLOSED'),
+    canceled: t('CANCELLED'),
+    inProgress: t('IN PROGRESS'),
+    complete: t('COMPLETE'),
+    RECEIVED: t('RECEIVED'),
+    PARTLY_RECEIVED: t('PARTLY RECEIVED'),
+    performed: t('PERFORMED'),
+    onOrder: '',
+    onShort: '',
+    draft: t('DRAFT'),
+    issued: '',
+    progress: '',
+  };
   const columnDefs = [
     {
       headerName: `${t('ACCESS No')}`,
@@ -436,6 +459,52 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
     {
       field: 'userName',
       headerName: `${t('CREATE BY')}`,
+      cellDataType: 'text',
+    },
+  ];
+  const columnDefsAccets = [
+    {
+      headerName: `${t('LABEL')}`,
+      field: 'accessProjectNumber',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'status',
+      headerName: `${t('Status')}`,
+      cellDataType: 'text',
+      width: 150,
+      filter: true,
+      valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
+        params.data.status,
+      valueFormatter: (params: { value: keyof ValueEnumType }) => {
+        const status = params.value;
+        return valueEnum[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumType }) => ({
+        backgroundColor: getStatusColor(params.value),
+        color: '#ffffff', // Text color
+      }),
+    },
+    {
+      headerName: `${t('ACCESS No')}`,
+      field: 'accessNbr',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'accessDescription',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'majoreZoneNbr',
+      headerName: `${t('ZONE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'subZoneNbr',
+      headerName: `${t('SUB ZONE')}`,
       cellDataType: 'text',
     },
   ];
@@ -512,6 +581,14 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           </Button>
           {/* )} */}
         </Col>
+        <Col>
+          <Switch
+            checkedChildren="Table"
+            unCheckedChildren="Tree"
+            defaultChecked
+            onChange={() => setIsTreeView(!isTreeView)}
+          />
+        </Col>
         {/* <Col>
           {editingproject && (
             <Button
@@ -557,14 +634,37 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                 }}
               />
             )}
-            {projectSearchValues?.isOnlyPanels && (
+            {projectSearchValues?.isOnlyPanels && isTreeView ? (
               <AccessCodeOnlyPanelTree
+                isLoading={isLoading || isFetching}
                 onZoneCodeSelect={handleEdit}
                 accessCode={accesses || []}
                 onCheckItems={(selectedKeys) => {
                   setSelectedKeys(selectedKeys);
                 }}
               />
+            ) : (
+              projectSearchValues?.isOnlyPanels && (
+                <PartContainer
+                  isFilesVisiable={false}
+                  isVisible={true}
+                  pagination={true}
+                  isAddVisiable={true}
+                  isButtonVisiable={false}
+                  isEditable={false}
+                  height={'65vh'}
+                  columnDefs={columnDefsAccets}
+                  partNumbers={[]}
+                  isChekboxColumn={true}
+                  onUpdateData={(data: any[]): void => {}}
+                  rowData={transformedTaleAccess}
+                  isLoading={isLoading || isFetching}
+                  onCheckItems={(selectedKeys) => {
+                    setSelectedKeys(selectedKeys);
+                  }}
+                  onRowSelect={handleEdit}
+                />
+              )
             )}
           </div>
           <div className="h-[69vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
@@ -594,6 +694,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                   isChekboxColumn={false}
                   onUpdateData={(data: any[]): void => {}}
                   rowData={transformedAccess}
+                  isLoading={false}
                 />
                 {/* <TableComponent
                   columns={columns}

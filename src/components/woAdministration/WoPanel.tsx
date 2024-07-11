@@ -39,6 +39,7 @@ import {
 import {
   ValueEnumType,
   getStatusColor,
+  handleOpenReport,
   transformToIProjectTask,
   transformToIRequirement,
   transformToITask,
@@ -53,6 +54,13 @@ import {
 } from '@/features/storeAdministration/PartsApi';
 import TaskList from '../shared/Table/TaskList';
 import { useAddMultiActionMutation } from '@/features/projectItemWO/actionsApi';
+import { generateReport } from '@/utils/api/thunks';
+import PdfGenerator from './PdfGenerator';
+import { useGlobalState } from './GlobalStateContext';
+import {
+  useAddProjectTaskMutation,
+  useUpdateProjectTaskMutation,
+} from '@/features/projectTaskAdministration/projectsTaskApi';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -63,6 +71,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const [editingProject, setEditingProject] = useState<IProjectItemWO | null>(
     null
   );
+  const [editingProjectNRC, setEditingProjectNRC] = useState<any | null>(null);
+  const { currentTime } = useGlobalState();
   const [selectedStoreID, setSelectedStoreID] = useState<any | undefined>(
     undefined
   );
@@ -93,10 +103,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       skillCodeID: projectSearchValues?.skillCodeID,
       accessID: projectSearchValues?.accessID,
       zonesID: projectSearchValues?.zonesID,
+      projectItemType: projectSearchValues?.projectItemType,
     },
     {
       skip: !triggerQuery,
-      refetchOnMountOrArgChange: true,
+      // refetchOnMountOrArgChange: true,
     }
   );
   // const { data: quantity, refetch } = useGetStorePartStockQTYQuery(
@@ -115,6 +126,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     storesIDString = editingProject?.projectID?.storesID.join(',');
   }
   const [addMultiAction] = useAddMultiActionMutation({});
+  const [addTask] = useAddProjectTaskMutation();
+  const [updateTask] = useUpdateProjectTaskMutation();
+
   const { data: stores } = useGetStoresQuery(
     {
       ids: storesIDString,
@@ -160,16 +174,61 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       }
     }
   }, [projectSearchValues]);
+  useEffect(() => {
+    projectTasks && refetch();
+    setEditingProject(editingProject);
 
+    // console.log(currentTime);
+  }, [currentTime]); //
   const handleEdit = (project: IProjectItemWO) => {
     setEditingProject(project);
+    setEditingProjectNRC(null);
   };
   const handleStoreChange = (value: string) => {
     setSelectedStoreID(value);
   };
-
+  const handleSubmit = async (task: any) => {
+    try {
+      if (editingProject && editingProject?.id) {
+        updateTask(task).unwrap();
+        refetch();
+        // await updateRequirement(task).unwrap();
+        message.success(t('TASK SUCCESSFULLY UPDATED'));
+      } else if (!editingProject?.id) {
+        await addTask({ project: { ...task, isNRC: true } }).unwrap();
+        refetch();
+        message.success(t('TASK SUCCESSFULLY ADDED'));
+      }
+      // setEditingProject(null);
+    } catch (error) {
+      message.error(t('ERROR SAVING TASK'));
+    }
+  };
   const handleCreate = () => {
+    setEditingProjectNRC(editingProject);
     setEditingProject(null);
+    const { id, _id, projectItemID, taskId, taskWO, ...projectWithoutIds } =
+      editingProjectNRC;
+    setEditingProject({
+      ...projectWithoutIds,
+      projectTaskReferenceID: editingProjectNRC?.id,
+      restrictionID: [],
+      skillCodeID: [],
+      taskDescription: '',
+      taskNumber: `NRC/${
+        editingProjectNRC?.taskNumber
+      } - ${new Date().toISOString()}`,
+      stepID: [],
+      preparationID: [],
+      createUserID: '',
+      createDate: new Date(),
+      status: 'open',
+      projectID: editingProjectNRC?.projectID._id,
+      projectItemType: 'NRC',
+      partTaskID: null,
+      projectItemReferenceID: editingProjectNRC?.projectItemID,
+      taskDescriptionCustumer: editingProjectNRC?.taskDescriptionCustumer,
+    });
   };
 
   const handleDelete = async (companyId: string) => {
@@ -238,7 +297,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     },
 
     {
-      field: 'taskType',
+      field: 'projectItemType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
       // hide: true,
@@ -419,8 +478,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     // Добавьте другие колонки по необходимости
   ];
 
-  const handleSubmit = () => {};
-
   const valueEnum: ValueEnumType = {
     inspect: t('INSPECTED'),
     onQuatation: t('QUATATION'),
@@ -479,6 +536,114 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
     });
   };
+  const [reportData, setReportData] = useState<any>(false);
+  const [reportDataLoading, setReportDataLoading] = useState<any>(false);
+  const fetchAndHandleReport = async (reportTitle: string) => {
+    setReportData(true);
+  };
+
+  const htmlTemplate = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Table Example</title>
+      <style>
+          table {
+              width: 720px;
+              margin-right: 9pt;
+              margin-left: 9pt;
+              border-collapse: collapse;
+              text-align: center; /* Исправлено */
+          }
+          td {
+              border: 0.5pt solid #00b050;
+              padding: 1.4pt 1.02pt;
+              vertical-align: middle;
+              height: 30px; /* Добавлено */
+              overflow: hidden; /* Добавлено */
+          }
+      </style>
+  </head>
+  <body>
+      <div>
+          <table cellspacing="0" cellpadding="0">
+              <tr style="page-break-inside: avoid">
+                  <td colspan="2" style="width: 79.8pt;">
+                      <h3 style="text-align: left; font-size: 9pt">
+                          <span style="font-family: Roboto; font-weight: normal">WP Card Seq.</span>
+                      </h3>
+                      <p style="margin-right: 2.85pt; font-size: 6pt">
+                          <span style="font-family: Roboto">Номер в пакете работ</span>
+                      </p>
+                  </td>
+                  <td style="width: 37.9pt;">
+                      <h3 style="text-align: left">
+                          <span style="font-family: Roboto; font-weight: normal">&#xa0;</span>
+                      </h3>
+                  </td>
+                  <!-- Другие ячейки -->
+              </tr>
+              <!-- Другие строки -->
+          </table>
+          <p style="font-size: 5pt">
+              <span style="font-family: Roboto">&#xa0;</span>
+          </p>
+      </div>
+  </body>
+  </html>
+
+`;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (reportData && selectedKeys) {
+        const companyID = localStorage.getItem('companyID');
+        const queryParams = {
+          title: 'TASK_COVER_REPORT',
+          token: localStorage.getItem('token'),
+          landscape: 'portrait',
+        };
+
+        try {
+          // Вызываем функцию для генерации отчета
+          setReportDataLoading(true);
+          const reportDataQ = await generateReport(
+            companyID,
+            queryParams,
+            localStorage.getItem('token')
+          );
+
+          handleOpenReport(reportDataQ);
+          setReportDataLoading(false);
+
+          // Устанавливаем состояние reportData в false
+          setReportData(false);
+          // return reportDataQ;
+        } catch (error) {
+          // Обрабатываем ошибку при загрузке отчета
+          console.error('Ошибка при загрузке отчета:', error);
+          setReportDataLoading(false);
+          setReportData(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [selectedKeys, reportData]);
+  const [data, setData] = useState({
+    toolsItems: [
+      {
+        TOOL_CODE: '123',
+        PART_NUMBER: '456',
+        NAME_OF_MATERIAL: 'Hammer',
+        PICKSLIP_NO: '789',
+        TOOLS_QUANTITY: '10',
+      },
+      // Добавьте другие элементы по мере необходимости
+    ],
+  });
 
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
@@ -582,12 +747,17 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         </Col>
         <Col style={{ textAlign: 'right' }}>
           <Button
-            disabled={!selectedKeys.length}
-            size="small"
+            loading={reportDataLoading}
             icon={<PrinterOutlined />}
+            size="small"
+            onClick={() => fetchAndHandleReport('TASK_COVER_REPORT')}
+            disabled={!selectedKeys.length}
           >
-            {t('PRINT WORKORDER')}
+            {`${t('PRINT WORKORDER')}`}
           </Button>
+        </Col>
+        <Col>
+          <PdfGenerator htmlTemplate={htmlTemplate} data={data} />
         </Col>
         <Col>
           <Switch
@@ -643,6 +813,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               order={editingProject}
               onCheckItems={function (selectedKeys: React.Key[]): void {
                 setSelectedKeysRequirements(selectedKeys);
+              }}
+              onSubmit={function (task: any): void {
+                handleSubmit(task);
               }}
             />
           </div>

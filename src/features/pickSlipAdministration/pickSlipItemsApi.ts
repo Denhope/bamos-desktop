@@ -53,8 +53,8 @@ export const pickSlipItemsApi = createApi({
         }
       },
     }),
-    getPickSlipItem: builder.query<IProjectItem, string>({
-      query: (id) => `pickSlipItem/company/${id}`,
+    getPickSlipItem: builder.query<any, string>({
+      query: (id) => `pickSlipItem/company/${COMPANY_ID}/item/${id}`,
     }),
     addPickSlipItem: builder.mutation<
       any,

@@ -234,7 +234,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
           ></ProjectDiscription>
         </Col>
       </Space>
-      <Space className="">
+      <Space size={'small'} className="">
         <Col>
           <Button
             size="small"
@@ -289,12 +289,12 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 partNumbers={[]}
                 rowData={projects || []}
                 onUpdateData={function (data: any[]): void {}}
-                height={'64vh'}
+                height={'70vh'}
                 onRowSelect={handleEdit}
               ></PartContainer>
             )}
           </div>
-          <div className="h-[68vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+          <div className="h-[70vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <ProjectForm
               project={editingproject || undefined}
               onSubmit={handleSubmit}

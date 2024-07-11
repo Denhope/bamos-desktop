@@ -284,7 +284,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           })),
         styles: {
           header: {
-            fontSize: 8,
+            Roboto: 8,
             bold: true,
             margin: [0, 0, 0, 5],
           },

@@ -13,12 +13,14 @@ interface ZoneTreeProps {
   onCheckItems?: (selectedKeys: React.Key[]) => void;
   onZoneCodeSelect: (zoneCode: IAccessCode) => void;
   accessCode: IAccessCode[] | [];
+  isLoading?: boolean;
 }
 
 const AccessCodeOnlyPanelTree: FC<ZoneTreeProps> = ({
   onZoneCodeSelect,
   accessCode,
   onCheckItems,
+  isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]); // Добавлено
@@ -136,6 +138,7 @@ const AccessCodeOnlyPanelTree: FC<ZoneTreeProps> = ({
       />
 
       <CustomTree
+        isLoading={isLoading}
         isAllChecked={true}
         checkable={true}
         treeData={filteredTreeData}

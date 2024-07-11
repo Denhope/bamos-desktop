@@ -1,5 +1,5 @@
 // StepCard.tsx
-
+import { useGlobalState } from './GlobalStateContext';
 import React, { useEffect, useState } from 'react';
 import {
   Card,
@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
-
+import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 interface Props {
   step: IStep;
   selectedStepItems: string[];
@@ -131,6 +131,7 @@ const StepCard: React.FC<Props> = ({
     }
   );
 
+  const { setCurrentTime } = useGlobalState();
   const handleActionSave = async (action: Action) => {
     try {
       if (action) {
@@ -139,7 +140,9 @@ const StepCard: React.FC<Props> = ({
           stepId: step.id || '',
           projectItemID: step.projectItemID || '',
           projectId: step.projectId || '',
+          projectTaskID: step?.projectTaskID || '',
         });
+
         notification.success({
           message: t('ACTION ADDED'),
           description: t('ACTION SUCCESSFULLY ADDED'),
@@ -147,7 +150,7 @@ const StepCard: React.FC<Props> = ({
 
         await addBooking({
           booking: { voucherModel: 'ADD_ACTION', data: action },
-        });
+        }).unwrap();
       }
       setVisibleActionEdit(false);
       await setStepEditStatus({
@@ -155,6 +158,8 @@ const StepCard: React.FC<Props> = ({
         isEditing: false,
       });
       refetch(); // Оставляем только этот запрос
+      // refetchTasks();
+      setCurrentTime(Date.now());
     } catch (error) {
       notification.error({
         message: t('ERROR SAVING'),
@@ -196,6 +201,7 @@ const StepCard: React.FC<Props> = ({
           isEditing: false,
         }));
       refetch();
+      setCurrentTime(Date.now());
     } catch (error) {
       notification.error({
         message: t('ERROR EDIT'),
@@ -205,6 +211,7 @@ const StepCard: React.FC<Props> = ({
         stepId: updateAction?.projectStepId,
         isEditing: false,
       }).unwrap();
+
       refetch();
     }
   };

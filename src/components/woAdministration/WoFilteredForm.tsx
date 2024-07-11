@@ -125,6 +125,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         useID: form.getFieldValue('useID'),
         phasesID: form.getFieldValue('phasesID'),
         zonesID: form.getFieldValue('zonesID'),
+        projectItemType: form.getFieldValue('projectItemType'),
       };
 
       onProjectSearch(searchParams);
@@ -158,7 +159,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         }}
       />
       <ProFormSelect
-        initialValue={['open', 'inspect', 'inProgress']}
+        initialValue={['open', 'performed', 'inspect']}
         mode="multiple"
         name="woStatus"
         label={`${t('Wo STATUS')}`}
@@ -307,7 +308,26 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // valueEnum={projectsValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
+      <ProFormSelect
+        initialValue={['RC', 'RC_ADD', 'NRC']}
+        mode="multiple"
+        name="projectItemType"
+        label={`${t('TASK TYPE')}`}
+        width="lg"
+        valueEnum={{
+          RC: {
+            text: t(
+              'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+            ),
+          },
+          RC_ADD: { text: t('RC (Critical Task, Double Inspection)') },
 
+          NRC: { text: t('NRC (AdHoc, Defect)') },
+          MJC: { text: 'MJC (Extended MPD) ' },
+          CMJC: { text: t('CMJC (Component maintenance) ') },
+          FC: { text: t('FC (Fabrication card)') },
+        }}
+      />
       <ProFormDateRangePicker
         name="plannedDate"
         label={`${t('DATE')}`}
