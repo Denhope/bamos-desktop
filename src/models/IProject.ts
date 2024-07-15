@@ -60,7 +60,10 @@ export interface IProjectResponce {
 }
 
 export interface IProject {
-  projectType: string;
+  WONumber?: any;
+  WPNumber?: any;
+  WOName?: any;
+  projectType?: string;
   _id: any;
   id: string;
   projectName: string;
@@ -80,6 +83,6 @@ export interface IProject {
   workPackageIds?: any[];
   isEditing?: boolean;
   planeId?: string | any;
-  acTypeID?: string;
+  acTypeID?: string | any;
   customerID?: string;
 }

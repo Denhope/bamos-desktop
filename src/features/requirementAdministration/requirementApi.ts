@@ -22,6 +22,7 @@ export const requirementApi = createApi({
         partRequestNumberNew?: number;
         partNumberID?: string;
         neededOnID?: string;
+        WOReferenceID?: string;
       }
     >({
       query: ({
@@ -36,6 +37,7 @@ export const requirementApi = createApi({
         partNumberID,
         neededOnID,
         endDate,
+        WOReferenceID,
       }) => ({
         url: `requirementsNew/getFilteredRequirementsFull/company/${COMPANY_ID}`,
         params: {
@@ -50,6 +52,7 @@ export const requirementApi = createApi({
           partNumberID,
           neededOnID,
           endDate,
+          WOReferenceID,
         },
       }),
       providesTags: (result) =>
@@ -80,6 +83,7 @@ export const requirementApi = createApi({
         neededOnID?: string;
         ifStockCulc?: boolean;
         includeAlternates?: boolean;
+        WOReferenceID?: string;
       }
     >({
       query: ({
@@ -96,6 +100,7 @@ export const requirementApi = createApi({
         endDate,
         ifStockCulc,
         includeAlternates,
+        WOReferenceID,
       }) => ({
         url: `requirementsNew/getFilteredRequirements/company/${COMPANY_ID}`,
         params: {
@@ -112,6 +117,7 @@ export const requirementApi = createApi({
           endDate,
           ifStockCulc,
           includeAlternates,
+          WOReferenceID,
         },
       }),
       providesTags: (result) =>

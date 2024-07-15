@@ -15,11 +15,13 @@ interface reqTreeProps {
   onProjectItemSelect: (req: any) => void;
   onCheckItems?: (selectedKeys: React.Key[]) => void;
   projectItems: any[] | [];
+  isLoading?: boolean;
 }
 const StoreLocationAdministrationTree: FC<reqTreeProps> = ({
   onProjectItemSelect,
   onCheckItems,
   projectItems,
+  isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -118,6 +120,8 @@ const StoreLocationAdministrationTree: FC<reqTreeProps> = ({
         onKeyDown={handleKeyDown}
       />
       <CustomTree
+        isAllChecked
+        isLoading={isLoading}
         checkable={false}
         treeData={filteredTreeData}
         onCheckItems={(selectedKeys) => {
@@ -132,7 +136,7 @@ const StoreLocationAdministrationTree: FC<reqTreeProps> = ({
             onProjectItemSelect(reqGroup);
           }
         }}
-        height={680}
+        height={480}
         searchQuery={searchQuery}
       />
     </div>

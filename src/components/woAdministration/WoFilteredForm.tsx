@@ -19,6 +19,7 @@ import { useGetProjectsQuery } from '@/features/projectAdministration/projectsAp
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
@@ -50,6 +51,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   };
 
   const [reqTypeID, setReqTypeID] = useState<any>('');
+  const [WOID, setWOID] = useState<any>(null);
   const { data: planes } = useGetPlanesQuery({});
   const { t } = useTranslation();
   const { data: zones, isLoading: loading } = useGetFilteredZonesQuery(
@@ -62,7 +64,18 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   // { skip: acTypeID }
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
   const { data: restriction } = useGetFilteredRestrictionsQuery({});
-  const { data: projects } = useGetProjectsQuery({});
+  const { data: projects } = useGetProjectsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !WOID }
+  );
+
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
   const { data: usersGroups } = useGetGroupUsersQuery({});
   const { data: usersSkill } = useGetSkillsQuery({});
   const groupSlills = usersSkill?.map((skill: any) => ({
@@ -93,12 +106,12 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     }, {} as Record<string, string>) || {};
   const projectsValueEnum: Record<string, string> =
     projects?.reduce((acc, reqType: any) => {
-      acc[reqType._id] = `№:${reqType.projectWO}-${reqType.projectName}`;
+      acc[reqType?._id] = `№:${reqType?.projectWO} / ${reqType.projectName}`;
       return acc;
     }, {}) || {};
   const restrictionValueEnum: Record<string, string> =
     restriction?.reduce((acc, reqType) => {
-      acc[reqType.id || reqType_.id] = `${reqType.code}`;
+      acc[reqType.id || reqType._id] = `${reqType.code}`;
       return acc;
     }, {}) || {};
 
@@ -126,6 +139,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         phasesID: form.getFieldValue('phasesID'),
         zonesID: form.getFieldValue('zonesID'),
         projectItemType: form.getFieldValue('projectItemType'),
+        WOReferenceID: form.getFieldValue('WOReferenceID'),
       };
 
       onProjectSearch(searchParams);
@@ -134,7 +148,13 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     }
   };
   const { data: stores } = useGetStoresQuery({});
-
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
   return (
     <ProForm
       formRef={formRef}
@@ -159,6 +179,25 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         }}
       />
       <ProFormSelect
+        showSearch
+        name="WOReferenceID"
+        label={t('WO')}
+        width="lg"
+        valueEnum={wpValueEnum || []}
+        onChange={(value: any) => setWOID(value)}
+        // disabled={!projectId}
+      />
+      <ProFormSelect
+        mode={'multiple'}
+        showSearch
+        name="projectID"
+        label={t('WP TITLE')}
+        width="lg"
+        valueEnum={projectsValueEnum}
+        onChange={(value: any) => setReqTypeID(value)}
+        disabled={!WOID} // Disable the select if acTypeID is not set
+      />
+      <ProFormSelect
         initialValue={['open', 'performed', 'inspect']}
         mode="multiple"
         name="woStatus"
@@ -177,18 +216,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           cancelled: { text: t('CANCELLED'), status: 'Error' },
         }}
       />
-      <ProForm.Group>
-        <ProFormSelect
-          mode={'multiple'}
-          showSearch
-          name="projectID"
-          label={t('PROJECT No')}
-          width="lg"
-          valueEnum={projectsValueEnum}
-          onChange={(value: any) => setReqTypeID(value)}
-          // disabled={!acTypeID} // Disable the select if acTypeID is not set
-        />
-      </ProForm.Group>
+
       <ProFormSelect
         mode={'multiple'}
         showSearch
@@ -309,7 +337,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
       <ProFormSelect
-        initialValue={['RC', 'RC_ADD', 'NRC']}
+        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC']}
         mode="multiple"
         name="projectItemType"
         label={`${t('TASK TYPE')}`}
@@ -322,7 +350,8 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           },
           RC_ADD: { text: t('RC (Critical Task, Double Inspection)') },
 
-          NRC: { text: t('NRC (AdHoc, Defect)') },
+          NRC: { text: t('NRC (Defect)') },
+          NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
           MJC: { text: 'MJC (Extended MPD) ' },
           CMJC: { text: t('CMJC (Component maintenance) ') },
           FC: { text: t('FC (Fabrication card)') },

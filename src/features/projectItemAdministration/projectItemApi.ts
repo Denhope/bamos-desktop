@@ -75,9 +75,10 @@ export const projectItemApi = createApi({
         planeID?: any;
         projectID: string;
         vendorID?: string;
+        taskType?: string;
       }
     >({
-      query: ({ projectItemsDTO, projectID, vendorID, planeID }) => ({
+      query: ({ projectItemsDTO, projectID, vendorID, planeID, taskType }) => ({
         url: `projectItems/multi/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
@@ -88,6 +89,7 @@ export const projectItemApi = createApi({
           companyID: COMPANY_ID,
           projectID: projectID,
           vendorID: vendorID,
+          taskType: taskType,
         },
       }),
       invalidatesTags: ['ProjectItem'], // Указываем, что это мутация недействительна тега 'UserGroups'

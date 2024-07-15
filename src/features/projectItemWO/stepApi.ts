@@ -57,11 +57,16 @@ export const projectStepApi = createApi({
     }),
     getFilteredSteps: builder.query<
       IStep[],
-      { projectId?: string; status?: string; projectItemID?: any }
+      {
+        projectId?: string;
+        status?: string;
+        projectItemID?: any;
+        projectTaskID?: string;
+      }
     >({
-      query: ({ projectId, status, projectItemID }) => ({
+      query: ({ projectId, status, projectItemID, projectTaskID }) => ({
         url: `projectTaskSteps/getFilteredProjectsTaskSteps/company/${COMPANY_ID}`,
-        params: { status, projectItemID, projectId },
+        params: { status, projectItemID, projectId, projectTaskID },
       }),
       providesTags: (result, error, { projectId }) => [
         { type: 'Steps', projectId },

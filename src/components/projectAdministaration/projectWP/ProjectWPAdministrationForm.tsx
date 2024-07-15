@@ -319,7 +319,8 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                 },
                 RC_ADD: { text: t('RC (Critical Task, Double Inspection)') },
 
-                NRC: { text: t('NRC (AdHoc, Defect)') },
+                NRC: { text: t('NRC (Defect)') },
+                NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
                 MJC: { text: 'MJC (Extended MPD) ' },
                 CMJC: { text: t('CMJC (Component maintenance) ') },
                 FC: { text: t('FC (Fabrication card)') },
@@ -380,7 +381,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                 />
               </ProFormGroup>
               <ProFormTextArea
-                width={'sm'}
+                width={'lg'}
                 fieldProps={{
                   // style: { resize: 'none' },
                   rows: 2,
@@ -434,7 +435,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                   style: {
                     resize: 'none',
                   },
-                  rows: 3,
+                  rows: 2,
                   // This is the correct way to set colSize within fieldProps
                 }}
                 name="notes"

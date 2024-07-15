@@ -13,12 +13,13 @@ interface TreeDataNode extends DataNode {
 interface UserTreeProps {
   onstoreSelect: (project: IStore) => void;
   stores: IStore[] | [];
+  isLoading?: boolean;
 }
 
 const { TreeNode } = Tree;
 const { Search } = Input;
 
-const WOTree: FC<UserTreeProps> = ({ onstoreSelect, stores }) => {
+const WOTree: FC<UserTreeProps> = ({ onstoreSelect, stores, isLoading }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
@@ -127,6 +128,8 @@ const WOTree: FC<UserTreeProps> = ({ onstoreSelect, stores }) => {
         onPressEnter={handleEnterPress}
       />
       <CustomTree
+        isAllChecked
+        isLoading={isLoading}
         treeData={filteredTreeData}
         checkable={true}
         searchQuery={searchQuery}

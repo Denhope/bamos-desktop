@@ -430,7 +430,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                   // mode="multiple"
                   name="projectID"
                   disabled
-                  label={`${t(`PROJECT`)}`}
+                  label={`${t(`WP`)}`}
                   width="lg"
                   valueEnum={projectsValueEnum}
                   onChange={async (value: any) => {

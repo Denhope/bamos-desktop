@@ -99,13 +99,6 @@ const StoreLocationAdmin: React.FC<AdminPanelRProps> = ({ storeID }) => {
 
   const { t } = useTranslation();
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
   return (
     <>
       <Space className="gap-6 pb-3">
@@ -165,9 +158,10 @@ const StoreLocationAdmin: React.FC<AdminPanelRProps> = ({ storeID }) => {
         <Split initialPrimarySize="25%">
           <div
             // sm={12}
-            className="h-[48vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+            className="h-[42vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
           >
             <StoreLocationAdministrationTree
+              isLoading={isLoading}
               projectItems={projectItems || []}
               onProjectItemSelect={handleEdit}
               onCheckItems={(selectedKeys) => {
@@ -176,7 +170,7 @@ const StoreLocationAdmin: React.FC<AdminPanelRProps> = ({ storeID }) => {
             />
           </div>
           <div
-            className="h-[53vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[55vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
             // sm={11}
           >
             <StoreLocationAdministrationForm

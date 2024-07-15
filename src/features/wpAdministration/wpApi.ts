@@ -4,12 +4,12 @@ import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { IProject } from '@/models/IProject';
 
-export const projectsApi = createApi({
-  reducerPath: 'projectsAdministrationREduser',
+export const wpApi = createApi({
+  reducerPath: 'wpAdministrationReuser',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Projects'], // Add tag types for caching
+  tagTypes: ['WorkPackages'], // Add tag types for caching
   endpoints: (builder) => ({
-    getProjects: builder.query<
+    getfilteredWO: builder.query<
       IProject[],
       {
         status?: string;
@@ -17,10 +17,9 @@ export const projectsApi = createApi({
         projectTypesID?: string;
         startDate?: any;
         endDate?: any;
-        projectWO?: any;
-        projectType?: any;
+        WONumber?: any;
+        WOType?: any;
         customerID?: string;
-        WOReferenceID?: string;
       }
     >({
       query: ({
@@ -29,25 +28,23 @@ export const projectsApi = createApi({
         projectTypesID,
         startDate,
         endDate,
-        projectWO,
-        projectType,
+        WONumber,
+        WOType,
         customerID,
-        WOReferenceID,
       }) => ({
-        url: `projects/getFilteredProjects/company/${COMPANY_ID}`,
+        url: `workOrders/getFilteredWO/company/${COMPANY_ID}`,
         params: {
           status,
           planeId,
           projectTypesID,
           startDate,
           endDate,
-          projectWO,
-          projectType,
+          WONumber,
+          WOType,
           customerID,
-          WOReferenceID,
         },
       }),
-      providesTags: ['Projects'],
+      providesTags: ['WorkPackages'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -60,15 +57,15 @@ export const projectsApi = createApi({
       // Provide the 'Users' tag after fetching
     }),
     getProject: builder.query<IProject, string>({
-      query: (id) => `projects/company/${COMPANY_ID}/project/${id}`,
-      providesTags: ['Projects'], // Provide the 'Users' tag after fetching
+      query: (id) => `workOrders/company/${COMPANY_ID}/workOrder/${id}`,
+      providesTags: ['WorkPackages'], // Provide the 'Users' tag after fetching
     }),
     addProject: builder.mutation<
       IProject,
       { project: Partial<IProject>; acTypeId?: string }
     >({
       query: ({ project, acTypeId }) => ({
-        url: `projects/company/${COMPANY_ID}`,
+        url: `workOrders/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
           ...project,
@@ -77,11 +74,11 @@ export const projectsApi = createApi({
           companyID: COMPANY_ID,
         },
       }),
-      invalidatesTags: ['Projects'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: ['WorkPackages'], // Invalidate the 'Users' tag after mutation
     }),
     updateProject: builder.mutation<IProject, IProject>({
       query: (project) => ({
-        url: `projects/company/${COMPANY_ID}/project/${
+        url: `workOrders/company/${COMPANY_ID}/wpAdministration/${
           project.id || project._id
         }`,
         method: 'PUT',
@@ -91,22 +88,22 @@ export const projectsApi = createApi({
           updateDate: new Date(),
         },
       }),
-      invalidatesTags: ['Projects'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: ['WorkPackages'], // Invalidate the 'Users' tag after mutation
     }),
     deleteProject: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
-        url: `projects/company/${COMPANY_ID}/project/${id}`,
+        url: `workOrders/company/${COMPANY_ID}/wpAdministration/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Projects'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: ['WorkPackages'], // Invalidate the 'Users' tag after mutation
     }),
   }),
 });
 
 export const {
-  useGetProjectsQuery,
+  useGetfilteredWOQuery,
   useAddProjectMutation,
   useDeleteProjectMutation,
   useUpdateProjectMutation,
   useGetProjectQuery,
-} = projectsApi;
+} = wpApi;

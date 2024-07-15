@@ -62,13 +62,7 @@ const StorePanel: React.FC<AdminPanelProps> = ({ storeSearchValues }) => {
       }
     }
   }, [storeSearchValues]);
-  if (isLoading || partsLoadingF) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
+
   const handleEdit = (project: IStore) => {
     setEditingStore(project);
   };
@@ -141,7 +135,11 @@ const StorePanel: React.FC<AdminPanelProps> = ({ storeSearchValues }) => {
       <div className="h-[77vh] flex flex-col">
         <Split initialPrimarySize="15%" splitterSize="20px">
           <div className="h-[67vh] bg-white px-4 pb-3 rounded-md border-gray-400 p-3 flex flex-col">
-            <StoreTree onstoreSelect={handleEdit} stores={stores || []} />
+            <StoreTree
+              isLoading={isLoading || partsLoadingF}
+              onstoreSelect={handleEdit}
+              stores={stores || []}
+            />
           </div>
           <div className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <StoreAdminForm

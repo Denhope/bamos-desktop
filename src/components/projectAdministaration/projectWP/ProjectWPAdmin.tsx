@@ -27,7 +27,12 @@ import {
 // import projectItemsAdministrationTree from './projectItemsAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
 import PartContainer from '@/components/woAdministration/PartContainer';
-import { transformToIProjectItem } from '@/services/utilites';
+import {
+  ValueEnumType,
+  ValueEnumTypeTask,
+  getTaskTypeColor,
+  transformToIProjectItem,
+} from '@/services/utilites';
 interface AdminPanelRProps {
   projectID: string;
   project: any;
@@ -37,10 +42,21 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   const [editingReqCode, setEditingReqCode] = useState<IProjectItem | null>(
     null
   );
+  const { t } = useTranslation();
+
   const [isTreeView, setIsTreeView] = useState(true);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   // let projectItems = null;
   // let isLoading = false;
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('RC'),
+    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    MJC: t('MJC)'),
+    CMJC: t('CMJC)'),
+    FC: t('FC)'),
+    NRC_ADD: t('ADHOC)'),
+  };
 
   // if (projectID) {
   const {
@@ -186,14 +202,14 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       if (editingReqCode) {
         await updateProjectItem(reqCode).unwrap();
         message.success(t('УСПЕШНО ОБНОВЛЕНО'));
-        setEditingReqCode(null);
+        // setEditingReqCode(null);
       } else {
         await addProjectItem({
           projectItem: reqCode,
           projectID: projectID,
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        setEditingReqCode(null);
+        // setEditingReqCode(null);
       }
     } catch (error) {
       message.error(t('ОШИБКА СОХРАНЕНИЯ'));
@@ -206,6 +222,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
           projectItemsDTO: data,
           projectID: projectID,
           planeID: project?.planeId._id,
+          taskType: 'RC',
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
         setEditingReqCode(null);
@@ -214,8 +231,6 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       message.error(t('ОШИБКА СОХРАНЕНИЯ'));
     }
   };
-
-  const { t } = useTranslation();
 
   if (loading) {
     return (
@@ -235,6 +250,22 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       field: 'taskDescription',
       headerName: `${t('TASK DESCREIPTION')}`,
       cellDataType: 'text',
+    },
+    {
+      field: 'taskType',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      valueGetter: (params: { data: { taskType: keyof ValueEnumTypeTask } }) =>
+        params.data.taskType,
+      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+        const status = params.value;
+        return valueEnumTask[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
+        backgroundColor: getTaskTypeColor(params.value),
+        color: '#ffffff', // Text color
+      }),
+      // hide: true,
     },
     {
       field: 'createDate',
@@ -329,7 +360,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             icon={<ProjectOutlined />}
             onClick={() => handleGenerateWOTasks(selectedKeys)}
           >
-            {t('CREATE TRACE')}
+            {t('CREATE TASK')}
           </Button>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
@@ -409,7 +440,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             )}
           </div>
           <div
-            className="h-[57vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[55vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
             // sm={11}
           >
             <ProjectWPAdministrationForm

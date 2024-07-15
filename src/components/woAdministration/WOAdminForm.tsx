@@ -7,6 +7,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
+import { UploadOutlined, ProjectOutlined } from '@ant-design/icons';
 import {
   ProForm,
   ProFormDigit,
@@ -15,7 +17,16 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Tabs, Form, message, notification, Empty, Button } from 'antd';
+import {
+  Tabs,
+  Form,
+  message,
+  notification,
+  Empty,
+  Button,
+  Upload,
+  Modal,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 import {
   useAddStepMutation,
@@ -55,6 +66,9 @@ import CircleRenderer from '../userAdministration/requirementAdministration/Circ
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { useGetPartTaskNumbersQuery } from '@/features/tasksAdministration/partApi';
 import { useGlobalState } from './GlobalStateContext';
+import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
+import { COMPANY_ID } from '@/utils/api/http';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 interface UserFormProps {
   order?: any;
@@ -297,9 +311,9 @@ const WOAdminForm: FC<UserFormProps> = ({
   const projectTaskID = order?.id;
   const { currentTime } = useGlobalState();
   const { data: steps, refetch } = useGetFilteredStepsQuery(
-    { projectItemID: projectItemID },
+    { projectItemID: projectItemID, projectTaskID: projectTaskID },
     {
-      skip: !projectItemID,
+      skip: !projectTaskID,
       refetchOnMountOrArgChange: true,
     }
   );
@@ -309,7 +323,7 @@ const WOAdminForm: FC<UserFormProps> = ({
     value: skill?.id, // Use the _id as the value
   }));
   useEffect(() => {
-    steps && order && order?.id && refetch();
+    steps && order && order?.id && !order?.projectItemReferenceID && refetch();
     // setEditingProject(editingProject);
 
     // console.log(currentTime);
@@ -399,7 +413,7 @@ const WOAdminForm: FC<UserFormProps> = ({
     { acTypeId: acTypeID },
     { skip: !acTypeID }
   );
-  const stepsToRender = projectItemID ? steps : [];
+  const stepsToRender = projectItemID || projectTaskID ? steps : [];
 
   const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
   const { data: mpdCodes, isLoading: mpdCodesLoading } = useGetMPDCodesQuery(
@@ -529,6 +543,73 @@ const WOAdminForm: FC<UserFormProps> = ({
     },
     [onCheckItems]
   );
+  const dispatch = useAppDispatch();
+  const handleDelete = (file: any) => {
+    Modal.confirm({
+      title: 'Вы уверены, что хотите удалить этот файл?',
+      onOk: async () => {
+        try {
+          const response = await dispatch(
+            deleteFile({ id: file.id, companyID: COMPANY_ID })
+          );
+          if (response.meta.requestStatus === 'fulfilled') {
+            // Удаляем файл из массива files
+            const updatedFiles =
+              order &&
+              order?.FILES &&
+              order?.FILES.filter((f: any) => f.id !== file?.id);
+            const updatedOrderItem = {
+              ...order,
+              FILES: updatedFiles,
+            };
+            // await updateProjectItem(updatedOrderItem).unwrap();
+            order && onSubmit(updatedOrderItem);
+          } else {
+            throw new Error('Не удалось удалить файл');
+          }
+        } catch (error) {
+          message.error('ERROR');
+        }
+      },
+    });
+  };
+  const handleUpload = async (file: File) => {
+    if (!order || !order?._id) {
+      console.error(
+        'Невозможно загрузить файл: компания не существует или не имеет id'
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await uploadFileServer(formData);
+
+      if (response) {
+        const updatedproject: any = {
+          ...order,
+          FILES: response,
+        };
+        const updatedOrderItem = {
+          ...order,
+          FILES: [...(order?.FILES || []), response],
+        };
+        updatedOrderItem && order && onSubmit(updatedOrderItem);
+      } else {
+        message.error('Ошибка при загрузке файла: неверный ответ сервера');
+      }
+    } catch (error) {
+      message.error('Ошибка при загрузке файла');
+      throw error;
+    }
+  };
+
+  const handleDownload = (file: any) => {
+    // Здесь должен быть код для скачивания файла
+
+    handleFileOpen(file);
+  };
   return (
     <ProForm
       onFinish={(values) => {
@@ -543,6 +624,7 @@ const WOAdminForm: FC<UserFormProps> = ({
           PHASES: order?.PHASES,
           MPD_REFERENCE: order?.MPD,
           id: order.id,
+          _id: order.id,
         });
         // console.log({
         //   ...values,
@@ -873,7 +955,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                         />
                         <ProFormTextArea
                           fieldProps={{
-                            style: { resize: 'none' },
+                            // style: { resize: 'none' },
                             rows: 5,
                           }}
                           width="xl"
@@ -970,6 +1052,31 @@ const WOAdminForm: FC<UserFormProps> = ({
                     </>
                   )}
                 </ProFormGroup>
+                <ProForm.Item label={t('UPLOAD')}>
+                  <div className="overflow-y-auto max-h-64">
+                    <Upload
+                      name="FILES"
+                      fileList={order?.FILES || []}
+                      // listType="picture"
+                      className="upload-list-inline cursor-pointer"
+                      beforeUpload={handleUpload}
+                      accept="image/*"
+                      onPreview={handleDownload}
+                      onRemove={handleDelete}
+                      multiple
+                      onDownload={function (file: any): void {
+                        handleFileSelect({
+                          id: file?.id,
+                          name: file?.name,
+                        });
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>
+                        {t('CLICK TO UPLOAD')}
+                      </Button>
+                    </Upload>
+                  </div>
+                </ProForm.Item>
                 {/* {taskType !== 'PART_PRODUCE' && (
                   <ProFormGroup>
                     <ProFormDigit
@@ -1026,7 +1133,8 @@ const WOAdminForm: FC<UserFormProps> = ({
           )}
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['3']} key="3">
-          {projectItemID ? (
+          {(order?.id && projectItemID) ||
+          (order?.id && order?.projectItemReferenceID) ? (
             <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
               <StepContainer
                 steps={stepsToRender || []}
@@ -1068,7 +1176,7 @@ const WOAdminForm: FC<UserFormProps> = ({
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['2']} key="2">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-            {order ? (
+            {order && !order?.projectItemReferenceID ? (
               <PartContainer
                 isButtonColumn={false}
                 isButtonVisiable={false}
@@ -1093,7 +1201,7 @@ const WOAdminForm: FC<UserFormProps> = ({
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['4']} key="4">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-            {order ? (
+            {order && !order?.projectItemReferenceID ? (
               <PartContainer
                 isButtonColumn={false}
                 isButtonVisiable={false}

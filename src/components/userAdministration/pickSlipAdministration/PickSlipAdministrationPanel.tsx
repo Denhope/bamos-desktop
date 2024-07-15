@@ -53,6 +53,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       neededOnID: pickSlipSearchValues?.neededOnID || '',
       includeAlternates: true,
       storeFromID: pickSlipSearchValues?.storeFromID || '',
+      WOReferenceID: pickSlipSearchValues?.storeFromID || '',
     },
     {
       skip: !pickSlipSearchValues,
@@ -151,7 +152,12 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'projectWO',
-      headerName: `${t('PROJECT')}`,
+      headerName: `${t('WP')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'WONumber',
+      headerName: `${t('WO')}`,
       cellDataType: 'number',
     },
 
@@ -160,6 +166,21 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       editable: false,
       cellDataType: 'date',
       headerName: `${t('PLANNED DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
+    },
+    {
+      field: 'bookingDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('BOOKING DATE')}`,
       valueFormatter: (params: any) => {
         if (!params.value) return ''; // Проверка отсутствия значения
         const date = new Date(params.value);
@@ -182,6 +203,21 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       editable: false,
       cellDataType: 'text',
       headerName: `${t('NEEDED ON')}`,
+    },
+    {
+      field: 'createDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('CREATE DATE')}`,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      },
     },
     // Добавьте другие колонки по необходимости
   ];

@@ -8,7 +8,6 @@ import {
 } from '@ant-design/pro-components';
 import { DatePickerProps, Form, FormInstance, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
-import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,14 +15,12 @@ import { useTranslation } from 'react-i18next';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
-import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
 };
-const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
+const WPFilterForm: FC<RequirementsFilteredFormType> = ({
   onProjectSearch,
 }) => {
-  const [WOID, setWOID] = useState<any>(null);
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
 
@@ -50,12 +47,6 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
   const [reqTypeID, setReqTypeID] = useState<any>('');
 
   const { t } = useTranslation();
-  const { data: projects } = useGetProjectsQuery(
-    {
-      WOReferenceID: form.getFieldValue('WOReferenceID'),
-    },
-    { skip: !WOID }
-  );
   const { data: companies } = useGetCompaniesQuery({});
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
   const { data: usersGroups } = useGetGroupUsersQuery({});
@@ -80,7 +71,6 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         projectTypesID: form.getFieldValue('projectTypesID'),
         projectType: form.getFieldValue('projectType'),
         customerID: form.getFieldValue('customerID'),
-        WOReferenceID: form.getFieldValue('WOReferenceID'),
       };
 
       onProjectSearch(searchParams);
@@ -88,24 +78,6 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
       message.error('Failed to fetch requirements');
     }
   };
-  const {
-    data: wp,
-    isLoading: isLoadingWP,
-    isFetching,
-  } = useGetfilteredWOQuery({});
-  const wpValueEnum: Record<string, string> =
-    wp?.reduce((acc, wp) => {
-      if (wp._id && wp?.WOName) {
-        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
-      }
-      return acc;
-    }, {} as Record<string, string>) || {};
-  const projectsValueEnum: Record<string, string> =
-    projects?.reduce((acc, reqType: any) => {
-      acc[reqType._id] = `${reqType.projectName}`;
-      return acc;
-    }, {}) || {};
-
   return (
     <ProForm
       formRef={formRef}
@@ -122,33 +94,14 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
       onFinish={onFinish}
     >
       <ProForm.Group>
-        <ProFormSelect
-          showSearch
-          name="WOReferenceID"
-          label={t('WP No')}
-          width="lg"
-          onChange={(value: any) => setWOID(value)}
-          valueEnum={wpValueEnum || []}
-          // disabled={!projectId}
-        />
-        <ProFormSelect
-          mode={'multiple'}
-          showSearch
-          name="projectID"
-          label={t('WP TITLE')}
-          width="lg"
-          valueEnum={projectsValueEnum}
-          onChange={(value: any) => setReqTypeID(value)}
-          disabled={!WOID} // Disable the select if acTypeID is not set
-        />
-        {/* <ProFormText
+        <ProFormText
           name="projectNumber"
-          label={`${t('PROJECT No')}`}
+          label={`${t('WP No')}`}
           width="lg"
           fieldProps={{
             onKeyPress: handleKeyPress,
           }}
-        /> */}
+        />
         <ProForm.Group></ProForm.Group>
       </ProForm.Group>
       {/* <ProFormSelect
@@ -164,10 +117,9 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
       <ProFormSelect
         showSearch
         // disabled={!project}
-        // rules={[{ required: true }]}
-        mode="multiple"
+
         name="projectType"
-        label={t('WO TYPE')}
+        label={t('WP TYPE')}
         width="lg"
         // initialValue={['baseMaintanance']}
         valueEnum={{
@@ -190,7 +142,7 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         // initialValue={['OPEN']}
         mode="multiple"
         name="status"
-        label={`${t('PROJECT STATE')}`}
+        label={`${t('WP STATE')}`}
         width="lg"
         valueEnum={{
           DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
@@ -224,4 +176,4 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
   );
 };
 
-export default ProjectFilterForm;
+export default WPFilterForm;

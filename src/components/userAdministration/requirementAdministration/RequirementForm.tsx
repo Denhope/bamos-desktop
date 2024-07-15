@@ -133,7 +133,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
   const projectsValueEnum: Record<string, string> = (projects ?? []).reduce<
     Record<string, string>
   >((acc, project) => {
-    acc[project._id] = `${project.projectWO} - ${project.projectName}`;
+    acc[project._id] = `№:${project?.projectWO} / ${project.projectName}`;
     return acc;
   }, {});
   const requirementTypesValueEnum: Record<string, string> =
@@ -207,7 +207,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                   rules={[{ required: true }]}
                   // mode="multiple"
                   name="projectID"
-                  label={`${t(`PROJECT`)}`}
+                  label={`${t(`WP`)}`}
                   width="lg"
                   valueEnum={projectsValueEnum}
                   onChange={async (value: any) => {

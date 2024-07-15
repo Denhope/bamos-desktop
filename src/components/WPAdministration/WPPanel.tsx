@@ -4,22 +4,24 @@ import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
-import ProjectForm from './ProjectForm';
+import ProjectForm from './WPForm';
 
-import ProjectTree from './ProjectTree';
+import ProjectTree from './WPTree';
 import {
   useAddProjectMutation,
   useDeleteProjectMutation,
   useGetProjectQuery,
-  useGetProjectsQuery,
+  useGetfilteredWOQuery,
   useUpdateProjectMutation,
-} from '@/features/projectAdministration/projectsApi';
+} from '@/features/wpAdministration/wpApi';
 import { IProject } from '@/models/IProject';
-import ProjectDiscription from './ProjectDiscription';
+import ProjectDiscription from './WPDiscription';
 import { Split } from '@geoffcox/react-splitter';
 import PartList from '../woAdministration/PartList';
 import PartContainer from '../woAdministration/PartContainer';
 import { ValueEnumType, getStatusColor } from '@/services/utilites';
+import WPDiscription from './WPDiscription';
+import WPForm from './WPForm';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -33,16 +35,15 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     data: projects,
     isLoading,
     isFetching,
-  } = useGetProjectsQuery(
+  } = useGetfilteredWOQuery(
     {
       projectTypesID: projectSearchValues?.projectTypesID,
-      projectType: projectSearchValues?.projectType,
+      WOType: projectSearchValues?.projectType,
       status: projectSearchValues?.status,
       startDate: projectSearchValues?.startDate,
       endDate: projectSearchValues?.endDate,
-      projectWO: projectSearchValues?.projectNumber,
+      WONumber: projectSearchValues?.projectNumber,
       customerID: projectSearchValues?.customerID,
-      WOReferenceID: projectSearchValues?.WOReferenceID,
     },
     { skip: !projectSearchValues }
   );
@@ -61,13 +62,13 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
 
   const handleDelete = async (projectId: string) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS project?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS WO?'),
       onOk: async () => {
         try {
           await deleteProject(projectId).unwrap();
-          message.success(t('PROJECT SUCCESSFULLY DELETED'));
+          message.success(t('WO SUCCESSFULLY DELETED'));
         } catch (error) {
-          message.error(t('ERROR DELETING PROJECT'));
+          message.error(t('ERROR DELETING WO'));
         }
       },
     });
@@ -78,10 +79,10 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       if (editingproject) {
         await updateProject(project).unwrap();
         handleEdit(project);
-        message.success(t('PROJECT SUCCESSFULLY UPDATED'));
+        message.success(t('WO SUCCESSFULLY UPDATED'));
       } else {
         await addProject({ project }).unwrap();
-        message.success(t('PROJECT SUCCESSFULLY ADDED'));
+        message.success(t('WO SUCCESSFULLY ADDED'));
         setEditingproject(null);
       }
       // setEditingproject(null);
@@ -112,26 +113,20 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
   };
   const columnItems = [
     {
-      field: 'projectWO',
-      headerName: `${t('PROJECT No')}`,
+      field: 'WONumber',
+      headerName: `${t('WP No')}`,
       cellDataType: 'text',
     },
     {
-      field: 'projectName',
+      field: 'WOName',
       headerName: `${t('WO NAME')}`,
       cellDataType: 'text',
     },
     {
-      field: 'projectType',
+      field: 'WOType',
       headerName: `${t('WO TYPE')}`,
       cellDataType: 'text',
-      valueFormatter: (params: any) => params.value.toUpperCase(),
-    },
-    {
-      field: 'WONumber',
-      headerName: `${t('WP No')}`,
-      cellDataType: 'text',
-      // valueFormatter: (params: any) => params.value.toUpperCase(),
+      valueFormatter: (params: any) => params?.value?.toUpperCase(),
     },
     {
       field: 'customerWO',
@@ -238,10 +233,10 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
           className=" bg-white px-4 py-3   rounded-md brequierement-gray-400 "
           sm={24}
         >
-          <ProjectDiscription
+          <WPDiscription
             // onRequirementSearch={setRequirement}
             project={editingproject}
-          ></ProjectDiscription>
+          ></WPDiscription>
         </Col>
       </Space>
       <Space size={'small'} className="">
@@ -251,7 +246,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
           >
-            {t('ADD PROJECT')}
+            {t('ADD WP')}
           </Button>
         </Col>
         <Col style={{ textAlign: 'right' }}>
@@ -263,7 +258,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 handleDelete(editingproject.id || editingproject?._id)
               }
             >
-              {t('DELETE PROJECT')}
+              {t('DELETE WP')}
             </Button>
           )}
         </Col>
@@ -279,7 +274,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
 
       <div className="  flex gap-4 justify-between">
         <Split initialPrimarySize="15%" splitterSize="20px">
-          <div className=" h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+          <div className=" h-[68vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             {isTreeView ? (
               <ProjectTree
                 isLoading={isFetching || isLoading}
@@ -305,7 +300,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             )}
           </div>
           <div className="h-[70vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
-            <ProjectForm
+            <WPForm
               project={editingproject || undefined}
               onSubmit={handleSubmit}
               onDelete={handleDelete}

@@ -31,6 +31,7 @@ export enum RouteNames {
   ORDER_VIEWER = 'order/orderViewer',
   ORDER_VIEWER_NEW = 'order/orderViewerNew',
   PROJECT_ADMINISTRATION = '/project/administration',
+  WP_ADMINISTRATION = '/worckPackage/administration',
   PROJECTS_CODES = '/user/administration/projects/codes',
   LOGIN = '/login',
   REGISTRATION = '/registration',
@@ -122,7 +123,7 @@ export enum RouteNames {
   PLANNINGFORECAST = '/planning/forecast',
   APLICATIONS = '/aplications',
   SKILLS_ACCOUNTS = 'SKILLS_ACCOUNTS',
-  PICKSLIP_CONFIRMATIONS_NEW = "PICKSLIP_CONFIRMATIONS_NEW",
+  PICKSLIP_CONFIRMATIONS_NEW = 'PICKSLIP_CONFIRMATIONS_NEW',
 
   // CHEACK_MATERIAL_TASKS = '/materials',wwwwwwwwwwwwwwwww
 }

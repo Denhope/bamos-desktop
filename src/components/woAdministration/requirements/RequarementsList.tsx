@@ -75,8 +75,8 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   order,
   isIssueVisibale,
 }) => {
-  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+  const containerStyle = useMemo(() => ({ width: '100%', height: height }), []);
+  const gridStyle = useMemo(() => ({ height: height, width: '100%' }), []);
 
   const { t } = useTranslation();
 

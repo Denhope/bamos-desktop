@@ -120,6 +120,10 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       editable: false,
       cellDataType: 'text',
       headerName: `${t('VENDOR')}`,
+      valueFormatter: (params: { value: string }) => {
+        const vendorCode = params?.value?.toUpperCase();
+        return vendorCode;
+      },
     },
     {
       field: 'allPrice',
@@ -139,6 +143,10 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       editable: false,
       cellDataType: 'text',
       headerName: `${t('CREATE BY')}`,
+      valueFormatter: (params: { value: string }) => {
+        const user = params?.value?.toUpperCase();
+        return user;
+      },
     },
     {
       field: 'createDate',

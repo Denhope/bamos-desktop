@@ -20,7 +20,8 @@ import { saveAs } from 'file-saver'; // Importing file-saver for saving PDF
 import * as XLSX from 'xlsx'; // Importing xlsx for Excel export
 import { utils } from 'xlsx';
 import { ITask } from '@/models/ITask';
-
+import FileModalList from '../FileModalList';
+import { handleFileSelect, handleFileOpen } from '@/services/utilites';
 interface ColumnDef {
   field: keyof IProjectItemWO;
   headerName: string;
@@ -38,6 +39,7 @@ interface MyTableProps {
   pagination?: boolean;
   isChekboxColumn?: boolean;
   isLoading?: boolean;
+  isFilesVisiable?: boolean;
 }
 
 const TaskList: React.FC<MyTableProps> = ({
@@ -49,6 +51,7 @@ const TaskList: React.FC<MyTableProps> = ({
   pagination = false,
   isChekboxColumn = false,
   isLoading,
+  isFilesVisiable,
 }) => {
   const gridRef = useRef<AgGridReact>(null);
   const { t, i18n } = useTranslation();
@@ -256,7 +259,104 @@ const TaskList: React.FC<MyTableProps> = ({
   const gridOptions = {
     domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
   };
+  const copySelectedRows = () => {
+    if (gridRef.current) {
+      // Получаем выделенные строки
+      const selectedNodes = gridRef.current.api.getSelectedNodes();
 
+      if (selectedNodes.length === 0) {
+        console.warn('No rows selected to copy.');
+        return;
+      }
+
+      // Получаем заголовки столбцов
+      const columnHeaders = columnDefs.map((column) => column.headerName);
+
+      // Формируем данные для копирования
+      const selectedRowData = selectedNodes.map((node) => node.data);
+
+      const tableHtml = `
+        <style>
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+          }
+          th {
+            background-color: #f2f2f2;
+            border: 1px solid #000;
+          }
+          td {
+            border: 1px solid #000;
+          }
+        </style>
+        <table>
+          <thead>
+            <tr>
+              ${columnHeaders.map((header) => `<th>${header}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${selectedRowData
+              .map(
+                (rowData) =>
+                  `<tr>
+                    ${columnDefs
+                      .map(
+                        (column: any) =>
+                          `<td>${
+                            rowData[column?.field] !== undefined
+                              ? rowData[column.field]
+                              : ''
+                          }</td>`
+                      )
+                      .join('')}
+                  </tr>`
+              )
+              .join('')}
+          </tbody>
+        </table>
+      `;
+
+      // Создаем Blob с HTML таблицей
+      const blob = new Blob([tableHtml], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
+      });
+
+      // Копируем HTML в буфер обмена
+      copy(tableHtml, { format: 'text/html' });
+    }
+    setContextMenuVisible(false);
+  };
+
+  const filesColumnDef = isFilesVisiable
+    ? [
+        {
+          field: 'files',
+          headerName: `${t('DOC')}`,
+          cellRenderer: (params: any) => (
+            <FileModalList
+              files={params?.data?.files || params?.data?.FILES}
+              onFileSelect={(file) => {
+                console.log('Selected file:', file);
+                handleFileSelect({
+                  id: file?.id,
+                  name: file?.name,
+                });
+              }}
+              onFileOpen={(file) => {
+                console.log('Opened file:', file);
+                handleFileOpen(file);
+              }}
+            />
+          ),
+        },
+      ]
+    : [];
   return (
     <div
       className="pb-5 ag-theme-alpine"
@@ -298,7 +398,10 @@ const TaskList: React.FC<MyTableProps> = ({
             resizable: true,
           }}
           // gridOptions={gridOptions}
-          columnDefs={[...(isChekboxColumn ? updatedColumnDefs : columnDefs)]}
+          columnDefs={[
+            ...(isChekboxColumn ? updatedColumnDefs : columnDefs),
+            ...filesColumnDef,
+          ]}
           rowHeight={30}
           rowData={rowData}
           rowSelection="multiple"
@@ -363,7 +466,7 @@ const TaskList: React.FC<MyTableProps> = ({
             {t('COPY CELL')}
           </div>
           <div
-            onClick={copyRow}
+            onClick={copySelectedRows}
             style={{
               padding: '10px 15px',
               cursor: 'pointer',
@@ -378,9 +481,9 @@ const TaskList: React.FC<MyTableProps> = ({
               (e.currentTarget.style.backgroundColor = 'white')
             }
           >
-            {t('COPY ROW')}
+            {t('COPY SELECTED ROWS')}
           </div>
-          <div
+          {/* <div
             onClick={copyTable}
             style={{
               padding: '10px 15px',
@@ -397,7 +500,7 @@ const TaskList: React.FC<MyTableProps> = ({
             }
           >
             {t('COPY TABLE')}
-          </div>
+          </div> */}
           <div
             onClick={exportToExcel}
             style={{

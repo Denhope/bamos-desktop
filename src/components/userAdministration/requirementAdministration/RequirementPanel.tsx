@@ -412,7 +412,7 @@ import {
   transformToIRequirement,
 } from '@/services/utilites';
 import CircleRenderer from './CircleRenderer';
-
+//@ts-nocheck
 interface AdminPanelProps {
   requirementsSearchValues?: any;
 }
@@ -441,6 +441,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       neededOnID: requirementsSearchValues?.neededOnID || '',
       ifStockCulc: true,
       includeAlternates: true,
+      WOReferenceID: requirementsSearchValues?.WOReferenceID || '',
     },
     {
       skip: !requirementsSearchValues,
@@ -487,7 +488,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
         await addRequirement({ requirement }).unwrap();
         message.success(t('REQUIREMENT SUCCESSFULLY ADDED'));
       }
-      setEditingRequirement(null);
+      // setEditingRequirement(null);
     } catch (error) {
       message.error(t('ERROR SAVING REQUIREMENT'));
     }
@@ -552,9 +553,15 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'projectWO',
-      headerName: `${t('PROJECT')}`,
+      headerName: `${t('WP')}`,
       cellDataType: 'number',
     },
+    {
+      field: 'WONumber',
+      headerName: `${t('WO')}`,
+      cellDataType: 'number',
+    },
+
     {
       headerName: `${t('PART No')}`,
       field: 'PART_NUMBER',
@@ -665,14 +672,6 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     );
   }, [requirementsSearchValues, requirements]);
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spin />
-      </div>
-    );
-  }
-
   return (
     <>
       <Space>
@@ -735,9 +734,9 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             ) : (
               <RequarementsList
                 loading={isLoading || isFetching}
-                pagination={false}
+                pagination={true}
                 isEditable={false}
-                height={'64vh'}
+                height={'34vh'}
                 isAddVisiable={true}
                 isButtonVisiable={false}
                 fetchData={transformedRequirements}

@@ -17,7 +17,7 @@ import {
 } from '@ant-design/pro-components';
 import { IProject } from '@/models/IProject';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
-import ProjectWPAdmin from './projectWP/ProjectWPAdmin';
+
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { COMPANY_ID } from '@/utils/api/http';
@@ -26,14 +26,13 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
-import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
   onDelete?: (projectId: string) => void;
 }
 
-const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
+const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
   const handleSubmit = async (values: IProject) => {
@@ -51,15 +50,11 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const { data: planes } = useGetPlanesQuery({});
 
   // Инициализация состояния для хранения выбранного acTypeID
-  const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
+  const [selectedAcTypeID, setSelectedAcTypeID] = useState<string | any>(null);
   const { data: stores } = useGetStoresQuery({});
   const { data: companies } = useGetCompaniesQuery({});
   const [addPanels] = useAddProjectPanelsMutation({});
-  const {
-    data: wp,
-    isLoading: isLoadingWP,
-    isFetching,
-  } = useGetfilteredWOQuery({});
+
   // Формирование объекта planesValueEnum
   const planesValueEnum: Record<string, { text: string; value: string }> =
     planes?.reduce((acc, reqType) => {
@@ -72,7 +67,6 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       }
       return acc;
     }, {}) || {};
-
   const storeCodesValueEnum: Record<string, string> =
     stores?.reduce((acc, mpdCode) => {
       if (mpdCode.id && mpdCode.storeShortName) {
@@ -180,13 +174,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     handleFileOpen(file);
   };
   const dispatch = useAppDispatch();
-  const wpValueEnum: Record<string, string> =
-    wp?.reduce((acc, wp) => {
-      if (wp._id && wp?.WOName) {
-        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
-      }
-      return acc;
-    }, {} as Record<string, string>) || {};
+
   return (
     <ProForm
       size="small"
@@ -210,7 +198,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         defaultActiveKey="1"
         type="card"
       >
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div className=" h-[57vh] flex flex-col overflow-auto">
             <ProFormSelect
               showSearch
@@ -234,8 +222,8 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               showSearch
               // disabled={!project}
               rules={[{ required: true }]}
-              name="projectType"
-              label={t('WO TYPE')}
+              name="WOType"
+              label={t('WP TYPE')}
               width="lg"
               // initialValue={['baseMaintanance']}
               valueEnum={{
@@ -253,7 +241,6 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
               }}
             />
-
             {/* <ProFormSelect
             showSearch
             name="projectTypesID"
@@ -266,7 +253,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             <ProFormGroup>
               <ProFormText
                 width={'xl'}
-                name="projectName"
+                name="WOName"
                 label={t('TITLE')}
                 rules={[
                   {
@@ -358,15 +345,6 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   onChange={(value: any) => setSelectedAcTypeID(value)}
                   // disabled={!acTypeID} // Disable the select if acTypeID is not set
                 />
-                <ProFormSelect
-                  showSearch
-                  rules={[{ required: true }]}
-                  name="WOReferenceID"
-                  label={t('WP No')}
-                  width="sm"
-                  valueEnum={wpValueEnum || []}
-                  // disabled={!projectId}
-                />
               </ProFormGroup>
               <ProFormTextArea
                 width={'xl'}
@@ -402,17 +380,8 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             </ProFormGroup>
           </div>
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('TASK LIST')} key="2">
-          {project && project?._id ? (
-            <ProjectWPAdmin
-              project={project}
-              projectID={project?._id}
-            ></ProjectWPAdmin>
-          ) : (
-            <Empty />
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={t('ACTIONS')} key="3">
+
+        <Tabs.TabPane tab={t('WP LIST')} key="3">
           <Empty />
           {/* <Space>
             {' '}
@@ -454,4 +423,4 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     </ProForm>
   );
 };
-export default ProjectForm;
+export default WPForm;

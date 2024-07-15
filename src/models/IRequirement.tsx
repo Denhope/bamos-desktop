@@ -35,6 +35,7 @@ export interface IRequirement {
   projectID?: string;
   neededOnID?: string | any;
   projectTaskID?: string;
+  WOReferenceID?: string;
   partNumberID?: string | any;
   status?: string;
   description?: string;

@@ -1,4 +1,4 @@
-// ts-nocheck
+// @ts-nocheck
 
 import {
   ProForm,
@@ -28,6 +28,8 @@ import { useGetREQTypesQuery } from '@/features/requirementsTypeAdministration/r
 import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/requirementsCodesApi';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
+import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (values: any) => void;
   nonCalculate?: boolean;
@@ -40,7 +42,13 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
 }) => {
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
-
+  const [WOID, setWOID] = useState<any>(null);
+  const { data: projects } = useGetProjectsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !WOID }
+  );
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -74,62 +82,62 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   const { t } = useTranslation();
   const currentCompanyID = localStorage.getItem('companyID');
 
-  useEffect(() => {
-    if (receiverType) {
-      let action;
-      let url;
-      switch (receiverType) {
-        case 'PROJECT':
-          action = getFilteredProjects({ companyID: currentCompanyID || '' });
-          break;
-        case 'AC':
-          url = '/api/ac';
-          break;
-        case 'SHOP':
-          action = getFilteredShops({ companyID: currentCompanyID || '' });
-          break;
-        default:
-          url = '/api/default';
-      }
+  // useEffect(() => {
+  //   if (receiverType) {
+  //     let action;
+  //     let url;
+  //     switch (receiverType) {
+  //       case 'PROJECT':
+  //         action = getFilteredProjects({ companyID: currentCompanyID || '' });
+  //         break;
+  //       case 'AC':
+  //         url = '/api/ac';
+  //         break;
+  //       case 'SHOP':
+  //         action = getFilteredShops({ companyID: currentCompanyID || '' });
+  //         break;
+  //       default:
+  //         url = '/api/default';
+  //     }
 
-      if (action) {
-        dispatch(action)
-          .then((action) => {
-            const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
-            let options;
-            switch (receiverType) {
-              case 'PROJECT':
-                options = data.map((item: any) => ({
-                  value: item._id, // замените на нужное поле для 'PROJECT'
-                  label: `№:${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
-                }));
-                break;
-              case 'AC':
-                options = data.map((item: any) => ({
-                  value: item.acField1, // замените на нужное поле для 'AC'
-                  label: item.acField2, // замените на нужное поле для 'AC'
-                }));
-                break;
-              case 'SHOP':
-                options = data.map((item: any) => ({
-                  value: item.shopShortName, // замените на нужное поле для 'SHOP'
-                  label: item.shopShortName, // замените на нужное поле для 'SHOP'
-                }));
-                break;
-              default:
-                options = data.map((item: any) => ({
-                  value: item.defaultField1, // замените на нужное поле для 'default'
-                  label: item.defaultField2, // замените на нужное поле для 'default'
-                }));
-            }
-            setOptions(options);
-          })
-          .catch((error) => {
-            console.error('Ошибка при получении данных:', error);
-          });
-      }
-    }
-  }, [receiverType, dispatch]);
+  //     if (action) {
+  //       dispatch(action)
+  //         .then((action) => {
+  //           const data: any[] = action.payload; // предполагаем, что payload содержит массив данных
+  //           let options;
+  //           switch (receiverType) {
+  //             case 'PROJECT':
+  //               options = data.map((item: any) => ({
+  //                 value: item._id, // замените на нужное поле для 'PROJECT'
+  //                 label: `№:${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
+  //               }));
+  //               break;
+  //             case 'AC':
+  //               options = data.map((item: any) => ({
+  //                 value: item.acField1, // замените на нужное поле для 'AC'
+  //                 label: item.acField2, // замените на нужное поле для 'AC'
+  //               }));
+  //               break;
+  //             case 'SHOP':
+  //               options = data.map((item: any) => ({
+  //                 value: item.shopShortName, // замените на нужное поле для 'SHOP'
+  //                 label: item.shopShortName, // замените на нужное поле для 'SHOP'
+  //               }));
+  //               break;
+  //             default:
+  //               options = data.map((item: any) => ({
+  //                 value: item.defaultField1, // замените на нужное поле для 'default'
+  //                 label: item.defaultField2, // замените на нужное поле для 'default'
+  //               }));
+  //           }
+  //           setOptions(options);
+  //         })
+  //         .catch((error) => {
+  //           console.error('Ошибка при получении данных:', error);
+  //         });
+  //     }
+  //   }
+  // }, [receiverType, dispatch]);
 
   const [isAltertative, setIsAltertative] = useState<any>(true);
   const { data: reqTypes } = useGetREQTypesQuery({});
@@ -178,6 +186,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         reqCodesID: form.getFieldValue('reqCodesID'),
         reqTypesID: form.getFieldValue('reqTypesID'),
         neededOnID: form.getFieldValue('neededOnID'),
+        WOReferenceID: form.getFieldValue('WOReferenceID'),
       };
 
       onRequirementsSearch(searchParams);
@@ -193,6 +202,11 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       skip: !selectedProjectId,
     }
   );
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
   const projectTasksCodesValueEnum: Record<string, string> =
     projectTasks?.reduce<Record<string, string>>((acc, projectTask) => {
       acc[projectTask.id] =
@@ -200,6 +214,18 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         projectTask.taskWo ||
         projectTask.projectTaskWO ||
         '';
+      return acc;
+    }, {}) || {};
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
+  const projectsValueEnum: Record<string, string> =
+    projects?.reduce((acc, reqType: any) => {
+      acc[reqType?._id] = `№:${reqType?.projectWO} / ${reqType.projectName}`;
       return acc;
     }, {}) || {};
   return (
@@ -231,7 +257,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       form={form}
       onFinish={onFinish}
     >
-      <ProForm.Group>
+      {/* <ProForm.Group>
         <ProFormRadio.Group
           layout="horizontal"
           name="receiverType"
@@ -274,8 +300,34 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
             // disabled={!projectId}
           />
         )}
-      </ProForm.Group>
+      </ProForm.Group> */}
       <ProForm.Group>
+        <ProFormSelect
+          showSearch
+          name="WOReferenceID"
+          label={t('WP No')}
+          width="lg"
+          valueEnum={wpValueEnum || []}
+          onChange={(value: any) => setWOID(value)}
+        />
+        <ProFormSelect
+          mode={'multiple'}
+          showSearch
+          name="projectID"
+          label={t('WP')}
+          width="lg"
+          valueEnum={projectsValueEnum}
+          onChange={(value: any) => setSelectedProjectId(value)}
+          disabled={!WOID} // Disable the select if acTypeID is not set
+        />
+        <ProFormSelect
+          showSearch
+          name="neededOnID"
+          label={t('NEEDED ON')}
+          width="sm"
+          valueEnum={neededCodesValueEnum || []}
+          // disabled={!projectId}
+        />
         <ProFormText
           name="partRequestNumber"
           label={`${t('REQUIREMENT No')}`}
@@ -296,7 +348,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
             width={'lg'}
             label={t('PART No')}
           ></ContextMenuPNSearchSelect>
-          <ProFormCheckbox.Group
+          {/* <ProFormCheckbox.Group
             className="my-0 py-0"
             disabled={!selectedSinglePN?.PART_NUMBER}
             initialValue={['true']}
@@ -311,7 +363,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
                 style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
               })
             )}
-          />
+          /> */}
         </ProForm.Group>
 
         <ProFormSelect

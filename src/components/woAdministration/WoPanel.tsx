@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   Button,
@@ -18,6 +20,7 @@ import {
   UsergroupAddOutlined,
   CheckCircleFilled,
   ShoppingCartOutlined,
+  ShrinkOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { Split } from '@geoffcox/react-splitter';
@@ -38,7 +41,9 @@ import {
 } from '@ant-design/pro-components';
 import {
   ValueEnumType,
+  ValueEnumTypeTask,
   getStatusColor,
+  getTaskTypeColor,
   handleOpenReport,
   transformToIProjectTask,
   transformToIRequirement,
@@ -104,10 +109,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       accessID: projectSearchValues?.accessID,
       zonesID: projectSearchValues?.zonesID,
       projectItemType: projectSearchValues?.projectItemType,
+      WOReferenceID: projectSearchValues?.WOReferenceID,
     },
     {
       skip: !triggerQuery,
-      // refetchOnMountOrArgChange: true,
+      refetchOnMountOrArgChange: true,
     }
   );
   // const { data: quantity, refetch } = useGetStorePartStockQTYQuery(
@@ -215,9 +221,13 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       restrictionID: [],
       skillCodeID: [],
       taskDescription: '',
-      taskNumber: `NRC/${
-        editingProjectNRC?.taskNumber
-      } - ${new Date().toISOString()}`,
+      taskNumber: `NRC/${editingProjectNRC.taskNumber.replace(
+        /^24-/,
+        ''
+      )}/${new Date()
+        .toISOString()
+        .replace(/[-:.Z]/g, '')
+        .slice(2)}`,
       stepID: [],
       preparationID: [],
       createUserID: '',
@@ -290,8 +300,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       // hide: true,
     },
     {
-      field: 'projectWO',
-      headerName: `${t('WO NUMBER')}`,
+      field: 'projectName',
+      headerName: `${t('WP TITLE')}`,
       filter: true,
       // hide: true,
     },
@@ -300,6 +310,17 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'projectItemType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
+      valueGetter: (params: {
+        data: { projectItemType: keyof ValueEnumTypeTask };
+      }) => params.data.projectItemType,
+      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+        const status = params.value;
+        return valueEnumTask[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumType }) => ({
+        backgroundColor: getTaskTypeColor(params.value),
+        color: '#ffffff', // Text color
+      }),
       // hide: true,
     },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
@@ -495,6 +516,16 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     issued: '',
     progress: '',
   };
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('RC'),
+    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    NRC_ADHOC: t('ADHOC (ADHOC TASK)'),
+    MJC: t('MJC)'),
+    CMJC: t('CMJC)'),
+    FC: t('FC)'),
+  };
+
   const handleAddAction = async (
     actionType: string,
     ids: any,
@@ -745,20 +776,33 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             {t('CLOSE WORKORDER')}
           </Button>
         </Col>
+        <Col>
+          <Button
+            onClick={() => {
+              handleAddAction('open', selectedKeys, ['open']);
+            }}
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<ShrinkOutlined />}
+          >
+            {t('REOPEN TASK')}
+          </Button>
+        </Col>
         <Col style={{ textAlign: 'right' }}>
           <Button
             loading={reportDataLoading}
             icon={<PrinterOutlined />}
             size="small"
             onClick={() => fetchAndHandleReport('TASK_COVER_REPORT')}
-            disabled={!selectedKeys.length}
+            // disabled={!selectedKeys.length}
+            disabled
           >
             {`${t('PRINT WORKORDER')}`}
           </Button>
         </Col>
-        <Col>
+        {/* <Col>
           <PdfGenerator htmlTemplate={htmlTemplate} data={data} />
-        </Col>
+        </Col> */}
         <Col>
           <Switch
             checkedChildren="Table"
@@ -782,6 +826,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               />
             ) : (
               <TaskList
+                isFilesVisiable={true}
                 isLoading={isLoading || isFetching}
                 pagination={true}
                 isChekboxColumn={true}

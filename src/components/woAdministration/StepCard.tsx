@@ -137,16 +137,17 @@ const StepCard: React.FC<Props> = ({
       if (action) {
         await addAction({
           action,
-          stepId: step.id || '',
-          projectItemID: step.projectItemID || '',
-          projectId: step.projectId || '',
-          projectTaskID: step?.projectTaskID || '',
+          stepId: step?.id || '',
+          projectItemID: step?.projectItemID,
+          projectId: step?.projectId,
+          projectTaskID: step?.projectTaskID,
         });
 
         notification.success({
           message: t('ACTION ADDED'),
           description: t('ACTION SUCCESSFULLY ADDED'),
         });
+        setCurrentTime(Date.now());
 
         await addBooking({
           booking: { voucherModel: 'ADD_ACTION', data: action },
@@ -159,7 +160,7 @@ const StepCard: React.FC<Props> = ({
       });
       refetch(); // Оставляем только этот запрос
       // refetchTasks();
-      setCurrentTime(Date.now());
+      // setCurrentTime(Date.now());
     } catch (error) {
       notification.error({
         message: t('ERROR SAVING'),

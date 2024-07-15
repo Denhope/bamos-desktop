@@ -57,6 +57,7 @@ import PickslipRequestNew from './APN/PickslipRequestNew';
 import ProjectAdministration from './APN/ProjectAdministration';
 import GoodsRecivingNew from './APN/GoodsRecivingNew';
 import WOAdministration from './APN/WOAdmonistration';
+
 import { ipcRenderer } from 'electron';
 import AccessTracking from './APN/AccessTracking';
 import PartAdministrationNew from './APN/PartAdministrationNew';
@@ -66,6 +67,7 @@ import StoreAdministration from './APN/StoreAdministration';
 import StockInformationNew from './APN/StockInformationNew';
 import PickSlipAdministration from './APN/PickSlipAdministration';
 import PickSlipConfirmationNew from './APN/PickSlipConfirmationNew';
+import WPAdministration from './APN/WPAdministration';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
   const onMenuClick = ({ key }: { key: string }) => {
@@ -264,6 +266,17 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         content: (
           <div className="h-[82vh] overflow-hidden">
             <WOAdministration />
+          </div>
+        ),
+        closable: true,
+      };
+    } else if (key === RouteNames.WP_ADMINISTRATION) {
+      tab = {
+        key,
+        title: `${t('WP ADMINISTRATION')}`,
+        content: (
+          <div className="h-[82vh] overflow-hidden">
+            <WPAdministration />
           </div>
         ),
         closable: true,

@@ -26,6 +26,7 @@ export const pickSlipApi = createApi({
         neededOnID?: string;
         includeAlternates?: boolean;
         storeFromID?: any;
+        WOReferenceID?: any;
       }
     >({
       query: ({
@@ -41,6 +42,7 @@ export const pickSlipApi = createApi({
         endDate,
         startDate,
         storeFromID,
+        WOReferenceID,
       }) => ({
         url: `pickSlipAdministration/getFilteredPickSlips/company/${COMPANY_ID}`,
         params: {
@@ -56,6 +58,7 @@ export const pickSlipApi = createApi({
           endDate,
           startDate,
           storeFromID,
+          WOReferenceID,
         },
       }),
       providesTags: ['PickSlip'],

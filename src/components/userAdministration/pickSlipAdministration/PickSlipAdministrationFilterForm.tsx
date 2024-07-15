@@ -1,4 +1,4 @@
-// ts-nocheck
+// @ts-nocheck
 
 import {
   ProForm,
@@ -8,6 +8,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
+import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { DatePickerProps, Form, FormInstance, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 
@@ -22,6 +23,7 @@ import { useGetREQCodesQuery } from '@/features/requirementsCodeAdministration/r
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 type RequirementsFilteredFormType = {
   onpickSlipSearchValues: (values: any) => void;
   nonCalculate?: boolean;
@@ -32,7 +34,13 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
 }) => {
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
-
+  const [WOID, setWOID] = useState<any>(null);
+  const { data: projects } = useGetProjectsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !WOID }
+  );
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -72,7 +80,10 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       let url;
       switch (receiverType) {
         case 'PROJECT':
-          action = getFilteredProjects({ companyID: currentCompanyID || '' });
+          action = getFilteredProjects({
+            companyID: currentCompanyID || '',
+            WOReferenceID: form.getFieldValue('WOReferenceID'),
+          });
           break;
         case 'AC':
           url = '/api/ac';
@@ -93,7 +104,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
               case 'PROJECT':
                 options = data.map((item: any) => ({
                   value: item._id, // замените на нужное поле для 'PROJECT'
-                  label: `№:${item.projectWO}-${item.projectName}`, // замените на нужное поле для 'PROJECT'
+                  label: `S${item.projectName}`, // замените на нужное поле для 'PROJECT'
                 }));
                 break;
               case 'AC':
@@ -124,7 +135,11 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
   }, [receiverType, dispatch]);
 
   const [isAltertative, setIsAltertative] = useState<any>(true);
-
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
   const { data: usersGroups } = useGetGroupUsersQuery({});
 
   const neededCodesValueEnum: Record<string, string> =
@@ -157,6 +172,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       projectID: selectedProjectId,
       neededOnID: form.getFieldValue('neededOnID'),
       storeFromID: form.getFieldValue('storeFromID'),
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
     });
   };
   const { data: projectTasks, isLoading } = useGetProjectItemsWOQuery(
@@ -174,6 +190,18 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
         projectTask.taskWo ||
         projectTask.projectTaskWO ||
         '';
+      return acc;
+    }, {}) || {};
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
+  const projectsValueEnum: Record<string, string> =
+    projects?.reduce((acc, reqType: any) => {
+      acc[reqType._id] = `${reqType.projectName}`;
       return acc;
     }, {}) || {};
   return (
@@ -205,30 +233,40 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       form={form}
       onFinish={onFinish}
     >
-      <ProForm.Group>
+      {/* <ProForm.Group>
         <ProFormRadio.Group
           layout="horizontal"
           name="receiverType"
           label={`${t('RECEIVER TYPE')}`}
           tooltip="ENTER TYPE"
           options={[
-            { value: 'PROJECT', label: `${t(`PROJECT`)}` },
-            { value: 'AC', label: `${t(`AIRCRAFT`)}` },
+            { value: 'PROJECT', label: `${t(`WP`)}` },
+            // { value: 'AC', label: `${t(`AIRCRAFT`)}` },
             { value: 'SHOP', label: `${t(`SHOP/STORE`)}` },
           ]}
           initialValue="PROJECT"
         />
         {receiverType === 'PROJECT' && (
-          <ProFormSelect
-            name="additionalSelectProject"
-            label={`${t(`PROJECT`)}`}
-            width="lg"
-            mode="multiple"
-            options={options}
-            onChange={async (value: any) => {
-              setSelectedProjectId(value);
-            }}
-          />
+          <>
+            <ProFormSelect
+              showSearch
+              name="WOReferenceID"
+              label={t('WP No')}
+              width="lg"
+              valueEnum={wpValueEnum || []}
+              onChange={(value: any) => setWOID(value)}
+            />
+            <ProFormSelect
+              name="additionalSelectProject"
+              label={`${t(`WP`)}`}
+              width="lg"
+              mode="multiple"
+              options={options}
+              onChange={async (value: any) => {
+                setSelectedProjectId(value);
+              }}
+            />
+          </>
         )}
         {receiverType === 'AC' && (
           <ProFormText
@@ -248,8 +286,35 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
             // disabled={!projectId}
           />
         )}
-      </ProForm.Group>
+      </ProForm.Group> */}
       <ProForm.Group>
+        <ProFormSelect
+          showSearch
+          name="WOReferenceID"
+          label={t('WP No')}
+          width="lg"
+          valueEnum={wpValueEnum || []}
+          onChange={(value: any) => setWOID(value)}
+        />
+        <ProFormSelect
+          mode={'multiple'}
+          showSearch
+          name="projectID"
+          label={t('WP TITLE')}
+          width="lg"
+          valueEnum={projectsValueEnum}
+          onChange={(value: any) => setSelectedProjectId(value)}
+          disabled={!WOID} // Disable the select if acTypeID is not set
+        />
+        <ProFormSelect
+          showSearch
+          name="neededOnID"
+          label={t('NEEDED ON')}
+          width="sm"
+          valueEnum={neededCodesValueEnum || []}
+          // disabled={!projectId}
+        />
+
         <ProFormText
           name="pickSlipNumberNew"
           label={`${t('PICKSLIP No')}`}
@@ -270,7 +335,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
             width={'lg'}
             label={t('PART No')}
           ></ContextMenuPNSearchSelect>
-          <ProFormCheckbox.Group
+          {/* <ProFormCheckbox.Group
             className="my-0 py-0"
             disabled={!selectedSinglePN?.PART_NUMBER}
             initialValue={['true']}
@@ -285,7 +350,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
                 style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
               })
             )}
-          />
+          /> */}
         </ProForm.Group>
         <ProFormSelect
           showSearch
@@ -330,7 +395,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
           // { value: 'transfer', label: t('TRANSFER') },
         ]}
       />
-      <ProFormSelect
+      {/* <ProFormSelect
         mode="multiple"
         name="pickSlipType"
         label={`${t('PICKSLIP TYPE')}`}
@@ -341,11 +406,11 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
 
           // { value: 'transfer', label: t('TRANSFER') },
         ]}
-      />
+      /> */}
 
       <ProFormDateRangePicker
         name="plannedDate"
-        label={`${t('PLANNED DATE')}`}
+        label={`${t('BOOKING DATE')}`}
         width="lg"
         tooltip="PLANNED DATE"
         fieldProps={{

@@ -957,6 +957,7 @@ export const transformToIRequirement = (data: any[]): any[] => {
     serialNumber: item?.serialNumber,
     partRequestNumberNew: item?.partRequestNumberNew,
     projectWO: item?.projectID?.projectWO,
+    WONumber: item?.projectiID?.WOReferenceID.WONumber,
     projectTaskWO: item.projectTaskID?.taskWO,
     partId: item.partNumberID?._id,
     PART_NUMBER: item?.partNumberID?.PART_NUMBER,
@@ -972,7 +973,8 @@ export const transformToIRequirement = (data: any[]): any[] => {
     createUserID: item?.createUserID?._id,
     updateDate: item?.updateDate,
     updateUserID: item?.updateUserID ? item.updateUserID?._id : '',
-    acTypeID: item?.acTypeID, // Добавить тип AC, если требуется
+
+    acTypeID: item?.acTypeID, // Добавить тип AC, если требуется,
   }));
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
@@ -996,6 +998,7 @@ export const transformToIPickSlip = (data: any[]): any[] => {
     createUserName: item?.createUserID?.name,
     updateDate: item?.updateDate,
     updateUserID: item?.updateUserID ? item.updateUserID : '',
+    WONumber: item?.projectID?.WOReferenceID?.WONumber,
   }));
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
@@ -1020,10 +1023,47 @@ export interface ValueEnumType {
   inspect?: string;
   performed?: string;
   inspected?: string;
+  DRAFT?: string;
+  OPEN?: string;
 }
+export interface ValueEnumTypeTask {
+  RC: string;
+  RC_ADD: string;
+  NRC: string;
+  MJC: string;
+  CMJC: string;
+  FC: string;
+  NRC_ADD: string;
+}
+export const getTaskTypeColor = (
+  projectItemType: keyof ValueEnumTypeTask
+): string => {
+  switch (projectItemType) {
+    case 'RC':
+      return '#D3D3D3'; // Light Gray
+    case 'RC_ADD':
+      return '#800080'; // Light Gray
+    case 'MJC':
+      return '#D3D3D3'; // Light Gray
+    case 'CMJC':
+      return '#D3D3D3'; // Light Gray
+    case 'FC':
+      return '#FFA07A'; // Light Salmon
+
+    case 'NRC':
+      return '#FF6347'; // Tomato Red
+    case 'NRC_ADD':
+      return '#FF6347'; // Tomato Red
+
+    default:
+      return ''; // Default color
+  }
+};
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
     case 'draft':
+      return '#D3D3D3'; // Light Gray
+    case 'DRAFT':
       return '#D3D3D3'; // Light Gray
     case 'onShort':
       return '#FFA07A'; // Light Salmon
@@ -1041,6 +1081,8 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
     case 'complete':
       return '#FFD700'; // Gold
     case 'open':
+      return '#00008B'; // Sky Blue
+    case 'OPEN':
       return '#00008B'; // Sky Blue
     case 'closed':
       return '#32CD32'; // Lime Green
@@ -1276,8 +1318,10 @@ export const transformToIProjectItem = (data: any[]): any[] => {
     ...item,
     ...item?.taskNumberID,
     zonesID: item?.zonesID,
-    _id: item._id || item?.id,
+    id: item?.id,
     ...item.createUserID,
+    taskType: item.taskType,
+    _id: item?.id || item._id,
   }));
 
   console.log('Output data from transformToIProjectItem:', result); // Вывод результата
@@ -1289,12 +1333,14 @@ export const transformToIProjectTask = (data: any[]): any[] => {
     ...item,
     ...item.taskId,
     // QUANTITY: item.quantity,
-    // id: item._id || item?.id,
+    id: item._id || item?.id,
     // status: item?.status,
-    // _id: item._id || item?.id,
+    _id: item._id || item?.id,
     zonesID: item?.zonesID,
     projectWO: item?.projectID?.projectWO,
-    mainWorkTime: item?.taskId?.mainWorkTime,
+    projectName: item?.projectID?.projectName,
+    mainWorkTime: item?.taskId?.mainWorkTime || item?.mainWorkTime,
+    files: item?.FILES || item?.files || [],
 
     // taskNumber: item?.taskNumber,
     // description: item?.taskDescription,

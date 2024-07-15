@@ -117,14 +117,9 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
     if (reqCode) {
       form.resetFields();
       form.setFieldsValue(reqCode);
-      // form.setFieldsValue({
-      //   partNumberID: reqCode.partNumberID?._id,
-      //   nameOfMaterial: reqCode.partNumberID?.DESCRIPTION,
-      //   unit: reqCode.partNumberID?.UNIT_OF_MEASURE,
-      //   projectItemNumberID: reqCode?.projectItemsWOID?.map(
-      //     (item) => item?.taskWO
-      //   ),
-      // });
+      form.setFieldsValue({
+        ownerID: reqCode.ownerID?._id,
+      });
     } else {
       form.resetFields();
     }
@@ -217,163 +212,163 @@ const StoreLocationAdministrationForm: FC<FormProps> = ({
   return (
     <Tabs defaultActiveKey="1" type="card">
       <Tabs.TabPane tab={t('INFORMATION')} key="1">
-        <ProForm
-          className="bg-gray-100 p-5 rounded"
-          size="small"
-          form={form}
-          onFinish={handleSubmit}
-          // submitter={false}
-          initialValues={reqCode}
-          layout="horizontal"
-        >
-          <ProForm.Group>
+        <div className=" h-[47vh] flex flex-col overflow-auto">
+          <ProForm
+            className="bg-gray-100 p-5 rounded"
+            size="small"
+            form={form}
+            onFinish={handleSubmit}
+            // submitter={false}
+            initialValues={reqCode}
+            layout="horizontal"
+          >
             <ProForm.Group>
-              <ProFormText
-                rules={[{ required: true }]}
-                name="locationName"
-                label={t('LOCATION NAME')}
-                width="md"
-                tooltip={t('DESCRIPTION')}
-              ></ProFormText>
-              {/* <ProFormText
+              <ProForm.Group>
+                <ProFormText
+                  rules={[{ required: true }]}
+                  name="locationName"
+                  label={t('LOCATION NAME')}
+                  width="md"
+                  tooltip={t('DESCRIPTION')}
+                ></ProFormText>
+                {/* <ProFormText
             rules={[{ required: true }]}
             name="description"
             label={t('DESCRIPTION')}
             width="md"
             tooltip={t('DESCRIPTION')}
           ></ProFormText> */}
-              <ProFormSelect
-                name="description"
-                label={`${t('DESCRIPTION')}`}
-                width="lg"
-                rules={[{ required: true }]}
-                valueEnum={{
-                  LOCATION_FOR_UNSERVICEABLE_PARTS: {
-                    text: t('LOCATION FOR UNSERVICEABLE PARTS'),
-                  },
-                  LOCATION_FOR_SERVICEABLE_PARTS: {
-                    text: t('LOCATION FOR SERVICEABLE PARTS'),
-                  },
-                  LOCATION_FOR_PARTS_IN_HANGAR: {
-                    text: t('LOCATION FOR PARTS IN HANGAR'),
-                  },
-                  LOCATION_FOR_PARTS_IN_QUARANTINE: {
-                    text: t('LOCATION FOR PARTS IN QUARANTINE'),
-                  },
-                  LOCATION_FOR_PARTS_IN_SHOP: {
-                    text: t('LOCATION FOR PARTS TO TRANSFER'),
-                  },
-
-                  LOCATION_FOR_PARTS_TO_SCRAP: {
-                    text: t('LOCATION FOR PARTS TO SCRAP'),
-                  },
-
-                  // QUAR_LOCATION: { text: t('QUAR LOCATION') },
-                  // TRANSFER_LOCATION: { text: t('TRANSFER LOCATION') },
-                }}
-              />
-
-              <ProFormGroup>
                 <ProFormSelect
-                  name="locationType"
-                  label={`${t('LOCATION TYPE')}`}
-                  width="sm"
-                  tooltip={`${t('LOCATION TYPE')}`}
-                  // rules={[{ required: true }]}
-                  // valueEnum={locationCodesValueEnum}
-                  valueEnum={{
-                    standart: { text: t('STANDART') },
-                    hangar: { text: t('HANGAR') },
-                    quarantine: { text: t('QUARANTINE') },
-                    // rollOut: { text: t('ROLLOUT') },
-                    scrap: { text: t('SCRAP') },
-                    shipment: { text: t('SHIPMENT') },
-                    transfer: { text: t('TRANSFER') },
-                    shop: { text: t('SHOP') },
-                    unserviceable: { text: t('UNSERVICEABLE') },
-                    serviceable: { text: t('SERVICEABLE') },
-                    reservation: { text: t('RESERVATION') },
-                    customer: { text: t('CUSTOMER') },
-                    // consingment: { text: t('CONSIGNMENT') },
-                    // pool: { text: t('POOL') },
-                    tool: { text: t('TOOL') },
-                    // arhive: { text: t('ARCHIVE') },
-                    // moving: { text: t('MOVING') },
-                  }}
-                />
-                <ProFormSelect
-                  name="restrictionID"
-                  label={`${t('RESTRICTION')}`}
-                  width="sm"
-                  tooltip={`${t('RESTRICTION')}`}
+                  name="description"
+                  label={`${t('DESCRIPTION')}`}
+                  width="lg"
                   rules={[{ required: true }]}
                   valueEnum={{
-                    standart: { text: t('STANDART') },
-                    inaccessible: { text: t('INACCESSIBLE') },
-                    restricted: { text: t('RESTRICTED') },
+                    LOCATION_FOR_UNSERVICEABLE_PARTS: {
+                      text: t('LOCATION FOR UNSERVICEABLE PARTS'),
+                    },
+                    LOCATION_FOR_SERVICEABLE_PARTS: {
+                      text: t('LOCATION FOR SERVICEABLE PARTS'),
+                    },
+                    LOCATION_FOR_PARTS_IN_HANGAR: {
+                      text: t('LOCATION FOR PARTS IN HANGAR'),
+                    },
+                    LOCATION_FOR_PARTS_IN_QUARANTINE: {
+                      text: t('LOCATION FOR PARTS IN QUARANTINE'),
+                    },
+                    LOCATION_FOR_PARTS_IN_SHOP: {
+                      text: t('LOCATION FOR PARTS TO TRANSFER'),
+                    },
+
+                    LOCATION_FOR_PARTS_TO_SCRAP: {
+                      text: t('LOCATION FOR PARTS TO SCRAP'),
+                    },
+
+                    // QUAR_LOCATION: { text: t('QUAR LOCATION') },
+                    // TRANSFER_LOCATION: { text: t('TRANSFER LOCATION') },
                   }}
                 />
-              </ProFormGroup>
 
-              <ProFormTextArea
-                width={'xl'}
-                fieldProps={{
-                  style: {
-                    resize: 'none',
-                  },
-                  rows: 3,
-                  // This is the correct way to set colSize within fieldProps
-                }}
-                name="remarks"
-                label={t('REMARKS')}
-              />
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                name="storeID"
-                label={t('STORE')}
-                width="lg"
-                valueEnum={storeCodesValueEnum || []}
-                // disabled={!projectId}
-              />
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                name="ownerID"
-                label={t('OWNER')}
-                width="lg"
-                valueEnum={companiesCodesValueEnum || []}
-                // disabled={!projectId}
-              />
-
-              <ProForm.Item label={t('UPLOAD')}>
-                <div className="overflow-y-auto max-h-64">
-                  <Upload
-                    name="FILES"
-                    fileList={reqCode?.files || []}
-                    // listType="picture"
-                    className="upload-list-inline cursor-pointer"
-                    beforeUpload={handleUpload}
-                    accept="image/*"
-                    onPreview={handleDownload}
-                    onRemove={handleDelete}
-                    multiple
-                    onDownload={function (file: any): void {
-                      handleFileSelect({
-                        id: file?.id,
-                        name: file?.name,
-                      });
+                <ProFormGroup>
+                  <ProFormSelect
+                    name="locationType"
+                    label={`${t('LOCATION TYPE')}`}
+                    width="sm"
+                    tooltip={`${t('LOCATION TYPE')}`}
+                    // rules={[{ required: true }]}
+                    // valueEnum={locationCodesValueEnum}
+                    valueEnum={{
+                      standart: { text: t('STANDART') },
+                      hangar: { text: t('HANGAR') },
+                      quarantine: { text: t('QUARANTINE') },
+                      // rollOut: { text: t('ROLLOUT') },
+                      scrap: { text: t('SCRAP') },
+                      shipment: { text: t('SHIPMENT') },
+                      transfer: { text: t('TRANSFER') },
+                      shop: { text: t('SHOP') },
+                      unserviceable: { text: t('UNSERVICEABLE') },
+                      serviceable: { text: t('SERVICEABLE') },
+                      reservation: { text: t('RESERVATION') },
+                      customer: { text: t('CUSTOMER') },
+                      // consingment: { text: t('CONSIGNMENT') },
+                      // pool: { text: t('POOL') },
+                      tool: { text: t('TOOL') },
+                      // arhive: { text: t('ARCHIVE') },
+                      // moving: { text: t('MOVING') },
                     }}
-                  >
-                    <Button icon={<UploadOutlined />}>
-                      {t('CLICK TO UPLOAD')}
-                    </Button>
-                  </Upload>
-                </div>
-              </ProForm.Item>
+                  />
+                  <ProFormSelect
+                    name="restrictionID"
+                    label={`${t('RESTRICTION')}`}
+                    width="sm"
+                    tooltip={`${t('RESTRICTION')}`}
+                    rules={[{ required: true }]}
+                    valueEnum={{
+                      standart: { text: t('STANDART') },
+                      inaccessible: { text: t('INACCESSIBLE') },
+                      restricted: { text: t('RESTRICTED') },
+                    }}
+                  />
+                </ProFormGroup>
+
+                <ProFormTextArea
+                  width={'xl'}
+                  fieldProps={{
+                    style: {},
+                    rows: 2,
+                    // This is the correct way to set colSize within fieldProps
+                  }}
+                  name="remarks"
+                  label={t('REMARKS')}
+                />
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  name="storeID"
+                  label={t('STORE')}
+                  width="lg"
+                  valueEnum={storeCodesValueEnum || []}
+                  // disabled={!projectId}
+                />
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  name="ownerID"
+                  label={t('OWNER')}
+                  width="lg"
+                  valueEnum={companiesCodesValueEnum || []}
+                  // disabled={!projectId}
+                />
+
+                <ProForm.Item label={t('UPLOAD')}>
+                  <div className="overflow-y-auto max-h-64">
+                    <Upload
+                      name="FILES"
+                      fileList={reqCode?.files || []}
+                      // listType="picture"
+                      className="upload-list-inline cursor-pointer"
+                      beforeUpload={handleUpload}
+                      accept="image/*"
+                      onPreview={handleDownload}
+                      onRemove={handleDelete}
+                      multiple
+                      onDownload={function (file: any): void {
+                        handleFileSelect({
+                          id: file?.id,
+                          name: file?.name,
+                        });
+                      }}
+                    >
+                      <Button icon={<UploadOutlined />}>
+                        {t('CLICK TO UPLOAD')}
+                      </Button>
+                    </Upload>
+                  </div>
+                </ProForm.Item>
+              </ProForm.Group>
             </ProForm.Group>
-          </ProForm.Group>
-        </ProForm>
+          </ProForm>
+        </div>
       </Tabs.TabPane>
       <Tabs.TabPane tab={t('PARTS')} key="2">
         {reqCode ? (

@@ -240,6 +240,7 @@ import { pickSlipApi } from '@/features/pickSlipAdministration/pickSlipApi';
 import { pickSlipItemsApi } from '@/features/pickSlipAdministration/pickSlipItemsApi';
 import { pickSlipBookingsItemsApi } from '@/features/pickSlipAdministration/pickSlipBookingsItemsApi';
 import { restrictionApi } from '@/features/restrictionAdministration/restrictionApi';
+import { wpApi } from '@/features/wpAdministration/wpApi';
 
 const store = configureStore({
   reducer: {
@@ -303,6 +304,7 @@ const store = configureStore({
     [pickSlipItemsApi.reducerPath]: pickSlipItemsApi.reducer,
     [pickSlipBookingsItemsApi.reducerPath]: pickSlipBookingsItemsApi.reducer,
     [restrictionApi.reducerPath]: restrictionApi.reducer,
+    [wpApi.reducerPath]: wpApi.reducer,
 
     vendor: vendorReducer,
     acTypes: acTypesReducer,
@@ -350,7 +352,8 @@ const store = configureStore({
       pickSlipItemsApi.middleware,
       pickSlipApi.middleware,
       pickSlipBookingsItemsApi.middleware,
-      restrictionApi.middleware
+      restrictionApi.middleware,
+      wpApi.middleware
     ),
 });
 export default store;
