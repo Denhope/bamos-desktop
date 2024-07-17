@@ -14,6 +14,7 @@ import { IRequirementType, IMaintenanceType } from '@/models/AC';
 import { ProFormTextArea } from '@ant-design/pro-components';
 
 import ReqCodesAdmin from '../requirementsCodesAdministration/ReqCodesAdmin';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface IRequirementTypeFormProps {
   reqType: IRequirementType | undefined;
@@ -55,9 +56,11 @@ const RequirementsTypesForm: FC<IRequirementTypeFormProps> = ({
     }
   }, [reqType?.id, form]);
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {reqType ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {reqType ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
 
   return (

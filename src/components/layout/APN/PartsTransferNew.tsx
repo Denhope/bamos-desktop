@@ -33,6 +33,7 @@ import { ColDef } from 'ag-grid-community';
 import { format } from 'date-fns';
 import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
 import ReportPrintQR from '@/components/shared/ReportPrintQR';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 const PartsTransferNew: FC = () => {
   const { t } = useTranslation();
@@ -326,79 +327,109 @@ const PartsTransferNew: FC = () => {
         <Row justify={'space-between'}>
           <div className="flex gap-5">
             <Col>
-              <Button
-                type={'primary'}
-                disabled={!rowKeys.length || !selectedTargetValues}
-                size="small"
-                icon={<SaveOutlined />}
-                onClick={handleSubmit}
+              <PermissionGuard
+                requiredPermissions={[Permission.PART_TRANSFER_ACTIONS]}
               >
-                {t('TRANSFER PARTS')}
-              </Button>
+                <Button
+                  type={'primary'}
+                  disabled={!rowKeys.length || !selectedTargetValues}
+                  size="small"
+                  icon={<SaveOutlined />}
+                  onClick={handleSubmit}
+                >
+                  {t('TRANSFER PARTS')}
+                </Button>
+              </PermissionGuard>
             </Col>
             <Col>
-              <Button
-                danger
-                disabled={!rowKeys.length || rowKeys.length != 1}
-                size="small"
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setOpenPartsModify(true);
-                }}
+              <PermissionGuard
+                requiredPermissions={[
+                  Permission.PART_TRANSFER_ACTIONS,
+                  Permission.PART_EDIT_ACTIONS,
+                ]}
               >
-                {t('EDIT')}
-              </Button>
+                <Button
+                  danger
+                  disabled={!rowKeys.length || rowKeys.length != 1}
+                  size="small"
+                  icon={<EditOutlined />}
+                  onClick={() => {
+                    setOpenPartsModify(true);
+                  }}
+                >
+                  {t('EDIT')}
+                </Button>
+              </PermissionGuard>
             </Col>
           </div>
           <div className="flex gap-5">
             <Col style={{ textAlign: 'right' }}>
               <Space>
-                <ReportPrintLabel
-                  xmlTemplate={''}
-                  data={[]}
-                  ids={rowKeys}
-                  isDisabled={!rowKeys.length}
-                ></ReportPrintLabel>
-                <ReportEXEL
-                  isDisabled={!rowKeys.length}
-                  headers={{
-                    LOCAL_ID: 'НОМЕР БИРКИ',
-                    PART_NUMBER: 'НАМЕНКЛАТУРА',
-                    NAME_OF_MATERIAL: 'ОПИСАНИЕ',
-                    SERIAL_NUMBER: 'СЕРИЙНЫЙ НОМЕР/НОМЕР ПАРТИИ',
-                    QUANTITY: 'КОЛИЧЕСТВО',
-                    GROUP: 'ГРУППА',
-                    estimatedDueDate: 'КРАЙНЯЯ ДАТА ПОВЕРКИ',
-                    nextDueMOS: 'СЛЕДУЮЩЯЯ ДАТА ПОВЕРКИ',
-                    'storeID.storeShortName': 'СКЛАД',
-                    'locationID.locationName': 'ЛОКАЦИЯ',
-                  }}
-                  data={selectedParts}
-                  fileName={'PARTS_REPORTS_'}
-                ></ReportEXEL>
+                <PermissionGuard
+                  requiredPermissions={[Permission.PART_TRANSFER_ACTIONS]}
+                >
+                  <ReportPrintLabel
+                    xmlTemplate={''}
+                    data={[]}
+                    ids={rowKeys}
+                    isDisabled={!rowKeys.length}
+                  ></ReportPrintLabel>
+                </PermissionGuard>
+                <PermissionGuard
+                  requiredPermissions={[
+                    Permission.PART_TRANSFER_ACTIONS,
+                    Permission.EXPORT,
+                  ]}
+                >
+                  <ReportEXEL
+                    isDisabled={!rowKeys.length}
+                    headers={{
+                      LOCAL_ID: 'НОМЕР БИРКИ',
+                      PART_NUMBER: 'НАМЕНКЛАТУРА',
+                      NAME_OF_MATERIAL: 'ОПИСАНИЕ',
+                      SERIAL_NUMBER: 'СЕРИЙНЫЙ НОМЕР/НОМЕР ПАРТИИ',
+                      QUANTITY: 'КОЛИЧЕСТВО',
+                      GROUP: 'ГРУППА',
+                      estimatedDueDate: 'КРАЙНЯЯ ДАТА ПОВЕРКИ',
+                      nextDueMOS: 'СЛЕДУЮЩЯЯ ДАТА ПОВЕРКИ',
+                      'storeID.storeShortName': 'СКЛАД',
+                      'locationID.locationName': 'ЛОКАЦИЯ',
+                    }}
+                    data={selectedParts}
+                    fileName={'PARTS_REPORTS_'}
+                  ></ReportEXEL>
+                </PermissionGuard>
               </Space>
             </Col>
             <Col>
-              <ReportPrintQR
-                openSettingsModal
-                pageBreakAfter={false}
-                // qrCodeSize={32}
-                // fontSize={5}
-                isDisabled={!rowKeys.length}
-                data={selectedParts}
-                ids={rowKeys}
-              ></ReportPrintQR>
+              <PermissionGuard
+                requiredPermissions={[Permission.PART_TRANSFER_ACTIONS]}
+              >
+                <ReportPrintQR
+                  openSettingsModal
+                  pageBreakAfter={false}
+                  // qrCodeSize={32}
+                  // fontSize={5}
+                  isDisabled={!rowKeys.length}
+                  data={selectedParts}
+                  ids={rowKeys}
+                ></ReportPrintQR>
+              </PermissionGuard>
             </Col>
             <Col>
-              <Button
-                loading={reportDataLoading}
-                icon={<PrinterOutlined />}
-                size="small"
-                onClick={() => fetchAndHandleReport('dddddddddd')}
-                disabled={!selectedSerchValues}
+              <PermissionGuard
+                requiredPermissions={[Permission.PRINT_REPORT_EXPIRY]}
               >
-                {`${t('PRINT REPORT')}`}
-              </Button>
+                <Button
+                  loading={reportDataLoading}
+                  icon={<PrinterOutlined />}
+                  size="small"
+                  onClick={() => fetchAndHandleReport('dddddddddd')}
+                  disabled={!selectedSerchValues}
+                >
+                  {`${t('PRINT REPORT')}`}
+                </Button>
+              </PermissionGuard>
             </Col>
           </div>
         </Row>

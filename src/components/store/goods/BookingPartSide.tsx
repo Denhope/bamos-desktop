@@ -17,6 +17,7 @@ import {
 import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
 import { getFilteredShops } from '@/utils/api/thunks';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 type BookingPartSideType = {
   order: IOrder | null;
   onUpdateOrder?: (data: any) => void;
@@ -78,29 +79,36 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 </div>
 
                 <Space className="mt-5" align="center">
-                  <Button
-                    size="small"
-                    onClick={handleOpenPart}
-                    disabled={
-                      !!(
-                        !selectedPart ||
-                        selectedPart.record.state === 'RECEIVED' ||
-                        selectedPart.record.state === 'CANCELLED' ||
-                        selectedPart.record.state === 'CLOSED' ||
-                        (selectedOrder && selectedOrder?.state === 'CLOSED') ||
-                        (selectedOrder &&
-                          selectedOrder?.state === 'CANCELLED') ||
-                        (selectedOrder &&
-                          selectedOrder?.state === 'RECEIVED') ||
-                        !selecteReceiving ||
-                        (selectedOrder &&
-                          selectedOrder?.state === 'onQuatation') ||
-                        !selecteReceiving
-                      )
-                    }
+                  <PermissionGuard
+                    requiredPermissions={[
+                      Permission.PICKSLIP_CONFIRMATION_ACTIONS,
+                    ]}
                   >
-                    {t('PROCESS RECEIVING')}
-                  </Button>
+                    <Button
+                      size="small"
+                      onClick={handleOpenPart}
+                      disabled={
+                        !!(
+                          !selectedPart ||
+                          selectedPart.record.state === 'RECEIVED' ||
+                          selectedPart.record.state === 'CANCELLED' ||
+                          selectedPart.record.state === 'CLOSED' ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'CLOSED') ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'CANCELLED') ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'RECEIVED') ||
+                          !selecteReceiving ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'onQuatation') ||
+                          !selecteReceiving
+                        )
+                      }
+                    >
+                      {t('PROCESS RECEIVING')}
+                    </Button>
+                  </PermissionGuard>
                 </Space>
               </div>
             ),

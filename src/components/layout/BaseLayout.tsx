@@ -38,7 +38,7 @@ import MaintenanceMTX from './maintenance/mtx/MaintenanceMTX';
 import { useTranslation } from 'react-i18next';
 import HomeWEB from './HomeWEB';
 import { ModalForm, ProCard, ProFormItem } from '@ant-design/pro-components';
-import { MenuItem, getItem } from '@/services/utilites';
+import { MenuItem, filterAPNByRole, getItem } from '@/services/utilites';
 import APNTable from '@/components/layout/APNTable';
 import UTCClock from '../shared/UTCClock';
 import { ipcRenderer } from 'electron';
@@ -47,6 +47,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const BaseLayout: React.FC = () => {
   const { t } = useTranslation();
+  const { user } = useTypedSelector((state) => state.auth);
   const APN = [
     //{
     //  APNNBR: '1',
@@ -63,11 +64,33 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`ADMINISTRATION`)}`,
       route: RouteNames.USER_ADMINISTRATION,
     },
+    {
+      APNNBR: '02',
+      descriptions: `${t(`PART ADMINISTRATION`)}`,
+      route: RouteNames.PART_ADMINISTRATIONS_NEW,
+    },
+    {
+      APNNBR: '03',
+      descriptions: `${t(`WP ADMINISTRATION`)}`,
+      route: RouteNames.WP_ADMINISTRATION,
+    },
+
+    {
+      APNNBR: '04',
+      descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
+      route: RouteNames.PROJECT_ADMINISTRATION,
+    },
 
     {
       APNNBR: '05',
       descriptions: `${t(`WORKORDER ADMINISTRATION`)}`,
       route: RouteNames.WORKORDER_ADMINISTRATION,
+    },
+    {
+      APNNBR: '06',
+
+      descriptions: `${t(`PICKSLIP ADMINISTRATION`)}`,
+      route: RouteNames.PICKSLIP_ADMINISTRATION,
     },
     // {
     //   APNNBR: '58',
@@ -79,21 +102,7 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`PART ADMINISTRATION`)}`,
     //   route: RouteNames.PART_ADMINISTRATIONS,
     // },
-    {
-      APNNBR: '02',
-      descriptions: `${t(`PART ADMINISTRATION`)}`,
-      route: RouteNames.PART_ADMINISTRATIONS_NEW,
-    },
-    {
-      APNNBR: '03',
-      descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
-      route: RouteNames.PROJECT_ADMINISTRATION,
-    },
-    {
-      APNNBR: '04',
-      descriptions: `${t(`WP ADMINISTRATION`)}`,
-      route: RouteNames.WP_ADMINISTRATION,
-    },
+
     // {
     //   APNNBR: '101',
     //   descriptions: `${t(`PROJECT VIEWER`)}`,
@@ -110,7 +119,7 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.WORKPACKGEN,
     // },
     {
-      APNNBR: '1198',
+      APNNBR: '07',
       descriptions: `${t(`RECEIVING VIEWER`)}`,
       route: RouteNames.RESERVING_TRACK,
     },
@@ -126,7 +135,7 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.ORDER_VIEWER,
     // },
     {
-      APNNBR: '1212',
+      APNNBR: '08',
       descriptions: `${t(`ORDER VIEWER`)}`,
       route: RouteNames.ORDER_VIEWER_NEW,
     },
@@ -136,7 +145,7 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.ORDER_MANAGMENT,
     // },
     {
-      APNNBR: '1201',
+      APNNBR: '09',
       descriptions: `${t(`ORDER ADMINISTARTION`)}`,
       route: RouteNames.ORDERS_ADMINISTRATION,
     },
@@ -146,19 +155,19 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.REQUIREMENT_MANAGMENT,
     // },
     {
-      APNNBR: '1203',
+      APNNBR: '10',
       descriptions: `${t(`REQUIREMENT ADMINISTRATION`)}`,
       route: RouteNames.REQUIREMENT_ADMINISTRATION,
     },
 
     {
-      APNNBR: '2121',
+      APNNBR: '11',
 
       descriptions: `${t(`GOODS RECEIVING`)}`,
       route: RouteNames.GOODS_RESERVING_NEW,
     },
     {
-      APNNBR: '188',
+      APNNBR: '12',
 
       descriptions: `${t(`PARTS TRACKING`)}`,
       route: RouteNames.PARTS_TRACKING,
@@ -183,20 +192,20 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.REQUIREMENT_VIEWER_VIEWER,
     // },
     {
-      APNNBR: '220',
+      APNNBR: '14',
 
       descriptions: `${t(`STORES ADMINISTRATION`)}`,
       route: RouteNames.STORES_ADMINISTRATIONS,
     },
     {
-      APNNBR: '221',
+      APNNBR: '15',
 
       descriptions: `${t(`STOCK INFORMATION`)}`,
       route: RouteNames.STOCK_NFORMATIONS,
     },
 
     {
-      APNNBR: '11',
+      APNNBR: '16',
 
       descriptions: `${t(`PARTS TRANSFER`)}`,
       route: RouteNames.PARTS_TRANSFER,
@@ -220,13 +229,13 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.PICKSLIP_CONFIRMATIONS,
     // },
     {
-      APNNBR: '267',
+      APNNBR: '17',
 
       descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
       route: RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
     },
     {
-      APNNBR: '309',
+      APNNBR: '18',
 
       descriptions: `${t(`CANCEL PICKSLIP`)}`,
       route: RouteNames.PICKSLIP_CANCEL,
@@ -238,13 +247,13 @@ const BaseLayout: React.FC = () => {
     //   route: RouteNames.SCRAP_MATERIAL,
     // },
     {
-      APNNBR: '335',
+      APNNBR: '19',
 
       descriptions: `${t(`CANCEL RECEIVING`)}`,
       route: RouteNames.CANCEL_RESERVING,
     },
     {
-      APNNBR: '12',
+      APNNBR: '20',
 
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,
@@ -255,12 +264,6 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`PICKSLIP VIEWER`)}`,
     //   route: RouteNames.PICKSLIP_VIEWER,
     // },
-    {
-      APNNBR: '375',
-
-      descriptions: `${t(`PICKSLIP ADMINISTRATION`)}`,
-      route: RouteNames.PICKSLIP_ADMINISTRATION,
-    },
 
     // {
     //   APNNBR: '1418',
@@ -423,6 +426,8 @@ const BaseLayout: React.FC = () => {
   //     setIsModalOpen(false);
   //   }
   // };
+
+  const filteredAPN = filterAPNByRole(APN, user.role);
   return (
     <Layout style={{ minHeight: '100vh' }}>
       {location.pathname === RouteNames.WEB ? (
@@ -492,7 +497,7 @@ const BaseLayout: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <a className="text-xl  px-3 uppercase cursor-pointer text-gray-500">
-              bamos
+              название
             </a>
             <ProFormItem
               label
@@ -521,7 +526,7 @@ const BaseLayout: React.FC = () => {
                     return false;
                   }}
                 >
-                  {APN.map((apn) => (
+                  {filteredAPN.map((apn) => (
                     <Option key={apn.APNNBR} value={apn.APNNBR}>
                       {apn.descriptions}
                     </Option>
@@ -609,7 +614,7 @@ const BaseLayout: React.FC = () => {
             style={{}}
           >
             <APNTable
-              data={APN}
+              data={filteredAPN}
               onRowClick={function (record: any, rowIndex?: any): void {
                 setSecectedAPN(record);
                 setIsModalOpen(false);

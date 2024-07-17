@@ -125,7 +125,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       field: 'projectType',
       headerName: `${t('WO TYPE')}`,
       cellDataType: 'text',
-      valueFormatter: (params: any) => params.value.toUpperCase(),
+      valueFormatter: (params: any) => params?.value?.toUpperCase(),
     },
     {
       field: 'WONumber',
@@ -299,7 +299,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 partNumbers={[]}
                 rowData={projects || []}
                 onUpdateData={function (data: any[]): void {}}
-                height={'70vh'}
+                height={'65vh'}
                 onRowSelect={handleEdit}
               ></PartContainer>
             )}

@@ -1,3 +1,4 @@
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { IAltPartNumber, IPartNumber } from '@/models/IUser';
 import {
@@ -40,7 +41,6 @@ const AltForm: FC<AltFormProps> = ({ onSubmit, altPart, currentPart }) => {
           companyID: localStorage.getItem('companyID') || '',
         };
 
-    console.log('Processed user:', newUser);
     onSubmit(newUser);
   };
   useEffect(() => {
@@ -87,85 +87,92 @@ const AltForm: FC<AltFormProps> = ({ onSubmit, altPart, currentPart }) => {
     }, {} as Record<string, any>) || {};
 
   return (
-    <ProForm layout="horizontal" form={form1} onFinish={handleSubmit}>
-      <ProFormSelect
-        disabled={!!altPart?._id}
-        showSearch
-        rules={[{ required: true }]}
-        width="lg"
-        name="altPartNumberID"
-        label={t('PART No')}
-        onChange={(value, data: any) => {
-          form1.setFields([
-            { name: 'ALTERNATIVE_DESCRIPTION', value: data.data.DESCRIPTION },
-            { name: 'unit', value: data.data.UNIT_OF_MEASURE },
-            { name: 'ADD_DESCRIPTION', value: data.data.ADD_DESCRIPTION },
-            { name: 'TYPE', value: data.data.TYPE },
-            { name: 'GROUP', value: data.data.GROUP },
-          ]);
-          setSelectedAltPN(data.data.PART_NUMBER);
-        }}
-        options={Object.entries(partValueEnum).map(([key, part]) => ({
-          label: part.PART_NUMBER,
-          value: key,
-          data: part,
-        }))}
-      />
-      <ProFormText
-        fieldProps={{ style: { resize: 'none' } }}
-        disabled
-        name="ALTERNATIVE_DESCRIPTION"
-        label={t('DESCRIPTION')}
-        width="lg"
-      />
+    <PermissionGuard
+      requiredPermissions={[
+        Permission.PART_NUMBER_EDIT,
+        Permission.DELETE_ALTERNATIVE,
+      ]}
+    >
+      <ProForm layout="horizontal" form={form1} onFinish={handleSubmit}>
+        <ProFormSelect
+          disabled={!!altPart?._id}
+          showSearch
+          rules={[{ required: true }]}
+          width="lg"
+          name="altPartNumberID"
+          label={t('PART No')}
+          onChange={(value, data: any) => {
+            form1.setFields([
+              { name: 'ALTERNATIVE_DESCRIPTION', value: data.data.DESCRIPTION },
+              { name: 'unit', value: data.data.UNIT_OF_MEASURE },
+              { name: 'ADD_DESCRIPTION', value: data.data.ADD_DESCRIPTION },
+              { name: 'TYPE', value: data.data.TYPE },
+              { name: 'GROUP', value: data.data.GROUP },
+            ]);
+            setSelectedAltPN(data.data.PART_NUMBER);
+          }}
+          options={Object.entries(partValueEnum).map(([key, part]) => ({
+            label: part.PART_NUMBER,
+            value: key,
+            data: part,
+          }))}
+        />
+        <ProFormText
+          fieldProps={{ style: { resize: 'none' } }}
+          disabled
+          name="ALTERNATIVE_DESCRIPTION"
+          label={t('DESCRIPTION')}
+          width="lg"
+        />
 
-      <ProFormSelect
-        disabled
-        name="GROUP"
-        label={t('PART GROUP')}
-        width="lg"
-        options={[
-          { value: 'CONS', label: t('CONS') },
-          { value: 'TOOL', label: t('TOOL') },
-          { value: 'CHEM', label: t('CHEM') },
-          { value: 'ROT', label: t('ROT') },
-          { value: 'GSE', label: t('GSE') },
-        ]}
-      />
-      <ProFormSelect
-        disabled
-        name="TYPE"
-        label={t('PART TYPE')}
-        width="lg"
-        options={[
-          { value: 'ROTABLE', label: t('ROTABLE') },
-          { value: 'CONSUMABLE', label: t('CONSUMABLE') },
-        ]}
-      />
-      <ProFormCheckbox.Group
-        disabled={!!altPart?._id}
-        labelAlign="left"
-        name="box"
-        fieldProps={{
-          onChange: (value) => {
-            setGroupTwoWays(value.includes('group'));
-          },
-        }}
-        options={[
-          { label: t('TWO WAYS INTERCHANGEBILITY'), value: 'group' },
-        ].map((option) => ({
-          ...option,
-          style: { display: 'flex', flexWrap: 'wrap' },
-        }))}
-      />
-      <ProFormTextArea
-        fieldProps={{ style: { resize: 'none' } }}
-        colSize={2}
-        label={t('REMARKS')}
-        name="ALTERNATIVE_REMARKS"
-        width="lg"
-      />
-    </ProForm>
+        <ProFormSelect
+          disabled
+          name="GROUP"
+          label={t('PART GROUP')}
+          width="lg"
+          options={[
+            { value: 'CONS', label: t('CONS') },
+            { value: 'TOOL', label: t('TOOL') },
+            { value: 'CHEM', label: t('CHEM') },
+            { value: 'ROT', label: t('ROT') },
+            { value: 'GSE', label: t('GSE') },
+          ]}
+        />
+        <ProFormSelect
+          disabled
+          name="TYPE"
+          label={t('PART TYPE')}
+          width="lg"
+          options={[
+            { value: 'ROTABLE', label: t('ROTABLE') },
+            { value: 'CONSUMABLE', label: t('CONSUMABLE') },
+          ]}
+        />
+        <ProFormCheckbox.Group
+          disabled={!!altPart?._id}
+          labelAlign="left"
+          name="box"
+          fieldProps={{
+            onChange: (value) => {
+              setGroupTwoWays(value.includes('group'));
+            },
+          }}
+          options={[
+            { label: t('TWO WAYS INTERCHANGEBILITY'), value: 'group' },
+          ].map((option) => ({
+            ...option,
+            style: { display: 'flex', flexWrap: 'wrap' },
+          }))}
+        />
+        <ProFormTextArea
+          fieldProps={{ style: { resize: 'none' } }}
+          colSize={2}
+          label={t('REMARKS')}
+          name="ALTERNATIVE_REMARKS"
+          width="lg"
+        />
+      </ProForm>
+    </PermissionGuard>
   );
 };
 

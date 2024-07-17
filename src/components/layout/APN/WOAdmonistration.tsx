@@ -16,11 +16,7 @@ const WOAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const items: MenuItem[] = [
-    getItem(
-      <>{t('WO ADMINISTRATION')} (BAN:02)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('WO ADMINISTRATION')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

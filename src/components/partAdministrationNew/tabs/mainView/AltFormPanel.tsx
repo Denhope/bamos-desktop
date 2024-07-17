@@ -15,6 +15,7 @@ import {
   useDeletePartNumberMutation,
   useUpdatePartNumberMutation,
 } from '@/features/partAdministration/altPartApi';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 type AlternatesCurrentPart = {
   onEditPart?: (part?: IAltPartNumber) => void;
   currentAltPart?: IAltPartNumber | null;
@@ -92,17 +93,29 @@ const AltFormPanel: FC<AlternatesCurrentPart> = ({
     <div className="flex flex-col gap-5 overflow-hidden">
       <Space className="">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
+          <PermissionGuard
+            requiredPermissions={[
+              Permission.PART_NUMBER_EDIT,
+              Permission.ADD_ALTERNATIVE,
+            ]}
           >
-            {t('ADD ALTERNATIVE PART No')}
-          </Button>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD ALTERNATIVE PART No')}
+            </Button>
+          </PermissionGuard>
         </Col>
 
         <Col style={{ textAlign: 'right' }}>
-          {
+          <PermissionGuard
+            requiredPermissions={[
+              Permission.PART_NUMBER_EDIT,
+              Permission.DELETE_ALTERNATIVE,
+            ]}
+          >
             <Button
               danger
               disabled={!currentAltPart}
@@ -112,10 +125,10 @@ const AltFormPanel: FC<AlternatesCurrentPart> = ({
             >
               {t('DELETE  ALTERNATIVE PART No')}
             </Button>
-          }
+          </PermissionGuard>
         </Col>
       </Space>
-      <div className="h-[64vh] px-4 rounded-md  p-3 overflow-y-auto">
+      <div className="h-[62vh] px-4 rounded-md  p-3 overflow-y-auto">
         <AltForm
           altPart={editingAltPart}
           currentPart={currentPart || null}

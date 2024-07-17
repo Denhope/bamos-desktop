@@ -16,6 +16,7 @@ import { useGetCompaniesQuery } from '@/features/companyAdministration/companyAp
 interface AdminPanelProps {}
 import { Split } from '@geoffcox/react-splitter';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const { data: usersGroup, isLoading } = useGetGroupUsersQuery({});
@@ -59,7 +60,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
         }).unwrap();
         message.success(t('USER  SUCCESSFULLY ADDED'));
       }
-      setEditingUser(null);
+      // setEditingUser(null);
     } catch (error) {
       message.error(t('ERROR SAVING USER '));
     }
@@ -77,25 +78,29 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
     <>
       <Space className="gap-4 pb-3">
         <Col span={20}>
-          <Button
-            size="small"
-            icon={<UserAddOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD USER')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.USER_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<UserAddOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD USER')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           {editingUser && (
-            <Button
-              size="small"
-              icon={<UserDeleteOutlined />}
-              onClick={() =>
-                handleDelete(editingUser?.id || editingUser?._id || '')
-              }
-            >
-              {t('DELETE USER')}
-            </Button>
+            <PermissionGuard requiredPermissions={[Permission.USER_ACTIONS]}>
+              <Button
+                size="small"
+                icon={<UserDeleteOutlined />}
+                onClick={() =>
+                  handleDelete(editingUser?.id || editingUser?._id || '')
+                }
+              >
+                {t('DELETE USER')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

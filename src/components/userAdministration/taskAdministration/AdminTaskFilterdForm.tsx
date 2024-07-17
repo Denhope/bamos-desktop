@@ -111,10 +111,12 @@ const AdminTaskFilteredForm: FC<
           label={t('TASK TYPE')}
           width="xl"
           valueEnum={{
+            PART_PRODUCE: { text: t('PART PRODUCE') },
             SB: { text: t('SERVICE BULLETIN') },
             SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
+            // PN: { text: t('COMPONENT') },
             // PART_PRODUCE: { text: t('PART PRODUCE') },
             // NRC: { text: t('NRC') },
             // ADD_HOC: { text: t('ADD HOC') },

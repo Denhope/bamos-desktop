@@ -33,6 +33,7 @@ import MyTable from '@/components/shared/Table/MyTable';
 import TaskList from '@/components/shared/Table/TaskList';
 import { transformToITask } from '@/services/utilites';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelProps {
   values: TaskFilteredFormValues;
@@ -95,7 +96,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       message.error(t('ERROR SAVING TASK GROUP'));
     }
   };
-
+  //
   const { t } = useTranslation();
 
   // if (isLoading) {
@@ -128,53 +129,57 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       // hide: true,
     },
     { field: 'description', headerName: `${t('DESCRIPTION')}`, filter: true },
-    { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
-    { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
-    { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
-    { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
-    { field: 'SKILL_CODE1', headerName: `${t('SKILL_CODE')}`, filter: true },
-    { field: 'TASK_CODE', headerName: `${t('TASK_CODE')}`, filter: true },
-    {
-      field: 'SUB TASK_CODE',
-      headerName: `${t('SUB TASK_CODE')}`,
-      filter: true,
-    },
-
-    { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
-    {
-      field: 'RESTRICTION_1',
-      headerName: `${t('RESTRICTION_1')}`,
-      filter: true,
-    },
-    {
-      field: 'PREPARATION_CODE',
-      headerName: `${t('PREPARATION_CODE')}`,
-      filter: true,
-    },
-    {
-      field: 'REFERENCE_2',
-      headerName: `${t('REFERENCE_2')}`,
-      filter: true,
-    },
-    {
-      field: 'mainWorkTime',
-      headerName: `${t('MHS')}`,
-      filter: true,
-    },
-    {
-      field: 'IDENTIFICATOR',
-      headerName: `${t('IDENTIFICATOR')}`,
-      filter: true,
-    },
-
-    // { field: 'closedByID', headerName: 'Closed By ID' },
-
     {
       field: 'PART_NUMBER',
       headerName: `${t('PART No')}`,
       filter: true,
     },
+    {
+      field: 'rev',
+      headerName: `${t('REVISION')}`,
+      filter: true,
+    },
+    // { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
+    // { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
+    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
+    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    // { field: 'SKILL_CODE1', headerName: `${t('SKILL_CODE')}`, filter: true },
+    // { field: 'TASK_CODE', headerName: `${t('TASK_CODE')}`, filter: true },
+    // {
+    //   field: 'SUB TASK_CODE',
+    //   headerName: `${t('SUB TASK_CODE')}`,
+    //   filter: true,
+    // },
+
+    // { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    // {
+    //   field: 'RESTRICTION_1',
+    //   headerName: `${t('RESTRICTION_1')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'PREPARATION_CODE',
+    //   headerName: `${t('PREPARATION_CODE')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'REFERENCE_2',
+    //   headerName: `${t('REFERENCE_2')}`,
+    //   filter: true,
+    // },
+    {
+      field: 'mainWorkTime',
+      headerName: `${t('MHS')}`,
+      filter: true,
+    },
+    // {
+    //   field: 'IDENTIFICATOR',
+    //   headerName: `${t('IDENTIFICATOR')}`,
+    //   filter: true,
+    // },
+
+    // { field: 'closedByID', headerName: 'Closed By ID' },
 
     // {
     //   field: 'status',
@@ -214,7 +219,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
           taskNumberDTO: data,
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        setEditingvendor(null);
+        // setEditingvendor(null);
       }
     } catch (error) {
       message.error(t('ОШИБКА СОХРАНЕНИЯ'));
@@ -225,17 +230,20 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     return transformToITask(tasks || []);
   }, [tasks]);
   const { data: partNumbers } = useGetPartNumbersQuery({});
+
   return (
     <>
       <Space className="gap-6 pb-3">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD TASK')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.TASK_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD TASK')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <FileUploader
           isDisabled
@@ -256,13 +264,15 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         ></FileUploader>
         <Col style={{ textAlign: 'right' }}>
           {editingvendor && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingvendor.id)}
-            >
-              {t('DELETE TASK')}
-            </Button>
+            <PermissionGuard requiredPermissions={[Permission.TASK_ACTIONS]}>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingvendor.id)}
+              >
+                {t('DELETE TASK')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
         <Col>

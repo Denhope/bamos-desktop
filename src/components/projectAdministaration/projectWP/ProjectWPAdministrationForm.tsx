@@ -42,7 +42,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
       ? { ...reqCode, ...values }
       : {
           ...values,
-          planeID: project?.planeId._id,
+          planeID: project?.planeId?._id,
           companyID: localStorage.getItem('companyID') || '',
         };
     onSubmit(newUser);
@@ -161,7 +161,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
       initialValues={reqCode}
       layout="horizontal"
     >
-      {project && project.projectType === 'partProduce' && (
+      {project && project.projectType === 'production' && (
         <ProFormGroup>
           <ProForm.Group>
             <ProForm.Group>
@@ -321,7 +321,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
 
                 NRC: { text: t('NRC (Defect)') },
                 NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
-                MJC: { text: 'MJC (Extended MPD) ' },
+                MJC: { text: t('MJC ((Extended MPD)') },
                 CMJC: { text: t('CMJC (Component maintenance) ') },
                 FC: { text: t('FC (Fabrication card)') },
               }}

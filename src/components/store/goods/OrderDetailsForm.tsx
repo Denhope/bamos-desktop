@@ -23,6 +23,7 @@ import { USER_ID } from '@/utils/api/http';
 import { getFilteredOrders, postNewReceiving } from '@/utils/api/thunks';
 
 import ContextMenuReceivingsSearchSelect from '@/components/shared/form/ContextMenuReceivingsSearchSelect';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 type OrderDetailsFormType = {
   order: IOrder | null;
@@ -173,21 +174,28 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 currentReceiving && Object.keys(currentReceiving).length === 0
               ) || !selectedSingleVendor?.CODE,
           },
-          render: (_, dom) =>
-            isCreating
-              ? [
-                  ...dom,
-                  <Button
-                    key="cancel"
-                    onClick={() => {
-                      isCreating && setIsCreating(false);
-                      onCurrentReceiving(null);
-                    }}
-                  >
-                    {t('Cancel')}
-                  </Button>,
-                ]
-              : [],
+          render: (_, dom) => (
+            <PermissionGuard
+              requiredPermissions={[Permission.PICKSLIP_CONFIRMATION_ACTIONS]}
+            >
+              <div>
+                {isCreating
+                  ? [
+                      ...dom,
+                      <Button
+                        key="cancel"
+                        onClick={() => {
+                          isCreating && setIsCreating(false);
+                          onCurrentReceiving(null);
+                        }}
+                      >
+                        {t('Cancel')}
+                      </Button>,
+                    ]
+                  : []}
+              </div>
+            </PermissionGuard>
+          ),
         }}
         onReset={() => {
           setinitialForm('');

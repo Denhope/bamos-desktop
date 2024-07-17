@@ -1,3 +1,4 @@
+import { Permission } from '@/components/auth/PermissionGuard';
 import { IRequirement, Requirement } from './IRequirement';
 import { ITask } from './ITask';
 
@@ -40,15 +41,6 @@ export type UserResponce = {
   pass: string;
 };
 
-export enum Permission {
-  CREATE_USER = 'CREATE_USER',
-  DELETE_USER = 'DELETE_USER',
-  EDIT_USER = 'EDIT_USER',
-  ADD_WO = 'ADD_WO',
-  EDIT_WO = 'EDIT_WO',
-  // Добавьте другие разрешения, если нужно
-}
-
 export enum AccountStatus {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
@@ -57,7 +49,7 @@ export enum AccountRole {
   ADMIN = 'admin',
   TECHNICAN = 'technican',
   LOGISTIC = 'logistic',
-  STOREMAN = 'storeMaan',
+  STOREMAN = 'storeMan',
   GUEST = 'guest',
 }
 
@@ -139,6 +131,7 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
+  NAME_OF_MATERIAL?: any;
   REMARKS: any;
   QUANTITY?: any;
   quantity?: number;

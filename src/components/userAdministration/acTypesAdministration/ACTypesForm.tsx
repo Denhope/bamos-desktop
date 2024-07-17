@@ -16,6 +16,7 @@ import TaskCodeFormPanel from '../taskCodeAdministration/TaskCodeFormPanel';
 import ZoneCodeFormPanel from '../zoneCodeAdministration/zoneCodeFormPanel';
 import MPDAdministrationFormPanel from '../MPDAdministration/MPDAdministrationFormPanel';
 import AccessCodeFormPanel from '../accessCodeAdministration/AccessCodeFormPanel';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface IACTypeFormProps {
   acType: IACType | undefined;
@@ -52,9 +53,11 @@ const ACTypeForm: FC<IACTypeFormProps> = ({ acType, onSubmit }) => {
     }
   }, [acType?.id, form]);
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {acType ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.AC_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {acType ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
 
   return (

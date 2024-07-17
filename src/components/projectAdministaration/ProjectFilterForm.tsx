@@ -179,10 +179,13 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
           },
 
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+          repairPart: { text: t('REPAIR COMPONENT') },
+          repairAC: { text: t('REPAIR AC') },
           partCange: { text: t('COMPONENT CHANGE') },
           addWork: { text: t('ADD WORK') },
           enginiring: { text: t('ENGINIRING SERVICESES') },
           nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+          production: { text: t('PRODUCTION PART') },
         }}
       />
 

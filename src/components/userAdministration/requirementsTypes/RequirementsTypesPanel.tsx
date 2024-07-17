@@ -16,6 +16,7 @@ import {
 } from '@/features/requirementsTypeAdministration/requirementsTypeApi';
 import RequirementsTypesForm from './RequirementsTypesForm';
 import { Split } from '@geoffcox/react-splitter';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelProps {
   values?: any;
@@ -83,23 +84,31 @@ const RequirementsTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
     <>
       <Space className="gap-4 pb-3">
         <Col span={20}>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
+          <PermissionGuard
+            requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
           >
-            {t('ADD REQUIREMENT TYPE')}
-          </Button>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD REQUIREMENT TYPE')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           {editingACType && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingACType.id)}
+            <PermissionGuard
+              requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
             >
-              {t('DELETE REQUIREMENT TYPE')}
-            </Button>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingACType.id)}
+              >
+                {t('DELETE REQUIREMENT TYPE')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

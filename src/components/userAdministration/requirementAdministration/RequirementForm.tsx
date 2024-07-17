@@ -24,7 +24,7 @@ import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
-
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 interface UserFormProps {
   requierement?: IRequirement;
   onSubmit: (company: IRequirement) => void;
@@ -75,9 +75,11 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
   };
 
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {requierement ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.DELETE_REQUIREMENT]}>
+      <Button type="primary" htmlType="submit">
+        {requierement ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
 
   const { data: usersGroups } = useGetGroupUsersQuery({});

@@ -26,6 +26,7 @@ import PickSlipAdministrationTree from './PickSlipAdministrationTree';
 import PickSlipContainer from './PickSlipContainer';
 import { useGetPickSlipsQuery } from '@/features/pickSlipAdministration/pickSlipApi';
 import PickSlipAdministrationForm from './PickSlipAdministrationForm';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelProps {
   pickSlipSearchValues?: any;
@@ -248,24 +249,33 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       </Space>
       <Space className="">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD PICKSLIP')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.PICKSLIP_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD PICKSLIP')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {editingRequirement && (
-            <Button
-              danger
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingRequirement.id)}
+            <PermissionGuard
+              requiredPermissions={[
+                Permission.PICKSLIP_ACTIONS,
+                Permission.DELETE_PICKSLIP,
+              ]}
             >
-              {t('DELETE PICKSLIP')}
-            </Button>
+              <Button
+                danger
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingRequirement.id)}
+              >
+                {t('DELETE PICKSLIP')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
 

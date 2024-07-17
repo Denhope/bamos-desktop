@@ -294,7 +294,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 partNumbers={[]}
                 rowData={projects || []}
                 onUpdateData={function (data: any[]): void {}}
-                height={'70vh'}
+                height={'65vh'}
                 onRowSelect={handleEdit}
               ></PartContainer>
             )}

@@ -18,11 +18,7 @@ const PickSlipAdministration: FC<RequirementManagementProps> = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const items: MenuItem[] = [
-    getItem(
-      <>{t('PICKSLIP ADMINISTRATION')} (BAN:08)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('PICKSLIP ADMINISTRATION')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

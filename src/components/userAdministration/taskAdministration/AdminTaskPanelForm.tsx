@@ -37,6 +37,7 @@ import PartList from './PartList';
 import AutoCompleteEditor from '@/components/shared/Table/ag-grid/AutoCompleteEditor';
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface UserFormProps {
   task?: ITask;
@@ -59,17 +60,17 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   const [addStep] = useAddStepMutation({});
   const [deleteStep] = useDeleteStepMutation();
   const [activeTabKey, setActiveTabKey] = useState('1');
-  // const partValueEnum: Record<string, any> = useMemo(() => {
-  //   return (
-  //     partNumbers?.reduce(
-  //       (acc: Record<string, any>, partNumber: IPartNumber) => {
-  //         acc[partNumber?._id || partNumber?.id] = partNumber;
-  //         return acc;
-  //       },
-  //       {}
-  //     ) || {}
-  //   );
-  // }, [partNumbers]);
+  const partValueEnum: Record<string, any> = useMemo(() => {
+    return (
+      partNumbers?.reduce(
+        (acc: Record<string, any>, partNumber: IPartNumber) => {
+          acc[partNumber?._id || partNumber?.id] = partNumber;
+          return acc;
+        },
+        {}
+      ) || {}
+    );
+  }, [partNumbers]);
 
   // const toolValueEnum: Record<string, IPartNumber> =
   //   tools?.reduce(
@@ -91,13 +92,13 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       setACTypeID(task.acTypeId || ''); // Используйте пустую строку в качестве значения по умолчанию, если task.acTypeId равно undefined
       task?.taskType && setTaskType(task?.taskType);
       form.setFieldsValue({
-        partNumberID: task.partNumberID?._id,
-        nameOfMaterial: task.partNumberID?.DESCRIPTION,
-        WORKPIECE_DIMENSIONS: task.partNumberID?.WORKPIECE_DIMENSIONS,
-        COATING: task.partNumberID?.COATING,
-        MATERIAL: task.partNumberID?.MATERIAL,
-        WEIGHT: task.partNumberID?.WEIGHT,
-        SQUARE: task.partNumberID?.SQUARE,
+        partNumberID: task?.partNumberID?._id,
+        nameOfMaterial: task?.partNumberID?.DESCRIPTION,
+        WORKPIECE_DIMENSIONS: task?.partNumberID?.WORKPIECE_DIMENSIONS,
+        COATING: task?.partNumberID?.COATING,
+        MATERIAL: task?.partNumberID?.MATERIAL,
+        WEIGHT: task?.partNumberID?.WEIGHT,
+        SQUARE: task?.partNumberID?.SQUARE,
         WORKPIECE_WEIGHT: task.partNumberID?.WORKPIECE_WEIGHT,
         WORKPIECE_MATERIAL_TYPE: task.partNumberID?.WORKPIECE_MATERIAL_TYPE,
         instrumentID:
@@ -113,9 +114,11 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   }, [task, form]);
 
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {task ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.TASK_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {task ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
   const { data: usersSkill } = useGetSkillsQuery({});
   const groupSlills = usersSkill?.map((skill: any) => ({
@@ -369,14 +372,14 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       label={t('TASK TYPE')}
                       width="xl"
                       valueEnum={{
-                        SB: { text: t('SERVICE BULLETIN') },
-                        SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
-                        ADP: { text: t('ADP') },
-                        AD: { text: t('AIRWORTHINESS DIRECTIVE') },
-                        PN: { text: t('COMPONENT') },
+                        // SB: { text: t('SERVICE BULLETIN') },
+                        // SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
+                        // ADP: { text: t('ADP') },
+                        // AD: { text: t('AIRWORTHINESS DIRECTIVE') },
+                        // PN: { text: t('COMPONENT') },
                         PART_PRODUCE: { text: t('PART PRODUCE') },
-                        NRC: { text: t('NRC') },
-                        ADD_HOC: { text: t('ADD HOC') },
+                        // NRC: { text: t('NRC') },
+                        // ADD_HOC: { text: t('ADD HOC') },
                       }}
                       onChange={(value: any) => setTaskType(value)}
                     />
@@ -442,9 +445,10 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         width={'lg'}
                         name="partNumberID"
                         label={`${t(`PART No`)}`}
+                        // valueEnum={partValueEnum}
                         // value={partNumber}
                         onChange={(value: string | undefined, data: any) => {
-                          // console.log(data);
+                          console.log(data);
                           form.setFields([
                             {
                               name: 'nameOfMaterial',
@@ -483,13 +487,13 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                             },
                           ]);
                         }}
-                        // options={Object.entries(partValueEnum).map(
-                        //   ([key, part]) => ({
-                        //     label: part.PART_NUMBER,
-                        //     value: key,
-                        //     data: part,
-                        //   })
-                        // )}
+                        options={Object.entries(partValueEnum).map(
+                          ([key, part]) => ({
+                            label: part.PART_NUMBER,
+                            value: key,
+                            data: part,
+                          })
+                        )}
                       />
 
                       <ProFormText
@@ -554,7 +558,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
 
                       <ProFormText
                         disabled
-                        rules={[{ required: true }]}
+                        // rules={[{ required: true }]}
                         name="WORKPIECE_MATERIAL_TYPE"
                         label={t('WORKPIECE_MATERIAL_TYPE')}
                         width="md"

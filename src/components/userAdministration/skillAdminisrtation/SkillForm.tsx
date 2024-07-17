@@ -1,10 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
-import { User, Permission, UserGroup, ISkill } from '@/models/IUser';
+import { User, UserGroup, ISkill } from '@/models/IUser';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useTranslation } from 'react-i18next';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface UserFormProps {
   user?: ISkill;
@@ -39,9 +40,11 @@ const SkillForm: FC<UserFormProps> = ({
   }, [user, form]);
 
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {user ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.USER_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {user ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
 
   const [showSubmitButton, setShowSubmitButton] = useState(true);

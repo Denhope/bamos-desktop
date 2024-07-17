@@ -1,7 +1,7 @@
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 
 import { Button, Col, Modal, Space, Spin, Switch, message } from 'antd';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import WODiscription from './PartAdminDiscription';
 import {
   PlusSquareOutlined,
@@ -32,6 +32,11 @@ import PartList from '../woAdministration/PartList';
 import { ColDef } from 'ag-grid-community';
 import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
 import PartContainer from '../woAdministration/PartContainer';
+import {
+  transformToIAltPartNumber,
+  transformToIPart,
+} from '@/services/utilites';
+import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -56,6 +61,9 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const [deletePartNumber] = useDeletePartNumberMutation();
 
   const [addMultiPpartItems] = useAddMultiPartNumberMutation({});
+  const transformedTasks = useMemo(() => {
+    return transformToIPart(projectTasks || []);
+  }, [projectTasks]);
   const handleAddMultiItems = async (data: any) => {
     try {
       {
@@ -189,48 +197,67 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         </Space>
         <Space className="">
           <Col>
-            <Button
-              size="small"
-              icon={<PlusSquareOutlined />}
-              onClick={handleCreate}
+            <PermissionGuard
+              requiredPermissions={[Permission.PART_NUMBER_EDIT]}
             >
-              {t('ADD PART NUMBER')}
-            </Button>
+              <Button
+                size="small"
+                icon={<PlusSquareOutlined />}
+                onClick={handleCreate}
+              >
+                {t('ADD PART NUMBER')}
+              </Button>
+            </PermissionGuard>
           </Col>
           <Col span={20}>
-            <FileUploader
-              onFileProcessed={function (data: any[]): void {
-                handleAddMultiItems(data);
-              }}
-              requiredFields={[
-                'PART_NUMBER',
-                'DESCRIPTION',
-                'GROUP',
-                'TYPE',
-                'ADD_UNIT_OF_MEASURE',
-                'UNIT_OF_MEASURE',
+            <PermissionGuard
+              requiredPermissions={[Permission.PART_NUMBER_EDIT]}
+            >
+              <FileUploader
+                onFileProcessed={function (data: any[]): void {
+                  handleAddMultiItems(data);
+                }}
+                requiredFields={[
+                  'PART_NUMBER',
+                  'DESCRIPTION',
+                  'GROUP',
+                  'TYPE',
+                  'ADD_UNIT_OF_MEASURE',
+                  'UNIT_OF_MEASURE',
+                ]}
+              ></FileUploader>
+            </PermissionGuard>
+          </Col>
+          <Col style={{ textAlign: 'right' }}>
+            <PermissionGuard
+              requiredPermissions={[
+                Permission.DELETE_PART_NUMBER,
+                Permission.PART_NUMBER_EDIT,
               ]}
-            ></FileUploader>
+            >
+              <Button
+                danger
+                disabled={!selectedKeys.length}
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(String(selectedKeys))}
+              >
+                {t('DELETE PART NUMBER')}
+              </Button>
+            </PermissionGuard>
           </Col>
           <Col style={{ textAlign: 'right' }}>
-            <Button
-              danger
-              disabled={!selectedKeys.length}
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(String(selectedKeys))}
+            <PermissionGuard
+              requiredPermissions={[Permission.PART_NUMBER_EDIT]}
             >
-              {t('DELETE PART NUMBER')}
-            </Button>
-          </Col>
-          <Col style={{ textAlign: 'right' }}>
-            <Button
-              disabled={!selectedKeys.length}
-              size="small"
-              icon={<PrinterOutlined />}
-            >
-              {t('PRINT PART NUMBER')}
-            </Button>
+              <Button
+                disabled={!selectedKeys.length}
+                size="small"
+                icon={<PrinterOutlined />}
+              >
+                {t('PRINT PART NUMBER')}
+              </Button>
+            </PermissionGuard>
           </Col>
           <Col>
             <Switch
@@ -248,7 +275,7 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 <PartAdminTree
                   isLoading={isLoading || isFetching}
                   onProjectSelect={handleEdit}
-                  parts={projectTasks || []}
+                  parts={transformedTasks || []}
                   onCheckItems={(selectedKeys) => {
                     setSelectedKeys(selectedKeys);
                   }}
@@ -267,11 +294,11 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                   columnDefs={columnDefs}
                   partNumbers={[]}
                   onUpdateData={(data: any[]): void => {}}
-                  rowData={projectTasks}
+                  rowData={transformedTasks}
                 />
               )}
             </div>
-            <div className="  h-[77vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+            <div className="  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
               <PartAdminForm
                 order={editingproject}
                 onSubmit={handleSubmit}

@@ -22,11 +22,7 @@ const WPAdministration: FC<RequirementManagementProps> = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const items: MenuItem[] = [
-    getItem(
-      <>{t('WP ADMINISTRATION')} (BAN:01)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('WP ADMINISTRATION')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

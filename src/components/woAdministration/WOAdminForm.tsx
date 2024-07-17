@@ -495,15 +495,15 @@ const WOAdminForm: FC<UserFormProps> = ({
       setACTypeID(order.acTypeId);
       setTaskType(order.taskType);
       form.setFieldsValue({
-        partNumberID: order.partNumberID?._id,
-        nameOfMaterial: order.partNumberID?.DESCRIPTION,
-        WORKPIECE_DIMENSIONS: order.partNumberID?.WORKPIECE_DIMENSIONS,
-        COATING: order.partNumberID?.COATING,
-        MATERIAL: order.partNumberID?.MATERIAL,
-        WEIGHT: order.partNumberID?.WEIGHT,
-        SQUARE: order.partNumberID?.SQUARE,
-        WORKPIECE_WEIGHT: order.partNumberID?.WORKPIECE_WEIGHT,
-        WORKPIECE_MATERIAL_TYPE: order.partNumberID?.WORKPIECE_MATERIAL_TYPE,
+        partNumberID: order?.PART_NUMBER,
+        nameOfMaterial: order?.DESCRIPTION || order.NAME_OF_MATERIAL,
+        WORKPIECE_DIMENSIONS: order?.WORKPIECE_DIMENSIONS,
+        COATING: order?.COATING,
+        MATERIAL: order?.MATERIAL,
+        WEIGHT: order?.WEIGHT,
+        SQUARE: order?.SQUARE,
+        WORKPIECE_WEIGHT: order?.WORKPIECE_WEIGHT,
+        WORKPIECE_MATERIAL_TYPE: order?.WORKPIECE_MATERIAL_TYPE,
       });
       if (!order.id) {
       }
@@ -710,7 +710,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                           },
 
                           NRC: { text: t('NRC (AdHoc, Defect)') },
-                          MJC: { text: 'MJC (Extended MPD) ' },
+                          MJC: { text: t('MJC ((Extended MPD)') },
                           CMJC: { text: t('CMJC (Component maintenance) ') },
                           FC: { text: t('FC (Fabrication card)') },
                         }}
@@ -742,7 +742,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                           },
 
                           NRC: { text: t('NRC (AdHoc, Defect)') },
-                          MJC: { text: 'MJC (Extended MPD) ' },
+                          MJC: { text: t('MJC ((Extended MPD)') },
                           CMJC: { text: t('CMJC (Component maintenance) ') },
                           FC: { text: t('FC (Fabrication card)') },
                         }}
@@ -791,49 +791,49 @@ const WOAdminForm: FC<UserFormProps> = ({
                           name="partNumberID"
                           label={`${t(`PART No`)}`}
                           // value={partNumber}
-                          onChange={(value, data: any) => {
-                            // console.log(data);
-                            form.setFields([
-                              {
-                                name: 'nameOfMaterial',
-                                value: data.data.DESCRIPTION,
-                              },
-                              {
-                                name: 'unit',
-                                value: data.data.UNIT_OF_MEASURE,
-                              },
-                              { name: 'type', value: data.data.TYPE },
-                              { name: 'group', value: data.data.GROUP },
-                              {
-                                name: 'WORKPIECE_DIMENSIONS',
-                                value: data.data.WORKPIECE_DIMENSIONS,
-                              },
-                              {
-                                name: 'MATERIAL',
-                                value: data.data.MATERIAL,
-                              },
-                              {
-                                name: 'WEIGHT',
-                                value: data.data.WEIGHT,
-                              },
-                              {
-                                name: 'SQUARE',
-                                value: data.data.SQUARE,
-                              },
-                              {
-                                name: 'COATING',
-                                value: data.data.COATING,
-                              },
-                              {
-                                name: 'WORKPIECE_WEIGHT',
-                                value: data.data.WORKPIECE_WEIGHT,
-                              },
-                              {
-                                name: 'WORKPIECE_MATERIAL_TYPE',
-                                value: data.data.WORKPIECE_MATERIAL_TYPE,
-                              },
-                            ]);
-                          }}
+                          // onChange={(value, data: any) => {
+                          //   // console.log(data);
+                          //   form.setFields([
+                          //     {
+                          //       name: 'nameOfMaterial',
+                          //       value: data.data.DESCRIPTION,
+                          //     },
+                          //     {
+                          //       name: 'unit',
+                          //       value: data.data.UNIT_OF_MEASURE,
+                          //     },
+                          //     { name: 'type', value: data.data.TYPE },
+                          //     { name: 'group', value: data.data.GROUP },
+                          //     {
+                          //       name: 'WORKPIECE_DIMENSIONS',
+                          //       value: data.data.WORKPIECE_DIMENSIONS,
+                          //     },
+                          //     {
+                          //       name: 'MATERIAL',
+                          //       value: data.data.MATERIAL,
+                          //     },
+                          //     {
+                          //       name: 'WEIGHT',
+                          //       value: data.data.WEIGHT,
+                          //     },
+                          //     {
+                          //       name: 'SQUARE',
+                          //       value: data.data.SQUARE,
+                          //     },
+                          //     {
+                          //       name: 'COATING',
+                          //       value: data.data.COATING,
+                          //     },
+                          //     {
+                          //       name: 'WORKPIECE_WEIGHT',
+                          //       value: data.data.WORKPIECE_WEIGHT,
+                          //     },
+                          //     {
+                          //       name: 'WORKPIECE_MATERIAL_TYPE',
+                          //       value: data.data.WORKPIECE_MATERIAL_TYPE,
+                          //     },
+                          //   ]);
+                          // }}
                           options={Object.entries(partValueEnum).map(
                             ([key, part]) => ({
                               label: part.PART_NUMBER,
@@ -845,7 +845,6 @@ const WOAdminForm: FC<UserFormProps> = ({
 
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="nameOfMaterial"
                           label={t('DESCRIPTION')}
                           width="md"
@@ -856,15 +855,9 @@ const WOAdminForm: FC<UserFormProps> = ({
                           width="sm"
                           name="WORKPIECE_DIMENSIONS"
                           label={t('WORKPIECE DIMENSIONS')}
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
                         />
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="COATING"
                           label={t('COATING')}
                           width="sm"
@@ -872,7 +865,6 @@ const WOAdminForm: FC<UserFormProps> = ({
                         ></ProFormText>
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="MATERIAL"
                           label={t('MATERIAL')}
                           width="sm"
@@ -880,7 +872,6 @@ const WOAdminForm: FC<UserFormProps> = ({
                         ></ProFormText>
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="WEIGHT"
                           label={t('WEIGHT')}
                           width="md"
@@ -888,7 +879,6 @@ const WOAdminForm: FC<UserFormProps> = ({
                         ></ProFormText>
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="SQUARE"
                           label={t('SQUARE')}
                           width="sm"
@@ -896,7 +886,6 @@ const WOAdminForm: FC<UserFormProps> = ({
                         ></ProFormText>
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="WORKPIECE_WEIGHT"
                           label={t('WORKPIECE_WEIGHT')}
                           width="sm"
@@ -905,7 +894,6 @@ const WOAdminForm: FC<UserFormProps> = ({
 
                         <ProFormText
                           disabled
-                          rules={[{ required: true }]}
                           name="WORKPIECE_MATERIAL_TYPE"
                           label={t('WORKPIECE_MATERIAL_TYPE')}
                           width="sm"
@@ -1135,7 +1123,7 @@ const WOAdminForm: FC<UserFormProps> = ({
         <Tabs.TabPane tab={tabTitles['3']} key="3">
           {(order?.id && projectItemID) ||
           (order?.id && order?.projectItemReferenceID) ? (
-            <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
+            <div className=" h-[68vh] flex flex-col overflow-auto pb-3">
               <StepContainer
                 steps={stepsToRender || []}
                 onAddStep={handleAddStep}

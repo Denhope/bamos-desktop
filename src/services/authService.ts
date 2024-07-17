@@ -13,6 +13,7 @@ export default class AuthService {
     localStorage.setItem('lastName', response.data.lastName);
     localStorage.setItem('role', response.data.role);
     localStorage.setItem('singNumber', response.data.singNumber);
+    localStorage.setItem('permissions', response.data.permissions);
     localStorage.setItem(
       'name',
       response.data.name ||
@@ -80,6 +81,7 @@ export default class AuthService {
     localStorage.removeItem('dueINDate');
     localStorage.removeItem('taskSearchUrl');
     localStorage.removeItem('companyID');
+    localStorage.removeItem('permissions');
   }
   static async handleAuthError(error: any) {
     const originalRequest = error.config;

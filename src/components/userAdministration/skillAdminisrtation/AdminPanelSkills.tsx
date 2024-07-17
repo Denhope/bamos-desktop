@@ -17,6 +17,7 @@ import {
 } from '@/features/userAdministration/skillApi';
 import SkillForm from './SkillForm';
 import SkillTree from './SkillTree';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 interface AdminPanelProps {}
 
 const AdminPanelSkills: React.FC<AdminPanelProps> = ({}) => {
@@ -78,25 +79,29 @@ const AdminPanelSkills: React.FC<AdminPanelProps> = ({}) => {
     <>
       <Space className="gap-4 pb-3">
         <Col span={20}>
-          <Button
-            size="small"
-            icon={<UserAddOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD SKILL')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.USER_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<UserAddOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD SKILL')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           {editingUser && (
-            <Button
-              size="small"
-              icon={<UserDeleteOutlined />}
-              onClick={() =>
-                handleDelete(editingUser?.id || editingUser?.id || '')
-              }
-            >
-              {t('DELETE SKILL')}
-            </Button>
+            <PermissionGuard requiredPermissions={[Permission.USER_ACTIONS]}>
+              <Button
+                size="small"
+                icon={<UserDeleteOutlined />}
+                onClick={() =>
+                  handleDelete(editingUser?.id || editingUser?.id || '')
+                }
+              >
+                {t('DELETE SKILL')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

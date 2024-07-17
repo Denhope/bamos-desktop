@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
@@ -66,6 +66,7 @@ import {
   useAddProjectTaskMutation,
   useUpdateProjectTaskMutation,
 } from '@/features/projectTaskAdministration/projectsTaskApi';
+import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -300,6 +301,18 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       // hide: true,
     },
     {
+      field: 'PART_NUMBER',
+      headerName: `${t('PART No')}`,
+      filter: true,
+      // hide: true,
+    },
+    {
+      field: 'qty',
+      headerName: `${t('QUANTITY')}`,
+      filter: true,
+      // hide: true,
+    },
+    {
       field: 'projectName',
       headerName: `${t('WP TITLE')}`,
       filter: true,
@@ -317,7 +330,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         const status = params.value;
         return valueEnumTask[status] || '';
       },
-      cellStyle: (params: { value: keyof ValueEnumType }) => ({
+      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
         color: '#ffffff', // Text color
       }),
@@ -520,10 +533,10 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     RC: t('RC'),
     RC_ADD: t('RC (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
-    NRC_ADHOC: t('ADHOC (ADHOC TASK)'),
+    NRC_ADD: t('ADHOC (ADHOC TASK)'),
     MJC: t('MJC)'),
     CMJC: t('CMJC)'),
-    FC: t('FC)'),
+    FC: t('FC'),
   };
 
   const handleAddAction = async (
@@ -691,19 +704,22 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       </Space>
       <Space className="">
         <Col>
-          <Button
-            disabled={
-              !selectedKeys.length ||
-              selectedKeys.length > 1 ||
-              editingProject?.status == 'closed'
-            }
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD NRC')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.ADD_NRC]}>
+            <Button
+              disabled={
+                !selectedKeys.length ||
+                selectedKeys.length > 1 ||
+                editingProject?.status == 'closed'
+              }
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD NRC')}
+            </Button>
+          </PermissionGuard>
         </Col>
+
         {/* <Col style={{ textAlign: 'right' }}>
           {editingProject && (
             <Button
@@ -726,67 +742,81 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           </Button>
         </Col> */}
         <Col>
-          <Button
-            onClick={() => {
-              handleAddAction('pfmd', selectedKeys, [
-                'inspect',
-                'performed',
-                'closed',
-              ]);
-            }}
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<AlertTwoTone />}
+          <PermissionGuard
+            requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
-            {t('COMPLETE WORKORDER')}
-          </Button>
+            <Button
+              onClick={() => {
+                handleAddAction('pfmd', selectedKeys, [
+                  'inspect',
+                  'performed',
+                  'closed',
+                ]);
+              }}
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<AlertTwoTone />}
+            >
+              {t('COMPLETE WORKORDER')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col>
-          <Button
-            onClick={() => {
-              handleAddAction('inspect', selectedKeys, [
-                'inspect',
-                'doubleInspect',
-                'closed',
-                'inProgress',
-                'open',
-              ]);
-            }}
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<AlertTwoTone />}
+          <PermissionGuard
+            requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
-            {t('INSPECT WORKORDER')}
-          </Button>
+            <Button
+              onClick={() => {
+                handleAddAction('inspect', selectedKeys, [
+                  'inspect',
+                  'doubleInspect',
+                  'closed',
+                  'inProgress',
+                  'open',
+                ]);
+              }}
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<AlertTwoTone />}
+            >
+              {t('INSPECT WORKORDER')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col>
-          <Button
-            onClick={() => {
-              handleAddAction('closed', selectedKeys, [
-                'closed',
-                'inProgress',
-                'performed',
-                'open',
-              ]);
-            }}
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<CheckCircleFilled />}
+          <PermissionGuard
+            requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
-            {t('CLOSE WORKORDER')}
-          </Button>
+            <Button
+              onClick={() => {
+                handleAddAction('closed', selectedKeys, [
+                  'closed',
+                  'inProgress',
+                  'performed',
+                  'open',
+                ]);
+              }}
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<CheckCircleFilled />}
+            >
+              {t('CLOSE WORKORDER')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col>
-          <Button
-            onClick={() => {
-              handleAddAction('open', selectedKeys, ['open']);
-            }}
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<ShrinkOutlined />}
-          >
-            {t('REOPEN TASK')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.REOPEN_TASK]}>
+            <Button
+              onClick={() => {
+                handleAddAction('open', selectedKeys, ['open']);
+              }}
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<ShrinkOutlined />}
+            >
+              {t('REOPEN TASK')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           <Button

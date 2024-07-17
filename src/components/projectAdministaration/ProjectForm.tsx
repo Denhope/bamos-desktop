@@ -24,7 +24,8 @@ import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 interface UserFormProps {
@@ -247,10 +248,13 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 },
 
                 // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                repairPart: { text: t('REPAIR COMPONENT') },
+                repairAC: { text: t('REPAIR AC') },
                 partCange: { text: t('COMPONENT CHANGE') },
                 addWork: { text: t('ADD WORK') },
                 enginiring: { text: t('ENGINIRING SERVICESES') },
                 nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+                production: { text: t('PRODUCTION PART') },
               }}
             />
 
@@ -265,7 +269,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           /> */}
             <ProFormGroup>
               <ProFormText
-                width={'xl'}
+                width={'lg'}
                 name="projectName"
                 label={t('TITLE')}
                 rules={[
@@ -345,7 +349,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   rules={[{ required: true }]}
                   name="customerID"
                   label={t('CUSTOMER')}
-                  width="sm"
+                  width="lg"
                   valueEnum={companiesCodesValueEnum || []}
                   // disabled={!projectId}
                 />
@@ -363,14 +367,20 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   rules={[{ required: true }]}
                   name="WOReferenceID"
                   label={t('WP No')}
-                  width="sm"
+                  width="lg"
                   valueEnum={wpValueEnum || []}
                   // disabled={!projectId}
                 />
               </ProFormGroup>
               <ProFormTextArea
                 width={'xl'}
-                fieldProps={{ style: { resize: 'none' } }}
+                fieldProps={{
+                  style: {
+                    resize: 'none',
+                  },
+                  rows: 2,
+                  // This is the correct way to set colSize within fieldProps
+                }}
                 name="remarks"
                 label={t('REMARKS')}
               />

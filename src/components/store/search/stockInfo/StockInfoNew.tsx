@@ -32,7 +32,9 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
               valueType="text"
             >
               <div className="font-bold">
-                {selectedItem && selectedItem?.DESCRIPTION.toUpperCase()}
+                {(selectedItem && selectedItem?.DESCRIPTION?.toUpperCase()) ||
+                  (selectedItem &&
+                    selectedItem?.NAME_OF_MATERIAL?.toUpperCase())}
               </div>
             </ProDescriptions.Item>
 

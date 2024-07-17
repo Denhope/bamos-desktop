@@ -14,6 +14,7 @@ import {
   useGetCompaniesQuery,
 } from '@/features/companyAdministration/companyApi';
 import { Split } from '@geoffcox/react-splitter';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelProps {}
 
@@ -77,23 +78,27 @@ const AdminCompanyPanel: React.FC<AdminPanelProps> = () => {
     <>
       <Space className="gap-4 pb-3">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD COMPANY')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.COMPANY_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD COMPANY')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {editingCompany && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingCompany.id)}
-            >
-              {t('DELETE COMPANY')}
-            </Button>
+            <PermissionGuard requiredPermissions={[Permission.COMPANY_ACTIONS]}>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingCompany.id)}
+              >
+                {t('DELETE COMPANY')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

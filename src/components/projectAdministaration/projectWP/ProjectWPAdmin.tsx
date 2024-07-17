@@ -204,28 +204,52 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         message.success(t('УСПЕШНО ОБНОВЛЕНО'));
         // setEditingReqCode(null);
       } else {
-        await addProjectItem({
-          projectItem: reqCode,
-          projectID: projectID,
-        }).unwrap();
-        message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        // setEditingReqCode(null);
+        if (project && project.projectType == 'production') {
+          await addProjectItem({
+            projectItem: reqCode,
+            projectID: projectID,
+            planeID: project?.planeId?._id,
+            taskType: 'FC',
+          }).unwrap();
+          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
+        } else if (project && project.projectType == 'baseMaintenance') {
+          await addProjectItem({
+            projectItem: reqCode,
+            projectID: projectID,
+            planeID: project?.planeId?._id,
+            taskType: 'RC',
+          }).unwrap();
+          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
+
+          // setEditingReqCode(null);
+        }
       }
     } catch (error) {
-      message.error(t('ОШИБКА СОХРАНЕНИЯ'));
+      message.error(t(`${error}`));
     }
   };
   const handleAddMultiItems = async (data: any) => {
     try {
-      {
+      if (project && project.projectType == 'production') {
+        {
+          await addMultiProjectItems({
+            projectItemsDTO: data,
+            projectID: projectID,
+            planeID: project?.planeId?._id,
+            taskType: 'FC',
+          }).unwrap();
+          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
+          // setEditingReqCode(null);
+        }
+      } else if (project && project.projectType == 'baseMaintenance') {
         await addMultiProjectItems({
           projectItemsDTO: data,
           projectID: projectID,
-          planeID: project?.planeId._id,
+          planeID: project?.planeId?._id,
           taskType: 'RC',
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        setEditingReqCode(null);
+        // setEditingReqCode(null);
       }
     } catch (error) {
       message.error(t('ОШИБКА СОХРАНЕНИЯ'));
@@ -338,11 +362,11 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             onFileProcessed={function (data: any[]): void {
               handleAddMultiItems(data);
             }}
-            requiredFields={['taskNumber']}
+            requiredFields={['PART_NUMBER']}
           ></FileUploader>
         </Col>
         <Col style={{ textAlign: 'right' }}>
-          <Button
+          {/* <Button
             // disabled
             // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
@@ -350,7 +374,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             onClick={() => handleGenerateWOPanels(selectedKeys)}
           >
             {t('GENERATE ACCEESS')}
-          </Button>
+          </Button> */}
         </Col>
 
         <Col style={{ textAlign: 'right' }}>

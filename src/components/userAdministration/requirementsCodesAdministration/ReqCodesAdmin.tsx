@@ -15,6 +15,7 @@ import {
 import ReqCodesAdministrationForm from './ReqCodesAdministrationForm';
 import ReqCodesAdministrationTree from './ReqCodesAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelRProps {
   reqTypeID: string;
@@ -89,23 +90,31 @@ const ReqCodesAdmin: React.FC<AdminPanelRProps> = ({ reqTypeID }) => {
     <>
       <Space className="gap-6 pb-3">
         <Col span={20}>
-          <Button
-            size="small"
-            icon={<UserAddOutlined />}
-            onClick={handleCreate}
+          <PermissionGuard
+            requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
           >
-            {t('ADD REQUIREMENT CODE')}
-          </Button>
+            <Button
+              size="small"
+              icon={<UserAddOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD REQUIREMENT CODE')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           {editingReqCode && (
-            <Button
-              size="small"
-              icon={<UserDeleteOutlined />}
-              onClick={() => handleDelete(editingReqCode.id)}
+            <PermissionGuard
+              requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
             >
-              {t('DELETE REQUIREMENT CODE')}
-            </Button>
+              <Button
+                size="small"
+                icon={<UserDeleteOutlined />}
+                onClick={() => handleDelete(editingReqCode.id)}
+              >
+                {t('DELETE REQUIREMENT CODE')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

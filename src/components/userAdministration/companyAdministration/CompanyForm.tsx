@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { uploadFileServer } from '@/utils/api/thunks';
 import { UploadOutlined } from '@ant-design/icons';
 import { handleFileSelect } from '@/services/utilites';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface UserFormProps {
   company?: ICompany;
@@ -66,9 +67,11 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
     }
   };
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {company ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.COMPANY_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {company ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   return (

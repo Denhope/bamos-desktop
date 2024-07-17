@@ -94,9 +94,11 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
   };
 
   const SubmitButton = () => (
-    <Button disabled type="primary" htmlType="submit">
-      {requierement ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.PICKSLIP_ACTIONS]}>
+      <Button disabled type="primary" htmlType="submit">
+        {requierement ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
 
   const { data: usersGroups } = useGetGroupUsersQuery({});

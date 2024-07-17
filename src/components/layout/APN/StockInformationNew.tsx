@@ -344,11 +344,11 @@ const StockInformationNew: FC = () => {
                   onChange: (value) => setGroup(value),
                 }}
                 options={[
-                  { label: 'TOOL', value: 'TOOL' },
-                  { label: 'ROT', value: 'ROT' },
-                  { label: 'CONS', value: 'CONS' },
-                  { label: 'GSE', value: 'GSE' },
-                  { label: 'CHEM', value: 'CHEM' },
+                  { label: `${t('TOOL')}`, value: 'TOOL' },
+                  { label: `${t('ROT')}`, value: 'ROT' },
+                  { label: `${t('CONS')}`, value: 'CONS' },
+                  { label: `${t('GSE')}`, value: 'GSE' },
+                  { label: `${t('CHEM')}`, value: 'CHEM' },
                 ].map((option) => ({
                   ...option,
                   style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку

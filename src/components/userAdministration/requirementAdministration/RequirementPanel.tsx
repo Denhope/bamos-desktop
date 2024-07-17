@@ -412,6 +412,7 @@ import {
   transformToIRequirement,
 } from '@/services/utilites';
 import CircleRenderer from './CircleRenderer';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 //@ts-nocheck
 interface AdminPanelProps {
   requirementsSearchValues?: any;
@@ -686,23 +687,31 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       </Space>
       <Space className="">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
+          <PermissionGuard
+            requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
           >
-            {t('ADD REQUIREMENT')}
-          </Button>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD REQUIREMENT')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {editingRequirement && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingRequirement._id)}
+            <PermissionGuard
+              requiredPermissions={[Permission.DELETE_REQUIREMENT]}
             >
-              {t('DELETE REQUIREMENT')}
-            </Button>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingRequirement._id)}
+              >
+                {t('DELETE REQUIREMENT')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
         <Col style={{ textAlign: 'right' }}>
@@ -736,7 +745,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
                 loading={isLoading || isFetching}
                 pagination={true}
                 isEditable={false}
-                height={'34vh'}
+                height={'64vh'}
                 isAddVisiable={true}
                 isButtonVisiable={false}
                 fetchData={transformedRequirements}

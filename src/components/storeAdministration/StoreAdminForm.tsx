@@ -12,6 +12,7 @@ import { Button, Tabs } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import StoreLocationAdmin from './storeLocations/StoreLocationAdmin';
+import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 interface UserFormProps {
   store?: IStore | undefined;
   storeItem?: any | {};
@@ -51,9 +52,11 @@ const StoreAdminForm: FC<UserFormProps> = ({ store, storeItem, onSubmit }) => {
   const { data: companies, isLoading } = useGetCompaniesQuery({});
   const { data: users } = useGetUsersQuery({});
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {store ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.STORE_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {store ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   useEffect(() => {

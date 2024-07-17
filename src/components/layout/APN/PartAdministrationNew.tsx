@@ -17,11 +17,7 @@ const PartAdministrationNew: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const items: MenuItem[] = [
-    getItem(
-      <>{t('PART ADMINISTRATION_NEW')} (BAN:0211)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('PART ADMINISTRATION')} </>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

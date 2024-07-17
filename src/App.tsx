@@ -1,21 +1,22 @@
-
-import  { FC, useCallback, useEffect, useState } from "react";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import AuthService from "@/services/authService";
-import enUS from "antd/lib/locale/en_US";
-import ruRU from "antd/lib/locale/ru_RU"; // Для русского
+import { FC, useCallback, useEffect, useState } from 'react';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import AuthService from '@/services/authService';
+import enUS from 'antd/lib/locale/en_US';
+import ruRU from 'antd/lib/locale/ru_RU'; // Для русского
 import {
   authSlice,
   setAuthUserId,
   setAuthUserName,
-} from "@/store/reducers/AuthSlice";
+  setAuthUserPermissions,
+  setAuthUserRole,
+} from '@/store/reducers/AuthSlice';
 
-import "./App.css";
-import { ConfigProvider  } from "antd";
-import Main from "@/components/layout/Main";
-import { useNavigate } from "react-router-dom";
-import { USER_ID } from "./utils/api/http";
-import { RouteNames } from "./router";
+import './App.css';
+import { ConfigProvider } from 'antd';
+import Main from '@/components/layout/Main';
+import { useNavigate } from 'react-router-dom';
+import { PERMISSIONS, ROLE, USER_ID } from './utils/api/http';
+import { RouteNames } from './router';
 
 const App: FC = () => {
   const [count, setCount] = useState(0);
@@ -25,12 +26,16 @@ const App: FC = () => {
   const history = useNavigate();
   const [isLoading, setLoading] = useState(true);
   const authCheck = useCallback(async () => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem('token')) {
       AuthService.check(USER_ID)
         .then(() => {
           dispatch(authSlice.actions.setIsAuth(true));
-          dispatch(setAuthUserId(USER_ID || ""));
-          dispatch(setAuthUserName(localStorage.getItem("name")));
+          dispatch(setAuthUserId(USER_ID || ''));
+          dispatch(setAuthUserRole(ROLE || ''));
+          dispatch(setAuthUserPermissions(PERMISSIONS || ''));
+
+          dispatch(setAuthUserName(localStorage.getItem('name')));
+          console.log(PERMISSIONS);
         })
         .finally(() => {
           // dispatch(getNewUserTokens(USER_ID));
@@ -38,6 +43,7 @@ const App: FC = () => {
         });
     } else {
       dispatch(authSlice.actions.setIsAuth(false));
+      dispatch(setAuthUserId(''));
       history(`${RouteNames.HOME}`);
       setLoading(false);
     }
@@ -49,8 +55,8 @@ const App: FC = () => {
 
   return (
     <div className="App">
-      <ConfigProvider locale={language === "ru" ? ruRU : enUS}>
-        <Main></Main>       
+      <ConfigProvider locale={language === 'ru' ? ruRU : enUS}>
+        <Main></Main>
       </ConfigProvider>
     </div>
   );

@@ -24,7 +24,8 @@ import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 interface UserFormProps {
   project?: IProject;
@@ -235,10 +236,13 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 },
 
                 // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                repairPart: { text: t('REPAIR COMPONENT') },
+                repairAC: { text: t('REPAIR AC') },
                 partCange: { text: t('COMPONENT CHANGE') },
                 addWork: { text: t('ADD WORK') },
                 enginiring: { text: t('ENGINIRING SERVICESES') },
                 nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+                production: { text: t('PRODUCTION PART') },
               }}
             />
             {/* <ProFormSelect
@@ -323,7 +327,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               <ProFormGroup>
                 <ProFormText
                   width={'xl'}
-                  fieldProps={{ style: { resize: 'none' } }}
                   name="customerWO"
                   label={t('CUSTOMER WO No')}
                 />

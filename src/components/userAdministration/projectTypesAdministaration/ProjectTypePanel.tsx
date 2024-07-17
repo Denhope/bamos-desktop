@@ -14,6 +14,7 @@ import {
 } from '@/features/projectTypeAdministration/projectTypeApi';
 import ProjectTypeTree from './ProjectTypeTree';
 import { Split } from '@geoffcox/react-splitter';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelProps {}
 
@@ -79,23 +80,27 @@ const ProjectTypePanel: React.FC<AdminPanelProps> = () => {
     <>
       <Space className="gap-4 pb-3">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD PROJECT TYPE')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.WP_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD PROJECT TYPE')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {editingCompany && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingCompany.id)}
-            >
-              {t('DELETE PROJECT TYPE')}
-            </Button>
+            <PermissionGuard requiredPermissions={[Permission.WP_ACTIONS]}>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingCompany.id)}
+              >
+                {t('DELETE PROJECT TYPE')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

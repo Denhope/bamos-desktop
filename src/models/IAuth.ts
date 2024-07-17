@@ -4,4 +4,6 @@ export interface IAuth {
   refreshToken: string;
   userId: string;
   name: string;
+  role: any;
+  permissions: any;
 }

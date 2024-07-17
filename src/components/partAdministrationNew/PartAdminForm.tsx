@@ -1,5 +1,6 @@
 import {
   ProForm,
+  ProFormGroup,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -110,7 +111,7 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
         type="card"
       >
         <Tabs.TabPane tab={tabTitles['1']} key="1">
-          {
+          <div className=" h-[55vh] flex flex-col overflow-auto">
             <>
               <ProFormText
                 // disabled={!isCreating}
@@ -137,91 +138,132 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
                 tooltip={t('ADD DESCRIPTION')}
               ></ProFormText>
             </>
-          }
-          <ProFormSelect
-            rules={[{ required: true }]}
-            name="TYPE"
-            label={`${t('PART TYPE')}`}
-            width="lg"
-            tooltip={`${t('SELECT PART TYPE')}`}
-            options={[
-              { value: 'ROTABLE', label: t('ROTABLE') },
-              { value: 'CONSUMABLE', label: t('CONSUMABLE') },
-            ]}
-          />
-          <ProFormSelect
-            rules={[{ required: true }]}
-            name="GROUP"
-            label={`${t('PART GROUP')}`}
-            width="lg"
-            tooltip={`${t('SELECT SPESIAL GROUP')}`}
-            options={[
-              { value: 'CONS', label: t('CONS') },
-              { value: 'TOOL', label: t('TOOL') },
-              { value: 'CHEM', label: t('CHEM') },
-              { value: 'ROT', label: t('ROT') },
-              { value: 'GSE', label: t('GSE') },
-            ]}
-          />
-
-          <ProFormSelect
-            showSearch
-            rules={[{ required: true }]}
-            label={t('UNIT')}
-            name="UNIT_OF_MEASURE"
-            width="lg"
-            valueEnum={{
-              EA: `EA/${t('EACH').toUpperCase()}`,
-              M: `M/${t('Meters').toUpperCase()}`,
-              ML: `ML/${t('Milliliters').toUpperCase()}`,
-              SI: `SI/${t('Sq Inch').toUpperCase()}`,
-              CM: `CM/${t('Centimeters').toUpperCase()}`,
-              GM: `GM/${t('Grams').toUpperCase()}`,
-              YD: `YD/${t('Yards').toUpperCase()}`,
-              FT: `FT/${t('Feet').toUpperCase()}`,
-              SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
-              IN: `IN/${t('Inch').toUpperCase()}`,
-              SH: `SH/${t('Sheet').toUpperCase()}`,
-              SM: `SM/${t('Sq Meters').toUpperCase()}`,
-              RL: `RL/${t('Roll').toUpperCase()}`,
-              KT: `KT/${t('Kit').toUpperCase()}`,
-              LI: `LI/${t('Liters').toUpperCase()}`,
-              KG: `KG/${t('Kilograms').toUpperCase()}`,
-              JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
-            }}
-          ></ProFormSelect>
-          <ProFormSelect
-            showSearch
-            rules={[{ required: true }]}
-            label={t('ADD UNIT')}
-            name="ADD_UNIT_OF_MEASURE"
-            width="xl"
-            valueEnum={{
-              шт: `${t('шт').toUpperCase()}`,
-              м: `${t('м').toUpperCase()}`,
-              мл: `${t('мл').toUpperCase()}`,
-              дюйм2: `${t('дюйм2').toUpperCase()}`,
-              см: `${t('см').toUpperCase()}`,
-              г: `${t('г').toUpperCase()}`,
-              ярд: `${t('ярд').toUpperCase()}`,
-              фут: `${t('фут').toUpperCase()}`,
-              см2: `${t('см2').toUpperCase()}`,
-              дюйм: `${t('дюйм').toUpperCase()}`,
-              м2: `${t('м2').toUpperCase()}`,
-              рул: `${t('рул').toUpperCase()}`,
-              л: `${t('л').toUpperCase()}`,
-              кг: `${t('кг').toUpperCase()}`,
-            }}
-          ></ProFormSelect>
-
-          <ProFormSelect
-            showSearch
-            name="acTypeID"
-            label={t('AC TYPE')}
-            width="lg"
-            valueEnum={acTypeValueEnum}
-            // onChange={(value: any) => setACTypeID(value)}
-          />
+            <ProFormSelect
+              rules={[{ required: true }]}
+              name="TYPE"
+              label={`${t('PART TYPE')}`}
+              width="lg"
+              tooltip={`${t('SELECT PART TYPE')}`}
+              options={[
+                { value: 'ROTABLE', label: t('ROTABLE') },
+                { value: 'CONSUMABLE', label: t('CONSUMABLE') },
+              ]}
+            />
+            <ProFormSelect
+              rules={[{ required: true }]}
+              name="GROUP"
+              label={`${t('PART GROUP')}`}
+              width="lg"
+              tooltip={`${t('SELECT SPESIAL GROUP')}`}
+              options={[
+                { value: 'CONS', label: t('CONS') },
+                { value: 'TOOL', label: t('TOOL') },
+                { value: 'CHEM', label: t('CHEM') },
+                { value: 'ROT', label: t('ROT') },
+                { value: 'GSE', label: t('GSE') },
+              ]}
+            />
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              label={t('UNIT')}
+              name="UNIT_OF_MEASURE"
+              width="lg"
+              valueEnum={{
+                EA: `EA/${t('EACH').toUpperCase()}`,
+                M: `M/${t('Meters').toUpperCase()}`,
+                ML: `ML/${t('Milliliters').toUpperCase()}`,
+                SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                CM: `CM/${t('Centimeters').toUpperCase()}`,
+                GM: `GM/${t('Grams').toUpperCase()}`,
+                YD: `YD/${t('Yards').toUpperCase()}`,
+                FT: `FT/${t('Feet').toUpperCase()}`,
+                SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                IN: `IN/${t('Inch').toUpperCase()}`,
+                SH: `SH/${t('Sheet').toUpperCase()}`,
+                SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                RL: `RL/${t('Roll').toUpperCase()}`,
+                KT: `KT/${t('Kit').toUpperCase()}`,
+                LI: `LI/${t('Liters').toUpperCase()}`,
+                KG: `KG/${t('Kilograms').toUpperCase()}`,
+                JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+              }}
+            ></ProFormSelect>
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              label={t('ADD UNIT')}
+              name="ADD_UNIT_OF_MEASURE"
+              width="xl"
+              valueEnum={{
+                шт: `${t('шт').toUpperCase()}`,
+                м: `${t('м').toUpperCase()}`,
+                мл: `${t('мл').toUpperCase()}`,
+                дюйм2: `${t('дюйм2').toUpperCase()}`,
+                см: `${t('см').toUpperCase()}`,
+                г: `${t('г').toUpperCase()}`,
+                ярд: `${t('ярд').toUpperCase()}`,
+                фут: `${t('фут').toUpperCase()}`,
+                см2: `${t('см2').toUpperCase()}`,
+                дюйм: `${t('дюйм').toUpperCase()}`,
+                м2: `${t('м2').toUpperCase()}`,
+                рул: `${t('рул').toUpperCase()}`,
+                л: `${t('л').toUpperCase()}`,
+                кг: `${t('кг').toUpperCase()}`,
+              }}
+            ></ProFormSelect>
+            <ProFormGroup>
+              <ProFormText
+                width="sm"
+                name="WORKPIECE_DIMENSIONS"
+                label={t('WORKPIECE DIMENSIONS')}
+              />
+              <ProFormText
+                name="COATING"
+                label={t('COATING')}
+                width="md"
+                tooltip={t('COATING')}
+              ></ProFormText>
+              <ProFormText
+                name="MATERIAL"
+                label={t('MATERIAL')}
+                width="md"
+                tooltip={t('MATERIAL')}
+              ></ProFormText>
+              <ProFormText
+                name="WEIGHT"
+                label={t('WEIGHT')}
+                width="md"
+                tooltip={t('WEIGHT')}
+              ></ProFormText>
+              <ProFormText
+                name="SQUARE"
+                label={t('SQUARE')}
+                width="md"
+                tooltip={t('SQUARE')}
+              ></ProFormText>
+              <ProFormText
+                name="WORKPIECE_WEIGHT"
+                label={t('WORKPIECE_WEIGHT')}
+                width="md"
+                tooltip={t('WORKPIECE_WEIGHT')}
+              ></ProFormText>
+              <ProFormText
+                name="WORKPIECE_MATERIAL_TYPE"
+                label={t('WORKPIECE_MATERIAL_TYPE')}
+                width="md"
+                tooltip={t('WORKPIECE_MATERIAL_TYPE')}
+              ></ProFormText>
+            </ProFormGroup>
+            <ProFormSelect
+              showSearch
+              name="acTypeID"
+              label={t('AC TYPE')}
+              width="lg"
+              valueEnum={acTypeValueEnum}
+              // onChange={(value: any) => setACTypeID(value)}
+            />
+          </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={tabTitles['2']} key="2">
           <Alternates currentPart={order} />

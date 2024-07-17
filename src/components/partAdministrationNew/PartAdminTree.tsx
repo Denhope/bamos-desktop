@@ -140,7 +140,7 @@ const PartAdminTree: FC<UserTreeProps> = ({
         treeData={filteredTreeData}
         checkable={true}
         searchQuery={searchQuery}
-        height={680}
+        height={580}
         onCheckItems={(selectedKeys: any[]) => {
           // console.log(selectedKeys);
           return onCheckItems && onCheckItems(selectedKeys);

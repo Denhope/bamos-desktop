@@ -846,6 +846,18 @@ export const transformToIPartNumber = (
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
+export const transformToIPart = (data: any[]): any[] => {
+  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    DESCRIPTION:
+      item?.NAME_OF_MATERIAL?.toUpperCase() || item?.DESCRIPTION?.toUpperCase(),
+  }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
 export const transformToIAltPartNumber = (data: any[]): any[] => {
   console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
@@ -1005,14 +1017,13 @@ export const transformToIPickSlip = (data: any[]): any[] => {
 };
 export interface ValueEnumType {
   onQuatation: string;
-  open: string;
+  open?: string;
   closed: string;
   canceled: string;
   onOrder: string;
   onShort: string;
   draft: string;
   issued: string;
-  progress: string;
   inProgress?: string;
   complete: string;
   RECEIVED?: string;
@@ -1025,6 +1036,7 @@ export interface ValueEnumType {
   inspected?: string;
   DRAFT?: string;
   OPEN?: string;
+  progress?: string;
 }
 export interface ValueEnumTypeTask {
   RC: string;
@@ -1123,6 +1135,7 @@ export const transformToITask = (data: ITask[]): any[] => {
     partId: item.partNumberID?._id,
     PART_NUMBER: item.partNumberID?.PART_NUMBER,
     DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    REVISION: item.partNumberID?.REVISION,
     TYPE: item.partNumberID?.TYPE,
     GROUP: item.partNumberID?.GROUP,
     UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
@@ -1331,7 +1344,8 @@ export const transformToIProjectItem = (data: any[]): any[] => {
 export const transformToIProjectTask = (data: any[]): any[] => {
   const result = data.map((item: any) => ({
     ...item,
-    ...item.taskId,
+    ...item?.taskId,
+    ...item?.partNumberID,
     // QUANTITY: item.quantity,
     id: item._id || item?.id,
     // status: item?.status,
@@ -1365,4 +1379,166 @@ export const transformToIProjectTask = (data: any[]): any[] => {
 
   console.log('Output data from transformToIProjectTask:', result); // Вывод результата
   return result;
+};
+type Role =
+  | 'admin'
+  | 'mech'
+  | 'engeneer'
+  | 'planing'
+  | 'logistic'
+  | 'storeman'
+  | 'director';
+export const rolePermissions: Record<Role, string[]> = {
+  admin: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+  mech: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+  engeneer: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+  planing: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+  logistic: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+  storeman: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+  director: [
+    '01',
+    '05',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+  ],
+};
+
+export const filterAPNByRole = (apnList: any[], userRole: Role) => {
+  const userPermissions = rolePermissions[userRole] || [];
+  return apnList.filter((apn) => userPermissions.includes(apn.APNNBR));
 };

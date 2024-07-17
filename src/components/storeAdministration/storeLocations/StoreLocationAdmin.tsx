@@ -24,6 +24,7 @@ import {
   useUpdateLocationMutation,
 } from '@/features/storeAdministration/LocationApi';
 import { ILocation } from '@/models/IUser';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 interface AdminPanelRProps {
   storeID: string;
 }
@@ -103,43 +104,36 @@ const StoreLocationAdmin: React.FC<AdminPanelRProps> = ({ storeID }) => {
     <>
       <Space className="gap-6 pb-3">
         <Col span={20}>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD LOCATION')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.STORE_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD LOCATION')}
+            </Button>
+          </PermissionGuard>
         </Col>
 
         <Col span={4} style={{ textAlign: 'right' }}>
           {editingReqCode && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => {
-                // Проверяем, есть ли в элементах editingReqCode.projectItemsWOID заказы со статусом отличным от CANCELED или DELETED
-                // const hasActiveOrders = editingReqCode?.ID?.some(
-                //   (item) =>
-                //     item.status !== 'CANCELED' && item.status !== 'DELETED'
-                // );
-
-                // if (hasActiveOrders) {
-                //   // Если есть активные заказы, выводим предупреждение
-                //   Modal.warning({
-                //     title: t('УДАЛЕНИЕ НЕВОЗМОЖНО'),
-                //     content: t(
-                //       'Удаление невозможно из-за того, что уже созданы заказы. Если вы хотите удалить записи, установите статус ЗАКАЗА на ОТМЕНЕН.'
-                //     ),
-                //   });
-                // } else {
-                // Если все заказы отменены или удалены, вызываем handleDelete
-                handleDelete(editingReqCode?.id || '');
-                // }
-              }}
+            <PermissionGuard
+              requiredPermissions={[
+                Permission.STORE_ACTIONS,
+                Permission.STORE_DELETE_ACTIONS,
+              ]}
             >
-              {t('DELETE LOCATION')}
-            </Button>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => {
+                  handleDelete(editingReqCode?.id || '');
+                  // }
+                }}
+              >
+                {t('DELETE LOCATION')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
         {/* <Col span={4} style={{ textAlign: 'right' }}>

@@ -18,7 +18,7 @@ const RequirementAdministration: FC<RequirementManagementProps> = () => {
   const { t } = useTranslation();
   const items: MenuItem[] = [
     getItem(
-      <>{t('REQUIREMENT ADMINISTRATION')} (BAN:01)</>,
+      <>{t('REQUIREMENT ADMINISTRATION')}</>,
       'sub1',
       <ApartmentOutlined />
     ),

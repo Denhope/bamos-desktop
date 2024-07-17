@@ -70,6 +70,7 @@ import PickSlipConfirmationNew from './APN/PickSlipConfirmationNew';
 import WPAdministration from './APN/WPAdministration';
 type homePropsType = { apnRoute: any | null };
 const Home: FC<homePropsType> = ({ apnRoute }) => {
+  const { user } = useTypedSelector((state) => state.auth);
   const onMenuClick = ({ key }: { key: string }) => {
     let tab:
       | {
@@ -416,7 +417,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.PICKSLIP_CONFIRMATIONS_NEW) {
       tab = {
         key,
-        title: `${t(`PICKSLIP CONFIRMATION NEW`)}`,
+        title: `${t(`PICKSLIP CONFIRMATION`)}`,
         content: (
           <div className="h-[82vh] overflow-hidden">
             <PickSlipConfirmationNew />
@@ -741,6 +742,206 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
     getItem(t('SHELF EXPIRY'), RouteNames.SHELF_LIFE, <SisternodeOutlined />),
     // getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
   ];
+
+  const roleMenuItems: Record<any, any[]> = {
+    admin: [
+      getItem(
+        t('ADMINISTRATION'),
+        RouteNames.USER_ADMINISTRATION,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('WP ADMINISTRATION'),
+        RouteNames.WP_ADMINISTRATION,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('PROJECT ADMINISTRATION'),
+        RouteNames.PROJECT_ADMINISTRATION,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STORES ADMINISTRATION'),
+        RouteNames.STORES_ADMINISTRATIONS,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('RECEIVING VIEWER'),
+        RouteNames.RESERVING_TRACK,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('GOODS RECEIVING'),
+        RouteNames.GOODS_RESERVING_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
+      getItem(
+        t('PARTS TRANSFER'),
+        RouteNames.PARTS_TRANSFER,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PICKSLIP CONFIRMATION'),
+        RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('CANCEL PICKSLIP'),
+        RouteNames.PICKSLIP_CANCEL,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('CANCEL RECEIVING'),
+        RouteNames.CANCEL_RESERVING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('RECEIVING VIEWER'),
+        RouteNames.RESERVING_TRACK,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER ADMINISTARTION'),
+        RouteNames.ORDERS_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER VIEWER'),
+        RouteNames.ORDER_VIEWER_NEW,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('WORKORDER ADMINISTRATION'),
+        RouteNames.WORKORDER_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+    ],
+    technican: [],
+    engineer: [
+      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
+      getItem(
+        t('PICKSLIP ADMINISTRATION'),
+        RouteNames.PICKSLIP_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ShoppingCartOutlined />
+      ),
+    ],
+    planing: [],
+    logistic: [
+      getItem(
+        t('PICKSLIP CONFIRMATION'),
+        RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('CANCEL PICKSLIP'),
+        RouteNames.PICKSLIP_CANCEL,
+        <ShoppingCartOutlined />
+      ),
+    ],
+    storeman: [
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STORES ADMINISTRATION'),
+        RouteNames.STORES_ADMINISTRATIONS,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('RECEIVING VIEWER'),
+        RouteNames.RESERVING_TRACK,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('GOODS RECEIVING'),
+        RouteNames.GOODS_RESERVING_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PARTS TRANSFER'),
+        RouteNames.PARTS_TRANSFER,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
+      getItem(
+        t('PICKSLIP CONFIRMATION'),
+        RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('CANCEL PICKSLIP'),
+        RouteNames.PICKSLIP_CANCEL,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('CANCEL RECEIVING'),
+        RouteNames.CANCEL_RESERVING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER ADMINISTARTION'),
+        RouteNames.ORDERS_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER VIEWER'),
+        RouteNames.ORDER_VIEWER_NEW,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ShoppingCartOutlined />
+      ),
+    ],
+    director: [
+      getItem(
+        t('STORES ADMINISTRATION'),
+        RouteNames.STORES_ADMINISTRATIONS,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+    ],
+  };
+
+  const menuItems = roleMenuItems[user.role] || [];
   const navigate = useNavigate();
   const [selectedTopKeys, setSelectedTopKeys] = useState<string[]>([
     RouteNames.HOME,
@@ -783,7 +984,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
                 onClick={onMenuClick}
                 // onSelect={handleClick}
                 mode="vertical"
-                items={itemsHorisontal}
+                items={menuItems}
                 selectedKeys={selectedTopKeys}
               />
             </ProCard>

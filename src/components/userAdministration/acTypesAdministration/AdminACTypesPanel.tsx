@@ -16,6 +16,7 @@ import {
   useUpdateACTypeMutation,
 } from '@/features/acTypeAdministration/acTypeApi';
 import { Split } from '@geoffcox/react-splitter';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface AdminPanelProps {
   values: ACTypesFilteredFormValues;
@@ -81,23 +82,27 @@ const AdminACTypesPanel: React.FC<AdminPanelProps> = ({ values }) => {
     <>
       <Space className="gap-4 pb-3">
         <Col span={20}>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD AC TYPE')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.AC_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD AC TYPE')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           {editingACType && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingACType.id)}
-            >
-              {t('DELETE AC TYPE')}
-            </Button>
+            <PermissionGuard requiredPermissions={[Permission.AC_ACTIONS]}>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingACType.id)}
+              >
+                {t('DELETE AC TYPE')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>

@@ -7,6 +7,7 @@ import { uploadFileServer } from '@/utils/api/thunks';
 
 import { ProFormTextArea } from '@ant-design/pro-components';
 import { IProjectType } from '@/models/AC';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface UserFormProps {
   project?: IProjectType;
@@ -61,9 +62,11 @@ const ProjectTypeForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     }
   };
   const SubmitButton = () => (
-    <Button type="primary" htmlType="submit">
-      {project ? t('UPDATE') : t('CREATE')}
-    </Button>
+    <PermissionGuard requiredPermissions={[Permission.WP_ACTIONS]}>
+      <Button type="primary" htmlType="submit">
+        {project ? t('UPDATE') : t('CREATE')}
+      </Button>
+    </PermissionGuard>
   );
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   return (

@@ -22,6 +22,7 @@ import {
   useAddStoreMutation,
   useUpdateStoreMutation,
 } from '@/features/storeAdministration/StoreApi';
+import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 interface AdminPanelProps {
   storeSearchValues: any;
 }
@@ -112,36 +113,45 @@ const StorePanel: React.FC<AdminPanelProps> = ({ storeSearchValues }) => {
       </Space>
       <Space className="">
         <Col>
-          <Button
-            size="small"
-            icon={<PlusSquareOutlined />}
-            onClick={handleCreate}
-          >
-            {t('ADD STORE')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.STORE_ACTIONS]}>
+            <Button
+              size="small"
+              icon={<PlusSquareOutlined />}
+              onClick={handleCreate}
+            >
+              {t('ADD STORE')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {editingStore && (
-            <Button
-              size="small"
-              icon={<MinusSquareOutlined />}
-              onClick={() => handleDelete(editingStore.id || '')}
+            <PermissionGuard
+              requiredPermissions={[
+                Permission.STORE_ACTIONS,
+                Permission.STORE_DELETE_ACTIONS,
+              ]}
             >
-              {t('DELETE STORE')}
-            </Button>
+              <Button
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDelete(editingStore.id || '')}
+              >
+                {t('DELETE STORE')}
+              </Button>
+            </PermissionGuard>
           )}
         </Col>
       </Space>
       <div className="h-[77vh] flex flex-col">
         <Split initialPrimarySize="15%" splitterSize="20px">
-          <div className="h-[67vh] bg-white px-4 pb-3 rounded-md border-gray-400 p-3 flex flex-col">
+          <div className="h-[77vh] bg-white px-4 pb-3 rounded-md border-gray-400 p-3 flex flex-col">
             <StoreTree
               isLoading={isLoading || partsLoadingF}
               onstoreSelect={handleEdit}
               stores={stores || []}
             />
           </div>
-          <div className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+          <div className="  h-[77vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <StoreAdminForm
               onSubmit={handleSubmit}
               store={editingStore || undefined}

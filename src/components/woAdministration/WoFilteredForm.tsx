@@ -16,7 +16,8 @@ import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessAp
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
@@ -337,7 +338,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
       <ProFormSelect
-        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC']}
+        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC', 'FC']}
         mode="multiple"
         name="projectItemType"
         label={`${t('TASK TYPE')}`}
@@ -352,7 +353,8 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
 
           NRC: { text: t('NRC (Defect)') },
           NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
-          MJC: { text: 'MJC (Extended MPD) ' },
+          MJC: { text: t('MJC (Extended MPD)') },
+
           CMJC: { text: t('CMJC (Component maintenance) ') },
           FC: { text: t('FC (Fabrication card)') },
         }}

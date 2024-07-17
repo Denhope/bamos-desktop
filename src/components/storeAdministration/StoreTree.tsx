@@ -133,7 +133,7 @@ const WOTree: FC<UserTreeProps> = ({ onstoreSelect, stores, isLoading }) => {
         treeData={filteredTreeData}
         checkable={true}
         searchQuery={searchQuery}
-        height={600}
+        height={580}
         onSelect={(selectedKeys, info) => {
           const project = stores.find(
             (project) => project.id === selectedKeys[0]
