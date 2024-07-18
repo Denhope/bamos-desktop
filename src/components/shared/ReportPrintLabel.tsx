@@ -1,73 +1,62 @@
 //@ts-nocheck
 import React, { useState } from 'react';
-
 import xml2js from 'xml2js';
 import JsBarcode from 'jsbarcode';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
-
 import moment from 'moment';
 import { SING } from '@/utils/api/http';
 import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
-import { createPdf } from '@/services/createPdf';
+import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
+import robotoFont from '../../fonts/Roboto-Regular.ttf'; // Путь к вашему шрифту Roboto
 
 interface ReportGeneratorProps {
-  xmlTemplate: string; // XML-шаблон для генерации PDF
-  data?: any[]; // Массив данных для заполнения шаблона, по умолчанию пустой массив
+  xmlTemplate: string;
+  data?: any[];
   isDisabled?: boolean;
-  ids?: any; // Перечень ID для получения данных о частях, если `data` не передано
+  ids?: any;
 }
 
 const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   xmlTemplate,
-  data = [], // По умолчанию, data – пустой массив
+  data = [],
   isDisabled,
   ids,
 }) => {
-  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Получение данных о частях
   const { data: parts, isLoading: partsLoading } = useGetStorePartsQuery(
-    ids ? { ids: ids } : {}, // Выполнение запроса только если переданы ID
+    ids ? { ids: ids } : {},
     {
-      skip: !ids || data?.length > 0, // Пропуск запроса, если нет ID или если переданы данные `data`
+      skip: !ids || data?.length > 0,
     }
   );
 
   const { t } = useTranslation();
 
-  // Функция для генерации штрихкода из строки данных
   const generateBarcode = (data: any) => {
     const canvas = document.createElement('canvas');
     JsBarcode(canvas, data, {
-      format: 'CODE128', // Формат штрихкода
-      displayValue: false, // Показывать значения рядом с штрихкодом
-      width: 1, // Ширина линий штрихкода
-      height: 15, // Высота штрихкода
-      margin: 0, // Отступы
+      format: 'CODE128',
+      displayValue: false,
+      width: 1,
+      height: 15,
+      margin: 0,
     });
-    return canvas.toDataURL(); // Возвращает URL изображения штрихкода
+    return canvas.toDataURL();
   };
 
-  // Генерация PDF
   const generatePdfFile = async () => {
-    // const pdfMake = (await import('pdfmake/build/pdfmake')).default;
-    // const pdfFonts = (await import('pdfmake/build/vfs_fonts')).default;
-    // pdfMake.vfs = pdfFonts.pdfMake.vfs;
     setLoading(true);
 
     try {
       console.log('Начало генерации PDF');
       console.log('xmlTemplate:', xmlTemplate);
 
-      // Преобразование XML в JSON
-      console.log('Преобразование XML в JSON');
       const jsonTemplate = await xml2js.parseStringPromise(xmlTemplate);
 
-      // Заменяем ${data[i].prop} на фактические данные
-      console.log('Вставка данных в шаблон');
       const filledTemplate = JSON.parse(
         JSON.stringify(jsonTemplate),
         (key, value) => {
@@ -83,235 +72,277 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
       const usedData = data.length > 0 ? data : parts;
 
-      // Создание PDF
-      console.log('Создание PDF');
-      const docDefinition = {
-        pageMargins: [5, 5, 5, 5], // Установка отступов: верх, право, низ, лево
-        defaultStyle: {
-          fontSize: 10, // Установка размера шрифта 10 для всего документа
-        },
-        pageSize: {
-          width: 174,
-          height: 280,
-          unit: 'mm', // Установка единиц измерения в миллиметрах
-        },
-        content:
-          usedData &&
-          usedData.map((product: any, index: number) => ({
-            pageBreak: index < usedData.length - 1 ? 'after' : '',
-            columns: [
-              {
-                stack: [
-                  [
-                    {
-                      columns: [
-                        {
-                          image: generateBarcode(
-                            product?.LOCAL_ID || product?.locationID?.LOCAL_ID
-                          ),
-                          width: 60,
-                          height: 15,
-                          alignment: 'left',
-                          margin: [0, 0, 0, 1],
-                        },
-                        {
-                          text:
-                            product.COMPANY_ID?.title ||
-                            product?.storeItemID?.COMPANY_ID?.title,
-                          fontSize: 14,
-                          bold: true,
-                          alignment: 'right',
-                          width: '62%',
-                        },
-                      ],
-                    },
-                    {
-                      text: `L: ${
-                        product.LOCAL_ID ||
-                        product?.storeItemID?.locationID?.LOCAL_ID
-                      }`,
-                      fontSize: 8,
-                      alignment: 'left',
-                      margin: [0, 0, 0, 5],
-                    },
-                  ],
-                  {
-                    text: `${
-                      product?.locationID?.restrictionID === 'standart' ||
-                      product?.storeItemID?.locationID?.restrictionID ===
-                        'standart' ||
-                      product?.storeItemID?.locationID?.locationType ===
-                        'reservation'
-                        ? `${t('SERVICABLE TAG')}`
-                        : `${t('UNSERVICEABLE TAG')}`
-                    }`,
-                    fontSize: 13,
-                    bold: true,
-                    margin: [0, 0, 0, 5],
-                  },
-                  {
-                    text: `${t('PART No')}: ${
-                      product?.PART_NUMBER || product?.storeItemID?.PART_NUMBER
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('BATCH No')}: ${
-                      product?.SUPPLIER_BATCH_NUMBER ||
-                      product?.storeItemID?.SUPPLIER_BATCH_NUMBER ||
-                      'N/A'
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('MC/QTY')}: ${
-                      product?.GROUP || product?.storeItemID?.GROUP
-                    } / ${product?.QUANTITY || product?.bookedQty}/${
-                      product.UNIT_OF_MEASURE ||
-                      product?.storeItemID?.UNIT_OF_MEASURE
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('CONDITION')}: ${
-                      product?.CONDITION ||
-                      product?.storeItemID?.CONDITION ||
-                      'N/A'
-                    } `,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('EXP.DATE')}: ${
-                      product.PRODUCT_EXPIRATION_DATE ||
-                      (product?.storeItemID?.PRODUCT_EXPIRATION_DATE &&
-                        moment(
-                          product.PRODUCT_EXPIRATION_DATE ||
-                            product?.storeItemID?.PRODUCT_EXPIRATION_DATE
-                        ).format('Do. MMM. YYYY')) ||
-                      'N/A'
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('DESCRIPTION')}: ${String(
-                      product?.NAME_OF_MATERIAL ||
-                        product?.storeItemID?.NAME_OF_MATERIAL
-                    ).toUpperCase()}`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('CERT No')}: ${
-                      product?.APPROVED_CERT ||
-                      product?.storeItemID?.APPROVED_CERT ||
-                      'N/A'
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('ORDER No')}: ${
-                      product?.ORDER_NUMBER ||
-                      product?.storeItemID?.ORDER_NUMBER ||
-                      'N/A'
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    text: `${t('REC.DATE')}: ${
-                      product.RECEIVED_DATE ||
-                      product?.storeItemID?.RECEIVED_DATE
-                        ? moment(
-                            product.RECEIVED_DATE ||
-                              product?.storeItemID?.RECEIVED_DATE
-                          )
-                            .locale('en')
-                            .format('DD.MM.YYYY') // Установка локали и форматирование даты
-                        : 'N/A'
-                    }`,
-                    margin: [0, 0, 0, 2],
-                  },
-                  {
-                    canvas: [
-                      {
-                        type: 'rect',
-                        x: 0,
-                        y: 0,
-                        w: 165,
-                        h: 30,
-                        border: [true, true, true, true], // Установите границу для всех сторон
-                        alignment: 'left',
-                      },
-                    ],
-                  },
-                  {
-                    stack: [
-                      {
-                        text: `${t('MATERIAL INCOMING INSPECTION')}`,
-                        bold: true,
-                        border: [true, true, true, false],
-                        margin: [2, -30, 2, 2],
-                      },
-                      {
-                        text: '1799',
-                        bold: true,
-                        margin: [5, 0, 5, 5],
-                      },
-                    ],
-                    margin: [0, 0, 0, 5],
-                  },
-                  {
-                    text: `${String(
-                      product?.storeID?.storeShortName ||
-                        product?.storeItemID?.storeID?.storeShortName
-                    ).toUpperCase()}/${
-                      product?.locationID?.locationName ||
-                      product?.storeItemID?.locationID?.locationName ||
-                      'N/A'
-                    }`,
-                    bold: true,
-                  },
-                  {
-                    text: `${t('PRINT BY')} ${SING} ${new Date().toLocaleString(
-                      'ru-RU'
-                    )}`,
-                    alignment: 'left',
-                    fontSize: 6,
-                    margin: [0, 5, 0, 0],
-                  },
-                ],
-                alignment: 'left',
-              },
-            ],
-          })),
-        styles: {
-          header: {
-            Roboto: 8,
-            bold: true,
-            margin: [0, 0, 0, 5],
-          },
-        },
-      };
+      const pdfDoc = await PDFDocument.create();
+      pdfDoc.registerFontkit(fontkit);
 
-      const pdfDoc = createPdf(docDefinition);
-      (await pdfDoc).getBlob((blob: Blob) => {
-        const fileURL = window.URL.createObjectURL(blob);
-        const newWindow = window.open(fileURL, '_blank');
+      // Загрузка шрифта Roboto
+      const fontBytes = await fetch(robotoFont).then((res) =>
+        res.arrayBuffer()
+      );
+      const font = await pdfDoc.embedFont(fontBytes);
 
-        // Если браузер блокирует открытие файла, предлагаем сохранить его
-        if (
-          !newWindow ||
-          newWindow.closed ||
-          typeof newWindow.closed === 'undefined'
-        ) {
-          alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
-        } else {
-          newWindow.focus();
-        }
+      for (const product of usedData) {
+        const page = pdfDoc.addPage([174, 280]);
+        const { width, height } = page.getSize();
 
-        // Не забываем очищать URL после открытия файла
-        window.URL.revokeObjectURL(fileURL);
-        console.log('PDF успешно создан');
-        setPdfBlob(blob);
-      });
+        const barcodeImage = await pdfDoc.embedPng(
+          generateBarcode(product?.LOCAL_ID || product?.locationID?.LOCAL_ID)
+        );
+        page.drawImage(barcodeImage, {
+          x: 5,
+          y: height - 20,
+          width: 60,
+          height: 15,
+        });
+
+        page.drawText(
+          product.COMPANY_ID?.title || product?.storeItemID?.COMPANY_ID?.title,
+          {
+            x: 70,
+            y: height - 15,
+            size: 14,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `L: ${
+            product.LOCAL_ID || product?.storeItemID?.locationID?.LOCAL_ID
+          }`,
+          {
+            x: 5,
+            y: height - 30,
+            size: 8,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${
+            product?.locationID?.restrictionID === 'standart' ||
+            product?.storeItemID?.locationID?.restrictionID === 'standart' ||
+            product?.storeItemID?.locationID?.locationType === 'reservation'
+              ? `${t('SERVICABLE TAG')}`
+              : `${t('UNSERVICEABLE TAG')}`
+          }`,
+          {
+            x: 5,
+            y: height - 45,
+            size: 13,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('PART No')}: ${
+            product?.PART_NUMBER || product?.storeItemID?.PART_NUMBER
+          }`,
+          {
+            x: 5,
+            y: height - 60,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('BATCH No')}: ${
+            product?.SUPPLIER_BATCH_NUMBER ||
+            product?.storeItemID?.SUPPLIER_BATCH_NUMBER ||
+            'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 75,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('MC/QTY')}: ${product?.GROUP || product?.storeItemID?.GROUP} / ${
+            product?.QUANTITY || product?.bookedQty
+          }/${
+            product.UNIT_OF_MEASURE || product?.storeItemID?.UNIT_OF_MEASURE
+          }`,
+          {
+            x: 5,
+            y: height - 90,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('CONDITION')}: ${
+            product?.CONDITION || product?.storeItemID?.CONDITION || 'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 105,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('EXP.DATE')}: ${
+            product.PRODUCT_EXPIRATION_DATE ||
+            (product?.storeItemID?.PRODUCT_EXPIRATION_DATE &&
+              moment(
+                product.PRODUCT_EXPIRATION_DATE ||
+                  product?.storeItemID?.PRODUCT_EXPIRATION_DATE
+              ).format('Do. MMM. YYYY')) ||
+            'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 120,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('DESCRIPTION')}: ${String(
+            product?.NAME_OF_MATERIAL || product?.storeItemID?.NAME_OF_MATERIAL
+          ).toUpperCase()}`,
+          {
+            x: 5,
+            y: height - 135,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('CERT No')}: ${
+            product?.APPROVED_CERT ||
+            product?.storeItemID?.APPROVED_CERT ||
+            'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 150,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('ORDER No')}: ${
+            product?.ORDER_NUMBER || product?.storeItemID?.ORDER_NUMBER || 'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 165,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('REC.DATE')}: ${
+            product.RECEIVED_DATE || product?.storeItemID?.RECEIVED_DATE
+              ? moment(
+                  product.RECEIVED_DATE || product?.storeItemID?.RECEIVED_DATE
+                )
+                  .locale('en')
+                  .format('DD.MM.YYYY')
+              : 'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 180,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawRectangle({
+          x: 5,
+          y: height - 248,
+          width: 165,
+          height: 30,
+          borderWidth: 1,
+          borderColor: rgb(0, 0, 0),
+        });
+
+        page.drawText(`${t('MATERIAL INCOMING INSPECTION')}`, {
+          x: 7,
+          y: height - 230,
+          size: 10,
+          font,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(SING, {
+          x: 7,
+          y: height - 245,
+          size: 10,
+          font,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(
+          `${String(
+            product?.storeID?.storeShortName ||
+              product?.storeItemID?.storeID?.storeShortName
+          ).toUpperCase()}/${
+            product?.locationID?.locationName ||
+            product?.storeItemID?.locationID?.locationName ||
+            'N/A'
+          }`,
+          {
+            x: 5,
+            y: height - 265,
+            size: 10,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+
+        page.drawText(
+          `${t('PRINT BY')} ${SING} ${new Date().toLocaleString('ru-RU')}`,
+          {
+            x: 5,
+            y: height - 277,
+            size: 6,
+            font,
+            color: rgb(0, 0, 0),
+          }
+        );
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(blob);
+      const newWindow = window.open(fileURL, '_blank');
+
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+      } else {
+        newWindow.focus();
+      }
+
+      URL.revokeObjectURL(fileURL);
+      console.log('PDF успешно создан');
     } catch (error) {
       console.error('Ошибка при генерации PDF:', error);
     } finally {

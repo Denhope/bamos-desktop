@@ -1,14 +1,13 @@
 //@ts-nocheck
 import React, { useState, useEffect } from 'react';
-
 import { useTranslation } from 'react-i18next';
 import { Button, Modal } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
 import QRCode from 'qrcode';
-
 import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 import { ProFormCheckbox, ProFormDigit, ProForm } from '@ant-design/pro-form';
-import { createPdf } from '@/services/createPdf';
+import { PDFDocument, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 
 interface ReportGeneratorProps {
   data: any[];
@@ -31,30 +30,6 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   pageBreakAfter: defaultPageBreakAfter = true,
   openSettingsModal = false,
 }) => {
-  // const loadPdfMake = async () => {
-  //   // Загружаем pdfmake.js как текст
-  //   const pdfMakeResponse = await fetch('/pdfmake.js');
-  //   const pdfMakeText = await pdfMakeResponse.text();
-
-  //   // Выполняем скрипт pdfmake и получаем объект pdfMake
-  //   const executePdfMake = new Function('module', 'exports', pdfMakeText);
-  //   const pdfMakeModule = { exports: {} };
-  //   executePdfMake(pdfMakeModule, pdfMakeModule.exports);
-  //   const pdfMake = pdfMakeModule.exports;
-
-  //   // Загружаем vfs_fonts.js как текст
-  //   const vfsResponse = await fetch('/vfs_fonts.js');
-  //   const vfsText = await vfsResponse.text();
-
-  //   // Выполняем скрипт vfs_fonts для загрузки в pdfMake
-  //   const executeVfs = new Function('pdfMake', vfsText);
-  //   executeVfs(pdfMake);
-
-  //   // Назначаем vfs системе pdfMake
-  //   pdfMake.vfs = pdfMake.vfs;
-
-  //   return pdfMake;
-  // };
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [settingsVisible, setSettingsVisible] = useState<boolean>(false);
@@ -105,92 +80,83 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   };
 
   const generatePdfFile = async () => {
-    // const pdfMake = await loadPdfMake();
-    // const pdfMake = (await import('pdfmake/build/pdfmake')).default;
-    // const pdfFonts = (await import('pdfmake/build/vfs_fonts')).default;
-    // pdfMake.vfs = pdfFonts.pdfMake.vfs;
     setLoading(true);
-    // const pdfMake = await loadPdfMake();
-    // if (pdfMake) {
+
     try {
+      const pdfDoc = await PDFDocument.create();
+      pdfDoc.registerFontkit(fontkit);
+
+      if (!parts) {
+        throw new Error('Parts data is undefined');
+      }
+
       const qrCodes = await Promise.all(
         parts.map(async (product: any) => {
           const qrDataURL = await generateQRCodeDataURL(
             String(product.LOCAL_ID)
           );
-          return qrDataURL
-            ? {
-                qrCode: qrDataURL,
-                data: product,
-              }
-            : null;
+          return qrDataURL ? { qrCode: qrDataURL, data: product } : null;
         })
       );
 
       const qrCodesFiltered = qrCodes.filter((qrCode) => qrCode !== null);
 
-      const docDefinition: any = {
-        pageMargins: [2, 2, 1, 1],
-        defaultStyle: {
-          fontSize: fontSize,
-        },
-        pageSize: pageSize,
-        content: qrCodesFiltered.map((qrCode) => ({
-          columns: [
-            {
-              stack: [
-                {
-                  image: qrCode?.qrCode,
-                  width: qrCodeSize,
-                  height: qrCodeSize,
-                  alignment: 'left',
-                  margin: [-3, -3, -5, -5],
-                },
-                {
-                  text: JSON.stringify(qrCode?.data.LOCAL_ID),
-                  fontSize: fontSize,
-                  alignment: 'left',
-                  margin: [3, 0, 0, 0],
-                },
-              ],
-              alignment: 'left',
-            },
-          ],
-          pageBreak: pageBreakAfter ? 'after' : undefined,
-        })),
-        styles: {
-          header: {
-            fontSize: 8,
-            bold: true,
-            margin: [0, 0, 0, 5],
-          },
-        },
-      };
+      let currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
+      let currentY = pageSize.height - qrCodeSize - 5;
 
-      const pdfDoc = createPdf(docDefinition);
-      (await pdfDoc).getBlob((blob: Blob) => {
-        const fileURL = window.URL.createObjectURL(blob);
-        const newWindow = window.open(fileURL, '_blank');
+      for (const qrCode of qrCodesFiltered) {
+        if (!qrCode) continue;
 
-        if (
-          !newWindow ||
-          newWindow.closed ||
-          typeof newWindow.closed === 'undefined'
-        ) {
-          alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
-        } else {
-          newWindow.focus();
+        if (currentY < qrCodeSize + 5) {
+          currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
+          currentY = pageSize.height - qrCodeSize - 5;
         }
 
-        window.URL.revokeObjectURL(fileURL);
-        setPdfBlob(blob);
-      });
+        const qrImage = await pdfDoc.embedPng(qrCode.qrCode);
+        currentPage.drawImage(qrImage, {
+          x: 5,
+          y: currentY,
+          width: qrCodeSize,
+          height: qrCodeSize,
+        });
+
+        currentPage.drawText(String(qrCode.data.LOCAL_ID), {
+          x: 5,
+          y: currentY - 20,
+          size: fontSize,
+          color: rgb(0, 0, 0),
+        });
+
+        currentY -= qrCodeSize + 25; // Adjust the spacing as needed
+
+        if (pageBreakAfter || currentY < qrCodeSize + 5) {
+          currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
+          currentY = pageSize.height - qrCodeSize - 5;
+        }
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(blob);
+      const newWindow = window.open(fileURL, '_blank');
+
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+      } else {
+        newWindow.focus();
+      }
+
+      window.URL.revokeObjectURL(fileURL);
+      setPdfBlob(blob);
     } catch (error) {
       console.error('Ошибка при генерации PDF:', error);
     } finally {
       setLoading(false);
     }
-    // }
   };
 
   const handleSettingsOk = () => {
