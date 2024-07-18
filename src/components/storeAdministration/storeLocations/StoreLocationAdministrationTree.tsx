@@ -136,7 +136,7 @@ const StoreLocationAdministrationTree: FC<reqTreeProps> = ({
             onProjectItemSelect(reqGroup);
           }
         }}
-        height={480}
+        height={460}
         searchQuery={searchQuery}
       />
     </div>

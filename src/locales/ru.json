@@ -557,7 +557,7 @@
   "RU": "РУС",
   "EN": "АНГЛ",
   "PROJECT LOG": "СПИСОК ПАКЕТОВ",
-  "ADD NEW PART": "ДОБАВИТЬ ПОЗИЦИЮ",
+  "ADD NEW PART": "ДОБАВИТЬ",
   "CANCEL": "ОТМЕНА",
   "SAVE": "СОХРАНИТЬ",
   "SEARCH": "ПОИСК",
@@ -725,8 +725,8 @@
   "SHEDULED MAINTENENCE CHEACK": "ТЕХОБСЛУЖИВАНИЕ",
   "AIRWORTHINESS DIRECTIVE": "ДИРЕКТИВА ЛЕТНОЙ ГОДНОСТИ",
   "COMPONENT": "КОМПОНЕНТ",
-  "ADD ITEM": "ДОВАВИТЬ ПОЗИЦИЮ",
-  "REMOVE ITEM": "УДАЛИТЬ ПОЗИЦИЮ",
+  "ADD ITEM": "ДОВАВИТЬ",
+  "REMOVE ITEM": "УДАЛИТЬ",
   "CREATE WO": "СОЗДАТЬ ЗАКАЗ",
   "ADD PART NUMBER": "ДОБАВИТЬ НОМЕНКЛАТУРНЫЙ НОМЕР",
   "DELETE PART NUMBER": "УДАЛИТЬ НОМЕНКЛАТУРНЫЙ НОМЕР",
@@ -876,5 +876,7 @@
   "EDIT_STEP": "РЕДАКТИРОВАНИЕ ШАГА",
   "EDIT_ACTION": "РЕДАКТИРОВАНИЕ ДЕЙСТВИЯ",
   "ADD_STEP": "ДОБАВЛЕНИЕ ШАГА",
-  "DELETE_STEP": "УДАЛЕНИЕ ШАГА"
+  "DELETE_STEP": "УДАЛЕНИЕ ШАГА",
+  "DELETE ITEM": "УДАЛИТЬ",
+  "GENERATE ACCEESS": "СОЗДАТЬ ПАНЕЛИ"
 }

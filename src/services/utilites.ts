@@ -1382,16 +1382,15 @@ export const transformToIProjectTask = (data: any[]): any[] => {
 };
 type Role =
   | 'admin'
-  | 'mech'
-  | 'engeneer'
-  | 'planing'
+  | 'engineer'
+  | 'planning'
   | 'logistic'
-  | 'storeman'
-  | 'director';
+  | 'storeMan'
+  | 'director'
+  | 'technican';
 export const rolePermissions: Record<Role, string[]> = {
   admin: [
     '01',
-    '05',
     '02',
     '03',
     '04',
@@ -1409,31 +1408,28 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '17',
     '18',
+    '19',
+    '20',
+    '21',
   ],
-  mech: [
+  technican: ['02', '05', '06', '08', '10', '12', '15', '21'],
+  engineer: [
     '01',
-    '05',
     '02',
-    '03',
-    '04',
     '05',
     '06',
     '07',
     '08',
     '09',
-    '10',
-    '11',
     '12',
     '13',
-    '14',
     '15',
     '16',
-    '17',
-    '18',
+    '20',
+    '21',
   ],
-  engeneer: [
+  planning: [
     '01',
-    '05',
     '02',
     '03',
     '04',
@@ -1443,39 +1439,15 @@ export const rolePermissions: Record<Role, string[]> = {
     '08',
     '09',
     '10',
-    '11',
     '12',
     '13',
-    '14',
     '15',
     '16',
-    '17',
-    '18',
-  ],
-  planing: [
-    '01',
-    '05',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
+    '20',
+    '21',
   ],
   logistic: [
     '01',
-    '05',
     '02',
     '03',
     '04',
@@ -1493,14 +1465,13 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '17',
     '18',
+    '19',
+    '20',
+    '21',
   ],
-  storeman: [
+  storeMan: [
     '01',
-    '05',
     '02',
-    '03',
-    '04',
-    '05',
     '06',
     '07',
     '08',
@@ -1514,10 +1485,11 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '17',
     '18',
+    '19',
+    '20',
   ],
   director: [
     '01',
-    '05',
     '02',
     '03',
     '04',
@@ -1535,6 +1507,9 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '17',
     '18',
+    '19',
+    '20',
+    '21',
   ],
 };
 

@@ -212,7 +212,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             taskType: 'FC',
           }).unwrap();
           message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        } else if (project && project.projectType == 'baseMaintenance') {
+        } else if (project && project.projectType == 'baseMaintanance') {
           await addProjectItem({
             projectItem: reqCode,
             projectID: projectID,
@@ -241,7 +241,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
           message.success(t('УСПЕШНО ДОБАВЛЕНО'));
           // setEditingReqCode(null);
         }
-      } else if (project && project.projectType == 'baseMaintenance') {
+      } else if (project && project.projectType == 'baseMaintanance') {
         await addMultiProjectItems({
           projectItemsDTO: data,
           projectID: projectID,
@@ -362,11 +362,11 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             onFileProcessed={function (data: any[]): void {
               handleAddMultiItems(data);
             }}
-            requiredFields={['PART_NUMBER']}
+            requiredFields={['taskNumber']}
           ></FileUploader>
         </Col>
         <Col style={{ textAlign: 'right' }}>
-          {/* <Button
+          <Button
             // disabled
             // disabled={!selectedKeys.length && selectedKeys.length < 1}
             size="small"
@@ -374,7 +374,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             onClick={() => handleGenerateWOPanels(selectedKeys)}
           >
             {t('GENERATE ACCEESS')}
-          </Button> */}
+          </Button>
         </Col>
 
         <Col style={{ textAlign: 'right' }}>

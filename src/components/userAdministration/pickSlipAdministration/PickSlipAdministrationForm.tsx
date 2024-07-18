@@ -40,6 +40,7 @@ import {
 import { Split } from '@geoffcox/react-splitter';
 import Title from 'antd/lib/typography/Title';
 import BookedPartContainer from '@/components/layout/pickSlipConfirmationNew/BookedPartContainer';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 interface UserFormProps {
   requierement?: any;
@@ -503,6 +504,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                   partNumbers={[]}
                   onUpdateData={(data: any[]): void => {}}
                   rowData={transformedRequirements}
+                  isLoading={isLoading}
                 />
               </div>
               <div className="flex flex-col">
