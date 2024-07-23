@@ -341,7 +341,7 @@ const PickSlipConfirmationNew: FC = () => {
     },
     {
       field: 'canceledQty',
-      headerName: `${t('CANCELED QTY')}`,
+      headerName: `${t('CANCELLED QTY')}`,
       cellDataType: 'number',
     },
     {
@@ -368,13 +368,18 @@ const PickSlipConfirmationNew: FC = () => {
     // Фильтруем части по дате и restrictionID
     const filteredParts = (parts || []).filter((part) => {
       // Преобразуем дату истечения срока годности в объект Date
-      const expirationDate = new Date(part.PRODUCT_EXPIRATION_DATE);
+      const expirationDate = new Date(part?.PRODUCT_EXPIRATION_DATE);
 
       // Проверяем, что дата не прошла и restrictionID не равно "standart"
-      return (
-        expirationDate >= currentDate &&
-        part?.locationID?.restrictionID == 'standart'
-      );
+
+      if (part?.PRODUCT_EXPIRATION_DATE) {
+        return (
+          expirationDate >= currentDate &&
+          part?.locationID?.restrictionID == 'standart'
+        );
+      } else {
+        return part?.locationID?.restrictionID == 'standart';
+      }
     });
 
     // Применяем функцию transformToIStockPartNumber к отфильтрованным частям
@@ -573,6 +578,7 @@ const PickSlipConfirmationNew: FC = () => {
               }
               // Вызываем addBookingsPickslip после обновления pickSlipItemID
             } else {
+              console.log('added');
               await addBookingsPickslip({
                 pickSlipItem: {
                   status: item?.status,
@@ -591,16 +597,20 @@ const PickSlipConfirmationNew: FC = () => {
                   projectTaskWO: item?.projectTaskWO,
                   projectWO: item?.projectWO,
                 },
-              }).unwrap();
-              // pickSlipRefetch();
-              // refetchItems();
-              // notification.info({
-              //   message: t('PARTS IN PROGRESS'),
-              //   description: t('Parts in Progress'),
-              // });
+              });
+
+              // .unwrap();
             }
             // После установки item.pickSlipItemID вызываем addBookingsPickslip
           }
+          pickSlipRefetch();
+          refetchItems();
+          // refetchItems();
+
+          notification.info({
+            message: t('PARTS IN PROGRESS'),
+            description: t('Parts in Progress'),
+          });
         } catch (error) {
           notification.error({
             message: t('ERROR'),
@@ -822,7 +832,7 @@ const PickSlipConfirmationNew: FC = () => {
     <div className="h-[82vh]    overflow-hidden flex flex-col justify-between ">
       <Split initialPrimarySize="48%" horizontal splitterSize="20px">
         <div className="flex flex-col ">
-          <Split initialPrimarySize="36%" splitterSize="20px">
+          <Split initialPrimarySize="40%" splitterSize="20px">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col rounded-md p-3 h-[35vh] bg-white overflow-y-auto  ">
                 <PickslipRequestFilterForm
@@ -952,7 +962,7 @@ const PickSlipConfirmationNew: FC = () => {
                 size="small"
               >
                 {' '}
-                {t('COMPLETE')}
+                {t('TO COMPLETE')}
               </Button>
               <Button
                 disabled={

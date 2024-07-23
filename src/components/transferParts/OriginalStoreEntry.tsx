@@ -21,6 +21,7 @@ import {
   Tag,
   Row,
   Divider,
+  notification,
 } from 'antd';
 
 import { useAppDispatch } from '@/hooks/useTypedSelector';
@@ -100,20 +101,27 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
                 await updateStoreParts({
                   partsIds: [currentPart?.id || currentPart?._id],
                   FILES: updatedFiles,
-                }).unwrap();
+                });
                 const { _id, ...bookingData } = parts && parts[0];
                 const addBookingResponse = await addBooking({
                   booking: {
                     voucherModel: 'ENTITY_CHANGE',
                     ...bookingData,
                   },
-                }).unwrap();
-
+                });
                 refetch();
-                message.success(t('PARTS SUCCESSFULLY UPDATE'));
+
+                // onUpdatePart(currentPart);
+                notification.success({
+                  message: t('PARTS SUCCESSFULLY UPDATE'),
+                  description: t('The  part has been successfully update.'),
+                });
               }
             } catch (error) {
-              message.error(t('ERROR UPDATE PARTS'));
+              notification.error({
+                message: t('FAILED TO UPDATE PARTS'),
+                description: 'There was an error delete the part.',
+              });
             }
           } else {
             throw new Error('Не удалось удалить файл');
@@ -148,21 +156,28 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
         await updateStoreParts({
           partsIds: [currentPart?.id || currentPart?._id],
           FILES: updatedFiles,
-        }).unwrap();
-        refetch().unwrap();
+        });
+
+        refetch();
+        // onUpdatePart(currentPart);
         const { _id, ...bookingData } = parts && parts[0];
         const addBookingResponse = await addBooking({
           booking: {
             voucherModel: 'ENTITY_CHANGE',
             ...bookingData,
           },
-        }).unwrap();
+        });
 
-        refetch();
-        message.success(t('PARTS SUCCESSFULLY TRANSFER'));
+        notification.success({
+          message: t('PARTS SUCCESSFULLY UPDATE'),
+          description: t('The  part has been successfully update.'),
+        });
       }
     } catch (error) {
-      message.error('Ошибка при загрузке файла');
+      notification.error({
+        message: t('FAILED TO UPDATE PARTS'),
+        description: 'There was an error delete the part.',
+      });
 
       throw error;
     }
@@ -193,6 +208,7 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
         }).unwrap();
 
         refetch().unwrap();
+        // onUpdatePart(currentPart);
         const { _id, ...bookingData } = parts && parts[0];
 
         const addBookingResponse = await addBooking({
@@ -201,10 +217,17 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
             ...bookingData,
           },
         }).unwrap();
-        message.success(t('PARTS SUCCESSFULLY UPDATE'));
+        // handleSave();
+        notification.success({
+          message: t('PARTS SUCCESSFULLY UPDATE'),
+          description: t('The  part has been successfully update.'),
+        });
       }
     } catch (error) {
-      message.error(t('ERROR UPDATE PARTS'));
+      notification.error({
+        message: t('FAILED TO UPDATE PARTS'),
+        description: 'There was an error delete the part.',
+      });
     }
   };
 

@@ -20,7 +20,7 @@ import {
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
-
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
 };
@@ -32,6 +32,18 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
 
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
+  const [WOID, setWOID] = useState<any>(null);
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
+  const { data: projects } = useGetProjectsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !WOID }
+  );
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
@@ -39,6 +51,13 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     setSelectedEndDate(dateString[1]);
     setSelectedStartDate(dateString[0]);
   };
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
 
   interface Option {
     value: string;
@@ -55,11 +74,11 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   const { t } = useTranslation();
 
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
-  const { data: projects } = useGetProjectsQuery({});
+
   const { data: usersGroups } = useGetGroupUsersQuery({});
   const { data: users } = useGetUsersQuery({});
   const [isOnlyWithPanels, setIsOnlyWithPanels] = useState<boolean>(false);
-  const [isOnlyPanels, setIsOnlyPanels] = useState<boolean>(false);
+  const [isOnlyPanels, setIsOnlyPanels] = useState<boolean>(true);
   const projectsValueEnum: Record<string, string> =
     projects?.reduce((acc, reqType) => {
       acc[reqType._id] = `№:${reqType.projectWO}-${reqType.projectName}`;
@@ -67,7 +86,9 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     }, {}) || {};
   const usersValueEnum: Record<string, string> =
     users?.reduce((acc, user) => {
-      acc[user._id] = `(${user.singNumber})-${String(user.name).toUpperCase()}`;
+      acc[user?._id || user?.id] = `(${user.singNumber})-${String(
+        user.name
+      ).toUpperCase()}`;
       return acc;
     }, {}) || {};
   // const { data: zones, isLoading: loading } = useGetZonesByGroupQuery(
@@ -95,6 +116,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         removeUserId: form.getFieldValue('removeUserId'),
         installUserId: form.getFieldValue('installUserId'),
         inspectedUserID: form.getFieldValue('inspectedUserID'),
+        WOReferenceID: form.getFieldValue('WOReferenceID'),
       };
 
       onProjectSearch(searchParams);
@@ -137,22 +159,25 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
 
       <ProForm.Group>
         <ProFormSelect
-          // mode={'multiple'}
           showSearch
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          name="WOReferenceID"
+          label={t('WP No')}
+          width="lg"
+          valueEnum={wpValueEnum || []}
+          onChange={(value: any) => setWOID(value)}
+        />
+        <ProFormSelect
+          mode={'multiple'}
+          showSearch
           name="projectID"
           label={t('PROJECT No')}
           width="lg"
           valueEnum={projectsValueEnum}
           onChange={(value: any) => setReqTypeID(value)}
-          // disabled={!acTypeID} // Disable the select if acTypeID is not set
+          disabled={!WOID} // Disable the select if acTypeID is not set
         />
       </ProForm.Group>
-      <ProFormSelect
+      {/* <ProFormSelect
         mode={'multiple'}
         showSearch
         name="ACID"
@@ -161,7 +186,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // valueEnum={projectTypesValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
         // disabled={!acTypeID} // Disable the select if acTypeID is not set
-      />
+      /> */}
 
       <ProFormSelect
         // mode={'multiple'}
@@ -192,7 +217,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        initialValue={['open']}
+        initialValue={['open', 'draft']}
         mode="multiple"
         name="status"
         label={`${t('ACCESS STATUS')}`}
@@ -207,14 +232,14 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
       <ProFormDateRangePicker
         name="openDate"
-        label={`${t('OPEN DATE')}`}
+        label={`${t('DATE')}`}
         width="lg"
         tooltip="DATE"
         fieldProps={{
           onChange: onChange,
         }}
       />
-      <ProFormDateRangePicker
+      {/* <ProFormDateRangePicker
         name="closedDate"
         label={`${t('CLOSED DATE')}`}
         width="lg"
@@ -222,9 +247,9 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         fieldProps={{
           onChange: onChange,
         }}
-      />
+      /> */}
 
-      <ProFormDateRangePicker
+      {/* <ProFormDateRangePicker
         name="inspectedDate"
         label={`${t('INSPECTED DATE')}`}
         width="lg"
@@ -232,7 +257,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         fieldProps={{
           onChange: onChange,
         }}
-      />
+      /> */}
       <ProFormCheckbox
         name="isOnlyWithPanels"
         label={t('SHOW ONLY ZONES WITH ACCESS')}

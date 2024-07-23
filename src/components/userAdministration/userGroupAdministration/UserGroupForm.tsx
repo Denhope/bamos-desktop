@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
 import { Button, Tabs } from 'antd';
-import { User, Permission, UserGroup } from '@/models/IUser';
+import { UserGroup } from '@/models/IUser';
 import { ProFormSelect, ProFormTextArea } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
 

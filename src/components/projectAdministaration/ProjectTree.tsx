@@ -32,7 +32,7 @@ const ProjectTree: FC<UserTreeProps> = ({
 
   const convertToTreeData = (companys: IProject[]): TreeDataNode[] => {
     return companys.map((project) => ({
-      title: project.projectName,
+      title: `№:${project?.projectWO} / ${project.projectName}`,
       key: project.id || project._id,
       project: project,
     }));

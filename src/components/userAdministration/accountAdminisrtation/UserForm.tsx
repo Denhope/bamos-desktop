@@ -223,6 +223,7 @@ const UserForm: FC<UserFormProps> = ({
                   options={[
                     { value: 'admin', label: t('ADMIN') },
                     { value: 'engineer', label: t('ENGINEER') },
+                    { value: 'planning', label: t('PLANNING') },
                     { value: 'technican', label: t('TECHNICAN') },
                     { value: 'storeMan', label: t('STOREMAN') },
                     { value: 'logistic', label: t('LOGISTIC') },

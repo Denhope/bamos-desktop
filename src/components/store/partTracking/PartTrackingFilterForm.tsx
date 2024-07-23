@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import {
   ModalForm,
   ProForm,
@@ -19,6 +21,9 @@ import {
   getFilteredPartNumber,
 } from '@/utils/api/thunks';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
+import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 
 type PartTrackingFilterFormType = {
   onBookingSearch: (bookings: any[] | []) => void;
@@ -33,18 +38,50 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
     value: string;
     label: string;
   }
+  const dispatch = useAppDispatch();
+  const [form] = Form.useForm();
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
+  const { data: usersGroups } = useGetGroupUsersQuery({});
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
+  const [WOID, setWOID] = useState<any>(null);
+  const { data: projects } = useGetProjectsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !WOID }
+  );
+  const neededCodesValueEnum: Record<string, string> =
+    usersGroups?.reduce<Record<string, string>>((acc, usersGroup) => {
+      acc[usersGroup.id] = usersGroup.title;
+      return acc;
+    }, {}) || {};
   const { t } = useTranslation();
   const [receiverType, setReceiverType] = useState('PROJECT');
   const [options, setOptions] = useState<Option[]>([]); // указываем тип состояния явно
-  const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
+
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
     }
   };
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
+  const projectsValueEnum: Record<string, string> =
+    projects?.reduce((acc, reqType: any) => {
+      acc[reqType._id] = `${reqType.projectName}`;
+      return acc;
+    }, {}) || {};
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -182,6 +219,9 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
                 voucherModel: form.getFieldValue('voucherModel'),
                 startDate: selectedStartDate,
                 endDate: selectedEndDate,
+                neededOnID: form.getFieldValue('neededOnID'),
+                WOReferenceID: form.getFieldValue('WOReferenceID'),
+                projectID: form.getFieldValue('projectID'),
               })
             );
             if ((await result).meta.requestStatus === 'fulfilled') {
@@ -275,7 +315,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             { value: 'GSE', label: t('GSE') },
           ]}
         />
-        <ProForm.Group>
+        {/* <ProForm.Group>
           <ProFormRadio.Group
             name="receiverType"
             label={`${t('RECEIVER TYPE')}`}
@@ -315,7 +355,33 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
               options={options}
             />
           )}
-        </ProForm.Group>
+        </ProForm.Group> */}
+        <ProFormSelect
+          showSearch
+          name="WOReferenceID"
+          label={t('WP No')}
+          width="lg"
+          valueEnum={wpValueEnum || []}
+          onChange={(value: any) => setWOID(value)}
+        />
+        <ProFormSelect
+          mode={'multiple'}
+          showSearch
+          name="projectID"
+          label={t('WP TITLE')}
+          width="lg"
+          valueEnum={projectsValueEnum}
+          onChange={(value: any) => setSelectedProjectId(value)}
+          disabled={!WOID} // Disable the select if acTypeID is not set
+        />
+        <ProFormSelect
+          showSearch
+          name="neededOnID"
+          label={t('NEEDED ON')}
+          width="lg"
+          valueEnum={neededCodesValueEnum || []}
+          // disabled={!projectId}
+        />
         <ProFormSelect
           mode="multiple"
           name="voucherModel"
@@ -331,14 +397,14 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             { value: 'STORE_TO_SHOP', label: t('STORE_TO_SHOP') },
             { value: 'RECEIVING_GOODS', label: t('RECEIVING_GOODS') },
             { value: 'RECEIVING_CANCELLED', label: t('RECEIVING_CANCELLED') },
-            { value: 'BATCH_CHANGE', label: t('BATCH_CHANGE') },
+            // { value: 'BATCH_CHANGE', label: t('BATCH_CHANGE') },
             // { value: 'ADD_ROTABLES', label: t('ADD_ROTABLES') },
 
-            { value: 'COMPONENT_INSPECTION', label: t('COMPONENT_INSPECTION') },
-            { value: 'RETURN_DELIVERY', label: t('RETURN_DELIVERY') },
+            // { value: 'COMPONENT_INSPECTION', label: t('COMPONENT_INSPECTION') },
+            // { value: 'RETURN_DELIVERY', label: t('RETURN_DELIVERY') },
             // { value: 'DELETE_REQUIREMENT', label: t('DELETE_REQUIREMENT') },
 
-            { value: 'ENTITY_CHANGE', label: t('ENTITY_CHANGE') },
+            // { value: 'ENTITY_CHANGE', label: t('ENTITY_CHANGE') },
             { value: 'SHOP_TO_STORE', label: t('SHOP_TO_STORE') },
             // { value: 'EXCHANGED', label: t('EXCHANGED') },
             // {
@@ -346,36 +412,36 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             //   label: t('INCOMING_SHIPMENT_ARRIVED'),
             // },
             // { value: 'INTERVAL_REMOVED', label: t('INTERVAL_REMOVED') },
-            { value: 'KIT_TRANSFER', label: t('KIT_TRANSFER') },
-            { value: 'INVOCE_DETAIL_BOOKED', label: t('INVOCE_DETAIL_BOOKED') },
-            { value: 'MAT_CLASS_CHANGE', label: t('MAT_CLASS_CHANGE') },
-            { value: 'MODIFIED', label: t('MODIFIED') },
-            { value: 'OWNER_CHANGE', label: t('OWNER_CHANGE') },
-            { value: 'PART_ACTIVATED', label: t('PART_ACTIVATED') },
-            { value: 'PART_DEACTIVATED', label: t('PART_DEACTIVATED') },
-            { value: 'UNIT_CHANGE', label: t('UNIT_CHANGE') },
-            { value: 'AV_PRICE_CHANGE', label: t('AV_PRICE_CHANGE') },
+            // { value: 'KIT_TRANSFER', label: t('KIT_TRANSFER') },
+            // { value: 'INVOCE_DETAIL_BOOKED', label: t('INVOCE_DETAIL_BOOKED') },
+            // { value: 'MAT_CLASS_CHANGE', label: t('MAT_CLASS_CHANGE') },
+            // { value: 'MODIFIED', label: t('MODIFIED') },
+            // { value: 'OWNER_CHANGE', label: t('OWNER_CHANGE') },
+            // { value: 'PART_ACTIVATED', label: t('PART_ACTIVATED') },
+            // { value: 'PART_DEACTIVATED', label: t('PART_DEACTIVATED') },
+            // { value: 'UNIT_CHANGE', label: t('UNIT_CHANGE') },
+            // { value: 'AV_PRICE_CHANGE', label: t('AV_PRICE_CHANGE') },
             { value: 'QUARANTINE', label: t('QUARANTINE') },
             { value: 'ADD_NEW_PART', label: t('ADD_NEW_PART') },
             { value: 'PART_NUMBER_CHANGE', label: t('PART_NUMBER_CHANGE') },
             { value: 'PART_RESERVATION', label: t('PART_RESERVATION') },
             { value: 'QTY_CHANGE', label: t('QTY_CHANGE') },
-            { value: 'STOCK_PURCHASE', label: t('STOCK_PURCHASE') },
-            { value: 'SCRAP', label: t('SCRAP') },
-            { value: 'SHELF_INSPECTION', label: t('SHELF_INSPECTION') },
-            { value: 'S/N_CHANGE', label: t('S/N_CHANGE') },
-            { value: 'TRANSFER', label: t('TRANSFER') },
-            { value: 'TRANSFER_CANCELLED', label: t('TRANSFER_CANCELLED') },
-            { value: 'TRANSFER_RECEIVE', label: t('TRANSFER_RECEIVE') },
-            { value: 'TRANSFER_SHIP', label: t('TRANSFER_SHIP') },
-            { value: 'TOOL_TRANSFER', label: t('TOOL_TRANSFER') },
-            { value: 'TOOL_LOST_NOTICE', label: t('TOOL_LOST_NOTICE') },
-            { value: 'VENDOR_INSTALATION', label: t('VENDOR_INSTALATION') },
+            // { value: 'STOCK_PURCHASE', label: t('STOCK_PURCHASE') },
+            // { value: 'SCRAP', label: t('SCRAP') },
+            // { value: 'SHELF_INSPECTION', label: t('SHELF_INSPECTION') },
+            // { value: 'S/N_CHANGE', label: t('S/N_CHANGE') },
+            // { value: 'TRANSFER', label: t('TRANSFER') },
+            // { value: 'TRANSFER_CANCELLED', label: t('TRANSFER_CANCELLED') },
+            // { value: 'TRANSFER_RECEIVE', label: t('TRANSFER_RECEIVE') },
+            // { value: 'TRANSFER_SHIP', label: t('TRANSFER_SHIP') },
+            // { value: 'TOOL_TRANSFER', label: t('TOOL_TRANSFER') },
+            // { value: 'TOOL_LOST_NOTICE', label: t('TOOL_LOST_NOTICE') },
+            // { value: 'VENDOR_INSTALATION', label: t('VENDOR_INSTALATION') },
 
-            {
-              value: 'INCOMING_SHIPMENT_SENT',
-              label: t('INCOMING_SHIPMENT_SENT'),
-            },
+            // {
+            // value: 'INCOMING_SHIPMENT_SENT',
+            // label: t('INCOMING_SHIPMENT_SENT'),
+            // },
             // {
             //   value: 'OUTGOIN SHIPMENT ARRIVED',
             //   label: t('OUTGOIN SHIPMENT ARRIVED'),

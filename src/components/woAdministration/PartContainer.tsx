@@ -16,6 +16,7 @@ type ExampleComponentProps = {
   isEditable?: boolean;
   pagination?: boolean;
   onRowSelect?: (rowData: any | null) => void;
+  onDRowSelect?: (rowData: any | null) => void;
   isButtonColumn?: boolean;
   isChekboxColumn?: boolean;
   isFilesVisiable?: boolean;
@@ -35,6 +36,7 @@ const PartContainer: FC<ExampleComponentProps> = ({
   isVisible = false,
   pagination,
   onRowSelect,
+  onDRowSelect,
   isChekboxColumn,
   isButtonColumn,
   isFilesVisiable,
@@ -71,6 +73,11 @@ const PartContainer: FC<ExampleComponentProps> = ({
           onRowSelect={function (rowData: any): void {
             onRowSelect && onRowSelect(rowData);
             console.log(rowData);
+          }}
+          onDRowSelect={function (rowData: any): void {
+            // onRowSelect && onRowSelect(rowData);
+            onDRowSelect && onDRowSelect(rowData);
+            // console.log(rowData);
           }}
           onCheckItems={function (keys: any): void {
             onCheckItems && onCheckItems(keys);

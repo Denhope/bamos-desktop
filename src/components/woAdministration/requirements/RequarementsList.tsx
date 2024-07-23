@@ -28,7 +28,7 @@ import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import IssuedList from './IssuedList';
 import { useAddPickSlipMutation } from '@/features/pickSlipAdministration/pickSlipApi';
 import { useAddPickSlipItemMutation } from '@/features/pickSlipAdministration/pickSlipItemsApi';
-
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 type ExampleComponentProps = {
   columnDefs: ColDef[];
   partNumbers: IPartNumber[] | [];
@@ -423,58 +423,62 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
     <div style={containerStyle} className="flex  flex-col gap-5">
       {isIssueVisibale && (
         <Col style={{ textAlign: 'right' }}>
-          <Button
-            onClick={() => {
-              const hasClosedOrCanceled = filteredRequirements.some(
-                (req) => req.status === 'closed' || req.status === 'canceled'
-              );
+          <PermissionGuard requiredPermissions={[Permission.ADD_REQUIREMENT]}>
+            <Button
+              onClick={() => {
+                const hasClosedOrCanceled = filteredRequirements.some(
+                  (req) => req.status === 'closed' || req.status === 'canceled'
+                );
 
-              if (hasClosedOrCanceled) {
-                notification.warning({
-                  message: t('WARNING'),
-                  description: t(
-                    'Some requirements have a status of closed or canceled.'
-                  ),
-                });
-              } else {
-                setOpenCreatePickSlip(true);
+                if (hasClosedOrCanceled) {
+                  notification.warning({
+                    message: t('WARNING'),
+                    description: t(
+                      'Some requirements have a status of closed or canceled.'
+                    ),
+                  });
+                } else {
+                  setOpenCreatePickSlip(true);
+                }
+              }}
+              disabled={
+                !stepsSelected?.length ||
+                order.status == 'closed' ||
+                order.status == 'cancelled' ||
+                order.status == 'deleted'
               }
-            }}
-            disabled={
-              !stepsSelected?.length ||
-              order.status == 'closed' ||
-              order.status == 'cancelled' ||
-              order.status == 'deleted'
-            }
-            size="small"
-            icon={<ShoppingCartOutlined />}
-          >
-            {t('ISSUE PARTS')}
-          </Button>
+              size="small"
+              icon={<ShoppingCartOutlined />}
+            >
+              {t('ISSUE PARTS')}
+            </Button>
+          </PermissionGuard>
         </Col>
       )}
 
       <div style={gridStyle} className={'ag-theme-alpine'}>
-        <PartsTable
-          isLoading={isLoading || isFetching || loading}
-          isChekboxColumn={isChekboxColumn}
-          isVisible={isVisible}
-          isButtonColumn={isButtonColumn}
-          pagination={pagination}
-          isEditable={isEditable}
-          isAddVisiable={isAddVisiable}
-          isButtonVisiable={isButtonVisiable}
-          height={height}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          partNumbers={partNumbers}
-          onAddRow={onAddRow}
-          onDelete={onDelete}
-          onSave={handleSubmit}
-          onCellValueChanged={onCellValueChanged}
-          onRowSelect={handleRowSelect}
-          onCheckItems={handleRowSheck}
-        />
+        <PermissionGuard requiredPermissions={[Permission.ADD_REQUIREMENT]}>
+          <PartsTable
+            isLoading={isLoading || isFetching || loading}
+            isChekboxColumn={isChekboxColumn}
+            isVisible={isVisible}
+            isButtonColumn={isButtonColumn}
+            pagination={pagination}
+            isEditable={isEditable}
+            isAddVisiable={isAddVisiable}
+            isButtonVisiable={isButtonVisiable}
+            height={height}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            partNumbers={partNumbers}
+            onAddRow={onAddRow}
+            onDelete={onDelete}
+            onSave={handleSubmit}
+            onCellValueChanged={onCellValueChanged}
+            onRowSelect={handleRowSelect}
+            onCheckItems={handleRowSheck}
+          />
+        </PermissionGuard>
       </div>
       <ModalForm
         onFinish={async (values) => {

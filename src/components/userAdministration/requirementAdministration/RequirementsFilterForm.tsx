@@ -187,6 +187,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         reqTypesID: form.getFieldValue('reqTypesID'),
         neededOnID: form.getFieldValue('neededOnID'),
         WOReferenceID: form.getFieldValue('WOReferenceID'),
+        time: new Date(),
       };
 
       onRequirementsSearch(searchParams);
@@ -324,7 +325,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           showSearch
           name="neededOnID"
           label={t('NEEDED ON')}
-          width="sm"
+          width="lg"
           valueEnum={neededCodesValueEnum || []}
           // disabled={!projectId}
         />
@@ -373,7 +374,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           mode="single"
           name="projectTaskID"
           label={`${t(`TASK`)}`}
-          width="sm"
+          width="lg"
           valueEnum={projectTasksCodesValueEnum}
           onChange={(value: any) => {
             setSelectedTask(value);
@@ -401,7 +402,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        initialValue={['open']}
+        initialValue={['open', 'issued', 'onShort', 'onQuatation']}
         mode="multiple"
         name="requestStatus"
         label={`${t('REQUIREMENT STATUS')}`}

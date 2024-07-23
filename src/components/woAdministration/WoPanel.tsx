@@ -300,18 +300,18 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       filter: true,
       // hide: true,
     },
-    {
-      field: 'PART_NUMBER',
-      headerName: `${t('PART No')}`,
-      filter: true,
-      // hide: true,
-    },
-    {
-      field: 'qty',
-      headerName: `${t('QUANTITY')}`,
-      filter: true,
-      // hide: true,
-    },
+    // {
+    //   field: 'PART_NUMBER',
+    //   headerName: `${t('PART No')}`,
+    //   filter: true,
+    //   // hide: true,
+    // },
+    // {
+    //   field: 'qty',
+    //   headerName: `${t('QUANTITY')}`,
+    //   filter: true,
+    //   // hide: true,
+    // },
     {
       field: 'projectName',
       headerName: `${t('WP TITLE')}`,
@@ -338,51 +338,51 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
     { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
-    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
-    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+    { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
+    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
     { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
     { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
-    // {
-    //   field: 'SUB TASK_CODE',
-    //   headerName: `${t('SUB TASK_CODE')}`,
-    //   filter: true,
-    // },
+    {
+      field: 'SUB TASK_CODE',
+      headerName: `${t('SUB TASK_CODE')}`,
+      filter: true,
+    },
 
-    // { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
-    // {
-    //   field: 'RESTRICTION_1',
-    //   headerName: `${t('RESTRICTION_1')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'PREPARATION_CODE',
-    //   headerName: `${t('PREPARATION_CODE')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'REFERENCE_2',
-    //   headerName: `${t('REFERENCE_2')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'mainWorkTime',
-    //   headerName: `${t('MHS')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'IDENTIFICATOR',
-    //   headerName: `${t('IDENTIFICATOR')}`,
-    //   filter: true,
-    // },
+    { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    {
+      field: 'RESTRICTION_1',
+      headerName: `${t('RESTRICTION_1')}`,
+      filter: true,
+    },
+    {
+      field: 'PREPARATION_CODE',
+      headerName: `${t('PREPARATION_CODE')}`,
+      filter: true,
+    },
+    {
+      field: 'REFERENCE_2',
+      headerName: `${t('REFERENCE_2')}`,
+      filter: true,
+    },
+    {
+      field: 'mainWorkTime',
+      headerName: `${t('MHS')}`,
+      filter: true,
+    },
+    {
+      field: 'IDENTIFICATOR',
+      headerName: `${t('IDENTIFICATOR')}`,
+      filter: true,
+    },
 
-    // { field: 'closedByID', headerName: 'Closed By ID' },
+    { field: 'closedByID', headerName: 'Closed By ID' },
 
-    // {
-    //   field: 'PART_NUMBER',
-    //   headerName: `${t('PART No')}`,
-    //   filter: true,
-    // },
+    {
+      field: 'PART_NUMBER',
+      headerName: `${t('PART No')}`,
+      filter: true,
+    },
 
     // {
     //   field: 'status',
@@ -676,18 +676,116 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
     fetchData();
   }, [selectedKeys, reportData]);
-  const [data, setData] = useState({
-    toolsItems: [
+  const data = {
+    steps: [
       {
-        TOOL_CODE: '123',
-        PART_NUMBER: '456',
-        NAME_OF_MATERIAL: 'Hammer',
-        PICKSLIP_NO: '789',
-        TOOLS_QUANTITY: '10',
+        number: '1',
+        createDate: '2024-07-18',
+        createBy: 'John Doe',
+        description:
+          'Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.',
       },
-      // Добавьте другие элементы по мере необходимости
+      {
+        number: '2',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '2',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '2',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '2',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
+      {
+        number: '3',
+        createDate: '2024-07-19',
+        createBy: 'Jane Smith',
+        description:
+          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
+      },
     ],
-  });
+  };
 
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
@@ -819,20 +917,27 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
-          <Button
+          {/* <Button
             loading={reportDataLoading}
             icon={<PrinterOutlined />}
             size="small"
             onClick={() => fetchAndHandleReport('TASK_COVER_REPORT')}
-            // disabled={!selectedKeys.length}
-            disabled
+            disabled={!selectedKeys.length}
+            // disabled
           >
             {`${t('PRINT WORKORDER')}`}
-          </Button>
+          </Button> */}
         </Col>
-        {/* <Col>
-          <PdfGenerator htmlTemplate={htmlTemplate} data={data} />
-        </Col> */}
+        <Col>
+          <PermissionGuard requiredPermissions={[Permission.PRINT_TASK_CARD]}>
+            <PdfGenerator
+              disabled={!selectedKeys.length}
+              ids={selectedKeys}
+              htmlTemplate={htmlTemplate}
+              data={data}
+            />
+          </PermissionGuard>
+        </Col>
         <Col>
           <Switch
             checkedChildren="Table"

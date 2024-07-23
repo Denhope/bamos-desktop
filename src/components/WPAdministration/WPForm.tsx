@@ -24,8 +24,8 @@ import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 interface UserFormProps {
   project?: IProject;
@@ -384,7 +384,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           </div>
         </Tabs.TabPane>
 
-        <Tabs.TabPane tab={t('WP LIST')} key="3">
+        <Tabs.TabPane tab={t('ACTIONS')} key="3">
           <Empty />
           {/* <Space>
             {' '}

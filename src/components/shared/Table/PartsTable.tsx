@@ -38,6 +38,7 @@ type PartsTableProps = {
   isButtonVisiable?: boolean;
   isEditable?: boolean;
   onRowSelect: (rowData: any) => void;
+  onDRowSelect?: (rowData: any) => void;
   onCheckItems: (selectedKeys: React.Key[]) => void;
   pagination?: boolean;
   isChekboxColumn?: boolean;
@@ -62,6 +63,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
   isAddVisiable,
   isEditable = true,
   onRowSelect,
+  onDRowSelect,
   onCheckItems,
   pagination = false,
   isChekboxColumn = false,
@@ -395,6 +397,25 @@ const PartsTable: React.FC<PartsTableProps> = ({
     console.log(selectedKeys);
     setSelectedRowCount(selectedNodes?.length || 0);
   };
+  const handleRowDSelection = () => {
+    const selectedNodes = gridRef.current?.api.getSelectedNodes();
+    const selectedKeys =
+      selectedNodes?.map((node) => node?.data?._id || node?.data?.id) || [];
+    // onRowSelect(
+    //   selectedNodes?.length && selectedNodes.length > 0
+    //     ? selectedNodes[0].data
+    //     : null
+    // );
+    onCheckItems(selectedKeys);
+    // console.log(selectedKeys);
+    setSelectedRowCount(selectedNodes?.length || 0);
+    onDRowSelect &&
+      onDRowSelect(
+        selectedNodes?.length && selectedNodes.length > 0
+          ? selectedNodes[0].data
+          : null
+      );
+  };
   const checkboxColumn = {
     headerCheckboxSelection: true,
     checkboxSelection: true,
@@ -508,7 +529,10 @@ const PartsTable: React.FC<PartsTableProps> = ({
             }}
             // gridOptions={gridOptions}
             // loadingOverlayComponent="agLoadingOverlay"
-
+            onRowDoubleClicked={() => {
+              handleRowDSelection();
+              console.log('jjjjjj');
+            }}
             localeText={localeText}
             paginationPageSize={50}
             clipboardDelimiter={'\t'}

@@ -179,16 +179,14 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
 
   const handleGenerateWOPanels = async (ids: any[]) => {
     Modal.confirm({
-      title: t(
-        ' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ ДЛЯ ВЫДЕЛЕННЫХ ПОЗИЦИЙ?'
-      ),
+      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
       onOk: async () => {
         try {
           await addPanels({
             projectID: projectID,
           }).unwrap();
           refetchProjectItems();
-          message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+          message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
           Modal.destroyAll();
         } catch (error) {
           message.error(t('ОШИБКА '));

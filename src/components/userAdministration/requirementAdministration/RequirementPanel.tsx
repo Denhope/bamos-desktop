@@ -443,6 +443,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       ifStockCulc: true,
       includeAlternates: true,
       WOReferenceID: requirementsSearchValues?.WOReferenceID || '',
+      time: requirementsSearchValues?.time,
     },
     {
       skip: !requirementsSearchValues,
@@ -549,17 +550,17 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'projectTaskWO',
-      headerName: `${t('WO No')}`,
-      cellDataType: 'number',
-    },
-    {
-      field: 'projectWO',
-      headerName: `${t('WP')}`,
+      headerName: `${t('TRACE No')}`,
       cellDataType: 'number',
     },
     {
       field: 'WONumber',
       headerName: `${t('WO')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'projectWO',
+      headerName: `${t('WP')}`,
       cellDataType: 'number',
     },
 
@@ -687,9 +688,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       </Space>
       <Space className="">
         <Col>
-          <PermissionGuard
-            requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
-          >
+          <PermissionGuard requiredPermissions={[Permission.ADD_REQUIREMENT]}>
             <Button
               size="small"
               icon={<PlusSquareOutlined />}
@@ -742,6 +741,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
               />
             ) : (
               <RequarementsList
+                isVisible={true}
                 loading={isLoading || isFetching}
                 pagination={true}
                 isEditable={false}

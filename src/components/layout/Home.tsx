@@ -835,8 +835,59 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         <ShoppingCartOutlined />
       ),
     ],
-    technican: [],
+    technican: [
+      getItem(
+        t('WORKORDER ADMINISTRATION'),
+        RouteNames.WORKORDER_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PART ADMINISTRATION'),
+        RouteNames.PART_ADMINISTRATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ACCESS TRACKING'),
+        RouteNames.ACCESS_TRACKING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+    ],
     engineer: [
+      getItem(
+        t('WORKORDER ADMINISTRATION'),
+        RouteNames.WORKORDER_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PART ADMINISTRATION'),
+        RouteNames.PART_ADMINISTRATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ACCESS TRACKING'),
+        RouteNames.ACCESS_TRACKING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
       getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
       getItem(
         t('PICKSLIP ADMINISTRATION'),
@@ -848,8 +899,85 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         RouteNames.SHELF_LIFE,
         <ShoppingCartOutlined />
       ),
+      getItem(
+        t('ADMINISTRATION'),
+        RouteNames.USER_ADMINISTRATION,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('ORDER VIEWER'),
+        RouteNames.ORDER_VIEWER_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
     ],
-    planing: [],
+    planing: [
+      getItem(
+        t('PART ADMINISTRATION'),
+        RouteNames.PART_ADMINISTRATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('WORKORDER ADMINISTRATION'),
+        RouteNames.WORKORDER_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('WP ADMINISTRATION'),
+        RouteNames.WP_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PROJECT ADMINISTRATION'),
+        RouteNames.PROJECT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ACCESS TRACKING'),
+        RouteNames.ACCESS_TRACKING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
+      getItem(
+        t('PICKSLIP ADMINISTRATION'),
+        RouteNames.PICKSLIP_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ADMINISTRATION'),
+        RouteNames.USER_ADMINISTRATION,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('ORDER VIEWER'),
+        RouteNames.ORDER_VIEWER_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+    ],
     logistic: [
       getItem(
         t('PICKSLIP CONFIRMATION'),
@@ -872,6 +1000,11 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         t('STORES ADMINISTRATION'),
         RouteNames.STORES_ADMINISTRATIONS,
         <HomeOutlined />
+      ),
+      getItem(
+        t('PART ADMINISTRATION'),
+        RouteNames.PART_ADMINISTRATIONS_NEW,
+        <ShoppingCartOutlined />
       ),
       getItem(
         t('RECEIVING VIEWER'),

@@ -92,6 +92,10 @@ const PartsTransferNew: FC = () => {
               booking: {
                 voucherModel: 'CHANGE_LOCATION',
                 partsIDs: rowKeys,
+                locationID: selectedTargetValues.targetLocationID,
+                storeID: selectedTargetValues.targetStoreID,
+                locationFromID: selectedSerchValues.locationIDFrom,
+                storeFromID: selectedSerchValues.storeIDFrom,
               },
             }).unwrap();
 
@@ -166,146 +170,142 @@ const PartsTransferNew: FC = () => {
     cellDataType: CellDataType;
   }
 
-  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
-    {
-      headerName: `${t('LOCAL_ID')}`,
-      field: 'LOCAL_ID',
-      editable: false,
-      cellDataType: 'text',
-    },
-    {
-      headerName: `${t('PART No')}`,
-      field: 'PART_NUMBER',
-      editable: false,
-      cellDataType: 'text',
-    },
-    {
-      field: 'NAME_OF_MATERIAL',
-      headerName: `${t('DESCRIPTION')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'GROUP',
-      headerName: `${t('GROUP')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'TYPE',
-      headerName: `${t('TYPE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'QUANTITY',
-      editable: false,
-      filter: false,
-      headerName: `${t('QTY')}`,
-      cellDataType: 'number',
-    },
-    {
-      field: 'UNIT_OF_MEASURE',
-      editable: false,
-      filter: false,
-      headerName: `${t('UNIT OF MEASURE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'STOCK',
-      editable: false,
-      filter: false,
-      headerName: `${t('STORE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'LOCATION',
-      editable: false,
-      filter: false,
-      headerName: `${t('LOCATION')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'SERIAL_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('BATCH/SERIAL')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'CONDITION',
-      editable: false,
-      filter: false,
-      headerName: `${t('CONDITION')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'PRODUCT_EXPIRATION_DATE',
-      editable: false,
-      filter: false,
-      headerName: `${t('EXPIRY DATE')}`,
-      cellDataType: 'date',
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+  const columnDefs = useMemo(
+    () => [
+      {
+        headerName: `${t('LOCAL_ID')}`,
+        field: 'LOCAL_ID',
+        editable: false,
+        cellDataType: 'text',
       },
-    },
-
-    // {
-    //   field: 'reservedQTY',
-    //   editable: false,
-    //   filter: false,
-    //   headerName: `${t('RESERVED QTY')}`,
-    //   cellDataType: 'number',
-    // },
-
-    {
-      field: 'OWNER',
-      editable: false,
-      filter: false,
-      headerName: `${t('OWNER')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'RECEIVING_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('RECEIVING')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'RECEIVED_DATE',
-      editable: false,
-      filter: false,
-      headerName: `${t('RECEIVED DATE')}`,
-      cellDataType: 'date',
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+      {
+        headerName: `${t('PART No')}`,
+        field: 'PART_NUMBER',
+        editable: false,
+        cellDataType: 'text',
       },
-    },
-    {
-      field: 'DOC_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('DOC_NUMBER')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'DOC_TYPE',
-      editable: false,
-      filter: false,
-      headerName: `${t('DOC_TYPE')}`,
-      cellDataType: 'text',
-    },
-  ]);
+      {
+        field: 'NAME_OF_MATERIAL',
+        headerName: `${t('DESCRIPTION')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'GROUP',
+        headerName: `${t('GROUP')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'TYPE',
+        headerName: `${t('TYPE')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'QUANTITY',
+        editable: false,
+        filter: false,
+        headerName: `${t('QTY')}`,
+        cellDataType: 'number',
+      },
+      {
+        field: 'UNIT_OF_MEASURE',
+        editable: false,
+        filter: false,
+        headerName: `${t('UNIT OF MEASURE')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'STOCK',
+        editable: false,
+        filter: false,
+        headerName: `${t('STORE')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'LOCATION',
+        editable: false,
+        filter: false,
+        headerName: `${t('LOCATION')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'SUPPLIER_BATCH_NUMBER',
+        editable: false,
+        filter: false,
+        headerName: `${t('BATCH No')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'SERIAL_NUMBER',
+        editable: false,
+        filter: false,
+        headerName: `${t('SERIAL No')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'CONDITION',
+        editable: false,
+        filter: false,
+        headerName: `${t('CONDITION')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'PRODUCT_EXPIRATION_DATE',
+        editable: false,
+        filter: false,
+        headerName: `${t('EXPIRY DATE')}`,
+        cellDataType: 'date',
+        valueFormatter: (params: any) => {
+          if (!params.value) return ''; // Проверка отсутствия значения
+          const date = new Date(params.value);
+          return date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+        },
+      },
+      {
+        field: 'OWNER',
+        editable: false,
+        filter: false,
+        headerName: `${t('OWNER')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'RECEIVING_NUMBER',
+        editable: false,
+        filter: false,
+        headerName: `${t('RECEIVING')}`,
+        cellDataType: 'text',
+      },
+      {
+        field: 'RECEIVED_DATE',
+        editable: false,
+        filter: false,
+        headerName: `${t('RECEIVED DATE')}`,
+        cellDataType: 'date',
+        valueFormatter: (params: any) => {
+          if (!params.value) return ''; // Проверка отсутствия значения
+          const date = new Date(params.value);
+          return date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+        },
+      },
+    ],
+    [t]
+  );
+
+  const handleOpenReport = (reportData: any) => {
+    Modal.confirm({
+      title: t('PARTS EXPIRY REPORT'),
+      content: reportData,
+      width: '80%',
+      onCancel: () => {},
+    });
+  };
 
   const transformedPartNumbers = useMemo(() => {
     return transformToIStockPartNumber(parts || []);
@@ -365,9 +365,7 @@ const PartsTransferNew: FC = () => {
           <div className="flex gap-5">
             <Col style={{ textAlign: 'right' }}>
               <Space>
-                <PermissionGuard
-                  requiredPermissions={[Permission.PART_TRANSFER_ACTIONS]}
-                >
+                <PermissionGuard requiredPermissions={[Permission.PRINT_LABEL]}>
                   <ReportPrintLabel
                     xmlTemplate={''}
                     data={[]}
@@ -375,13 +373,13 @@ const PartsTransferNew: FC = () => {
                     isDisabled={!rowKeys.length}
                   ></ReportPrintLabel>
                 </PermissionGuard>
-                <PermissionGuard
+                {/* <PermissionGuard
                   requiredPermissions={[
                     Permission.PART_TRANSFER_ACTIONS,
                     Permission.EXPORT,
                   ]}
-                >
-                  <ReportEXEL
+                > */}
+                {/* <ReportEXEL
                     isDisabled={!rowKeys.length}
                     headers={{
                       LOCAL_ID: 'НОМЕР БИРКИ',
@@ -397,14 +395,12 @@ const PartsTransferNew: FC = () => {
                     }}
                     data={selectedParts}
                     fileName={'PARTS_REPORTS_'}
-                  ></ReportEXEL>
-                </PermissionGuard>
+                  ></ReportEXEL> */}
+                {/* </PermissionGuard> */}
               </Space>
             </Col>
             <Col>
-              <PermissionGuard
-                requiredPermissions={[Permission.PART_TRANSFER_ACTIONS]}
-              >
+              <PermissionGuard requiredPermissions={[Permission.PRINT_LABEL]}>
                 <ReportPrintQR
                   openSettingsModal
                   pageBreakAfter={false}
@@ -465,6 +461,11 @@ const PartsTransferNew: FC = () => {
             onRowSelect={(data: any[]): void => {
               setSecectedParts([data]);
             }}
+            onDRowSelect={(data: any[]): void => {
+              // setSecectedParts([data]);
+              setOpenPartsModify(true);
+            }}
+            // isLoading={false}
           />
         </div>
       </div>
@@ -479,7 +480,9 @@ const PartsTransferNew: FC = () => {
         >
           <OriginalStoreEntry
             onUpdatePart={(data: any) => {
-              [data];
+              // [data];
+              setselectedRowKeys(data._id);
+              // console.log(data);
             }}
             currentPart={
               // null

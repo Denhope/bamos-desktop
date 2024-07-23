@@ -54,11 +54,7 @@ const BaseLayout: React.FC = () => {
     //  descriptions: 'Work Order Information',
     //  route: RouteNames.WORKORDER_INFORMATION,
     //},
-    {
-      APNNBR: '100500',
-      descriptions: `${t(`ACCESS TRACKING`)}`,
-      route: RouteNames.ACCESS_TRACKING,
-    },
+
     {
       APNNBR: '01',
       descriptions: `${t(`ADMINISTRATION`)}`,
@@ -257,6 +253,11 @@ const BaseLayout: React.FC = () => {
 
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,
+    },
+    {
+      APNNBR: '21',
+      descriptions: `${t(`ACCESS TRACKING`)}`,
+      route: RouteNames.ACCESS_TRACKING,
     },
     // {
     //   APNNBR: '375',

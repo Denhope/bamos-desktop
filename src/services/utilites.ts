@@ -905,7 +905,8 @@ export const transformToIStockPartNumber = (data: any[]): any[] => {
     OWNER: item?.locationID?.ownerID?.title,
     restrictionID: item?.locationID?.restrictionID,
     locationType: item?.locationID?.locationType,
-    SERIAL_NUMBER: item?.SERIAL_NUMBER || item?.SUPPLIER_BATCH_NUMBER,
+    SUPPLIER_BATCH_NUMBER: item?.SUPPLIER_BATCH_NUMBER,
+    SERIAL_NUMBER: item?.SERIAL_NUMBER,
     RECEIVING_NUMBER: item?.RECEIVING_ID?.receivingNumber,
     DOC_NUMBER: item?.RECEIVING_ID?.awbNumber || item?.DOC_NUMBER,
     DOC_TYPE: item?.RECEIVING_ID?.awbType || item?.DOC_TYPE,
@@ -969,7 +970,7 @@ export const transformToIRequirement = (data: any[]): any[] => {
     serialNumber: item?.serialNumber,
     partRequestNumberNew: item?.partRequestNumberNew,
     projectWO: item?.projectID?.projectWO,
-    WONumber: item?.projectiID?.WOReferenceID.WONumber,
+    WONumber: item?.projectID?.WOReferenceID.WONumber,
     projectTaskWO: item.projectTaskID?.taskWO,
     partId: item.partNumberID?._id,
     PART_NUMBER: item?.partNumberID?.PART_NUMBER,
@@ -1011,12 +1012,14 @@ export const transformToIPickSlip = (data: any[]): any[] => {
     updateDate: item?.updateDate,
     updateUserID: item?.updateUserID ? item.updateUserID : '',
     WONumber: item?.projectID?.WOReferenceID?.WONumber,
+    // id: item.id,
   }));
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 export interface ValueEnumType {
   onQuatation: string;
+  partlyCanceled?: string;
   open?: string;
   closed: string;
   canceled: string;
@@ -1107,6 +1110,8 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
     case 'partlyClosed':
       return '#90EE90'; // Light Green
     case 'canceled':
+      return '#FF6347'; // Tomato Red
+    case 'partlyCanceled':
       return '#FF6347'; // Tomato Red
     case 'CANCELLED':
       return '#FF6347'; // Tomato Red
@@ -1225,6 +1230,13 @@ export const transformToPartBooking = (data: any[]): any[] => {
   const result = data.map((item: any) => ({
     ...item,
     ...item.MATERIAL_STORE_ID,
+    QUANTITY: parseInt(
+      `${item.qyantityMode === 'minus' ? '-' : ''}${
+        item.MATERIAL_STORE_ID.QUANTITY
+      }`,
+      10
+    ),
+    SHELF_NUMBER: item.MATERIAL_STORE_ID.locationID.locationName,
 
     // index: item?.index,
     // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,
@@ -1343,18 +1355,20 @@ export const transformToIProjectItem = (data: any[]): any[] => {
 
 export const transformToIProjectTask = (data: any[]): any[] => {
   const result = data.map((item: any) => ({
-    ...item,
     ...item?.taskId,
+    ...item,
     ...item?.partNumberID,
     // QUANTITY: item.quantity,
     id: item._id || item?.id,
     // status: item?.status,
     _id: item._id || item?.id,
     zonesID: item?.zonesID,
+    accessID: item?.accessID,
     projectWO: item?.projectID?.projectWO,
     projectName: item?.projectID?.projectName,
-    mainWorkTime: item?.taskId?.mainWorkTime || item?.mainWorkTime,
+    mainWorkTime: item?.mainWorkTime || item?.taskId?.mainWorkTime,
     files: item?.FILES || item?.files || [],
+    taskDescription: item?.taskDescription,
 
     // taskNumber: item?.taskNumber,
     // description: item?.taskDescription,
@@ -1421,6 +1435,7 @@ export const rolePermissions: Record<Role, string[]> = {
     '07',
     '08',
     '09',
+    '10',
     '12',
     '13',
     '15',

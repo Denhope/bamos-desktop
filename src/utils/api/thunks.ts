@@ -5939,15 +5939,17 @@ export const getFilteredBookingItems = createAsyncThunk(
       API_URL
     );
     const searchParams = new URLSearchParams();
-
+    if (params.WOReferenceID)
+      searchParams.append('WOReferenceID', params.WOReferenceID);
+    if (params.neededOnID) searchParams.append('neededOnID', params.neededOnID);
     if (params.workshop) searchParams.append('workshop', params.workshop);
     if (params.isReturned) searchParams.append('isReturned', params.isReturned);
     if (params.isCancelled)
       searchParams.append('isCancelled', params.isCancelled);
     if (params.startDate) searchParams.append('startDate', params.startDate);
     if (params.endDate) searchParams.append('endDate', params.endDate);
-    if (params.projectWO)
-      searchParams.append('projectWO', params.projectWO.join(','));
+    if (params.projectID)
+      searchParams.append('projectID', params.projectID.join(','));
     if (params.label) searchParams.append('label', params.label);
 
     if (params.partNumber) searchParams.append('partNumber', params.partNumber);

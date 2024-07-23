@@ -42,12 +42,12 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
       return {
         title: `${
           zoneCode.majoreZoneNbr
-        } - ${zoneCode.majoreZoneDescription.toUpperCase()}${zoneIndicator}`,
+        } - ${zoneCode?.majoreZoneDescription?.toUpperCase()}${zoneIndicator}`,
         key: zoneCode.id,
         zoneCode,
         children: zoneCode.subZonesCode?.map((subZoneCode) => {
           const subZoneIndicator = getIndicator(subZoneCode);
-          if (!subZoneCode.areasCode || subZoneCode.areasCode.length === 0) {
+          if (!subZoneCode?.areasCode || subZoneCode?.areasCode.length === 0) {
             // Если areasCode отсутствует или не содержит элементов, устанавливаем статус 'draft'
             return {
               title: `${

@@ -46,6 +46,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       field: 'orderNumber',
       headerName: `${t('ORDER No')}`,
       cellDataType: 'text',
+      with: 100,
     },
     {
       field: 'orderType',
@@ -56,12 +57,13 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       field: 'index',
       headerName: `${t('POS')}`,
       cellDataType: 'text',
+      with: 50,
     },
     {
       field: 'status',
       headerName: `${t('Status')}`,
       cellDataType: 'text',
-      width: 150,
+      width: 200,
       filter: true,
       valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
         params.data.status,
@@ -79,6 +81,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       headerName: `${t('PART No')}`,
       field: 'PART_NUMBER',
       editable: false,
+      width: 200,
     },
     {
       field: 'DESCRIPTION',

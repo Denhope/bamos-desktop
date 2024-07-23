@@ -126,9 +126,7 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         );
 
         page.drawText(
-          `${t('AC TYPE No')}: ${String(
-            product?.acTypeID?.code
-          ).toUpperCase()}`,
+          `${t('AC TYPE')}: ${String(product?.acTypeID?.code).toUpperCase()}`,
           {
             x: 5,
             y: height - 75,
@@ -151,7 +149,7 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
           }
         );
 
-        page.drawText(`${t('W/O No')}: ${product?.projectID?.projectWO}`, {
+        page.drawText(`${t('WO No')}: ${product?.projectID?.projectWO}`, {
           x: 5,
           y: height - 105,
           font,
@@ -161,7 +159,7 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         });
 
         page.drawText(
-          `${t('TASK W/O No')}: ${product?.projectTaskIds?.map(
+          `${t('TRACE No')}: ${product?.projectTaskIds?.map(
             (item: any) => item?.taskWO
           )}`,
           {

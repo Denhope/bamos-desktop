@@ -46,8 +46,8 @@ export const bookingApi = createApi({
       providesTags: ['Bookings'], // Provide the 'Users' tag after fetching
     }),
     addBooking: builder.mutation<
-      IBookingItem,
-      { booking: Partial<IBookingItem>; acTypeId?: string }
+      any,
+      { booking: Partial<any>; acTypeId?: string }
     >({
       query: ({ booking, acTypeId }) => ({
         url: `bookingItems/companyID/${COMPANY_ID}`,

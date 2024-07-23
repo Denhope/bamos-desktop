@@ -287,7 +287,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               rules={[{ required: true }]}
               name="receivingDate"
               label={t('RECEIVING DATE')}
-              width="xs"
+              width="sm"
             ></ProFormDatePicker>
             <ProFormTimePicker
               disabled={!isCreating}
@@ -345,7 +345,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           ></ProFormText>
           <ContextMenuVendorsSearchSelect
             disabled={!isCreating}
-            width="sm"
+            width="lg"
             rules={[{ required: true }]}
             name={'SUPPLIES_CODE'}
             onSelectedVendor={function (record: any, rowIndex?: any): void {

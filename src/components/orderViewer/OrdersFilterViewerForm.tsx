@@ -129,7 +129,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
           width={'lg'}
           label={t('PART No')}
         ></ContextMenuPNSearchSelect>
-        <ProFormCheckbox.Group
+        {/* <ProFormCheckbox.Group
           className="my-0 py-0"
           disabled={!selectedSinglePN?.PART_NUMBER}
           initialValue={['true']}
@@ -144,7 +144,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
               style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
             })
           )}
-        />
+        /> */}
 
         <ProFormText
           name="serialNumber"
@@ -160,7 +160,7 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
           showSearch
           mode="multiple"
           name="orderType"
-          initialValue={['QUOTATION_ORDER']}
+          initialValue={['QUOTATION_ORDER', 'PURCHASE_ORDER']}
           label={t('ORDER TYPE')}
           width="sm"
           tooltip={t('ORDER TYPE')}
@@ -194,7 +194,13 @@ const OrdersFilterViewerForm: FC<RequirementsFilteredFormType> = ({
         />
 
         <ProFormSelect
-          // initialValue={['open']}
+          initialValue={[
+            'open',
+            'onQuatation',
+            'onShort',
+            'PARTLY_RECEIVED',
+            'RECEIVED',
+          ]}
           mode="multiple"
           name="state"
           label={`${t('ORDER STATUS')}`}

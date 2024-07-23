@@ -131,6 +131,8 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
+  LOCATION?: string;
+  locationName?: any;
   NAME_OF_MATERIAL?: any;
   REMARKS: any;
   QUANTITY?: any;

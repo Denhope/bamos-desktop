@@ -254,7 +254,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
     },
     {
       field: 'canceledQty',
-      headerName: `${t('CANCELED QTY')}`,
+      headerName: `${t('CANCELLED QTY')}`,
       cellDataType: 'number',
     },
     {
@@ -408,6 +408,8 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                   { value: 'onQuatation', label: t('QUATATION') },
                   { value: 'onShort', label: t('ON SHORT') },
                   { value: 'closed', label: t('CLOSED') },
+                  { value: 'partlyCanceled', label: t('PARTLY CANCELLED') },
+
                   { value: 'canceled', label: t('CANCELED') },
                   // { value: 'transfer', label: t('TRANSFER') },
                 ]}

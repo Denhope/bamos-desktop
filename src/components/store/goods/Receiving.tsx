@@ -631,7 +631,7 @@ const Receiving: FC<ReceivingType> = ({
                   // rules={[{ required: true }]}
                   name="certificateType"
                   label={`${t('CERTIFICATE TYPE')}`}
-                  width="sm"
+                  width="lg"
                   options={[
                     { value: 'B1', label: t('BCAA SRC FORM 2.2.2 V2') },
                     { value: 'B2', label: t('BCAA FORM (CONTRACTED AMO)') },
@@ -680,7 +680,7 @@ const Receiving: FC<ReceivingType> = ({
                 <ProFormDatePicker
                   name="expiryDate"
                   label={t('EXPIRY DATE')}
-                  width="xs"
+                  width="sm"
                 ></ProFormDatePicker>
                 <ProFormGroup></ProFormGroup>
               </ProFormGroup>

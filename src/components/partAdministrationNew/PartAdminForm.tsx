@@ -212,7 +212,7 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
                 кг: `${t('кг').toUpperCase()}`,
               }}
             ></ProFormSelect>
-            <ProFormGroup>
+            {/* <ProFormGroup>
               <ProFormText
                 width="sm"
                 name="WORKPIECE_DIMENSIONS"
@@ -254,7 +254,7 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
                 width="md"
                 tooltip={t('WORKPIECE_MATERIAL_TYPE')}
               ></ProFormText>
-            </ProFormGroup>
+            </ProFormGroup> */}
             <ProFormSelect
               showSearch
               name="acTypeID"

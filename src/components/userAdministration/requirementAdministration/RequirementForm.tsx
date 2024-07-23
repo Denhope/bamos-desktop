@@ -182,6 +182,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                   { value: 'onQuatation', label: t('QUATATION') },
                   { value: 'onShort', label: t('ON SHORT') },
                   { value: 'closed', label: t('CLOSED') },
+                  { value: 'partlyClosed', label: t('PARTLY CLOSED') },
                   { value: 'canceled', label: t('CANCELED') },
                   // { value: 'transfer', label: t('TRANSFER') },
                 ]}

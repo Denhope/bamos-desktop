@@ -84,6 +84,7 @@ export const requirementApi = createApi({
         ifStockCulc?: boolean;
         includeAlternates?: boolean;
         WOReferenceID?: string;
+        time?: any;
       }
     >({
       query: ({
@@ -101,6 +102,7 @@ export const requirementApi = createApi({
         ifStockCulc,
         includeAlternates,
         WOReferenceID,
+        time,
       }) => ({
         url: `requirementsNew/getFilteredRequirements/company/${COMPANY_ID}`,
         params: {
@@ -118,6 +120,7 @@ export const requirementApi = createApi({
           ifStockCulc,
           includeAlternates,
           WOReferenceID,
+          time,
         },
       }),
       providesTags: (result) =>

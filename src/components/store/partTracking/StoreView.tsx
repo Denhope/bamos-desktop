@@ -136,7 +136,7 @@ const StoreView: FC<StoreViewType> = ({
         height={'68vh'}
         columnDefs={columnDefs}
         partNumbers={[]}
-        isChekboxColumn={false}
+        isChekboxColumn={true}
         onUpdateData={(data: any[]): void => {}}
         rowData={transformedPartNumbers}
         onCheckItems={setSelectedRowKeys}

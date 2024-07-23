@@ -262,6 +262,11 @@ const TechnicalView: FC<TechnicalViewType> = ({
       headerName: `${t('UNIT OF MEASURE')}`,
       cellDataType: 'text',
     },
+    // {
+    //   field: 'projectWO',
+    //   headerName: `${t('WO No')}`,
+    //   cellDataType: 'text',
+    // },
     {
       field: 'projectWO',
       headerName: `${t('PROJECT No')}`,
@@ -269,7 +274,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
     },
     {
       field: 'projectTaskWO',
-      headerName: `${t('WO No')}`,
+      headerName: `${t('TRACE No')}`,
       cellDataType: 'text',
     },
   ]);
@@ -293,7 +298,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
         height={'68vh'}
         columnDefs={columnDefs}
         partNumbers={[]}
-        isChekboxColumn={false}
+        isChekboxColumn={true}
         onUpdateData={(data: any[]): void => {}}
         rowData={transformedPartNumbers}
         onCheckItems={setSelectedRowKeys}

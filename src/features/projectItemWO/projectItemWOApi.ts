@@ -37,6 +37,7 @@ export const projectItemWOApi = createApi({
         preparationID?: any;
         projectItemType?: any;
         WOReferenceID?: any;
+        ids?: any;
       }
     >({
       query: ({
@@ -64,6 +65,7 @@ export const projectItemWOApi = createApi({
         preparationID,
         projectItemType,
         WOReferenceID,
+        ids,
       }) => ({
         url: `projectsTasksNew/getFilteredProjectsTasks/company/${COMPANY_ID}`,
         params: {
@@ -91,6 +93,7 @@ export const projectItemWOApi = createApi({
           preparationID,
           projectItemType,
           WOReferenceID,
+          ids,
         },
       }),
       providesTags: ['ProjectItemWO'],
@@ -149,9 +152,22 @@ export const projectItemWOApi = createApi({
         projectID?: string;
         projectItemID?: any;
         isAllPanels?: boolean;
+        accessIds?: string;
+        WOReferenceID?: string;
+        projectTaskIds?: string;
+        isFromWO?: boolean;
       }
     >({
-      query: ({ projectItemWO, projectID, projectItemID, isAllPanels }) => ({
+      query: ({
+        projectItemWO,
+        projectID,
+        projectItemID,
+        isAllPanels,
+        accessIds,
+        WOReferenceID,
+        projectTaskIds,
+        isFromWO,
+      }) => ({
         url: `projectsAccess/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
@@ -162,6 +178,10 @@ export const projectItemWOApi = createApi({
           projectID: projectID,
           projectItemID: projectItemID,
           isAllPanels,
+          accessIds,
+          WOReferenceID,
+          projectTaskIds,
+          isFromWO,
         },
       }),
       invalidatesTags: ['ProjectItemWO'], // Указываем, что это мутация недействительна тега 'UserGroups'
@@ -188,6 +208,7 @@ export const projectItemWOApi = createApi({
         accessIds?: string;
         isOnlyWithPanels?: boolean;
         userID?: string;
+        WOReferenceID?: string;
       }
     >({
       query: ({
@@ -210,6 +231,7 @@ export const projectItemWOApi = createApi({
         accessIds,
         accessProjectNumber,
         userID,
+        WOReferenceID,
       }) => ({
         url: `projectsAccess/getFilteredProjectsGroupAccess/company/${COMPANY_ID}`,
         params: {
@@ -232,6 +254,7 @@ export const projectItemWOApi = createApi({
           accessIds,
           accessProjectNumber,
           userID,
+          WOReferenceID,
         },
       }),
       providesTags: ['ProjectItemWO'],
@@ -267,6 +290,8 @@ export const projectItemWOApi = createApi({
         accessIds?: string;
         isOnlyWithPanels?: boolean;
         userID?: string;
+        WOReferenceID?: string;
+        accessProjectNumber?: string;
       }
     >({
       query: ({
@@ -288,6 +313,8 @@ export const projectItemWOApi = createApi({
         isOnlyWithPanels,
         accessIds,
         userID,
+        WOReferenceID,
+        accessProjectNumber,
       }) => ({
         url: `projectsAccess/getFilteredProjectsAccess/company/${COMPANY_ID}`,
         params: {
@@ -309,6 +336,8 @@ export const projectItemWOApi = createApi({
           isOnlyWithPanels,
           accessIds,
           userID,
+          WOReferenceID,
+          accessProjectNumber,
         },
       }),
       providesTags: ['ProjectItemWO'],
@@ -370,6 +399,30 @@ export const projectItemWOApi = createApi({
         method: 'DELETE',
       }),
       invalidatesTags: ['ProjectItemWO'],
+    }),
+
+    getProjectTaskForCard: builder.query<
+      any[],
+      {
+        ids?: any;
+      }
+    >({
+      query: ({ ids }) => ({
+        url: `projectsTasksNew/getFilteredProjectsTaskCard/company/${COMPANY_ID}`,
+        params: {
+          ids,
+        },
+      }),
+      providesTags: ['ProjectItemWO'],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          // dispatch(setprojectItems(data));
+        } catch (error) {
+          console.error('Ошибка при выполнении запроса:', error);
+        }
+      },
     }),
   }),
 });

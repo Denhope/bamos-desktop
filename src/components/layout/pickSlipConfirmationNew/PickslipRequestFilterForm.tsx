@@ -226,6 +226,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
           />
         </ProFormGroup>{' '}
         <ProFormDatePicker
+          width={'md'}
           disabled={pickSlip && pickSlip.state !== 'complete'}
           name="bookingDate"
           label={`${t('BOOKING DATE')}`}

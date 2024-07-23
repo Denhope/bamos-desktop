@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
-import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
+import {
+  PlusSquareOutlined,
+  MinusSquareOutlined,
+  ProjectOutlined,
+} from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +26,7 @@ import PartContainer from '../woAdministration/PartContainer';
 import { ValueEnumType, getStatusColor } from '@/services/utilites';
 import WPDiscription from './WPDiscription';
 import WPForm from './WPForm';
+import { useAddProjectPanelsMutation } from '@/features/projectItemWO/projectItemWOApi';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -47,7 +52,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     { skip: !projectSearchValues }
   );
-
+  const [addPanels] = useAddProjectPanelsMutation({});
   const [addProject] = useAddProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
   const [deleteProject] = useDeleteProjectMutation();
@@ -226,6 +231,26 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       },
     },
   ];
+  const handleGenerateWOPanels = async (ids: any[]) => {
+    Modal.confirm({
+      title: t('ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
+      onOk: async () => {
+        try {
+          await addPanels({
+            // projectID: projectID,
+            WOReferenceID: editingproject?._id,
+            isFromWO: true,
+          }).unwrap();
+          // refetchProjectItems();
+          message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
+          Modal.destroyAll();
+        } catch (error) {
+          message.error(t('ОШИБКА '));
+        }
+      },
+    });
+  };
+
   return (
     <>
       <Space>
@@ -261,6 +286,17 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
               {t('DELETE WP')}
             </Button>
           )}
+        </Col>
+        <Col>
+          <Button
+            // disabled
+            disabled={!editingproject}
+            size="small"
+            icon={<ProjectOutlined />}
+            onClick={() => handleGenerateWOPanels(selectedKeys)}
+          >
+            {t('GENERATE ACCEESS')}
+          </Button>
         </Col>
         <Col>
           <Switch

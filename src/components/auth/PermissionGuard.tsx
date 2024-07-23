@@ -1,6 +1,9 @@
+// @ts-nocheck
+
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { rolePermissions } from '@/services/utilites';
 import React from 'react';
+
 
 export enum Permission {
   USER_ACTIONS = 'USER_ACTIONS',
@@ -11,6 +14,7 @@ export enum Permission {
   REOPEN_TASK = 'REOPEN_TASK',
   ADD_NRC = 'ADD_NRC',
   REQUIREMENT_ACTIONS = 'REQUIREMENT_ACTIONS',
+  ADD_REQUIREMENT = 'ADD_REQUIREMENT',
   DELETE_REQUIREMENT = 'DELETE_REQUIREMENT',
   ORDER_ACTIONS = 'ORDER_ACTIONS',
   DELETE_ORDER = 'DELETE_ORDER',
@@ -48,6 +52,10 @@ export enum Permission {
   ADD_STEP = 'ADD_STEP',
   DELETE_STEP = 'DELETE_STEP',
   EDIT_STEP = 'EDIT_STEP',
+  PRINT_TAG = 'PRINT_TAG',
+  PRINT_LABEL = 'PRINT_LABEL',
+  PRINT_TASK_CARD = 'PRINT_TASK_CARD',
+  PartsModification = "PartsModification"
 }
 
 type Role =

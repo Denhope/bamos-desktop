@@ -158,7 +158,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
     }, {} as Record<string, string>) || {};
 
   const onFinish = async (values: any) => {
-    console.log(values);
+    // console.log(values);
     onpickSlipSearchValues({
       startDate: selectedStartDate,
       status: form.getFieldValue('pickSlipStatus'),
@@ -310,7 +310,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
           showSearch
           name="neededOnID"
           label={t('NEEDED ON')}
-          width="sm"
+          width="lg"
           valueEnum={neededCodesValueEnum || []}
           // disabled={!projectId}
         />
@@ -368,7 +368,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
           mode="multiple"
           name="projectTaskID"
           label={`${t(`TASK`)}`}
-          width="sm"
+          width="lg"
           valueEnum={projectTasksCodesValueEnum}
           onChange={(value: any) => {
             setSelectedTask(value);
@@ -377,7 +377,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       </ProForm.Group>
 
       <ProFormSelect
-        initialValue={['open']}
+        initialValue={['open', 'closed', 'progress']}
         mode="multiple"
         name="pickSlipStatus"
         label={`${t('PICKSLIP STATUS')}`}
@@ -391,6 +391,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
           { value: 'onQuatation', label: t('QUATATION') },
           { value: 'onShort', label: t('ON SHORT') },
           { value: 'closed', label: t('CLOSED') },
+          { value: 'partlyCanceled', label: t('PARTLY CANCELLED') },
           { value: 'canceled', label: t('CANCELED') },
           // { value: 'transfer', label: t('TRANSFER') },
         ]}

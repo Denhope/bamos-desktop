@@ -65,9 +65,14 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     data: parts,
     isLoading: partsLoading,
     refetch,
-  } = useGetStorePartsQuery(ids ? { ids: ids } : {}, {
-    skip: !ids,
-  });
+  } = useGetStorePartsQuery(
+    {
+      ids: ids,
+    },
+    {
+      skip: !ids.length,
+    }
+  );
 
   const generateQRCodeDataURL = async (data: string) => {
     try {

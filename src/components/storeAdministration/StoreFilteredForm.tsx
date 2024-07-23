@@ -95,6 +95,7 @@ const StoreFilteredForm: FC<RequirementsFilteredFormType> = ({
         // disabled={!projectId}
       />
       <ProFormSelect
+        initialValue={['ACTIVE']}
         mode="multiple"
         name="status"
         label={`${t('STORE STATE')}`}

@@ -69,6 +69,7 @@ import { useGlobalState } from './GlobalStateContext';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
+import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 
 interface UserFormProps {
   order?: any;
@@ -611,342 +612,161 @@ const WOAdminForm: FC<UserFormProps> = ({
     handleFileOpen(file);
   };
   return (
-    <ProForm
-      onFinish={(values) => {
-        onSubmit({
-          ...values,
-          projectTaskReferenceID: order?.projectTaskReferenceID,
-          projectID: order?.projectID,
-          projectId: order?.projectId,
-          projectItemReferenceID: order?.projectItemReferenceID,
-          removeInslallItemsIds: order?.removeInslallItemsIds,
-          status: order?.status,
-          PHASES: order?.PHASES,
-          MPD_REFERENCE: order?.MPD,
-          id: order.id,
-          _id: order.id,
-        });
-        // console.log({
-        //   ...values,
-        //   projectTaskReferenceID: order?.projectTaskReferenceID,
-        //   projectID: order?.projectID,
-        //   projectId: order?.projectId,
-        //   projectItemReferenceID: order?.projectItemReferenceID,
-        //   removeInslallItemsIds: order?.removeInslallItemsIds,
-        //   status: order?.status,
-        //   projectWO: order?.projectWO,
-        //   PHASES: order?.PHASES,
-        //   MPD_REFERENCE: order?.MPD,
-        // });
-      }}
-      disabled={order && order?.status === 'closed'}
-      size="small"
-      form={form}
-      submitter={{
-        render: (_, dom) => [
-          order &&
-            activeTabKey !== '3' &&
-            activeTabKey !== '4' &&
-            activeTabKey !== '5' &&
-            activeTabKey !== '2' && <SubmitButton key="submit" />,
-          order &&
-            activeTabKey !== '3' &&
-            activeTabKey !== '4' &&
-            activeTabKey !== '5' &&
-            activeTabKey !== '2' &&
-            dom.reverse()[1],
-        ],
-      }}
-      layout="horizontal"
-    >
-      {/* <div className="h-[69vh] "> */}
-      <Tabs
-        activeKey={activeTabKey}
-        onChange={(key) => setActiveTabKey(key)}
-        defaultActiveKey="3"
-        type="card"
+    <PermissionGuard requiredPermissions={[Permission.EDIT_PROJECT_TASK]}>
+      <ProForm
+        onFinish={(values) => {
+          onSubmit({
+            ...values,
+            projectTaskReferenceID: order?.projectTaskReferenceID,
+            projectID: order?.projectID,
+            projectId: order?.projectId,
+            projectItemReferenceID: order?.projectItemReferenceID,
+            removeInslallItemsIds: order?.removeInslallItemsIds,
+            status: order?.status,
+            PHASES: order?.PHASES,
+            MPD_REFERENCE: order?.MPD,
+            id: order.id,
+            _id: order.id,
+          });
+          // console.log({
+          //   ...values,
+          //   projectTaskReferenceID: order?.projectTaskReferenceID,
+          //   projectID: order?.projectID,
+          //   projectId: order?.projectId,
+          //   projectItemReferenceID: order?.projectItemReferenceID,
+          //   removeInslallItemsIds: order?.removeInslallItemsIds,
+          //   status: order?.status,
+          //   projectWO: order?.projectWO,
+          //   PHASES: order?.PHASES,
+          //   MPD_REFERENCE: order?.MPD,
+          // });
+        }}
+        disabled={order && order?.status === 'closed'}
+        size="small"
+        form={form}
+        submitter={{
+          render: (_, dom) => [
+            order &&
+              activeTabKey !== '3' &&
+              activeTabKey !== '4' &&
+              activeTabKey !== '5' &&
+              activeTabKey !== '2' && <SubmitButton key="submit" />,
+            order &&
+              activeTabKey !== '3' &&
+              activeTabKey !== '4' &&
+              activeTabKey !== '5' &&
+              activeTabKey !== '2' &&
+              dom.reverse()[1],
+          ],
+        }}
+        layout="horizontal"
       >
-        <Tabs.TabPane tab={tabTitles['1']} key="1">
-          {order ? (
-            <div className=" h-[57vh] flex flex-col overflow-auto">
-              <ProFormGroup>
+        {/* <div className="h-[69vh] "> */}
+        <Tabs
+          activeKey={activeTabKey}
+          onChange={(key) => setActiveTabKey(key)}
+          defaultActiveKey="3"
+          type="card"
+        >
+          <Tabs.TabPane tab={tabTitles['1']} key="1">
+            {order ? (
+              <div className=" h-[57vh] flex flex-col overflow-auto">
                 <ProFormGroup>
-                  <ProFormSelect
-                    disabled
-                    showSearch
-                    name="acTypeId"
-                    label={t('AC TYPE')}
-                    width="sm"
-                    valueEnum={acTypeValueEnum}
-                    onChange={(value: any) => setACTypeID(value)}
-                  />
-                  {taskType !== 'PART_PRODUCE' && (
-                    <>
-                      <ProFormSelect
-                        disabled
-                        mode={'multiple'}
-                        showSearch
-                        name="mpdDocumentationId"
-                        label={t('MPD CODE')}
-                        width="lg"
-                        valueEnum={mpdCodesValueEnum}
-                        // disabled={!acTypeID} // Disable the select if acTypeID is not set
-                      />
-                      <ProFormSelect
-                        disabled
-                        showSearch
-                        // initialValue={['PART_PRODUCE']}
-                        name="projectItemType"
-                        label={t('TASK TYPE')}
-                        width="xl"
-                        valueEnum={{
-                          RC: {
-                            text: t(
-                              'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
-                            ),
-                          },
-                          RC_ADD: {
-                            text: t('RC (Critical Task, Double Inspection)'),
-                          },
-
-                          NRC: { text: t('NRC (AdHoc, Defect)') },
-                          MJC: { text: t('MJC ((Extended MPD)') },
-                          CMJC: { text: t('CMJC (Component maintenance) ') },
-                          FC: { text: t('FC (Fabrication card)') },
-                        }}
-                        onChange={(value: string) => setTaskType(value)}
-                      />
-                    </>
-                  )}
-                  {taskType === 'PART_PRODUCE' && (
-                    <>
-                      <ProFormSelect
-                        disabled
-                        showSearch
-                        name="projectItemType"
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                        label={t('TASK TYPE')}
-                        width="xl"
-                        valueEnum={{
-                          RC: {
-                            text: t(
-                              'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
-                            ),
-                          },
-                          RC_ADD: {
-                            text: t('RC (Critical Task, Double Inspection)'),
-                          },
-
-                          NRC: { text: t('NRC (AdHoc, Defect)') },
-                          MJC: { text: t('MJC ((Extended MPD)') },
-                          CMJC: { text: t('CMJC (Component maintenance) ') },
-                          FC: { text: t('FC (Fabrication card)') },
-                        }}
-                        onChange={(value: string) => setTaskType(value)}
-                      />
-                      <ProFormText
-                        disabled
-                        width={'lg'}
-                        name="taskNumber"
-                        label={t('TASK NUMBER')}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      />
-                      <ProFormTextArea
-                        disabled
-                        fieldProps={{
-                          rows: 3,
-                        }}
-                        width="lg"
-                        name="taskDescription"
-                        label={t('DESCRIPTION')}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      />
-                      <ProFormTextArea
-                        fieldProps={{
-                          rows: 2,
-                        }}
-                        width="xl"
-                        name="notes"
-                        label={t('NOTE')}
-                      />
-
-                      <ProFormGroup>
+                  <ProFormGroup>
+                    <ProFormSelect
+                      disabled
+                      showSearch
+                      name="acTypeId"
+                      label={t('AC TYPE')}
+                      width="sm"
+                      valueEnum={acTypeValueEnum}
+                      onChange={(value: any) => setACTypeID(value)}
+                    />
+                    {taskType !== 'PART_PRODUCE' && (
+                      <>
                         <ProFormSelect
                           disabled
+                          mode={'multiple'}
                           showSearch
-                          rules={[{ required: true }]}
-                          width={'sm'}
-                          name="partNumberID"
-                          label={`${t(`PART No`)}`}
-                          // value={partNumber}
-                          // onChange={(value, data: any) => {
-                          //   // console.log(data);
-                          //   form.setFields([
-                          //     {
-                          //       name: 'nameOfMaterial',
-                          //       value: data.data.DESCRIPTION,
-                          //     },
-                          //     {
-                          //       name: 'unit',
-                          //       value: data.data.UNIT_OF_MEASURE,
-                          //     },
-                          //     { name: 'type', value: data.data.TYPE },
-                          //     { name: 'group', value: data.data.GROUP },
-                          //     {
-                          //       name: 'WORKPIECE_DIMENSIONS',
-                          //       value: data.data.WORKPIECE_DIMENSIONS,
-                          //     },
-                          //     {
-                          //       name: 'MATERIAL',
-                          //       value: data.data.MATERIAL,
-                          //     },
-                          //     {
-                          //       name: 'WEIGHT',
-                          //       value: data.data.WEIGHT,
-                          //     },
-                          //     {
-                          //       name: 'SQUARE',
-                          //       value: data.data.SQUARE,
-                          //     },
-                          //     {
-                          //       name: 'COATING',
-                          //       value: data.data.COATING,
-                          //     },
-                          //     {
-                          //       name: 'WORKPIECE_WEIGHT',
-                          //       value: data.data.WORKPIECE_WEIGHT,
-                          //     },
-                          //     {
-                          //       name: 'WORKPIECE_MATERIAL_TYPE',
-                          //       value: data.data.WORKPIECE_MATERIAL_TYPE,
-                          //     },
-                          //   ]);
-                          // }}
-                          options={Object.entries(partValueEnum).map(
-                            ([key, part]) => ({
-                              label: part.PART_NUMBER,
-                              value: key,
-                              data: part,
-                            })
-                          )}
+                          name="mpdDocumentationId"
+                          label={t('MPD CODE')}
+                          width="lg"
+                          valueEnum={mpdCodesValueEnum}
+                          // disabled={!acTypeID} // Disable the select if acTypeID is not set
                         />
+                        <ProFormSelect
+                          // disabled
+                          showSearch
+                          // initialValue={['PART_PRODUCE']}
+                          name="projectItemType"
+                          label={t('TASK TYPE')}
+                          width="xl"
+                          valueEnum={{
+                            RC: {
+                              text: t(
+                                'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                              ),
+                            },
+                            RC_ADD: {
+                              text: t('RC (Critical Task, Double Inspection)'),
+                            },
 
-                        <ProFormText
-                          disabled
-                          name="nameOfMaterial"
-                          label={t('DESCRIPTION')}
-                          width="md"
-                          tooltip={t('DESCRIPTION')}
-                        ></ProFormText>
-                        <ProFormText
-                          disabled
-                          width="sm"
-                          name="WORKPIECE_DIMENSIONS"
-                          label={t('WORKPIECE DIMENSIONS')}
+                            NRC: { text: t('NRC (AdHoc, Defect)') },
+                            MJC: { text: t('MJC ((Extended MPD)') },
+                            CMJC: { text: t('CMJC (Component maintenance) ') },
+                            FC: { text: t('FC (Fabrication card)') },
+                          }}
+                          onChange={(value: string) => setTaskType(value)}
+                        />
+                      </>
+                    )}
+                    {taskType === 'PART_PRODUCE' && (
+                      <>
+                        <ProFormSelect
+                          // disabled
+                          showSearch
+                          name="projectItemType"
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+                          label={t('TASK TYPE')}
+                          width="xl"
+                          valueEnum={{
+                            RC: {
+                              text: t(
+                                'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                              ),
+                            },
+                            RC_ADD: {
+                              text: t('RC (Critical Task, Double Inspection)'),
+                            },
+
+                            NRC: { text: t('NRC (AdHoc, Defect)') },
+                            MJC: { text: t('MJC ((Extended MPD)') },
+                            CMJC: { text: t('CMJC (Component maintenance) ') },
+                            FC: { text: t('FC (Fabrication card)') },
+                          }}
+                          onChange={(value: string) => setTaskType(value)}
                         />
                         <ProFormText
                           disabled
-                          name="COATING"
-                          label={t('COATING')}
-                          width="sm"
-                          tooltip={t('COATING')}
-                        ></ProFormText>
-                        <ProFormText
-                          disabled
-                          name="MATERIAL"
-                          label={t('MATERIAL')}
-                          width="sm"
-                          tooltip={t('MATERIAL')}
-                        ></ProFormText>
-                        <ProFormText
-                          disabled
-                          name="WEIGHT"
-                          label={t('WEIGHT')}
-                          width="md"
-                          tooltip={t('WEIGHT')}
-                        ></ProFormText>
-                        <ProFormText
-                          disabled
-                          name="SQUARE"
-                          label={t('SQUARE')}
-                          width="sm"
-                          tooltip={t('SQUARE')}
-                        ></ProFormText>
-                        <ProFormText
-                          disabled
-                          name="WORKPIECE_WEIGHT"
-                          label={t('WORKPIECE_WEIGHT')}
-                          width="sm"
-                          tooltip={t('WORKPIECE_WEIGHT')}
-                        ></ProFormText>
-
-                        <ProFormText
-                          disabled
-                          name="WORKPIECE_MATERIAL_TYPE"
-                          label={t('WORKPIECE_MATERIAL_TYPE')}
-                          width="sm"
-                          tooltip={t('WORKPIECE_MATERIAL_TYPE')}
-                        ></ProFormText>
-                      </ProFormGroup>
-                      <ProFormText
-                        width={'xs'}
-                        name="rev"
-                        label={t('REVISION')}
-                      />
-
-                      <ProFormGroup>
-                        <ProFormDigit
-                          width={'xs'}
-                          name="mainWorkTime"
-                          label={t('PART TIME')}
-                        />
-                        {/* <ProFormDigit
-                          width={'sm'}
-                          name="machineWorkTimeHours"
-                          label={t('MACHINE TIME')}
-                        /> */}
-                      </ProFormGroup>
-                    </>
-                  )}
-                  {taskType !== 'PART_PRODUCE' && (
-                    <>
-                      <ProFormGroup>
-                        <ProFormText
-                          disabled={!order?.projectTaskReferenceID}
-                          width={'xl'}
+                          width={'lg'}
                           name="taskNumber"
                           label={t('TASK NUMBER')}
-                        />
-                        <ProFormText
-                          disabled
-                          width={'xs'}
-                          name="rev"
-                          label={t('REVISION')}
-                        />
-                        <ProFormDigit
-                          disabled={!order?.projectTaskReferenceID}
-                          width={'xs'}
-                          name="mainWorkTime"
-                          label={t('MHS')}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
                         />
                         <ProFormTextArea
+                          // disabled
                           fieldProps={{
-                            // style: { resize: 'none' },
-                            rows: 5,
+                            rows: 3,
                           }}
-                          width="xl"
+                          width="lg"
                           name="taskDescription"
                           label={t('DESCRIPTION')}
                           rules={[
@@ -955,266 +775,455 @@ const WOAdminForm: FC<UserFormProps> = ({
                             },
                           ]}
                         />
-                      </ProFormGroup>
-                      <ProFormTextArea
-                        disabled={!order?.projectTaskReferenceID}
-                        width={'sm'}
-                        fieldProps={{ style: { resize: 'none' } }}
-                        name="amtoss"
-                        label={t('AMM')}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      />
-                      <ProFormSelect
-                        disabled={!order?.projectTaskReferenceID}
-                        showSearch
-                        name="zonesID"
-                        mode={'multiple'}
-                        label={t('ZONES')}
-                        width="sm"
-                        valueEnum={zonesValueEnum}
-                        // disabled={!acTypeID}
-                      />
-                      <ProFormSelect
-                        disabled={!order?.projectTaskReferenceID}
-                        showSearch
-                        name="accessID"
-                        mode={'multiple'}
-                        label={t('ACCESS')}
-                        width="sm"
-                        valueEnum={accessCodesValueEnum}
-                        // disabled={!acTypeID}
-                      />
-                      <ProFormSelect
-                        disabled={!order?.projectTaskReferenceID}
-                        showSearch
-                        name="code"
-                        label={t('TASK CODE')}
-                        width="sm"
-                        valueEnum={taskCodesValueEnum}
-                        // disabled={!acTypeID}
-                      />
-                      <ProFormSelect
-                        disabled={!order?.projectTaskReferenceID}
-                        showSearch
-                        mode="multiple"
-                        name="restrictionID"
-                        label={t('RESTRICTION')}
-                        width="sm"
-                        valueEnum={restrictionValueEnum}
-                        // disabled={!acTypeID}
-                      />
-                      <ProFormSelect
-                        disabled={!order?.projectTaskReferenceID}
-                        mode="multiple"
-                        showSearch
-                        name="skillCodeID"
-                        label={t('SKILL')}
-                        width="sm"
-                        options={groupSlills}
-                        // valueEnum={taskCodesValueEnum}
-                        // disabled={!acTypeID}
-                      />
-                      <ProFormTextArea
-                        fieldProps={{
-                          style: { resize: 'none' },
-                          rows: 1,
-                        }}
-                        name="notes"
-                        label={t('REMARKS')}
-                        width="lg"
-                      />
-                      {/* <ProFormSelect
-                        showSearch
-                        name="status"
-                        label={t('STATE')}
-                        width="sm"
-                        valueEnum={{
-                          ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
-                          INACTIVE: { text: t('INACTIVE'), status: 'Error' },
-                        }}
-                      /> */}
-                    </>
-                  )}
-                </ProFormGroup>
-                <ProForm.Item label={t('UPLOAD')}>
-                  <div className="overflow-y-auto max-h-64">
-                    <Upload
-                      name="FILES"
-                      fileList={order?.FILES || []}
-                      // listType="picture"
-                      className="upload-list-inline cursor-pointer"
-                      beforeUpload={handleUpload}
-                      accept="image/*"
-                      onPreview={handleDownload}
-                      onRemove={handleDelete}
-                      multiple
-                      onDownload={function (file: any): void {
-                        handleFileSelect({
-                          id: file?.id,
-                          name: file?.name,
-                        });
-                      }}
-                    >
-                      <Button icon={<UploadOutlined />}>
-                        {t('CLICK TO UPLOAD')}
-                      </Button>
-                    </Upload>
-                  </div>
-                </ProForm.Item>
-                {/* {taskType !== 'PART_PRODUCE' && (
-                  <ProFormGroup>
-                    <ProFormDigit
-                      width={'xs'}
-                      name="intervalDAYS"
-                      label={t('INTERVAL DAYS')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="toleranceDAY"
-                      label={t('TOLERANCE DAY')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="intervalMOS"
-                      label={t('INTERVAL MOS')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="toleranceMOS"
-                      label={t('TOLERANCE MOS')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="intervalHRS"
-                      label={t('INTERVAL HRS')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="toleranceMHS"
-                      label={t('TOLERANCE MHS')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="intervalAFL"
-                      label={t('INTERVAL AFL')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="intervalENC"
-                      label={t('INTERVAL ENC')}
-                    />
-                    <ProFormDigit
-                      width={'xs'}
-                      name="intervalAPUS"
-                      label={t('INTERVAL APUS')}
-                    />
+                        <ProFormTextArea
+                          fieldProps={{
+                            rows: 2,
+                          }}
+                          width="xl"
+                          name="notes"
+                          label={t('NOTE')}
+                        />
+
+                        <ProFormGroup>
+                          <ProFormSelect
+                            disabled
+                            showSearch
+                            rules={[{ required: true }]}
+                            width={'sm'}
+                            name="partNumberID"
+                            label={`${t(`PART No`)}`}
+                            // value={partNumber}
+                            // onChange={(value, data: any) => {
+                            //   // console.log(data);
+                            //   form.setFields([
+                            //     {
+                            //       name: 'nameOfMaterial',
+                            //       value: data.data.DESCRIPTION,
+                            //     },
+                            //     {
+                            //       name: 'unit',
+                            //       value: data.data.UNIT_OF_MEASURE,
+                            //     },
+                            //     { name: 'type', value: data.data.TYPE },
+                            //     { name: 'group', value: data.data.GROUP },
+                            //     {
+                            //       name: 'WORKPIECE_DIMENSIONS',
+                            //       value: data.data.WORKPIECE_DIMENSIONS,
+                            //     },
+                            //     {
+                            //       name: 'MATERIAL',
+                            //       value: data.data.MATERIAL,
+                            //     },
+                            //     {
+                            //       name: 'WEIGHT',
+                            //       value: data.data.WEIGHT,
+                            //     },
+                            //     {
+                            //       name: 'SQUARE',
+                            //       value: data.data.SQUARE,
+                            //     },
+                            //     {
+                            //       name: 'COATING',
+                            //       value: data.data.COATING,
+                            //     },
+                            //     {
+                            //       name: 'WORKPIECE_WEIGHT',
+                            //       value: data.data.WORKPIECE_WEIGHT,
+                            //     },
+                            //     {
+                            //       name: 'WORKPIECE_MATERIAL_TYPE',
+                            //       value: data.data.WORKPIECE_MATERIAL_TYPE,
+                            //     },
+                            //   ]);
+                            // }}
+                            options={Object.entries(partValueEnum).map(
+                              ([key, part]) => ({
+                                label: part.PART_NUMBER,
+                                value: key,
+                                data: part,
+                              })
+                            )}
+                          />
+
+                          <ProFormText
+                            // disabled
+                            name="nameOfMaterial"
+                            label={t('DESCRIPTION')}
+                            width="md"
+                            tooltip={t('DESCRIPTION')}
+                          ></ProFormText>
+                          <ProFormText
+                            // disabled
+                            width="sm"
+                            name="WORKPIECE_DIMENSIONS"
+                            label={t('WORKPIECE DIMENSIONS')}
+                          />
+                          <ProFormText
+                            // disabled
+                            name="COATING"
+                            label={t('COATING')}
+                            width="sm"
+                            tooltip={t('COATING')}
+                          ></ProFormText>
+                          <ProFormText
+                            // disabled
+                            name="MATERIAL"
+                            label={t('MATERIAL')}
+                            width="sm"
+                            tooltip={t('MATERIAL')}
+                          ></ProFormText>
+                          <ProFormText
+                            // disabled
+                            name="WEIGHT"
+                            label={t('WEIGHT')}
+                            width="md"
+                            tooltip={t('WEIGHT')}
+                          ></ProFormText>
+                          <ProFormText
+                            // disabled
+                            name="SQUARE"
+                            label={t('SQUARE')}
+                            width="sm"
+                            tooltip={t('SQUARE')}
+                          ></ProFormText>
+                          <ProFormText
+                            // disabled
+                            name="WORKPIECE_WEIGHT"
+                            label={t('WORKPIECE_WEIGHT')}
+                            width="sm"
+                            tooltip={t('WORKPIECE_WEIGHT')}
+                          ></ProFormText>
+
+                          <ProFormText
+                            // disabled
+                            name="WORKPIECE_MATERIAL_TYPE"
+                            label={t('WORKPIECE_MATERIAL_TYPE')}
+                            width="sm"
+                            tooltip={t('WORKPIECE_MATERIAL_TYPE')}
+                          ></ProFormText>
+                        </ProFormGroup>
+                        <ProFormText
+                          width={'xs'}
+                          name="rev"
+                          label={t('REVISION')}
+                        />
+
+                        <ProFormGroup>
+                          <ProFormDigit
+                            width={'xs'}
+                            name="mainWorkTime"
+                            label={t('PART TIME')}
+                          />
+                          {/* <ProFormDigit
+                      width={'sm'}
+                      name="machineWorkTimeHours"
+                      label={t('MACHINE TIME')}
+                    /> */}
+                        </ProFormGroup>
+                      </>
+                    )}
+                    {taskType !== 'PART_PRODUCE' && (
+                      <>
+                        <ProFormGroup>
+                          <ProFormText
+                            // disabled={!order?.projectTaskReferenceID}
+                            width={'xl'}
+                            name="taskNumber"
+                            label={t('TASK NUMBER')}
+                          />
+                          <ProFormText
+                            disabled
+                            width={'xs'}
+                            name="rev"
+                            label={t('REVISION')}
+                          />
+                          <ProFormDigit
+                            // disabled={!order?.projectTaskReferenceID}
+                            width={'xs'}
+                            name="mainWorkTime"
+                            label={t('MHS')}
+                          />
+                          <ProFormTextArea
+                            fieldProps={{
+                              // style: { resize: 'none' },
+                              rows: 5,
+                            }}
+                            width="xl"
+                            name="taskDescription"
+                            label={t('DESCRIPTION')}
+                            rules={[
+                              {
+                                required: true,
+                              },
+                            ]}
+                          />
+                        </ProFormGroup>
+                        <ProFormTextArea
+                          // disabled={!order?.projectTaskReferenceID}
+                          width={'sm'}
+                          fieldProps={{ style: { resize: 'none' } }}
+                          name="amtoss"
+                          label={t('AMM')}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+                        />
+                        <ProFormSelect
+                          // disabled={!order?.projectTaskReferenceID}
+                          showSearch
+                          name="zonesID"
+                          mode={'multiple'}
+                          label={t('ZONES')}
+                          width="sm"
+                          valueEnum={zonesValueEnum}
+                          // disabled={!acTypeID}
+                        />
+                        <ProFormSelect
+                          // disabled={!order?.projectTaskReferenceID}
+                          showSearch
+                          name="accessID"
+                          mode={'multiple'}
+                          label={t('ACCESS')}
+                          width="sm"
+                          valueEnum={accessCodesValueEnum}
+                          // disabled={!acTypeID}
+                        />
+                        <ProFormSelect
+                          // disabled={!order?.projectTaskReferenceID}
+                          showSearch
+                          name="code"
+                          label={t('TASK CODE')}
+                          width="sm"
+                          valueEnum={taskCodesValueEnum}
+                          // disabled={!acTypeID}
+                        />
+                        <ProFormSelect
+                          // disabled={!order?.projectTaskReferenceID}
+                          showSearch
+                          mode="multiple"
+                          name="restrictionID"
+                          label={t('RESTRICTION')}
+                          width="sm"
+                          valueEnum={restrictionValueEnum}
+                          // disabled={!acTypeID}
+                        />
+                        <ProFormSelect
+                          // disabled={!order?.projectTaskReferenceID}
+                          mode="multiple"
+                          showSearch
+                          name="skillCodeID"
+                          label={t('SKILL')}
+                          width="sm"
+                          options={groupSlills}
+                          // valueEnum={taskCodesValueEnum}
+                          // disabled={!acTypeID}
+                        />
+                        <ProFormTextArea
+                          fieldProps={{
+                            style: { resize: 'none' },
+                            rows: 1,
+                          }}
+                          name="notes"
+                          label={t('REMARKS')}
+                          width="lg"
+                        />
+                        {/* <ProFormSelect
+                    showSearch
+                    name="status"
+                    label={t('STATE')}
+                    width="sm"
+                    valueEnum={{
+                      ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
+                      INACTIVE: { text: t('INACTIVE'), status: 'Error' },
+                    }}
+                  /> */}
+                      </>
+                    )}
                   </ProFormGroup>
-                )} */}
+                  <ProForm.Item label={t('UPLOAD')}>
+                    <div className="overflow-y-auto max-h-64">
+                      <Upload
+                        name="FILES"
+                        fileList={order?.FILES || []}
+                        // listType="picture"
+                        className="upload-list-inline cursor-pointer"
+                        beforeUpload={handleUpload}
+                        accept="image/*"
+                        onPreview={handleDownload}
+                        onRemove={handleDelete}
+                        multiple
+                        onDownload={function (file: any): void {
+                          handleFileSelect({
+                            id: file?.id,
+                            name: file?.name,
+                          });
+                        }}
+                      >
+                        <Button icon={<UploadOutlined />}>
+                          {t('CLICK TO UPLOAD')}
+                        </Button>
+                      </Upload>
+                    </div>
+                  </ProForm.Item>
+                  {/* {taskType !== 'PART_PRODUCE' && (
+              <ProFormGroup>
+                <ProFormDigit
+                  width={'xs'}
+                  name="intervalDAYS"
+                  label={t('INTERVAL DAYS')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="toleranceDAY"
+                  label={t('TOLERANCE DAY')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="intervalMOS"
+                  label={t('INTERVAL MOS')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="toleranceMOS"
+                  label={t('TOLERANCE MOS')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="intervalHRS"
+                  label={t('INTERVAL HRS')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="toleranceMHS"
+                  label={t('TOLERANCE MHS')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="intervalAFL"
+                  label={t('INTERVAL AFL')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="intervalENC"
+                  label={t('INTERVAL ENC')}
+                />
+                <ProFormDigit
+                  width={'xs'}
+                  name="intervalAPUS"
+                  label={t('INTERVAL APUS')}
+                />
               </ProFormGroup>
-            </div>
-          ) : (
-            <Empty />
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={tabTitles['3']} key="3">
-          {(order?.id && projectItemID) ||
-          (order?.id && order?.projectItemReferenceID) ? (
-            <div className=" h-[68vh] flex flex-col overflow-auto pb-3">
-              <StepContainer
-                steps={stepsToRender || []}
-                onAddStep={handleAddStep}
-                onDeleteStep={handleDeleteStep}
-              />
-            </div>
-          ) : (
-            <Empty></Empty>
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={tabTitles['5']} key="5">
-          {order && order?.id ? (
-            <RequarementsList
-              isIssueVisibale={true}
-              order={order}
-              isAddVisiable={order && order.status === 'closed' ? true : false}
-              isChekboxColumn={true}
-              fetchData={transformedRequirements}
-              columnDefs={columnRequirements}
-              partNumbers={partNumbers || []}
-              taskId={order?.id}
-              onUpdateData={function (data: any[]): void {}}
-              height={'54Vh'}
-              onRowSelect={function (rowData: IRequirement | null): void {}}
-              onCheckItems={function (selectedKeys: any[]): void {
-                handleCheckItems(selectedKeys);
-              }}
-              onDelete={function (reqID: string): void {
-                throw new Error('Function not implemented.');
-              }}
-              onSave={function (rowData: IRequirement): void {
-                throw new Error('Function not implemented.');
-              }}
-            ></RequarementsList>
-          ) : (
-            <Empty></Empty>
-          )}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={tabTitles['2']} key="2">
-          <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-            {order && !order?.projectItemReferenceID ? (
-              <PartContainer
-                isButtonColumn={false}
-                isButtonVisiable={false}
-                isAddVisiable={true}
-                height={'58vh'}
-                columnDefs={columnDefs}
-                partNumbers={partNumbers || []}
-                onUpdateData={(data: any[]): void => {}}
-                rowData={
-                  order?.partTaskID &&
-                  transformToIPartNumber(
-                    partsTask || [], // Передаем массив `order.partTaskID`
-                    ['TOOL', 'GSE'] // Ваши группы инструментов
-                  )
-                }
-                isLoading={isLoading}
-              />
+            )} */}
+                </ProFormGroup>
+              </div>
+            ) : (
+              <Empty />
+            )}
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={tabTitles['3']} key="3">
+            {(order?.id && projectItemID) ||
+            (order?.id && order?.projectItemReferenceID) ? (
+              <div className=" h-[68vh] flex flex-col overflow-auto pb-3">
+                <StepContainer
+                  steps={stepsToRender || []}
+                  onAddStep={handleAddStep}
+                  onDeleteStep={handleDeleteStep}
+                />
+              </div>
             ) : (
               <Empty></Empty>
             )}
-          </div>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={tabTitles['4']} key="4">
-          <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-            {order && !order?.projectItemReferenceID ? (
-              <PartContainer
-                isButtonColumn={false}
-                isButtonVisiable={false}
-                isLoading={isLoading}
-                isAddVisiable={true}
-                height={'58vh'}
-                columnDefs={columnDefs}
-                partNumbers={partNumbers || []}
-                onUpdateData={(data: any[]): void => {}}
-                rowData={
-                  order?.partTaskID &&
-                  transformToIPartNumber(
-                    partsTask || [],
-                    ['ROT', 'CONS', 'CHEM'] // Ваши группы инструментов
-                  )
-                }
-              />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={tabTitles['5']} key="5">
+            {order && order?.id ? (
+              <PermissionGuard
+                requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
+              >
+                <RequarementsList
+                  isIssueVisibale={true}
+                  order={order}
+                  isAddVisiable={
+                    order && order.status === 'closed' ? true : false
+                  }
+                  isChekboxColumn={true}
+                  fetchData={transformedRequirements}
+                  columnDefs={columnRequirements}
+                  partNumbers={partNumbers || []}
+                  taskId={order?.id}
+                  onUpdateData={function (data: any[]): void {}}
+                  height={'54Vh'}
+                  onRowSelect={function (rowData: IRequirement | null): void {}}
+                  onCheckItems={function (selectedKeys: any[]): void {
+                    handleCheckItems(selectedKeys);
+                  }}
+                  onDelete={function (reqID: string): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                  onSave={function (rowData: IRequirement): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                ></RequarementsList>
+              </PermissionGuard>
             ) : (
               <Empty></Empty>
             )}
-          </div>
-        </Tabs.TabPane>
-      </Tabs>
-      {/* </div> */}
-    </ProForm>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={tabTitles['2']} key="2">
+            <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
+              {order && !order?.projectItemReferenceID ? (
+                <PartContainer
+                  isButtonColumn={false}
+                  isButtonVisiable={false}
+                  isAddVisiable={true}
+                  height={'58vh'}
+                  columnDefs={columnDefs}
+                  partNumbers={partNumbers || []}
+                  onUpdateData={(data: any[]): void => {}}
+                  rowData={
+                    order?.partTaskID &&
+                    transformToIPartNumber(
+                      partsTask || [], // Передаем массив `order.partTaskID`
+                      ['TOOL', 'GSE'] // Ваши группы инструментов
+                    )
+                  }
+                  isLoading={isLoading}
+                />
+              ) : (
+                <Empty></Empty>
+              )}
+            </div>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={tabTitles['4']} key="4">
+            <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
+              {order && !order?.projectItemReferenceID ? (
+                <PartContainer
+                  isButtonColumn={false}
+                  isButtonVisiable={false}
+                  isLoading={isLoading}
+                  isAddVisiable={true}
+                  height={'58vh'}
+                  columnDefs={columnDefs}
+                  partNumbers={partNumbers || []}
+                  onUpdateData={(data: any[]): void => {}}
+                  rowData={
+                    order?.partTaskID &&
+                    transformToIPartNumber(
+                      partsTask || [],
+                      ['ROT', 'CONS', 'CHEM'] // Ваши группы инструментов
+                    )
+                  }
+                />
+              ) : (
+                <Empty></Empty>
+              )}
+            </div>
+          </Tabs.TabPane>
+        </Tabs>
+        {/* </div> */}
+      </ProForm>
+    </PermissionGuard>
   );
 };
 

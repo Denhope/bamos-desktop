@@ -69,11 +69,14 @@ const PickSlipAdministrationTree: FC<UserTreeProps> = ({
       if (requirement.state === 'PARTLY_RECEIVED') {
         stateIndicator = ' \u{1F7E1}'; // Оранжевый кружок
       }
-      if (requirement.state === 'CANCELED') {
-        stateIndicator = ' ⚪'; // Серый квадрат
+      if (requirement.state === 'canceled') {
+        stateIndicator = '  \u{1F534}'; // Серый квадрат
       }
       if (requirement.state === 'CANCELLED') {
-        stateIndicator = ' ⚪'; // Серый квадрат
+        stateIndicator = '  \u{1F534}'; // Серый квадрат
+      }
+      if (requirement.state === 'partlyCanceled') {
+        stateIndicator = '  \u{1F534}'; // Серый квадрат
       }
       if (requirement.state === 'issued') {
         stateIndicator = '🟣'; // Серый квадрат

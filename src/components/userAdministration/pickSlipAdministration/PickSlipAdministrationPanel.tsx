@@ -54,7 +54,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       neededOnID: pickSlipSearchValues?.neededOnID || '',
       includeAlternates: true,
       storeFromID: pickSlipSearchValues?.storeFromID || '',
-      WOReferenceID: pickSlipSearchValues?.storeFromID || '',
+      WOReferenceID: pickSlipSearchValues?.WOReferenceID || '',
     },
     {
       skip: !pickSlipSearchValues,
@@ -116,6 +116,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     open: t('OPEN'),
     closed: t('CLOSED'),
     canceled: t('CANCELLED'),
+    partlyCanceled: t('PARTLY CANCELLED'),
     onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
@@ -133,7 +134,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       field: 'status',
       headerName: `${t('Status')}`,
       cellDataType: 'text',
-      width: 150,
+      width: 200,
       filter: true,
       valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
         params.data.status,

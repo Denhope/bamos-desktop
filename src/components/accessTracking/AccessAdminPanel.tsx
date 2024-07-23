@@ -1,4 +1,5 @@
 //@ts-nocheck
+import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 import { Split } from '@geoffcox/react-splitter';
 import {
   useGetProjectGroupPanelsQuery,
@@ -7,7 +8,7 @@ import {
   useUpdateProjectPanelsMutation,
 } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
-import { Button, Col, Modal, Space, Spin, Switch, message } from 'antd';
+import { Button, Col, Modal, Space, Spin, Empty, Switch, message } from 'antd';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 // import data from '../../data/reports/label.xml';
 
@@ -35,6 +36,8 @@ import { IAccessCode } from '@/models/ITask';
 // import ReportGenerator from '../shared/ReportPrintLabel';
 // import ReportEXEL from '../shared/ReportEXEL';
 // import ReportPrintTag from '../shared/ReportPrintTag';
+
+import { useAddProjectPanelsMutation } from '@/features/projectItemWO/projectItemWOApi';
 import {
   useAddBookingMutation,
   useGetFilteredBookingsQuery,
@@ -75,6 +78,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   }, [editingproject?.id, editingproject?._id]);
 
   // Запускаем запрос, если triggerQuery true
+  const [addPanels] = useAddProjectPanelsMutation({});
   const { data: bookings } = useGetFilteredBookingsQuery(
     {
       accessProjectID: editingproject?.id || editingproject?._id,
@@ -123,7 +127,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   } = projectSearchValues?.isOnlyPanels
     ? useGetProjectPanelsQuery(
         {
-          // accessProjectNumber: projectSearchValues?.accessProjectNumber,
+          accessProjectNumber: projectSearchValues?.accessProjectNumber,
           status: projectSearchValues?.status,
           createStartDate: projectSearchValues?.startDate,
           createFinishDate: projectSearchValues?.endDate,
@@ -136,6 +140,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           acTypeID: projectSearchValues?.acTypeID,
           isOnlyWithPanels: projectSearchValues?.isOnlyWithPanels,
           userID: projectSearchValues?.userID,
+          WOReferenceID: projectSearchValues?.WOReferenceID || '',
         },
         { skip: !triggerQuery }
       )
@@ -154,6 +159,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           acTypeID: projectSearchValues?.acTypeID,
           isOnlyWithPanels: projectSearchValues?.isOnlyWithPanels,
           userID: projectSearchValues?.userID,
+          WOReferenceID: projectSearchValues?.WOReferenceID || '',
         },
         { skip: !triggerQuery }
       );
@@ -188,6 +194,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
 
   //   fetchXmlTemplate();
   // }, []);
+
   const products = [
     {
       name: 'Ноутбук',
@@ -546,39 +553,45 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
         </Col>
 
         <Col>
-          {/* {editingproject && ( */}
-          <Button
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<AlertTwoTone />}
-            onClick={() => handleUpdateOpen(selectedKeys)}
-          >
-            {t('OPEN ACCESS')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.OPEN_ACCESS]}>
+            <Button
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<AlertTwoTone />}
+              onClick={() => handleUpdateOpen(selectedKeys)}
+            >
+              {t('OPEN ACCESS')}
+            </Button>
+          </PermissionGuard>
+
           {/* )} */}
         </Col>
         <Col>
-          {/* {editingproject && ( */}
-          <Button
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<CheckCircleFilled />}
-            onClick={() => handleUpdateClosed(selectedKeys)}
-          >
-            {t('CLOSE ACCESS')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.CLOSE_ACCESS]}>
+            <Button
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<CheckCircleFilled />}
+              onClick={() => handleUpdateClosed(selectedKeys)}
+            >
+              {t('CLOSE ACCESS')}
+            </Button>
+          </PermissionGuard>
+
           {/* )} */}
         </Col>
         <Col>
-          {/* {editingproject && ( */}
-          <Button
-            disabled={!selectedKeys.length}
-            size="small"
-            icon={<CheckCircleFilled />}
-            onClick={() => handleUpdateInspected(selectedKeys)}
-          >
-            {t('INSPECT CLOSE ACCESS')}
-          </Button>
+          <PermissionGuard requiredPermissions={[Permission.CLOSE_ACCESS]}>
+            <Button
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<CheckCircleFilled />}
+              onClick={() => handleUpdateInspected(selectedKeys)}
+            >
+              {t('INSPECT CLOSE ACCESS')}
+            </Button>
+          </PermissionGuard>
+
           {/* )} */}
         </Col>
         <Col>
@@ -601,24 +614,16 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           )}
         </Col> */}
         <Col style={{ textAlign: 'right' }}>
-          {selectedKeys.length > 0 && (
-            <>
-              <ReportPrintTag
-                xmlTemplate={xmlTemplate}
-                data={products}
-                ids={selectedKeys}
-              ></ReportPrintTag>
-              {/* <ReportEXEL
-                headers={{
-                  name: 'Название',
-                  price: 'Цена',
-                  description: 'Описание',
-                  barcode: 'Штрих-код',
-                }}
-                data={products}
-              ></ReportEXEL> */}
-            </>
-          )}
+          <PermissionGuard
+            requiredPermissions={[Permission.PART_TRANSFER_ACTIONS]}
+          >
+            <ReportPrintTag
+              isDisabled={!selectedKeys.length > 0}
+              xmlTemplate={xmlTemplate}
+              data={products}
+              ids={selectedKeys}
+            ></ReportPrintTag>
+          </PermissionGuard>
         </Col>
       </Space>
 
@@ -673,29 +678,51 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
               <div className="overflow-auto h-[57vh]">
                 <AccessCodeForm
                   accessesData={accessesData || []}
-                  projectTasks={projectTasks || []}
+                  // projectTasks={projectTasks || []}
                   accessCode={editingproject}
-                  onSubmit={function (accessCode: IAccessCode): void {
+                  onSubmit={function (accessCode: any): void {
                     console.log(accessCode);
+                    Modal.confirm({
+                      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
+                      onOk: async () => {
+                        try {
+                          await addPanels({
+                            accessIds: [accessCode.accessID],
+                            WOReferenceID: accessCode.WOReferenceID,
+                            projectTaskIds: accessCode.projectTaskID,
+                          }).unwrap();
+                          // refetchProjectItems();
+                          message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
+                          Modal.destroyAll();
+                        } catch (error) {
+                          message.error(t('ОШИБКА '));
+                        }
+                      },
+                    });
                   }}
                 ></AccessCodeForm>
               </div>
               <div className="py-5">
-                <PartContainer
-                  isFilesVisiable={false}
-                  isVisible={false}
-                  pagination={false}
-                  isAddVisiable={true}
-                  isButtonVisiable={false}
-                  isEditable={false}
-                  height={'30vh'}
-                  columnDefs={columnDefs}
-                  partNumbers={[]}
-                  isChekboxColumn={false}
-                  onUpdateData={(data: any[]): void => {}}
-                  rowData={transformedAccess}
-                  isLoading={false}
-                />
+                {editingproject ? (
+                  <PartContainer
+                    isFilesVisiable={false}
+                    isVisible={false}
+                    pagination={false}
+                    isAddVisiable={true}
+                    isButtonVisiable={false}
+                    isEditable={false}
+                    height={'30vh'}
+                    columnDefs={columnDefs}
+                    partNumbers={[]}
+                    isChekboxColumn={false}
+                    onUpdateData={(data: any[]): void => {}}
+                    rowData={transformedAccess}
+                    isLoading={false}
+                  />
+                ) : (
+                  <Empty></Empty>
+                )}
+
                 {/* <TableComponent
                   columns={columns}
                   data={editingproject?.accessNbr ? bookings : []}

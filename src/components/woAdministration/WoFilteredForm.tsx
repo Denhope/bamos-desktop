@@ -16,8 +16,8 @@ import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessAp
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
@@ -173,7 +173,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     >
       <ProFormText
         name="projectTaskWO"
-        label={`${t('WO No')}`}
+        label={`${t('TRACE No')}`}
         width="lg"
         fieldProps={{
           onKeyPress: handleKeyPress,
@@ -338,7 +338,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
       <ProFormSelect
-        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC', 'FC']}
+        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC']}
         mode="multiple"
         name="projectItemType"
         label={`${t('TASK TYPE')}`}

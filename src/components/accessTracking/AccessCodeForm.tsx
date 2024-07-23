@@ -15,12 +15,13 @@ import {
   ProFormSelect,
 } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
+import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
 import { Button } from 'antd';
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
-
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 interface UserFormProps {
-  accessCode?: IAccessCode;
+  accessCode?: IAccessCode | null;
   onSubmit: (accessCode: IAccessCode) => void;
   onDelete?: (accessCodeId: string) => void;
   projectTasks?: any[];
@@ -35,6 +36,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
 }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
+  const [WOID, setWOID] = useState<any>(null);
   const [areaID, setAreaID] = useState<any>('');
   const handleSubmit = async (values: IAccessCode) => {
     const newUser: IAccessCode = accessCode
@@ -42,7 +44,15 @@ const AccessCodeForm: FC<UserFormProps> = ({
       : { ...values };
     onSubmit(newUser);
   };
-
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
+  const { data: projectTasksItems } = useGetProjectItemsWOQuery(
+    { WOReferenceID: form.getFieldValue('WOReferenceID') },
+    { skip: !WOID }
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   // const accessValueEnum: Record<string, string> =
@@ -61,9 +71,15 @@ const AccessCodeForm: FC<UserFormProps> = ({
       };
       return acc;
     }, {}) || {};
-
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
   const projectTasksCodesValueEnum: Record<string, string> =
-    projectTasks?.reduce<Record<string, string>>((acc, projectTask) => {
+    projectTasksItems?.reduce<Record<string, string>>((acc, projectTask) => {
       acc[projectTask.id] =
         projectTask.taskWO ||
         projectTask.taskWo ||
@@ -108,6 +124,9 @@ const AccessCodeForm: FC<UserFormProps> = ({
   );
   return (
     <ProForm
+      onReset={() => {
+        setWOID(null);
+      }}
       size="small"
       form={form}
       onFinish={handleSubmit}
@@ -124,7 +143,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
     >
       <ProForm.Group>
         <>
-          {isDisabled && (
+          {isDisabled && accessCode && (
             <>
               <ProFormSelect
                 // options={majoreZoneOptions}
@@ -159,22 +178,54 @@ const AccessCodeForm: FC<UserFormProps> = ({
                 width={'sm'}
                 name="areaNbr"
                 label={t('AREA NUMBER')}
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
               />
               <ProFormText
                 disabled
                 width={'lg'}
                 name="areaDescription"
                 label={t('AREA DESCRIPTION')}
+              />
+              {/* <ProFormSelect
+                showSearch
+                name="accessID"
+                label={t('ACCESS NUMBER')}
+                width="lg"
+                valueEnum={accessValueEnum}
+                disabled={isDisabled}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
+                value={form.getFieldValue('accessID')}
+                onChange={(value: any) => {
+                  console.log(value);
+                  form.setFieldsValue({
+                    majoreZoneDescription:
+                      accessCode?.areaCode?.majoreZoneDescription,
+                    majoreZoneNbr: accessCode?.areaCode?.majoreZoneNbr,
+                    subZoneNbr: accessCode?.areaCode?.subZoneNbr,
+                    subZoneDescription:
+                      accessCode?.areaCode?.subZoneDescription,
+                    areaNbr: accessCode?.areaCode?.areaNbr,
+                    areaDescription: accessCode?.areaCode?.areaDescription,
+                    // accessID: accessCode?._id,
+
+                    // zoneType: initialZoneType,
+                  });
+                }}
+              /> */}
+              <ProFormSelect
+                disabled={isDisabled}
+                width={'sm'}
+                name="accessNbr"
+                label={t('ACCESS ')}
+              />
+              <ProFormText
+                disabled
+                width={'lg'}
+                name="accessDescription"
+                label={t('ACCESS DESCRIPTION')}
               />
             </>
           )}
@@ -195,21 +246,71 @@ const AccessCodeForm: FC<UserFormProps> = ({
               }}
             /> */}
 
-            {isDisabled && (
-              <ProFormSelect
-                disabled={isDisabled}
-                width={'sm'}
-                name="accessNbr"
-                label={t('ACCESS NUMBER')}
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              />
+            {/* {isDisabled && (
+              <>
+                <ProFormSelect
+                  disabled={isDisabled}
+                  width={'sm'}
+                  name="accessNbr"
+                  label={t('ACCESS NUMBER')}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                />
+              </>
+            )} */}
+
+            {!accessCode && (
+              <>
+                <ProFormSelect
+                  showSearch
+                  name="WOReferenceID"
+                  label={t('WP No')}
+                  width="lg"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  valueEnum={wpValueEnum || []}
+                  onChange={(value: any) => setWOID(value)}
+                />
+
+                <ProFormSelect
+                  showSearch
+                  name="accessID"
+                  label={t('ACCESS')}
+                  width="lg"
+                  valueEnum={accessValueEnum}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  value={form.getFieldValue('accessID')}
+                  onChange={(value: any) => {
+                    console.log(value);
+                    form.setFieldsValue({
+                      majoreZoneDescription:
+                        accessCode?.areaCode?.majoreZoneDescription,
+                      majoreZoneNbr: accessCode?.areaCode?.majoreZoneNbr,
+                      subZoneNbr: accessCode?.areaCode?.subZoneNbr,
+                      subZoneDescription:
+                        accessCode?.areaCode?.subZoneDescription,
+                      areaNbr: accessCode?.areaCode?.areaNbr,
+                      areaDescription: accessCode?.areaCode?.areaDescription,
+                      // accessID: accessCode?._id,
+
+                      // zoneType: initialZoneType,
+                    });
+                  }}
+                />
+              </>
             )}
 
-            {!isDisabled && (
+            {/* {!isDisabled && (
               <ProFormSelect
                 showSearch
                 name="accessID"
@@ -240,9 +341,9 @@ const AccessCodeForm: FC<UserFormProps> = ({
                   });
                 }}
               />
-            )}
+            )} */}
 
-            {isDisabled && (
+            {/* {isDisabled && (
               <ProFormText
                 disabled
                 width={'lg'}
@@ -254,7 +355,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
                   },
                 ]}
               />
-            )}
+            )} */}
             {/* <ProFormGroup>
               <ProFormDigit
                 width={'xs'}
@@ -275,22 +376,26 @@ const AccessCodeForm: FC<UserFormProps> = ({
           </>
         </>
         <ProFormGroup>
-          {{ isDisabled } && (
+          {!accessCode && (
             <ProFormSelect
               showSearch
-              // rules={[{ required: true }]}
-              disabled={isDisabled}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              disabled={!WOID}
               mode="single"
               name="projectTaskID"
               label={`${t(`TASK`)}`}
-              width="sm"
+              width="lg"
               valueEnum={projectTasksCodesValueEnum}
               // onChange={(value: any) => {
               //   setSelectedTask(value);
               // }}
             />
           )}
-          {isDisabled && (
+          {isDisabled && accessCode && (
             <ProFormSelect
               showSearch
               disabled
