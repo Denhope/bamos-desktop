@@ -68,7 +68,7 @@ const ShelfExpiryNew: FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
   const items: MenuItem[] = [
-    getItem(<>{t('SHELF EXPIRY')} (BAN:359)</>, 'sub1', <WarningOutlined />),
+    getItem(<>{t('SHELF EXPIRY')}</>, 'sub1', <WarningOutlined />),
   ];
   const handleCopy = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;

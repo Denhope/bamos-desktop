@@ -21,6 +21,8 @@ export const partNumberApi = createApi({
         unit?: string;
         status?: string;
         acTypeID?: string;
+        TOOL_TYPE_CODE?: string;
+        TOOL_GROUP_CODE?: string;
       }
     >({
       query: ({
@@ -32,6 +34,8 @@ export const partNumberApi = createApi({
         status,
         partNumberID,
         acTypeID,
+        TOOL_GROUP_CODE,
+        TOOL_TYPE_CODE,
       }) => ({
         url: `partNumbers/getFilteredPartNumber/company/${COMPANY_ID}`,
         params: {
@@ -43,6 +47,8 @@ export const partNumberApi = createApi({
           unit,
           status,
           acTypeID,
+          TOOL_GROUP_CODE,
+          TOOL_TYPE_CODE,
         },
       }),
       providesTags: ['PartNumber'],

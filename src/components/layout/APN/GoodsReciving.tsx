@@ -19,11 +19,7 @@ const GoodsReciving: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const [onUpdateOrder, setUpdateOrder] = useState<any | null>(null);
   const items: MenuItem[] = [
-    getItem(
-      <>{t('GOODS RECEIVING')} (BAN:1201)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('GOODS RECEIVING')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

@@ -44,7 +44,7 @@ const OrderTree: FC<UserTreeProps> = ({
     }
   };
   const convertToTreeData = (orders: IOrder[]): TreeDataNode[] => {
-    return orders.map((order) => {
+    return orders?.map((order) => {
       let titlePrefix = '';
       if (order.orderType === 'QUOTATION_ORDER') {
         titlePrefix = 'Q';
@@ -95,9 +95,9 @@ const OrderTree: FC<UserTreeProps> = ({
           key: `vendor-${order.id}-${vendorId}`,
           order: order,
           children: vendorOrders?.map((vendorOrder, index) => ({
-            title: `POS: ${index + 1}: ${vendorOrder.partID.PART_NUMBER} - ${
+            title: `POS: ${index + 1}: ${vendorOrder.partID?.PART_NUMBER} - ${
               vendorOrder.amout
-            }${vendorOrder.partID.UNIT_OF_MEASURE}`,
+            }${vendorOrder?.partID?.UNIT_OF_MEASURE}`,
 
             key: `${order.id!.toString()}-${vendorId}-${index}`,
             orderItem: vendorOrder,
@@ -109,7 +109,7 @@ const OrderTree: FC<UserTreeProps> = ({
                   <div className="flex gap-1">
                     <DollarOutlined />{' '}
                     {`${t('PRICE FOR ONE')}: ${
-                      vendorOrder.price ? vendorOrder.price : ''
+                      vendorOrder.price ? vendorOrder?.price : ''
                     }`}
                   </div>
                 ),

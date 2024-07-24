@@ -131,6 +131,7 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
+  TOOL_TYPE_CODE?: string;
   LOCATION?: string;
   locationName?: any;
   NAME_OF_MATERIAL?: any;

@@ -32,7 +32,7 @@ const PartsTracking: FC<PartsTracking> = ({
   }, [bookings]);
   type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
-    getItem(<>{t('PARTS TRACKING')} (BAN:188)</>, 'sub1', <SwapOutlined />),
+    getItem(<>{t('PARTS TRACKING')}</>, 'sub1', <SwapOutlined />),
   ];
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null);

@@ -360,20 +360,27 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             onFileProcessed={function (data: any[]): void {
               handleAddMultiItems(data);
             }}
-            requiredFields={['taskNumber']}
+            requiredFields={
+              project && project.projectType === 'baseMaintanance'
+                ? ['taskNumber']
+                : ['PART_NUMBER', 'QUANTITY']
+            }
           ></FileUploader>
         </Col>
-        <Col style={{ textAlign: 'right' }}>
-          <Button
-            // disabled
-            // disabled={!selectedKeys.length && selectedKeys.length < 1}
-            size="small"
-            icon={<ProjectOutlined />}
-            onClick={() => handleGenerateWOPanels(selectedKeys)}
-          >
-            {t('GENERATE ACCEESS')}
-          </Button>
-        </Col>
+
+        {project && project.projectType === 'baseMaintanance' && (
+          <Col style={{ textAlign: 'right' }}>
+            <Button
+              // disabled
+              // disabled={!selectedKeys.length && selectedKeys.length < 1}
+              size="small"
+              icon={<ProjectOutlined />}
+              onClick={() => handleGenerateWOPanels(selectedKeys)}
+            >
+              {t('GENERATE ACCEESS')}
+            </Button>
+          </Col>
+        )}
 
         <Col style={{ textAlign: 'right' }}>
           <Button

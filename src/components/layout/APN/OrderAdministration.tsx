@@ -18,11 +18,7 @@ const OrderAdministration: FC<RequirementManagementProps> = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const items: MenuItem[] = [
-    getItem(
-      <>{t('ORDER ADMINISTRATION')} (BAN:1201)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('ORDER ADMINISTRATION')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

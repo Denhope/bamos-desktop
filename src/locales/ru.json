@@ -178,7 +178,7 @@
   "MAT ORDER NBR": "НОМЕР",
   "REMARKS": "ПРИМЕЧАНИЕ",
   "PICKSLIP CONFIRMATION": "ВЫДАЧА МАТЕРИАЛОВ И ЗПЧ",
-  "STOCK INFORMATION (BAN:221)": "ПРОСМОТР ОСТАТКОВ (BAN:221)",
+  "STOCK INFORMATION (BAN:221)": "ПРОСМОТР ОСТАТКОВ",
   "Include Alternative": "Включать альтернативы",
   "Load all Exp. Dates": "Включать все сроки годности",
 
@@ -241,7 +241,7 @@
   "ADD": "ДОБАВИТЬ",
   "STORE MANAGMENT": "УПРАВЛЕНИЕ СКЛАДОМ",
   "CANCEL PICKSLIP": "ОТМЕНА СПИСАНИЯ",
-  "CANCEL PICKSLIP (BAN:309)": "ОТМЕНА СПИСАНИЯ (BAN:309)",
+  "CANCEL PICKSLIP (BAN:309)": "ОТМЕНА СПИСАНИЯ",
   "BOOKING DATE": "ДАТА СПИСАНИЯ",
   "MECH.SING": "МЕХ.ПОДПИСЬ",
   "GET FROM": "ПОЛУЧИТЬ ИЗ",
@@ -624,7 +624,7 @@
   "WORKORDER No": "№ ЗАКАЗА",
   "WO ADMINISTRATION": "ПРОСМОТР ПАКЕТОВ РАБОТ",
   "WORKORDER ADMINISTRATION": "ПРОСМОТР ПАКЕТОВ РАБОТ",
-  "Wo STATUS": "СТАТУС ЗАКАЗА",
+  "Wo STATUS": "СТАТУС РАБОТЫ",
   "ADD WORKORDER": "СОЗДАТЬ ЗАКАЗ",
   "DELETE WORKORDER": "УДАЛИТЬ ЗАКАЗ",
   "WORKORDER №": "НОМЕР ЗАКАЗА №:",
@@ -915,5 +915,15 @@
   "PARTLY CANCELLED": "ЧАСТИЧНО ОТМЕНЕН",
   "PRINT_TAG": "ПЕЧАТЬ ТЭГОВ",
   "PRINT_LABEL": "ПЕЧАТЬ ЯРЛЫКОВ",
-  "PRINT_TASK_CARD": "ПЕЧАТЬ РАБОЧИХ КАРТ"
+  "PRINT_TASK_CARD": "ПЕЧАТЬ РАБОЧИХ КАРТ",
+  "PLANNING": "ИНЖЕНЕР ПО ПЛАНИРОВАНИЮ",
+  "PartsModification": "РЕДАКТИРОВАНИЕ МАТЕРИАЛА",
+  "ADD_REQUIREMENT": "ДОБАВЛЕНИЕ ПОТРЕБНОСТИ",
+  "RESERVED QTY": "ЗАРЕЗЕРВИРОВАННОЕ КОЛ-ВО",
+  "RECEIVED DATE": "ДАТА ПОСТУПЛЕНИЯ",
+  "DOC_NUMBER": "НОМЕР ДОКУМЕНТА",
+  "DOC_TYPE": "ТИП ДОКУМЕНТА",
+  "COPY CELL": "КОПИРОВАТЬ ЯЧЕЙКУ",
+  "COPY SELECTED ROWS": "КОПИРОВАТЬ ВЫДЕЛЕННЫЕ СТРОКИ",
+  "EXPORT EXCEL": "ВЫГРУЗИТЬ ВЫДЕЛЕННЫЕ СТРОКИ EXEL"
 }

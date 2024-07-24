@@ -80,11 +80,7 @@ const PickSlipCancel: FC = () => {
 
   type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
-    getItem(
-      <>{t('CANCEL PICKSLIP (BAN:309)')}</>,
-      'sub1',
-      <ShoppingCartOutlined />
-    ),
+    getItem(<>{t('CANCEL PICKSLIP')}</>, 'sub1', <ShoppingCartOutlined />),
     // ]
     // ),
   ];

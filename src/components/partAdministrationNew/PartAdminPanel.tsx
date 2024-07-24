@@ -82,14 +82,14 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       if (editingproject) {
         await updatePartNumber(part).unwrap();
         message.success(t('УСПЕШНО ОБНОВЛЕНО'));
-        setEditingproject(null);
+        // setEditingproject(null);
       } else {
         await addPartNumber({
           partNumber: part,
           // storeID: storeID,
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        setEditingproject(null);
+        // setEditingproject(null);
       }
     } catch (error) {
       message.error(t('ОШИБКА СОХРАНЕНИЯ'));
@@ -137,27 +137,31 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         options: projectTasks,
       },
       cellDataType: 'text',
+      filter: true,
     },
     {
       field: 'DESCRIPTION',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
+      filter: true,
     },
     {
       field: 'GROUP',
       headerName: `${t('GROUP')}`,
       cellDataType: 'text',
+      filter: true,
     },
     {
       field: 'TYPE',
       headerName: `${t('TYPE')}`,
       cellDataType: 'text',
+      filter: true,
     },
 
     {
       field: 'UNIT_OF_MEASURE',
       editable: false,
-      filter: false,
+      filter: true,
       headerName: `${t('UNIT OF MEASURE')}`,
       cellDataType: 'text',
     },

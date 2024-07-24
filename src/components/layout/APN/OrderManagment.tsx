@@ -27,11 +27,7 @@ const OrderManagment: FC = () => {
     }
   }, [orders]);
   const items: MenuItem[] = [
-    getItem(
-      <>{t('ORDER MANAGMENT')} (BAN:1201)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('ORDER MANAGMENT')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

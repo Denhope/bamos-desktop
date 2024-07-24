@@ -906,6 +906,7 @@ export const transformToIStockPartNumber = (data: any[]): any[] => {
     restrictionID: item?.locationID?.restrictionID,
     locationType: item?.locationID?.locationType,
     SUPPLIER_BATCH_NUMBER: item?.SUPPLIER_BATCH_NUMBER,
+    PRODUCT_EXPIRATION_DATE: item?.PRODUCT_EXPIRATION_DATE || item?.nextDueMOS,
     SERIAL_NUMBER: item?.SERIAL_NUMBER,
     RECEIVING_NUMBER: item?.RECEIVING_ID?.receivingNumber,
     DOC_NUMBER: item?.RECEIVING_ID?.awbNumber || item?.DOC_NUMBER,
@@ -1232,11 +1233,11 @@ export const transformToPartBooking = (data: any[]): any[] => {
     ...item.MATERIAL_STORE_ID,
     QUANTITY: parseInt(
       `${item.qyantityMode === 'minus' ? '-' : ''}${
-        item.MATERIAL_STORE_ID.QUANTITY
+        item.MATERIAL_STORE_ID?.QUANTITY
       }`,
       10
     ),
-    SHELF_NUMBER: item.MATERIAL_STORE_ID.locationID.locationName,
+    SHELF_NUMBER: item.MATERIAL_STORE_ID?.locationID.locationName,
 
     // index: item?.index,
     // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,
