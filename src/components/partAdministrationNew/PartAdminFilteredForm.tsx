@@ -70,7 +70,53 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       }
       return acc;
     }, {} as Record<string, string>) || {};
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [selectedToolType, setSelectedToolType] = useState<string | null>(null);
+  const [selectedToolTypeCode, setSelectedToolTypeCode] = useState<
+    string | null
+  >(null);
+  const toolTypeOptions = [
+    { value: 'MECHANIC_INSTRUMENT', label: t('МЕХАНИЧЕСКИЙ ИНСТРУМЕНТ') },
+    {
+      value: 'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ',
+      label: t('СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ'),
+    },
+    {
+      value:
+        'СПЕЦИАЛЬНЫЕ СРЕДСТВА ИЗМЕРЕНИЯ И СРЕДСТВА НАЗЕМНОГО КОНТРОЛЯ АВИАЦИОННОЙ ТЕХНИКИ',
+      label: t(
+        'СПЕЦИАЛЬНЫЕ СРЕДСТВА ИЗМЕРЕНИЯ И СРЕДСТВА НАЗЕМНОГО КОНТРОЛЯ АВИАЦИОННОЙ ТЕХНИКИ'
+      ),
+    },
+  ];
 
+  const toolGroupOptions = {
+    'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ': [
+      {
+        value: 'Средства измерений давления и разрежения',
+        label: t('ДАВЛЕНИЯ И РАЗРЯЖЕНИЯ'),
+      },
+      {
+        value: 'Средства измерений электрических величин',
+        label: t('ЭЛЕКТРИЧЕСКИХ ВЕЛИЧИН'),
+      },
+      {
+        value: 'Средства измерений геометрических величин',
+        label: t('ГЕОМЕРТИЧЕСКИХ ВЕЛИЧИН'),
+      },
+      {
+        value: 'Средства измерений радиотехнических величин',
+        label: t('РАДИОТЕХНИЧЕСКИХ ВЕЛЕЧИН'),
+      },
+    ],
+    MECHANIC_INSTRUMENT: [
+      {
+        value: 'РЕЖУЩИЙ ИНСТРУМЕНТ',
+        label: t('РЕЖУЩИЙ ИНСТРУМЕНТ'),
+      },
+    ],
+    // Add other groups if needed
+  };
   return (
     <ProForm
       formRef={formRef}
@@ -115,15 +161,9 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'ROT', label: t('ROT') },
           { value: 'GSE', label: t('GSE') },
         ]}
+        onChange={(value: string) => setSelectedGroup(value)}
       />
-      <ProFormSelect
-        showSearch
-        name="acTypeID"
-        label={t('AC TYPE')}
-        width="lg"
-        valueEnum={acTypeValueEnum}
-        // onChange={(value: any) => setACTypeID(value)}
-      />
+
       <ProFormText
         name="description"
         label={t('DESCRIPTION')}
@@ -133,6 +173,56 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           onKeyPress: handleKeyPress,
         }}
       ></ProFormText>
+
+      {selectedGroup === 'TOOL' && (
+        <>
+          <ProFormSelect
+            // rules={[{ required: true }]}
+            name="TOOL_TYPE_CODE"
+            label={`${t('ТИП ИНСТРУМЕНТА')}`}
+            width="lg"
+            tooltip={`${t('SELECT SPESIAL GROUP')}`}
+            options={toolTypeOptions}
+            onChange={(value: string) => setSelectedToolType(value)}
+          />
+          {selectedToolType && (
+            <>
+              {selectedToolType === 'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ' && (
+                <>
+                  <ProFormSelect
+                    // rules={[{ required: true }]}
+                    name="TOOL_GROUP_CODE"
+                    label={`${t('КОД ИНСТРУМЕНТА')}`}
+                    width="lg"
+                    tooltip={`${t('ВЫБЕРИТЕ КОД ИНСТРУМЕНТА')}`}
+                    options={
+                      toolGroupOptions['СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ']
+                    }
+                  />
+                </>
+              )}
+              {selectedToolType === 'MECHANIC_INSTRUMENT' && (
+                <ProFormSelect
+                  // rules={[{ required: true }]}
+                  name="TOOL_GROUP_CODE"
+                  label={`${t('КОД ИНСТРУМЕНТА')}`}
+                  width="lg"
+                  tooltip={`${t('ВЫБЕРИТЕ КОД ИНСТРУМЕНТА')}`}
+                  options={toolGroupOptions['MECHANIC_INSTRUMENT']}
+                />
+              )}
+            </>
+          )}
+          <ProFormSelect
+            showSearch
+            name="acTypeID"
+            label={t('AC TYPE')}
+            width="lg"
+            valueEnum={acTypeValueEnum}
+            // onChange={(value: any) => setACTypeID(value)}
+          />
+        </>
+      )}
     </ProForm>
   );
 };

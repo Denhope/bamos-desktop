@@ -16,8 +16,8 @@ import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessAp
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
@@ -264,7 +264,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={storeCodesValueEnum || []}
       /> */}
 
-      <ProFormSelect
+      {/* <ProFormSelect
         mode={'multiple'}
         showSearch
         name="restrictionID"
@@ -272,7 +272,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         valueEnum={restrictionValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
-      />
+      /> */}
       {/* <ProFormSelect
         mode={'multiple'}
         showSearch
@@ -282,7 +282,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // valueEnum={projectsValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
-      <ProFormSelect
+      {/* <ProFormSelect
         mode={'multiple'}
         showSearch
         name="zonesID"
@@ -299,7 +299,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         valueEnum={accessCodesValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
-      />
+      /> */}
       {/* <ProFormSelect
         mode={'multiple'}
         showSearch

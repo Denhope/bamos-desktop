@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import {
   ProForm,
   ProFormGroup,
@@ -68,6 +70,9 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
     if (order) {
       form.resetFields();
       form.setFieldsValue(order);
+      setSelectedGroup(order.GROUP);
+      setSelectedToolType(order?.TOOL_TYPE_CODE);
+      setSelectedToolTypeCode(order?.TOOL_GROUP_CODE);
     } else {
       form.resetFields();
       // setSelectedProjectId(undefined);
@@ -81,6 +86,53 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
       }
       return acc;
     }, {} as Record<string, string>) || {};
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [selectedToolType, setSelectedToolType] = useState<string | null>(null);
+  const [selectedToolTypeCode, setSelectedToolTypeCode] = useState<
+    string | null
+  >(null);
+  const toolTypeOptions = [
+    { value: 'MECHANIC_INSTRUMENT', label: t('МЕХАНИЧЕСКИЙ ИНСТРУМЕНТ') },
+    {
+      value: 'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ',
+      label: t('СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ'),
+    },
+    {
+      value:
+        'СПЕЦИАЛЬНЫЕ СРЕДСТВА ИЗМЕРЕНИЯ И СРЕДСТВА НАЗЕМНОГО КОНТРОЛЯ АВИАЦИОННОЙ ТЕХНИКИ',
+      label: t(
+        'СПЕЦИАЛЬНЫЕ СРЕДСТВА ИЗМЕРЕНИЯ И СРЕДСТВА НАЗЕМНОГО КОНТРОЛЯ АВИАЦИОННОЙ ТЕХНИКИ'
+      ),
+    },
+  ];
+
+  const toolGroupOptions = {
+    'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ': [
+      {
+        value: 'Средства измерений давления и разрежения',
+        label: t('Средства измерений давления и разрежения'),
+      },
+      {
+        value: 'Средства измерений электрических величин',
+        label: t('Средства измерений электрических величин'),
+      },
+      {
+        value: 'Средства измерений геометрических величин',
+        label: t('Средства измерений геометрических величин'),
+      },
+      {
+        value: 'Средства измерений радиотехнических величин',
+        label: t('Средства измерений радиотехнических величин'),
+      },
+    ],
+    MECHANIC_INSTRUMENT: [
+      {
+        value: 'РЕЖУЩИЙ ИНСТРУМЕНТ',
+        label: t('РЕЖУЩИЙ ИНСТРУМЕНТ'),
+      },
+    ],
+    // Add other groups if needed
+  };
 
   return (
     <ProForm
@@ -162,7 +214,59 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
                 { value: 'ROT', label: t('ROT') },
                 { value: 'GSE', label: t('GSE') },
               ]}
+              onChange={(value) => setSelectedGroup(value)}
             />
+            {selectedGroup === 'TOOL' && (
+              <>
+                <ProFormSelect
+                  // rules={[{ required: true }]}
+                  name="TOOL_TYPE_CODE"
+                  label={`${t('ТИП ИНСТРУМЕНТА')}`}
+                  width="lg"
+                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  options={toolTypeOptions}
+                  onChange={(value) => setSelectedToolType(value)}
+                />
+                {selectedToolType && (
+                  <>
+                    {selectedToolType ===
+                      'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ' && (
+                      <>
+                        <ProFormSelect
+                          // rules={[{ required: true }]}
+                          name="TOOL_GROUP_CODE"
+                          label={`${t('КОД ИНСТРУМЕНТА')}`}
+                          width="lg"
+                          tooltip={`${t('ВЫБЕРИТЕ КОД ИНСТРУМЕНТА')}`}
+                          options={
+                            toolGroupOptions[
+                              'СРЕДСТВА ИЗМЕРЕНИЙ ОБЩЕГО ПРИМЕНЕНИЯ'
+                            ]
+                          }
+                        />
+                        <ProFormText
+                          // rules={[{ required: true }]}
+                          name="UNIT_LIMIT"
+                          label={`${t('UNIT_LIMIT')}`}
+                          width="lg"
+                          tooltip={`${t('UNIT_LIMIT')}`}
+                        />
+                      </>
+                    )}
+                    {selectedToolType === 'MECHANIC_INSTRUMENT' && (
+                      <ProFormSelect
+                        // rules={[{ required: true }]}
+                        name="TOOL_GROUP_CODE"
+                        label={`${t('КОД ИНСТРУМЕНТА')}`}
+                        width="lg"
+                        tooltip={`${t('ВЫБЕРИТЕ КОД ИНСТРУМЕНТА')}`}
+                        options={toolGroupOptions['MECHANIC_INSTRUMENT']}
+                      />
+                    )}
+                  </>
+                )}
+              </>
+            )}
             <ProFormSelect
               showSearch
               rules={[{ required: true }]}

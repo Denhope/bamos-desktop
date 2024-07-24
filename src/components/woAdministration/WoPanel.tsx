@@ -336,53 +336,53 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       }),
       // hide: true,
     },
-    { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
-    { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
-    { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
-    { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
-    { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
-    { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
-    {
-      field: 'SUB TASK_CODE',
-      headerName: `${t('SUB TASK_CODE')}`,
-      filter: true,
-    },
-
-    { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
-    {
-      field: 'RESTRICTION_1',
-      headerName: `${t('RESTRICTION_1')}`,
-      filter: true,
-    },
-    {
-      field: 'PREPARATION_CODE',
-      headerName: `${t('PREPARATION_CODE')}`,
-      filter: true,
-    },
-    {
-      field: 'REFERENCE_2',
-      headerName: `${t('REFERENCE_2')}`,
-      filter: true,
-    },
-    {
-      field: 'mainWorkTime',
-      headerName: `${t('MHS')}`,
-      filter: true,
-    },
-    {
-      field: 'IDENTIFICATOR',
-      headerName: `${t('IDENTIFICATOR')}`,
-      filter: true,
-    },
-
-    { field: 'closedByID', headerName: 'Closed By ID' },
-
     {
       field: 'PART_NUMBER',
       headerName: `${t('PART No')}`,
       filter: true,
     },
+    { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
+    // { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
+    // { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
+    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
+    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    // { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
+    // { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
+    // {
+    //   field: 'SUB TASK_CODE',
+    //   headerName: `${t('SUB TASK_CODE')}`,
+    //   filter: true,
+    // },
+
+    // { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    // {
+    //   field: 'RESTRICTION_1',
+    //   headerName: `${t('RESTRICTION_1')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'PREPARATION_CODE',
+    //   headerName: `${t('PREPARATION_CODE')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'REFERENCE_2',
+    //   headerName: `${t('REFERENCE_2')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'mainWorkTime',
+    //   headerName: `${t('MHS')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'IDENTIFICATOR',
+    //   headerName: `${t('IDENTIFICATOR')}`,
+    //   filter: true,
+    // },
+
+    // { field: 'closedByID', headerName: 'Closed By ID' },
 
     // {
     //   field: 'status',

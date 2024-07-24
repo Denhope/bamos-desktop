@@ -1,5 +1,5 @@
 {
-  appId: 'Bamos',
+  appId: 'ZAVOD_APP',
   asar: true,
   directories: {
     output: 'release/${version}',
@@ -28,6 +28,6 @@
   publish: {
     provider: 'generic',
     channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.23/',
+    url: 'https://github.com/DenhopezavodBamosN/releases/download/v0.0.2/',
   },
 }

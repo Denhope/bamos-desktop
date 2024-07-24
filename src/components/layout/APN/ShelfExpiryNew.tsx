@@ -635,7 +635,7 @@ const ShelfExpiryNew: FC = () => {
       <Sider
         className="h-screen overflow-hidden"
         theme="light"
-        width={370}
+        width={470}
         // trigger
         collapsible
         // color="rgba(255, 255, 255, 0.2)"

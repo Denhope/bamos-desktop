@@ -10,18 +10,18 @@ function LanguageSelector() {
 
   const changeLanguage = (lng: string) => {
     dispatch(setLanguage(lng));
-    localStorage.setItem('lng', lng);
+    localStorage.setItem('lng', lng || 'ru');
     i18n.changeLanguage(lng);
   };
 
   return (
     <div>
-      <Button
+      {/* <Button
         onClick={() => changeLanguage('en')}
         className="w-1/5  text-start  border-none hover:bg-gray-200"
       >
         {t('EN')}
-      </Button>
+      </Button> */}
       <Button
         onClick={() => changeLanguage('ru')}
         className="w-1/5  text-start  border-none hover:bg-gray-200"

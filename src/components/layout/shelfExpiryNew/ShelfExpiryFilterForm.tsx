@@ -179,7 +179,11 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
     form.setFieldsValue({ value: localStorage.getItem('expiryValue') || 2 });
     handleValueChange(form.getFieldValue('value'));
   }, []);
-
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [selectedToolType, setSelectedToolType] = useState<string | null>(null);
+  const [selectedToolTypeCode, setSelectedToolTypeCode] = useState<
+    string | null
+  >(null);
   return (
     <>
       <ProForm
@@ -235,6 +239,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
             { value: 'ROT', label: t('ROT') },
             { value: 'GSE', label: t('GSE') },
           ]}
+          onChange={(value: string) => setSelectedGroup(value)}
         />
         <ProFormSelect
           mode="multiple"

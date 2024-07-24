@@ -17,10 +17,12 @@ import {
   getInspectionScope,
 } from '@/utils/api/thunks';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import logoImage from '/src/assets/img/logo.jpg';
+import logoImage from '/src/assets/img/logoAmarez.jpg';
 
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { useTranslation } from 'react-i18next';
 const AuthForm: FC = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const history = useNavigate();
@@ -68,14 +70,14 @@ const AuthForm: FC = () => {
     <>
       <LoginForm
         logo={logoImage}
-        title="BAMOS"
-        subTitle="maintenance operation system"
+        title="НАЗВАНИЕ"
+        subTitle="система управления производством"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
         submitter={{
           searchConfig: {
-            submitText: 'Login',
+            submitText: t('LOG IN'),
           },
         }}
       >
