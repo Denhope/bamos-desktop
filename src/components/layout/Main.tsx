@@ -15,16 +15,12 @@ const Main: FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   return (
-    <>
+    <div style={{ height: '100vh', overflow: 'hidden' }}>
       {!isAuth ? (
-        <Layout
-        // style={{ minHeight: "100vh" }}
-        >
+        <Layout style={{ height: '100%', overflow: 'hidden' }}>
           <Header
             className="flex justify-between my-0 px-0"
             style={{
-              // marginLeft: 'auto',
-
               background: 'rgba(255, 255, 255, 0.2)',
             }}
           >
@@ -32,23 +28,19 @@ const Main: FC = () => {
               onClick={() => navigate(RouteNames.HOME)}
               className="text-xl cursor-pointer  px-3 first-line:align-middle  uppercase  text-gray-500"
             >
-              bamos
+              407APP
             </Space>
           </Header>
           <Layout>
-            {' '}
-            <Content>
+            <Content style={{ flex: 1, overflow: 'hidden' }}>
               <Routes>
                 <Route element={<Auth />} path={RouteNames.LOGIN} />
                 <Route
                   element={
                     <Result
-                      style={{ height: '90vh' }}
+                      style={{ height: '100%', overflow: 'hidden' }}
                       status="403"
-                      // title="403"
-                      subTitle={`${t(
-                        'Sorry, you are not authorized to BAMOS.'
-                      )}`}
+                      subTitle={`${t('Sorry, you are not authorized.')}`}
                       extra={
                         <Button
                           onClick={() => navigate(RouteNames.LOGIN)}
@@ -78,7 +70,7 @@ const Main: FC = () => {
       ) : (
         <BaseLayout />
       )}
-    </>
+    </div>
   );
 };
 

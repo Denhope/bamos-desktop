@@ -161,7 +161,7 @@
   "PROJECT": "№ ПАКЕТА",
   "RECEIVER TYPE": "ТИП",
   "RECEIVER": "ОБЬЕКТ",
-  "BAN BOOK": "СПИСОК BAN",
+  "BAN BOOK": "СПИСОК МОДУЛЕЙ",
   "PART SPESIAL GROUP": "ГРУППА",
   "PART TYPE": "ТИП",
   "GROUP": "ГРУППА",
@@ -925,5 +925,6 @@
   "DOC_TYPE": "ТИП ДОКУМЕНТА",
   "COPY CELL": "КОПИРОВАТЬ ЯЧЕЙКУ",
   "COPY SELECTED ROWS": "КОПИРОВАТЬ ВЫДЕЛЕННЫЕ СТРОКИ",
-  "EXPORT EXCEL": "ВЫГРУЗИТЬ ВЫДЕЛЕННЫЕ СТРОКИ EXEL"
+  "EXPORT EXCEL": "ВЫГРУЗИТЬ ВЫДЕЛЕННЫЕ СТРОКИ EXEL",
+  "Sorry, you are not authorized.": "ВЫ НЕ АВТОРИЗОВАНЫ"
 }
