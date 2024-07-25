@@ -72,7 +72,6 @@ const PartContainer: FC<ExampleComponentProps> = ({
           onCellValueChanged={function (params: any): void {}} // onAddRow={onAddRow}
           onRowSelect={function (rowData: any): void {
             onRowSelect && onRowSelect(rowData);
-            console.log(rowData);
           }}
           onDRowSelect={function (rowData: any): void {
             // onRowSelect && onRowSelect(rowData);

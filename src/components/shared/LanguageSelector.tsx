@@ -16,12 +16,12 @@ function LanguageSelector() {
 
   return (
     <div>
-      {/* <Button
+      <Button
         onClick={() => changeLanguage('en')}
         className="w-1/5  text-start  border-none hover:bg-gray-200"
       >
         {t('EN')}
-      </Button> */}
+      </Button>
       <Button
         onClick={() => changeLanguage('ru')}
         className="w-1/5  text-start  border-none hover:bg-gray-200"

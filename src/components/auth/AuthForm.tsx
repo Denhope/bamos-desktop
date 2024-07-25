@@ -17,7 +17,7 @@ import {
   getInspectionScope,
 } from '@/utils/api/thunks';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import logoImage from '/src/assets/img/logoAmarez.jpg';
+import logoImage from '/src/assets/img/logo.jpg';
 
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
@@ -70,8 +70,8 @@ const AuthForm: FC = () => {
     <>
       <LoginForm
         logo={logoImage}
-        title="НАЗВАНИЕ"
-        subTitle="система управления производством"
+        title="BAMOS"
+        subTitle="bamos"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"

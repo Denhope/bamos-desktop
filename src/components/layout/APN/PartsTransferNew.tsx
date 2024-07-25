@@ -94,7 +94,7 @@ const PartsTransferNew: FC = () => {
                 partsIDs: rowKeys,
                 locationID: selectedTargetValues.targetLocationID,
                 storeID: selectedTargetValues.targetStoreID,
-                locationFromID: selectedSerchValues.locationIDFrom,
+                // locationFromID: spullelectedSerchValues.locationIDFrom,
                 storeFromID: selectedSerchValues.storeIDFrom,
               },
             }).unwrap();
@@ -373,13 +373,13 @@ const PartsTransferNew: FC = () => {
                     isDisabled={!rowKeys.length}
                   ></ReportPrintLabel>
                 </PermissionGuard>
-                {/* <PermissionGuard
+                <PermissionGuard
                   requiredPermissions={[
                     Permission.PART_TRANSFER_ACTIONS,
                     Permission.EXPORT,
                   ]}
-                > */}
-                {/* <ReportEXEL
+                >
+                  <ReportEXEL
                     isDisabled={!rowKeys.length}
                     headers={{
                       LOCAL_ID: 'НОМЕР БИРКИ',
@@ -395,8 +395,8 @@ const PartsTransferNew: FC = () => {
                     }}
                     data={selectedParts}
                     fileName={'PARTS_REPORTS_'}
-                  ></ReportEXEL> */}
-                {/* </PermissionGuard> */}
+                  ></ReportEXEL>
+                </PermissionGuard>
               </Space>
             </Col>
             <Col>
@@ -412,7 +412,7 @@ const PartsTransferNew: FC = () => {
                 ></ReportPrintQR>
               </PermissionGuard>
             </Col>
-            <Col>
+            {/* <Col>
               <PermissionGuard
                 requiredPermissions={[Permission.PRINT_REPORT_EXPIRY]}
               >
@@ -426,7 +426,7 @@ const PartsTransferNew: FC = () => {
                   {`${t('PRINT REPORT')}`}
                 </Button>
               </PermissionGuard>
-            </Col>
+            </Col> */}
           </div>
         </Row>
 
@@ -459,7 +459,7 @@ const PartsTransferNew: FC = () => {
             rowData={transformedPartNumbers}
             onCheckItems={setselectedRowKeys}
             onRowSelect={(data: any[]): void => {
-              setSecectedParts([data]);
+              setSecectedParts(data);
             }}
             onDRowSelect={(data: any[]): void => {
               // setSecectedParts([data]);

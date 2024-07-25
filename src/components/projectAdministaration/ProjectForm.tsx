@@ -24,8 +24,8 @@ import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 interface UserFormProps {
@@ -248,13 +248,13 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 },
 
                 // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-                repairPart: { text: t('REPAIR COMPONENT') },
-                repairAC: { text: t('REPAIR AC') },
+                // repairPart: { text: t('REPAIR COMPONENT') },
+                // repairAC: { text: t('REPAIR AC') },
                 partCange: { text: t('COMPONENT CHANGE') },
                 addWork: { text: t('ADD WORK') },
                 enginiring: { text: t('ENGINIRING SERVICESES') },
                 nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
-                production: { text: t('PRODUCTION PART') },
+                // production: { text: t('PRODUCTION PART') },
               }}
             />
 
@@ -422,9 +422,9 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             <Empty />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('ACTIONS')} key="3">
-          <Empty />
-          {/* <Space>
+        {/* <Tabs.TabPane tab={t('ACTIONS')} key="3"> */}
+        <Empty />
+        {/* <Space>
             {' '}
             <Col span={4} style={{ textAlign: 'right' }}>
               <Button
@@ -459,7 +459,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               </Button>
             </Col>
           </Space> */}
-        </Tabs.TabPane>
+        {/* </Tabs.TabPane> */}
       </Tabs>
     </ProForm>
   );

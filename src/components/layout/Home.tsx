@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Button, Layout, Menu, Skeleton, TabPaneProps, Tabs } from 'antd';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
-// import logoImage from '../../assets/img/407Technics_logo.png';
-import logoImage from '../../assets/img/Image.jpg';
+import logoImage from '../../assets/img/407Technics_logo.png';
+// import logoImage from '../../assets/img/Image.jpg';
 
 import {
   HomeOutlined,
@@ -1133,12 +1133,12 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
             className="ml-auto"
             src={logoImage} // замените на URL вашего логотипа
             style={{
-              width: '100px', // измените размер по желанию
-              height: '100px', // измените размер по желанию
-              borderRadius: '50%', // делает изображение круглым
+              // width: '100px', // измените размер по желанию
+              // height: '100px', // измените размер по желанию
+              // borderRadius: '50%', // делает изображение круглым
 
-              // width: '200px', // измените размер по желанию
-              // height: '40px', // измените размер по желанию
+              width: '200px', // измените размер по желанию
+              height: '40px', // измените размер по желанию
               // // borderRadius: '50%', // делает изображение круглым
             }}
           />

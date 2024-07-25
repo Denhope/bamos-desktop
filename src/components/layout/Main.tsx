@@ -28,7 +28,7 @@ const Main: FC = () => {
               onClick={() => navigate(RouteNames.HOME)}
               className="text-xl cursor-pointer  px-3 first-line:align-middle  uppercase  text-gray-500"
             >
-              407APP
+              BAMOS
             </Space>
           </Header>
           <Layout>

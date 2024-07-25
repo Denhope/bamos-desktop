@@ -763,7 +763,7 @@ const ShelfExpiryNew: FC = () => {
                       ids={rowKeys}
                       isDisabled={!rowKeys.length}
                     ></ReportPrintLabel>
-                    {/* <ReportEXEL
+                    <ReportEXEL
                       isDisabled={!rowKeys.length}
                       headers={{
                         LOCAL_ID: `${t('LABEL')}`,
@@ -784,7 +784,7 @@ const ShelfExpiryNew: FC = () => {
                       }}
                       data={selectedMaterials}
                       fileName={'EXPIRES_REPORT_'}
-                    ></ReportEXEL> */}
+                    ></ReportEXEL>
                   </Space>
                 </Col>
                 <Col>

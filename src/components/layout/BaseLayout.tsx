@@ -254,11 +254,11 @@ const BaseLayout: React.FC = () => {
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,
     },
-    // {
-    //   APNNBR: '21',
-    //   descriptions: `${t(`ACCESS TRACKING`)}`,
-    //   route: RouteNames.ACCESS_TRACKING,
-    // },
+    {
+      APNNBR: '21',
+      descriptions: `${t(`ACCESS TRACKING`)}`,
+      route: RouteNames.ACCESS_TRACKING,
+    },
     // {
     //   APNNBR: '375',
 
@@ -498,7 +498,7 @@ const BaseLayout: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <a className="text-xl  px-3 uppercase cursor-pointer text-gray-500">
-              407APP
+              BAMOS
             </a>
             <ProFormItem
               label

@@ -126,13 +126,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         });
 
         currentPage.drawText(String(qrCode.data.LOCAL_ID), {
-          x: 5,
-          y: currentY - 20,
+          x: 15,
+          y: currentY - 5,
           size: fontSize,
           color: rgb(0, 0, 0),
         });
 
-        currentY -= qrCodeSize + 25; // Adjust the spacing as needed
+        currentY -= qrCodeSize + 7; // Adjust the spacing as needed
 
         if (pageBreakAfter || currentY < qrCodeSize + 5) {
           currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
