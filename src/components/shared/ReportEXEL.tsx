@@ -115,7 +115,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
       // Преобразуем данные для заполнения таблицы
       const worksheetData = [
-        headerValues?.map((header) => ({
+        headerValues.map((header) => ({
           v: header,
           s: headerCellStyle, // Применяем стиль к заголовкам
         })),

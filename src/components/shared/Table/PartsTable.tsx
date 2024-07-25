@@ -388,9 +388,11 @@ const PartsTable: React.FC<PartsTableProps> = ({
     const selectedNodes = gridRef.current?.api.getSelectedNodes();
     const selectedKeys =
       selectedNodes?.map((node) => node?.data?._id || node?.data?.id) || [];
-    const selectedData = selectedNodes?.map((node) => node.data) || [];
-
-    onRowSelect(selectedData);
+    onRowSelect(
+      selectedNodes?.length && selectedNodes.length > 0
+        ? selectedNodes[0].data
+        : null
+    );
     onCheckItems(selectedKeys);
     console.log(selectedKeys);
     setSelectedRowCount(selectedNodes?.length || 0);
@@ -529,6 +531,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
             // loadingOverlayComponent="agLoadingOverlay"
             onRowDoubleClicked={() => {
               handleRowDSelection();
+              console.log('jjjjjj');
             }}
             localeText={localeText}
             paginationPageSize={50}
