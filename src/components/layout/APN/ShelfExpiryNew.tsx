@@ -51,6 +51,7 @@ import { useGetLocationsQuery } from '@/features/storeAdministration/LocationApi
 import { ColDef } from 'ag-grid-community';
 import ReportPrintQR from '@/components/shared/ReportPrintQR';
 import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 const ShelfExpiryNew: FC = () => {
   const [reportData, setReportData] = useState<any>(false);
@@ -763,7 +764,7 @@ const ShelfExpiryNew: FC = () => {
                       ids={rowKeys}
                       isDisabled={!rowKeys.length}
                     ></ReportPrintLabel>
-                    {/* <ReportEXEL
+                    <ReportEXEL
                       isDisabled={!rowKeys.length}
                       headers={{
                         LOCAL_ID: `${t('LABEL')}`,
@@ -784,7 +785,7 @@ const ShelfExpiryNew: FC = () => {
                       }}
                       data={selectedMaterials}
                       fileName={'EXPIRES_REPORT_'}
-                    ></ReportEXEL> */}
+                    ></ReportEXEL>
                   </Space>
                 </Col>
                 <Col>
@@ -797,15 +798,19 @@ const ShelfExpiryNew: FC = () => {
                   ></ReportPrintQR>
                 </Col>
                 <Col>
-                  <Button
-                    loading={reportDataLoading}
-                    icon={<PrinterOutlined />}
-                    size="small"
-                    onClick={() => fetchAndHandleReport('dddddddddd')}
-                    disabled={!selectedSerchValues}
+                  <PermissionGuard
+                    requiredPermissions={[Permission.PRINT_REPORT_EXPIRY]}
                   >
-                    {`${t('PRINT REPORT')}`}
-                  </Button>
+                    <Button
+                      loading={reportDataLoading}
+                      icon={<PrinterOutlined />}
+                      size="small"
+                      onClick={() => fetchAndHandleReport('dddddddddd')}
+                      disabled={!selectedSerchValues}
+                    >
+                      {`${t('PRINT REPORT')}`}
+                    </Button>
+                  </PermissionGuard>
                 </Col>
               </div>
             </Row>
