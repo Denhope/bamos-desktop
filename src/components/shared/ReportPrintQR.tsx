@@ -1,10 +1,10 @@
-//@ts-nocheck
+//ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Modal } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
 import QRCode from 'qrcode';
-import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
+import { useLazyGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 import { ProFormCheckbox, ProFormDigit, ProForm } from '@ant-design/pro-form';
 import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
@@ -45,6 +45,9 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   );
   const { t } = useTranslation();
 
+  const [trigger, { data: parts, isLoading: partsLoading }] =
+    useLazyGetStorePartsQuery();
+
   useEffect(() => {
     console.log('QR Code Size Changed:', qrCodeSize);
   }, [qrCodeSize]);
@@ -61,19 +64,6 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     console.log('Page Break After Changed:', pageBreakAfter);
   }, [pageBreakAfter]);
 
-  const {
-    data: parts,
-    isLoading: partsLoading,
-    refetch,
-  } = useGetStorePartsQuery(
-    {
-      ids: ids,
-    },
-    {
-      skip: !ids.length,
-    }
-  );
-
   const generateQRCodeDataURL = async (data: string) => {
     try {
       const qrDataURL = await QRCode.toDataURL(data, { width: qrCodeSize });
@@ -88,12 +78,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
     setLoading(true);
 
     try {
-      const pdfDoc = await PDFDocument.create();
-      pdfDoc.registerFontkit(fontkit);
+      const result = await trigger({ ids });
+      const parts = result.data;
 
       if (!parts) {
         throw new Error('Parts data is undefined');
       }
+
+      const pdfDoc = await PDFDocument.create();
+      pdfDoc.registerFontkit(fontkit);
 
       const qrCodes = await Promise.all(
         parts.map(async (product: any) => {

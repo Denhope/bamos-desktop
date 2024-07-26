@@ -1237,7 +1237,9 @@ export const transformToPartBooking = (data: any[]): any[] => {
       }`,
       10
     ),
-    SHELF_NUMBER: item.MATERIAL_STORE_ID?.locationID.locationName,
+    SHELF_NUMBER: item.MATERIAL_STORE_ID?.locationID?.locationName,
+    files: item.MATERIAL_STORE_ID?.FILES,
+    CREATE_BY: item?.createUserID?.name,
 
     // index: item?.index,
     // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,

@@ -74,7 +74,7 @@ const PartContainer: FC<ExampleComponentProps> = ({
             onRowSelect && onRowSelect(rowData);
           }}
           onDRowSelect={function (rowData: any): void {
-            // onRowSelect && onRowSelect(rowData);
+            onRowSelect && onRowSelect(rowData);
             onDRowSelect && onDRowSelect(rowData);
             // console.log(rowData);
           }}

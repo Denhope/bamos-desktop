@@ -59,7 +59,7 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
   const handleSave = (rowKey: any, data: any, row: any) => {
     // setData((prevData: any) => [...prevData, data]);
 
-    onUpdatePart && onUpdatePart(data);
+    // onUpdatePart && onUpdatePart(data);
     setDataPart(data);
   };
   console.log(currentPart);
@@ -107,9 +107,10 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
                   booking: {
                     voucherModel: 'ENTITY_CHANGE',
                     ...bookingData,
+                    MATERIAL_STORE_ID: _id,
                   },
                 });
-                refetch();
+                // refetch();
 
                 // onUpdatePart(currentPart);
                 notification.success({
@@ -158,13 +159,14 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           FILES: updatedFiles,
         });
 
-        refetch();
+        // refetch();
         // onUpdatePart(currentPart);
         const { _id, ...bookingData } = parts && parts[0];
         const addBookingResponse = await addBooking({
           booking: {
             voucherModel: 'ENTITY_CHANGE',
             ...bookingData,
+            MATERIAL_STORE_ID: _id,
           },
         });
 
@@ -205,9 +207,10 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           intervalMOS: values?.intervalMOS,
           UNIT_LIMIT: values?.UNIT_LIMIT,
           estimatedDueDate: values?.estimatedDueDate,
+          RECEIVED_DATE: values?.RECEIVED_DATE,
         }).unwrap();
 
-        refetch().unwrap();
+        // refetch().unwrap();
         // onUpdatePart(currentPart);
         const { _id, ...bookingData } = parts && parts[0];
 
@@ -215,6 +218,7 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           booking: {
             voucherModel: 'ENTITY_CHANGE',
             ...bookingData,
+            MATERIAL_STORE_ID: _id,
           },
         }).unwrap();
         // handleSave();
@@ -349,6 +353,9 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
                   </Tag>
                 )}
               </ProDescriptions.Item>
+              <ProDescriptions.Item valueType="date" label={t('RECEIVED_DATE')}>
+                {(parts && parts[0]?.RECEIVED_DATE) || 'N/A'}
+              </ProDescriptions.Item>
               <ProDescriptions.Item valueType="date" label={t('LAST INSPECT')}>
                 {(parts && parts[0]?.estimatedDueDate) || 'N/A'}
               </ProDescriptions.Item>
@@ -371,16 +378,24 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
                 <ProFormText label={t('INTERVAL')} name="intervalMOS" />
                 <ProFormText label={t('SERIAL NUMBER')} name="SERIAL_NUMBER" />
                 <ProFormText label={t('BATCH')} name="SUPPLIER_BATCH_NUMBER" />
+                <ProFormDatePicker
+                  width={'md'}
+                  label={t('RECEIVED DATE')}
+                  name="RECEIVED_DATE"
+                />
               </Space>
             </ProForm.Item>
             <Divider />
 
             <Row justify={'space-between'}>
               <ProFormDatePicker
+                width={'md'}
                 label={t('ESTIMATED DUE DATE')}
                 name="estimatedDueDate"
               />
+
               <ProFormDatePicker
+                width={'md'}
                 label={t('PRODUCT EXPIRATION DATE')}
                 name="PRODUCT_EXPIRATION_DATE"
               />

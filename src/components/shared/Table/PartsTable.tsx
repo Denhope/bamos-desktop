@@ -24,6 +24,7 @@ import { utils, writeFile } from 'xlsx';
 import { Input } from 'antd';
 import { handleFileSelect, handleFileOpen } from '@/services/utilites';
 import FileModalList from '../FileModalList';
+
 type PartsTableProps = {
   isLoading?: boolean;
   rowData: any[];
@@ -47,6 +48,8 @@ type PartsTableProps = {
   isFilesVisiable?: boolean;
   isRowSelectable?: any;
   rowClassRules?: any;
+  onColumnResized?: (event: any) => void;
+  onGridReady?: (event: any) => void;
 };
 
 const PartsTable: React.FC<PartsTableProps> = ({
@@ -72,6 +75,8 @@ const PartsTable: React.FC<PartsTableProps> = ({
   isRowSelectable,
   isFilesVisiable = false,
   rowClassRules,
+  onColumnResized,
+  onGridReady,
 }) => {
   const { t, i18n } = useTranslation();
   const gridRef = useRef<AgGridReact>(null);
@@ -127,15 +132,6 @@ const PartsTable: React.FC<PartsTableProps> = ({
     [onCellValueChanged]
   );
 
-  // const defaultColDef = useMemo(
-  //   () => ({
-  //     editable: false,
-  //     sortable: true,
-  //     filter: true,
-  //   }),
-  //   []
-  // );
-
   const [selectedCell, setSelectedCell] = useState<CellContextMenuEvent | null>(
     null
   );
@@ -162,68 +158,6 @@ const PartsTable: React.FC<PartsTableProps> = ({
     setContextMenuVisible(false);
   };
 
-  // const copyTable = () => {
-  //   if (gridRef.current) {
-  //     const columnHeaders = columnDefs.map((column) => column.headerName);
-  //     const allRowData = gridRef.current.api
-  //       .getRenderedNodes()
-  //       .map((node) => node.data);
-
-  //     const tableHtml = `
-  //       <style>
-  //         table {
-  //           border-collapse: collapse;
-  //           width: 100%;
-  //         }
-  //         th, td {
-  //           border: 1px solid #ddd;
-  //           text-align: left;
-  //           padding: 8px;
-  //         }
-  //         th {
-  //           background-color: #f2f2f2;
-  //           border: 1px solid #000;
-  //         }
-  //         td {
-  //           border: 1px solid #000;
-  //         }
-  //       </style>
-  //       <table>
-  //         <thead>
-  //           <tr>
-  //             ${columnHeaders.map((header) => `<th>${header}</th>`).join('')}
-  //           </tr>
-  //         </thead>
-  //         <tbody>
-  //           ${allRowData
-  //             .map(
-  //               (rowData) =>
-  //                 `<tr>
-  //                 ${columnDefs
-  //                   .map(
-  //                     (column: any) =>
-  //                       `<td>${
-  //                         rowData[column?.field] !== undefined
-  //                           ? rowData[column.field]
-  //                           : ''
-  //                       }</td>`
-  //                   )
-  //                   .join('')}
-  //               </tr>`
-  //             )
-  //             .join('')}
-  //         </tbody>
-  //       </table>
-  //     `;
-
-  //     const blob = new Blob([tableHtml], {
-  //       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
-  //     });
-  //     // saveAs(blob, 'table.xlsx');
-  //     copy(tableHtml, { format: 'text/html' });
-  //   }
-  //   setContextMenuVisible(false);
-  // };
   const copySelectedRows = () => {
     if (gridRef.current) {
       // Получаем выделенные строки
@@ -298,53 +232,6 @@ const PartsTable: React.FC<PartsTableProps> = ({
     setContextMenuVisible(false);
   };
 
-  const copyRow = () => {
-    if (selectedCell) {
-      const rowData = selectedCell.node?.data;
-      if (rowData) {
-        const columnHeaders = columnDefs.map((column) => column.headerName);
-        const rowDataHtml = `<tr>${columnDefs
-          .map(
-            (column: any) =>
-              `<td>${
-                rowData[column?.field] !== undefined
-                  ? rowData[column.field]
-                  : ''
-              }</td>`
-          )
-          .join('')}</tr>`;
-        const tableHtml = `
-          <style>
-            table {
-              border-collapse: collapse;
-              width: 100%;
-            }
-            th, td {
-              border: 1px solid #ddd;
-              text-align: left;
-              padding: 8px;
-            }
-            th {
-              background-color: #f2f2f2;
-              border: 1px solid #000;
-            }
-            td {
-              border: 1px solid #000;
-            }
-          </style>
-          <table>
-            <thead><tr>${columnHeaders
-              .map((header) => `<th>${header}</th>`)
-              .join('')}</tr></thead>
-            <tbody>${rowDataHtml}</tbody>
-          </table>
-        `;
-        copy(tableHtml, { format: 'text/html' });
-      }
-    }
-    setContextMenuVisible(false);
-  };
-
   const exportToExcel = () => {
     if (gridRef.current) {
       const columnHeaders = columnDefs.map((column) => column.headerName);
@@ -384,6 +271,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
       setContextMenuVisible(true);
     }
   }, []);
+
   const handleRowSelection = () => {
     const selectedNodes = gridRef.current?.api.getSelectedNodes();
     const selectedKeys =
@@ -392,18 +280,15 @@ const PartsTable: React.FC<PartsTableProps> = ({
 
     onRowSelect(selectedData);
     onCheckItems(selectedKeys);
-    console.log(selectedKeys);
+    console.log(selectedData);
     setSelectedRowCount(selectedNodes?.length || 0);
   };
+
   const handleRowDSelection = () => {
     const selectedNodes = gridRef.current?.api.getSelectedNodes();
     const selectedKeys =
       selectedNodes?.map((node) => node?.data?._id || node?.data?.id) || [];
-    // onRowSelect(
-    //   selectedNodes?.length && selectedNodes.length > 0
-    //     ? selectedNodes[0].data
-    //     : null
-    // );
+
     onCheckItems(selectedKeys);
     // console.log(selectedKeys);
     setSelectedRowCount(selectedNodes?.length || 0);
@@ -414,71 +299,93 @@ const PartsTable: React.FC<PartsTableProps> = ({
           : null
       );
   };
-  const checkboxColumn = {
-    headerCheckboxSelection: true,
-    checkboxSelection: true,
-    width: 50,
-  };
-  const gridOptions = {
-    domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
-  };
-  const updatedColumnDefs = [checkboxColumn, ...(columnDefs || [])];
+
+  const checkboxColumn = useMemo(
+    () => ({
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      width: 50,
+    }),
+    []
+  );
+
+  const gridOptions = useMemo(
+    () => ({
+      domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
+    }),
+    []
+  );
+
+  const updatedColumnDefs = useMemo(
+    () => [checkboxColumn, ...(columnDefs || [])],
+    [checkboxColumn, columnDefs]
+  );
 
   const baseColumnDefs = isChekboxColumn ? updatedColumnDefs : columnDefs;
-  const buttonColumnDef = isButtonVisiable
-    ? [
-        {
-          cellRenderer: (params: any) => (
-            <Space>
-              <Button
-                size="small"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSave(params);
-                }}
-                disabled={params.node.data._id !== editingRowId}
-              >
-                {t('SAVE')}
-              </Button>
-              <Button
-                size="small"
-                danger
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleDelete(params);
-                }}
-              >
-                {t('DELETE')}
-              </Button>
-            </Space>
-          ),
-        },
-      ]
-    : [];
-  const filesColumnDef = isFilesVisiable
-    ? [
-        {
-          field: 'files',
-          headerName: `${t('DOC')}`,
-          cellRenderer: (params: any) => (
-            <FileModalList
-              files={params?.data?.files}
-              onFileSelect={(file) => {
-                console.log('Selected file:', file);
-                handleFileSelect({
-                  id: file?.id,
-                  name: file?.name,
-                });
-              }}
-              onFileOpen={(file) => {
-                console.log('Opened file:', file);
-                handleFileOpen(file);
-              }}
-            />
-          ),
-        },
-      ]
-    : [];
+
+  const buttonColumnDef = useMemo(
+    () =>
+      isButtonVisiable
+        ? [
+            {
+              cellRenderer: (params: any) => (
+                <Space>
+                  <Button
+                    size="small"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSave(params);
+                    }}
+                    disabled={params.node.data._id !== editingRowId}
+                  >
+                    {t('SAVE')}
+                  </Button>
+                  <Button
+                    size="small"
+                    danger
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(params);
+                    }}
+                  >
+                    {t('DELETE')}
+                  </Button>
+                </Space>
+              ),
+            },
+          ]
+        : [],
+    [isButtonVisiable, handleSave, handleDelete, editingRowId, t]
+  );
+
+  const filesColumnDef = useMemo(
+    () =>
+      isFilesVisiable
+        ? [
+            {
+              field: 'files',
+              headerName: `${t('DOC')}`,
+              cellRenderer: (params: any) => (
+                <FileModalList
+                  files={params?.data?.files}
+                  onFileSelect={(file) => {
+                    console.log('Selected file:', file);
+                    handleFileSelect({
+                      id: file?.id,
+                      name: file?.name,
+                    });
+                  }}
+                  onFileOpen={(file) => {
+                    console.log('Opened file:', file);
+                    handleFileOpen(file);
+                  }}
+                />
+              ),
+            },
+          ]
+        : [],
+    [isFilesVisiable, t, handleFileSelect, handleFileOpen]
+  );
 
   return (
     <div
@@ -519,6 +426,8 @@ const PartsTable: React.FC<PartsTableProps> = ({
           </div>
         ) : (
           <AgGridReact
+            onColumnResized={onColumnResized}
+            onGridReady={onGridReady}
             rowClassRules={rowClassRules}
             columnHoverHighlight={true}
             defaultColDef={{
@@ -541,6 +450,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
             quickFilterText={searchText}
             // suppressRowClickSelection={true}
             // isRowSelectable={isRowSelectable}
+
             onSelectionChanged={handleRowSelection}
             onCellContextMenu={handleCellContextMenu}
             onRowEditingStarted={handleRowEditingStarted} // Обработчик начала редактирования
@@ -596,24 +506,6 @@ const PartsTable: React.FC<PartsTableProps> = ({
           >
             {t('COPY CELL')}
           </div>
-          {/* <div
-            onClick={copyRow}
-            style={{
-              padding: '10px 15px',
-              cursor: 'pointer',
-              fontFamily: 'Arial, sans-serif',
-              fontSize: '14px',
-              transition: 'background-color 0.2s ease-in-out',
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#f5f5f5')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = 'white')
-            }
-          >
-            {t('COPY ROW')}
-          </div> */}
           <div
             onClick={copySelectedRows}
             style={{

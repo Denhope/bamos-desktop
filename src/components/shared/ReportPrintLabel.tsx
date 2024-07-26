@@ -7,7 +7,7 @@ import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { SING } from '@/utils/api/http';
-import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
+import { useLazyGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import robotoFont from '../../fonts/Roboto-Regular.ttf'; // Путь к вашему шрифту Roboto
@@ -26,14 +26,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   ids,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-
-  const { data: parts, isLoading: partsLoading } = useGetStorePartsQuery(
-    ids ? { ids: ids } : {},
-    {
-      skip: !ids || data?.length > 0,
-    }
-  );
-
+  const [trigger, { data: parts, isLoading: partsLoading }] =
+    useLazyGetStorePartsQuery();
   const { t } = useTranslation();
 
   const generateBarcode = (data: any) => {
@@ -70,7 +64,8 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         }
       );
 
-      const usedData = data.length > 0 ? data : parts;
+      const result = await trigger({ ids });
+      const usedData = data.length > 0 ? data : result.data;
 
       const pdfDoc = await PDFDocument.create();
       pdfDoc.registerFontkit(fontkit);

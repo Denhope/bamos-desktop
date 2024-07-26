@@ -269,6 +269,7 @@ export const storePartsApi = createApi({
         AWB_TYPE?: any;
         AWB_NUMBER?: any;
         IS_CUSTOMER_GOODS?: any;
+        RECEIVED_DATE?: any;
       }
     >({
       query: ({
@@ -305,6 +306,7 @@ export const storePartsApi = createApi({
         AWB_TYPE,
         AWB_NUMBER,
         IS_CUSTOMER_GOODS,
+        RECEIVED_DATE,
       }) => ({
         url: `materialStore/updateItemByIds/company/${COMPANY_ID}`,
         method: 'PUT',
@@ -344,6 +346,7 @@ export const storePartsApi = createApi({
           AWB_TYPE,
           AWB_NUMBER,
           IS_CUSTOMER_GOODS,
+          RECEIVED_DATE,
         },
       }),
       invalidatesTags: ['StoreItem'],
@@ -365,4 +368,5 @@ export const {
   useGetStorePartStockQTYQuery,
   useAddStoreMutation,
   useUpdateStorePartsMutation,
+  useLazyGetStorePartsQuery,
 } = storePartsApi;

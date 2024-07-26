@@ -61,8 +61,10 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     setEditingproject(null);
   };
 
-  const handleEdit = (project: IProject) => {
-    setEditingproject(project);
+  const handleEdit = (project: any) => {
+    project && project?.length
+      ? setEditingproject(project[0])
+      : setEditingproject(project);
   };
 
   const handleDelete = async (projectId: string) => {

@@ -926,5 +926,17 @@
   "COPY CELL": "КОПИРОВАТЬ ЯЧЕЙКУ",
   "COPY SELECTED ROWS": "КОПИРОВАТЬ ВЫДЕЛЕННЫЕ СТРОКИ",
   "EXPORT EXCEL": "ВЫГРУЗИТЬ ВЫДЕЛЕННЫЕ СТРОКИ EXEL",
-  "Sorry, you are not authorized.": "ВЫ НЕ АВТОРИЗОВАНЫ"
+  "Sorry, you are not authorized.": "ВЫ НЕ АВТОРИЗОВАНЫ",
+  "PFMD": "ВЫПОЛНИЛ",
+  "ENTITY_CHANGE": "ИЗМЕНЕНИЕ МАТЕРИАЛА",
+  "RECEIVING_CANCELLED": "ОТМЕНА ПОСТУПЛЕНИЯ",
+  "RECEIVING_GOODS": "ПОСТУПЛЕНИЕ",
+  "STORE_TO_SHOP": "ВЫДАЧА В ЦЕХ",
+  "AC_TYPE_CHANGE": "ИЗМЕНЕНИЕ ВС",
+  "CHANGE_LOCATION": "ИЗМЕНЕНИЕ ЛОКАЦИИ",
+  "STORE_TO_A/C": "ВЫДАЧА НА САМОЛЕТ",
+  "A/C_TO_STORE": "СДАЧА НА СКЛАД",
+  "BACK_TO_STORE": "ОТМЕНА ВЫДАЧИ",
+  "PART_NUMBER_CHANGE": "ИЗМЕНЕНИЕ НОМЕНКЛАТУРЫ",
+  "ADD_NEW_PART": "ДОБАВЛЕНИЕ НОМЕНКЛАТУРЫ "
 }

@@ -37,6 +37,7 @@ import {
   transformToIPart,
 } from '@/services/utilites';
 import PermissionGuard, { Permission } from '../auth/PermissionGuard';
+import PartsTable from '../shared/Table/PartsTable';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -115,8 +116,10 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   //     </div>
   //   );
   // }
-  const handleEdit = (project: IPartNumber) => {
-    setEditingproject(project);
+  const handleEdit = (project: any) => {
+    project && project?.length
+      ? setEditingproject(project[0])
+      : setEditingproject(project);
   };
   const handleCreate = () => {
     setEditingproject(null);
@@ -127,6 +130,9 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType; // Обязательное свойство
   }
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
+
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
       headerName: `${t('PART No')}`,
@@ -285,21 +291,32 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                   }}
                 />
               ) : (
-                <PartContainer
-                  isLoading={isLoading || isFetching}
-                  isChekboxColumn={true}
-                  isVisible={true}
-                  onRowSelect={handleEdit}
-                  pagination={true}
-                  isAddVisiable={true}
-                  isButtonVisiable={false}
-                  isEditable={true}
-                  height={'64vh'}
-                  columnDefs={columnDefs}
-                  partNumbers={[]}
-                  onUpdateData={(data: any[]): void => {}}
-                  rowData={transformedTasks}
-                />
+                <div style={containerStyle}>
+                  <div style={gridStyle} className={'ag-theme-alpine'}>
+                    <PartsTable
+                      isLoading={isLoading || isFetching}
+                      isFilesVisiable={true}
+                      isVisible={true}
+                      pagination={true}
+                      isAddVisiable={true}
+                      isButtonVisiable={false}
+                      height={'64vh'}
+                      rowData={transformedTasks}
+                      columnDefs={columnDefs}
+                      onAddRow={function (): void {}}
+                      onDelete={function (id: string): void {}}
+                      onSave={function (data: any): void {}}
+                      onCellValueChanged={function (params: any): void {}} // onAddRow={onAddRow}
+                      onRowSelect={handleEdit}
+                      // onCheckItems={true}
+                      partNumbers={[]}
+                      isChekboxColumn={true}
+                      onCheckItems={function (
+                        selectedKeys: React.Key[]
+                      ): void {}}
+                    />
+                  </div>
+                </div>
               )}
             </div>
             <div className="  h-[75vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
