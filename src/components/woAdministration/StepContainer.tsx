@@ -8,14 +8,28 @@ import { ProFormSelect } from '@ant-design/pro-components';
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGlobalState } from './GlobalStateContext';
+import { Split } from '@geoffcox/react-splitter';
+import TemplateSelector from './TemplateSelector';
 
 interface Props {
   steps: IStep[];
   onAddStep: (newStep: IStep) => void;
   onDeleteStep: (stepIds: string[]) => void;
+  templates: Template[]; // Update the type of templates to Template[]
 }
-
-const StepContainer: React.FC<Props> = ({ steps, onAddStep, onDeleteStep }) => {
+interface Template {
+  id: string;
+  name: string;
+  content: string;
+  type: string; // Add the missing properties type and planeType
+  planeType: string;
+}
+const StepContainer: React.FC<Props> = ({
+  steps,
+  onAddStep,
+  onDeleteStep,
+  templates,
+}) => {
   const [selectedStepItems, setSelectedStepItems] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -48,7 +62,19 @@ const StepContainer: React.FC<Props> = ({ steps, onAddStep, onDeleteStep }) => {
       setIsModalVisible(false);
     });
   };
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  );
 
+  const handleSelectTemplate = (templateId: string) => {
+    setSelectedTemplateId(templateId);
+    const selected = templates.find((t) => t.id === templateId);
+    if (selected) {
+      form.setFieldsValue({
+        stepDescription: selected.content,
+      });
+    }
+  };
   const handleModalCancel = () => {
     setIsModalVisible(false);
   };
@@ -114,13 +140,16 @@ const StepContainer: React.FC<Props> = ({ steps, onAddStep, onDeleteStep }) => {
         </Button>
       </div>
       <Modal
+        width={'80%'}
         title={`${t('ADD STEP')}`}
         visible={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
       >
-        <Form form={form} layout="vertical">
-          {/* <Form.Item
+        <Split initialPrimarySize="50%" splitterSize="10px">
+          <div>
+            <Form form={form} layout="vertical">
+              {/* <Form.Item
             name="stepType"
             label={`${t('STEP_TYPE')}`}
             rules={[{ required: true }]}
@@ -143,36 +172,42 @@ const StepContainer: React.FC<Props> = ({ steps, onAddStep, onDeleteStep }) => {
             </Select>
           </Form.Item> */}
 
-          <ProFormSelect
-            name="userGroupID"
-            mode="multiple"
-            label={t('GROUP')}
-            options={groupOptions}
-            // rules={[{ required: true, message: t('PLEASE SELECT A GROUP') }]}
-          />
-          <ProFormSelect
-            mode="multiple"
-            name="skillID"
-            label={t('SKILL')}
-            options={skillOptions}
-            // rules={[{ required: true, message: t('PLEASE SELECT A SKILL') }]}
-          />
+              <ProFormSelect
+                name="userGroupID"
+                mode="multiple"
+                label={t('GROUP')}
+                options={groupOptions}
+                // rules={[{ required: true, message: t('PLEASE SELECT A GROUP') }]}
+              />
+              <ProFormSelect
+                mode="multiple"
+                name="skillID"
+                label={t('SKILL')}
+                options={skillOptions}
+                // rules={[{ required: true, message: t('PLEASE SELECT A SKILL') }]}
+              />
 
-          {/* <Form.Item
+              {/* <Form.Item
             name="stepHeadLine"
             label="Step Headline"
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item> */}
-          <Form.Item
-            name="stepDescription"
-            label={t('STEP DESCRITION')}
-            rules={[{ required: true }]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-        </Form>
+              <Form.Item
+                name="stepDescription"
+                label={t('STEP DESCRITION')}
+                rules={[{ required: true }]}
+              >
+                <Input.TextArea rows={14} />
+              </Form.Item>
+            </Form>
+          </div>
+          <TemplateSelector
+            templates={templates}
+            onSelectTemplate={handleSelectTemplate}
+          />
+        </Split>
       </Modal>
     </div>
   );

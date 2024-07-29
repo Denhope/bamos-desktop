@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  message,
+  Space,
+  Spin,
+  Switch,
+  notification,
+} from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
@@ -49,6 +59,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       endDate: projectSearchValues?.endDate,
       WONumber: projectSearchValues?.projectNumber,
       customerID: projectSearchValues?.customerID,
+      time: projectSearchValues?.time,
     },
     { skip: !projectSearchValues }
   );
@@ -86,15 +97,25 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       if (editingproject) {
         await updateProject(project).unwrap();
         handleEdit(project);
-        message.success(t('WO SUCCESSFULLY UPDATED'));
+        notification.success({
+          message: t('WO УСПЕШНО ОБНОВЛЕН'),
+          description: t('ОБновление прошло успешно'),
+        });
       } else {
         await addProject({ project }).unwrap();
-        message.success(t('WO SUCCESSFULLY ADDED'));
+        notification.success({
+          message: t('WO УСПЕШНО ДОБАВЛЕН'),
+          description: t('Обновление прошло успешно'),
+        });
+
         setEditingproject(null);
       }
       // setEditingproject(null);
     } catch (error) {
-      message.error(t('ERROR SAVING PROJECT '));
+      notification.error({
+        message: t('ОШИБКА'),
+        description: t('Ошибка при создании/обновлении  WO'),
+      });
     }
   };
 
@@ -289,7 +310,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             </Button>
           )}
         </Col>
-        <Col>
+        {/* <Col>
           <Button
             // disabled
             disabled={!editingproject}
@@ -299,7 +320,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
           >
             {t('GENERATE ACCEESS')}
           </Button>
-        </Col>
+        </Col> */}
         <Col>
           <Switch
             checkedChildren="Table"

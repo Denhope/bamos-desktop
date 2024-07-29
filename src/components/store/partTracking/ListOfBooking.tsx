@@ -44,6 +44,7 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       editable: false,
       cellDataType: 'date',
       headerName: `${t('CREATE DATE')}`,
+      width: 150,
       valueFormatter: (params: any) => {
         if (!params.value) return ''; // Проверка отсутствия значения
         const date = new Date(params.value);
@@ -51,6 +52,8 @@ const ListOfBooking: FC<ListOfBookingType> = ({
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
         });
       },
     },
@@ -60,6 +63,13 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       field: 'voucherModel',
       editable: false,
       cellDataType: 'text',
+      width: 140,
+    },
+    {
+      field: 'LOCAL_ID',
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'text',
+      width: 100,
     },
     {
       headerName: `${t('PART No')}`,
@@ -73,6 +83,7 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       filter: false,
       headerName: `${t('BATCH')}`,
       cellDataType: 'text',
+      width: 140,
     },
     {
       field: 'SERIAL_NUMBER',
@@ -80,6 +91,7 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       filter: false,
       headerName: `${t('SERIAL')}`,
       cellDataType: 'text',
+      width: 140,
     },
     {
       field: 'CONDITION',
@@ -87,17 +99,18 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       filter: false,
       headerName: `${t('CONDITION')}`,
       cellDataType: 'text',
+      width: 140,
     },
     {
       field: 'NAME_OF_MATERIAL',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
     },
-    {
-      field: 'registrationNumber',
-      headerName: `${t('A/C')}`,
-      cellDataType: 'text',
-    },
+    // {
+    //   field: 'registrationNumber',
+    //   headerName: `${t('A/C')}`,
+    //   cellDataType: 'text',
+    // },
 
     {
       field: 'QUANTITY',
@@ -105,12 +118,20 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       filter: false,
       headerName: `${t('QTY')}`,
       cellDataType: 'number',
+      width: 100,
     },
     {
       field: 'UNIT_OF_MEASURE',
       editable: false,
       filter: false,
       headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CREATE_BY',
+      editable: false,
+      filter: false,
+      headerName: `${t('CREATE BY')}`,
       cellDataType: 'text',
     },
   ]);

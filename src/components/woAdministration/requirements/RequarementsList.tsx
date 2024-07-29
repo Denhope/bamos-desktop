@@ -51,6 +51,8 @@ type ExampleComponentProps = {
   order?: any;
   isIssueVisibale?: boolean;
   loading?: boolean;
+  onColumnResized?: (event: any) => void;
+  onGridReady?: (event: any) => void;
 };
 
 const RequarementsList: React.FC<ExampleComponentProps> = ({
@@ -74,6 +76,8 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   onSave,
   order,
   isIssueVisibale,
+  onGridReady,
+  onColumnResized,
 }) => {
   const containerStyle = useMemo(() => ({ width: '100%', height: height }), []);
   const gridStyle = useMemo(() => ({ height: height, width: '100%' }), []);
@@ -455,31 +459,35 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
           </PermissionGuard>
         </Col>
       )}
-
-      <div style={gridStyle} className={'ag-theme-alpine'}>
-        <PermissionGuard requiredPermissions={[Permission.ADD_REQUIREMENT]}>
-          <PartsTable
-            isLoading={isLoading || isFetching || loading}
-            isChekboxColumn={isChekboxColumn}
-            isVisible={isVisible}
-            isButtonColumn={isButtonColumn}
-            pagination={pagination}
-            isEditable={isEditable}
-            isAddVisiable={isAddVisiable}
-            isButtonVisiable={isButtonVisiable}
-            height={height}
-            rowData={rowData}
-            columnDefs={columnDefs}
-            partNumbers={partNumbers}
-            onAddRow={onAddRow}
-            onDelete={onDelete}
-            onSave={handleSubmit}
-            onCellValueChanged={onCellValueChanged}
-            onRowSelect={handleRowSelect}
-            onCheckItems={handleRowSheck}
-          />
-        </PermissionGuard>
+      <div style={containerStyle}>
+        <div style={gridStyle} className={'ag-theme-alpine'}>
+          <PermissionGuard requiredPermissions={[Permission.ADD_REQUIREMENT]}>
+            <PartsTable
+              isLoading={isLoading || isFetching || loading}
+              isChekboxColumn={isChekboxColumn}
+              isVisible={isVisible}
+              isButtonColumn={isButtonColumn}
+              pagination={pagination}
+              isEditable={isEditable}
+              isAddVisiable={isAddVisiable}
+              isButtonVisiable={isButtonVisiable}
+              height={height}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              partNumbers={partNumbers}
+              onAddRow={onAddRow}
+              onDelete={onDelete}
+              onSave={handleSubmit}
+              onCellValueChanged={onCellValueChanged}
+              onRowSelect={handleRowSelect}
+              onCheckItems={handleRowSheck}
+              onColumnResized={onColumnResized}
+              onGridReady={onGridReady}
+            />
+          </PermissionGuard>
+        </div>
       </div>
+
       <ModalForm
         onFinish={async (values) => {
           const result = await handleSubmitModal(values);

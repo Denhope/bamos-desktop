@@ -38,6 +38,7 @@ export const projectItemWOApi = createApi({
         projectItemType?: any;
         WOReferenceID?: any;
         ids?: any;
+        time?: any;
       }
     >({
       query: ({
@@ -107,6 +108,7 @@ export const projectItemWOApi = createApi({
         }
       },
     }),
+
     getProjectItemWO: builder.query<IProjectItemWO, string>({
       query: (id) => `projectsTasksNew/company/${id}`,
     }),
@@ -405,12 +407,14 @@ export const projectItemWOApi = createApi({
       any[],
       {
         ids?: any;
+        WOReferenceID?: any;
       }
     >({
-      query: ({ ids }) => ({
+      query: ({ ids, WOReferenceID }) => ({
         url: `projectsTasksNew/getFilteredProjectsTaskCard/company/${COMPANY_ID}`,
         params: {
           ids,
+          WOReferenceID,
         },
       }),
       providesTags: ['ProjectItemWO'],
@@ -423,6 +427,7 @@ export const projectItemWOApi = createApi({
           console.error('Ошибка при выполнении запроса:', error);
         }
       },
+      keepUnusedDataFor: 5,
     }),
   }),
 });
@@ -436,4 +441,5 @@ export const {
   useGetProjectItemsWOQuery,
   useUpdateProjectPanelsMutation,
   useGetProjectPanelsQuery,
+  useGetProjectTaskForCardQuery,
 } = projectItemWOApi;

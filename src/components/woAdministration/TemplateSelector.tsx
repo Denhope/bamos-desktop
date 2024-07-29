@@ -88,7 +88,7 @@ const TemplateSelector: React.FC<{
             ))}
         </Select>
         <TextArea
-          rows={6}
+          rows={19}
           value={
             selectedTemplate
               ? templates.find((t) => t.id === selectedTemplate)?.content

@@ -67,6 +67,9 @@ import {
   useUpdateProjectTaskMutation,
 } from '@/features/projectTaskAdministration/projectsTaskApi';
 import PermissionGuard, { Permission } from '../auth/PermissionGuard';
+import TaskMultiCloseModal from './TaskMultiCloseModal';
+import { IStep } from '@/models/IStep';
+import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 
 interface AdminPanelProps {
   projectSearchValues: any;
@@ -88,6 +91,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     React.Key[]
   >([]);
   const [triggerQuery, setTriggerQuery] = useState(false);
+  const { data: users } = useGetUsersQuery({});
   const {
     data: projectTasks,
     isLoading,
@@ -111,6 +115,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       zonesID: projectSearchValues?.zonesID,
       projectItemType: projectSearchValues?.projectItemType,
       WOReferenceID: projectSearchValues?.WOReferenceID,
+      time: projectSearchValues?.time,
     },
     {
       skip: !triggerQuery,
@@ -170,7 +175,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const transformedTasks = useMemo(() => {
     return transformToIProjectTask(projectTasks || []);
   }, [projectTasks]);
-  console.log(transformedTasks);
+
   useEffect(() => {
     if (projectSearchValues) {
       const hasSearchParams = Object.values(projectSearchValues).some(
@@ -214,21 +219,26 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const handleCreate = () => {
     setEditingProjectNRC(editingProject);
     setEditingProject(null);
-    const { id, _id, projectItemID, taskId, taskWO, ...projectWithoutIds } =
-      editingProjectNRC;
+    const {
+      id,
+      _id,
+      projectItemID,
+      taskId,
+      taskWO,
+      removeInslallItemsIds,
+      ...projectWithoutIds
+    } = editingProjectNRC;
     setEditingProject({
       ...projectWithoutIds,
       projectTaskReferenceID: editingProjectNRC?.id,
       restrictionID: [],
       skillCodeID: [],
       taskDescription: '',
-      taskNumber: `NRC/${editingProjectNRC.taskNumber.replace(
-        /^24-/,
-        ''
-      )}/${new Date()
+      taskNumber: `${new Date()
         .toISOString()
         .replace(/[-:.Z]/g, '')
-        .slice(2)}`,
+        .substring(2)
+        .replace('T', '')}`,
       stepID: [],
       preparationID: [],
       createUserID: '',
@@ -239,6 +249,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       partTaskID: null,
       projectItemReferenceID: editingProjectNRC?.projectItemID,
       taskDescriptionCustumer: editingProjectNRC?.taskDescriptionCustumer,
+      taskId,
     });
   };
 
@@ -344,11 +355,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     // { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
     { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
-    { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
-    { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
-    { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
-    { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
+    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
+    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    // { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
+    // { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
     {
       field: 'SUB TASK_CODE',
       headerName: `${t('SUB TASK_CODE')}`,
@@ -420,98 +431,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     cellDataType: CellDataType; // Обязательное свойство
   }
 
-  const columnRequirements = [
-    {
-      field: 'partRequestNumberNew',
-      headerName: `${t('REQUIREMENT No')}`,
-      cellDataType: 'number',
-    },
-
-    {
-      headerName: `${t('PART No')}`,
-      field: 'PART_NUMBER',
-      editable: false,
-    },
-    {
-      field: 'DESCRIPTION',
-      headerName: `${t('DESCRIPTION')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'amout',
-      editable: false,
-      cellDataType: 'number',
-      headerName: `${t('ВОЗМОЖНОЕ КОЛ-ВО К ЗАКАЗУ')}`,
-    },
-    {
-      field: 'issuedQuantity',
-      editable: true,
-      cellDataType: 'number',
-      headerName: `${t('REQUESTED QTY')}`,
-      // valueSetter: (params: any) => {
-      //   // Получаем текущее значение поля и значение amout
-      //   const newValue = Number(params.newValue);
-      //   const amout = params.data.amout || 0;
-      //   const bookedQuantity = params.data.bookedQuantity || 0;
-
-      //   // Проверка: значение issuedQuantity не должно превышать (amout - bookedQuantity)
-      //   if (newValue <= amout - bookedQuantity) {
-      //     // Устанавливаем новое значение
-      //     params.data.issuedQuantity = newValue;
-      //     return true; // Указываем, что значение было изменено
-      //   } else {
-      //     // Отображаем предупреждение, если значение некорректно
-      //     alert(
-      //       `${t('Значение не может превышать')} ${amout - bookedQuantity}`
-      //     );
-      //     return false; // Указываем, что значение не было изменено
-      //   }
-      // },
-    },
-    {
-      field: 'bookedQuantity',
-      editable: false,
-      cellDataType: 'number',
-      headerName: `${t('BOOKED QTY')}`,
-    },
-    {
-      field: 'UNIT_OF_MEASURE',
-      editable: false,
-      filter: false,
-      headerName: `${t('UNIT OF MEASURE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'plannedDate',
-      editable: false,
-      cellDataType: 'date',
-      headerName: `${t('PLANNED DATE')}`,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-
-    {
-      field: 'availableQTY',
-      editable: false,
-      cellDataType: 'number',
-      headerName: `${t('ДОСТУПНОЕ НА СКЛАДЕ')}`,
-    },
-    // {
-    //   field: 'materialAplicationNumber',
-    //   editable: false,
-    //   cellDataType: 'number',
-    //   headerName: `${t('PICKSLIP No')}`,
-    // },
-    // Добавьте другие колонки по необходимости
-  ];
-
   const valueEnum: ValueEnumType = {
     inspect: t('INSPECTED'),
     onQuatation: t('QUATATION'),
@@ -580,6 +499,53 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
     });
   };
+
+  const handleAddActionALL = async (
+    actions: any[],
+    ids: any[],
+    invalidStates: string[]
+  ) => {
+    const hasInvalidData = transformedTasks.some((item) => {
+      if (selectedKeys.includes(item.id)) {
+        if (invalidStates.includes(item.status)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (hasInvalidData) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Invalid status in the table. Please check the status.'),
+      });
+      return false;
+    }
+
+    try {
+      for (const action of actions) {
+        console.log(action);
+        await addMultiAction({
+          actionType: action.type,
+          ids,
+          userPerformDurations: action.userPerformDurations,
+          userInspectDurations: action.userInspectDurations,
+        });
+      }
+      refetch();
+      notification.success({
+        message: t('SUCCESS'),
+        description: t('ACTIONS COMPLETED'),
+      });
+      setEditingProject(null);
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('ACTIONS ERROR'),
+      });
+    }
+  };
+
   const [reportData, setReportData] = useState<any>(false);
   const [reportDataLoading, setReportDataLoading] = useState<any>(false);
   const fetchAndHandleReport = async (reportTitle: string) => {
@@ -676,117 +642,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
     fetchData();
   }, [selectedKeys, reportData]);
-  const data = {
-    steps: [
-      {
-        number: '1',
-        createDate: '2024-07-18',
-        createBy: 'John Doe',
-        description:
-          'Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.Step 1: Description with\nmultiple lines\nof text.',
-      },
-      {
-        number: '2',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '2',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '2',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '2',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 2: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-      {
-        number: '3',
-        createDate: '2024-07-19',
-        createBy: 'Jane Smith',
-        description:
-          'Step 3: Another description with a really long line of text that should be wrapped into multiple lines for proper display.',
-      },
-    ],
-  };
-
+  const [visibleActionAdd, setVisibleActionAdd] = useState(false);
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       <Space>
@@ -851,7 +707,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                   'closed',
                 ]);
               }}
-              disabled={!selectedKeys.length}
+              disabled={
+                !selectedKeys.length ||
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'performed' ||
+                editingProject?.status == 'inspect'
+              }
               size="small"
               icon={<AlertTwoTone />}
             >
@@ -873,7 +734,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                   'open',
                 ]);
               }}
-              disabled={!selectedKeys.length}
+              disabled={
+                !selectedKeys.length ||
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'inspect'
+              }
               size="small"
               icon={<AlertTwoTone />}
             >
@@ -885,7 +750,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           <PermissionGuard
             requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
-            <Button
+            {/* <Button
               onClick={() => {
                 handleAddAction('closed', selectedKeys, [
                   'closed',
@@ -899,6 +764,24 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               icon={<CheckCircleFilled />}
             >
               {t('CLOSE WORKORDER')}
+            </Button> */}
+            <Button
+              onClick={() => {
+                setVisibleActionAdd(true);
+                // handleAddActionALL('closed', selectedKeys, [
+                //   'closed',
+                //   'inProgress',
+                //   'performed',
+                //   'open',
+                // ]);
+              }}
+              disabled={
+                !selectedKeys.length || editingProject?.status == 'closed'
+              }
+              size="small"
+              icon={<CheckCircleFilled />}
+            >
+              {t('CLOSE WORKORDER')}
             </Button>
           </PermissionGuard>
         </Col>
@@ -908,7 +791,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               onClick={() => {
                 handleAddAction('open', selectedKeys, ['open']);
               }}
-              disabled={!selectedKeys.length}
+              disabled={
+                !selectedKeys.length || editingProject?.status !== 'closed'
+              }
               size="small"
               icon={<ShrinkOutlined />}
             >
@@ -934,7 +819,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               disabled={!selectedKeys.length}
               ids={selectedKeys}
               htmlTemplate={htmlTemplate}
-              data={data}
+              data={[]}
             />
           </PermissionGuard>
         </Col>
@@ -1000,6 +885,21 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             />
           </div>
         </Split>
+        {editingProject && (
+          <TaskMultiCloseModal
+            key={editingProject._id}
+            currentTask={editingProject}
+            visible={visibleActionAdd}
+            users={users || []}
+            onCancel={function (): void {
+              setVisibleActionAdd(false);
+            }}
+            onSave={(data) => {
+              // console.log(data);
+              handleAddActionALL(data, selectedKeys, ['closed']);
+            }}
+          />
+        )}
       </div>
     </div>
   );

@@ -21,6 +21,7 @@ export const projectsApi = createApi({
         projectType?: any;
         customerID?: string;
         WOReferenceID?: string;
+        time?: any;
       }
     >({
       query: ({
@@ -57,6 +58,8 @@ export const projectsApi = createApi({
           console.error('Ошибка при выполнении запроса:', error);
         }
       },
+      keepUnusedDataFor: 5, // Кэшированные данные будут удалены через 5 секунд после того, как они перестанут использоваться
+      forceRefetch: ({ currentArg, previousArg }) => true,
       // Provide the 'Users' tag after fetching
     }),
     getProject: builder.query<IProject, string>({

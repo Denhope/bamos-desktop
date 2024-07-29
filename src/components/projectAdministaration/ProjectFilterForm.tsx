@@ -81,6 +81,7 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         projectType: form.getFieldValue('projectType'),
         customerID: form.getFieldValue('customerID'),
         WOReferenceID: form.getFieldValue('WOReferenceID'),
+        time: new Date(),
       };
 
       onProjectSearch(searchParams);

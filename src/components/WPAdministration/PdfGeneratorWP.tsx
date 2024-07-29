@@ -1,4 +1,5 @@
 // @ts-nocheck
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from 'antd';
 import Handlebars from 'handlebars';
@@ -14,14 +15,14 @@ import {
 } from '@/features/projectItemWO/projectItemWOApi';
 import { useTranslation } from 'react-i18next';
 import { transformToIProjectTask } from '@/services/utilites';
-const PdfGenerator: React.FC<{
+const PdfGeneratorWP: React.FC<{
   htmlTemplate: string;
   data: any;
   ids?: any;
   disabled?: any;
 }> = ({ htmlTemplate, data, ids, disabled }) => {
   const { t } = useTranslation();
-  console.log(ids);
+
   const {
     data: projectTasks,
     isLoading,
@@ -40,12 +41,12 @@ const PdfGenerator: React.FC<{
   const transformedTasks = useMemo(() => {
     return projectTasks || [];
   }, [projectTasks]);
-
+  const [loading, setLoading] = useState(false); // Состояние загрузки
   const generatePdf = async () => {
     // // Компилируем шаблон с помощью Handlebars
     // const template = Handlebars.compile(htmlTemplate);
     // const renderedHtml = template(data);
-
+    setLoading(true);
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
 
@@ -364,9 +365,9 @@ const PdfGenerator: React.FC<{
 
       const truncateText = (
         text: any,
-        maxWidth: number,
-        font: PDFFont,
-        fontSize: number
+        maxWidth: any,
+        font: any,
+        fontSize: any
       ) => {
         let truncated = text;
         let width = font.widthOfTextAtSize(truncated, fontSize);
@@ -1691,19 +1692,21 @@ const PdfGenerator: React.FC<{
     window.open(fileURL, '_blank');
     URL.revokeObjectURL(fileURL);
     console.log('PDF успешно создан');
+    setLoading(false);
   };
   return (
-    <div>
+    <div className="ml-4">
       <Button
-        loading={isLoading}
+        type="primary"
+        loading={loading || isFetching}
         disabled={disabled}
         size="small"
         onClick={generatePdf}
       >
-        {`${t('PRINT WORKORDER')}`}
+        {`${t('GENERATE WP CARDS')}`}
       </Button>
     </div>
   );
 };
 
-export default PdfGenerator;
+export default PdfGeneratorWP;

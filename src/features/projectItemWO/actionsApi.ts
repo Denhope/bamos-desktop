@@ -42,9 +42,16 @@ export const actionApi = createApi({
       {
         ids: any;
         actionType: string;
+        userInspectDurations?: any;
+        userPerformDurations?: any;
       }
     >({
-      query: ({ actionType, ids }) => ({
+      query: ({
+        actionType,
+        ids,
+        userInspectDurations,
+        userPerformDurations,
+      }) => ({
         url: `projectTaskStepsActions/multi-actions/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
@@ -52,6 +59,8 @@ export const actionApi = createApi({
           createUserID: USER_ID,
           companyID: COMPANY_ID,
           ids,
+          userInspectDurations: userInspectDurations,
+          userPerformDurations: userPerformDurations,
         },
       }),
       invalidatesTags: ['Actions'],

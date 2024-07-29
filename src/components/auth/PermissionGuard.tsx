@@ -4,7 +4,6 @@ import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { rolePermissions } from '@/services/utilites';
 import React from 'react';
 
-
 export enum Permission {
   USER_ACTIONS = 'USER_ACTIONS',
   WO_ACTIONS = 'WO_ACTIONS',
@@ -55,7 +54,7 @@ export enum Permission {
   PRINT_TAG = 'PRINT_TAG',
   PRINT_LABEL = 'PRINT_LABEL',
   PRINT_TASK_CARD = 'PRINT_TASK_CARD',
-  PartsModification = "PartsModification"
+  PartsModification = 'PartsModification',
 }
 
 type Role =
@@ -99,8 +98,6 @@ const PermissionGuard: React.FC<PermissionGuardProps> = ({
     ...roleBasedPermissions,
     ...userSpecificPermissions,
   ];
-
-  console.log('combinedPermissions', combinedPermissions);
 
   const hasPermission = requiredPermissions.every((permission) =>
     combinedPermissions.includes(permission)

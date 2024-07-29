@@ -179,6 +179,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       editable: false,
       cellDataType: 'date',
       headerName: `${t('CREATE DATE')}`,
+      width: 150,
       valueFormatter: (params: any) => {
         if (!params.value) return ''; // Проверка отсутствия значения
         const date = new Date(params.value);
@@ -186,6 +187,8 @@ const TechnicalView: FC<TechnicalViewType> = ({
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
         });
       },
     },
@@ -262,6 +265,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       headerName: `${t('UNIT OF MEASURE')}`,
       cellDataType: 'text',
     },
+
     // {
     //   field: 'projectWO',
     //   headerName: `${t('WO No')}`,
@@ -275,6 +279,13 @@ const TechnicalView: FC<TechnicalViewType> = ({
     {
       field: 'projectTaskWO',
       headerName: `${t('TRACE No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CREATE_BY',
+      editable: false,
+      filter: false,
+      headerName: `${t('CREATE BY')}`,
       cellDataType: 'text',
     },
   ]);

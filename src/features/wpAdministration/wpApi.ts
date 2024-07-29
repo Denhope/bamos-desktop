@@ -20,6 +20,7 @@ export const wpApi = createApi({
         WONumber?: any;
         WOType?: any;
         customerID?: string;
+        time?: any;
       }
     >({
       query: ({
@@ -54,6 +55,8 @@ export const wpApi = createApi({
           console.error('Ошибка при выполнении запроса:', error);
         }
       },
+      forceRefetch: ({ currentArg, previousArg }) => true,
+
       // Provide the 'Users' tag after fetching
     }),
     getProject: builder.query<IProject, string>({

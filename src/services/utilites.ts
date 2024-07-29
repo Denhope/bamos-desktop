@@ -1394,7 +1394,6 @@ export const transformToIProjectTask = (data: any[]): any[] => {
     // partNumberID: item?.partNumberID,
   }));
 
-  console.log('Output data from transformToIProjectTask:', result); // Вывод результата
   return result;
 };
 type Role =

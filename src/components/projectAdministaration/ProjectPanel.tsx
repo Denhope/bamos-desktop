@@ -43,6 +43,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       projectWO: projectSearchValues?.projectNumber,
       customerID: projectSearchValues?.customerID,
       WOReferenceID: projectSearchValues?.WOReferenceID,
+      time: projectSearchValues?.time,
     },
     { skip: !projectSearchValues }
   );

@@ -1,14 +1,26 @@
-//@ts-nocheck
+// @ts-nocheck
 
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
-import { Button, Empty, Modal, Tabs, Upload, message, Col, Space } from 'antd';
+import {
+  Button,
+  Empty,
+  Modal,
+  Tabs,
+  Upload,
+  message,
+  Col,
+  Space,
+  notification,
+} from 'antd';
 import { UploadOutlined, ProjectOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 import {
   useAddProjectItemWOMutation,
   useAddProjectPanelsMutation,
+  useGetProjectItemsWOQuery,
+  useGetProjectTaskForCardQuery,
 } from '@/features/projectItemWO/projectItemWOApi';
 import {
   ProFormDatePicker,
@@ -20,33 +32,262 @@ import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTyp
 
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
-import { COMPANY_ID } from '@/utils/api/http';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 // import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
+import ActionsComponent from './ActionsComponent';
+import { useGetProjectItemsQuery } from '@/features/projectItemAdministration/projectItemApi';
+import PdfGeneratorWP from './PdfGeneratorWP';
+import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
   onDelete?: (projectId: string) => void;
 }
 
+interface ActionHistory {
+  [key: string]: {
+    user?: any;
+    date: string;
+  };
+}
+
 const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
-  const handleSubmit = async (values: IProject) => {
-    const newUser: IProject = project
-      ? { ...project, ...values }
+  const [triggerQuery, setTriggerQuery] = useState(false);
+
+  const {
+    data: projectItems,
+
+    isFetching,
+    refetch,
+  } = useGetProjectItemsQuery(
+    {
+      WOReferenceID: project?._id,
+    },
+    {
+      // skip: !triggerQuery,
+      // refetchOnMountOrArgChange: true,
+    }
+  );
+
+  const {
+    data: projectTasks,
+
+    isFetching: isFetch,
+  } = useGetProjectItemsWOQuery(
+    {
+      WOReferenceID: project?._id,
+    },
+    {
+      skip: !project,
+    }
+  );
+  const ids = projectTasks?.map((item) => item?.id);
+  const handleSubmit = async (projectType: any) => {
+    const newUser: any = project
+      ? { ...project, ...projectType }
       : {
-          ...values,
+          ...projectType,
           status: form.getFieldValue('status')[0],
           acTypeID: selectedAcTypeID,
         };
     onSubmit(newUser);
   };
+  const [createWO] = useAddProjectItemWOMutation({});
+  const [actionHistory, setActionHistory] = useState<ActionHistory>({
+    generateWP: { user: '', date: '' },
+    createRequirements: { user: '', date: '' },
+    linkRequirements: { user: '', date: '' },
+    cancelLink: { user: '', date: '' },
+    generateAccess: { user: '', date: '' },
+  });
+  const generateWP = async (
+    ids: any[],
+    actionKey: string,
+    user?: string,
+    userName?: string,
+    date?: string
+  ) => {
+    console.log('generateWP function called');
+    setTriggerQuery(true);
+    Modal.confirm({
+      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ПАКЕТ РАБОТ?'),
+      onOk: async () => {
+        try {
+          await createWO({
+            isSingleWO: true,
+            isMultiWO: false,
+            projectItemID: ids,
+          }).unwrap();
+          // refetchProjectItems();
+          notification.success({
+            message: t('ПАКЕТ РАБОТ УСПЕШНО СОЗДАН'),
+            description: t('Работы созданы'),
+          });
 
+          // Вызов handleSubmit с actionHistory
+          handleSubmit({
+            actionHistory: {
+              ...actionHistory,
+              [actionKey]: { user, userName, date },
+            },
+          });
+
+          Modal.destroyAll();
+        } catch (error) {
+          notification.error({
+            message: t('ОШИБКА'),
+            description: t(
+              'Ошибка при создании пакета работ, проверьте список работ в WP administration'
+            ),
+          });
+        }
+      },
+    });
+  };
+
+  const createRequirements = () => {
+    console.log('createRequirements function called');
+    // Здесь вы можете добавить логику для create Requirements
+  };
+
+  const linkRequirements = () => {
+    console.log('linkRequirements function called');
+    // Здесь вы можете добавить логику для link Requirements
+  };
+
+  const cancelLink = () => {
+    console.log('cancelLink function called');
+    // Здесь вы можете добавить логику для cancel Link
+  };
+
+  const generateAccess = (
+    ids: any[],
+    actionKey: string,
+    user?: string,
+    userName?: string,
+    date?: string
+  ) => {
+    console.log('generateAccess function called');
+    // const handleGenerateWOPanels = async (ids?: any[]) => {
+    Modal.confirm({
+      title: t('ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
+      onOk: async () => {
+        try {
+          await addPanels({
+            // projectID: projectID,
+            WOReferenceID: project?._id,
+            isFromWO: true,
+          }).unwrap();
+          // Вызов handleSubmit с actionHistory
+          handleSubmit({
+            actionHistory: {
+              ...actionHistory,
+              [actionKey]: { user, userName, date },
+            },
+          });
+          // refetchProjectItems();
+          notification.success({
+            message: t('ПАНЕЛИ УСПЕШНО СОЗДАН'),
+            description: t('панели для отслеживания созданы'),
+          });
+          Modal.destroyAll();
+        } catch (error) {
+          notification.error({
+            message: t('ОШИБКА'),
+            description: t('Ошибка при создании панелей'),
+          });
+        }
+      },
+    });
+    //   handleGenerateWOPanels();
+    // };
+  };
+
+  const generateTaskCard = (
+    ids: any[],
+    actionKey: string,
+    user?: string,
+    userName?: string,
+    date?: string
+  ) => {
+    console.log('generateAccess function called');
+    // const handleGenerateWOPanels = async (ids?: any[]) => {
+    Modal.confirm({
+      title: t('ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ РАБОЧИЕ КАРТЫ?'),
+      onOk: async () => {
+        // try {
+        //   await addPanels({
+        //     // projectID: projectID,
+        //     WOReferenceID: project?._id,
+        //     isFromWO: true,
+        //   }).unwrap();
+        //   // Вызов handleSubmit с actionHistory
+        //   handleSubmit({
+        //     actionHistory: {
+        //       ...actionHistory,
+        //       [actionKey]: { user, userName, date },
+        //     },
+        //   });
+        //   // refetchProjectItems();
+        //   notification.success({
+        //     message: t('ПАНЕЛИ УСПЕШНО СОЗДАН'),
+        //     description: t('панели для отслеживания созданы'),
+        //   });
+        //   Modal.destroyAll();
+        // } catch (error) {
+        //   notification.error({
+        //     message: t('ОШИБКА'),
+        //     description: t('Ошибка при создании панелей'),
+        //   });
+        // }
+      },
+    });
+  };
+  const handleActionClick = (actionKey: string) => {
+    const ids = projectItems?.map((item) => item.id);
+    const user = USER_ID; // Здесь вы можете использовать реальные данные пользователя
+    const userName = localStorage.getItem('name'); // Здесь вы можете использовать реальные данные пользователя
+    const date = new Date().toLocaleString();
+
+    setActionHistory((prevHistory) => ({
+      ...prevHistory,
+      [actionKey]: { user, userName, date },
+    }));
+
+    console.log(
+      `${actionKey} ${t('button clicked by')} ${userName} ${t('on')} ${date}`
+    );
+
+    // Вызов соответствующих функций в зависимости от actionKey
+    switch (actionKey) {
+      case 'generateWP':
+        generateWP(ids, actionKey, user, userName, date);
+        break;
+      case 'createRequirements':
+        createRequirements();
+        break;
+      case 'linkRequirements':
+        linkRequirements();
+        break;
+      case 'cancelLink':
+        cancelLink();
+        break;
+      case 'generateAccess':
+        generateAccess(ids, actionKey, user, userName, date);
+      case 'generateTaskCard':
+        generateTaskCard(ids, actionKey, user, userName, date);
+        break;
+      default:
+        console.log('Unknown action key:', actionKey);
+    }
+  };
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
   const { data: planes } = useGetPlanesQuery({});
 
@@ -385,43 +626,18 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         </Tabs.TabPane>
 
         <Tabs.TabPane tab={t('ACTIONS')} key="3">
-          <Empty />
-          {/* <Space>
-            {' '}
-            <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
-                // disabled={!selectedKeys.length && selectedKeys.length < 1}
-                size="small"
-                icon={<ProjectOutlined />}
-                // onClick={() => handleGenerateWOTasks(selectedKeys)}
-              >
-                {t('CREATE TRACE')}
-              </Button>
-            </Col>
-            <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
-                disabled
-                // disabled={!selectedKeys.length && selectedKeys.length < 1}
-                size="small"
-                icon={<ProjectOutlined />}
-                // onClick={() => handleGenerateWOTasks(selectedKeys)}
-              >
-                {t('LINK REQUIREMENTS')}
-              </Button>
-            </Col>
-            <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
-                disabled
-                // disabled={!selectedKeys.length && selectedKeys.length < 1}
-                size="small"
-                icon={<ProjectOutlined />}
-                // onClick={() => handleGenerateWOTasks(selectedKeys)}
-              >
-                {t('CANCEL LINK')}
-              </Button>
-            </Col>
-          </Space> */}
+          <ActionsComponent
+            selectedKeys={ids}
+            wo={project}
+            onActionClick={handleActionClick}
+            actionHistory={(project && project?.actionHistory) || []}
+            t={t}
+            htmlTemplate={''}
+          />
         </Tabs.TabPane>
+        <Tabs.TabPane tab={t('TASKS')} key="4"></Tabs.TabPane>
+        <Tabs.TabPane tab={t('CHECK LIST')} key="5"></Tabs.TabPane>
+        <Tabs.TabPane tab={t('REPORTS')} key="6"></Tabs.TabPane>
       </Tabs>
     </ProForm>
   );

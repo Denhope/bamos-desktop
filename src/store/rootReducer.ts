@@ -66,7 +66,8 @@ import { pickSlipBookingsItemsApi } from '@/features/pickSlipAdministration/pick
 import { restrictionApi } from '@/features/restrictionAdministration/restrictionApi';
 import { wpApi } from '@/features/wpAdministration/wpApi';
 import columnWidthsReducer from './reducers/columnWidthsSlice'; // Добавьте эту строку
-import columnWidthsExpiryReducer from './reducers/columnWidthsExpirySlice'; // Добавьте эту строку
+import columnWidthsExpiryReducer from './reducers/columnWidthsExpirySlice';
+import columnWidthsReqReducer from './reducers/columnWidthrReqlice'; //
 const rootReducer = combineReducers({
   auth: authSlice,
   files: filesUploadeReducer,
@@ -136,6 +137,7 @@ const rootReducer = combineReducers({
   planesAdministration: acAdministrationReducer,
   columnWidths: columnWidthsReducer, // Добавьте эту строку
   columnWidthsExpiry: columnWidthsExpiryReducer,
+  columnWidthrReq: columnWidthsReqReducer,
 });
 
 export default rootReducer;

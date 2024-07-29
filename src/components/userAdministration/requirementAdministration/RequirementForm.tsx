@@ -25,6 +25,7 @@ import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 interface UserFormProps {
   requierement?: IRequirement;
   onSubmit: (company: IRequirement) => void;
@@ -39,7 +40,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
   // requierement?.projectID || ''
 
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
-
+  const [WOID, setWOID] = useState<any>(null);
   useEffect(() => {
     if (requierement) {
       form.resetFields();
@@ -57,6 +58,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
         projectTaskID: requierement.projectTaskID?._id,
         projectID: requierement.projectID?._id,
         neededOnID: requierement?.neededOnID?._id,
+        WOReferenceID: requierement.projectID?.WOReferenceID._id,
       });
     } else {
       form.resetFields();
@@ -95,17 +97,32 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
     { projectId },
     { skip: !projectId }
   );
-
+  const {
+    data: wp,
+    isLoading: isLoadingWP,
+    isFetching,
+  } = useGetfilteredWOQuery({});
   const { data: partNumbers, isLoading, isError } = useGetPartNumbersQuery({});
 
-  const { data: projects } = useGetProjectsQuery({});
+  const { data: projects } = useGetProjectsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !requierement }
+  );
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   const requirementCodesValueEnum: Record<string, string> =
     reqCodes?.reduce((acc, reqCode) => {
       acc[reqCode.id] = reqCode.code;
       return acc;
     }, {}) || {};
-
+  const wpValueEnum: Record<string, string> =
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
   const neededCodesValueEnum: Record<string, string> =
     usersGroups?.reduce((acc, usersGroup) => {
       acc[usersGroup.id] = usersGroup.title;
@@ -207,12 +224,22 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
             <ProFormGroup>
               <ProForm.Group direction="horizontal">
                 <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  name="WOReferenceID"
+                  label={t('WP No')}
+                  width="lg"
+                  valueEnum={wpValueEnum || []}
+                  onChange={(value: any) => setWOID(value)}
+                />
+                <ProFormSelect
                   rules={[{ required: true }]}
                   // mode="multiple"
                   name="projectID"
                   label={`${t(`WP`)}`}
                   width="lg"
                   valueEnum={projectsValueEnum}
+                  disabled={!WOID} // D
                   onChange={async (value: any) => {
                     setSelectedProjectId(value);
                   }}

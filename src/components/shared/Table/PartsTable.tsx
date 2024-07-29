@@ -278,7 +278,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
       selectedNodes?.map((node) => node?.data?._id || node?.data?.id) || [];
     const selectedData = selectedNodes?.map((node) => node.data) || [];
 
-    onRowSelect(selectedData);
+    onRowSelect(selectedData[0]);
     onCheckItems(selectedKeys);
     console.log(selectedData);
     setSelectedRowCount(selectedNodes?.length || 0);

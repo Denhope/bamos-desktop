@@ -141,6 +141,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         zonesID: form.getFieldValue('zonesID'),
         projectItemType: form.getFieldValue('projectItemType'),
         WOReferenceID: form.getFieldValue('WOReferenceID'),
+        time: new Date(),
       };
 
       onProjectSearch(searchParams);
@@ -199,7 +200,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         disabled={!WOID} // Disable the select if acTypeID is not set
       />
       <ProFormSelect
-        initialValue={['open', 'performed', 'inspect']}
+        initialValue={['open', 'performed', 'inspect', 'inProgress']}
         mode="multiple"
         name="woStatus"
         label={`${t('Wo STATUS')}`}
@@ -264,7 +265,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={storeCodesValueEnum || []}
       /> */}
 
-      {/* <ProFormSelect
+      <ProFormSelect
         mode={'multiple'}
         showSearch
         name="restrictionID"
@@ -272,7 +273,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         valueEnum={restrictionValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
-      /> */}
+      />
       {/* <ProFormSelect
         mode={'multiple'}
         showSearch
@@ -282,7 +283,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // valueEnum={projectsValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
-      {/* <ProFormSelect
+      <ProFormSelect
         mode={'multiple'}
         showSearch
         name="zonesID"
@@ -299,7 +300,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         valueEnum={accessCodesValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
-      /> */}
+      />
       {/* <ProFormSelect
         mode={'multiple'}
         showSearch
@@ -328,7 +329,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       />
 
-      {/* <ProFormSelect
+      <ProFormSelect
         mode={'multiple'}
         showSearch
         name="useID"
@@ -336,7 +337,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         // valueEnum={projectsValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
-      /> */}
+      />
       <ProFormSelect
         initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC']}
         mode="multiple"

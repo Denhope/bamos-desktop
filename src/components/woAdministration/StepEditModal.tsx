@@ -141,7 +141,7 @@ const StepEditModal: React.FC<{
                 },
               ]}
             >
-              <Input.TextArea rows={6} />
+              <Input.TextArea rows={14} />
             </Form.Item>
           </Form>
         </div>

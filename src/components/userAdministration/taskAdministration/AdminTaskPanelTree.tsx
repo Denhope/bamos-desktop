@@ -25,11 +25,15 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
     return tasks.map((task) => ({
       title: `№:${String(task.taskNumber).toUpperCase()}/${String(
         task.taskDescription
-      ).toUpperCase()}/${
+      ).toUpperCase()}
+      
+      /${
         String(
-          task?.partNumber || task.partNumberID?.PART_NUMBER
+          // (task?.partNumber && task?.partNumber) ||
+          task?.partNumberID && task?.partNumberID?.PART_NUMBER
         ).toUpperCase() || ''
-      }`,
+      }
+      `,
       key: task.id,
       task: task,
     }));

@@ -1,4 +1,4 @@
-// ts-nocheck
+//@ts-nocheck
 import React, {
   FC,
   useCallback,
@@ -49,7 +49,7 @@ import {
   useGetZonesByGroupQuery,
 } from '@/features/zoneAdministration/zonesApi';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, ColumnResizedEvent, GridReadyEvent } from 'ag-grid-community';
 import {
   ValueEnumType,
   getStatusColor,
@@ -68,8 +68,11 @@ import { useGetPartTaskNumbersQuery } from '@/features/tasksAdministration/partA
 import { useGlobalState } from './GlobalStateContext';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 import { COMPANY_ID } from '@/utils/api/http';
-import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 import PermissionGuard, { Permission } from '../auth/PermissionGuard';
+import { setColumnWidthReq } from '@/store/reducers/columnWidthrReqlice';
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
 
 interface UserFormProps {
   order?: any;
@@ -84,12 +87,13 @@ const WOAdminForm: FC<UserFormProps> = ({
   onCheckItems,
   onSubmit,
 }) => {
+  const dispatch = useAppDispatch();
   type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
   const { t } = useTranslation();
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType; // Обязательное свойство
   }
-
+  const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const columnDefs = useMemo(
     () => [
@@ -156,143 +160,181 @@ const WOAdminForm: FC<UserFormProps> = ({
     progress: t('IN PROGRESS'),
     partlyClosed: t('PARTLY CLOSED'),
   };
-  const [columnRequirements, setColumnDefsRequirements] = useState<
-    ExtendedColDef[]
-  >([
-    {
-      field: 'readyStatus',
-      headerName: ``,
-      cellRenderer: CircleRenderer, // Использование кастомного рендерера
-      width: 60,
-      filter: false,
-      cellRendererParams: {
-        color: '', // Параметры, если необходимы
+  const columnRequirements = useMemo(
+    () => [
+      {
+        field: 'readyStatus',
+        headerName: ``,
+        cellRenderer: CircleRenderer, // Использование кастомного рендерера
+        width: 60,
+        filter: false,
+        cellRendererParams: {
+          color: '', // Параметры, если необходимы
+        },
+        cellDataType: 'number',
       },
-      cellDataType: 'number',
-    },
-
-    {
-      field: 'partRequestNumberNew',
-      headerName: `${t('REQUIREMENT No')}`,
-      cellDataType: 'number',
-    },
-    {
-      field: 'status',
-      headerName: `${t('Status')}`,
-      cellDataType: 'text',
-      width: 150,
-      filter: true,
-      valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
-        params.data.status,
-      valueFormatter: (params: { value: keyof ValueEnumType }) => {
-        const status = params.value;
-        return valueEnum[status] || '';
+      {
+        field: 'partRequestNumberNew',
+        headerName: `${t('REQUIREMENT No')}`,
+        cellDataType: 'number',
+        width: columnWidths['REQUIREMENT No'],
       },
-      cellStyle: (params: { value: keyof ValueEnumType }) => ({
-        backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
-      }),
-    },
-
-    {
-      headerName: `${t('PART No')}`,
-      field: 'PART_NUMBER',
-      editable: true,
-      cellEditor: AutoCompleteEditor,
-      cellEditorParams: {
-        options: partNumbers,
+      {
+        field: 'status',
+        headerName: `${t('Status')}`,
+        cellDataType: 'text',
+        width: columnWidths['Status'],
+        filter: true,
+        valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
+          params.data.status,
+        valueFormatter: (params: { value: keyof ValueEnumType }) => {
+          const status = params.value;
+          return valueEnum[status] || '';
+        },
+        cellStyle: (params: { value: keyof ValueEnumType }) => ({
+          backgroundColor: getStatusColor(params.value),
+          color: '#ffffff', // Text color
+        }),
       },
-      cellDataType: 'text',
-    },
-    {
-      field: 'DESCRIPTION',
-      headerName: `${t('DESCRIPTION')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'GROUP',
-      headerName: `${t('GROUP')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'TYPE',
-      headerName: `${t('TYPE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'amout',
-      editable: true,
-      width: 110,
-      cellDataType: 'number',
-      headerName: `${t('QUANTITY')}`,
-    },
-    {
-      field: 'UNIT_OF_MEASURE',
-      editable: false,
-      filter: false,
-      headerName: `${t('UNIT OF MEASURE')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'plannedDate',
-      editable: true,
-      cellDataType: 'date',
-      headerName: `${t('PLANNED DATE')}`,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+      {
+        field: 'projectTaskWO',
+        headerName: `${t('TRACE No')}`,
+        cellDataType: 'number',
+        width: columnWidths['TRACE No'],
       },
-    },
-    {
-      field: 'requestQuantity',
+      {
+        field: 'WONumber',
+        headerName: `${t('WO')}`,
+        cellDataType: 'number',
+        width: columnWidths['WO'],
+      },
+      {
+        field: 'projectWO',
+        headerName: `${t('WP')}`,
+        cellDataType: 'number',
+        width: columnWidths['WP'],
+      },
 
-      cellDataType: 'number',
-      headerName: `${t('REQUESTED QTY')}`,
-    },
-    {
-      field: 'bookedQuantity',
+      {
+        headerName: `${t('PART No')}`,
+        field: 'PART_NUMBER',
+        editable: true,
+        cellEditor: AutoCompleteEditor,
+        cellEditorParams: {
+          options: partNumbers,
+        },
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'DESCRIPTION',
+        headerName: `${t('DESCRIPTION')}`,
+        cellDataType: 'text',
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'GROUP',
+        headerName: `${t('GROUP')}`,
+        cellDataType: 'text',
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'TYPE',
+        headerName: `${t('TYPE')}`,
+        cellDataType: 'text',
+        editable: false,
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'amout',
+        editable: true,
+        cellDataType: 'number',
+        headerName: `${t('QUANTITY')}`,
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'UNIT_OF_MEASURE',
+        editable: false,
+        filter: false,
+        headerName: `${t('UNIT OF MEASURE')}`,
+        cellDataType: 'text',
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'plannedDate',
+        editable: false,
+        cellDataType: 'date',
+        headerName: `${t('PLANNED DATE')}`,
+        width: columnWidths['PART No'],
+        valueFormatter: (params: any) => {
+          if (!params.value) return ''; // Проверка отсутствия значения
+          const date = new Date(params.value);
+          return date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+        },
+      },
+      {
+        field: 'requestQuantity',
+        width: columnWidths['PART No'],
+        editable: false,
+        cellDataType: 'number',
+        headerName: `${t('REQUESTED QTY')}`,
+      },
+      {
+        field: 'bookedQuantity',
+        width: columnWidths['PART No'],
+        editable: false,
+        cellDataType: 'number',
+        headerName: `${t('BOOKED QTY')}`,
+      },
+      {
+        field: 'reservationQTY',
+        width: columnWidths['PART No'],
+        editable: false,
+        cellDataType: 'number',
+        headerName: `${t('LINK QTY')}`,
+      },
+      {
+        field: 'availableQTY',
+        width: columnWidths['STOCK QTYo'],
 
-      cellDataType: 'number',
-      headerName: `${t('BOOKED QTY')}`,
-    },
-    {
-      field: 'reservationQTY',
+        cellDataType: 'number',
+        headerName: `${t('STOCK QTY')}`,
+      },
+      {
+        field: 'availableAllStoreQTY',
+        width: columnWidths['AVAIL ALL STORES QTY'],
 
-      cellDataType: 'number',
-      headerName: `${t('LINK QTY')}`,
-    },
-    {
-      field: 'availableQTY',
+        cellDataType: 'number',
+        headerName: `${t('AVAIL ALL STORES QTY')}`,
+      },
+      {
+        field: 'restrictedAllStoreQTY',
+        width: columnWidths['RESRICTED ALL STORES QTY'],
+        cellDataType: 'number',
+        headerName: `${t('RESRICTED ALL STORES QTY')}`,
+      },
+      {
+        field: 'pickSlipNumber',
+        editable: false,
+        cellDataType: 'number',
+        headerName: `${t('PICKSLIP No')}`,
+        width: columnWidths['PICKSLIP No'],
+      },
+      {
+        field: 'neededOnIDTitle',
+        editable: false,
+        cellDataType: 'text',
+        headerName: `${t('NEEDED ON')}`,
+        width: columnWidths['NEEDED ON'],
+      },
+      // Добавьте другие колонки по необходимости
+    ],
+    [t, columnWidths]
+  );
 
-      cellDataType: 'number',
-      headerName: `${t('STOCK QTY')}`,
-    },
-    {
-      field: 'availableAllStoreQTY',
-
-      cellDataType: 'number',
-      headerName: `${t('AVAIL. ALL STORES QTY')}`,
-    },
-    {
-      field: 'restrictedAllStoreQTY',
-
-      cellDataType: 'number',
-      headerName: `${t('RESTRICTED ALL STORES QTY')}`,
-    },
-
-    {
-      field: 'pickSlipNumber',
-
-      cellDataType: 'number',
-      headerName: `${t('PICKSLIP No')}`,
-    },
-    // Добавьте другие колонки по необходимости
-  ]);
   const [form] = ProForm.useForm();
 
   const [addBooking] = useAddBookingMutation({});
@@ -521,6 +563,7 @@ const WOAdminForm: FC<UserFormProps> = ({
       {order && order?.id ? t('UPDATE') : t('CREATE')}
     </Button>
   );
+
   const { data: requirements, isLoading } = useGetFilteredRequirementsQuery(
     {
       projectTaskID: order?.id,
@@ -544,7 +587,92 @@ const WOAdminForm: FC<UserFormProps> = ({
     },
     [onCheckItems]
   );
-  const dispatch = useAppDispatch();
+
+  const saveColumnState = useCallback(
+    (event: ColumnResizedEvent) => {
+      if (event.columns) {
+        event.columns.forEach((column) => {
+          dispatch(
+            setColumnWidthReq({
+              field: column.getColId(),
+              width: column.getActualWidth(),
+            })
+          );
+        });
+      }
+    },
+    [dispatch]
+  );
+
+  const restoreColumnState = useCallback(
+    (event: GridReadyEvent) => {
+      Object.keys(columnWidths).forEach((field) => {
+        const column = event.columnApi.getColumn(field, 'clientSide');
+        if (column) {
+          column.setActualWidth(columnWidths[field]);
+        }
+      });
+    },
+    [columnWidths]
+  );
+  const fakeTemplates = [
+    {
+      id: '1',
+      name: 'PERFORMED',
+      content: `TASK CARD 72-180-01-01 
+      WAS PFMD. BSI REPORT 291-23 AMM REV 77, 
+      FEB 15/22 SEE MATERIAL LIST.
+      WO: 000129`,
+      type: 'ACTIONS',
+      planeType: 'BOEING737',
+    },
+    {
+      id: '2',
+      name: 'INSPECTION',
+      content: `INSP PFMD IAW TASK CARD 72-180-01-01.
+      AMM REV 77, FEB 15/22.
+      WO: 000129
+      INSP 407T1`,
+      type: 'ACTIONS',
+      planeType: 'BOEING737',
+    },
+    {
+      id: '3',
+      name: 'Template 3',
+      content: 'Content of Template 3',
+      type: 'ACTIONS',
+      planeType: 'BOEING NG',
+    },
+    {
+      id: '4',
+      name: 'Template 4',
+      content: 'Content of Template 4',
+      type: 'STEPS',
+      planeType: 'A320',
+    },
+    {
+      id: '5',
+      name: 'Template 5',
+      content: 'Content of Template 5',
+      type: 'ACTIONS',
+      planeType: 'BOEING737',
+    },
+    {
+      id: '6',
+      name: 'Template 6',
+      content: 'Content of Template 6',
+      type: 'STEPS',
+      planeType: 'A320',
+    },
+    {
+      id: '7',
+      name: 'Template 7',
+      content: 'Content of Template 7',
+      type: 'ACTIONS',
+      planeType: 'BOEING NG',
+    },
+    // Добавьте другие фейковые шаблоны здесь
+  ];
   const handleDelete = (file: any) => {
     Modal.confirm({
       title: 'Вы уверены, что хотите удалить этот файл?',
@@ -622,10 +750,11 @@ const WOAdminForm: FC<UserFormProps> = ({
             projectId: order?.projectId,
             projectItemReferenceID: order?.projectItemReferenceID,
             removeInslallItemsIds: order?.removeInslallItemsIds,
-            status: order?.status,
+            status: values?.status,
             PHASES: order?.PHASES,
             MPD_REFERENCE: order?.MPD,
             id: order.id,
+            // taskId: order.taskId._id,
             _id: order.id,
           });
           // console.log({
@@ -673,15 +802,36 @@ const WOAdminForm: FC<UserFormProps> = ({
               <div className=" h-[57vh] flex flex-col overflow-auto">
                 <ProFormGroup>
                   <ProFormGroup>
-                    <ProFormSelect
-                      disabled
-                      showSearch
-                      name="acTypeId"
-                      label={t('AC TYPE')}
-                      width="sm"
-                      valueEnum={acTypeValueEnum}
-                      onChange={(value: any) => setACTypeID(value)}
-                    />
+                    <ProFormGroup direction="horizontal">
+                      <ProFormSelect
+                        disabled
+                        showSearch
+                        name="acTypeId"
+                        label={t('AC TYPE')}
+                        width="sm"
+                        valueEnum={acTypeValueEnum}
+                        onChange={(value: any) => setACTypeID(value)}
+                      />
+                      <ProFormSelect
+                        showSearch
+                        rules={[{ required: true }]}
+                        name="status"
+                        label={t('STATE')}
+                        width="sm"
+                        // initialValue={'draft'}
+                        options={[
+                          // { value: 'planned', label: t('PLANNED') },
+                          { value: 'open', label: t('OPEN') },
+                          { value: 'inProgress', label: t('IN PROGRESS') },
+                          { value: 'performed', label: t('PERFORMED') },
+                          { value: 'inspect', label: t('INSPECTED') },
+                          { value: 'closed', label: t('CLOSED') },
+                          { value: 'canceled', label: t('CANCELED') },
+                          // { value: 'transfer', label: t('TRANSFER') },
+                        ]}
+                      />
+                    </ProFormGroup>
+
                     {taskType !== 'PART_PRODUCE' && (
                       <>
                         <ProFormSelect
@@ -711,8 +861,10 @@ const WOAdminForm: FC<UserFormProps> = ({
                               text: t('RC (Critical Task, Double Inspection)'),
                             },
 
-                            NRC: { text: t('NRC (AdHoc, Defect)') },
-                            MJC: { text: t('MJC ((Extended MPD)') },
+                            NRC: { text: t('NRC (Defect)') },
+                            NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
+                            MJC: { text: t('MJC (Extended MPD)') },
+
                             CMJC: { text: t('CMJC (Component maintenance) ') },
                             FC: { text: t('FC (Fabrication card)') },
                           }}
@@ -743,8 +895,10 @@ const WOAdminForm: FC<UserFormProps> = ({
                               text: t('RC (Critical Task, Double Inspection)'),
                             },
 
-                            NRC: { text: t('NRC (AdHoc, Defect)') },
-                            MJC: { text: t('MJC ((Extended MPD)') },
+                            NRC: { text: t('NRC (Defect)') },
+                            NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
+                            MJC: { text: t('MJC (Extended MPD)') },
+
                             CMJC: { text: t('CMJC (Component maintenance) ') },
                             FC: { text: t('FC (Fabrication card)') },
                           }}
@@ -1067,55 +1221,6 @@ const WOAdminForm: FC<UserFormProps> = ({
                       </Upload>
                     </div>
                   </ProForm.Item>
-                  {/* {taskType !== 'PART_PRODUCE' && (
-              <ProFormGroup>
-                <ProFormDigit
-                  width={'xs'}
-                  name="intervalDAYS"
-                  label={t('INTERVAL DAYS')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="toleranceDAY"
-                  label={t('TOLERANCE DAY')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="intervalMOS"
-                  label={t('INTERVAL MOS')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="toleranceMOS"
-                  label={t('TOLERANCE MOS')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="intervalHRS"
-                  label={t('INTERVAL HRS')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="toleranceMHS"
-                  label={t('TOLERANCE MHS')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="intervalAFL"
-                  label={t('INTERVAL AFL')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="intervalENC"
-                  label={t('INTERVAL ENC')}
-                />
-                <ProFormDigit
-                  width={'xs'}
-                  name="intervalAPUS"
-                  label={t('INTERVAL APUS')}
-                />
-              </ProFormGroup>
-            )} */}
                 </ProFormGroup>
               </div>
             ) : (
@@ -1125,11 +1230,12 @@ const WOAdminForm: FC<UserFormProps> = ({
           <Tabs.TabPane tab={tabTitles['3']} key="3">
             {(order?.id && projectItemID) ||
             (order?.id && order?.projectItemReferenceID) ? (
-              <div className=" h-[68vh] flex flex-col overflow-auto pb-3">
+              <div className=" h-[60vh] flex flex-col overflow-auto pb-3">
                 <StepContainer
                   steps={stepsToRender || []}
                   onAddStep={handleAddStep}
                   onDeleteStep={handleDeleteStep}
+                  templates={fakeTemplates}
                 />
               </div>
             ) : (
@@ -1143,6 +1249,8 @@ const WOAdminForm: FC<UserFormProps> = ({
               >
                 <RequarementsList
                   isIssueVisibale={true}
+                  onColumnResized={saveColumnState}
+                  onGridReady={restoreColumnState}
                   order={order}
                   isAddVisiable={
                     order && order.status === 'closed' ? true : false

@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
@@ -28,6 +28,7 @@ import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 // import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import ProjectTestWPAdmin from './projectWP/ProjectTestWPAdmin';
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
@@ -412,7 +413,17 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             </ProFormGroup>
           </div>
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('TASK LIST')} key="2">
+        <Tabs.TabPane tab={t('CHECK TASKS IN DATABASE')} key="2">
+          {project && project?._id ? (
+            <ProjectTestWPAdmin
+              project={project}
+              projectID={project?._id}
+            ></ProjectTestWPAdmin>
+          ) : (
+            <Empty />
+          )}
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={t('TASK LIST')} key="3">
           {project && project?._id ? (
             <ProjectWPAdmin
               project={project}

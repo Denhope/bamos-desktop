@@ -19,6 +19,7 @@ export const projectItemApi = createApi({
         companyID?: string;
         projectID?: string;
         vendorID?: string;
+        WOReferenceID?: string;
       }
     >({
       query: ({
@@ -28,9 +29,18 @@ export const projectItemApi = createApi({
         companyID,
         projectID,
         vendorID,
+        WOReferenceID,
       }) => ({
         url: `projectItems/getFilteredProjectItems/company/${COMPANY_ID}`,
-        params: { partNumberID, status, name, companyID, projectID, vendorID },
+        params: {
+          partNumberID,
+          status,
+          name,
+          companyID,
+          projectID,
+          vendorID,
+          WOReferenceID,
+        },
       }),
       providesTags: ['ProjectItem'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -42,6 +52,8 @@ export const projectItemApi = createApi({
           console.error('Ошибка при выполнении запроса:', error);
         }
       },
+      keepUnusedDataFor: 5, // Кэшированные данные будут удалены через 5 секунд после того, как они перестанут использоваться
+      forceRefetch: ({ currentArg, previousArg }) => true,
     }),
     getProjectItem: builder.query<IProjectItem, string>({
       query: (id) => `projectItems/company/${id}`,
@@ -107,12 +119,22 @@ export const projectItemApi = createApi({
       invalidatesTags: ['ProjectItem'],
     }),
     deleteProjectItem: builder.mutation<
-      { success: boolean; projectItem: string },
-      string
+      { success: boolean; projectItem: any },
+      any
     >({
       query: (id) => ({
         url: `projectItems/company/${COMPANY_ID}/projectItem/${id}`,
         method: 'DELETE',
+      }),
+      invalidatesTags: ['ProjectItem'],
+    }),
+    reloadProjectItem: builder.mutation<
+      { success: boolean; projectItem: any },
+      any
+    >({
+      query: (id) => ({
+        url: `projectItems/company/${COMPANY_ID}/projectItem/reload/${id}`,
+        method: 'GET',
       }),
       invalidatesTags: ['ProjectItem'],
     }),
@@ -126,4 +148,5 @@ export const {
   useGetProjectItemsQuery,
   useUpdateProjectItemsMutation,
   useAddMultiProjectItemsMutation,
+  useReloadProjectItemMutation,
 } = projectItemApi;

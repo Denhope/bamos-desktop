@@ -71,6 +71,7 @@ const WPFilterForm: FC<RequirementsFilteredFormType> = ({
         projectTypesID: form.getFieldValue('projectTypesID'),
         projectType: form.getFieldValue('projectType'),
         customerID: form.getFieldValue('customerID'),
+        time: new Date(),
       };
 
       onProjectSearch(searchParams);

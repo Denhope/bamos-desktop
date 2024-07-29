@@ -397,7 +397,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             { value: 'STORE_TO_SHOP', label: t('STORE_TO_SHOP') },
             { value: 'RECEIVING_GOODS', label: t('RECEIVING_GOODS') },
             { value: 'RECEIVING_CANCELLED', label: t('RECEIVING_CANCELLED') },
-            // { value: 'BATCH_CHANGE', label: t('BATCH_CHANGE') },
+            { value: 'ENTITY_CHANGE', label: t('ENTITY_CHANGE') },
             // { value: 'ADD_ROTABLES', label: t('ADD_ROTABLES') },
 
             // { value: 'COMPONENT_INSPECTION', label: t('COMPONENT_INSPECTION') },
@@ -405,7 +405,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             // { value: 'DELETE_REQUIREMENT', label: t('DELETE_REQUIREMENT') },
 
             // { value: 'ENTITY_CHANGE', label: t('ENTITY_CHANGE') },
-            { value: 'SHOP_TO_STORE', label: t('SHOP_TO_STORE') },
+            // { value: 'SHOP_TO_STORE', label: t('SHOP_TO_STORE') },
             // { value: 'EXCHANGED', label: t('EXCHANGED') },
             // {
             //   value: 'INCOMING_SHIPMENT_ARRIVED',
@@ -421,11 +421,11 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             // { value: 'PART_DEACTIVATED', label: t('PART_DEACTIVATED') },
             // { value: 'UNIT_CHANGE', label: t('UNIT_CHANGE') },
             // { value: 'AV_PRICE_CHANGE', label: t('AV_PRICE_CHANGE') },
-            { value: 'QUARANTINE', label: t('QUARANTINE') },
+            // { value: 'QUARANTINE', label: t('QUARANTINE') },
             { value: 'ADD_NEW_PART', label: t('ADD_NEW_PART') },
             { value: 'PART_NUMBER_CHANGE', label: t('PART_NUMBER_CHANGE') },
-            { value: 'PART_RESERVATION', label: t('PART_RESERVATION') },
-            { value: 'QTY_CHANGE', label: t('QTY_CHANGE') },
+            // { value: 'PART_RESERVATION', label: t('PART_RESERVATION') },
+            // { value: 'QTY_CHANGE', label: t('QTY_CHANGE') },
             // { value: 'STOCK_PURCHASE', label: t('STOCK_PURCHASE') },
             // { value: 'SCRAP', label: t('SCRAP') },
             // { value: 'SHELF_INSPECTION', label: t('SHELF_INSPECTION') },

@@ -36,6 +36,7 @@ const StoreView: FC<StoreViewType> = ({
       editable: false,
       cellDataType: 'date',
       headerName: `${t('CREATE DATE')}`,
+      width: 150,
       valueFormatter: (params: any) => {
         if (!params.value) return ''; // Проверка отсутствия значения
         const date = new Date(params.value);
@@ -43,6 +44,8 @@ const StoreView: FC<StoreViewType> = ({
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
         });
       },
     },
@@ -52,6 +55,12 @@ const StoreView: FC<StoreViewType> = ({
       field: 'voucherModel',
       editable: false,
       cellDataType: 'text',
+    },
+    {
+      field: 'LOCAL_ID',
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'text',
+      width: 100,
     },
     {
       headerName: `${t('PART No')}`,
@@ -87,6 +96,7 @@ const StoreView: FC<StoreViewType> = ({
       headerName: `${t('LOCATION')}`,
       cellDataType: 'text',
     },
+
     {
       field: 'CONDITION',
       editable: false,
@@ -117,6 +127,13 @@ const StoreView: FC<StoreViewType> = ({
       editable: false,
       filter: false,
       headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CREATE_BY',
+      editable: false,
+      filter: false,
+      headerName: `${t('CREATE BY')}`,
       cellDataType: 'text',
     },
   ]);
