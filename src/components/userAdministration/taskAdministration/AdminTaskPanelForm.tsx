@@ -6,7 +6,7 @@ import {
   ProFormSelect,
 } from '@ant-design/pro-form';
 
-import { Button, Empty, Tabs, notification } from 'antd';
+import { Button, Empty, Modal, Tabs, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { ITask } from '@/models/ITask';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
@@ -38,6 +38,14 @@ import AutoCompleteEditor from '@/components/shared/Table/ag-grid/AutoCompleteEd
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
+import FileListE from './FileList.tsx';
+import {
+  deleteFileUploads,
+  uploadFileServerReference,
+} from '@/utils/api/thunks';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 
 interface UserFormProps {
   task?: ITask;
@@ -55,7 +63,8 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   const [acTypeID, setACTypeID] = useState<any>(task?.acTypeId || '');
   const [taskType, setTaskType] = useState<string>(task?.taskType || '');
   const { data: partNumbers } = useGetPartNumbersQuery({});
-
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+  const { tasksFormValues, setTasksFormValues } = useGlobalState();
   // const { data: tools } = useGetPartNumbersQuery({ group: 'TOOL,GSE' });
   const [addStep] = useAddStepMutation({});
   const [deleteStep] = useDeleteStepMutation();
@@ -221,7 +230,66 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       });
     }
   };
+  const dispatch = useAppDispatch();
+  const handleDeleteUpload = (key: any) => {
+    Modal.confirm({
+      title: 'Вы уверены, что хотите удалить этот файл?',
+      onOk: async () => {
+        try {
+          const response = await dispatch(
+            deleteFileUploads({
+              id: key,
+              companyID: COMPANY_ID,
+              type: 'taskItem',
+              itemID: task && task.id,
+            })
+          );
 
+          setTasksFormValues({ tasksFormValues, time: new Date() });
+        } catch (error) {
+          notification.error({
+            message: t('ERROR'),
+            description: t('Error delete files.'),
+          });
+        }
+      },
+    });
+  };
+  const handleUploadReference = async (data: any) => {
+    if (!task || !task.id) {
+      console.error('Невозможно загрузить файл');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', data?.file);
+    formData.append('referenceType', data?.referenceType);
+    formData.append('taskNumber', data?.taskNumber);
+    data?.customerCodeID &&
+      formData.append('customerCodeID', data?.customerCodeID);
+    formData.append('onSavedReference', 'true');
+    formData.append('taskNumberID', task.id);
+    formData.append('fileName', data.file.name);
+    formData.append('companyID', COMPANY_ID);
+    formData.append('createDate', new Date().toISOString());
+    formData.append('createUserID', USER_ID || '');
+    data?.efectivityACID &&
+      formData.append('efectivityACID', data?.efectivityACID);
+
+    try {
+      const response = await uploadFileServerReference(formData);
+      setTasksFormValues({ tasksFormValues, time: new Date() });
+      notification.success({
+        message: t('SUCCESS'),
+        description: t('File uploaded successfully'),
+      });
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Error File uploaded.'),
+      });
+    }
+  };
   const handleDeleteStep = async (stepIds: string[]) => {
     try {
       for (const stepId of stepIds) {
@@ -304,11 +372,13 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
         render: (_, dom) => [
           activeTabKey !== '3' &&
             activeTabKey !== '4' &&
+            activeTabKey !== '5' &&
             activeTabKey !== '2' && <SubmitButton key="submit" />,
           task &&
             activeTabKey !== '3' &&
             activeTabKey !== '4' &&
             activeTabKey !== '2' &&
+            activeTabKey !== '5' &&
             dom.reverse()[1],
         ],
       }}
@@ -320,7 +390,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
         type="card"
         onChange={(key) => setActiveTabKey(key)}
       >
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div className=" h-[57vh] flex flex-col overflow-auto">
             <ProFormGroup>
               <ProFormGroup>
@@ -351,7 +421,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       width="xl"
                       valueEnum={{
                         SB: { text: t('SERVICE BULLETIN') },
-                        SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
+                        SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
                         AD: { text: t('AIRWORTHINESS DIRECTIVE') },
                         PN: { text: t('COMPONENT') },
                       }}
@@ -373,7 +443,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       width="xl"
                       valueEnum={{
                         SB: { text: t('SERVICE BULLETIN') },
-                        SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
+                        SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
                         ADP: { text: t('ADP') },
                         AD: { text: t('AIRWORTHINESS DIRECTIVE') },
                         PN: { text: t('COMPONENT') },
@@ -438,7 +508,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       /> */}
                     </ProFormGroup>
 
-                    <ProFormGroup>
+                    {/* <ProFormGroup>
                       <ProFormSelect
                         showSearch
                         rules={[{ required: true }]}
@@ -564,7 +634,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         width="md"
                         tooltip={t('WORKPIECE_MATERIAL_TYPE')}
                       ></ProFormText>
-                    </ProFormGroup>
+                    </ProFormGroup> */}
                     <ProFormText
                       width={'xs'}
                       name="rev"
@@ -688,7 +758,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                     <ProFormSelect
                       showSearch
                       name="status"
-                      label={t('STATE')}
+                      label={t('STATUS')}
                       width="sm"
                       valueEnum={{
                         ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
@@ -804,6 +874,29 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   columnDefs={columnDefs}
                   onUpdateData={function (data: any[]): void {}}
                 ></PartList>
+              </div>
+            ) : (
+              <Empty />
+            )}
+          </div>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={t('DOCS')} key="5">
+          <div>
+            {task ? (
+              <div
+              // className="ag-theme-alpine flex"
+              // style={{ width: '100%', height: '60vh' }}
+              >
+                <FileListE
+                  isEfectivityField={true}
+                  isTaskNumberField={false}
+                  handleDelete={handleDeleteUpload}
+                  initialFiles={task.reference || []}
+                  onAddFile={function (file: any): void {
+                    handleUploadReference(file);
+                  }}
+                  onSelectedKeys={setSelectedKeys}
+                ></FileListE>
               </div>
             ) : (
               <Empty />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Button, message } from 'antd';
+import { Upload, Button, message, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +43,11 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       );
 
       if (missingFields.length > 0) {
-        message.error(`Missing required fields: ${missingFields.join(', ')}`);
+        notification.error({
+          message: t('FAILED '),
+          description: `Missing required fields: ${missingFields.join(', ')}`,
+        });
+
         return;
       }
 
@@ -74,7 +78,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         disabled={isDisabled}
         size="small"
         icon={<UploadOutlined />}
-      >{`${t('IMPORT EXEL')}`}</Button>
+      >{`${t('IMPORT EXCEL')}`}</Button>
     </Upload>
   );
 };

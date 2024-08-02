@@ -397,7 +397,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="status"
-                label={t('PICKSLIP STATE')}
+                label={t('PICKSLIP STATUS')}
                 width="sm"
                 initialValue={'draft'}
                 options={[

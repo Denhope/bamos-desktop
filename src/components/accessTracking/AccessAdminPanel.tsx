@@ -683,7 +683,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                   onSubmit={function (accessCode: any): void {
                     console.log(accessCode);
                     Modal.confirm({
-                      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
+                      title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
                       onOk: async () => {
                         try {
                           await addPanels({

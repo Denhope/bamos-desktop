@@ -75,6 +75,7 @@ export interface IProjectType {
 }
 
 export interface IProjectItem {
+  reference?: any[];
   taskNumberID: any;
   woType: any;
   reqCode: any;

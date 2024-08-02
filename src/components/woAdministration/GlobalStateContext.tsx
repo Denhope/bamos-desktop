@@ -3,7 +3,9 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 // Указываем тип для контекста
 interface GlobalStateContextType {
   currentTime: number;
+  tasksFormValues: any;
   setCurrentTime: (time: number) => void;
+  setTasksFormValues: (values: any) => void;
 }
 
 // Создаем контекст с типом и значением по умолчанию
@@ -17,9 +19,16 @@ interface GlobalStateProviderProps {
 
 export const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
-
+  const [tasksFormValues, setTasksFormValues] = useState<any>(null);
   return (
-    <GlobalStateContext.Provider value={{ currentTime, setCurrentTime }}>
+    <GlobalStateContext.Provider
+      value={{
+        currentTime,
+        setCurrentTime,
+        setTasksFormValues,
+        tasksFormValues,
+      }}
+    >
       {children}
     </GlobalStateContext.Provider>
   );

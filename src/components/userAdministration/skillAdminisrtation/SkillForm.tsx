@@ -70,7 +70,7 @@ const SkillForm: FC<UserFormProps> = ({
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card" onChange={handleTabChange}>
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <ProForm.Group>
             <ProFormText
               width={'sm'}

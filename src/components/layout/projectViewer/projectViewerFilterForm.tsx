@@ -121,7 +121,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
               showSearch
               mode="multiple"
               name="projectState"
-              label={t('PROJECT STATE')}
+              label={t('PROJECT STATUS')}
               width="sm"
               initialValue={['inProgress']}
               valueEnum={{

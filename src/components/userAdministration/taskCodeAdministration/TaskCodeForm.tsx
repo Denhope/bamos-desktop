@@ -75,7 +75,7 @@ const TaskCodeForm: FC<UserFormProps> = ({ taskCode, onSubmit }) => {
             <ProFormSelect
               showSearch
               name="status"
-              label={t('STATE')}
+              label={t('STATUS')}
               width="sm"
               valueEnum={{
                 ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },

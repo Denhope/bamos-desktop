@@ -107,7 +107,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
           name="zoneType"
           layout="horizontal"
           options={[
-            { label: 'MAJORE ZONE', value: 'majoreZoneNbr' },
+            { label: 'MAJOR ZONE', value: 'majoreZoneNbr' },
             { label: 'SUB ZONE', value: 'subZoneNbr' },
             { label: 'AREA', value: 'areaNbr' },
           ]}
@@ -118,7 +118,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
             <ProFormText
               width={'sm'}
               name="majoreZoneNbr"
-              label={t('MAJORE ZONE')}
+              label={t('MAJOR ZONE')}
               rules={[
                 {
                   required: form.getFieldValue('zoneType') === 'majoreZoneNbr',
@@ -128,7 +128,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
             <ProFormText
               width={'lg'}
               name="majoreZoneDescription"
-              label={t('MAJORE ZONE DESCRIPTION')}
+              label={t('MAJOR ZONE DESCRIPTION')}
               rules={[
                 {
                   required: form.getFieldValue('zoneType') === 'majoreZoneNbr',
@@ -146,7 +146,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
                 disabled={isDisabled}
                 width={'sm'}
                 name="majoreZoneNbr"
-                label={t('MAJORE ZONE')}
+                label={t('MAJOR ZONE')}
                 rules={[
                   {
                     required: true,
@@ -158,7 +158,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
                 disabled={isDisabled}
                 width={'lg'}
                 name="majoreZoneDescription"
-                label={t('MAJORE ZONE DESCRIPTION')}
+                label={t('MAJOR ZONE DESCRIPTION')}
                 rules={[
                   {
                     required: true,
@@ -195,7 +195,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
               disabled={isDisabled}
               width={'sm'}
               name="majoreZoneNbr"
-              label={t('MAJORE ZONE')}
+              label={t('MAJOR ZONE')}
               rules={[
                 {
                   required: true,
@@ -207,7 +207,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
               disabled={isDisabled}
               width={'lg'}
               name="majoreZoneDescription"
-              label={t('MAJORE ZONE DESCRIPTION')}
+              label={t('MAJOR ZONE DESCRIPTION')}
               rules={[
                 {
                   required: true,
@@ -264,7 +264,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
           <ProFormSelect
             showSearch
             name="status"
-            label={t('STATE')}
+            label={t('STATUS')}
             width="sm"
             valueEnum={{
               ACTIVE: { text: t('ACTIVE'), status: 'Success' },

@@ -34,6 +34,7 @@ import TaskList from '@/components/shared/Table/TaskList';
 import { transformToITask } from '@/services/utilites';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
+import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 
 interface AdminPanelProps {
   values: TaskFilteredFormValues;
@@ -41,18 +42,34 @@ interface AdminPanelProps {
 }
 
 const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
-  useEffect(() => {
-    console.log(values);
-  }, [values]);
+  const { setTasksFormValues, tasksFormValues } = useGlobalState();
+  // const { tasks, isLoading } = useTypedSelector(
+  //   (state) => state.tasksAdministration
+  // );
 
   const [editingvendor, setEditingvendor] = useState<ITask | null>(null);
-  const { tasks, isLoading } = useTypedSelector(
-    (state) => state.tasksAdministration
+
+  const {
+    data: tasksQuery,
+    refetch: refetchTasks,
+    isLoading,
+    isFetching: isFetchungQuery,
+  } = useGetTasksQuery(
+    {
+      acTypeID: tasksFormValues?.acTypeId,
+      time: tasksFormValues?.time,
+      amtoss: tasksFormValues?.AMM,
+      taskNumber: tasksFormValues?.taskNumber,
+      cardNumber: tasksFormValues?.cardNumber,
+      mpdDocumentationId: tasksFormValues?.mpdDocumentationId,
+    },
+    { skip: !tasksFormValues }
   );
-  // const { data: tasks } = useGetTasksQuery(
-  //   { taskNumber: values?.taskNumber },
-  //   { skip: !values }
-  // );
+
+  useEffect(() => {
+    setEditingvendor(null);
+  }, [tasksFormValues, tasksQuery]);
+
   const [addTask] = useAddTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
@@ -227,8 +244,8 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
   };
 
   const transformedTasks = useMemo(() => {
-    return transformToITask(tasks || []);
-  }, [tasks]);
+    return transformToITask(tasksQuery || []);
+  }, [tasksQuery]);
   const { data: partNumbers } = useGetPartNumbersQuery({});
 
   return (
@@ -290,10 +307,11 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
           <div className=" h-[74vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
             {isTreeView ? (
               <>
-                {tasks && tasks.length ? (
+                {tasksQuery && tasksQuery.length ? (
                   <AdminTaskPanelTree
                     onTaskSelect={handleEdit}
-                    tasks={tasks || []}
+                    tasks={tasksQuery || []}
+                    isLoading={isFetchungQuery || isLoading}
                   />
                 ) : (
                   <Empty />
@@ -312,7 +330,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
                 onCheckItems={function (selectedKeys: React.Key[]): void {
                   throw new Error('Function not implemented.');
                 }}
-                isLoading={isLoading || isLoadingF}
+                isLoading={isFetchungQuery || isLoading}
               />
             )}
           </div>

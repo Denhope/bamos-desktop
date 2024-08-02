@@ -57,7 +57,7 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <ProForm.Group>
             <ProForm.Group>
               <ProFormText

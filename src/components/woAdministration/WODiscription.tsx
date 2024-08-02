@@ -46,7 +46,7 @@ const WODiscription: FC<projectsDiscriptionType> = ({
         <ProDescriptions.Item valueType="date" label={t('MODIFICATION DATE')}>
           {project?.updateDate}
         </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="text" label={t('STATE')}>
+        <ProDescriptions.Item valueType="text" label={t('STATUS')}>
           {project?.taskWO && (
             <Tag color="#fc9601">{project?.status?.toUpperCase()}</Tag>
           )}

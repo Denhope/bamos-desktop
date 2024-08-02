@@ -271,9 +271,9 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               showSearch
               mode="multiple"
               name="orderState"
-              label={t('ORDER STATE')}
+              label={t('ORDER STATUS')}
               width="sm"
-              tooltip={t('ORDER STATE')}
+              tooltip={t('ORDER STATUS')}
               // initialValue={['PARTLY_RECEIVED', 'OPEN']}
               valueEnum={{
                 PARTLY_RECEIVED: {
@@ -336,7 +336,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               name="partGroup"
               label={`${t('PART GROUP')}`}
               width="sm"
-              tooltip={`${t('SELECT SPESIAL GROUP')}`}
+              tooltip={`${t('SELECT SPECIAL GROUP')}`}
               options={[
                 { value: 'CONS', label: t('CONS') },
                 { value: 'TOOL', label: t('TOOL') },

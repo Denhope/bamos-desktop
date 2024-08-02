@@ -173,10 +173,10 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         // initialValue={['baseMaintanance']}
         valueEnum={{
           baseMaintanance: {
-            text: t('BASE MAINTANENCE'),
+            text: t('BASE MAINTENANCE'),
           },
           lineMaintanance: {
-            text: t('LINE MAINTANENCE'),
+            text: t('LINE MAINTENANCE'),
           },
 
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
@@ -184,8 +184,8 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
           // repairAC: { text: t('REPAIR AC') },
           partCange: { text: t('COMPONENT CHANGE') },
           addWork: { text: t('ADD WORK') },
-          enginiring: { text: t('ENGINIRING SERVICESES') },
-          nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+          enginiring: { text: t('ENGINEERING SERVICES') },
+          nonProduction: { text: t('NOT PRODUCTION SERVICES') },
           // production: { text: t('PRODUCTION PART') },
         }}
       />
@@ -194,7 +194,7 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
         // initialValue={['OPEN']}
         mode="multiple"
         name="status"
-        label={`${t('PROJECT STATE')}`}
+        label={`${t('PROJECT STATUS')}`}
         width="lg"
         valueEnum={{
           DRAFT: { text: t('DRAFT'), status: 'DRAFT' },

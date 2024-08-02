@@ -231,7 +231,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
           name="GROUP"
           label={`${t('PART GROUP')}`}
           width="lg"
-          tooltip={`${t('SELECT SPESIAL GROUP')}`}
+          tooltip={`${t('SELECT SPECIAL GROUP')}`}
           options={[
             { value: 'CONS', label: t('CONS') },
             { value: 'TOOL', label: t('TOOL') },
@@ -239,7 +239,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
             { value: 'ROT', label: t('ROT') },
             { value: 'GSE', label: t('GSE') },
           ]}
-          onChange={(value: string) => setSelectedGroup(value)}
+          // onChange={(value: string) => setSelectedGroup(value)}
         />
         <ProFormSelect
           mode="multiple"
@@ -252,7 +252,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
             { value: 'CONSUMABLE', label: t('CONSUMABLE') },
           ]}
         />
-        <Divider />
+        {/* <Divider />
         <ProFormSelect
           showSearch
           name="toolTypeID"
@@ -269,7 +269,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
           valueEnum={toolsCodesValueEnum || []}
           // onChange={handleStoreChange}
         />
-        <Divider />
+        <Divider /> */}
         <ProForm.Item label={`${t('LIMIT')}`}>
           <Space.Compact size="small">
             <Form.Item rules={[{ required: true }]} name="value" noStyle>

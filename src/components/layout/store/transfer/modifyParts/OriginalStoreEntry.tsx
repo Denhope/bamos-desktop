@@ -313,7 +313,7 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           <ProFormText
             disabled
             name="partGroup"
-            label={`${t('PART SPESIAL GROUP')}`}
+            label={`${t('PART SPECIAL GROUP')}`}
             width="sm"
           ></ProFormText>
           <ProFormText

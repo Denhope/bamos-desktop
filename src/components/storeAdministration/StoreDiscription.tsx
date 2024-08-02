@@ -39,7 +39,7 @@ const StoreDiscription: FC<StoreDiscriptionType> = ({ store }) => {
         <ProDescriptions.Item valueType="date" label={t('MODIFICATION DATE')}>
           {store?.updateDate}
         </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="text" label={t('STATE')}>
+        <ProDescriptions.Item valueType="text" label={t('STATUS')}>
           {store?.id && <Tag>{store?.status?.toUpperCase()}</Tag>}
         </ProDescriptions.Item>
       </ProDescriptions>

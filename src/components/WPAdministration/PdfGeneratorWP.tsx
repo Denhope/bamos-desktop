@@ -1,10 +1,10 @@
-// @ts-nocheck
-
+//@ts-nocheck
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button } from 'antd';
+import { Button, Modal, notification } from 'antd';
 import Handlebars from 'handlebars';
-import { PDFDocument, PDFFont, rgb } from 'pdf-lib';
+import { PDFDocument, PDFFont, PDFPage, rgb, StandardFonts } from 'pdf-lib';
 import QRCode from 'qrcode';
+import { getFileFromServer, uploadFileServer } from '@/utils/api/thunks';
 import fontkit from '@pdf-lib/fontkit';
 import robotoBoldFont from '../../fonts/Roboto-Bold.ttf';
 import robotoFontt from '../../fonts/Roboto-Regular.ttf'; // Путь к вашему шрифту
@@ -15,14 +15,20 @@ import {
 } from '@/features/projectItemWO/projectItemWOApi';
 import { useTranslation } from 'react-i18next';
 import { transformToIProjectTask } from '@/services/utilites';
+import axios from 'axios';
+import { COMPANY_ID, SING } from '@/utils/api/http';
+
 const PdfGeneratorWP: React.FC<{
-  htmlTemplate: string;
-  data: any;
+  wo?: any;
+  htmlTemplate?: string;
+  data?: any;
   ids?: any;
   disabled?: any;
-}> = ({ htmlTemplate, data, ids, disabled }) => {
+  onClick: (key: string) => void;
+}> = ({ htmlTemplate, data, ids, disabled, wo, onClick }) => {
   const { t } = useTranslation();
-
+  const [loading, setLoading] = useState(false); // Состояние загрузки
+  console.log(wo);
   const {
     data: projectTasks,
     isLoading,
@@ -33,7 +39,7 @@ const PdfGeneratorWP: React.FC<{
       ids: ids,
     },
     {
-      skip: !ids.length,
+      skip: !ids?.length,
       refetchOnMountOrArgChange: true,
     }
   );
@@ -41,35 +47,70 @@ const PdfGeneratorWP: React.FC<{
   const transformedTasks = useMemo(() => {
     return projectTasks || [];
   }, [projectTasks]);
-  const [loading, setLoading] = useState(false); // Состояние загрузки
+
+  const addPageNumber = async (
+    page: PDFPage,
+    pageNumber: number,
+    totalPages: number
+  ) => {
+    const { width, height } = page.getSize();
+    const font = await page.doc.embedFont(StandardFonts.Helvetica);
+
+    // Добавление нумерации страниц
+    page.drawText(`Page ${pageNumber} of ${totalPages}`, {
+      x: width - 100,
+      y: height - 50,
+      size: 8,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  };
+
+  const mergePdfs = async (
+    mainPdf: Uint8Array,
+    additionalPdfs: Uint8Array[]
+  ): Promise<Uint8Array> => {
+    const mainDoc = await PDFDocument.load(mainPdf);
+    let currentPageNumber = mainDoc.getPageCount();
+
+    for (const pdf of additionalPdfs) {
+      const additionalDoc = await PDFDocument.load(pdf);
+      const pages = await mainDoc.copyPages(
+        additionalDoc,
+        additionalDoc.getPageIndices()
+      );
+
+      for (const page of pages) {
+        mainDoc.addPage(page);
+        await addPageNumber(page, currentPageNumber++, mainDoc.getPageCount());
+      }
+    }
+
+    return await mainDoc.save();
+  };
+
   const generatePdf = async () => {
-    // // Компилируем шаблон с помощью Handlebars
-    // const template = Handlebars.compile(htmlTemplate);
-    // const renderedHtml = template(data);
-    setLoading(true);
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
+    setLoading(true);
 
-    // const taskData =
-    //   projectTasks && projectTasks?.length > 0 ? data : projectTasks;
-    // // Загрузка шрифта
+    // Загрузка шрифтов и изображений
     const fontBytes = await fetch(robotoFontt).then((res) => res.arrayBuffer());
     const robotoFont = await pdfDoc.embedFont(fontBytes);
     const fontBytesB = await fetch(robotoBoldFont).then((res) =>
       res.arrayBuffer()
     );
+    const fontSize = 10;
+    const fontSizeM = 8;
+    const smallFontSize = 5;
+    const lageFontSize = 14;
+    const extraLageFontSize = 16;
     const robotoFontB = await pdfDoc.embedFont(fontBytesB);
     const logoBytes = await fetch(logoImage).then((res) => res.arrayBuffer());
     const logoImageEmbed = await pdfDoc.embedPng(logoBytes);
-
+    let totalPages = 0;
+    let blockStartIndex = 0;
     for (const task of transformedTasks) {
-      // Загрузка изображения
-
-      const fontSize = 12;
-      const fontSizeM = 10;
-      const smallFontSize = 6;
-      const lageFontSize = 14;
-      const extraLageFontSize = 16;
       const qrCodeData = await QRCode.toDataURL(`${task?.taskWO}`);
       const qrCodeImage = await pdfDoc.embedPng(qrCodeData);
 
@@ -78,10 +119,7 @@ const PdfGeneratorWP: React.FC<{
         const { width, height } = page.getSize();
 
         // Header
-        const headerTable = [
-          ['logo', 'title', 'QR Code'],
-          // [data.acType, ''],
-        ];
+        const headerTable = [['logo', 'title', 'QR Code']];
 
         let y = height - 30;
         for (const row of headerTable) {
@@ -93,7 +131,7 @@ const PdfGeneratorWP: React.FC<{
                 x: x + 75,
                 y: y - 15,
                 font: robotoFontB,
-                size: lageFontSize,
+                size: 14,
               });
               page.drawText('КАРТА НА ВЫПОЛНЕНИЕ РЕГЛАМЕНТНЫХ РАБОТ', {
                 x: x + 5,
@@ -119,7 +157,7 @@ const PdfGeneratorWP: React.FC<{
                 x: x + 85,
                 y: y - 60,
                 font: robotoFont,
-                size: extraLageFontSize,
+                size: 16,
               });
               page.drawText('Наименование', {
                 x: x + 5,
@@ -182,7 +220,7 @@ const PdfGeneratorWP: React.FC<{
               // Add taskCardNumber or N/A to the right
               const taskCardNumberText =
                 task?.taskCardNumber !== undefined
-                  ? task.taskCardNumber
+                  ? String(task.taskCardNumber)
                   : 'N/A';
               page.drawText(taskCardNumberText, {
                 x: x + 50,
@@ -218,19 +256,19 @@ const PdfGeneratorWP: React.FC<{
       };
 
       const drawFooter = (page: any) => {
-        const pageCount = pdfDoc.getPageCount();
-        page.drawText(`Page ${pageCount} of ${pageCount}`, {
-          x: 50,
-          y: 30,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        page.drawText(`${new Date().toLocaleString()}`, {
-          x: 450,
-          y: 30,
-          font: robotoFont,
-          size: smallFontSize,
-        });
+        // const pageCount = pdfDoc.getPageCount();
+        // page.drawText(`Page ${pageCount} of ${pageCount}`, {
+        //   x: 50,
+        //   y: 30,
+        //   font: robotoFont,
+        //   size: smallFontSize,
+        // });
+        // page.drawText(`${new Date().toLocaleString()}`, {
+        //   x: 450,
+        //   y: 30,
+        //   font: robotoFont,
+        //   size: smallFontSize,
+        // });
       };
 
       let { page, width, height, y } = addPage();
@@ -365,9 +403,9 @@ const PdfGeneratorWP: React.FC<{
 
       const truncateText = (
         text: any,
-        maxWidth: any,
-        font: any,
-        fontSize: any
+        maxWidth: number,
+        font: PDFFont,
+        fontSize: number
       ) => {
         let truncated = text;
         let width = font.widthOfTextAtSize(truncated, fontSize);
@@ -383,11 +421,8 @@ const PdfGeneratorWP: React.FC<{
 
         return truncated + '...';
       };
-      // const cellHeight = 30;
-      // const cellWidth = 100;
       const cellHeight = 25;
       const cellWidth = 100;
-      // y -= 0;
 
       for (let i = 0; i < cellData.length; i++) {
         const cell = cellData[i];
@@ -426,7 +461,7 @@ const PdfGeneratorWP: React.FC<{
         });
       }
       y -= cellHeight;
-      // y -= 0;
+
       for (let i = 0; i < cellData3.length; i++) {
         const cell = cellData3[i];
         const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 300 : 0); // Adjust x position for the cells after the first one
@@ -461,7 +496,7 @@ const PdfGeneratorWP: React.FC<{
           cell.value,
           cellWidthAdjusted - 40, // Use the adjusted width for truncation
           robotoFont,
-          fontSize
+          12
         );
 
         page.drawText(truncatedValue, {
@@ -472,6 +507,7 @@ const PdfGeneratorWP: React.FC<{
         });
       }
       y -= cellHeight;
+
       y -= 0; // Space between the first and second tables
 
       for (let i = 0; i < cellData4.length; i++) {
@@ -509,7 +545,7 @@ const PdfGeneratorWP: React.FC<{
           cell.value,
           cellWidthAdjusted - 40, // Use the adjusted width for truncation
           robotoFont,
-          fontSize
+          12
         );
 
         page.drawText(truncatedValue, {
@@ -596,7 +632,7 @@ const PdfGeneratorWP: React.FC<{
           cell.value,
           cellWidth - 40,
           robotoFont,
-          fontSize
+          12
         );
         page.drawText(truncatedValue, {
           x: cellX + 35,
@@ -643,7 +679,7 @@ const PdfGeneratorWP: React.FC<{
           x: cellX + 55,
           y: y - 13,
           font: robotoFont,
-          size: fontSize,
+          size: 8,
         });
       }
 
@@ -652,11 +688,20 @@ const PdfGeneratorWP: React.FC<{
       const referenceTable = [
         ['Type', 'Reference', 'Description'],
         ...(task.reference
-          ? task.reference.map((part: any) => [
-              part.TYPE,
-              part.REFERENCE,
-              part.DESCRIPTION,
-            ])
+          ? task.reference.map((part: any) => {
+              let typeAbbreviation;
+              switch (part?.referenceType) {
+                case 'TASK_CARD':
+                  typeAbbreviation = 'TC';
+                  break;
+                case 'REPORT':
+                  typeAbbreviation = 'R';
+                  break;
+                default:
+                  typeAbbreviation = 'F';
+              }
+              return [typeAbbreviation, part?.filename, part?.description];
+            })
           : []),
       ];
       const referenceColumnWidths = [50, 200, 250]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
@@ -671,7 +716,7 @@ const PdfGeneratorWP: React.FC<{
               x: x + 5,
               y: y - 15,
               font: robotoFont,
-              size: fontSize,
+              size: 8,
             });
           }
           // Draw border around the cell
@@ -775,14 +820,14 @@ const PdfGeneratorWP: React.FC<{
               cell,
               cellWidth - 10,
               robotoFont,
-              fontSizeM
+              10
             );
 
             page.drawText(truncatedCell, {
               x: x + 5,
               y: y - 15,
               font: robotoFont,
-              size: fontSizeM,
+              size: 10,
             });
           }
           // Рисуем границу вокруг ячейки
@@ -968,14 +1013,14 @@ const PdfGeneratorWP: React.FC<{
               cell,
               cellWidth - 10,
               robotoFont,
-              fontSizeM
+              10
             );
 
             page.drawText(truncatedCell, {
               x: x + 5,
               y: y - 15,
               font: robotoFont,
-              size: fontSizeM,
+              size: 10,
             });
           }
           // Рисуем границу вокруг ячейки
@@ -1162,7 +1207,7 @@ const PdfGeneratorWP: React.FC<{
         const descriptionHeight = getTextHeight(
           cellData12.value4,
           robotoFont,
-          fontSize,
+          12,
           cellWidthAdjusted - 10 // Adjust for padding
         );
 
@@ -1208,7 +1253,7 @@ const PdfGeneratorWP: React.FC<{
         const descriptionLines = splitTextIntoLines(
           cellData12.value4,
           robotoFont,
-          fontSize,
+          12,
           cellWidthAdjusted - 10 // Adjust for padding
         );
 
@@ -1220,7 +1265,7 @@ const PdfGeneratorWP: React.FC<{
             font: robotoFont,
             size: fontSize,
           });
-          textY -= robotoFont.heightAtSize(fontSize);
+          textY -= robotoFont.heightAtSize(12);
         });
 
         page.drawText(cellData12.label, {
@@ -1352,7 +1397,7 @@ const PdfGeneratorWP: React.FC<{
               x: x + 5,
               y: y - 15,
               font: robotoFont,
-              size: fontSizeM,
+              size: 10,
             });
           }
           // Draw border around the cell
@@ -1685,25 +1730,241 @@ const PdfGeneratorWP: React.FC<{
 
       y -= 0; // / Space betwe
       drawFooter(page);
+      let additionalPdfs: Uint8Array[] = [];
+      try {
+        additionalPdfs = await Promise.all(
+          task.reference.map(async (ref) => {
+            try {
+              const pdfBytes = await getFileFromServer(
+                COMPANY_ID,
+                ref.fileId,
+                'uploads'
+              );
+              return pdfBytes;
+            } catch (error) {
+              console.error(
+                `Ошибка при загрузке PDF-документа для fileId ${ref.fileId}:`,
+                error
+              );
+              return new Uint8Array(); // Возвращаем пустой Uint8Array, чтобы не прерывать процесс
+            }
+          })
+        );
+      } catch (error) {
+        console.error(
+          'Ошибка при загрузке дополнительных PDF-документов:',
+          error
+        );
+      }
+      // Объединение основного PDF-документа с дополнительными PDF-документами
+      let taskPdfDoc: PDFDocument;
+      try {
+        taskPdfDoc = await PDFDocument.create();
+        const embeddedPages = await Promise.all(
+          additionalPdfs.map(async (pdfBytes) => {
+            const srcDoc = await PDFDocument.load(pdfBytes);
+            const pages = await taskPdfDoc.copyPages(
+              srcDoc,
+              srcDoc.getPageIndices()
+            );
+            return pages;
+          })
+        );
+        embeddedPages.forEach((pages) =>
+          pages.forEach((page) => taskPdfDoc.addPage(page))
+        );
+      } catch (error) {
+        console.error('Ошибка при объединении PDF-документов:', error);
+        continue; // Пропускаем эту задачу и переходим к следующей
+      }
+
+      // Копирование страниц из taskPdfDoc в основной pdfDoc
+      const taskPages = await pdfDoc.copyPages(
+        taskPdfDoc,
+        taskPdfDoc.getPageIndices()
+      );
+      taskPages.forEach((page) => pdfDoc.addPage(page));
+
+      // Добавление нумерации страниц для текущего блока
+      const blockPages = [page, ...taskPages];
+      const blockTotalPages = blockPages.length;
+
+      blockPages.forEach((page, index) => {
+        const pageNumber = index + 1;
+        if (index === 0) {
+          // Основная страница блока
+          addMainPageText(page, robotoFont);
+          addMainPageNumber(page, pageNumber, blockTotalPages);
+        } else {
+          // Дополнительные страницы блока
+          addAdditionalPageText(page, robotoFont);
+          addAdditionalPageNumber(page, pageNumber, blockTotalPages);
+        }
+      });
     }
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+    // Создание и открытие финального PDF-документа
+    // const finalPdfBytes = await pdfDoc.save();
+    // const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+    // const fileURL = URL.createObjectURL(blob);
+    // window.open(fileURL, '_blank');
+    // URL.revokeObjectURL(fileURL);
+
+    // console.log('PDF успешно создан');
+    // setLoading(false);
+
+    const formattedDate = `${new Date()
+      .getDate()
+      .toString()
+      .padStart(2, '0')}.${(new Date().getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${new Date().getFullYear()} ${new Date()
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${new Date().getMinutes()}`;
+    const finalPdfBytes = await pdfDoc.save();
+    const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(blob);
-    window.open(fileURL, '_blank');
+
+    // Создаем ссылку для скачивания
+    const link = document.createElement('a');
+    link.href = fileURL;
+    link.download = `WP-DATA-${wo.WOName}-${formattedDate}.pdf`; // Указываем имя файла
+    link.style.display = 'none';
+    document.body.appendChild(link);
+
+    // Кликаем по ссылке для скачивания
+    link.click();
+
+    // Удаляем ссылку после скачивания
+    document.body.removeChild(link);
     URL.revokeObjectURL(fileURL);
+
     console.log('PDF успешно создан');
     setLoading(false);
   };
+
+  const addMainPageNumber = async (
+    page: PDFPage,
+    pageNumber: number,
+    totalPages: number
+  ) => {
+    const { width, height } = page.getSize();
+    const font = await page.doc.embedFont(StandardFonts.Helvetica);
+
+    // Добавление нумерации страниц внизу страницы для основной страницы
+    page.drawText(`Page ${pageNumber} of ${totalPages}`, {
+      x: width - 100,
+      y: 15, // Размещение внизу страницы
+      size: 8,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  };
+
+  const addAdditionalPageNumber = async (
+    page: PDFPage,
+    pageNumber: number,
+    totalPages: number
+  ) => {
+    const { width, height } = page.getSize();
+    const font = await page.doc.embedFont(StandardFonts.Helvetica);
+
+    // Добавление нумерации страниц внизу страницы для дополнительных страниц
+    page.drawText(`Page ${pageNumber} of ${totalPages}`, {
+      x: width - 100,
+      y: page.getHeight() - 50,
+      size: 8,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  };
+
+  const addMainPageText = (page: PDFPage, font: PDFFont) => {
+    const { width, height } = page.getSize();
+
+    const currentDate = new Date();
+    const formattedDate = `${currentDate
+      .getDate()
+      .toString()
+      .padStart(2, '0')}.${(currentDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${currentDate.getFullYear()} ${currentDate
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${currentDate
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}`;
+
+    // Добавление текста на дополнительные страницы
+    page.drawText(`ORIGINAL print by ${SING} ${formattedDate}`, {
+      x: 50,
+      y: 15, // Размещение внизу страницы
+      size: 8,
+      font,
+      color: rgb(0, 0, 0),
+    });
+  };
+
+  const addAdditionalPageText = (page: PDFPage, font: PDFFont) => {
+    const { width, height } = page.getSize();
+    const currentDate = new Date();
+    const formattedDate = `${currentDate
+      .getDate()
+      .toString()
+      .padStart(2, '0')}.${(currentDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${currentDate.getFullYear()} ${currentDate
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${currentDate
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}`;
+
+    // Добавление текста на дополнительные страницы
+    page.drawText(
+      `Works Order: ${wo?.WONumber} Aircraft: ${wo?.planeId?.regNbr}`,
+      {
+        x: 50,
+        y: page.getHeight() - 50,
+        size: 8,
+        font,
+        color: rgb(0, 0, 0),
+      }
+    );
+    setLoading(false);
+  };
+
+  const handleGeneratePdf = async () => {
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO GENERATE PDF?'),
+      onOk: async () => {
+        // await generatePdf();
+        try {
+          await generatePdf();
+          Modal.destroyAll();
+          onClick('generateTaskCard');
+        } catch {
+          notification.error({
+            message: t('FAILED '),
+            description: 'There was an error generate PDF.',
+          });
+        }
+      },
+    });
+  };
+
   return (
     <div className="ml-4">
       <Button
         type="primary"
-        loading={loading || isFetching}
-        disabled={disabled}
+        disabled={disabled || ids === null || ids === ''}
         size="small"
-        onClick={generatePdf}
+        onClick={handleGeneratePdf}
       >
-        {`${t('GENERATE WP CARDS')}`}
+        {`${t('GENERATE WP')}`}
       </Button>
     </div>
   );

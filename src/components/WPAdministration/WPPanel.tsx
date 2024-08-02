@@ -84,9 +84,15 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       onOk: async () => {
         try {
           await deleteProject(projectId).unwrap();
-          message.success(t('WO SUCCESSFULLY DELETED'));
+          notification.success({
+            message: t('WO SUCCESSFULLY DELETED'),
+            description: t('Item has been successfully updated.'),
+          });
         } catch (error) {
-          message.error(t('ERROR DELETING WO'));
+          notification.error({
+            message: t('FAILED '),
+            description: 'There was an error delete the WO.',
+          });
         }
       },
     });
@@ -98,14 +104,14 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
         await updateProject(project).unwrap();
         handleEdit(project);
         notification.success({
-          message: t('WO УСПЕШНО ОБНОВЛЕН'),
-          description: t('ОБновление прошло успешно'),
+          message: t('SUCCESSFULLY UPDATED'),
+          description: t('Item has been successfully updated.'),
         });
       } else {
         await addProject({ project }).unwrap();
         notification.success({
-          message: t('WO УСПЕШНО ДОБАВЛЕН'),
-          description: t('Обновление прошло успешно'),
+          message: t('SUCCESSFULLY ADDED'),
+          description: t('Item has been successfully added.'),
         });
 
         setEditingproject(null);
@@ -113,8 +119,8 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       // setEditingproject(null);
     } catch (error) {
       notification.error({
-        message: t('ОШИБКА'),
-        description: t('Ошибка при создании/обновлении  WO'),
+        message: t('FAILED TO SAVE'),
+        description: 'There was an error adding Item.',
       });
     }
   };
@@ -256,7 +262,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
   ];
   const handleGenerateWOPanels = async (ids: any[]) => {
     Modal.confirm({
-      title: t('ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
+      title: t('ARE YOU SURE, YOU WANT TO ADD ACCESS'),
       onOk: async () => {
         try {
           await addPanels({
@@ -265,10 +271,16 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             isFromWO: true,
           }).unwrap();
           // refetchProjectItems();
-          message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
+          notification.success({
+            message: t('ACCESS SUCCESSFULLY ADDED'),
+            description: t('The access has been successfully added.'),
+          });
           Modal.destroyAll();
         } catch (error) {
-          message.error(t('ОШИБКА '));
+          notification.error({
+            message: t('FAILED TO ADD ACCESS'),
+            description: 'There was an error adding the access.',
+          });
         }
       },
     });

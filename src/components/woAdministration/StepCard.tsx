@@ -364,7 +364,7 @@ const StepCard: React.FC<Props> = ({
       WAS PFMD. BSI REPORT 291-23 AMM REV 77, 
       FEB 15/22 SEE MATERIAL LIST.
       WO: 000129`,
-      type: 'Type A',
+      type: 'ACTIONS',
       planeType: 'BOEING737',
     },
     {
@@ -374,42 +374,42 @@ const StepCard: React.FC<Props> = ({
       AMM REV 77, FEB 15/22.
       WO: 000129
       INSP 407T1`,
-      type: 'Type A',
+      type: 'ACTIONS',
       planeType: 'BOEING737',
     },
     {
       id: '3',
       name: 'Template 3',
       content: 'Content of Template 3',
-      type: 'Type A',
+      type: 'ACTIONS',
       planeType: 'BOEING NG',
     },
     {
       id: '4',
       name: 'Template 4',
       content: 'Content of Template 4',
-      type: 'Type B',
+      type: 'STEPS',
       planeType: 'A320',
     },
     {
       id: '5',
       name: 'Template 5',
       content: 'Content of Template 5',
-      type: 'Type A',
+      type: 'ACTIONS',
       planeType: 'BOEING737',
     },
     {
       id: '6',
       name: 'Template 6',
       content: 'Content of Template 6',
-      type: 'Type B',
+      type: 'STEPS',
       planeType: 'A320',
     },
     {
       id: '7',
       name: 'Template 7',
       content: 'Content of Template 7',
-      type: 'Type A',
+      type: 'ACTIONS',
       planeType: 'BOEING NG',
     },
     // Добавьте другие фейковые шаблоны здесь

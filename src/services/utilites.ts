@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Excel } from 'antd-table-saveas-excel';
 import { v4 as uuidv4 } from 'uuid';
 import { IProjectTaskAll } from '@/models/IProjectTask';
@@ -731,6 +733,57 @@ export async function handleFileOpen(file: any): Promise<void> {
   }
 }
 
+export async function handleFileOpenTask(
+  fileID: any,
+  prop?: string,
+  name: string
+): Promise<void> {
+  try {
+    const companyID = localStorage.getItem('companyID') || '';
+    const fileData = await getFileFromServer(companyID, fileID, prop);
+
+    const mimeType = getMimeType(name);
+
+    // Проверяем, можно ли файл открыть внутри браузера
+    if (isInlineViewable(mimeType)) {
+      // Создаем Blob из файла с соответствующим MIME-типом
+      const blob = new Blob([fileData], { type: mimeType });
+
+      // Создаем временный URL для Blob
+      const fileURL = window.URL.createObjectURL(blob);
+
+      // Открываем файл в новом окне или вкладке браузера
+      const newWindow = window.open(fileURL, '_blank');
+
+      // if (newWindow && mimeType.startsWith('image/')) {
+      //   newWindow.print();
+      // }
+
+      // Если браузер блокирует открытие файла, предлагаем сохранить его
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+      } else {
+        newWindow.focus();
+      }
+
+      // Не забываем очищать URL после открытия файла
+      window.URL.revokeObjectURL(fileURL);
+    } else {
+      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new Blob([fileData]));
+      link.download = fileID;
+      link.click();
+    }
+  } catch (error) {
+    console.error('Не удалось открыть файл', error);
+  }
+}
+
 export async function handleOpenReport(
   fileData: any,
   linkD?: any,
@@ -1350,6 +1403,7 @@ export const transformToIProjectItem = (data: any[]): any[] => {
     ...item.createUserID,
     taskType: item.taskType,
     _id: item?.id || item._id,
+    reference: item?.reference,
   }));
 
   console.log('Output data from transformToIProjectItem:', result); // Вывод результата

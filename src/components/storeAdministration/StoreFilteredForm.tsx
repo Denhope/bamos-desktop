@@ -98,7 +98,7 @@ const StoreFilteredForm: FC<RequirementsFilteredFormType> = ({
         initialValue={['ACTIVE']}
         mode="multiple"
         name="status"
-        label={`${t('STORE STATE')}`}
+        label={`${t('STORE STATUS')}`}
         width="lg"
         valueEnum={{
           ACTIVE: { text: t('ACTIVE') },

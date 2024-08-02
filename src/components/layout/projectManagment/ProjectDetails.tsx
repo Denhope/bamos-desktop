@@ -288,7 +288,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             disabled={isCreating || !isEditing}
             rules={[{ required: true }]}
             name="projectState"
-            label={t('PROJECT STATE')}
+            label={t('PROJECT STATUS')}
             width="sm"
             initialValue={['DRAFT']}
             valueEnum={{
@@ -324,7 +324,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
 
           <ProFormGroup>
             <ProFormDatePicker
-              label={t('PLANED FINISH DATE')}
+              label={t('PLANNED FINISH DATE')}
               name="planedStartDate"
               width="sm"
             ></ProFormDatePicker>

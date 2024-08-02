@@ -23,11 +23,35 @@ export const taskApi = createApi({
         acTypeID?: string;
         taskNumber?: string;
         taskType?: string;
+        time?: any;
+        cardNumber?: any;
+        mpdDocumentationId?: any;
+        amtoss?: any;
       }
     >({
-      query: ({ code, acTypeID, taskNumber, status, taskType }) => ({
+      query: ({
+        code,
+        acTypeID,
+        taskNumber,
+        status,
+        taskType,
+        time,
+        cardNumber,
+        mpdDocumentationId,
+        amtoss,
+      }) => ({
         url: `tasks/administration/getFilteredTasks/company/${COMPANY_ID}`,
-        params: { code, status, acTypeID, taskNumber, taskType },
+        params: {
+          code,
+          status,
+          acTypeID,
+          taskNumber,
+          taskType,
+          time,
+          cardNumber,
+          mpdDocumentationId,
+          amtoss,
+        },
       }),
       providesTags: ['TaskTypes'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

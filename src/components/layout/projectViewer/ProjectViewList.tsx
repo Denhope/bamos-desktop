@@ -111,7 +111,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t('PLANED START DATE')}`,
+      title: `${t('PLANNED START DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
@@ -135,7 +135,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t('PLANED FINISH DATE')}`,
+      title: `${t('PLANNED FINISH DATE')}`,
       editable: (text, record, index) => {
         return false;
       },

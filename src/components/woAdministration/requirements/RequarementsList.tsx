@@ -198,7 +198,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   };
   const handleRowSelect = (data: any) => {
     onRowSelect(data);
-    // console.log(data);
+    console.log(data);
     // onCheckItems(stepsSelected);
   };
   const [selectedStoreID, setSelectedStoreID] = useState<any | undefined>(

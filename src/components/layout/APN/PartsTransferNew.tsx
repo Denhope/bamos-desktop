@@ -93,15 +93,16 @@ const PartsTransferNew: FC = () => {
                 locationID: selectedTargetValues.targetLocationID,
                 storeID: selectedTargetValues.targetStoreID,
               }).unwrap();
-              const addBookingResponse = await addAccessBooking({
-                booking: {
-                  voucherModel: 'CHANGE_LOCATION',
-                  partsIDs: rowKeys,
-                  locationID: selectedTargetValues.targetLocationID,
-                  storeID: selectedTargetValues.targetStoreID,
-                  storeFromID: selectedSerchValues.storeIDFrom,
-                },
-              }).unwrap();
+              // const addBookingResponse = await addAccessBooking({
+              //   booking: {
+              //     voucherModel: 'CHANGE_LOCATION',
+              //     partsIDs: rowKeys,
+              //     locationID: selectedTargetValues.targetLocationID,
+              //     storeID: selectedTargetValues.targetStoreID,
+              //     storeFromID: selectedSerchValues.storeIDFrom,
+              //     locationIDFrom: selectedSerchValues?.locationIDFrom,
+              //   },
+              // }).unwrap();
 
               // refetch();
               notification.success({
@@ -514,12 +515,7 @@ const PartsTransferNew: FC = () => {
             onUpdatePart={(data: any) => {
               // setselectedRowKeys(data._id);
             }}
-            currentPart={
-              partsOpenModify &&
-              selectedParts &&
-              selectedParts.length &&
-              selectedParts[0]
-            }
+            currentPart={partsOpenModify && selectedParts}
           />
         </Modal>
       </div>

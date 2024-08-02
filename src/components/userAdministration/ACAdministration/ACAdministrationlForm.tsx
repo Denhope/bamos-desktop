@@ -16,7 +16,11 @@ import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
 import { useGetGroupTaskCodesQuery } from '@/features/tasksAdministration/taskCodesApi';
-import { ProFormDigit, ProFormTextArea } from '@ant-design/pro-components';
+import {
+  ProFormDatePicker,
+  ProFormDigit,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 
 interface UserFormProps {
@@ -93,7 +97,10 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       acc[mpdCode.id] = mpdCode.companyName;
       return acc;
     }, {}) || {};
-
+  const customerOptions = [
+    { id: '66a7c334af08e2143903684a', name: 'LCV' },
+    { id: '66a9eec7af08e2143903688b', name: 'THY' },
+  ];
   return (
     <ProForm
       size="small"
@@ -105,69 +112,158 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab={t('MAIN')} key="1">
-          <ProFormGroup>
-            <ProFormGroup>
-              <ProFormSelect
-                showSearch
-                name="acTypeId"
-                label={t('AC TYPE')}
-                width="sm"
-                valueEnum={acTypeValueEnum}
-                onChange={(value: any) => setACTypeID(value)}
-              />
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
+          <div
+            className=" h-[62vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            // sm={19}
+          >
+            <ProFormGroup direction="vertical">
+              <ProFormGroup>
+                <ProFormText
+                  name="regNbr"
+                  label={t('AIRCRAFT REGISTRATION No')}
+                  width="sm"
+                ></ProFormText>
+                <ProFormText
+                  name="serialNbr"
+                  label={t('MANUFACTURER SERIAL No')}
+                  width="sm"
+                ></ProFormText>
+              </ProFormGroup>
               <ProFormSelect
                 showSearch
                 name="mpdDocumentationId"
-                label={t('MPD CODE')}
+                label={t('FLEET CODE')}
                 width="lg"
                 valueEnum={mpdCodesValueEnum}
                 disabled={!acTypeID} // Disable the select if acTypeID is not set
               />
-              <ProFormSelect
-                showSearch
-                name="companyID"
-                label={t('COMPANY CODE')}
-                width="lg"
-                valueEnum={companiesCodesValueEnum}
-                disabled={!acTypeID} // Disable the select if acTypeID is not set
-              />
+              <ProFormGroup>
+                <ProFormSelect
+                  showSearch
+                  name="acTypeId"
+                  label={t('AIRCRAFT TYPE')}
+                  width="lg"
+                  valueEnum={acTypeValueEnum}
+                  onChange={(value: any) => setACTypeID(value)}
+                />
+                <ProFormText
+                  name="acSubType"
+                  label={t('AIRCRAFT SUB TYPE')}
+                  width="sm"
+                  // valueEnum={acTypeValueEnum}
+                  onChange={(value: any) => setACTypeID(value)}
+                />
+                <ProFormText
+                  name="model"
+                  label={t('MODEL')}
+                  width="sm"
+                ></ProFormText>
+              </ProFormGroup>
+              <ProFormGroup direction="vertical">
+                <ProFormDatePicker
+                  name="MANUFACTURERDate"
+                  label={`${t('DATE OF MANAFACTURE')}`}
+                  width="sm"
+                  tooltip="PLANNED DATE"
+                  fieldProps={
+                    {
+                      // onChange: onChange,
+                    }
+                  }
+                />
+                <ProFormDatePicker
+                  name="firstServiceDate"
+                  label={`${t('FIRST SERVICE DATE')}`}
+                  width="sm"
+                  tooltip="PLANNED DATE"
+                  fieldProps={
+                    {
+                      // onChange: onChange,
+                    }
+                  }
+                />
+                <ProFormGroup>
+                  <ProFormText
+                    name="engineType"
+                    label={t('ENGINE TYPE')}
+                    width="sm"
+                  ></ProFormText>
+                  <ProFormText
+                    name="apuType"
+                    label={t('APU TYPE')}
+                    width="sm"
+                  ></ProFormText>
+                  <ProFormText
+                    name="weightWariant"
+                    label={t('WEIGHT VARIANT')}
+                    width="sm"
+                  ></ProFormText>
+                </ProFormGroup>
+                <ProFormGroup>
+                  <ProFormSelect
+                    showSearch
+                    name="companyID"
+                    label={t('COMPANY')}
+                    width="sm"
+                    valueEnum={companiesCodesValueEnum}
+                    disabled={!acTypeID} // Disable the select if acTypeID is not set
+                  />
+                  <ProFormSelect
+                    showSearch
+                    name="cuctumerCodeID"
+                    label={t('CUSTOMER CODE ID')}
+                    width="sm"
+                    options={customerOptions.map((option) => ({
+                      value: option.id,
+                      label: option.name,
+                    }))}
+                  />
+                </ProFormGroup>
 
-              <ProFormText
-                name="serialNbr"
-                label={t('SERIAL No')}
-                width="sm"
-              ></ProFormText>
-              <ProFormText
-                name="regNbr"
-                label={t('REGISTRATION No')}
-                width="sm"
-              ></ProFormText>
-              <ProFormTextArea
-                // mode={'multiple'}
+                <ProFormGroup>
+                  <ProFormText
+                    name="airFrameHours"
+                    label={t('AIRFRAME HOURS')}
+                    width="sm"
+                  ></ProFormText>
+                  <>
+                    <ProFormDigit
+                      name="airFrameLandings"
+                      label={t('AIRFRAME LANDINGS')}
+                      width="sm"
+                    ></ProFormDigit>
+                  </>
+                  <ProFormGroup>
+                    <ProFormText
+                      name="efectivityNumber"
+                      label={t('EFECTIVITY No')}
+                      width="sm"
+                    ></ProFormText>
+                    <ProFormDigit
+                      name="lineNumber"
+                      label={t('LINE No')}
+                      width="sm"
+                    ></ProFormDigit>
+                    <ProFormDigit
+                      name="variableNumber"
+                      label={t('VARIABLE No')}
+                      width="sm"
+                    ></ProFormDigit>
+                  </ProFormGroup>
+                </ProFormGroup>
 
-                name="remarks"
-                label={t('REMARKS')}
-                width="lg"
-                // Disable the select if acTypeID is not set
-              />
-              <ProFormSelect
-                showSearch
-                // mode="multiple"
-                name="status"
-                label={t('STATE')}
-                width="sm"
-                valueEnum={{
-                  ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
-                  INACTIVE: { text: t('INACTIVE'), status: 'Error' },
-                }}
-              />
+                <ProFormTextArea
+                  // mode={'multiple'}
+
+                  name="remarks"
+                  label={t('REMARKS')}
+                  width="lg"
+                  // Disable the select if acTypeID is not set
+                />
+              </ProFormGroup>{' '}
             </ProFormGroup>
-
-            <ProFormGroup>
-              <ProFormDigit width={'xs'} name="ACAFL" label={t('ACAFL')} />
-            </ProFormGroup>
-          </ProFormGroup>
+          </div>
         </Tabs.TabPane>
       </Tabs>
     </ProForm>

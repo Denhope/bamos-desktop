@@ -148,7 +148,7 @@ const UserForm: FC<UserFormProps> = ({
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
             <ProForm.Group>
               <ProForm.Group>

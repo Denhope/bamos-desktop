@@ -206,7 +206,7 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
               name="GROUP"
               label={`${t('PART GROUP')}`}
               width="lg"
-              tooltip={`${t('SELECT SPESIAL GROUP')}`}
+              tooltip={`${t('SELECT SPECIAL GROUP')}`}
               options={[
                 { value: 'CONS', label: t('CONS') },
                 { value: 'TOOL', label: t('TOOL') },
@@ -214,16 +214,16 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
                 { value: 'ROT', label: t('ROT') },
                 { value: 'GSE', label: t('GSE') },
               ]}
-              onChange={(value) => setSelectedGroup(value)}
+              // onChange={(value) => setSelectedGroup(value)}
             />
-            {selectedGroup === 'TOOL' && (
+            {/* {selectedGroup === 'TOOL' && (
               <>
                 <ProFormSelect
                   // rules={[{ required: true }]}
                   name="TOOL_TYPE_CODE"
                   label={`${t('ТИП ИНСТРУМЕНТА')}`}
                   width="lg"
-                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  tooltip={`${t('SELECT SPECIAL GROUP')}`}
                   options={toolTypeOptions}
                   onChange={(value) => setSelectedToolType(value)}
                 />
@@ -266,7 +266,7 @@ const PartAdminForm: FC<UserFormProps> = ({ order, orderItem, onSubmit }) => {
                   </>
                 )}
               </>
-            )}
+            )} */}
             <ProFormSelect
               showSearch
               rules={[{ required: true }]}

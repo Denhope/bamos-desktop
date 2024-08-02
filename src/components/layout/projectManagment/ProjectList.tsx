@@ -46,7 +46,7 @@ const ProjectList: FC<showProjectListType> = ({
     },
 
     {
-      title: `${t('STATE')}`,
+      title: `${t('STATUS')}`,
       dataIndex: 'status',
       key: 'status',
       ellipsis: true,

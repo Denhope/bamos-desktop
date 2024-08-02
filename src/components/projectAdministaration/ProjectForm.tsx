@@ -29,6 +29,7 @@ import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 import ProjectTestWPAdmin from './projectWP/ProjectTestWPAdmin';
+import FileListE from '../userAdministration/taskAdministration/FileList.tsx';
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
@@ -44,7 +45,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       : {
           ...values,
           status: form.getFieldValue('status')[0],
-          acTypeID: selectedAcTypeID,
+          // acTypeID: selectedAcTypeID,
         };
     onSubmit(newUser);
   };
@@ -142,7 +143,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   );
   const [activeTabKey, setActiveTabKey] = useState('1'); // Default to the first tab
   const [showSubmitButton, setShowSubmitButton] = useState(true);
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     setShowSubmitButton(activeTabKey === '1');
   }, [activeTabKey]);
@@ -181,7 +182,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
 
     handleFileOpen(file);
   };
-  const dispatch = useAppDispatch();
+
   const wpValueEnum: Record<string, string> =
     wp?.reduce((acc, wp) => {
       if (wp._id && wp?.WOName) {
@@ -212,26 +213,38 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         defaultActiveKey="1"
         type="card"
       >
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div className=" h-[57vh] flex flex-col overflow-auto">
-            <ProFormSelect
-              showSearch
-              disabled={!project}
-              rules={[{ required: true }]}
-              name="status"
-              label={t('WO STATE')}
-              width="sm"
-              initialValue={['DRAFT']}
-              valueEnum={{
-                DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
-                OPEN: { text: t('OPEN'), status: 'Processing' },
-                inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
-                // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-                COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-                CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-                CANCELLED: { text: t('CANCELLED'), status: 'Error' },
-              }}
-            />
+            <ProFormGroup>
+              <ProFormSelect
+                showSearch
+                disabled={!project}
+                rules={[{ required: true }]}
+                name="status"
+                label={t('WO STATUS')}
+                width="sm"
+                initialValue={['DRAFT']}
+                valueEnum={{
+                  DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
+                  OPEN: { text: t('OPEN'), status: 'Processing' },
+                  inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+                  // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                  COMPLETED: { text: t('COMPLETED'), status: 'Default' },
+                  CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+                  CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+                }}
+              />
+              <ProFormSelect
+                showSearch
+                rules={[{ required: true }]}
+                name="WOReferenceID"
+                label={t('WP No')}
+                width="lg"
+                valueEnum={wpValueEnum || []}
+                // disabled={!projectId}
+              />
+            </ProFormGroup>
+
             <ProFormSelect
               showSearch
               // disabled={!project}
@@ -242,10 +255,10 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               // initialValue={['baseMaintanance']}
               valueEnum={{
                 baseMaintanance: {
-                  text: t('BASE MAINTANENCE'),
+                  text: t('BASE MAINTENANCE'),
                 },
                 lineMaintanance: {
-                  text: t('LINE MAINTANENCE'),
+                  text: t('LINE MAINTENANCE'),
                 },
 
                 // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
@@ -253,12 +266,11 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 // repairAC: { text: t('REPAIR AC') },
                 partCange: { text: t('COMPONENT CHANGE') },
                 addWork: { text: t('ADD WORK') },
-                enginiring: { text: t('ENGINIRING SERVICESES') },
-                nonProduction: { text: t('NOT PRODUCTION SERVICESES') },
+                enginiring: { text: t('ENGINEERING SERVICES') },
+                nonProduction: { text: t('NOT PRODUCTION SERVICES') },
                 // production: { text: t('PRODUCTION PART') },
               }}
             />
-
             {/* <ProFormSelect
             showSearch
             name="projectTypesID"
@@ -290,7 +302,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               ]}
             /> */}
 
-              <ProFormText
+              {/* <ProFormText
                 width={'xl'}
                 name="description"
                 label={t('DESCRIPTION')}
@@ -299,11 +311,11 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                     required: true,
                   },
                 ]}
-              />
+              /> */}
 
               <ProFormGroup>
                 <ProFormDatePicker
-                  label={t('PLANED START DATE')}
+                  label={t('PLANNED START DATE')}
                   name="planedStartDate"
                   width="sm"
                 ></ProFormDatePicker>
@@ -316,7 +328,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               </ProFormGroup>
               <ProFormGroup>
                 <ProFormDatePicker
-                  label={t('PLANED FINISH DATE')}
+                  label={t('PLANNED FINISH DATE')}
                   name="planedFinishDate"
                   width="sm"
                 ></ProFormDatePicker>
@@ -345,7 +357,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   name="customerWO"
                   label={t('CUSTOMER WO No')}
                 />
-                <ProFormSelect
+                {/* <ProFormSelect
                   showSearch
                   rules={[{ required: true }]}
                   name="customerID"
@@ -362,16 +374,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   valueEnum={planesValueEnum}
                   onChange={(value: any) => setSelectedAcTypeID(value)}
                   // disabled={!acTypeID} // Disable the select if acTypeID is not set
-                />
-                <ProFormSelect
-                  showSearch
-                  rules={[{ required: true }]}
-                  name="WOReferenceID"
-                  label={t('WP No')}
-                  width="lg"
-                  valueEnum={wpValueEnum || []}
-                  // disabled={!projectId}
-                />
+                /> */}
               </ProFormGroup>
               <ProFormTextArea
                 width={'xl'}
@@ -423,7 +426,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             <Empty />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('TASK LIST')} key="3">
+        {/* <Tabs.TabPane tab={t('TASK LIST')} key="3">
           {project && project?._id ? (
             <ProjectWPAdmin
               project={project}
@@ -432,45 +435,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           ) : (
             <Empty />
           )}
-        </Tabs.TabPane>
-        {/* <Tabs.TabPane tab={t('ACTIONS')} key="3"> */}
-        <Empty />
-        {/* <Space>
-            {' '}
-            <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
-                // disabled={!selectedKeys.length && selectedKeys.length < 1}
-                size="small"
-                icon={<ProjectOutlined />}
-                // onClick={() => handleGenerateWOTasks(selectedKeys)}
-              >
-                {t('CREATE TRACE')}
-              </Button>
-            </Col>
-            <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
-                disabled
-                // disabled={!selectedKeys.length && selectedKeys.length < 1}
-                size="small"
-                icon={<ProjectOutlined />}
-                // onClick={() => handleGenerateWOTasks(selectedKeys)}
-              >
-                {t('LINK REQUIREMENTS')}
-              </Button>
-            </Col>
-            <Col span={4} style={{ textAlign: 'right' }}>
-              <Button
-                disabled
-                // disabled={!selectedKeys.length && selectedKeys.length < 1}
-                size="small"
-                icon={<ProjectOutlined />}
-                // onClick={() => handleGenerateWOTasks(selectedKeys)}
-              >
-                {t('CANCEL LINK')}
-              </Button>
-            </Col>
-          </Space> */}
-        {/* </Tabs.TabPane> */}
+        </Tabs.TabPane> */}
       </Tabs>
     </ProForm>
   );

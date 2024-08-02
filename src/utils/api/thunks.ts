@@ -5295,12 +5295,54 @@ export async function uploadFileServer(formData: any) {
     throw error;
   }
 }
+export async function uploadFileServerReference(formData: any) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/files/upload/reference/company`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Не удалось загрузить файл', error);
+    throw error;
+  }
+}
 
 // Функция для просмотра файла
-export async function getFileFromServer(companyID: string, fileId: string) {
+// export async function getFileFromServer(
+//   companyID: string,
+//   fileId: string,
+//   prop?: string
+// ) {
+//   try {
+//     const response = await axios.get(
+//       `${API_URL}/files/getById/company/${companyID}/file/${fileId}/prop/${prop}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem('token')}`,
+//         },
+//         responseType: 'blob', // Важно указать, что ответ должен быть в виде blob
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error('Не удалось получить файл', error);
+//     throw error;
+//   }
+// }
+export async function getFileFromServer(
+  companyID: string,
+  fileId: string,
+  prop?: string
+): Promise<Uint8Array> {
   try {
     const response = await axios.get(
-      `${API_URL}/files/getById/company/${companyID}/file/${fileId}`,
+      `${API_URL}/files/getById/company/${companyID}/file/${fileId}/prop/${prop}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -5308,13 +5350,24 @@ export async function getFileFromServer(companyID: string, fileId: string) {
         responseType: 'blob', // Важно указать, что ответ должен быть в виде blob
       }
     );
-    return response.data;
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result instanceof ArrayBuffer) {
+          resolve(new Uint8Array(reader.result));
+        } else {
+          reject(new Error('Failed to read blob as ArrayBuffer'));
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(response.data);
+    });
   } catch (error) {
     console.error('Не удалось получить файл', error);
     throw error;
   }
 }
-
 // Функция для удаления файла
 export const deleteFile = createAsyncThunk(
   'common/deleteFile',
@@ -5322,6 +5375,19 @@ export const deleteFile = createAsyncThunk(
     try {
       const response = await $authHost.delete(
         `files/companyID/${data.companyID}/file/${data.id}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось удалить файл');
+    }
+  }
+);
+export const deleteFileUploads = createAsyncThunk(
+  'common/deleteFile/uploads',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const response = await $authHost.delete(
+        `files/uploads/companyID/${data.companyID}/file/${data.id}/type/${data?.type}/itemID/${data?.itemID}`
       );
       return response.data;
     } catch (error) {

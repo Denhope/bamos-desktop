@@ -87,7 +87,7 @@ const ReqCodesAdministrationForm: FC<UserFormProps> = ({
             <ProFormSelect
               showSearch
               name="status"
-              label={t('STATE')}
+              label={t('STATUS')}
               width="sm"
               valueEnum={{
                 ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },

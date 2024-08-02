@@ -191,7 +191,7 @@ const PartList: React.FC<Props> = ({
   // Колонки для таблицы в модальном окне
   const columns = [
     {
-      title: `${t('STATE')}`,
+      title: `${t('STATUS')}`,
       // dataIndex: 'status',
       // key: 'status',
       // render: (partNumberID: { PART_NUMBER: string }) =>

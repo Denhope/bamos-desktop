@@ -18,6 +18,8 @@ export type TaskFilteredFormValues = {
   acTypeId?: string;
   mpdDocumentationId?: string[];
   status?: string[];
+  time?: any;
+  taskCardNumber?: any;
 };
 
 type VendorFilteredFormProps<T> = {
@@ -48,18 +50,19 @@ const AdminTaskFilteredForm: FC<
 
   const handleSubmit = useCallback(
     async (values: TaskFilteredFormValues) => {
-      if (Object.values(values).every((value) => value === '')) {
-        // Показываем уведомление, если все значения формы пустые
-        notification.warning({
-          message: 'Предупреждение',
-          description: 'Пожалуйста, введите хотя бы одно значение',
-        });
-        return false;
-      } else {
-        // Вызываем onSubmit только если хотя бы одно поле заполнено
-        const success = await onSubmit(values);
-        return success;
-      }
+      // if (Object.values(values).every((value) => value === '')) {
+      //   // Показываем уведомление, если все значения формы пустые
+      //   notification.warning({
+      //     message: 'Предупреждение',
+      //     description: 'Пожалуйста, введите хотя бы одно значение',
+      //   });
+      //   return false;
+      // } else {
+      //   // Вызываем onSubmit только если хотя бы одно поле заполнено
+      //   const success = onSubmit({ ...values, time: new Date() });
+      //   return success;
+      // }
+      onSubmit({ ...values, time: new Date() });
     },
     [onSubmit]
   );
@@ -104,6 +107,14 @@ const AdminTaskFilteredForm: FC<
           label={t('AMM')}
           width="lg"
         />
+        <ProFormText
+          fieldProps={{
+            onKeyPress: handleKeyPress,
+          }}
+          name="cardNumber"
+          label={t('CARD No')}
+          width="lg"
+        />
         <ProFormSelect
           showSearch
           mode="multiple"
@@ -111,9 +122,9 @@ const AdminTaskFilteredForm: FC<
           label={t('TASK TYPE')}
           width="xl"
           valueEnum={{
-            PART_PRODUCE: { text: t('PART PRODUCE') },
+            // PART_PRODUCE: { text: t('PART PRODUCE') },
             SB: { text: t('SERVICE BULLETIN') },
-            SMC: { text: t('SHEDULED MAINTENENCE CHEACK') },
+            SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
             // PN: { text: t('COMPONENT') },

@@ -56,7 +56,7 @@ const OrderList: FC<showOrderListType> = ({
     },
 
     {
-      title: `${t('STATE')}`,
+      title: `${t('STATUS')}`,
       dataIndex: 'state',
       key: 'state',
       // width: '10%',

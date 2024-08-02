@@ -150,14 +150,14 @@ const AccessCodeForm: FC<UserFormProps> = ({
                 disabled
                 width={'sm'}
                 name="majoreZoneNbr"
-                label={t('MAJORE ZONE')}
+                label={t('MAJOR ZONE')}
               />
               <ProFormSelect
                 // options={majoreZoneDescriptionOptions}
                 disabled
                 width={'sm'}
                 name="majoreZoneDescription"
-                label={t('MAJORE ZONE DESCRIPTION')}
+                label={t('MAJOR ZONE DESCRIPTION')}
               />
               <ProFormSelect
                 disabled
@@ -400,7 +400,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
               showSearch
               disabled
               name="status"
-              label={t('STATE')}
+              label={t('STATUS')}
               width="sm"
               valueEnum={{
                 open: { text: t('OPEN') },

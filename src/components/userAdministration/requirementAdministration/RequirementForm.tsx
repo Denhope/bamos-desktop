@@ -107,8 +107,8 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
   const { data: projects } = useGetProjectsQuery(
     {
       WOReferenceID: form.getFieldValue('WOReferenceID'),
-    },
-    { skip: !requierement }
+    }
+    // { skip: !requierement }
   );
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   const requirementCodesValueEnum: Record<string, string> =
@@ -181,14 +181,14 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div className=" h-[57vh] flex flex-col overflow-auto">
             <ProFormGroup>
               <ProFormSelect
                 showSearch
                 rules={[{ required: true }]}
                 name="status"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 initialValue={'draft'}
                 options={[
@@ -375,7 +375,7 @@ const RequirementForm: FC<UserFormProps> = ({ requierement, onSubmit }) => {
                   name="group"
                   label={`${t('PART GROUP')}`}
                   width="sm"
-                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  tooltip={`${t('SELECT SPECIAL GROUP')}`}
                   options={[
                     { value: 'CONS', label: t('CONS') },
                     { value: 'TOOL', label: t('TOOL') },

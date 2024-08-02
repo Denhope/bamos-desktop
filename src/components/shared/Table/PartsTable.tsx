@@ -50,6 +50,7 @@ type PartsTableProps = {
   rowClassRules?: any;
   onColumnResized?: (event: any) => void;
   onGridReady?: (event: any) => void;
+  rowSelection?: 'multiple' | 'single';
 };
 
 const PartsTable: React.FC<PartsTableProps> = ({
@@ -77,6 +78,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
   rowClassRules,
   onColumnResized,
   onGridReady,
+  rowSelection = 'multiple',
 }) => {
   const { t, i18n } = useTranslation();
   const gridRef = useRef<AgGridReact>(null);
@@ -445,7 +447,8 @@ const PartsTable: React.FC<PartsTableProps> = ({
             pagination={pagination}
             // loadingOverlayComponent={isLoading}
             ref={gridRef}
-            rowSelection="multiple"
+            rowSelection={rowSelection}
+            // rowSelection="multiple"
             rowHeight={30}
             quickFilterText={searchText}
             // suppressRowClickSelection={true}

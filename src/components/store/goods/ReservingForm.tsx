@@ -172,10 +172,10 @@ const ReservingForm: FC = () => {
         <ProForm.Group>
           <ProFormSelect
             showSearch
-            name="COSTUMER"
-            label="COSTUMER"
+            name="CUSTOMER"
+            label="CUSTOMER"
             width="sm"
-            tooltip="Enter COSTUMER"
+            tooltip="Enter CUSTOMER"
             rules={[
               {
                 required: true,

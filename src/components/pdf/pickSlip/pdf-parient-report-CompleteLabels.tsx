@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import {
   Text,
@@ -8,45 +8,45 @@ import {
   StyleSheet,
   Font,
   View,
-} from "@react-pdf/renderer";
+} from '@react-pdf/renderer';
 
 import {
   PdfSmall,
   PdfRegular,
   PdfRegularSmall,
   PdfNumber,
-} from "../typography.components";
-import { PdfView, PDFGrid, PdfHeader } from "../wrapped-view.component";
-import { IPickSlipResponse } from "@/models/IPickSlip";
-import moment from "moment";
-import { PdfTablePickSlip } from "../table.componentsPickSlip";
-import { useTranslation } from "react-i18next";
-import FooterPdfView from "./footer.component";
-import { PdfImage } from "../images.components";
+} from '../typography.components';
+import { PdfView, PDFGrid, PdfHeader } from '../wrapped-view.component';
+import { IPickSlipResponse } from '@/models/IPickSlip';
+import moment from 'moment';
+import { PdfTablePickSlip } from '../table.componentsPickSlip';
+import { useTranslation } from 'react-i18next';
+import FooterPdfView from './footer.component';
+import { PdfImage } from '../images.components';
 
 // import { QRCode } from 'antd';
-import QRCode from "qrcode.react";
+import QRCode from 'qrcode.react';
 
 Font.register({
-  family: "Roboto",
-  src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
+  family: 'Roboto',
+  src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf',
 });
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: "#ffffff",
-    paddingBottom: "40pt",
-    paddingTop: "20pt",
-    fontFamily: "Roboto",
+    backgroundColor: '#ffffff',
+    paddingBottom: '40pt',
+    paddingTop: '20pt',
+    fontFamily: 'Roboto',
   },
   image: {
     marginVertical: 15,
     marginHorizontal: 100,
   },
   wrapp: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: "140",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: '140',
     paddingHorizontal: 0,
     marginHorizontal: 0,
   },
@@ -88,7 +88,7 @@ export const PdfParientLabelsCompleted = ({
             </PDFGrid>
             <PDFGrid height={40} p={1} cols={1}>
               <PdfRegular textAlign="right" fontWeight="black" fontSize={9}>
-                {t("407 TECHNICS")}
+                {t('407 TECHNICS')}
               </PdfRegular>
               {/* <PdfRegular textAlign="right" fontSize={8}>
                 {t('CONDITION')}:
@@ -98,18 +98,18 @@ export const PdfParientLabelsCompleted = ({
                 {/* {data?.locationType &&
                   data?.locationType === 'scrap' &&
                   'SCRAPPED TAG'} */}
-                {data?.locationType === "standart" && "SERVICEABLE TAG"}
-                {data?.locationType === "scrap" && "SCRAPPED TAG"}
-                {(data?.locationType === "quarantine" ||
-                  type === "unserviceable") &&
-                  "UNSERVICEABLE TAG"}
+                {data?.locationType === 'standart' && 'SERVICEABLE TAG'}
+                {data?.locationType === 'scrap' && 'SCRAPPED TAG'}
+                {(data?.locationType === 'quarantine' ||
+                  type === 'unserviceable') &&
+                  'UNSERVICEABLE TAG'}
               </PdfRegular>
             </PDFGrid>
           </PdfView>
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid p={1} height={20} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("PART No")}:
+                {t('PART No')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={1}>
@@ -122,7 +122,7 @@ export const PdfParientLabelsCompleted = ({
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid p={1} height={20} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("BATCH No")}:
+                {t('BATCH No')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid p={1} height={20} cols={2}>
@@ -134,12 +134,12 @@ export const PdfParientLabelsCompleted = ({
 
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid height={20} p={1} cols={2}>
-              <PdfRegularSmall textAlign="left">{t("MC/QTY")}:</PdfRegularSmall>
+              <PdfRegularSmall textAlign="left">{t('MC/QTY')}:</PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegular textAlign="right" fontSize={8}>
                 {data?.GROUP} / {bookedQty || data?.QUANTITY}
-                {"\r"}
+                {'\r'}
                 {data.UNIT_OF_MEASURE}
               </PdfRegular>
             </PDFGrid>
@@ -147,7 +147,7 @@ export const PdfParientLabelsCompleted = ({
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid p={1} height={20} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("CONDITION")}:
+                {t('CONDITION')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={1}>
@@ -159,23 +159,23 @@ export const PdfParientLabelsCompleted = ({
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("EXP.DATE")}:
+                {t('EXP.DATE')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegular textAlign="right" fontSize={8}>
                 {(data.PRODUCT_EXPIRATION_DATE &&
                   moment(data.PRODUCT_EXPIRATION_DATE).format(
-                    "Do. MMM. YYYY"
+                    'Do. MMM. YYYY'
                   )) ||
-                  "N/A"}
+                  'N/A'}
               </PdfRegular>
             </PDFGrid>
           </PdfView>
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("DESCRIPTION")}:
+                {t('DESCRIPTION')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={2}>
@@ -187,78 +187,78 @@ export const PdfParientLabelsCompleted = ({
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("CERT No")}:
+                {t('CERT No')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegular textAlign="right" fontSize={8}>
-                {data?.APPROVED_CERT || "N/A"}
+                {data?.APPROVED_CERT || 'N/A'}
               </PdfRegular>
             </PDFGrid>
           </PdfView>
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {t("ORDER No")}:
+                {t('ORDER No')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegular textAlign="right" fontSize={8}>
-                {data?.ORDER_NUMBER || "N/A"}
+                {data?.ORDER_NUMBER || 'N/A'}
               </PdfRegular>
             </PDFGrid>
           </PdfView>
           <PdfView display="flex" flexDirection="row" alignItems="center">
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegularSmall textAlign="left">
-                {" "}
-                {t("REC.DATE")}:
+                {' '}
+                {t('REC.DATE')}:
               </PdfRegularSmall>
             </PDFGrid>
             <PDFGrid height={20} p={1} cols={2}>
               <PdfRegular textAlign="right" fontSize={8}>
                 {data.RECEIVED_DATE &&
-                  moment(data.RECEIVED_DATE).format("Do. MMM. YYYY")}
+                  moment(data.RECEIVED_DATE).format('Do. MMM. YYYY')}
               </PdfRegular>
             </PDFGrid>
           </PdfView>
           <PdfView display="flex" flexDirection="column">
             <PDFGrid height={30} p={1} cols={1} borderColor="#00" bw={0.5}>
-              {data?.locationType === "standart" && (
+              {data?.locationType === 'standart' && (
                 <>
                   <PdfRegularSmall>
-                    {t("MATERIAL INCOMING INSPECTION")}
+                    {t('MATERIAL INCOMING INSPECTION')}
                   </PdfRegularSmall>
                   <PdfRegular textAlign="left" fontSize={11}>
-                    {localStorage.getItem("singNumber")}
+                    {localStorage.getItem('singNumber')}
                   </PdfRegular>
                 </>
               )}
-              {data?.locationType === "scrap" && (
+              {data?.locationType === 'scrap' && (
                 <>
                   <PdfRegularSmall>
-                    {t("THIS ITEM IS DESTROYD BEYOND USAGE")}
+                    {t('THIS ITEM IS DESTROYED  BEYOND USAGE')}
                   </PdfRegularSmall>
                   <PdfRegular textAlign="left" fontSize={8}>
-                    Date:{moment.utc().format("DD. MM. YYYY")}
-                    {"\r"} {"\r"} {"\r"} {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"} {"\r"} {"\r"} {"\r"} {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    {"\r"}
-                    Sing:{localStorage.getItem("singNumber")}
+                    Date:{moment.utc().format('DD. MM. YYYY')}
+                    {'\r'} {'\r'} {'\r'} {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'} {'\r'} {'\r'} {'\r'} {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    {'\r'}
+                    Sing:{localStorage.getItem('singNumber')}
                   </PdfRegular>
                 </>
               )}
@@ -267,7 +267,7 @@ export const PdfParientLabelsCompleted = ({
           <PdfView display="flex" flexDirection="column">
             <PDFGrid height={30} p={1} cols={1}>
               <PdfRegular textAlign="right" fontSize={12}>
-                {data?.STOCK || "N/A"}/ {data?.SHELF_NUMBER || "N/A"}
+                {data?.STOCK || 'N/A'}/ {data?.SHELF_NUMBER || 'N/A'}
               </PdfRegular>
             </PDFGrid>
           </PdfView>

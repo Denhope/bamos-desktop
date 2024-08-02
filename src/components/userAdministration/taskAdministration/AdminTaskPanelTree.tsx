@@ -12,11 +12,16 @@ interface TreeDataNode extends DataNode {
 interface UserTreeProps {
   onTaskSelect: (task: ITask) => void;
   tasks: ITask[] | [];
+  isLoading?: boolean;
 }
 
 const { Search } = Input;
 
-const AdminTaskPanelTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
+const AdminTaskPanelTree: FC<UserTreeProps> = ({
+  onTaskSelect,
+  tasks,
+  isLoading,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
@@ -88,6 +93,7 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({ onTaskSelect, tasks }) => {
       />
 
       <CustomTree
+        isLoading={isLoading}
         checkable={false}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {

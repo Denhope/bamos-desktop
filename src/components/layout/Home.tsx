@@ -819,7 +819,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         <ShoppingCartOutlined />
       ),
       getItem(
-        t('ORDER ADMINISTARTION'),
+        t('ORDER ADMINISTRATION'),
         RouteNames.ORDERS_ADMINISTRATION,
         <ShoppingCartOutlined />
       ),
@@ -1050,7 +1050,7 @@ const Home: FC<homePropsType> = ({ apnRoute }) => {
         <ShoppingCartOutlined />
       ),
       getItem(
-        t('ORDER ADMINISTARTION'),
+        t('ORDER ADMINISTRATION'),
         RouteNames.ORDERS_ADMINISTRATION,
         <ShoppingCartOutlined />
       ),

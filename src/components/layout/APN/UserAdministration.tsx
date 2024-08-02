@@ -16,6 +16,7 @@ import {
   UsergroupAddOutlined,
   AppstoreAddOutlined,
   ForkOutlined,
+  AimOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import AdminPanel from '@/components/userAdministration/accountAdminisrtation/AdminPanel';
@@ -46,6 +47,7 @@ import RequirementsTypesPanel from '@/components/userAdministration/requirements
 import ProjectTypePanel from '@/components/userAdministration/projectTypesAdministaration/ProjectTypePanel';
 import AdminPanelSkills from '@/components/userAdministration/skillAdminisrtation/AdminPanelSkills';
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
+import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -74,23 +76,27 @@ const UserAdministration: FC = () => {
         <UsergroupAddOutlined />
       ),
     ]),
+    getItem(<>{t('TYPES')}</>, '434557', <AimOutlined />, [
+      getItem(
+        <>{t('REQUIREMENTS TYPES')}</>,
+        RouteNames.REQUIREMENTS_CODES,
+        <AppstoreAddOutlined />
+      ),
+      // getItem(
+      //   <>{t('PROJECT TYPES')}</>,
+      //   RouteNames.PROJECTS_CODES,
+      //   <ProjectOutlined />
+      // ),
+    ]),
 
-    getItem(
-      <>{t('REQUIREMENTS TYPES')}</>,
-      RouteNames.REQUIREMENTS_CODES,
-      <AppstoreAddOutlined />
-    ),
-
-    getItem(
-      <>{t('PROJECT TYPES')}</>,
-      RouteNames.PROJECTS_CODES,
-      <ProjectOutlined />
-    ),
     getItem(<>{t('COMPANIES')}</>, RouteNames.COMPANIES, <GroupOutlined />),
     getItem(<>{t('VENDORS')}</>, RouteNames.VENDORS, <HomeOutlined />),
-    getItem(<>{t('AC TYPES')}</>, RouteNames.AC_TYPES, <ForkOutlined />),
-    getItem(<>{t('AC TASKS')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
-    getItem(<>{t('AC ADMINISTRATION')}</>, RouteNames.AC, <EditOutlined />),
+    getItem(<>{t('AIRCRAFT')}</>, '4567', <AimOutlined />, [
+      getItem(<>{t('A/C TYPES')}</>, RouteNames.AC_TYPES, <ForkOutlined />),
+
+      getItem(<>{t('REGISTRATION')}</>, RouteNames.AC, <EditOutlined />),
+    ]),
+    getItem(<>{t('TASKS')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -100,7 +106,7 @@ const UserAdministration: FC = () => {
     status: [''],
   });
   const [vendorFormValues, setVendorFormValues] = useState<any>({});
-  const [tasksFormValues, setTasksFormValues] = useState<any>(null);
+  const { setTasksFormValues, tasksFormValues } = useGlobalState();
   const [ACTypesFormValues, setACTypesFormValues] =
     useState<ACTypesFilteredFormValues>({
       code: '',
@@ -115,19 +121,21 @@ const UserAdministration: FC = () => {
     },
     { skip: !tasksFormValues }
   );
-  const {
-    refetch: refetchTasks,
-    isFetching,
-    isLoading,
-  } = useGetTasksQuery(
-    {
-      status: tasksFormValues?.status,
-      taskNumber: tasksFormValues?.taskNumber,
-      acTypeID: tasksFormValues?.acTypeId,
-      taskType: tasksFormValues?.taskType,
-    },
-    { skip: !tasksFormValues }
-  );
+  // const {
+  //   refetch: refetchTasks,
+  //   isFetching,
+  //   isLoading,
+  // } = useGetTasksQuery(
+  //   {
+  //     status: tasksFormValues?.status,
+  //     taskNumber: tasksFormValues?.taskNumber,
+  //     acTypeID: tasksFormValues?.acTypeId,
+  //     taskType: tasksFormValues?.taskType,
+  //     time: tasksFormValues?.time,
+  //     cardNumber: tasksFormValues?.cardNumber,
+  //   },
+  //   { skip: !tasksFormValues }
+  // );
 
   const { refetch: refetchVendors } = useGetVendorsQuery({
     code: vendorFormValues?.CODE,
@@ -280,7 +288,7 @@ const UserAdministration: FC = () => {
           <div>
             <AdminTaskPanel
               values={tasksFormValues}
-              isLoadingF={isLoading || isFetching}
+              // isLoadingF={isLoading || isFetching}
             />
           </div>
         ),

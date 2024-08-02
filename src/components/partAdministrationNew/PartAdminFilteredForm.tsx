@@ -153,7 +153,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         name="group"
         label={`${t('PART GROUP')}`}
         width="lg"
-        tooltip={`${t('SELECT SPESIAL GROUP')}`}
+        tooltip={`${t('SELECT SPECIAL GROUP')}`}
         options={[
           { value: 'CONS', label: t('CONS') },
           { value: 'TOOL', label: t('TOOL') },
@@ -161,7 +161,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'ROT', label: t('ROT') },
           { value: 'GSE', label: t('GSE') },
         ]}
-        onChange={(value: string) => setSelectedGroup(value)}
+        // onChange={(value: string) => setSelectedGroup(value)}
       />
 
       <ProFormText
@@ -181,9 +181,9 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
             name="TOOL_TYPE_CODE"
             label={`${t('ТИП ИНСТРУМЕНТА')}`}
             width="lg"
-            tooltip={`${t('SELECT SPESIAL GROUP')}`}
+            tooltip={`${t('SELECT SPECIAL GROUP')}`}
             options={toolTypeOptions}
-            onChange={(value: string) => setSelectedToolType(value)}
+            // onChange={(value: string) => setSelectedToolType(value)}
           />
           {selectedToolType && (
             <>

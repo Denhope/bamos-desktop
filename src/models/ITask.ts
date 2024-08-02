@@ -376,6 +376,7 @@ export interface ITaskResponce {
   preparationCode?: any;
 }
 export interface ITask {
+  reference?: any[];
   mainWorkTime: any;
   _id: any;
   instrumentID: any;

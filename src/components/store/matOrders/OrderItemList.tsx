@@ -313,7 +313,7 @@ const OrderItemList: FC<ReceivingItemList> = ({
       search: false,
     },
     {
-      title: `${t('STATE')}`,
+      title: `${t('STATUS')}`,
       key: 'state',
 
       valueType: 'select',

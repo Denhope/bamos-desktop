@@ -203,7 +203,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
           name="partGroup"
           label={`${t('PART GROUP')}`}
           width="lg"
-          tooltip={`${t('SELECT SPESIAL GROUP')}`}
+          tooltip={`${t('SELECT SPECIAL GROUP')}`}
           options={[
             { value: 'CONS', label: t('CONS') },
             { value: 'TOOL', label: t('TOOL') },

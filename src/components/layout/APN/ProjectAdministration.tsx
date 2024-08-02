@@ -27,7 +27,7 @@ const ProjectAdministration: FC<RequirementManagementProps> = () => {
       <Sider
         className="h-[87vh] overflow-hidden"
         theme="light"
-        width={300}
+        width={380}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}

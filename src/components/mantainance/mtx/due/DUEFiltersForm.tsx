@@ -269,7 +269,7 @@ const DUEFiltersForm: FC<FIlteredDueFormProps> = ({
           <MultiSelectForm
             options={[
               { key: 'AD', value: 'AIRWORTHINESS DIRECTIVE' },
-              { key: 'SMC', value: 'SHEDULED MAINTENENCE CHEACK' },
+              { key: 'SMC', value: 'SHEDULED MAINTENENCE CHECK' },
               { key: 'SB', value: 'SB' },
               { key: 'PKGOP', value: 'PACKAGE' },
               { key: 'ADP', value: 'ADP ' },

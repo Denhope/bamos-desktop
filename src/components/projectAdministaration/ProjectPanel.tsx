@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  message,
+  Space,
+  Spin,
+  Switch,
+  notification,
+} from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -64,13 +74,19 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
 
   const handleDelete = async (projectId: string) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS project?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS ITEM?'),
       onOk: async () => {
         try {
           await deleteProject(projectId).unwrap();
-          message.success(t('PROJECT SUCCESSFULLY DELETED'));
+          notification.success({
+            message: t('SUCCESSFULLY ADDED'),
+            description: t('Item has been successfully added.'),
+          });
         } catch (error) {
-          message.error(t('ERROR DELETING PROJECT'));
+          notification.error({
+            message: t('FAILED '),
+            description: 'There was an error delete the alternative.',
+          });
         }
       },
     });
@@ -81,15 +97,24 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       if (editingproject) {
         await updateProject(project).unwrap();
         handleEdit(project);
-        message.success(t('PROJECT SUCCESSFULLY UPDATED'));
+        notification.success({
+          message: t('SUCCESSFULLY UPDATED'),
+          description: t('Item has been successfully updated.'),
+        });
       } else {
         await addProject({ project }).unwrap();
-        message.success(t('PROJECT SUCCESSFULLY ADDED'));
-        setEditingproject(null);
+        notification.success({
+          message: t('SUCCESSFULLY UPDATED'),
+          description: t('Item has been successfully updated.'),
+        });
+        // setEditingproject(null);
       }
       // setEditingproject(null);
     } catch (error) {
-      message.error(t('ERROR SAVING PROJECT '));
+      notification.error({
+        message: t('FAILED TO SAVE'),
+        description: 'There was an error adding Item.',
+      });
     }
   };
 
@@ -281,7 +306,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <Split initialPrimarySize="15%" splitterSize="20px">
+        <Split initialPrimarySize="25%" splitterSize="20px">
           <div className=" h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             {isTreeView ? (
               <ProjectTree

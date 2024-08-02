@@ -188,9 +188,9 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           showSearch
           mode="multiple"
           name="orderState"
-          label={t('ORDER STATE')}
+          label={t('ORDER STATUS')}
           width="lg"
-          tooltip={t('ORDER STATE')}
+          tooltip={t('ORDER STATUS')}
           // initialValue={['PARTLY_RECEIVED', 'OPEN']}
           valueEnum={{
             PARTLY_RECEIVED: {

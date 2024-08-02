@@ -1,7 +1,17 @@
 // @ts-nocheck
 
 import React, { useMemo, useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  message,
+  Space,
+  Spin,
+  Switch,
+  notification,
+} from 'antd';
 import {
   ProjectOutlined,
   PlusSquareOutlined,
@@ -96,13 +106,19 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
   const [addPanels] = useAddProjectPanelsMutation({});
   const handleDelete = async (ids: string[]) => {
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS PROJECT ITEM?'),
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS ITEM?'),
       onOk: async () => {
         try {
           await deleteProjectItem(ids).unwrap();
-          message.success(t('PROJECT ITEM SUCCESSFULLY DELETED'));
+          notification.success({
+            message: t('SUCCESSFULLY UPDATED'),
+            description: t('Item has been successfully updated.'),
+          });
         } catch (error) {
-          message.error(t('ERROR DELETING PROJECT ITEM'));
+          notification.error({
+            message: t('FAILED DELETING'),
+            description: 'There was an error deleting Item.',
+          });
         }
       },
     });
@@ -113,16 +129,22 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       onOk: async () => {
         try {
           await reloadProjectItem(ids).unwrap();
-          message.success(t('PROJECT ITEM SUCCESSFULLY DELETED'));
+          notification.success({
+            message: t('SUCCESSFULLY UPDATED'),
+            description: t('Item has been successfully updated.'),
+          });
         } catch (error) {
-          message.error(t('ERROR DELETING PROJECT ITEM'));
+          notification.error({
+            message: t('FAILED TO SAVE'),
+            description: 'There was an error adding Item.',
+          });
         }
       },
     });
   };
   const handleGenerateWOTasks = async (ids: any[]) => {
     Modal.confirm({
-      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ЗАКАЗЫ ДЛЯ ВЫДЕЛЕННЫХ ПОЗИЦИЙ?'),
+      title: t('ARE YOU SURE, YOU WANT TO CREATE TASKS?'),
       onOk: async () => {
         try {
           await createWO({
@@ -131,14 +153,17 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             projectItemID: ids,
           }).unwrap();
           refetchProjectItems();
-          message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
+          notification.success({
+            message: t('TASKS SUCCESSFULLY ADDED'),
+            description: t('The Tasks  has been successfully added.'),
+          });
           Modal.destroyAll();
           // Modal.confirm({
           //   width: 550,
           //   title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
           //   footer: [
           //     <Space>
-          //       {/* <Button
+          //       {/* <ButtonMissing required fields: PART_NUMBER, QUANTITY
           //         key="single"
           //         onClick={async () => {
           //           try {
@@ -159,7 +184,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           //         }}
           //       >
           //         {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
-          //       </Button> */}
+          //       </ButtonMissing> */}
           //       <Button
           //         key="multiple"
           //         type="primary"
@@ -193,7 +218,10 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           //   ],
           // });
         } catch (error) {
-          message.error(t('ОШИБКА '));
+          notification.error({
+            message: t('FAILED '),
+            description: 'There was an error delete the alternative.',
+          });
         }
       },
     });
@@ -203,7 +231,10 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     try {
       if (editingReqCode) {
         await updateProjectItem(reqCode).unwrap();
-        message.success(t('УСПЕШНО ОБНОВЛЕНО'));
+        notification.success({
+          message: t('SUCCESSFULLY UPDATED'),
+          description: t('Item has been successfully updated.'),
+        });
         // setEditingReqCode(null);
       } else {
         if (project && project.projectType == 'production') {
@@ -213,7 +244,10 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             planeID: project?.planeId?._id,
             taskType: 'FC',
           }).unwrap();
-          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
+          notification.success({
+            message: t('SUCCESSFULLY UPDATED'),
+            description: t('Item has been successfully updated.'),
+          });
         } else if (project && project.projectType == 'baseMaintanance') {
           await addProjectItem({
             projectItem: reqCode,
@@ -221,13 +255,19 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             planeID: project?.planeId?._id,
             taskType: 'RC',
           }).unwrap();
-          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
+          notification.success({
+            message: t('SUCCESSFULLY UPDATED'),
+            description: t('Item has been successfully updated.'),
+          });
 
           // setEditingReqCode(null);
         }
       }
     } catch (error) {
-      message.error(t(`${error}`));
+      notification.error({
+        message: t('FAILED TO SAVE'),
+        description: 'There was an error adding Item.',
+      });
     }
   };
   const handleAddMultiItems = async (data: any) => {
@@ -240,8 +280,10 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             planeID: project?.planeId?._id,
             taskType: 'FC',
           }).unwrap();
-          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-          // setEditingReqCode(null);
+          notification.success({
+            message: t('SUCCESSFULLY UPDATED'),
+            description: t('Item has been successfully updated.'),
+          });
         }
       } else if (project && project.projectType == 'baseMaintanance') {
         await addMultiProjectItems({
@@ -250,11 +292,16 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           planeID: project?.planeId?._id,
           taskType: 'RC',
         }).unwrap();
-        message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        // setEditingReqCode(null);
+        notification.success({
+          message: t('SUCCESSFULLY UPDATED'),
+          description: t('Item has been successfully updated.'),
+        });
       }
     } catch (error) {
-      message.error(t('ОШИБКА СОХРАНЕНИЯ'));
+      notification.error({
+        message: t('FAILED TO SAVE'),
+        description: 'There was an error adding Item.',
+      });
     }
   };
 
@@ -370,7 +417,8 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
               handleAddMultiItems(data);
             }}
             requiredFields={
-              project && project.projectType === 'baseMaintanance'
+              (project && project.projectType === 'baseMaintanance') ||
+              (project && project.projectType === 'addWork')
                 ? ['taskNumber']
                 : ['PART_NUMBER', 'QUANTITY']
             }
@@ -422,6 +470,18 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
               {t('RELOAD ITEM')}
             </Button>
           }
+        </Col>
+        <Col>
+          <Col style={{ textAlign: 'right' }}>
+            <Button
+              disabled={!selectedKeys.length && selectedKeys.length < 1}
+              size="small"
+              icon={<ProjectOutlined />}
+              onClick={() => handleGenerateWOTasks(selectedKeys)}
+            >
+              {t('CREATE TASK')}
+            </Button>
+          </Col>
         </Col>
 
         <Col>

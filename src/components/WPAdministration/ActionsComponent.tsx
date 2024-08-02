@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, List, Empty } from 'antd';
 import PdfGeneratorWP from './PdfGeneratorWP'; // Убедитесь, что путь к компоненту корректен
 
@@ -25,8 +25,7 @@ interface ActionsComponentProps {
 }
 
 const actions: Action[] = [
-  { key: 'generateWP', label: 'CREATE TASKS' },
-
+  { key: 'generateWP', label: 'CREATE TASKS FROM ALL WP THIS WO' },
   { key: 'createRequirements', label: 'CREATE REQUIREMENTS' },
   { key: 'linkRequirements', label: 'LINK REQUIREMENTS' },
   { key: 'cancelLink', label: 'CANCEL LINK' },
@@ -45,6 +44,12 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
     console.log('actionHistory updated:', actionHistory);
   }, [actionHistory]);
 
+  const [activeAction, setActiveAction] = useState(false);
+
+  const handlePdfGeneratorClick = () => {
+    onActionClick('generateTaskCard');
+  };
+
   return (
     <div>
       {wo ? (
@@ -55,8 +60,10 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
             renderItem={(action) => (
               <List.Item className="flex items-center justify-between py-2 px-4 bg-gray-50 border-b border-gray-200">
                 <Button
-                  type="primary"
-                  onClick={() => onActionClick(action.key)}
+                  // disabled={!selectedKeys?.length}
+                  onClick={() => {
+                    onActionClick(action.key);
+                  }}
                   className="mr-4"
                 >
                   {t(action.label)}
@@ -72,13 +79,21 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
               </List.Item>
             )}
           />
-          <div className="mt-4 flex justify-start">
+          <div className="mt-4 flex justify-between items-center">
             <PdfGeneratorWP
-              disabled={!selectedKeys || !selectedKeys?.length}
-              ids={selectedKeys || []}
-              htmlTemplate={htmlTemplate}
-              data={[]} // Здесь могут быть ваши данные
+              // disabled={!selectedKeys || selectedKeys?.length}
+              ids={selectedKeys?.length ? selectedKeys : null}
+              onClick={handlePdfGeneratorClick}
+              wo={wo}
             />
+            <span className="text-sm text-gray-600 ml-4">
+              {actionHistory['generateTaskCard']
+                ? `${t('Performed by')} ${
+                    actionHistory['generateTaskCard']?.userName ||
+                    actionHistory['generateTaskCard']?.user
+                  } ${t('on')} ${actionHistory['generateTaskCard']?.date}`
+                : t('Not performed yet')}
+            </span>
           </div>
         </div>
       ) : (

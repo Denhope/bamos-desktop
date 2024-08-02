@@ -49,7 +49,7 @@ const AccessDiscription: FC<projectsDiscriptionType> = ({
         <ProDescriptions.Item valueType="date" label={t('OPEN DATE')}>
           {project?.updateDate}
         </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="text" label={t('STATE')}>
+        <ProDescriptions.Item valueType="text" label={t('STATUS')}>
           {project?.accessNbr && <Tag>{project?.status?.toUpperCase()}</Tag>}
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CLOSED BY')}>

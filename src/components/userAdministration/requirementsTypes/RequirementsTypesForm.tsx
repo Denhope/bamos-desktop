@@ -80,7 +80,7 @@ const RequirementsTypesForm: FC<IRequirementTypeFormProps> = ({
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card" onChange={handleTabChange}>
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <ProFormGroup>
             <ProFormGroup>
               <ProFormText
@@ -126,7 +126,7 @@ const RequirementsTypesForm: FC<IRequirementTypeFormProps> = ({
                 showSearch
                 // mode="multiple"
                 name="status"
-                label={t('STATE')}
+                label={t('STATUS')}
                 width="sm"
                 valueEnum={{
                   ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },

@@ -205,15 +205,24 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         updateTask(task).unwrap();
         refetch();
         // await updateRequirement(task).unwrap();
-        message.success(t('TASK SUCCESSFULLY UPDATED'));
+        notification.success({
+          message: t('TASK SUCCESSFULLY ADDED'),
+          description: t('The task has been successfully added.'),
+        });
       } else if (!editingProject?.id) {
         await addTask({ project: { ...task, isNRC: true } }).unwrap();
         refetch();
-        message.success(t('TASK SUCCESSFULLY ADDED'));
+        notification.success({
+          message: t('TASK SUCCESSFULLY ADDED'),
+          description: t('The task has been successfully added.'),
+        });
       }
       // setEditingProject(null);
     } catch (error) {
-      message.error(t('ERROR SAVING TASK'));
+      notification.error({
+        message: t('FAILED TO ADD TASK'),
+        description: 'There was an error adding the task.',
+      });
     }
   };
   const handleCreate = () => {
@@ -260,7 +269,10 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         try {
           message.success(t('WORKORDER SUCCESSFULLY DELETED'));
         } catch (error) {
-          message.error(t('WORKORDER DELETING REQUIREMENT'));
+          notification.error({
+            message: t('FAILED DELETE'),
+            description: 'There was an error delete.',
+          });
         }
       },
     });
@@ -816,6 +828,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         <Col>
           <PermissionGuard requiredPermissions={[Permission.PRINT_TASK_CARD]}>
             <PdfGenerator
+              wo={editingProject}
               disabled={!selectedKeys.length}
               ids={selectedKeys}
               htmlTemplate={htmlTemplate}

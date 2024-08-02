@@ -726,10 +726,16 @@ const WOAdminForm: FC<UserFormProps> = ({
         };
         updatedOrderItem && order && onSubmit(updatedOrderItem);
       } else {
-        message.error('Ошибка при загрузке файла: неверный ответ сервера');
+        notification.error({
+          message: t('FAILED TO UPLOAD'),
+          description: t('There was an error uploading the file.'),
+        });
       }
     } catch (error) {
-      message.error('Ошибка при загрузке файла');
+      notification.error({
+        message: t('FAILED TO UPLOAD'),
+        description: t('There was an error uploading the file.'),
+      });
       throw error;
     }
   };
@@ -816,7 +822,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                         showSearch
                         rules={[{ required: true }]}
                         name="status"
-                        label={t('STATE')}
+                        label={t('STATUS')}
                         width="sm"
                         // initialValue={'draft'}
                         options={[
@@ -862,7 +868,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                             },
 
                             NRC: { text: t('NRC (Defect)') },
-                            NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
+                            NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
                             MJC: { text: t('MJC (Extended MPD)') },
 
                             CMJC: { text: t('CMJC (Component maintenance) ') },
@@ -896,7 +902,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                             },
 
                             NRC: { text: t('NRC (Defect)') },
-                            NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
+                            NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
                             MJC: { text: t('MJC (Extended MPD)') },
 
                             CMJC: { text: t('CMJC (Component maintenance) ') },
@@ -1186,7 +1192,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                         {/* <ProFormSelect
                     showSearch
                     name="status"
-                    label={t('STATE')}
+                    label={t('STATUS')}
                     width="sm"
                     valueEnum={{
                       ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },

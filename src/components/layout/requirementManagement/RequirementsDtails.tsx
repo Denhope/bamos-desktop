@@ -340,7 +340,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="projectState"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
@@ -359,7 +359,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="projectState"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
@@ -376,7 +376,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="projectState"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
@@ -536,7 +536,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   name="partGroup"
                   label={`${t('PART GROUP')}`}
                   width="sm"
-                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  tooltip={`${t('SELECT SPECIAL GROUP')}`}
                   options={[
                     { value: 'CONS', label: t('CONS') },
                     { value: 'TOOL', label: t('TOOL') },

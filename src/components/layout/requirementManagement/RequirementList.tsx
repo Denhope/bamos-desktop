@@ -48,7 +48,7 @@ const RequirementList: FC<showProjectListType> = ({
     },
 
     {
-      title: `${t('STATE')}`,
+      title: `${t('STATUS')}`,
       dataIndex: 'status',
       valueType: 'select',
       key: 'status',

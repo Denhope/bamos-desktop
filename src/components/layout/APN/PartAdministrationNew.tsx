@@ -24,7 +24,7 @@ const PartAdministrationNew: FC = () => {
       <Sider
         className="h-[87vh] overflow-hidden"
         theme="light"
-        width={450}
+        width={350}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}

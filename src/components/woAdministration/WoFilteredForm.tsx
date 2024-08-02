@@ -244,7 +244,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // initialValue={['OPEN']}
         mode="multiple"
         name="projectStatus"
-        label={`${t('PROJECT STATE')}`}
+        label={`${t('PROJECT STATUS')}`}
         width="lg"
         valueEnum={{
           DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
@@ -339,7 +339,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       />
       <ProFormSelect
-        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADHOC']}
+        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADD']}
         mode="multiple"
         name="projectItemType"
         label={`${t('TASK TYPE')}`}
@@ -353,7 +353,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           RC_ADD: { text: t('RC (Critical Task, Double Inspection)') },
 
           NRC: { text: t('NRC (Defect)') },
-          NRC_ADHOC: { text: t('ADHOC(Adhoc Task)') },
+          NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
           MJC: { text: t('MJC (Extended MPD)') },
 
           CMJC: { text: t('CMJC (Component maintenance) ') },

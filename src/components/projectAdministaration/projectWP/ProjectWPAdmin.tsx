@@ -1,5 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Row, Col, Modal, message, Space, Spin, Switch } from 'antd';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  message,
+  Space,
+  Spin,
+  Switch,
+  notification,
+} from 'antd';
 import {
   ProjectOutlined,
   PlusSquareOutlined,
@@ -179,7 +189,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
 
   const handleGenerateWOPanels = async (ids: any[]) => {
     Modal.confirm({
-      title: t(' ВЫ УВЕРЕНЫ, ВЫ ХОТИТЕ СОЗДАТЬ ДОСТУПЫ?'),
+      title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
       onOk: async () => {
         try {
           await addPanels({
@@ -236,8 +246,10 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             planeID: project?.planeId?._id,
             taskType: 'FC',
           }).unwrap();
-          message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-          // setEditingReqCode(null);
+          notification.success({
+            message: t(' SUCCESSFULLY ADDED'),
+            description: t('The item has been successfully added.'),
+          });
         }
       } else if (project && project.projectType == 'baseMaintanance') {
         await addMultiProjectItems({
@@ -246,11 +258,16 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
           planeID: project?.planeId?._id,
           taskType: 'RC',
         }).unwrap();
-        message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        // setEditingReqCode(null);
+        notification.success({
+          message: t(' SUCCESSFULLY ADDED'),
+          description: t('The item has been successfully added.'),
+        });
       }
     } catch (error) {
-      message.error(t('ОШИБКА СОХРАНЕНИЯ'));
+      notification.error({
+        message: t('FAILED SAVE'),
+        description: 'There was an error adding.',
+      });
     }
   };
 
@@ -441,7 +458,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         <Split initialPrimarySize="40%">
           <div
             // sm={12}
-            className="h-[50vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+            className="h-[65vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
           >
             {isTreeView ? (
               <ProjectWPAdministrationTree
@@ -469,7 +486,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             )}
           </div>
           <div
-            className="h-[55vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className="h-[55vh] bg-white p-1 rounded-md brequierement-gray-400 overflow-y-auto "
             // sm={11}
           >
             <ProjectWPAdministrationForm

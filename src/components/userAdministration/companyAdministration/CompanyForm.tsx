@@ -91,7 +91,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
       layout="horizontal"
     >
       <Tabs defaultActiveKey="1" type="card">
-        <Tabs.TabPane tab={t('MAIN')} key="1">
+        <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <ProForm.Group>
             <ProForm.Group>
               <ProFormText
@@ -229,7 +229,7 @@ const CompanyForm: FC<UserFormProps> = ({ company, onSubmit }) => {
                   GY: t('GUYANA'),
                   HT: t('HAITI'),
                   HM: t('HEARD ISLAND AND MCDONALD ISLANDS'),
-                  VA: t('HOLY SEE (VATICAN CITY STATE)'),
+                  VA: t('HOLY SEE (VATICAN CITY STATUS)'),
                   HN: t('HONDURAS'),
                   HK: t('HONG KONG'),
                   HU: t('HUNGARY'),

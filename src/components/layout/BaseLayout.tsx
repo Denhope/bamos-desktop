@@ -142,7 +142,7 @@ const BaseLayout: React.FC = () => {
     // },
     {
       APNNBR: '09',
-      descriptions: `${t(`ORDER ADMINISTARTION`)}`,
+      descriptions: `${t(`ORDER ADMINISTRATION`)}`,
       route: RouteNames.ORDERS_ADMINISTRATION,
     },
     // {
@@ -490,7 +490,8 @@ const BaseLayout: React.FC = () => {
         <Header
           className="flex justify-between my-0 "
           style={{
-            background: 'rgba(255, 255, 255, 0.2)',
+            // background: 'rgba(255, 255, 255, 0.2)',
+            background: 'rgba(255, 0, 0, 0.2)',
           }}
         >
           <div
@@ -498,7 +499,7 @@ const BaseLayout: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <a className="text-xl  px-3 uppercase cursor-pointer text-gray-500">
-              BAMOS
+              BAMOS TEST
             </a>
             <ProFormItem
               label
