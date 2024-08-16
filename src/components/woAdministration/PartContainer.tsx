@@ -24,6 +24,7 @@ type ExampleComponentProps = {
   onCheckItems?: (selectedKeys: React.Key[]) => void;
   isLoading: boolean;
   rowData?: any[];
+  onGridReady?: any;
 };
 const PartContainer: FC<ExampleComponentProps> = ({
   columnDefs,

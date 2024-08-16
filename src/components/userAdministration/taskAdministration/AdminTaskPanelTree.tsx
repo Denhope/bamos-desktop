@@ -13,6 +13,7 @@ interface UserTreeProps {
   onTaskSelect: (task: ITask) => void;
   tasks: ITask[] | [];
   isLoading?: boolean;
+  onCheckItems: (items: any[]) => void;
 }
 
 const { Search } = Input;
@@ -21,6 +22,7 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({
   onTaskSelect,
   tasks,
   isLoading,
+  onCheckItems,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -94,7 +96,8 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({
 
       <CustomTree
         isLoading={isLoading}
-        checkable={false}
+        checkable={true}
+        isAllChecked={true}
         treeData={filteredTreeData}
         onSelect={(selectedKeys, info) => {
           const task = tasks.find((task) => task.id === selectedKeys[0]);
@@ -102,7 +105,8 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({
             onTaskSelect(task);
           }
         }}
-        height={660}
+        height={640}
+        onCheckItems={onCheckItems}
         searchQuery={searchQuery}
       />
     </div>

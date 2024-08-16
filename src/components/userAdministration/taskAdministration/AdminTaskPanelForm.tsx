@@ -444,7 +444,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       valueEnum={{
                         SB: { text: t('SERVICE BULLETIN') },
                         SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
-                        ADP: { text: t('ADP') },
+                        // ADP: { text: t('ADP') },
                         AD: { text: t('AIRWORTHINESS DIRECTIVE') },
                         PN: { text: t('COMPONENT') },
                         // PART_PRODUCE: { text: t('PART PRODUCE') },
@@ -692,7 +692,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       width={'sm'}
                       fieldProps={{ style: { resize: 'none' } }}
                       name="amtoss"
-                      label={t('AMM')}
+                      label={t('TASK REFERENCE')}
                       rules={[
                         {
                           required: true,
@@ -888,6 +888,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               // style={{ width: '100%', height: '60vh' }}
               >
                 <FileListE
+                  isCuctomerCode={true}
                   isEfectivityField={true}
                   isTaskNumberField={false}
                   handleDelete={handleDeleteUpload}

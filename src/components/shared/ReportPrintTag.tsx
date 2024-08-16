@@ -83,8 +83,8 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         page.drawText(
           product?.companyID?.companyName || product?.COMPANY_ID?.title,
           {
-            x: 5,
-            y: height - 15,
+            x: 95,
+            y: height - 17,
             font,
             size: 9,
             color: rgb(0, 0, 0),
@@ -96,9 +96,9 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         );
         page.drawImage(barcodeImage, {
           x: 5,
-          y: height - 30,
-          width: 60,
-          height: 12,
+          y: height - 25,
+          width: 70,
+          height: 16,
         });
 
         page.drawText(`L: ${product.accessProjectNumber}`, {
@@ -149,7 +149,7 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
           }
         );
 
-        page.drawText(`${t('WO No')}: ${product?.projectID?.projectWO}`, {
+        page.drawText(`${t('WP No ')}: ${product?.projectID?.projectWO}`, {
           x: 5,
           y: height - 105,
           font,
@@ -157,10 +157,30 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
           color: rgb(0, 0, 0),
           bold: true,
         });
+        const truncateText = (text, maxWidth, font, fontSize) => {
+          let truncatedText = text;
+          let textWidth = font.widthOfTextAtSize(truncatedText, fontSize);
+
+          while (textWidth > maxWidth && truncatedText.length > 0) {
+            truncatedText = truncatedText.slice(0, -1);
+            textWidth = font.widthOfTextAtSize(truncatedText + '...', fontSize);
+          }
+
+          return truncatedText + (textWidth > maxWidth ? '' : '...');
+        };
+
+        const maxWidth = 100;
+        const maxWidth1 = 124;
+        const traceNumbers = product?.projectTaskIds
+          ?.map((item: any) => item?.taskWO)
+          .join(', ');
 
         page.drawText(
-          `${t('TRACE No')}: ${product?.projectTaskIds?.map(
-            (item: any) => item?.taskWO
+          `${t('TRACE No')}: ${truncateText(
+            traceNumbers || '',
+            maxWidth1,
+            font,
+            9
           )}`,
           {
             x: 5,
@@ -181,11 +201,12 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         });
 
         page.drawText(
-          `${t('ACCESS DESC.')}: ${
-            product?.accessDescription && product.accessDescription.length > 40
-              ? product.accessDescription.substring(0, 40) + '...'
-              : product?.accessDescription
-          }`,
+          `${t('ACCESS DESC.')}: ${truncateText(
+            product?.accessDescription || '',
+            maxWidth,
+            font,
+            9
+          )}`,
           {
             x: 5,
             y: height - 150,
@@ -196,12 +217,12 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         );
 
         page.drawText(
-          `${t('AREA DESC.')}: ${
-            product?.areaCodeID?.areaDescription &&
-            product.areaCodeID.areaDescription.length > 40
-              ? product.areaCodeID.areaDescription.substring(0, 40) + '...'
-              : product?.areaCodeID?.areaDescription
-          }`,
+          `${t('AREA DESC.')}: ${truncateText(
+            product?.areaCodeID?.areaDescription || '',
+            maxWidth,
+            font,
+            9
+          )}`,
           {
             x: 5,
             y: height - 165,
@@ -212,12 +233,12 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         );
 
         page.drawText(
-          `${t('SUB ZONE DESC.')}: ${
-            product?.areaCodeID?.subZoneDescription &&
-            product.areaCodeID.subZoneDescription.length > 40
-              ? product.areaCodeID.subZoneDescription.substring(0, 40) + '...'
-              : product?.areaCodeID?.subZoneDescription
-          }`,
+          `${t('SUB ZONE DESC.')}: ${truncateText(
+            product?.areaCodeID?.subZoneDescription || '',
+            maxWidth,
+            font,
+            9
+          )}`,
           {
             x: 5,
             y: height - 180,
@@ -228,7 +249,12 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         );
 
         page.drawText(
-          `${t('ZONE No')}: ${product?.areaCodeID?.majoreZoneNbr}`,
+          `${t('ZONE No')}: ${truncateText(
+            product?.areaCodeID?.majoreZoneNbr?.toString() || '',
+            maxWidth,
+            font,
+            9
+          )}`,
           {
             x: 5,
             y: height - 195,
@@ -239,13 +265,12 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         );
 
         page.drawText(
-          `${t('ZONE DESC.')}: ${
-            product?.areaCodeID?.majoreZoneDescription &&
-            product.areaCodeID.majoreZoneDescription.length > 40
-              ? product.areaCodeID.majoreZoneDescription.substring(0, 40) +
-                '...'
-              : product?.areaCodeID?.majoreZoneDescription
-          }`,
+          `${t('ZONE DESC.')}: ${truncateText(
+            product?.areaCodeID?.majoreZoneDescription || '',
+            maxWidth,
+            font,
+            9
+          )}`,
           {
             x: 5,
             y: height - 210,
@@ -254,6 +279,23 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
             color: rgb(0, 0, 0),
           }
         );
+
+        page.drawRectangle({
+          x: 5,
+          y: height - 262,
+          width: 165,
+          height: 32,
+          borderColor: rgb(0, 0, 0),
+          borderWidth: 1,
+        });
+        page.drawRectangle({
+          x: 5,
+          y: height - 262,
+          width: 165,
+          height: 32,
+          borderColor: rgb(0, 0, 0),
+          borderWidth: 1,
+        });
 
         page.drawRectangle({
           x: 5,

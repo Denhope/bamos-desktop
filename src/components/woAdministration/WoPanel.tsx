@@ -81,10 +81,18 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     null
   );
   const [editingProjectNRC, setEditingProjectNRC] = useState<any | null>(null);
-  const { currentTime } = useGlobalState();
+  const { currentTime, setProjectTasksFormValues, projectTasksFormValues } =
+    useGlobalState();
   const [selectedStoreID, setSelectedStoreID] = useState<any | undefined>(
     undefined
   );
+
+  useEffect(() => {
+    setProjectTasksFormValues(projectSearchValues);
+    setEditingProject(null);
+    setSelectedKeys([]);
+  }, [projectSearchValues]);
+
   const [createPickSlip, setOpenCreatePickSlip] = useState<boolean>(false);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [selectedKeysRequirements, setSelectedKeysRequirements] = useState<
@@ -99,23 +107,23 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     refetch,
   } = useGetProjectItemsWOQuery(
     {
-      status: projectSearchValues?.status,
-      startDate: projectSearchValues?.startDate,
-      finishDate: projectSearchValues?.endDate,
-      projectID: projectSearchValues?.projectID,
-      vendorID: projectSearchValues?.vendorID,
-      partNumberID: projectSearchValues?.partNumberID,
-      taskWO: projectSearchValues?.projectTaskWO,
-      planeId: projectSearchValues?.planeId,
-      restrictionID: projectSearchValues?.restrictionID,
-      phasesID: projectSearchValues?.phasesID,
-      useID: projectSearchValues?.useID,
-      skillCodeID: projectSearchValues?.skillCodeID,
-      accessID: projectSearchValues?.accessID,
-      zonesID: projectSearchValues?.zonesID,
-      projectItemType: projectSearchValues?.projectItemType,
-      WOReferenceID: projectSearchValues?.WOReferenceID,
-      time: projectSearchValues?.time,
+      status: projectTasksFormValues?.status,
+      startDate: projectTasksFormValues?.startDate,
+      finishDate: projectTasksFormValues?.endDate,
+      projectID: projectTasksFormValues?.projectID,
+      vendorID: projectTasksFormValues?.vendorID,
+      partNumberID: projectTasksFormValues?.partNumberID,
+      taskWO: projectTasksFormValues?.projectTaskWO,
+      planeId: projectTasksFormValues?.planeId,
+      restrictionID: projectTasksFormValues?.restrictionID,
+      phasesID: projectTasksFormValues?.phasesID,
+      useID: projectTasksFormValues?.useID,
+      skillCodeID: projectTasksFormValues?.skillCodeID,
+      accessID: projectTasksFormValues?.accessID,
+      zonesID: projectTasksFormValues?.zonesID,
+      projectItemType: projectTasksFormValues?.projectItemType,
+      WOReferenceID: projectTasksFormValues?.WOReferenceID,
+      time: projectTasksFormValues?.time,
     },
     {
       skip: !triggerQuery,
@@ -171,7 +179,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const transformedRequirements = useMemo(() => {
     return transformToIRequirement(requirements || []);
   }, [requirements]);
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const transformedTasks = useMemo(() => {
     return transformToIProjectTask(projectTasks || []);
   }, [projectTasks]);
@@ -309,6 +317,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'taskWO',
       headerName: `${t('TRACE No')}`,
       filter: true,
+      width: 130,
       // hide: true,
     },
     {
@@ -321,6 +330,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'taskDescription',
       headerName: `${t('DESCRIPTION')}`,
       filter: true,
+      width: 300,
       // hide: true,
     },
     // {
@@ -339,6 +349,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'projectName',
       headerName: `${t('WP TITLE')}`,
       filter: true,
+      width: 300,
       // hide: true,
     },
 
@@ -346,6 +357,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'projectItemType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
+      width: 130,
       valueGetter: (params: {
         data: { projectItemType: keyof ValueEnumTypeTask };
       }) => params.data.projectItemType,
@@ -359,11 +371,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       }),
       // hide: true,
     },
-    {
-      field: 'PART_NUMBER',
-      headerName: `${t('PART No')}`,
-      filter: true,
-    },
+    // {
+    //   field: 'PART_NUMBER',
+    //   headerName: `${t('PART No')}`,
+    //   filter: true,
+    // },
     // { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
     { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
@@ -372,11 +384,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
     // { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
     // { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
-    {
-      field: 'SUB TASK_CODE',
-      headerName: `${t('SUB TASK_CODE')}`,
-      filter: true,
-    },
+    // {
+    //   field: 'SUB TASK_CODE',
+    //   headerName: `${t('SUB TASK_CODE')}`,
+    //   filter: true,
+    // },
 
     { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
     // {
@@ -423,6 +435,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'createDate',
       headerName: `${t('CREATE DATE')}`,
       filter: true,
+      width: 150,
       valueFormatter: (params: any) => {
         if (!params.value) return ''; // Проверка отсутствия значения
         const date = new Date(params.value);
@@ -868,7 +881,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 onRowSelect={function (rowData: any | null): void {
                   handleEdit(rowData);
                 }}
-                height={'69vh'}
+                height={'64vh'}
                 onCheckItems={function (selectedKeys: React.Key[]): void {
                   setSelectedKeys(selectedKeys);
                 }}

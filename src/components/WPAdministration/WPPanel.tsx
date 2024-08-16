@@ -36,7 +36,10 @@ import PartContainer from '../woAdministration/PartContainer';
 import { ValueEnumType, getStatusColor } from '@/services/utilites';
 import WPDiscription from './WPDiscription';
 import WPForm from './WPForm';
-import { useAddProjectPanelsMutation } from '@/features/projectItemWO/projectItemWOApi';
+import {
+  useAddProjectPanelsMutation,
+  useAppendProjectTaskMutation,
+} from '@/features/projectItemWO/projectItemWOApi';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -45,7 +48,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
   projectSearchValues,
 }) => {
   const [editingproject, setEditingproject] = useState<IProject | null>(null);
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const {
     data: projects,
     isLoading,
@@ -64,6 +67,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     { skip: !projectSearchValues }
   );
   const [addPanels] = useAddProjectPanelsMutation({});
+
   const [addProject] = useAddProjectMutation();
   const [updateProject] = useUpdateProjectMutation();
   const [deleteProject] = useDeleteProjectMutation();
@@ -114,7 +118,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
           description: t('Item has been successfully added.'),
         });
 
-        setEditingproject(null);
+        // setEditingproject(null);
       }
       // setEditingproject(null);
     } catch (error) {
@@ -344,8 +348,8 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       </Space>
 
       <div className="  flex gap-4 justify-between">
-        <Split initialPrimarySize="15%" splitterSize="20px">
-          <div className=" h-[68vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+        <Split initialPrimarySize="35%" splitterSize="20px">
+          <div className=" h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
             {isTreeView ? (
               <ProjectTree
                 isLoading={isFetching || isLoading}
@@ -363,6 +367,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 isLoading={isFetching || isLoading}
                 columnDefs={columnItems}
                 partNumbers={[]}
+                pagination={true}
                 rowData={projects || []}
                 onUpdateData={function (data: any[]): void {}}
                 height={'65vh'}

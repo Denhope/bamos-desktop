@@ -59,6 +59,8 @@ export interface IRequirementCode {
   maintenanceTypes?: IMaintenanceType[];
 }
 export interface IProjectType {
+  acTypeID?: any;
+  skillCodeID?: any;
   projectName: any;
   id: string;
   code: string;

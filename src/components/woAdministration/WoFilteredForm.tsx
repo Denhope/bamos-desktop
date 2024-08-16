@@ -184,6 +184,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         showSearch
         name="WOReferenceID"
         label={t('WO')}
+        // rules={[{ required: true }]}
         width="lg"
         valueEnum={wpValueEnum || []}
         onChange={(value: any) => setWOID(value)}

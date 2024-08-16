@@ -26,25 +26,48 @@ const RequirementsDiscription: FC<RequirementsDiscriptionType> = ({
   const formRef = useRef<FormInstance>(null);
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col w-full">
       <ProDescriptions
         column={5}
         size="middle"
-        // layout="horizontal"
-        className="bg-white px-4 py-3 rounded-md  align-middle"
+        className="bg-white px-4 py-3 rounded-md align-middle w-full"
       >
         <ProDescriptions.Item label={`${t('REQUIREMENT No')}`} valueType="text">
-          <Tag>{requirement?.partRequestNumberNew}</Tag>
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {requirement?.partRequestNumberNew}
+          </Tag>
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CREATE BY')}>
-          <Tag>{requirement?.createUserID?.name?.toUpperCase()}</Tag>
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {requirement?.createUserID?.name?.toUpperCase()}
+          </Tag>
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="date" label={t('CREATE DATE')}>
           {requirement?.createDate}
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="text" label={t('LAST MODIFIED BY')}>
-          <Tag>{requirement?.updateUserID?.name?.toUpperCase()}</Tag>
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {requirement?.updateUserID?.name?.toUpperCase()}
+          </Tag>
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="date" label={t('MODIFICATION DATE')}>

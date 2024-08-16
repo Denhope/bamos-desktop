@@ -223,6 +223,9 @@ const TaskList: React.FC<MyTableProps> = ({
   };
 
   useEffect(() => {
+    setSelectedRowCount(0);
+  }, [rowData]);
+  useEffect(() => {
     const handleWindowClick = () => setContextMenuVisible(false);
     window.addEventListener('click', handleWindowClick);
     return () => window.removeEventListener('click', handleWindowClick);

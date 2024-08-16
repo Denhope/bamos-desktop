@@ -66,13 +66,20 @@ import CircleRenderer from '../userAdministration/requirementAdministration/Circ
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { useGetPartTaskNumbersQuery } from '@/features/tasksAdministration/partApi';
 import { useGlobalState } from './GlobalStateContext';
-import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
-import { COMPANY_ID } from '@/utils/api/http';
+import {
+  deleteFile,
+  deleteFileUploads,
+  uploadFileServer,
+  uploadFileServerReference,
+} from '@/utils/api/thunks';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 import { setColumnWidthReq } from '@/store/reducers/columnWidthrReqlice';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
+import FileListE from '../userAdministration/taskAdministration/FileList.tsx';
+import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
 
 interface UserFormProps {
   order?: any;
@@ -93,6 +100,7 @@ const WOAdminForm: FC<UserFormProps> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType; // Обязательное свойство
   }
+
   const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const columnDefs = useMemo(
@@ -352,7 +360,8 @@ const WOAdminForm: FC<UserFormProps> = ({
   const projectId = order?.projectId;
   const projectItemID = order?.projectItemID;
   const projectTaskID = order?.id;
-  const { currentTime } = useGlobalState();
+  const { currentTime, setProjectTasksFormValues, projectTasksFormValues } =
+    useGlobalState();
   const { data: steps, refetch } = useGetFilteredStepsQuery(
     { projectItemID: projectItemID, projectTaskID: projectTaskID },
     {
@@ -745,6 +754,78 @@ const WOAdminForm: FC<UserFormProps> = ({
 
     handleFileOpen(file);
   };
+
+  const handleDeleteUpload = (key: any) => {
+    Modal.confirm({
+      title: 'Вы уверены, что хотите удалить этот файл?',
+      onOk: async () => {
+        try {
+          const response = await dispatch(
+            deleteFileUploads({
+              id: key,
+              companyID: COMPANY_ID,
+              type: 'projectTaskItem',
+              itemID: order && order.id,
+            })
+          );
+          notification.success({
+            message: t('SUCCESS DELETE'),
+            description: t('File delete successfully'),
+          });
+          setProjectTasksFormValues({
+            ...projectTasksFormValues,
+            time: new Date(),
+          });
+        } catch (error) {
+          notification.error({
+            message: t('ERROR'),
+            description: t('Error delete files.'),
+          });
+        }
+      },
+    });
+  };
+  const { data: templates, isLoading: isTemplatesLoading } =
+    useGetActionsTemplatesQuery({});
+
+  const handleUploadReference = async (data: any) => {
+    if (!order || !order.id) {
+      console.error('Невозможно загрузить файл');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', data?.file);
+    formData.append('referenceType', data?.referenceType);
+    // formData.append('taskNumber', data?.taskNumber);
+    data?.customerCodeID &&
+      formData.append('customerCodeID', data?.customerCodeID);
+    formData.append('onSavedReference', 'true');
+    order.id && formData.append('projectTaskID', order.id);
+    formData.append('fileName', data.file.name);
+    formData.append('companyID', COMPANY_ID);
+    formData.append('createDate', new Date().toISOString());
+    formData.append('createUserID', USER_ID || '');
+    data?.efectivityACID &&
+      formData.append('efectivityACID', data?.efectivityACID);
+
+    try {
+      const response = await uploadFileServerReference(formData);
+      setProjectTasksFormValues({
+        ...projectTasksFormValues,
+        time: new Date(),
+      });
+      notification.success({
+        message: t('SUCCESS UPLOAD'),
+        description: t('File uploaded successfully'),
+      });
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Error File uploaded.'),
+      });
+    }
+  };
   return (
     <PermissionGuard requiredPermissions={[Permission.EDIT_PROJECT_TASK]}>
       <ProForm
@@ -1120,10 +1201,10 @@ const WOAdminForm: FC<UserFormProps> = ({
                         </ProFormGroup>
                         <ProFormTextArea
                           // disabled={!order?.projectTaskReferenceID}
-                          width={'sm'}
-                          fieldProps={{ style: { resize: 'none' } }}
+                          width={'md'}
+                          // fieldProps={{ style: { resize: 'none' } }}
                           name="amtoss"
-                          label={t('AMM')}
+                          label={t('TASK REFERENCE')}
                           rules={[
                             {
                               required: true,
@@ -1241,7 +1322,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                   steps={stepsToRender || []}
                   onAddStep={handleAddStep}
                   onDeleteStep={handleDeleteStep}
-                  templates={fakeTemplates}
+                  templates={templates}
                 />
               </div>
             ) : (
@@ -1271,6 +1352,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                   onRowSelect={function (rowData: IRequirement | null): void {}}
                   onCheckItems={function (selectedKeys: any[]): void {
                     handleCheckItems(selectedKeys);
+                    console.log(selectedKeys);
                   }}
                   onDelete={function (reqID: string): void {
                     throw new Error('Function not implemented.');
@@ -1331,6 +1413,30 @@ const WOAdminForm: FC<UserFormProps> = ({
                 />
               ) : (
                 <Empty></Empty>
+              )}
+            </div>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={t('DOCS')} key="6">
+            <div>
+              {order ? (
+                <div
+                // className="ag-theme-alpine flex"
+                // style={{ width: '100%', height: '60vh' }}
+                >
+                  <FileListE
+                    isEfectivityField={true}
+                    isTaskNumberField={false}
+                    handleDelete={handleDeleteUpload}
+                    initialFiles={order?.reference || []}
+                    onAddFile={function (file: any): void {
+                      console.log(file);
+                      handleUploadReference(file);
+                    }}
+                    // onSelectedKeys={setSelectedKeys}
+                  ></FileListE>
+                </div>
+              ) : (
+                <Empty />
               )}
             </div>
           </Tabs.TabPane>

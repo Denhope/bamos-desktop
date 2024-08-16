@@ -17,7 +17,7 @@ import Main from '@/components/layout/Main';
 import { useNavigate } from 'react-router-dom';
 import { PERMISSIONS, ROLE, USER_ID } from './utils/api/http';
 import { RouteNames } from './router';
-
+import enGB from 'antd/lib/locale/en_GB';
 const App: FC = () => {
   const [count, setCount] = useState(0);
   const { language } = useTypedSelector((state) => state.userPreferences);

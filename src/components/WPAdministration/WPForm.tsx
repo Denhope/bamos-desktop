@@ -17,14 +17,17 @@ import {
   UploadOutlined,
   ProjectOutlined,
   FileOutlined,
+  MinusSquareOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
 import {
   useAddProjectItemWOMutation,
   useAddProjectPanelsMutation,
+  useAppendProjectTaskMutation,
   useGetProjectItemsWOQuery,
   useGetProjectTaskForCardQuery,
+  useReloadProjectTaskMutation,
 } from '@/features/projectItemWO/projectItemWOApi';
 import {
   ProFormDatePicker,
@@ -55,8 +58,14 @@ import { useGetCompaniesQuery } from '@/features/companyAdministration/companyAp
 import ActionsComponent from './ActionsComponent';
 import { useGetProjectItemsQuery } from '@/features/projectItemAdministration/projectItemApi';
 import PdfGeneratorWP from './PdfGeneratorWP';
-import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
+import {
+  useDeleteProjectTaskMutation,
+  useGetProjectTasksQuery,
+} from '@/features/projectTaskAdministration/projectsTaskApi';
 import TaskList from '../shared/Table/TaskList';
+import { useGetCERTSTypeQuery } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
+import { useAddMultiRequirementMutation } from '@/features/requirementAdministration/requirementApi';
+
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
@@ -77,7 +86,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const {
     data: projectItems,
-
     isFetching,
     refetch,
   } = useGetProjectItemsQuery(
@@ -92,7 +100,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
 
   const {
     data: projectTasks,
-
+    refetch: refetchTasks,
     isFetching: isFetch,
   } = useGetProjectItemsWOQuery(
     {
@@ -192,18 +200,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       filter: true,
       // hide: true,
     },
-    // {
-    //   field: 'PART_NUMBER',
-    //   headerName: `${t('PART No')}`,
-    //   filter: true,
-    //   // hide: true,
-    // },
-    // {
-    //   field: 'qty',
-    //   headerName: `${t('QUANTITY')}`,
-    //   filter: true,
-    //   // hide: true,
-    // },
     {
       field: 'projectName',
       width: 100,
@@ -230,66 +226,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       }),
       // hide: true,
     },
-    // {
-    //   field: 'PART_NUMBER',
-    //   headerName: `${t('PART No')}`,
-    //   filter: true,
-    // },
-    // { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
-    // { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
-    // { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
-    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
-    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
-    // { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
-    // { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
-    // {
-    //   field: 'SUB TASK_CODE',
-    //   headerName: `${t('SUB TASK_CODE')}`,
-    //   filter: true,
-    // },
-
-    // { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
-    // {
-    //   field: 'RESTRICTION_1',
-    //   headerName: `${t('RESTRICTION_1')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'PREPARATION_CODE',
-    //   headerName: `${t('PREPARATION_CODE')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'REFERENCE_2',
-    //   headerName: `${t('REFERENCE_2')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'mainWorkTime',
-    //   headerName: `${t('MHS')}`,
-    //   filter: true,
-    // },
-    // {
-    //   field: 'IDENTIFICATOR',
-    //   headerName: `${t('IDENTIFICATOR')}`,
-    //   filter: true,
-    // },
-
-    // { field: 'closedByID', headerName: 'Closed By ID' },
-
-    // {
-    //   field: 'status',
-    //   headerName: `${t('STATUS')}`,
-    //   filter: true,
-    //   valueFormatter: (params: any) => {
-    //     if (!params.value) return '';
-    //     return params.value.toUpperCase();
-    //   },
-    // },
-    // { field: 'projectTaskWO', headerName: 'Project Task WO' },
-
-    // { field: 'companyID', headerName: 'Company ID' },
     {
       field: 'createDate',
       headerName: `${t('CREATE DATE')}`,
@@ -328,12 +264,9 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         );
       },
     },
-
-    // { field: 'updateDate', headerName: 'Update Date' },
-
-    // Добавьте дополнительные поля по мере необходимости
   ];
   const [createWO] = useAddProjectItemWOMutation({});
+  const [createMultiReq] = useAddMultiRequirementMutation({});
   const [actionHistory, setActionHistory] = useState<ActionHistory>({
     generateWP: { user: '', date: '' },
     createRequirements: { user: '', date: '' },
@@ -354,18 +287,22 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       title: t('ARE YOU SURE, YOU WANT TO CREATE TASKS?'),
       onOk: async () => {
         try {
-          await createWO({
-            isSingleWO: true,
-            isMultiWO: false,
-            projectItemID: ids,
-          }).unwrap();
-          // refetchProjectItems();
-          notification.success({
-            message: t('SUCCESSFULLY ADDED'),
-            description: t('Items has been successfully added.'),
-          });
+          if (ids && ids.length > 0) {
+            await createWO({
+              isSingleWO: true,
+              isMultiWO: false,
+              projectItemID: ids,
+            }).unwrap();
+            notification.success({
+              message: t('SUCCESSFULLY ADDED'),
+              description: t('Items has been successfully added.'),
+            });
+          } else
+            notification.error({
+              message: t('FAILED '),
+              description: 'There was an error adding tasks.',
+            });
 
-          // Вызов handleSubmit с actionHistory
           handleSubmit({
             actionHistory: {
               ...actionHistory,
@@ -384,8 +321,41 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     });
   };
 
-  const createRequirements = () => {
+  const createRequirements = (
+    actionKey: string,
+    user?: string,
+    userName?: string,
+    date?: string
+  ) => {
     console.log('createRequirements function called');
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO CREATE REQUAREMENTS?'),
+      onOk: async () => {
+        try {
+          await createMultiReq({
+            requirement: { WOReferenceID: project?._id },
+          }).unwrap();
+          handleSubmit({
+            actionHistory: {
+              ...actionHistory,
+              [actionKey]: { user, userName, date },
+            },
+          });
+          notification.success({
+            message: t('SUCCESSFULLY ADDED'),
+            description: t('Items has been successfully added.'),
+          });
+
+          Modal.destroyAll();
+        } catch (error) {
+          notification.error({
+            message: t('FAILED '),
+            description: 'There was an error adding req.',
+          });
+        }
+      },
+    });
+
     // Здесь вы можете добавить логику для create Requirements
   };
 
@@ -407,24 +377,20 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     date?: string
   ) => {
     console.log('generateAccess function called');
-    // const handleGenerateWOPanels = async (ids?: any[]) => {
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO ADD ACCESS'),
       onOk: async () => {
         try {
           await addPanels({
-            // projectID: projectID,
             WOReferenceID: project?._id,
             isFromWO: true,
           }).unwrap();
-          // Вызов handleSubmit с actionHistory
           handleSubmit({
             actionHistory: {
               ...actionHistory,
               [actionKey]: { user, userName, date },
             },
           });
-          // refetchProjectItems();
           notification.success({
             message: t('ACCESS SUCCESSFULLY DELETED'),
             description: t('The step has been successfully deleted.'),
@@ -438,8 +404,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         }
       },
     });
-    //   handleGenerateWOPanels();
-    // };
   };
 
   const generateTaskCardWo = (
@@ -456,10 +420,99 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       },
     });
   };
+  const [reload] = useReloadProjectTaskMutation({});
+  const [appendNew] = useAppendProjectTaskMutation({});
+  const regenerateTasks = (
+    actionKey: string,
+    user?: string,
+    userName?: string,
+    date?: string
+  ) => {
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO REBUILD'),
+      onOk: async () => {
+        try {
+          // Вызываем функцию reload и ждем ее завершения
+          const result = await reload({
+            WOReferenceID: project?._id,
+          });
+
+          if (result) {
+            // Обновляем actionHistory после успешного вызова reload
+            handleSubmit({
+              actionHistory: {
+                ...actionHistory,
+                [actionKey]: { user, userName, date },
+              },
+            });
+
+            // Показываем уведомление об успехе
+            notification.success({
+              message: t('TASKS SUCCESSFULLY RELOAD'),
+              description: t('The step has been successfully deleted.'),
+            });
+          }
+
+          // Закрываем все модальные окна
+          Modal.destroyAll();
+        } catch (error) {
+          // Показываем уведомление об ошибке
+          notification.error({
+            message: t('FAILED TO RELOAD TASKS'),
+            description: t('There was an error adding the access.'),
+          });
+        }
+      },
+    });
+  };
+  const addTowo = (
+    actionKey: string,
+    user?: string,
+    userName?: string,
+    date?: string
+  ) => {
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO ADD TASKS'),
+      onOk: async () => {
+        try {
+          // Вызываем функцию reload и ждем ее завершения
+          const result = await appendNew({
+            WOReferenceID: project?._id,
+          });
+
+          if (result) {
+            // Обновляем actionHistory после успешного вызова reload
+            handleSubmit({
+              actionHistory: {
+                ...actionHistory,
+                [actionKey]: { user, userName, date },
+              },
+            });
+
+            // Показываем уведомление об успехе
+            notification.success({
+              message: t('TASKS SUCCESSFULLY ADDED'),
+              description: t('The tesks has been successfully added.'),
+            });
+          }
+
+          // Закрываем все модальные окна
+          Modal.destroyAll();
+        } catch (error) {
+          // Показываем уведомление об ошибке
+          notification.error({
+            message: t('FAILED TO ADD TASKS'),
+            description: t('There was an error adding the tasks.'),
+          });
+        }
+      },
+    });
+  };
+
   const handleActionClick = (actionKey: string) => {
     const ids = projectItems?.map((item) => item.id);
-    const user = USER_ID; // Здесь вы можете использовать реальные данные пользователя
-    const userName = localStorage.getItem('name'); // Здесь вы можете использовать реальные данные пользователя
+    const user = USER_ID;
+    const userName = localStorage.getItem('name');
     const date = new Date().toLocaleString();
 
     setActionHistory((prevHistory) => ({
@@ -471,13 +524,12 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       `${actionKey} ${t('button clicked by')} ${userName} ${t('on')} ${date}`
     );
 
-    // Вызов соответствующих функций в зависимости от actionKey
     switch (actionKey) {
       case 'generateWP':
         generateWP(ids, actionKey, user, userName, date);
         break;
       case 'createRequirements':
-        createRequirements();
+        createRequirements(actionKey, user, userName, date);
         break;
       case 'linkRequirements':
         linkRequirements();
@@ -487,34 +539,38 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         break;
       case 'generateAccess':
         generateAccessWO(ids, actionKey, user, userName, date);
+        break;
       case 'generateTaskCard':
         generateTaskCardWo(ids, actionKey, user, userName, date);
         break;
+      case 'rebuildWO':
+        regenerateTasks(actionKey, user, userName, date);
+        break;
+      case 'appendTOWO':
+        addTowo(actionKey, user, userName, date);
       default:
         console.log('Unknown action key:', actionKey);
     }
   };
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
   const { data: planes } = useGetPlanesQuery({});
-
-  // Инициализация состояния для хранения выбранного acTypeID
+  const { data: certificates } = useGetCERTSTypeQuery({});
   const [selectedAcTypeID, setSelectedAcTypeID] = useState<string | any>(null);
   const { data: stores } = useGetStoresQuery({});
   const { data: companies } = useGetCompaniesQuery({});
   const [addPanels] = useAddProjectPanelsMutation({});
+  const [deleteTrace] = useDeleteProjectTaskMutation({});
 
-  // Формирование объекта planesValueEnum
   const planesValueEnum: Record<string, { text: string; value: string }> =
     planes?.reduce((acc, reqType) => {
-      // Check if reqType.acTypeID exists and has at least one element
       if (reqType.acTypeID && reqType.acTypeID.length > 0) {
         acc[reqType.id] = { text: reqType.regNbr, value: reqType.acTypeID[0] };
       } else {
-        // If reqType.acTypeID is undefined or empty, set value to an empty string or handle it as appropriate for your use case
         acc[reqType.id] = { text: reqType.regNbr, value: '' };
       }
       return acc;
     }, {}) || {};
+
   const storeCodesValueEnum: Record<string, string> =
     stores?.reduce((acc, mpdCode) => {
       if (mpdCode.id && mpdCode.storeShortName) {
@@ -522,12 +578,13 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       }
       return acc;
     }, {} as Record<string, string>) || {};
-
-  // const projectTypesValueEnum: Record<string, string> =
-  //   projectTypes?.reduce((acc, reqType) => {
-  //     acc[reqType.id] = reqType.code;
-  //     return acc;
-  //   }, {}) || {};
+  const certificatesValueEnum: Record<string, string> =
+    certificates?.reduce((acc, mpdCode) => {
+      if (mpdCode.id && mpdCode.code) {
+        acc[mpdCode.id] = `${String(mpdCode.code).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
 
   const companiesCodesValueEnum: Record<string, string> =
     companies?.reduce<Record<string, string>>((acc, mpdCode) => {
@@ -538,7 +595,10 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     if (project) {
       form.resetFields();
       form.setFieldsValue(project);
-      form.setFieldsValue({ planeId: project?.planeId?._id });
+      form.setFieldsValue({
+        planeId: project?.planeId?._id || project?.planeId,
+        certificateId: project?.certificateId?._id || project?.certificateId,
+      });
     } else {
       form.resetFields();
     }
@@ -586,7 +646,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       {project ? t('UPDATE') : t('CREATE')}
     </Button>
   );
-  const [activeTabKey, setActiveTabKey] = useState('1'); // Default to the first tab
+  const [activeTabKey, setActiveTabKey] = useState('1');
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   const transformedTasks = useMemo(() => {
     return transformToIProjectTask(projectTasks || []);
@@ -604,7 +664,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             deleteFile({ id: file.id, companyID: COMPANY_ID })
           );
           if (response.meta.requestStatus === 'fulfilled') {
-            // Удаляем файл из массива files
             const updatedFiles =
               project &&
               project?.FILES &&
@@ -613,7 +672,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               ...project,
               FILES: updatedFiles,
             };
-            // await updateProjectItem(updatedOrderItem).unwrap();
             project && onSubmit(updatedOrderItem);
           } else {
             throw new Error('Не удалось удалить файл');
@@ -628,12 +686,30 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     });
   };
   const handleDownload = (file: any) => {
-    // Здесь должен быть код для скачивания файла
-
     handleFileOpen(file);
   };
   const dispatch = useAppDispatch();
 
+  const handleDeleteTrace = async (selectedKeys: string[]) => {
+    Modal.confirm({
+      title: t('ARE YOU SURE, YOU WANT TO DELETE THIS TASK?'),
+      onOk: async () => {
+        try {
+          await deleteTrace(selectedKeys).unwrap();
+          refetchTasks();
+          notification.success({
+            message: t('SUCCESSFULLY ADDED'),
+            description: t('TASK SUCCESSFULLY DELETED'),
+          });
+        } catch (error) {
+          notification.error({
+            message: t('FAILED DELETE'),
+            description: 'There was an error delete.',
+          });
+        }
+      },
+    });
+  };
   return (
     <ProForm
       size="small"
@@ -665,14 +741,13 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 disabled={!project}
                 rules={[{ required: true }]}
                 name="status"
-                label={t('WO STATUS')}
+                label={t('WP STATUS')}
                 width="sm"
                 initialValue={['DRAFT']}
                 valueEnum={{
                   DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
                   OPEN: { text: t('OPEN'), status: 'Processing' },
                   inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
-                  // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
                   COMPLETED: { text: t('COMPLETED'), status: 'Default' },
                   CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
                   CANCELLED: { text: t('CANCELLED'), status: 'Error' },
@@ -680,12 +755,10 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               />
               <ProFormSelect
                 showSearch
-                // disabled={!project}
                 rules={[{ required: true }]}
                 name="WOType"
                 label={t('WP TYPE')}
                 width="lg"
-                // initialValue={['baseMaintanance']}
                 valueEnum={{
                   baseMaintanance: {
                     text: t('BASE MAINTENANCE'),
@@ -693,8 +766,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   lineMaintanance: {
                     text: t('LINE MAINTENANCE'),
                   },
-
-                  // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
                   repairPart: { text: t('REPAIR COMPONENT') },
                   repairAC: { text: t('REPAIR AC') },
                   partCange: { text: t('COMPONENT CHANGE') },
@@ -706,15 +777,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               />
             </ProFormGroup>
 
-            {/* <ProFormSelect
-            showSearch
-            name="projectTypesID"
-            label={t('PROJECT TYPE')}
-            width="lg"
-            valueEnum={projectTypesValueEnum}
-            onChange={(value: any) => setReqTypeID(value)}
-            // disabled={!acTypeID} // Disable the select if acTypeID is not set
-          /> */}
             <ProFormGroup>
               <ProFormText
                 width={'xl'}
@@ -726,17 +788,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   },
                 ]}
               />
-              {/* <ProFormText
-              width={'sm'}
-              name="code"
-              label={t('CODE')}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            /> */}
-
               <ProFormText
                 width={'xl'}
                 name="description"
@@ -755,7 +806,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   width="sm"
                 ></ProFormDatePicker>
                 <ProFormDatePicker
-                  // disabled
                   label={t('START DATE')}
                   name="startDate"
                   width="sm"
@@ -768,7 +818,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   width="sm"
                 ></ProFormDatePicker>
                 <ProFormDatePicker
-                  // disabled
                   label={t('FINISH DATE')}
                   name="finishDate"
                   width="sm"
@@ -782,7 +831,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   label={t('STORE FOR PARTS')}
                   width="lg"
                   valueEnum={storeCodesValueEnum || []}
-                  // onChange={handleStoreChange}
                 />
               </ProFormGroup>
               <ProFormGroup>
@@ -798,7 +846,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   label={t('CUSTOMER')}
                   width="sm"
                   valueEnum={companiesCodesValueEnum || []}
-                  // disabled={!projectId}
                 />
                 <ProFormSelect
                   showSearch
@@ -807,9 +854,16 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   width="sm"
                   valueEnum={planesValueEnum}
                   onChange={(value: any) => setSelectedAcTypeID(value)}
-                  // disabled={!acTypeID} // Disable the select if acTypeID is not set
                 />
               </ProFormGroup>
+              <ProFormSelect
+                showSearch
+                name="certificateId"
+                label={t('CERTIFICATES TYPE')}
+                width="sm"
+                valueEnum={certificatesValueEnum}
+                // onChange={(value: any) => setSelectedAcTypeID(value)}
+              />
               <ProFormTextArea
                 width={'xl'}
                 fieldProps={{ style: { resize: 'none' } }}
@@ -821,8 +875,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   <Upload
                     name="FILES"
                     fileList={project?.FILES || []}
-                    // listType="picture"
-                    className="upload-list-inline cursor-pointer"
                     beforeUpload={handleUpload}
                     accept="image/*"
                     onPreview={handleDownload}
@@ -856,7 +908,17 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('TASKS')} key="4">
-          <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
+          <div className="h-[60vh] bg-white px-4  rounded-md border-gray-400 gap-2 flex flex-col">
+            <Col style={{ textAlign: 'right' }}>
+              <Button
+                disabled={!selectedKeys.length}
+                size="small"
+                icon={<MinusSquareOutlined />}
+                onClick={() => handleDeleteTrace(selectedKeys)}
+              >
+                {t('DELETE TASK')}
+              </Button>
+            </Col>
             <TaskList
               isFilesVisiable={false}
               isLoading={isLoading || isFetching}
@@ -865,7 +927,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               columnDefs={columnDefs}
               rowData={transformedTasks || []}
               onRowSelect={function (rowData: any | null): void {
-                // handleEdit(rowData);
                 console.log(rowData);
               }}
               height={'69vh'}

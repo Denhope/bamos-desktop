@@ -1,6 +1,6 @@
 {
-  "name": "bamos",
-  "version": "0.1.2",
+  "name": "bamos-test",
+  "version": "0.0.29",
   "private": true,
   "description": "planeSystem",
   "license": "MIT",
@@ -67,6 +67,7 @@
     "react-router-dom": "^6.21.3",
     "react-table": "^7.8.0",
     "redux": "^5.0.1",
+    "redux-persist": "^6.0.0",
     "sort-by": "^0.0.2",
     "umi-request": "^1.2.3",
     "uuid": "^9.0.1",

@@ -311,12 +311,22 @@ const PartsTable: React.FC<PartsTableProps> = ({
     []
   );
 
-  const gridOptions = useMemo(
-    () => ({
-      domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
-    }),
-    []
-  );
+  // const gridOptions = useMemo(
+  //   () => ({
+  //     domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
+  //   }),
+  //   []
+  // );
+  const gridOptions = {
+    columnDefs: columnDefs,
+    defaultColDef: {
+      sortable: true,
+      filter: true,
+    },
+    // onGridReady: (params: any) => {
+    //   params.api.setSortModel([{ colId: 'readyStatus', sort: 'red' }]);
+    // },
+  };
 
   const updatedColumnDefs = useMemo(
     () => [checkboxColumn, ...(columnDefs || [])],
@@ -428,6 +438,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
           </div>
         ) : (
           <AgGridReact
+            gridOptions={gridOptions}
             onColumnResized={onColumnResized}
             onGridReady={onGridReady}
             rowClassRules={rowClassRules}

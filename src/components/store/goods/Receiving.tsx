@@ -9,7 +9,7 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-components';
 
-import { Button, Form, Modal, Upload, message } from 'antd';
+import { Button, Form, Modal, Upload, message, notification } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 import UploadLink, { AcceptedFileTypes } from '@/components/shared/UploadLink';
@@ -115,11 +115,12 @@ const Receiving: FC<ReceivingType> = ({
   useEffect(() => {
     if (currentPart) {
       setSecectedSinglePN(currentPart?.partID);
+      // setSecectedSinglePN(currentPart);
       setinitialForm(currentPart?.partID?.PART_NUMBER);
       form.setFields([
         {
           name: 'partNumber',
-          value: currentPart?.PART_NUMBER,
+          value: currentPart?.partID?.PART_NUMBER,
         },
         {
           name: 'description',
@@ -278,7 +279,11 @@ const Receiving: FC<ReceivingType> = ({
           if ((await result).meta.requestStatus === 'fulfilled') {
             setAddedMaterialItem((await result).payload);
             onReceivingPart && onReceivingPart([(await result).payload]);
-            message.success('SUCCESS');
+
+            notification.success({
+              message: t('МАТЕРИАЛЫ ПРИНЯТЫ УСПЕШНО'),
+              description: t('МАТЕРИАЛЫ ПРИНЯТЫ'),
+            });
             setPrintData((await result).payload.id);
 
             // Устанавливаем галку "Печать QR" в true
@@ -572,9 +577,12 @@ const Receiving: FC<ReceivingType> = ({
                     onSelectedPN={function (PN: any): void {
                       console.log(PN);
                       setSecectedSinglePN(PN);
-                      setSecectedSinglePNID(PN?._id);
+                      setSecectedSinglePNID(PN?._id || PN?.id);
                       form.setFields([
-                        { name: 'description', value: PN?.DESCRIPTION },
+                        {
+                          name: 'description',
+                          value: PN?.DESCRIPTION || PN?.NAME_OF_MATERIAL,
+                        },
                       ]);
                       form.setFields([
                         { name: 'unit', value: PN?.UNIT_OF_MEASURE },

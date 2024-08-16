@@ -68,6 +68,9 @@ import { wpApi } from '@/features/wpAdministration/wpApi';
 import columnWidthsReducer from './reducers/columnWidthsSlice'; // Добавьте эту строку
 import columnWidthsExpiryReducer from './reducers/columnWidthsExpirySlice';
 import columnWidthsReqReducer from './reducers/columnWidthrReqlice'; //
+import { certificatesTypeApi } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
+import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTextTypeApi';
+import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
 const rootReducer = combineReducers({
   auth: authSlice,
   files: filesUploadeReducer,
@@ -130,6 +133,9 @@ const rootReducer = combineReducers({
   [pickSlipBookingsItemsApi.reducerPath]: pickSlipBookingsItemsApi.reducer,
   [restrictionApi.reducerPath]: restrictionApi.reducer,
   [wpApi.reducerPath]: wpApi.reducer,
+  [certificatesTypeApi.reducerPath]: certificatesTypeApi.reducer,
+  [orderTextTypeApi.reducerPath]: orderTextTypeApi.reducer,
+  [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
   vendor: vendorReducer,
   acTypes: acTypesReducer,
   ACZones: zonesReducer,

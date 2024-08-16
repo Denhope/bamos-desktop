@@ -166,6 +166,22 @@ export const requirementApi = createApi({
       }),
       invalidatesTags: [{ type: 'Requirement' as const, id: 'LIST' }],
     }),
+    addMultiRequirement: builder.mutation<
+      IRequirement,
+      { requirement: Partial<IRequirement> }
+    >({
+      query: ({ requirement }) => ({
+        url: `requirementsNew/save-multi/company/${COMPANY_ID}`,
+        method: 'POST',
+        body: {
+          ...requirement,
+          createUserID: USER_ID,
+          createDate: new Date(),
+          companyID: COMPANY_ID,
+        },
+      }),
+      invalidatesTags: [{ type: 'Requirement' as const, id: 'LIST' }],
+    }),
 
     updateRequirement: builder.mutation<IRequirement, IRequirement>({
       query: (requirement) => ({
@@ -185,10 +201,7 @@ export const requirementApi = createApi({
       ],
     }),
 
-    deleteRequirement: builder.mutation<
-      { success: boolean; id: string },
-      string
-    >({
+    deleteRequirement: builder.mutation<{ success: boolean; id: any }, any>({
       query: (id) => ({
         url: `requirementsNew/company/${COMPANY_ID}/requirement/${id}`,
         method: 'DELETE',
@@ -208,4 +221,5 @@ export const {
   useGetRequirementQuery,
   useDeleteRequirementMutation,
   useUpdateRequirementMutation,
+  useAddMultiRequirementMutation,
 } = requirementApi;

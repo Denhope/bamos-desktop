@@ -15,26 +15,49 @@ const OrderDiscription: FC<ordersDiscriptionType> = ({
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col w-full">
       <ProDescriptions
         emptyText={''}
         column={5}
         size="middle"
-        // layout="horizontal"
-        className="bg-white px-4 py-3 rounded-md  align-middle"
+        className="bg-white px-4 py-3 rounded-md align-middle w-full"
       >
         <ProDescriptions.Item label={`${t('ORDER No')}`} valueType="text">
-          <Tag>{order?.orderNumberNew || ''}</Tag>
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {order?.orderNumberNew || ''}
+          </Tag>
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CREATE BY')}>
-          <Tag>{order?.createUserID?.name?.toUpperCase() || ''}</Tag>
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {order?.createUserID?.name?.toUpperCase() || ''}
+          </Tag>
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="date" label={t('CREATE DATE')}>
           {order?.createDate || ''}
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="text" label={t('LAST MODIFIED BY')}>
-          <Tag>{String(order?.updateUserID?.name || '')?.toUpperCase()}</Tag>
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {String(order?.updateUserID?.name || '')?.toUpperCase()}
+          </Tag>
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="date" label={t('MODIFICATION DATE')}>

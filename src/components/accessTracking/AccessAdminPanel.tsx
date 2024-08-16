@@ -8,7 +8,18 @@ import {
   useUpdateProjectPanelsMutation,
 } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
-import { Button, Col, Modal, Space, Spin, Empty, Switch, message } from 'antd';
+import {
+  Button,
+  Col,
+  Modal,
+  Space,
+  Spin,
+  Empty,
+  Switch,
+  message,
+  Tabs,
+  notification,
+} from 'antd';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 // import data from '../../data/reports/label.xml';
 
@@ -64,7 +75,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [updateAccess] = useUpdateProjectPanelsMutation({});
   const [addAccessBooking] = useAddBookingMutation({});
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const [triggerQueryBook, setTriggerQueryBook] = useState(false);
 
   // Проверяем, есть ли accessProjectID и устанавливаем триггер для запроса
@@ -76,6 +87,9 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       setTriggerQueryBook(true);
     }
   }, [editingproject?.id, editingproject?._id]);
+  useEffect(() => {
+    setEditingproject(null);
+  }, [projectSearchValues]);
 
   // Запускаем запрос, если triggerQuery true
   const [addPanels] = useAddProjectPanelsMutation({});
@@ -164,11 +178,11 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
         { skip: !triggerQuery }
       );
 
-  useEffect(() => {
-    if (accesses) {
-      refetch();
-    }
-  }, [accesses, refetch, projectSearchValues]);
+  // useEffect(() => {
+  //   if (accesses) {
+  //     refetch();
+  //   }
+  // }, [accesses, refetch, projectSearchValues]);
   const { data: accessesData } = useGetAccessCodesQuery(
     { acTypeID: accesses && accesses?.length && accesses[0]?.acTypeID },
     { skip: accesses && !accesses[0]?.acTypeID }
@@ -261,9 +275,15 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       onOk: async () => {
         try {
           // await deleteRequirement(companyId).unwrap();
-          message.success(t('ACCESS SUCCESSFULLY DELETED'));
+          notification.success({
+            message: t('SUCCESS DELETING'),
+            description: t('ACCESS SUCCESSFULLY DELETED'),
+          });
         } catch (error) {
-          message.error(t('ACCESS DELETING ERROR'));
+          notification.error({
+            message: t('ERROR DELETING'),
+            description: t('ERROR DELETING ACCESS'),
+          });
         }
       },
     });
@@ -292,12 +312,18 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           }).unwrap();
 
           console.log('Add Booking Response:', addBookingResponse);
+          notification.success({
+            message: t('SUCCESS OPEN'),
+            description: t('ACCESS SUCCESSFULLY OPEN'),
+          });
 
-          message.success(t('ACCESS SUCCESSFULLY OPEN'));
           refetch();
         } catch (error) {
           console.error('Error updating access or adding booking:', error);
-          message.error(t('ACCESS OPEN ERROR'));
+          notification.success({
+            message: t('ERROR OPEN'),
+            description: t('ACCESS OPEN ERROR'),
+          });
         }
       },
     });
@@ -322,10 +348,16 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             acTypeId: projectSearchValues.acTypeId,
           }).unwrap();
           console.log('Add Booking Response:', addBookingResponse);
-          message.success(t('ACCESS SUCCESSFULLY CLOSED'));
+          notification.success({
+            message: t('SUCCESS CLOSE'),
+            description: t('ACCESS SUCCESSFULLY CLOSED'),
+          });
           refetch();
         } catch (error) {
-          message.error(t('ACCESS CLOSE ERROR'));
+          notification.success({
+            message: t('ERROR CLOSED'),
+            description: t('ACCESS CLOSED ERROR'),
+          });
         }
       },
     });
@@ -350,10 +382,16 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             acTypeId: projectSearchValues.acTypeId,
           }).unwrap();
           console.log('Add Booking Response:', addBookingResponse);
-          message.success(t('ACCESS SUCCESSFULLY INSPECT'));
+          notification.success({
+            message: t('SUCCESS INSPECT'),
+            description: t('ACCESS SUCCESSFULLY INSPECT'),
+          });
           refetch();
         } catch (error) {
-          message.error(t('ACCESS CLOSE ERROR'));
+          notification.success({
+            message: t('ERROR INSPECT'),
+            description: t('ACCESS INSPECT ERROR'),
+          });
         }
       },
     });
@@ -471,10 +509,12 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   ];
   const columnDefsAccets = [
     {
-      headerName: `${t('LABEL')}`,
-      field: 'accessProjectNumber',
+      headerName: `${t('ACCESS No')}`,
+      field: 'accessNbr',
       editable: false,
       cellDataType: 'text',
+      filter: true,
+      width: 150,
     },
     {
       field: 'status',
@@ -494,25 +534,48 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       }),
     },
     {
-      headerName: `${t('ACCESS No')}`,
-      field: 'accessNbr',
+      headerName: `${t('LABEL')}`,
+      field: 'accessProjectNumber',
       editable: false,
       cellDataType: 'text',
+      filter: true,
+      width: 100,
     },
+
     {
       field: 'accessDescription',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
+      width: 250,
+      filter: true,
     },
     {
       field: 'majoreZoneNbr',
       headerName: `${t('ZONE')}`,
       cellDataType: 'text',
+      filter: true,
+      width: 100,
     },
     {
       field: 'subZoneNbr',
+      filter: true,
       headerName: `${t('SUB ZONE')}`,
       cellDataType: 'text',
+      width: 100,
+    },
+    {
+      field: 'areaNbr',
+      filter: true,
+      headerName: `${t('AREA')}`,
+      cellDataType: 'text',
+      width: 100,
+    },
+    {
+      field: 'areaDescription',
+      filter: true,
+      headerName: `${t('AREA DESCRIPTION')}`,
+      cellDataType: 'text',
+      width: 250,
     },
   ];
 
@@ -643,7 +706,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
               <AccessCodeOnlyPanelTree
                 isLoading={isLoading || isFetching}
                 onZoneCodeSelect={handleEdit}
-                accessCode={accesses || []}
+                accessCode={transformedTaleAccess || []}
                 onCheckItems={(selectedKeys) => {
                   setSelectedKeys(selectedKeys);
                 }}
@@ -663,7 +726,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                   isChekboxColumn={true}
                   onUpdateData={(data: any[]): void => {}}
                   rowData={transformedTaleAccess}
-                  isLoading={isLoading || isFetching}
+                  isLoading={isLoading}
                   onCheckItems={(selectedKeys) => {
                     setSelectedKeys(selectedKeys);
                   }}
@@ -674,61 +737,74 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           </div>
           <div className="h-[69vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
             {/* <WOAdminForm /> */}
-            <Split horizontal initialPrimarySize="45%">
-              <div className="overflow-auto h-[57vh]">
-                <AccessCodeForm
-                  accessesData={accessesData || []}
-                  // projectTasks={projectTasks || []}
-                  accessCode={editingproject}
-                  onSubmit={function (accessCode: any): void {
-                    console.log(accessCode);
-                    Modal.confirm({
-                      title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
-                      onOk: async () => {
-                        try {
-                          await addPanels({
-                            accessIds: [accessCode.accessID],
-                            WOReferenceID: accessCode.WOReferenceID,
-                            projectTaskIds: accessCode.projectTaskID,
-                          }).unwrap();
-                          // refetchProjectItems();
-                          message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
-                          Modal.destroyAll();
-                        } catch (error) {
-                          message.error(t('ОШИБКА '));
-                        }
-                      },
-                    });
-                  }}
-                ></AccessCodeForm>
-              </div>
-              <div className="py-5">
-                {editingproject ? (
-                  <PartContainer
-                    isFilesVisiable={false}
-                    isVisible={false}
-                    pagination={false}
-                    isAddVisiable={true}
-                    isButtonVisiable={false}
-                    isEditable={false}
-                    height={'30vh'}
-                    columnDefs={columnDefs}
-                    partNumbers={[]}
-                    isChekboxColumn={false}
-                    onUpdateData={(data: any[]): void => {}}
-                    rowData={transformedAccess}
-                    isLoading={false}
-                  />
-                ) : (
-                  <Empty></Empty>
-                )}
+            {/* <Split horizontal initialPrimarySize="45%"> */}
+            <div className="overflow-auto h-[70vh]">
+              <Tabs
+                onChange={(key) => {
+                  setActiveTabKey(key);
+                }}
+                defaultActiveKey="1"
+                type="card"
+              >
+                <Tabs.TabPane tab={t('INFORMATION')} key="1">
+                  <AccessCodeForm
+                    accessesData={accessesData || []}
+                    // projectTasks={projectTasks || []}
+                    accessCode={editingproject}
+                    onSubmit={function (accessCode: any): void {
+                      console.log(accessCode);
+                      Modal.confirm({
+                        title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
+                        onOk: async () => {
+                          try {
+                            await addPanels({
+                              accessIds: [accessCode.accessID],
+                              WOReferenceID: accessCode.WOReferenceID,
+                              projectTaskIds: accessCode.projectTaskID,
+                            }).unwrap();
+                            // refetchProjectItems();
+                            message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
+                            Modal.destroyAll();
+                          } catch (error) {
+                            message.error(t('ОШИБКА '));
+                          }
+                        },
+                      });
+                    }}
+                  ></AccessCodeForm>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab={t('BOOKING')} key="5">
+                  <div className="py-5">
+                    {editingproject ? (
+                      <PartContainer
+                        isFilesVisiable={false}
+                        isVisible={false}
+                        pagination={false}
+                        isAddVisiable={true}
+                        isButtonVisiable={false}
+                        isEditable={false}
+                        height={'56vh'}
+                        columnDefs={columnDefs}
+                        partNumbers={[]}
+                        isChekboxColumn={false}
+                        onUpdateData={(data: any[]): void => {}}
+                        rowData={transformedAccess}
+                        isLoading={false}
+                      />
+                    ) : (
+                      <Empty></Empty>
+                    )}
 
-                {/* <TableComponent
+                    {/* <TableComponent
                   columns={columns}
                   data={editingproject?.accessNbr ? bookings : []}
                 ></TableComponent> */}
-              </div>
-            </Split>
+                  </div>
+                </Tabs.TabPane>
+              </Tabs>
+            </div>
+
+            {/* </Split> */}
           </div>
         </Split>
       </div>

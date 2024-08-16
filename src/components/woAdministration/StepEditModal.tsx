@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +10,7 @@ import { ISkill, UserGroup } from '@/models/IUser';
 import { ProFormSelect } from '@ant-design/pro-components';
 
 interface Template {
+  description: any;
   id: string;
   name: string;
   content: string;
@@ -34,7 +37,7 @@ const StepEditModal: React.FC<{
     const selected = templates.find((t) => t.id === templateId);
     if (selected) {
       form.setFieldsValue({
-        stepDescription: selected.content,
+        stepDescription: selected.description,
       });
     }
   };
@@ -83,7 +86,7 @@ const StepEditModal: React.FC<{
             form={form}
             layout="vertical"
             initialValues={{
-              stepHeadLine: step.stepHeadLine,
+              stepHeadLine: step.stepHeadLine || 'mainWork',
               stepDescription: step.stepDescription,
               skillID: step.skillID,
               userGroupID: step.userGroupID,
@@ -115,6 +118,7 @@ const StepEditModal: React.FC<{
                 <Option value="package">{t('PACKAGE')}</Option>
                 <Option value="additionalWorks">{t('ADD_WORKS')}</Option>
                 <Option value="store">{t('STORE')}</Option>
+                <Option value="mainWork">{t('MAIN WORK')}</Option>
               </Select>
             </Form.Item> */}
             <ProFormSelect

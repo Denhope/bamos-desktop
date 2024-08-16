@@ -38,7 +38,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
   projectSearchValues,
 }) => {
   const [editingproject, setEditingproject] = useState<IProject | null>(null);
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const {
     data: projects,
     isLoading,

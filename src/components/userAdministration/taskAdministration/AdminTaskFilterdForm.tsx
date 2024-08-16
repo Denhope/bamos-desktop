@@ -50,18 +50,6 @@ const AdminTaskFilteredForm: FC<
 
   const handleSubmit = useCallback(
     async (values: TaskFilteredFormValues) => {
-      // if (Object.values(values).every((value) => value === '')) {
-      //   // Показываем уведомление, если все значения формы пустые
-      //   notification.warning({
-      //     message: 'Предупреждение',
-      //     description: 'Пожалуйста, введите хотя бы одно значение',
-      //   });
-      //   return false;
-      // } else {
-      //   // Вызываем onSubmit только если хотя бы одно поле заполнено
-      //   const success = onSubmit({ ...values, time: new Date() });
-      //   return success;
-      // }
       onSubmit({ ...values, time: new Date() });
     },
     [onSubmit]
@@ -84,7 +72,10 @@ const AdminTaskFilteredForm: FC<
     }, {}) || {};
 
   return (
-    <div className="p-3 m-1 rounded-md bg-slate-100">
+    <div
+      className="p-3 m-1 rounded-md bg-slate-100 overflow-y-auto"
+      style={{ maxHeight: '400px' }}
+    >
       <ProForm
         size="small"
         onFinish={handleSubmit}
@@ -122,15 +113,10 @@ const AdminTaskFilteredForm: FC<
           label={t('TASK TYPE')}
           width="xl"
           valueEnum={{
-            // PART_PRODUCE: { text: t('PART PRODUCE') },
             SB: { text: t('SERVICE BULLETIN') },
             SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
-            // PN: { text: t('COMPONENT') },
-            // PART_PRODUCE: { text: t('PART PRODUCE') },
-            // NRC: { text: t('NRC') },
-            // ADD_HOC: { text: t('ADD HOC') },
           }}
         />
         <ProFormSelect
@@ -162,7 +148,6 @@ const AdminTaskFilteredForm: FC<
           width="lg"
           valueEnum={statusOptions}
         />
-        {/* <ProFormCheckbox name="IS_RESIDENT" label={t('RESIDENT')} /> */}
       </ProForm>
     </div>
   );

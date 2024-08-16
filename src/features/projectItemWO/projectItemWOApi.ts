@@ -108,7 +108,45 @@ export const projectItemWOApi = createApi({
         }
       },
     }),
+    reloadProjectTask: builder.mutation<
+      any,
+      {
+        ids?: any;
+        WOReferenceID?: any;
+      }
+    >({
+      query: ({ ids, WOReferenceID }) => ({
+        url: `projectsTasksNew/reload/company/${COMPANY_ID}`,
+        method: 'PUT',
+        body: {
+          ids,
+          WOReferenceID,
+          updateUserID: USER_ID,
+          updateDate: new Date(),
+        },
+      }),
+      invalidatesTags: ['ProjectItemWO'],
+    }),
 
+    appendProjectTask: builder.mutation<
+      any,
+      {
+        ids?: any;
+        WOReferenceID?: any;
+      }
+    >({
+      query: ({ ids, WOReferenceID }) => ({
+        url: `projectsTasksNew/append-new/company/${COMPANY_ID}`,
+        method: 'PUT',
+        body: {
+          ids,
+          WOReferenceID,
+          createUserID: USER_ID,
+          createDate: new Date(),
+        },
+      }),
+      invalidatesTags: ['ProjectItemWO'],
+    }),
     getProjectItemWO: builder.query<IProjectItemWO, string>({
       query: (id) => `projectsTasksNew/company/${id}`,
     }),
@@ -442,4 +480,6 @@ export const {
   useUpdateProjectPanelsMutation,
   useGetProjectPanelsQuery,
   useGetProjectTaskForCardQuery,
+  useReloadProjectTaskMutation,
+  useAppendProjectTaskMutation,
 } = projectItemWOApi;

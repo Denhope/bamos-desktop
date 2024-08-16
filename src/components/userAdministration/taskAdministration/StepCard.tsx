@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import {
   Card,
@@ -34,7 +35,7 @@ import {
   useGetFilteredStepsQuery,
   useUpdateStepMutation,
 } from '@/features/tasksAdministration/stepApi';
-
+import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
 interface Props {
   step: IStep;
   selectedStepItems: string[];
@@ -57,11 +58,8 @@ const StepCard: React.FC<Props> = ({
   const [visibleStepEdit, setVisibleStepEdit] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // New state to track editing status
   const { data: users } = useGetUsersQuery({});
-  // const { data: editStatus, refetch: refetchEditStatus } =
-  //   useCheckStepEditStatusQuery(step.id || '', {
-  //     skip: !step.id,
-  //   });
-  // const [setStepEditStatus] = useSetStepEditStatusMutation({});
+  const { data: templates, isLoading: isTemplatesLoading } =
+    useGetActionsTemplatesQuery({});
   const { data: groups } = useGetGroupsUserQuery({});
   const { data: skills } = useGetSkillsQuery({});
 
@@ -116,65 +114,6 @@ const StepCard: React.FC<Props> = ({
     setVisibleStepEdit(false);
     //
   };
-
-  const fakeTemplates = [
-    {
-      id: '1',
-      name: 'PERFORMED',
-      content: `TASK CARD 72-180-01-01 
-      WAS PFMD. BSI REPORT 291-23 AMM REV 77, 
-      FEB 15/22 SEE MATERIAL LIST.
-      WO: 000129`,
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '2',
-      name: 'INSPECTION',
-      content: `INSP PFMD IAW TASK CARD 72-180-01-01.
-      AMM REV 77, FEB 15/22.
-      WO: 000129
-      INSP 407T1`,
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '3',
-      name: 'Template 3',
-      content: 'Content of Template 3',
-      type: 'ACTIONS',
-      planeType: 'BOEING NG',
-    },
-    {
-      id: '4',
-      name: 'Template 4',
-      content: 'Content of Template 4',
-      type: 'STEPS',
-      planeType: 'A320',
-    },
-    {
-      id: '5',
-      name: 'Template 5',
-      content: 'Content of Template 5',
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '6',
-      name: 'Template 6',
-      content: 'Content of Template 6',
-      type: 'STEPS',
-      planeType: 'A320',
-    },
-    {
-      id: '7',
-      name: 'Template 7',
-      content: 'Content of Template 7',
-      type: 'ACTIONS',
-      planeType: 'BOEING NG',
-    },
-    // Добавьте другие фейковые шаблоны здесь
-  ];
 
   const isSelected = step.id && selectedStepItems.includes(step.id);
   const { t } = useTranslation();
@@ -262,7 +201,7 @@ const StepCard: React.FC<Props> = ({
               onCancel={handleStepEditCancel}
               step={step}
               onSave={handleStepSave}
-              templates={fakeTemplates}
+              templates={templates}
               groups={groups || []}
               skills={skills || []}
             />

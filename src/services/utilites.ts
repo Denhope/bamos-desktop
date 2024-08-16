@@ -881,7 +881,8 @@ export const transformToIPartNumber = (
       _id: item._id,
       partId: item.partNumberID?._id,
       PART_NUMBER: item.partNumberID?.PART_NUMBER,
-      DESCRIPTION: item.partNumberID?.DESCRIPTION,
+      DESCRIPTION:
+        item.partNumberID?.DESCRIPTION || item.partNumberID?.NAME_OF_MATERIAL,
       TYPE: item.partNumberID?.TYPE,
       GROUP: item.partNumberID?.GROUP,
       UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
@@ -906,6 +907,7 @@ export const transformToIPart = (data: any[]): any[] => {
     ...item,
     DESCRIPTION:
       item?.NAME_OF_MATERIAL?.toUpperCase() || item?.DESCRIPTION?.toUpperCase(),
+    AC_TYPE: item?.acTypeID?.code || '',
   }));
 
   console.log('Output data from transformToIPartNumber:', result); // Вывод результата
@@ -940,6 +942,7 @@ export const transformToIAltPartNumber = (data: any[]): any[] => {
     createUserID: item.createUserID?._id,
     updateDate: item.updateDate,
     updateUserID: item.updateUserID?._id,
+    AC_TYPE: item?.partNumberID?.acTypeID?.code || '',
   }));
 
   console.log('Output data from transformToALTIPartNumber:', result); // Вывод результата
@@ -954,7 +957,8 @@ export const transformToIStockPartNumber = (data: any[]): any[] => {
     STOCK: item?.storeID?.storeShortName,
     STORE_ID: item?.storeID?._id,
     LOCATION: item?.locationID?.locationName,
-    files: item?.FILES,
+
+    files: item?.FILES || item?.files,
     OWNER: item?.locationID?.ownerID?.title,
     restrictionID: item?.locationID?.restrictionID,
     locationType: item?.locationID?.locationType,
@@ -1095,6 +1099,30 @@ export interface ValueEnumType {
   OPEN?: string;
   progress?: string;
 }
+export interface ValueEnumType {
+  onQuatation: string;
+  partlyCanceled?: string;
+  open?: string;
+  closed: string;
+  canceled: string;
+  onOrder: string;
+  onShort: string;
+  draft: string;
+  issued: string;
+  inProgress?: string;
+  complete: string;
+  RECEIVED?: string;
+  PARTLY_RECEIVED?: string;
+  CANCELLED?: string;
+  partyCancelled?: string;
+  partlyClosed?: string;
+  inspect?: string;
+  performed?: string;
+  inspected?: string;
+  DRAFT?: string;
+  OPEN?: string;
+  progress?: string;
+}
 export interface ValueEnumTypeTask {
   RC: string;
   RC_ADD: string;
@@ -1103,7 +1131,28 @@ export interface ValueEnumTypeTask {
   CMJC: string;
   FC: string;
   NRC_ADD: string;
+  PART_PRODUCE?: string;
+  SMC?: string;
 }
+export interface ValueEnumTypeOrder {
+  PURCHASE_ORDER: string;
+  QUOTATION_ORDER: string;
+}
+export const getTypeOrderColor = (
+  projectItemType: keyof ValueEnumTypeOrder
+): string => {
+  switch (projectItemType) {
+    case 'PURCHASE_ORDER':
+      return '#D3D3D3'; // Light Gray
+
+      return '#D3D3D3'; // Light Gray
+    case 'QUOTATION_ORDER':
+      return '#FFD700'; // Light Gray
+
+    default:
+      return ''; // Default color
+  }
+};
 export const getTaskTypeColor = (
   projectItemType: keyof ValueEnumTypeTask
 ): string => {
@@ -1112,11 +1161,18 @@ export const getTaskTypeColor = (
       return '#D3D3D3'; // Light Gray
     case 'RC_ADD':
       return '#800080'; // Light Gray
+    case 'SB':
+      return '#800080'; // Light Gray
+
     case 'MJC':
       return '#D3D3D3'; // Light Gray
     case 'CMJC':
       return '#D3D3D3'; // Light Gray
     case 'FC':
+      return '#FFA07A'; // Light Salmon
+    case 'SMC':
+      return '#FFA07A'; // Light Salmon
+    case 'PART_PRODUCE':
       return '#FFA07A'; // Light Salmon
 
     case 'NRC':
@@ -1173,6 +1229,9 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
       return '#FF6347'; // Tomato Red
     case 'onOrder':
       return '#FFA07A'; // Light Salmon
+    case 'transfer':
+      return '#FFD700'; // Dark Blue
+
     case 'issued':
       return '#800080'; // Dark Blue
     default:
@@ -1284,15 +1343,20 @@ export const transformToPartBooking = (data: any[]): any[] => {
   const result = data.map((item: any) => ({
     ...item,
     ...item.MATERIAL_STORE_ID,
-    QUANTITY: parseInt(
-      `${item.qyantityMode === 'minus' ? '-' : ''}${
-        item.MATERIAL_STORE_ID?.QUANTITY
-      }`,
-      10
-    ),
-    SHELF_NUMBER: item.MATERIAL_STORE_ID?.locationID?.locationName,
+    QUANTITY:
+      parseInt(
+        `${item.qyantityMode === 'minus' ? '-' : ''}${
+          item.MATERIAL_STORE_ID?.QUANTITY ||
+          item?.MATERIAL_STORE_ID?.ADD_QUANTITY
+        }`,
+        10
+      ) || item.QUANTITY,
+    SERIAL_NUMBER:
+      item?.MATERIAL_STORE_ID?.SERIAL_NUMBER || item?.SERIAL_NUMBER,
+    SHELF_NUMBER:
+      item.MATERIAL_STORE_ID?.locationID?.locationName || item?.SHELF_NUMBER,
     files: item.MATERIAL_STORE_ID?.FILES,
-    CREATE_BY: item?.createUserID?.name,
+    CREATE_BY: item?.createUserID?.name || item?.userID?.name,
 
     // index: item?.index,
     // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,

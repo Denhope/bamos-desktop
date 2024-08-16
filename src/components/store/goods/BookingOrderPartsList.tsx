@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { ProColumns } from '@ant-design/pro-components';
 import { DatePicker } from 'antd';
 import EditableTable from '@/components/shared/Table/EditableTable';
@@ -191,6 +193,7 @@ const BookingOrderPartsList: FC<showOrderListType> = ({
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
     PARTLY_RECEIVED: t('PARTLY RECEIVED'),
+    transfer: t('TRASFER'),
   };
   const columnOrderItems = [
     // {

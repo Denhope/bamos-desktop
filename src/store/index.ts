@@ -41,6 +41,9 @@ import { userGroupApi } from '@/features/userAdministration/userGroupApi';
 import { vendorApi } from '@/features/vendorAdministration/vendorApi';
 import { wpApi } from '@/features/wpAdministration/wpApi';
 import { zoneCodeApi } from '@/features/zoneAdministration/zonesApi';
+import { certificatesTypeApi } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
+import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTextTypeApi';
+import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
 
 const persistConfig = {
   key: 'root',
@@ -94,7 +97,10 @@ const store = configureStore({
       pickSlipItemsApi.middleware,
       pickSlipBookingsItemsApi.middleware,
       restrictionApi.middleware,
-      wpApi.middleware
+      wpApi.middleware,
+      certificatesTypeApi.middleware,
+      orderTextTypeApi.middleware,
+      actionsTemplatesApi.middleware
     ),
 });
 

@@ -1,7 +1,16 @@
 // @ts-nocheck
 
-import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Col, Modal, message, Space, Spin, Switch } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Button,
+  Col,
+  Modal,
+  message,
+  Space,
+  Spin,
+  Switch,
+  notification,
+} from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next';
@@ -70,29 +79,40 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
 
   const [addRequirement] = useAddRequirementMutation();
   const [updateRequirement] = useUpdateRequirementMutation();
-  const [deleteRequirement] = useDeleteRequirementMutation();
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [deleteRequirement] = useDeleteRequirementMutation({});
+  const [isTreeView, setIsTreeView] = useState(false);
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const { t } = useTranslation();
-
+  useEffect(() => {
+    setEditingRequirement(null);
+    setSelectedKeys([]);
+  }, [requirementsSearchValues]);
   const handleCreate = () => {
     setEditingRequirement(null);
     setIsCreating(true);
   };
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
   const handleEdit = (requirement: IRequirement) => {
     setEditingRequirement(requirement);
   };
 
-  const handleDelete = async (companyId: string) => {
+  const handleDelete = async (selectedKeys: string[]) => {
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS REQUIREMENT?'),
       onOk: async () => {
         try {
-          await deleteRequirement(companyId).unwrap();
-          message.success(t('REQUIREMENT SUCCESSFULLY DELETED'));
+          await deleteRequirement(selectedKeys).unwrap();
+
+          notification.success({
+            message: t('SUCCESSFULLY DELETED'),
+            description: t('REQUIREMENT SUCCESSFULLY DELETED'),
+          });
         } catch (error) {
-          message.error(t('ERROR DELETING REQUIREMENT'));
+          notification.error({
+            message: t('FAILED '),
+            description: 'ERROR DELETING REQUIREMENT',
+          });
         }
       },
     });
@@ -142,7 +162,41 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
         cellRendererParams: {
           color: '', // Параметры, если необходимы
         },
-        cellDataType: 'number',
+        sortable: true, // Включение сортировки для этой колонки
+        cellDataType: 'text',
+        valueGetter: (params: any) => {
+          // Определяет значение для фильтрации и сортировки
+          const { data } = params;
+          const availableQTY = data.availableQTY || 0;
+          const amout = data.amout || 0;
+          const bookedQuantity = data.bookedQuantity || 0;
+          const reservationQTY = data.reservationQTY || 0;
+          const availableAllStoreQTY = data.availableAllStoreQTY || 0;
+
+          const requiredQty = amout - bookedQuantity;
+          let color = '';
+
+          if (availableQTY >= requiredQty || reservationQTY === amout) {
+            color = 'green';
+          } else if (
+            availableQTY < requiredQty &&
+            availableAllStoreQTY >= requiredQty
+          ) {
+            color = 'orange';
+          } else if (availableQTY < requiredQty) {
+            color = 'red';
+          }
+
+          return color;
+        },
+        comparator: (valueA: any, valueB: any) => {
+          const colorOrder = { green: 1, orange: 2, red: 3 };
+          const colorA = colorOrder[valueA] || 0;
+          const colorB = colorOrder[valueB] || 0;
+
+          if (colorA === colorB) return 0;
+          return colorA < colorB ? -1 : 1;
+        },
       },
       {
         field: 'partRequestNumberNew',
@@ -364,19 +418,21 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
           </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
-          {editingRequirement && (
-            <PermissionGuard
-              requiredPermissions={[Permission.DELETE_REQUIREMENT]}
+          <PermissionGuard
+            requiredPermissions={[Permission.DELETE_REQUIREMENT]}
+          >
+            <Button
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<MinusSquareOutlined />}
+              onClick={() => {
+                // console.log(selectedKeys);
+                handleDelete(selectedKeys);
+              }}
             >
-              <Button
-                size="small"
-                icon={<MinusSquareOutlined />}
-                onClick={() => handleDelete(editingRequirement._id)}
-              >
-                {t('DELETE REQUIREMENT')}
-              </Button>
-            </PermissionGuard>
-          )}
+              {t('DELETE REQUIREMENT')}
+            </Button>
+          </PermissionGuard>
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {editingRequirement && (
@@ -412,6 +468,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
                 isEditable={false}
                 height={'64vh'}
                 isAddVisiable={true}
+                isChekboxColumn={true}
                 isButtonVisiable={false}
                 fetchData={transformedRequirements}
                 columnDefs={columnRequirements}
@@ -420,7 +477,9 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
                 onDelete={function (reqID: string): void {}}
                 onSave={function (rowData: IRequirement): void {}}
                 onUpdateData={function (data: any[]): void {}}
-                onCheckItems={function (selectedKeys: React.Key[]): void {}}
+                onCheckItems={function (selectedKeys: React.Key[]): void {
+                  setSelectedKeys(selectedKeys);
+                }}
                 onColumnResized={saveColumnState}
                 onGridReady={restoreColumnState}
               />
@@ -430,7 +489,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             <RequirementForm
               requierement={editingRequirement || undefined}
               onSubmit={handleSubmit}
-              onDelete={handleDelete}
+              // onDelete={handleDelete}
             />
           </div>
         </Split>

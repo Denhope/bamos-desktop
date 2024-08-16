@@ -1,7 +1,6 @@
 import { ProDescriptions } from '@ant-design/pro-components';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useState } from 'react';
-
 import { Col, Space, Spin, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import StockTabNew from './StockTabNew';
@@ -31,7 +30,7 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
               label={`${t(`DESCRIPTIONS`)}`}
               valueType="text"
             >
-              <div className="font-bold">
+              <div className="font-bold truncate">
                 {(selectedItem && selectedItem?.DESCRIPTION?.toUpperCase()) ||
                   (selectedItem &&
                     selectedItem?.NAME_OF_MATERIAL?.toUpperCase())}
@@ -40,13 +39,29 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
 
             <ProDescriptions.Item label={`${t(`GROUP`)}`} valueType="text">
               {selectedItem && selectedItem?.GROUP && (
-                <Tag>{selectedItem?.GROUP}</Tag>
+                <Tag
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {selectedItem?.GROUP}
+                </Tag>
               )}
             </ProDescriptions.Item>
 
             <ProDescriptions.Item label={`${t(`TYPE`)}`} valueType="text">
               {selectedItem && selectedItem?.TYPE && (
-                <Tag>{selectedItem?.TYPE}</Tag>
+                <Tag
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {selectedItem?.TYPE}
+                </Tag>
               )}
             </ProDescriptions.Item>
             <ProDescriptions.Item
@@ -54,7 +69,15 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
               valueType="text"
             >
               {selectedItem && (
-                <Tag>{selectedItem && selectedItem?.UNIT_OF_MEASURE}</Tag>
+                <Tag
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {selectedItem && selectedItem?.UNIT_OF_MEASURE}
+                </Tag>
               )}
             </ProDescriptions.Item>
           </ProDescriptions>

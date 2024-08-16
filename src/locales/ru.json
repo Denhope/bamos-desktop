@@ -639,7 +639,7 @@
   "USER": "ИСПОЛНИТЕЛЬ",
   "ADD WORKER": "ДОБАВИТЬ ИСПОЛНИТЕЛЯ",
   "CLOSE MANY WORKORDER": "ЗАКРЫТЬ НЕСКОЛЬКО ЗАКАЗОВ",
-  "WORKORDER ADMINISTRATION": "УПРАВЛЕНИЕ ПАКЕТАМИ РАБОТ",
+  "WORKORDER ADMINISTRATION": "ПРОСМОТР ПАКЕТОВ РАБОТ",
   "NOT ACTIVE": "НЕАКТИВНЫЙ",
   "STORE STATUS": "СТАТУС СКЛАДА",
   "STORE NAME": "СКЛАД",
@@ -938,5 +938,10 @@
   "A/C_TO_STORE": "СДАЧА НА СКЛАД",
   "BACK_TO_STORE": "ОТМЕНА ВЫДАЧИ",
   "PART_NUMBER_CHANGE": "ИЗМЕНЕНИЕ НОМЕНКЛАТУРЫ",
-  "ADD_NEW_PART": "ДОБАВЛЕНИЕ НОМЕНКЛАТУРЫ "
+  "ADD_NEW_PART": "ДОБАВЛЕНИЕ НОМЕНКЛАТУРЫ ",
+  "TYPES": "ТИПЫ",
+  "CERTIFICATES TYPES": "ТИПЫ СЕРТИФИКАТОВ",
+  "REGISTRATION": "РЕГИСТРАЦИЯ",
+  "A/C TYPES": "ТИПЫ САМОЛЁТОВ",
+  "CHECK TASKS IN DATABASE": "СПИСОК РАБОТ"
 }

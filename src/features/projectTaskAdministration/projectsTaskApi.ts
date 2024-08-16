@@ -70,12 +70,9 @@ export const projectsTaskApi = createApi({
       }),
       invalidatesTags: ['ProjectTask'], // Invalidate the 'Users' tag after mutation
     }),
-    deleteProjectTask: builder.mutation<
-      { success: boolean; id: string },
-      string
-    >({
+    deleteProjectTask: builder.mutation<{ success: boolean; id: any }, any>({
       query: (id) => ({
-        url: `projectsTasksNew/company/${COMPANY_ID}/project/${id}`,
+        url: `projectsTasksNew/company/${COMPANY_ID}/projectTask/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['ProjectTask'], // Invalidate the 'Users' tag after mutation

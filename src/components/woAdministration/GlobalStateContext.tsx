@@ -6,6 +6,8 @@ interface GlobalStateContextType {
   tasksFormValues: any;
   setCurrentTime: (time: number) => void;
   setTasksFormValues: (values: any) => void;
+  setProjectTasksFormValues: (values: any) => void;
+  projectTasksFormValues: any;
 }
 
 // Создаем контекст с типом и значением по умолчанию
@@ -20,6 +22,8 @@ interface GlobalStateProviderProps {
 export const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [tasksFormValues, setTasksFormValues] = useState<any>(null);
+  const [projectTasksFormValues, setProjectTasksFormValues] =
+    useState<any>(null);
   return (
     <GlobalStateContext.Provider
       value={{
@@ -27,6 +31,8 @@ export const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
         setCurrentTime,
         setTasksFormValues,
         tasksFormValues,
+        projectTasksFormValues,
+        setProjectTasksFormValues,
       }}
     >
       {children}

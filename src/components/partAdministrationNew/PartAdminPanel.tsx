@@ -188,7 +188,7 @@ const PartAdminPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
     });
   };
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       {/* {isLoading ? (

@@ -1096,7 +1096,7 @@ const PickSlipCancel: FC = () => {
                   storeID: targetItem.storeID._id,
                   locationtTo: targetItem.LOCATION_TO,
                   storeManID: values.storeManID,
-                  userID: values.userID,
+                  userID: USER_ID,
                   bookingDate: values.bookingDate,
                   id: targetItem.id,
                 },

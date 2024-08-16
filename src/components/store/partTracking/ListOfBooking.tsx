@@ -117,7 +117,7 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       editable: false,
       filter: false,
       headerName: `${t('QTY')}`,
-      cellDataType: 'number',
+      cellDataType: 'text',
       width: 100,
     },
     {

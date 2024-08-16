@@ -70,6 +70,7 @@ const OrderList: FC<showOrderListType> = ({
 
       valueEnum: {
         inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
+        transfer: { text: t('TRANSFER'), status: 'Warning' },
         onQuatation: { text: t('QUATATION'), status: 'Warning' },
         onShort: { text: t('ON SHORT'), status: 'Warning' },
         planned: { text: t('PLANNED'), status: 'Default' },

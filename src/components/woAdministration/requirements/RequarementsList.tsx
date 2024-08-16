@@ -194,7 +194,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   const handleRowSheck = (keys: any) => {
     console.log(keys);
     setStepsSelected(keys);
-    // onCheckItems(stepsSelected);
+    // onCheckItems(keys);
   };
   const handleRowSelect = (data: any) => {
     onRowSelect(data);
@@ -280,7 +280,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   let storesIDString = '';
   if (Array.isArray(order?.projectID?.storesID)) {
     storesIDString = order?.projectID.storesID.join(',');
-    console.log(order);
+    // console.log(order);
   }
   const {
     data: requirements,
@@ -316,7 +316,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   const transformedRequirements = useMemo(() => {
     return transformToIRequirement(requirements || []);
   }, [requirements]);
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const handleStoreChange = (value: string) => {
     setSelectedStoreID(value);
   };

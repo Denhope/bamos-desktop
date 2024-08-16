@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import TabContent from '@/components/shared/Table/TabContent';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +39,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
     draft: t('DRAFT'),
     issued: t('ISSUED'),
     progress: t('IN PROGRESS'),
+    transfer: t('TRANSFER'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
     PARTLY_RECEIVED: t('PARTLY RECEIVED'),

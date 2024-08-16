@@ -10,6 +10,7 @@ import {
 } from '@ant-design/pro-form';
 import { IAccessCode, IZoneCodeGroup } from '@/models/ITask';
 import {
+  ProDescriptions,
   ProFormDigit,
   ProFormGroup,
   ProFormSelect,
@@ -17,9 +18,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
-import { Button } from 'antd';
+import { Button, Tag } from 'antd';
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+
 interface UserFormProps {
   accessCode?: IAccessCode | null;
   onSubmit: (accessCode: IAccessCode) => void;
@@ -55,13 +57,6 @@ const AccessCodeForm: FC<UserFormProps> = ({
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
-  // const accessValueEnum: Record<string, string> =
-  //   accessesData?.reduce((acc, access) => {
-  //     acc[access.id] = `${String(access.accessNbr)}-${String(
-  //       access.accessDescription
-  //     )}`;
-  //     return acc;
-  //   }, {}) || {};
 
   const accessValueEnum: Record<string, any> =
     accessesData?.reduce((acc, access) => {
@@ -81,7 +76,7 @@ const AccessCodeForm: FC<UserFormProps> = ({
   const projectTasksCodesValueEnum: Record<string, string> =
     projectTasksItems?.reduce<Record<string, string>>((acc, projectTask) => {
       acc[projectTask.id] =
-        projectTask.taskWO ||
+        projectTask.taskNumber ||
         projectTask.taskWo ||
         projectTask.projectTaskWO ||
         '';
@@ -98,9 +93,6 @@ const AccessCodeForm: FC<UserFormProps> = ({
         subZoneDescription: accessCode?.areaCode?.subZoneDescription,
         areaNbr: accessCode?.areaCode?.areaNbr,
         areaDescription: accessCode?.areaCode?.areaDescription,
-        // accessID: accessCode?._id,
-
-        // zoneType: initialZoneType,
       });
 
       setIsDisabled(true);
@@ -144,124 +136,70 @@ const AccessCodeForm: FC<UserFormProps> = ({
       <ProForm.Group>
         <>
           {isDisabled && accessCode && (
-            <>
-              <ProFormSelect
-                // options={majoreZoneOptions}
-                disabled
-                width={'sm'}
-                name="majoreZoneNbr"
-                label={t('MAJOR ZONE')}
-              />
-              <ProFormSelect
-                // options={majoreZoneDescriptionOptions}
-                disabled
-                width={'sm'}
-                name="majoreZoneDescription"
-                label={t('MAJOR ZONE DESCRIPTION')}
-              />
-              <ProFormSelect
-                disabled
-                // options={subZoneNbrOptions}
-                width={'sm'}
-                name="subZoneNbr"
-                label={t('SUBZONE NUMBER')}
-              />
-              <ProFormSelect
-                disabled
-                // options={subZoneDescriptionOptions}
-                width={'sm'}
-                name="subZoneDescription"
-                label={t('SUBZONE DESCRIPTION')}
-              />
-              <ProFormText
-                disabled
-                width={'sm'}
-                name="areaNbr"
-                label={t('AREA NUMBER')}
-              />
-              <ProFormText
-                disabled
-                width={'lg'}
-                name="areaDescription"
-                label={t('AREA DESCRIPTION')}
-              />
-              {/* <ProFormSelect
-                showSearch
-                name="accessID"
-                label={t('ACCESS NUMBER')}
-                width="lg"
-                valueEnum={accessValueEnum}
-                disabled={isDisabled}
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-                value={form.getFieldValue('accessID')}
-                onChange={(value: any) => {
-                  console.log(value);
-                  form.setFieldsValue({
-                    majoreZoneDescription:
-                      accessCode?.areaCode?.majoreZoneDescription,
-                    majoreZoneNbr: accessCode?.areaCode?.majoreZoneNbr,
-                    subZoneNbr: accessCode?.areaCode?.subZoneNbr,
-                    subZoneDescription:
-                      accessCode?.areaCode?.subZoneDescription,
-                    areaNbr: accessCode?.areaCode?.areaNbr,
-                    areaDescription: accessCode?.areaCode?.areaDescription,
-                    // accessID: accessCode?._id,
-
-                    // zoneType: initialZoneType,
-                  });
-                }}
-              /> */}
-              <ProFormSelect
-                disabled={isDisabled}
-                width={'sm'}
-                name="accessNbr"
-                label={t('ACCESS ')}
-              />
-              <ProFormText
-                disabled
-                width={'lg'}
-                name="accessDescription"
+            <ProDescriptions column={1} size="middle">
+              <ProDescriptions.Item valueType="text" label={t('ACCESS No')}>
+                {accessCode?.accessNbr && (
+                  <Tag
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {accessCode?.accessNbr}
+                  </Tag>
+                )}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item
+                valueType="text"
                 label={t('ACCESS DESCRIPTION')}
-              />
-            </>
+              >
+                {accessCode?.accessDescription && (
+                  <Tag
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {accessCode?.accessDescription}
+                  </Tag>
+                )}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item valueType="text" label={t('MAJOR ZONE')}>
+                {accessCode?.majoreZoneNbr}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item
+                valueType="text"
+                label={t('MAJOR ZONE DESCRIPTION')}
+              >
+                {accessCode?.majoreZoneDescription}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item
+                valueType="text"
+                label={t('SUBZONE NUMBER')}
+              >
+                {accessCode?.subZoneNbr}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item
+                valueType="text"
+                label={t('SUBZONE DESCRIPTION')}
+              >
+                {accessCode?.subZoneDescription}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item valueType="text" label={t('AREA NUMBER')}>
+                {accessCode?.areaNbr}
+              </ProDescriptions.Item>
+              <ProDescriptions.Item
+                valueType="text"
+                label={t('AREA DESCRIPTION')}
+              >
+                {accessCode?.areaDescription}
+              </ProDescriptions.Item>
+            </ProDescriptions>
           )}
 
           <>
-            {/* <ProFormSelect
-              disabled={isDisabled}
-              // valueEnum={zonesValueEnum}
-              width={'lg'}
-              name="areaCodeID"
-              label={t('AREA NUMBER')}
-              onChange={(value: any, option: any) => {
-                // console.log(option);
-                // form.setFieldsValue({
-                //   areaDescription: option?.areaDescription,
-                // });
-                setAreaID(value);
-              }}
-            /> */}
-
-            {/* {isDisabled && (
-              <>
-                <ProFormSelect
-                  disabled={isDisabled}
-                  width={'sm'}
-                  name="accessNbr"
-                  label={t('ACCESS NUMBER')}
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                />
-              </>
-            )} */}
-
             {!accessCode && (
               <>
                 <ProFormSelect
@@ -301,78 +239,11 @@ const AccessCodeForm: FC<UserFormProps> = ({
                         accessCode?.areaCode?.subZoneDescription,
                       areaNbr: accessCode?.areaCode?.areaNbr,
                       areaDescription: accessCode?.areaCode?.areaDescription,
-                      // accessID: accessCode?._id,
-
-                      // zoneType: initialZoneType,
                     });
                   }}
                 />
               </>
             )}
-
-            {/* {!isDisabled && (
-              <ProFormSelect
-                showSearch
-                name="accessID"
-                label={t('ACCESS NUMBER')}
-                width="lg"
-                valueEnum={accessValueEnum}
-                disabled={isDisabled}
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-                value={form.getFieldValue('accessID')}
-                onChange={(value: any) => {
-                  console.log(value);
-                  form.setFieldsValue({
-                    majoreZoneDescription:
-                      accessCode?.areaCode?.majoreZoneDescription,
-                    majoreZoneNbr: accessCode?.areaCode?.majoreZoneNbr,
-                    subZoneNbr: accessCode?.areaCode?.subZoneNbr,
-                    subZoneDescription:
-                      accessCode?.areaCode?.subZoneDescription,
-                    areaNbr: accessCode?.areaCode?.areaNbr,
-                    areaDescription: accessCode?.areaCode?.areaDescription,
-                    // accessID: accessCode?._id,
-
-                    // zoneType: initialZoneType,
-                  });
-                }}
-              />
-            )} */}
-
-            {/* {isDisabled && (
-              <ProFormText
-                disabled
-                width={'lg'}
-                name="accessDescription"
-                label={t('ACCESS DESCRIPTION')}
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              />
-            )} */}
-            {/* <ProFormGroup>
-              <ProFormDigit
-                width={'xs'}
-                name="closingTime"
-                label={t('TIME TO CLOSE (MPD)')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="openingTime"
-                label={t('TIME TO OPEN (MPD)')}
-              />
-              <ProFormDigit
-                width={'xs'}
-                name="takeOfOnTime"
-                label={t('TIME OPEN/CLOSE (MPD)')}
-              />
-            </ProFormGroup> */}
           </>
         </>
         <ProFormGroup>
@@ -387,36 +258,13 @@ const AccessCodeForm: FC<UserFormProps> = ({
               disabled={!WOID}
               mode="single"
               name="projectTaskID"
-              label={`${t(`TASK`)}`}
+              label={`${t(`TASK No`)}`}
               width="lg"
               valueEnum={projectTasksCodesValueEnum}
-              // onChange={(value: any) => {
-              //   setSelectedTask(value);
-              // }}
-            />
-          )}
-          {isDisabled && accessCode && (
-            <ProFormSelect
-              showSearch
-              disabled
-              name="status"
-              label={t('STATUS')}
-              width="sm"
-              valueEnum={{
-                open: { text: t('OPEN') },
-                closed: { text: t('CLOSED') },
-                inspected: { text: t('INSPECTED') },
-              }}
             />
           )}
         </ProFormGroup>
       </ProForm.Group>
-
-      {/* <ProForm.Item>
-        <Button type="primary" htmlType="submit">
-          {accessCode ? 'Update' : 'Create'}
-        </Button>
-      </ProForm.Item> */}
     </ProForm>
   );
 };

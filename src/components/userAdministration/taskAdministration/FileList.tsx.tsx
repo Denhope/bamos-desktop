@@ -30,6 +30,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
+
 // types.ts
 export interface FileData {
   _id: string;
@@ -61,6 +62,7 @@ interface FileListEProps {
   handleDelete?: (keys: any) => void;
   isTaskNumberField: boolean;
   isEfectivityField?: boolean;
+  isCuctomerCode?: boolean;
 }
 
 const FileListE: React.FC<FileListEProps> = ({
@@ -69,6 +71,7 @@ const FileListE: React.FC<FileListEProps> = ({
   onSelectedKeys,
   handleDelete,
   isTaskNumberField,
+  isCuctomerCode,
   isEfectivityField = false,
 }) => {
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
@@ -84,8 +87,10 @@ const FileListE: React.FC<FileListEProps> = ({
   ];
 
   const typeOptions = [
-    { id: 'TASK_CARD', name: 'TASK_CARD' },
+    { id: 'TASK_CARD', name: 'TASK CARD' },
     { id: 'REPORT', name: 'REPORT' },
+    { id: 'WO', name: 'WO' },
+    { id: 'AMM', name: 'AMM' },
     { id: 'OTHER', name: 'OTHER' },
   ];
 
@@ -96,6 +101,13 @@ const FileListE: React.FC<FileListEProps> = ({
 
   const { t } = useTranslation();
   const columnDefs = [
+    {
+      headerName: `${t('TYPE')}`,
+      field: 'referenceType',
+      sortable: true,
+      filter: true,
+      width: 140,
+    },
     {
       headerName: `${t('FILENAME')}`,
       field: 'filename',
@@ -279,7 +291,7 @@ const FileListE: React.FC<FileListEProps> = ({
         }}
       />
       <Modal
-        title="Add New File"
+        title={`${t('Add New File')}`}
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         onOk={handleAddFile}
@@ -294,15 +306,16 @@ const FileListE: React.FC<FileListEProps> = ({
             })
           }
         >
-          <Form.Item label={`${t('CUSTOMER ID')}`} name="customerCodeID">
-            <Select allowClear placeholder="Select a customer">
-              {customerOptions.map((option) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
-            {/* <Form.Item label={`${t('EFECTIVITY')}`} name="customerCodeID">
+          {isCuctomerCode && (
+            <Form.Item label={`${t('CUSTOMER ID')}`} name="customerCodeID">
+              <Select allowClear placeholder="Выберите значение">
+                {customerOptions.map((option) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+              {/* <Form.Item label={`${t('EFECTIVITY')}`} name="customerCodeID">
             <Select allowClear placeholder="Select a customer">
               {customerOptions.map((option) => (
                 <Select.Option key={option.id} value={option.id}>
@@ -311,13 +324,15 @@ const FileListE: React.FC<FileListEProps> = ({
               ))}
             </Select>
           </Form.Item> */}
-          </Form.Item>
+            </Form.Item>
+          )}
           <Form.Item
             label={`${t('REF TYPE')}`}
             name="referenceType"
+            placeholder="Выберите значение"
             rules={[{ required: true, message: 'Please select a file type!' }]}
           >
-            <Select allowClear placeholder="Select a file type">
+            <Select allowClear>
               {typeOptions.map((option) => (
                 <Select.Option key={option.id} value={option.id}>
                   {option.name}
@@ -343,12 +358,12 @@ const FileListE: React.FC<FileListEProps> = ({
             />
           )}
           <Form.Item
-            label="Upload File"
+            label={t('Upload File')}
             name="upload"
             rules={[{ required: true, message: 'Please upload the file!' }]}
           >
             <Upload {...uploadProps} fileList={uploadFile ? [uploadFile] : []}>
-              <Button icon={<UploadOutlined />}>Select File</Button>
+              <Button icon={<UploadOutlined />}>{t('Select File')}</Button>
             </Upload>
           </Form.Item>
         </Form>

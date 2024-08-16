@@ -21,14 +21,15 @@ const Main: FC = () => {
           <Header
             className="flex justify-between my-0 px-0"
             style={{
-              background: 'rgba(255, 255, 255, 0.2)',
+              // background: 'rgba(255, 255, 255, 0.2)',
+              background: 'rgba(255, 0, 0, 0.2)',
             }}
           >
             <Space
               onClick={() => navigate(RouteNames.HOME)}
               className="text-xl cursor-pointer  px-3 first-line:align-middle  uppercase  text-gray-500"
             >
-              BAMOS
+              BAMOS TEST
             </Space>
           </Header>
           <Layout>

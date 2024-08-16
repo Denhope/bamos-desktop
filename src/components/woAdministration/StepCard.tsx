@@ -37,6 +37,8 @@ import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
+import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
+
 interface Props {
   step: IStep;
   selectedStepItems: string[];
@@ -356,64 +358,9 @@ const StepCard: React.FC<Props> = ({
       });
     }
   };
-  const fakeTemplates = [
-    {
-      id: '1',
-      name: 'PERFORMED',
-      content: `TASK CARD 72-180-01-01 
-      WAS PFMD. BSI REPORT 291-23 AMM REV 77, 
-      FEB 15/22 SEE MATERIAL LIST.
-      WO: 000129`,
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '2',
-      name: 'INSPECTION',
-      content: `INSP PFMD IAW TASK CARD 72-180-01-01.
-      AMM REV 77, FEB 15/22.
-      WO: 000129
-      INSP 407T1`,
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '3',
-      name: 'Template 3',
-      content: 'Content of Template 3',
-      type: 'ACTIONS',
-      planeType: 'BOEING NG',
-    },
-    {
-      id: '4',
-      name: 'Template 4',
-      content: 'Content of Template 4',
-      type: 'STEPS',
-      planeType: 'A320',
-    },
-    {
-      id: '5',
-      name: 'Template 5',
-      content: 'Content of Template 5',
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '6',
-      name: 'Template 6',
-      content: 'Content of Template 6',
-      type: 'STEPS',
-      planeType: 'A320',
-    },
-    {
-      id: '7',
-      name: 'Template 7',
-      content: 'Content of Template 7',
-      type: 'ACTIONS',
-      planeType: 'BOEING NG',
-    },
-    // Добавьте другие фейковые шаблоны здесь
-  ];
+
+  const { data: templates, isLoading: isTemplatesLoading } =
+    useGetActionsTemplatesQuery({});
 
   const isSelected = step.id && selectedStepItems.includes(step.id);
   const { t } = useTranslation();
@@ -526,7 +473,7 @@ const StepCard: React.FC<Props> = ({
           onSave={handleActionEditSave}
           currentAction={currentAction}
           onDelete={handleActionDelete}
-          templates={fakeTemplates}
+          templates={templates || []}
           users={users || []}
         />
       )}
@@ -537,7 +484,7 @@ const StepCard: React.FC<Props> = ({
           visible={visibleActionAdd}
           onCancel={handleActionAddCancel}
           onSave={handleNewActionSave}
-          templates={fakeTemplates}
+          templates={templates || []}
           users={users || []}
         />
       )}
@@ -550,7 +497,7 @@ const StepCard: React.FC<Props> = ({
               onCancel={handleStepEditCancel}
               step={step}
               onSave={handleStepSave}
-              templates={fakeTemplates}
+              templates={templates || []}
               groups={groups || []}
               skills={skills || []}
             />

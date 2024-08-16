@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +10,7 @@ import { ISkill, UserGroup } from '@/models/IUser';
 import { ProFormSelect } from '@ant-design/pro-components';
 
 interface Template {
+  description: any;
   id: string;
   name: string;
   content: string;
@@ -19,9 +22,9 @@ const StepEditModal: React.FC<{
   visible: boolean;
   onCancel: () => void;
   step: IStep;
-  onSave: (updatedStep: IStep) => void;
   groups: UserGroup[];
   skills: ISkill[];
+  onSave: (updatedStep: IStep) => void;
   templates: Template[]; // Update the type of templates to Template[]
 }> = ({ visible, onCancel, step, onSave, templates, groups, skills }) => {
   const [form] = Form.useForm();
@@ -34,7 +37,7 @@ const StepEditModal: React.FC<{
     const selected = templates.find((t) => t.id === templateId);
     if (selected) {
       form.setFieldsValue({
-        stepDescription: selected.content,
+        stepDescription: selected.description,
       });
     }
   };
@@ -51,8 +54,6 @@ const StepEditModal: React.FC<{
     onSave(updatedStep);
     onCancel();
   };
-  const { Option } = Select;
-  const { t } = useTranslation();
   const groupOptions = groups.map((group) => ({
     label: group.title,
     value: group.id, // Use the _id as the value
@@ -62,6 +63,8 @@ const StepEditModal: React.FC<{
     label: skill.code,
     value: skill.id, // Use the _id as the value
   }));
+  const { t } = useTranslation();
+  const { Option } = Select;
   return (
     <Modal
       width={'70%'}
@@ -83,7 +86,7 @@ const StepEditModal: React.FC<{
             form={form}
             layout="vertical"
             initialValues={{
-              stepHeadLine: step.stepHeadLine,
+              stepHeadLine: step.stepHeadLine || 'mainWork',
               stepDescription: step.stepDescription,
               skillID: step.skillID,
               userGroupID: step.userGroupID,
@@ -115,19 +118,9 @@ const StepEditModal: React.FC<{
                 <Option value="package">{t('PACKAGE')}</Option>
                 <Option value="additionalWorks">{t('ADD_WORKS')}</Option>
                 <Option value="store">{t('STORE')}</Option>
+                <Option value="mainWork">{t('MAIN WORK')}</Option>
               </Select>
             </Form.Item> */}
-
-            {/* <Form.Item
-              name="stepHeadLine"
-              label={t('STEP_TITLE_LABEL')}
-              // rules={[
-              //   { required: true, message: t('REQUIRED_STEP_TITLE_MESSAGE') },
-              // ]}
-            >
-              <Input />
-            </Form.Item> */}
-
             <ProFormSelect
               name="userGroupID"
               mode="multiple"
@@ -152,7 +145,7 @@ const StepEditModal: React.FC<{
                 },
               ]}
             >
-              <Input.TextArea rows={6} />
+              <Input.TextArea rows={14} />
             </Form.Item>
           </Form>
         </div>

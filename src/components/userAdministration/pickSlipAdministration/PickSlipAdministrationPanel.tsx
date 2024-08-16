@@ -64,7 +64,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   const [addRequirement] = useAddRequirementMutation();
   const [updateRequirement] = useUpdateRequirementMutation();
   const [deleteRequirement] = useDeleteRequirementMutation();
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const { t } = useTranslation();
 

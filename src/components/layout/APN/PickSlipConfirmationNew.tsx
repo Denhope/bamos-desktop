@@ -76,9 +76,9 @@ const PickSlipConfirmationNew: FC = () => {
     );
 
   // Обновление других частей приложения после вызова refetchRequirements
-  useEffect(() => {
-    // Логика обновления других частей приложения
-  }, [requirements]); // Обновление при изменении requirements
+  // useEffect(() => {
+  //   // Логика обновления других частей приложения
+  // }, [requirements]); // Обновление при изменении requirements
 
   // const { refetch: refetchRequirements } = useGetFilteredRequirementsQuery({
   //   projectID: pickSlips && pickSlips[0]?.projectID?._id,
@@ -850,7 +850,8 @@ const PickSlipConfirmationNew: FC = () => {
                     (pickSlips && pickSlips[0]?.state == 'closed') ||
                     (pickSlips && pickSlips[0]?.state == 'complete') ||
                     (pickSlips && pickSlips[0]?.state == 'progress') ||
-                    (pickSlips && pickSlips[0]?.state == 'canceled')
+                    (pickSlips && pickSlips[0]?.state == 'canceled') ||
+                    (pickSlips && pickSlips[0]?.state == 'partlyCanceled')
                     // ||
                     // (pickSlips && pickSlips[0]?.state == 'complete')
                   }
@@ -909,7 +910,8 @@ const PickSlipConfirmationNew: FC = () => {
                   !pickSlips ||
                   (pickSlips && pickSlips[0]?.state == 'closed') ||
                   (pickSlips && pickSlips[0]?.state == 'complete') ||
-                  (pickSlips && pickSlips[0]?.state == 'canceled')
+                  (pickSlips && pickSlips[0]?.state == 'canceled') ||
+                  (pickSlips && pickSlips[0]?.state == 'partlyCanceled')
                   // ||
                   // (pickSlips && pickSlips[0]?.state == 'complete')
                 }

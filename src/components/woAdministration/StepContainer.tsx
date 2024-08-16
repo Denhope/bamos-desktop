@@ -1,7 +1,9 @@
+//@ts-nocheck
+
 import React, { useState } from 'react';
 import StepCard from './StepCard';
 import { IStep } from '@/models/IStep';
-import { Button, Modal, Form, Input, Empty } from 'antd';
+import { Button, Modal, Form, Input, Empty, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 import SkillTimeAggregate from './SkillTimeAggregate';
 import { ProFormSelect } from '@ant-design/pro-components';
@@ -18,6 +20,7 @@ interface Props {
   templates: Template[]; // Update the type of templates to Template[]
 }
 interface Template {
+  description: any;
   id: string;
   name: string;
   content: string;
@@ -68,10 +71,12 @@ const StepContainer: React.FC<Props> = ({
 
   const handleSelectTemplate = (templateId: string) => {
     setSelectedTemplateId(templateId);
+
     const selected = templates.find((t) => t.id === templateId);
     if (selected) {
+      console.log(selected.description);
       form.setFieldsValue({
-        stepDescription: selected.content,
+        stepDescription: selected.description,
       });
     }
   };
@@ -148,29 +153,40 @@ const StepContainer: React.FC<Props> = ({
       >
         <Split initialPrimarySize="50%" splitterSize="10px">
           <div>
-            <Form form={form} layout="vertical">
+            <Form
+              form={form}
+              layout="vertical"
+              initialValues={{
+                stepHeadLine: 'mainWork',
+              }}
+            >
               {/* <Form.Item
-            name="stepType"
-            label={`${t('STEP_TYPE')}`}
-            rules={[{ required: true }]}
-          >
-            <Select>
-              <Option value="incomingInspection">
-                {t('INCOMING_INSPECTION')}
-              </Option>
-              <Option value="mechanicsProcess">{t('MECHANIC_PROCESS')}</Option>
+                name="stepType"
+                label={`${t('STEP_TYPE')}`}
+                rules={[{ required: true }]}
+              >
+                <Select>
+                  <Option value="incomingInspection">
+                    {t('INCOMING_INSPECTION')}
+                  </Option>
+                  <Option value="mechanicsProcess">
+                    {t('MECHANIC_PROCESS')}
+                  </Option>
 
-              <Option value="inspection">{t('INSPECTION')}</Option>
-              <Option value="diInspection">{t('DI_INSPECTION')}</Option>
+                  <Option value="inspection">{t('INSPECTION')}</Option>
+                  <Option value="diInspection">{t('DI_INSPECTION')}</Option>
 
-              <Option value="technicalControl">{t('TECHNICAL_CONTROL')}</Option>
-              <Option value="coating">{t('COATING')}</Option>
-              <Option value="marking">{t('MARKERING')}</Option>
-              <Option value="package">{t('PACKAGE')}</Option>
-              <Option value="additionalWorks">{t('ADD_WORKS')}</Option>
-              <Option value="store">{t('STORE')}</Option>
-            </Select>
-          </Form.Item> */}
+                  <Option value="technicalControl">
+                    {t('TECHNICAL_CONTROL')}
+                  </Option>
+                  <Option value="coating">{t('COATING')}</Option>
+                  <Option value="marking">{t('MARKERING')}</Option>
+                  <Option value="package">{t('PACKAGE')}</Option>
+                  <Option value="additionalWorks">{t('ADD_WORKS')}</Option>
+                  <Option value="store">{t('STORE')}</Option>
+                  <Option value="mainWork">{t('MAIN WORK')}</Option>
+                </Select>
+              </Form.Item> */}
 
               <ProFormSelect
                 name="userGroupID"
@@ -188,12 +204,12 @@ const StepContainer: React.FC<Props> = ({
               />
 
               {/* <Form.Item
-            name="stepHeadLine"
-            label="Step Headline"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item> */}
+                name="stepHeadLine"
+                label="Step Headline"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item> */}
               <Form.Item
                 name="stepDescription"
                 label={t('STEP DESCRITION')}

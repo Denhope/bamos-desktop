@@ -27,7 +27,7 @@ const PdfGenerator: React.FC<{
 }> = ({ htmlTemplate, data, ids, disabled, wo }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false); // Состояние загрузки
-  console.log(wo);
+
   const {
     data: projectTasks,
     isLoading,
@@ -46,7 +46,7 @@ const PdfGenerator: React.FC<{
   const transformedTasks = useMemo(() => {
     return projectTasks || [];
   }, [projectTasks]);
-
+  console.log(projectTasks);
   const addPageNumber = async (
     page: PDFPage,
     pageNumber: number,
@@ -99,22 +99,47 @@ const PdfGenerator: React.FC<{
     const fontBytesB = await fetch(robotoBoldFont).then((res) =>
       res.arrayBuffer()
     );
+    const robotoFontB = await pdfDoc.embedFont(fontBytesB);
+    const logoBytes = await fetch(logoImage).then((res) => res.arrayBuffer());
+    const logoImageEmbed = await pdfDoc.embedPng(logoBytes);
+
+    let totalPages = 0;
+    let blockStartIndex = 0;
     const fontSize = 9;
     const fontSizeM = 7;
     const smallFontSize = 5;
     const lageFontSize = 13;
     const extraLageFontSize = 16;
-    const robotoFontB = await pdfDoc.embedFont(fontBytesB);
-    const logoBytes = await fetch(logoImage).then((res) => res.arrayBuffer());
-    const logoImageEmbed = await pdfDoc.embedPng(logoBytes);
-    let totalPages = 0;
-    let blockStartIndex = 0;
+
+    const truncateText = (
+      text: any,
+      maxWidth: number,
+      font: PDFFont,
+      fontSize: number
+    ) => {
+      let truncated = text;
+      let width = font.widthOfTextAtSize(truncated, fontSize);
+
+      if (width <= maxWidth) {
+        return truncated;
+      }
+
+      while (width > maxWidth && truncated.length > 0) {
+        truncated = truncated.slice(0, -1);
+        width = font.widthOfTextAtSize(truncated + '...', fontSize);
+      }
+
+      return truncated + '...';
+    };
+
     for (const task of transformedTasks) {
+      const pages = [];
       const qrCodeData = await QRCode.toDataURL(`${task?.taskWO}`);
       const qrCodeImage = await pdfDoc.embedPng(qrCodeData);
 
       const addPage = () => {
         const page = pdfDoc.addPage([595.28, 841.89]); // A4 size in points (width, height)
+        pages.push(page); // Добавление страницы в массив
         const { width, height } = page.getSize();
 
         // Header
@@ -150,10 +175,19 @@ const PdfGenerator: React.FC<{
                 font: robotoFont,
                 size: smallFontSize,
               });
+
               const taskNumberText =
                 task?.taskNumber !== undefined ? task.taskNumber : 'N/A';
-              page.drawText(taskNumberText, {
-                x: x + 85,
+              const truncatedTaskNumberText = truncateText(
+                taskNumberText,
+                260,
+                robotoFont,
+                16
+              );
+
+              // Смещение влево на 20 единиц
+              page.drawText(truncatedTaskNumberText, {
+                x: x + 35, // Изменено с x + 85 на x + 65
                 y: y - 60,
                 font: robotoFont,
                 size: 16,
@@ -378,7 +412,7 @@ const PdfGenerator: React.FC<{
         {
           label: 'A/C Type',
           label1: 'Тип ВС',
-          value: task.WONumber !== undefined ? String(task.WONumber) : 'N/A',
+          value: task.acType !== undefined ? String(task.acType) : 'N/A',
         },
         {
           label: 'Skill',
@@ -386,7 +420,7 @@ const PdfGenerator: React.FC<{
           value: task.skills !== undefined ? task.skills : 'N/A',
         },
         {
-          label: 'Act. Labor',
+          label: 'Act.Labor',
           label1: 'Трудозатраты',
           value:
             task.mainWorkTime !== undefined ? String(task.mainWorkTime) : 'N/A',
@@ -400,27 +434,8 @@ const PdfGenerator: React.FC<{
         },
       ];
 
-      const truncateText = (
-        text: any,
-        maxWidth: number,
-        font: PDFFont,
-        fontSize: number
-      ) => {
-        let truncated = text;
-        let width = font.widthOfTextAtSize(truncated, fontSize);
-
-        if (width <= maxWidth) {
-          return truncated;
-        }
-
-        while (width > maxWidth && truncated.length > 0) {
-          truncated = truncated.slice(0, -1);
-          width = font.widthOfTextAtSize(truncated + '...', fontSize);
-        }
-
-        return truncated + '...';
-      };
       const cellHeight = 25;
+      const cellHeightSmall = 20;
       const cellWidth = 100;
 
       for (let i = 0; i < cellData.length; i++) {
@@ -495,7 +510,7 @@ const PdfGenerator: React.FC<{
           cell.value,
           cellWidthAdjusted - 40, // Use the adjusted width for truncation
           robotoFont,
-          12
+          fontSize
         );
 
         page.drawText(truncatedValue, {
@@ -544,7 +559,7 @@ const PdfGenerator: React.FC<{
           cell.value,
           cellWidthAdjusted - 40, // Use the adjusted width for truncation
           robotoFont,
-          12
+          fontSize
         );
 
         page.drawText(truncatedValue, {
@@ -652,9 +667,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - cellHeightSmall,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -662,14 +677,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -683,7 +698,7 @@ const PdfGenerator: React.FC<{
       }
 
       // y -= cellHeight;
-      y -= cellHeight;
+      y -= cellHeightSmall;
       const referenceTable = [
         ['Type', 'Reference', 'Description'],
         ...(task.reference
@@ -704,7 +719,7 @@ const PdfGenerator: React.FC<{
           : []),
       ];
       const referenceColumnWidths = [50, 200, 250]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
-      const referenceRowHeight = 20; // Height for each row in the part numbers table
+      const referenceRowHeight = 15; // Height for each row in the part numbers table
 
       for (const row of referenceTable) {
         let x = 50;
@@ -713,7 +728,7 @@ const PdfGenerator: React.FC<{
           if (cell !== undefined) {
             page.drawText(cell, {
               x: x + 5,
-              y: y - 15,
+              y: y - 10,
               font: robotoFont,
               size: 8,
             });
@@ -721,9 +736,9 @@ const PdfGenerator: React.FC<{
           // Draw border around the cell
           page.drawRectangle({
             x,
-            y: y - 20,
+            y: y - referenceRowHeight,
             width: referenceColumnWidths[i],
-            height: 20,
+            height: referenceRowHeight,
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
@@ -751,9 +766,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - cellHeightSmall,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -761,14 +776,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -781,7 +796,7 @@ const PdfGenerator: React.FC<{
         });
       }
       // y -= cellHeight;
-      y -= cellHeight;
+      y -= cellHeightSmall;
 
       const partNumbersTable = [
         ['Code', 'Part number', 'Description', 'Qty', 'Unit'],
@@ -800,13 +815,13 @@ const PdfGenerator: React.FC<{
                 String(part?.partNumberID?.UNIT_OF_MEASURE || ''),
               ])
           : [
-              ['', '', '', '', ''],
-              ['', '', '', '', ''],
+              // ['', '', '', '', ''],
+              // ['', '', '', '', ''],
             ]),
       ];
 
       const partNumbersColumnWidths = [50, 150, 200, 50, 50]; // Ширина колонок
-      const partNumbersRowHeight = 20; // Высота строки
+      const partNumbersRowHeight = 15; // Высота строки
 
       for (const row of partNumbersTable) {
         let x = 50;
@@ -819,20 +834,20 @@ const PdfGenerator: React.FC<{
               cell,
               cellWidth - 10,
               robotoFont,
-              10
+              fontSize
             );
 
             page.drawText(truncatedCell, {
               x: x + 5,
-              y: y - 15,
+              y: y - 10,
               font: robotoFont,
-              size: 10,
+              size: fontSize,
             });
           }
           // Рисуем границу вокруг ячейки
           page.drawRectangle({
             x,
-            y: y - 20,
+            y: y - 15,
             width: partNumbersColumnWidths[i],
             height: partNumbersRowHeight,
             borderColor: rgb(0, 0, 0),
@@ -867,9 +882,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - partNumbersRowHeight,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: partNumbersRowHeight,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -877,14 +892,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 6,
           font: robotoFont,
           size: smallFontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 13,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -897,7 +912,7 @@ const PdfGenerator: React.FC<{
         });
         y -= partNumbersRowHeight;
       }
-      y -= 10; // Space between
+      y -= 5; // Space between
 
       ///tooll
       const cellData11 = [
@@ -917,9 +932,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - cellHeightSmall,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -927,14 +942,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -945,9 +960,9 @@ const PdfGenerator: React.FC<{
           font: robotoFont,
           size: fontSize,
         });
-        y -= partNumbersRowHeight;
+        y -= 20;
       }
-      y -= 5; // Space between header and part numbers table
+      // y -= 5; // Space between header and part numbers table
       // const toolTable = [
       //   ['Code', 'Part number', 'Description', 'Qty'],
       //   ...(task.tools
@@ -976,12 +991,12 @@ const PdfGenerator: React.FC<{
                 String(part?.quantity || ''), // quantity should come from part, not partNumberID
               ])
           : [
-              ['', '', '', ''],
-              ['', '', '', ''],
+              // ['', '', '', ''],
+              // ['
             ]),
       ];
       const toolColumnWidths = [50, 150, 240, 60]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
-      const toolRowHeight = 20; // Height for each row in the part numbers table
+      const toolRowHeight = 15; // Height for each row in the part numbers table
 
       y -= 0; // Space between header and part numbers table
       for (const row of toolTable) {
@@ -1012,20 +1027,20 @@ const PdfGenerator: React.FC<{
               cell,
               cellWidth - 10,
               robotoFont,
-              10
+              fontSize
             );
 
             page.drawText(truncatedCell, {
               x: x + 5,
-              y: y - 15,
+              y: y - 10,
               font: robotoFont,
-              size: 10,
+              size: fontSize,
             });
           }
           // Рисуем границу вокруг ячейки
           page.drawRectangle({
             x,
-            y: y - 20,
+            y: y - toolRowHeight,
             width: toolColumnWidths[i],
             height: partNumbersRowHeight,
             borderColor: rgb(0, 0, 0),
@@ -1049,24 +1064,24 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - toolRowHeight,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: toolRowHeight,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
 
         // Draw the label
         page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 13,
+          x: cellX + 6,
+          y: y - 5,
           font: robotoFont,
           size: smallFontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 13,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -1079,7 +1094,7 @@ const PdfGenerator: React.FC<{
         });
         y -= partNumbersRowHeight;
       }
-      y -= 10; // Space between
+      y -= 5; // Space between
       ////Instructions
       const cellData10 = [
         {
@@ -1098,9 +1113,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - cellHeightSmall,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -1108,14 +1123,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -1210,11 +1225,11 @@ const PdfGenerator: React.FC<{
           cellWidthAdjusted - 10 // Adjust for padding
         );
 
-        const cellHeight = 30; // Base height for the top part
+        const cellHeight = 20; // Base height for the top part
 
         if (y - descriptionHeight - cellHeight < 50) {
           // Check if there is enough space for the step
-          drawFooter(page);
+          // drawFooter(page);
           ({ page, width, height, y } = addPage());
         }
 
@@ -1238,13 +1253,13 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cellData12.value1, {
           x: cellX + 5,
-          y: y - 20,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
         page.drawText(cellData12.value3, {
           x: cellX + 380,
-          y: y - 20,
+          y: y - 15,
           font: robotoFont,
           size: fontSize,
         });
@@ -1269,26 +1284,26 @@ const PdfGenerator: React.FC<{
 
         page.drawText(cellData12.label, {
           x: cellX + 30,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cellData12.label1, {
           x: cellX + 30,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
         page.drawText(cellData12.label2, {
           x: cellX + 300,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: smallFontSize,
         });
         page.drawText(cellData12.label3, {
           x: cellX + 300,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -1296,7 +1311,7 @@ const PdfGenerator: React.FC<{
         // Draw the value
         page.drawText(cellData12.value2, {
           x: cellX + 450,
-          y: y - 20,
+          y: y - 13,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -1320,16 +1335,16 @@ const PdfGenerator: React.FC<{
         const cellWidthAdjusted = cell.label === 'Item Change List' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
 
         // Draw the cell border
-        if (y - cellHeight - cellHeight < 50) {
+        if (y - cellHeightSmall - cellHeightSmall < 50) {
           // Check if there is enough space for the step
-          drawFooter(page);
+          // drawFooter(page);
           ({ page, width, height, y } = addPage());
         }
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - cellHeightSmall,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -1337,14 +1352,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -1384,7 +1399,7 @@ const PdfGenerator: React.FC<{
             ]),
       ];
       const componentColumnWidths = [80, 80, 80, 80, 40, 70, 70]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
-      const componentRowHeight = 20; // Height for each row in the part numbers table
+      const componentRowHeight = 15; // Height for each row in the part numbers table
 
       y -= 0; // Space between header and part numbers table
       for (const row of componentTable) {
@@ -1394,17 +1409,17 @@ const PdfGenerator: React.FC<{
           if (cell !== undefined) {
             page.drawText(cell, {
               x: x + 5,
-              y: y - 15,
+              y: y - 10,
               font: robotoFont,
-              size: 10,
+              size: fontSize,
             });
           }
           // Draw border around the cell
           page.drawRectangle({
             x,
-            y: y - 20,
+            y: y - componentRowHeight,
             width: componentColumnWidths[i],
-            height: 20,
+            height: componentRowHeight,
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
@@ -1431,9 +1446,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - cellHeightSmall,
           width: cellWidthAdjusted,
-          height: cellHeight,
+          height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -1441,14 +1456,14 @@ const PdfGenerator: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 13,
+          y: y - 10,
           font: robotoFont,
           size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -1460,6 +1475,11 @@ const PdfGenerator: React.FC<{
           size: fontSize,
         });
         y -= partNumbersRowHeight;
+        if (y - cellHeight < 50) {
+          // Check if there is enough space for the step
+          // drawFooter(page);
+          ({ page, width, height, y } = addPage());
+        }
       }
       y -= 5;
       const findingsTable = [
@@ -1474,7 +1494,7 @@ const PdfGenerator: React.FC<{
           : [['', '', '', '']]),
       ];
       const findingsColumnWidths = [100, 140, 120, 140]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
-      // const findingsRowHeight = 20; // Height for each row in the part numbers table
+      const findingsRowHeight = 15; // Height for each row in the part numbers table
 
       y -= 0; // Space between header and part numbers table
       for (const row of findingsTable) {
@@ -1484,22 +1504,22 @@ const PdfGenerator: React.FC<{
           if (cell !== undefined) {
             page.drawText(cell, {
               x: x + 5,
-              y: y - 15,
+              y: y - 10,
               font: robotoFont,
               size: smallFontSize,
             });
           }
           // Draw border around the cell
-          if (y - cellHeight - cellHeight < 50) {
+          if (y - cellHeight < 50) {
             // Check if there is enough space for the step
-            drawFooter(page);
+            // drawFooter(page);
             ({ page, width, height, y } = addPage());
           }
           page.drawRectangle({
             x,
-            y: y - 20,
+            y: y - findingsRowHeight,
             width: findingsColumnWidths[i],
-            height: 20,
+            height: findingsRowHeight,
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
@@ -1527,75 +1547,15 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         if (y - cellHeight - cellHeight < 50) {
           // Check if there is enough space for the step
-          drawFooter(page);
+          // drawFooter(page);
           ({ page, width, height, y } = addPage());
         }
 
         page.drawRectangle({
           x: cellX,
-          y: y - cellHeight,
+          y: y - 20,
           width: cellWidthAdjusted,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 23,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= partNumbersRowHeight;
-      }
-      const cellData17 = [
-        {
-          label:
-            'CERTIFIES THAT THIS WORK HAS BEEN ACCOMPLISHED IN ACCORDANCE WITH REQUIREMENTS OF AVIATION LEGISLATION OF ',
-          label1:
-            'RUSSIAN FEDERATION. ADMISSION TO OPERATION IN RELATION OF THIS WORK.',
-          value: `РАБОТА ВЫПОЛНЕНА В СООТВЕТСТВИИ С ТРЕБОВАНИЯМИ АВИАЦИОННОГО ЗАКОНОДАТЕЛЬСТВА РОССИЙСКОЙ ФЕДЕРАЦИИ `,
-          value2: `В ОБЛАСТИ ГРАЖДАНСКОЙ АВИАЦИИ, В ОТНОШЕНИИ ДАННОЙ РАБОТЫ, ВОЗДУШНОЕ СУДНО ПРИГОДНО ДЛЯ ДОПУСКА`,
-          value3: `К ЭКСПЛУАТАЦИИ.`,
-        },
-      ];
-      y -= 5; //
-      for (let i = 0; i < cellData17.length; i++) {
-        const cell = cellData17[i];
-
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted =
-          cell.label ===
-          'CERTIFIES THAT THIS WORK HAS BEEN ACCOMPLISHED IN ACCORDANCE WITH REQUIREMENTS OF AVIATION LEGISLATION OF '
-            ? 500
-            : 100; // Adjust width for the "Cust. ID Code" cell
-
-        // Draw the cell border
-        if (y - 60 - 60 < 50) {
-          // Check if there is enough space for the step
-          drawFooter(page);
-          ({ page, width, height, y } = addPage());
-        }
-        page.drawRectangle({
-          x: cellX,
-          y: y - 60,
-          width: cellWidthAdjusted,
-          height: 60,
+          height: 20,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -1605,37 +1565,93 @@ const PdfGenerator: React.FC<{
           x: cellX + 5,
           y: y - 10,
           font: robotoFont,
-          size: smallFontSize,
+          size: fontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 20,
+          y: y - 17,
           font: robotoFont,
           size: smallFontSize,
         });
         // Draw the value
         page.drawText(cell.value, {
-          x: cellX + 5,
-          y: y - 30,
+          x: cellX + 55,
+          y: y - 10,
           font: robotoFont,
-          size: smallFontSize,
+          size: fontSize,
         });
-        page.drawText(cell.value2, {
-          x: cellX + 5,
-          y: y - 40,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        page.drawText(cell.value3, {
-          x: cellX + 5,
-          y: y - 50,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        y -= partNumbersRowHeight;
+        // y -= partNumbersRowHeight;
       }
-      y -= 40; // Space between header and part numbers table
+      const cellData1234 = {
+        value1:
+          wo?.projectID?.WOReferenceID?.certificateId !== undefined
+            ? String(wo?.projectID?.WOReferenceID?.certificateId?.description)
+            : 'N/A',
+      };
+
+      const cellX = 50;
+      const cellWidthAdjusted = 500;
+      const certificateHeight = getTextHeight(
+        cellData1234.value1,
+        robotoFont,
+        fontSizeM,
+        cellWidthAdjusted - 10 // Adjust for padding
+      );
+
+      // const cellHeight = 20; // Base height for the top part
+
+      if (y - certificateHeight - cellHeight < 50) {
+        // Check if there is enough space for the step
+        // drawFooter(page);
+        ({ page, width, height, y } = addPage());
+      }
+
+      const descriptionHeight = getTextHeight(
+        cellData1234.value1,
+        robotoFont,
+        fontSizeM,
+        cellWidthAdjusted - 10 // Adjust for padding
+      );
+
+      const descriptionLines = splitTextIntoLines(
+        cellData1234.value1,
+        robotoFont,
+        fontSizeM,
+        cellWidthAdjusted - 10 // Adjust for padding
+      );
+
+      let textY = y - 20 - 10;
+      descriptionLines.forEach((line: string) => {
+        page.drawText(line, {
+          x: cellX + 5,
+          y: textY,
+          font: robotoFont,
+          size: fontSizeM,
+        });
+        textY -= robotoFont.heightAtSize(fontSizeM);
+      });
+
+      // page.drawRectangle({
+      //   x: cellX,
+      //   y: y - cellHeight,
+      //   width: cellWidthAdjusted,
+      //   height: cellHeight,
+      //   borderColor: rgb(0, 0, 0),
+      //   borderWidth: 1,
+      // });
+      page.drawRectangle({
+        x: cellX,
+        y: y - 20 - descriptionHeight,
+        width: cellWidthAdjusted,
+        height: descriptionHeight,
+        borderColor: rgb(0, 0, 0),
+        borderWidth: 1,
+      });
+
+      y -= descriptionHeight + 20;
+
+      // y -= 30; // Space between header and part numbers table
       // const cellData18 = [
       //   {
       //     label: '',
@@ -1696,9 +1712,9 @@ const PdfGenerator: React.FC<{
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
-          y: y - 60,
+          y: y - 40,
           width: cellWidthAdjusted,
-          height: 60,
+          height: 40,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
@@ -1728,7 +1744,7 @@ const PdfGenerator: React.FC<{
       y -= cellHeight;
 
       y -= 0; // / Space betwe
-      drawFooter(page);
+      // drawFooter(page);
       let additionalPdfs: Uint8Array[] = [];
       try {
         additionalPdfs = await Promise.all(
@@ -1777,6 +1793,8 @@ const PdfGenerator: React.FC<{
         continue; // Пропускаем эту задачу и переходим к следующей
       }
 
+      // Функция для добавления новых страниц и обновления состояния
+
       // Копирование страниц из taskPdfDoc в основной pdfDoc
       const taskPages = await pdfDoc.copyPages(
         taskPdfDoc,
@@ -1785,20 +1803,22 @@ const PdfGenerator: React.FC<{
       taskPages.forEach((page) => pdfDoc.addPage(page));
 
       // Добавление нумерации страниц для текущего блока
-      const blockPages = [page, ...taskPages];
+      const blockPages = [...pages, ...taskPages];
       const blockTotalPages = blockPages.length;
 
-      blockPages.forEach((page, index) => {
+      pages.forEach((page, index) => {
         const pageNumber = index + 1;
-        if (index === 0) {
-          // Основная страница блока
-          addMainPageText(page, robotoFont);
-          addMainPageNumber(page, pageNumber, blockTotalPages);
-        } else {
-          // Дополнительные страницы блока
-          addAdditionalPageText(page, robotoFont);
-          addAdditionalPageNumber(page, pageNumber, blockTotalPages);
-        }
+
+        addMainPageText(page, robotoFont);
+        addMainPageNumber(page, pageNumber, blockTotalPages);
+      });
+
+      taskPages.forEach((page, index) => {
+        const pageNumber = pages.length && pages.length + index + 1;
+
+        addAdditionalPageText(page, robotoFont);
+        addAdditionalPageNumber(page, pageNumber, blockTotalPages);
+        // // }
       });
     }
 
@@ -1824,7 +1844,7 @@ const PdfGenerator: React.FC<{
     // Добавление нумерации страниц внизу страницы для основной страницы
     page.drawText(`Page ${pageNumber} of ${totalPages}`, {
       x: width - 100,
-      y: 15, // Размещение внизу страницы
+      y: 6, // Размещение внизу страницы
       size: 8,
       font,
       color: rgb(0, 0, 0),
@@ -1869,7 +1889,7 @@ const PdfGenerator: React.FC<{
     // Добавление текста на дополнительные страницы
     page.drawText(`COPY print by ${SING} ${formattedDate}`, {
       x: 50,
-      y: 15, // Размещение внизу страницы
+      y: 6, // Размещение внизу страницы
       size: 8,
       font,
       color: rgb(0, 0, 0),
@@ -1894,7 +1914,7 @@ const PdfGenerator: React.FC<{
 
     // Добавление текста на дополнительные страницы
     page.drawText(
-      `Works Order: ${wo?.projectID?.WOReferenceID?.WONumber} Aircraft: ${wo?.projectID?.WOReferenceID?.planeId?.regNbr}`,
+      `Work Order: ${wo?.projectID?.WOReferenceID?.WONumber} Aircraft: ${wo?.projectID?.WOReferenceID?.planeId?.regNbr} Station: MSQ`,
       {
         x: 50,
         y: page.getHeight() - 50,
@@ -1903,7 +1923,6 @@ const PdfGenerator: React.FC<{
         color: rgb(0, 0, 0),
       }
     );
-    setLoading(false);
   };
 
   return (

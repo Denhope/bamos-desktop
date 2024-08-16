@@ -8,12 +8,12 @@ const { Text } = Typography;
 const TemplateSelector: React.FC<{
   templates: {
     id: string;
-    name: string;
-    content: string;
+    description: string;
+    code: string;
     type: string;
-    planeType: string;
+    acTypeID: { _id: string; code: string; name: string }[];
   }[];
-  onSelectTemplate: (templateId: string) => void;
+  onSelectTemplate: (templateId: string, description: string) => void;
 }> = ({ templates, onSelectTemplate }) => {
   const { t } = useTranslation();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
@@ -32,14 +32,26 @@ const TemplateSelector: React.FC<{
   };
 
   const typeOptions: string[] = Array.from(
-    new Set(templates.map((template) => template.type))
+    new Set(templates?.map((template) => template.type) || [])
   ); // Get unique type options
   const planeTypeOptions: string[] = Array.from(
-    new Set(templates.map((template) => template.planeType))
+    new Set(
+      templates?.flatMap(
+        (template) => template.acTypeID?.map((acType) => acType.code) || []
+      ) || []
+    )
   ); // Get unique plane type options
 
   const applyFilters = () => {
-    onSelectTemplate(selectedTemplate || '');
+    const selectedTemplateData = templates?.find(
+      (t) => t.id === selectedTemplate
+    );
+    if (selectedTemplateData) {
+      onSelectTemplate(
+        selectedTemplateData.id,
+        selectedTemplateData.description
+      );
+    }
   };
 
   return (
@@ -50,9 +62,12 @@ const TemplateSelector: React.FC<{
             allowClear
             style={{ width: 200 }}
             value={typeFilter}
-            options={typeOptions.map((option) => ({ value: option }))}
+            options={typeOptions.map((option) => ({
+              value: option,
+              label: option === 'action' ? t('ACTION') : t('STEP'),
+            }))}
             onChange={(value) => setTypeFilter(value)}
-            placeholder={t('Type')}
+            placeholder={t('TYPE')}
           />
 
           <AutoComplete
@@ -61,10 +76,11 @@ const TemplateSelector: React.FC<{
             value={planeTypeFilter}
             options={planeTypeOptions.map((option) => ({ value: option }))}
             onChange={(value) => setPlaneTypeFilter(value)}
-            placeholder={t('Plane Type')}
+            placeholder={t('PLANE TYPE')}
           />
         </div>
         <Select
+          allowClear
           style={{ width: '100%' }}
           onChange={handleTemplateChange}
           placeholder={t('SELECT TEMPLATE')}
@@ -74,28 +90,44 @@ const TemplateSelector: React.FC<{
           }
         >
           {templates
-            .filter(
+            ?.filter(
               (template) =>
                 (typeFilter === '' || template.type === typeFilter) &&
                 (planeTypeFilter === '' ||
-                  template.planeType === planeTypeFilter)
+                  template.acTypeID?.some(
+                    (acType) => acType.code === planeTypeFilter
+                  ))
             )
             .map((template) => (
               <Select.Option key={template.id} value={template.id}>
-                {template.name}
+                {template.code}
               </Select.Option>
             ))}
         </Select>
-        <TextArea
-          rows={6}
-          value={
-            selectedTemplate
-              ? templates.find((t) => t.id === selectedTemplate)?.content
-              : ''
-          }
-          onChange={handlePreviewHeightChange}
-          style={{ width: '100%' }}
-        />
+        <div style={{ position: 'relative' }}>
+          <TextArea
+            rows={previewHeight}
+            value={
+              selectedTemplate
+                ? templates?.find((t) => t.id === selectedTemplate)?.description
+                : ''
+            }
+            onChange={handlePreviewHeightChange}
+            style={{ width: '100%', resize: 'none' }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              padding: '5px',
+              background: 'rgba(255, 255, 255, 0.8)',
+              borderLeft: '1px solid #d9d9d9',
+              borderTop: '1px solid #d9d9d9',
+              borderRadius: '4px 0 0 0',
+            }}
+          ></div>
+        </div>
         <Button type="primary" onClick={applyFilters}>
           {t('APPLY')}
         </Button>

@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import React, { useMemo, useState } from 'react';
 import {
@@ -32,6 +32,7 @@ import {
   useReloadProjectItemMutation,
   useUpdateProjectItemsMutation,
 } from '@/features/projectItemAdministration/projectItemApi';
+
 import {
   useAddProjectItemWOMutation,
   useAddProjectPanelsMutation,
@@ -40,10 +41,12 @@ import {
 // import projectItemsAdministrationTree from './projectItemsAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
 import PartContainer from '@/components/woAdministration/PartContainer';
+import { FileOutlined } from '@ant-design/icons';
 import {
   ValueEnumType,
   ValueEnumTypeTask,
   getTaskTypeColor,
+  handleFileOpenTask,
   transformToIProjectItem,
 } from '@/services/utilites';
 import CircleTaskRenderer from './CircleTaskRenderer';
@@ -72,7 +75,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     MJC: t('MJC)'),
     CMJC: t('CMJC)'),
     FC: t('FC)'),
-    NRC_ADD: t('ADHOC)'),
+    NRC_ADD: t('ADHOC'),
   };
 
   // if (projectID) {
@@ -105,6 +108,23 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
   };
   const [addPanels] = useAddProjectPanelsMutation({});
   const handleDelete = async (ids: string[]) => {
+    const selectedItems = transformedItems.filter((item) =>
+      ids.includes(item._id)
+    );
+    const hasProjectItemsWOID = selectedItems.some(
+      (item) => item.projectItemsWOID && item.projectItemsWOID.length > 0
+    );
+
+    if (hasProjectItemsWOID) {
+      notification.warning({
+        message: t('CANNOT DELETE'),
+        description: t(
+          'Cannot delete items with associated projectItemsWOID. Please remove associated WO first.'
+        ),
+      });
+      return;
+    }
+
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS ITEM?'),
       onOk: async () => {
@@ -124,6 +144,23 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     });
   };
   const handleReload = async (ids: string[]) => {
+    const selectedItems = transformedItems.filter((item) =>
+      ids.includes(item._id)
+    );
+    const hasProjectItemsWOID = selectedItems.some(
+      (item) => item.projectItemsWOID && item.projectItemsWOID.length > 0
+    );
+
+    if (hasProjectItemsWOID) {
+      notification.warning({
+        message: t('CANNOT RELOAD'),
+        description: t(
+          'Cannot reload items with associated projectItemsWOID. Please remove associated WO first.'
+        ),
+      });
+      return;
+    }
+
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO RELOAD THIS PROJECT ITEM?'),
       onOk: async () => {
@@ -143,6 +180,23 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     });
   };
   const handleGenerateWOTasks = async (ids: any[]) => {
+    const selectedItems = transformedItems.filter((item) =>
+      ids.includes(item._id)
+    );
+    const hasProjectItemsWOID = selectedItems.some(
+      (item) => item.projectItemsWOID && item.projectItemsWOID.length > 0
+    );
+
+    if (hasProjectItemsWOID) {
+      notification.warning({
+        message: t('CANNOT CREATE TASKS'),
+        description: t(
+          'Cannot create tasks for items with associated projectItemsWOID. Please remove associated WO first.'
+        ),
+      });
+      return;
+    }
+
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO CREATE TASKS?'),
       onOk: async () => {
@@ -158,65 +212,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             description: t('The Tasks  has been successfully added.'),
           });
           Modal.destroyAll();
-          // Modal.confirm({
-          //   width: 550,
-          //   title: t('СОЗДАТЬ ЗАКАЗ ПОД КАЖДУЮ ПОЗИЦИЮ?'),
-          //   footer: [
-          //     <Space>
-          //       {/* <ButtonMissing required fields: PART_NUMBER, QUANTITY
-          //         key="single"
-          //         onClick={async () => {
-          //           try {
-          //             await createWO({
-          //               isSingleWO: false,
-          //               isMultiWO: true,
-          //               projectItemID: ids,
-          //               projectID: projectID,
-          //             }).unwrap();
-          //             refetchProjectItems();
-          //             message.success(t('ОДИН ЗАКАЗ УСПЕШНО СОЗДАН'));
-          //             refetchProjectItems();
-          //             Modal.destroyAll();
-          //           } catch (error) {
-          //             message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗА'));
-          //             Modal.destroyAll();
-          //           }
-          //         }}
-          //       >
-          //         {t('СОЗДАТЬ ОДИН ЗАКАЗ')}
-          //       </ButtonMissing> */}
-          //       <Button
-          //         key="multiple"
-          //         type="primary"
-          //         onClick={async () => {
-          //           try {
-          //             await createWO({
-          //               isSingleWO: true,
-          //               isMultiWO: false,
-          //               projectItemID: ids,
-          //             }).unwrap();
-          //             refetchProjectItems();
-          //             message.success(t('ЗАКАЗЫ УСПЕШНО СОЗДАНЫ'));
-          //             Modal.destroyAll();
-          //           } catch (error) {
-          //             message.error(t('ОШИБКА ПРИ СОЗДАНИИ ЗАКАЗОВ'));
-          //             Modal.destroyAll();
-          //           }
-          //         }}
-          //       >
-          //         {t('ПОД КАЖДУЮ ПОЗИЦИЮ')}
-          //       </Button>
-          //       <Button
-          //         key="cancel"
-          //         onClick={() => {
-          //           Modal.destroyAll(); // Закрываем все модальные окна
-          //         }}
-          //       >
-          //         {t('Отмена')}
-          //       </Button>
-          //     </Space>,
-          //   ],
-          // });
         } catch (error) {
           notification.error({
             message: t('FAILED '),
@@ -242,7 +237,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             projectItem: reqCode,
             projectID: projectID,
             planeID: project?.planeId?._id,
-            taskType: 'FC',
+            taskType: reqCode?.taskType ? reqCode?.taskType : 'FC',
           }).unwrap();
           notification.success({
             message: t('SUCCESSFULLY UPDATED'),
@@ -253,7 +248,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             projectItem: reqCode,
             projectID: projectID,
             planeID: project?.planeId?._id,
-            taskType: 'RC',
+            taskType: reqCode?.taskType ? reqCode?.taskType : 'RC',
           }).unwrap();
           notification.success({
             message: t('SUCCESSFULLY UPDATED'),
@@ -322,11 +317,11 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       filter: 'agSetColumnFilter', // Использование фильтра со списком значений
       sortable: true,
       comparator: (valueA: any, valueB: any) => {
-        const colorA = valueA ? 'green' : 'red';
-        const colorB = valueB ? 'green' : 'red';
+        const colorA = valueA === 'green' ? 1 : 0;
+        const colorB = valueB === 'green' ? 1 : 0;
 
         if (colorA === colorB) return 0;
-        return colorA === 'green' ? -1 : 1;
+        return colorA > colorB ? -1 : 1;
       },
       valueGetter: (params: any) => {
         // Определяет значение для фильтрации и сортировки
@@ -349,10 +344,69 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
     },
     {
+      field: 'reference',
+      headerName: `${t('DB FILE')}`,
+      width: 90,
+      cellRenderer: (params: any) => {
+        const files =
+          params?.data?.taskNumberID?.reference &&
+          params?.data?.taskNumberID?.reference?.length
+            ? params?.data?.taskNumberID?.reference
+            : params?.data?.reference; // Проверяем taskNumberID.reference, затем reference
+        if (!files || files.length === 0) return null; // Проверка на наличие файлов
+
+        // Предполагаем, что вы хотите взять первый файл из массива
+        const file = files[0];
+
+        return (
+          <div
+            className="cursor-pointer hover:text-blue-500"
+            onClick={() => {
+              handleFileOpenTask(file.fileId, 'uploads', file.filename);
+            }}
+          >
+            <FileOutlined />
+          </div>
+        );
+      },
+      sortable: true,
+      comparator: (valueA: any, valueB: any) => {
+        // Сравниваем по наличию файлов
+        const hasFileA = valueA && valueA.length > 0;
+        const hasFileB = valueB && valueB.length > 0;
+
+        if (hasFileA === hasFileB) return 0;
+        return hasFileA ? -1 : 1;
+      },
+      valueGetter: (params: any) => {
+        // Извлекаем значения для сортировки
+        const files =
+          params?.data?.taskNumberID?.reference &&
+          params?.data?.taskNumberID?.reference?.length
+            ? params?.data?.taskNumberID?.reference
+            : params?.data?.reference;
+        return files;
+      },
+    },
+    {
+      field: 'taskWO',
+      headerName: `${t('TRACE No')}`,
+      filter: true,
+      width: 120,
+      valueGetter: (params: any) => {
+        const projectItemsWOID = params.data.projectItemsWOID; // Предполагаем, что projectItemsWOID — это массив объектов
+        if (projectItemsWOID && projectItemsWOID.length > 0) {
+          return projectItemsWOID[0].taskWO; // Возвращаем taskWO первого объекта в массиве
+        }
+        return null; // Возвращаем null, если массив пуст или не существует
+      },
+    },
+    {
       field: 'taskNumber',
       headerName: `${t('TASK No')}`,
       cellDataType: 'text',
       filter: 'agTextColumnFilter',
+      width: 150,
     },
     {
       field: 'taskDescription',
@@ -362,6 +416,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
 
     {
       field: 'taskType',
+      width: 120,
       headerName: `${t('TASK TYPE')}`,
       filter: true,
       valueGetter: (params: { data: { taskType: keyof ValueEnumTypeTask } }) =>
@@ -379,6 +434,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
 
     {
       field: 'createDate',
+      width: 120,
       editable: false,
       cellDataType: 'date',
       headerName: `${t('CREATE DATE')}`,
@@ -431,25 +487,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
               size="small"
               icon={<MinusSquareOutlined />}
               onClick={() => {
-                // Проверяем, есть ли в элементах editingReqCode.projectItemsWOID заказы со статусом отличным от CANCELED или DELETED
-                // const hasActiveOrders = editingReqCode?.projectItemsWOID?.some(
-                //   (item) =>
-                //     item.status !== 'CANCELED' && item.status !== 'DELETED'
-                // );
-
-                // if (hasActiveOrders) {
-                //   // Если есть активные заказы, выводим предупреждение
-                //   Modal.warning({
-                //     title: t('УДАЛЕНИЕ НЕВОЗМОЖНО'),
-                //     content: t(
-                //       'Удаление невозможно из-за того, что уже созданы заказы. Если вы хотите удалить записи, установите статус ЗАКАЗА на ОТМЕНЕН.'
-                //     ),
-                //   });
-                // } else {
-                //   editingReqCode &&
-                //     // Если все заказы отменены или удалены, вызываем handleDelete
                 handleDelete(selectedKeys);
-                // }
               }}
             >
               {t('DELETE ITEM')}
@@ -464,7 +502,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
               icon={<MinusSquareOutlined />}
               onClick={() => {
                 handleReload(selectedKeys);
-                // }
               }}
             >
               {t('RELOAD ITEM')}

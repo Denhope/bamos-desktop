@@ -54,7 +54,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   );
   const { t } = useTranslation();
 
-  const [isTreeView, setIsTreeView] = useState(true);
+  const [isTreeView, setIsTreeView] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   // let projectItems = null;
   // let isLoading = false;
@@ -65,7 +65,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
     MJC: t('MJC)'),
     CMJC: t('CMJC)'),
     FC: t('FC)'),
-    NRC_ADD: t('ADHOC)'),
+    NRC_ADD: t('ADHOC'),
   };
 
   // if (projectID) {

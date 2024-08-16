@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ICellRendererParams } from 'ag-grid-community';
 import React from 'react';
 
@@ -30,6 +31,9 @@ const CircleRenderer = (params: ICellRendererParams) => {
     backgroundColor: color,
     display: 'inline-block',
   };
+
+  // Создаем копию объекта params и устанавливаем значение цвета
+  const modifiedParams = { ...params, value: color };
 
   return <div style={circleStyle}></div>;
 };
