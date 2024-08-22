@@ -7,21 +7,26 @@ import {
   ProFormText,
   ProFormRadio,
   ProFormTextArea,
+  ProFormSelect,
 } from '@ant-design/pro-form';
 import { IAccessCode, IZoneCodeGroup } from '@/models/ITask';
 import {
   ProDescriptions,
   ProFormDigit,
   ProFormGroup,
-  ProFormSelect,
 } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
-import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
+
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
 import { Button, Tag } from 'antd';
 import { useGetProjectTasksQuery } from '@/features/projectTaskAdministration/projectsTaskApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
-
+import {
+  useGetProjectGroupPanelsQuery,
+  useGetProjectItemsWOQuery,
+  useGetProjectPanelsQuery,
+  useUpdateProjectPanelsMutation,
+} from '@/features/projectItemWO/projectItemWOApi';
 interface UserFormProps {
   accessCode?: IAccessCode | null;
   onSubmit: (accessCode: IAccessCode) => void;
@@ -46,6 +51,13 @@ const AccessCodeForm: FC<UserFormProps> = ({
       : { ...values };
     onSubmit(newUser);
   };
+
+  const { data: filteredAcceses } = useGetProjectPanelsQuery(
+    {
+      WOReferenceID: form.getFieldValue('WOReferenceID'),
+    },
+    { skip: !WOID }
+  );
   const {
     data: wp,
     isLoading: isLoadingWP,
@@ -58,14 +70,28 @@ const AccessCodeForm: FC<UserFormProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
 
+  // Функция для фильтрации accessesData
+  const filterAccessesData = (accessesData: any[], filteredAcceses: any[]) => {
+    const filteredAccesesIds = new Set(
+      filteredAcceses?.map((item) => item.accessItemID?._id) || []
+    );
+    return accessesData?.filter((access) => !filteredAccesesIds.has(access.id));
+  };
+
+  const filteredAccessesData = filterAccessesData(
+    accessesData,
+    filteredAcceses
+  );
+
   const accessValueEnum: Record<string, any> =
-    accessesData?.reduce((acc, access) => {
+    filteredAccessesData?.reduce((acc, access) => {
       acc[access.id] = {
         text: `${String(access.accessNbr)}-${String(access.accessDescription)}`,
         value: access,
       };
       return acc;
     }, {}) || {};
+
   const wpValueEnum: Record<string, string> =
     wp?.reduce((acc, wp) => {
       if (wp._id && wp?.WOName) {
@@ -265,6 +291,21 @@ const AccessCodeForm: FC<UserFormProps> = ({
           )}
         </ProFormGroup>
       </ProForm.Group>
+
+      {/* Отображение списка задач */}
+      <ProForm.Item label={t('TASK LIST')}>
+        <ProDescriptions column={1} size="middle">
+          {accessCode?.projectTaskIds &&
+            accessCode?.projectTaskIds?.map((task) => (
+              <ProDescriptions.Item
+                key={task?._id}
+                label={`${task?.taskNumber}(TRACE:${task?.taskWO})`}
+              >
+                {task.taskDescription}
+              </ProDescriptions.Item>
+            ))}
+        </ProDescriptions>
+      </ProForm.Item>
     </ProForm>
   );
 };

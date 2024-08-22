@@ -70,6 +70,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       cardNumber: tasksFormValues?.cardNumber,
       mpdDocumentationId: tasksFormValues?.mpdDocumentationId,
       taskType: tasksFormValues?.taskType,
+      isCriticalTask: tasksFormValues?.isCriticalTask,
     },
     { skip: !tasksFormValues }
   );
@@ -114,7 +115,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
   };
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('RC'),
-    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
     MJC: t('MJC)'),
@@ -143,7 +144,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     } catch (error) {
       notification.error({
         message: t('ERROR'),
-        description: t('ERROR SAVING TASK GROUP'),
+        description: t('ERROR SAVING TASK'),
       });
     }
   };
@@ -167,8 +168,15 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
   }
   const columnDefs: any[] = [
     {
+      field: 'cardNumber',
+      headerName: `${t('CARD No')}`,
+      filter: true,
+      width: 100,
+      // hide: true,
+    },
+    {
       field: 'taskNumber',
-      headerName: `${t('TASK WO')}`,
+      headerName: `${t('TASK No')}`,
       filter: true,
       // hide: true,
     },
@@ -203,7 +211,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       filter: true,
     },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
-    { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
+    { field: 'amtoss', headerName: `${t('REFERENCE')}`, filter: true },
     { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
     { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
     { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },

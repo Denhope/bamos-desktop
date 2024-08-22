@@ -1,5 +1,4 @@
 import { IProjectItemWO } from '@/models/AC';
-import { IProject } from '@/models/IProject';
 import { ProDescriptions } from '@ant-design/pro-components';
 import { Tag } from 'antd';
 import React, { FC } from 'react';
@@ -7,38 +6,41 @@ import { useTranslation } from 'react-i18next';
 
 type projectsDiscriptionType = {
   project: IProjectItemWO | null;
-  onprojectSearch?: (orders: any | null) => void;
 };
 
-const WODiscription: FC<projectsDiscriptionType> = ({
-  project,
-  onprojectSearch,
-}) => {
+const WODiscription: FC<projectsDiscriptionType> = ({ project }) => {
   const { t } = useTranslation();
+
+  const getDocumentRevision = (documentName: string) => {
+    const document = project?.projectID?.WOReferenceID?.documents?.find(
+      (doc: any) => doc?.name === documentName
+    );
+    return document ? `${document?.revision}-${document?.revisionDate}` : '';
+  };
 
   return (
     <div className="flex flex-col w-full">
       <ProDescriptions
-        column={6}
-        size="middle"
-        className="bg-white px-4 py-3 rounded-md align-middle w-full"
+        column={7}
+        size="small"
+        className="bg-white px-4  rounded-md align-middle w-full py-0"
       >
-        <ProDescriptions.Item label={`${t('WORKORDER No')}`} valueType="text">
-          {project?.taskWO && (
+        {/* Добавление информации из project.projectID.WOReferenceID.planeId */}
+        <ProDescriptions.Item label={`${t('Reg Nbr')}`} valueType="text">
+          {project?.projectID?.WOReferenceID?.planeId?.regNbr && (
             <Tag
-              color="#fc9601"
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
               }}
             >
-              {project?.taskWO}
+              {project.projectID.WOReferenceID.planeId.regNbr}
             </Tag>
           )}
         </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="text" label={t('CREATE BY')}>
-          {project?.taskWO && (
+        <ProDescriptions.Item label={`${t('AC Type')}`} valueType="text">
+          {project?.projectID?.WOReferenceID?.planeId?.acTypeId[0]?.code && (
             <Tag
               style={{
                 overflow: 'hidden',
@@ -46,48 +48,159 @@ const WODiscription: FC<projectsDiscriptionType> = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {project?.createUserID?.name?.toUpperCase()}
-            </Tag>
-          )}
-        </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="date" label={t('CREATE DATE')}>
-          {project?.createDate}
-        </ProDescriptions.Item>
-
-        <ProDescriptions.Item valueType="text" label={t('LAST MODIFIED BY')}>
-          {project?.taskWO && (
-            <Tag
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {project?.updateUserID?.name?.toUpperCase()}
+              {project?.projectID?.WOReferenceID?.planeId?.acTypeId[0]?.code}
             </Tag>
           )}
         </ProDescriptions.Item>
 
-        <ProDescriptions.Item valueType="date" label={t('MODIFICATION DATE')}>
-          {project?.updateDate}
-        </ProDescriptions.Item>
-        <ProDescriptions.Item valueType="text" label={t('STATUS')}>
-          {project?.taskWO && (
+        <ProDescriptions.Item label={`${t('MSN')}`} valueType="text">
+          {project?.projectID?.WOReferenceID?.planeId?.serialNbr && (
             <Tag
-              color="#fc9601"
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
               }}
             >
-              {project?.status?.toUpperCase()}
+              {project.projectID.WOReferenceID.planeId.serialNbr}
             </Tag>
           )}
         </ProDescriptions.Item>
-        {/* <ProDescriptions.Item valueType="text" label={t('CLOSED BY')}>
-          {project?.taskWO && <Tag>{project?.closedByID?.toUpperCase()}</Tag>}
-        </ProDescriptions.Item> */}
+        <ProDescriptions.Item label={`${t('Effectivity')}`} valueType="text">
+          {project?.projectID?.WOReferenceID?.planeId?.efectivityNumber && (
+            <Tag
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {project.projectID.WOReferenceID.planeId.efectivityNumber}
+            </Tag>
+          )}
+        </ProDescriptions.Item>
+
+        <ProDescriptions.Item valueType="date" label={t('Manufactory date')}>
+          {project?.projectID?.WOReferenceID?.planeId?.manafacturesDate}
+        </ProDescriptions.Item>
+        <ProDescriptions.Item label={`${t('Engine Type')}`} valueType="text">
+          {project?.projectID?.WOReferenceID?.planeId?.engineType && (
+            <Tag
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {project.projectID.WOReferenceID.planeId.engineType}
+            </Tag>
+          )}
+        </ProDescriptions.Item>
+
+        <ProDescriptions.Item label={`${t('APU Type')}`} valueType="text">
+          {project?.projectID?.WOReferenceID?.planeId?.apuType && (
+            <Tag
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {project.projectID.WOReferenceID.planeId.apuType}
+            </Tag>
+          )}
+        </ProDescriptions.Item>
+
+        <ProDescriptions.Item
+          label={`${t('Total Frame Hours')}`}
+          valueType="text"
+        >
+          {project?.projectID?.WOReferenceID?.planeId?.airFrameHours && (
+            <Tag
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {project.projectID.WOReferenceID.planeId.airFrameHours}
+            </Tag>
+          )}
+        </ProDescriptions.Item>
+
+        <ProDescriptions.Item
+          label={`${t('Total Frame Cycles')}`}
+          valueType="text"
+        >
+          {project?.projectID?.WOReferenceID?.planeId?.airFrameLandings && (
+            <Tag
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {project.projectID.WOReferenceID.planeId.airFrameLandings}
+            </Tag>
+          )}
+        </ProDescriptions.Item>
+
+        {/* Document revisions */}
+        <ProDescriptions.Item label={`${t('MPD Rev')}`} valueType="text">
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {getDocumentRevision('MPD')}
+          </Tag>
+        </ProDescriptions.Item>
+        <ProDescriptions.Item label={`${t('AMM Rev')}`} valueType="text">
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {getDocumentRevision('AMM')}
+          </Tag>
+        </ProDescriptions.Item>
+        <ProDescriptions.Item label={`${t('SRM Rev')}`} valueType="text">
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {getDocumentRevision('SRM')}
+          </Tag>
+        </ProDescriptions.Item>
+        <ProDescriptions.Item label={`${t('TC Rev')}`} valueType="text">
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {getDocumentRevision('TC')}
+          </Tag>
+        </ProDescriptions.Item>
+        <ProDescriptions.Item label={`${t('NDTM Rev')}`} valueType="text">
+          <Tag
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {getDocumentRevision('NDTM')}
+          </Tag>
+        </ProDescriptions.Item>
       </ProDescriptions>
     </div>
   );

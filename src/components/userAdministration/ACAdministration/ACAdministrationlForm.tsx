@@ -162,7 +162,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               </ProFormGroup>
               <ProFormGroup direction="vertical">
                 <ProFormDatePicker
-                  name="MANUFACTURERDate"
+                  name="manafacturesDate"
                   label={`${t('DATE OF MANAFACTURE')}`}
                   width="sm"
                   tooltip="PLANNED DATE"

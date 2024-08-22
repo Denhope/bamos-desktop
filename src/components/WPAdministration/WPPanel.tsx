@@ -138,6 +138,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     OPEN: t('OPEN'),
     closed: t('CLOSED'),
     canceled: t('CANCELLED'),
+    cancelled: t('CANCELLED'),
     CANCELLED: t('CANCELLED'),
     onOrder: t('ISSUED'),
     draft: t('DRAFT'),
@@ -367,7 +368,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 isLoading={isFetching || isLoading}
                 columnDefs={columnItems}
                 partNumbers={[]}
-                pagination={true}
+                pagination={false}
                 rowData={projects || []}
                 onUpdateData={function (data: any[]): void {}}
                 height={'65vh'}

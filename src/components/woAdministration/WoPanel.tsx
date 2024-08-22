@@ -11,6 +11,7 @@ import {
   Switch,
   Divider,
   notification,
+  FloatButton,
 } from 'antd';
 import {
   PlusSquareOutlined,
@@ -89,7 +90,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
   useEffect(() => {
     setProjectTasksFormValues(projectSearchValues);
-    setEditingProject(null);
+    // setEditingProject(null);
     setSelectedKeys([]);
   }, [projectSearchValues]);
 
@@ -196,7 +197,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   }, [projectSearchValues]);
   useEffect(() => {
     projectTasks && refetch();
-    setEditingProject(editingProject);
+    // setEditingProject(editingProject);
 
     // console.log(currentTime);
   }, [currentTime]); //
@@ -300,7 +301,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'status',
       headerName: `${t('Status')}`,
       cellDataType: 'text',
-      width: 150,
+      // width: 150,
       filter: true,
       valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
         params.data.status,
@@ -317,7 +318,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'taskWO',
       headerName: `${t('TRACE No')}`,
       filter: true,
-      width: 130,
+      // width: 130,
       // hide: true,
     },
     {
@@ -330,7 +331,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'taskDescription',
       headerName: `${t('DESCRIPTION')}`,
       filter: true,
-      width: 300,
+      // width: 300,
       // hide: true,
     },
     // {
@@ -349,7 +350,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'projectName',
       headerName: `${t('WP TITLE')}`,
       filter: true,
-      width: 300,
+      // width: 300,
       // hide: true,
     },
 
@@ -357,7 +358,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       field: 'projectItemType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
-      width: 130,
+      // width: 130,
       valueGetter: (params: {
         data: { projectItemType: keyof ValueEnumTypeTask };
       }) => params.data.projectItemType,
@@ -461,7 +462,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
     closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
+    cancelled: t('CANCELLED'),
     inProgress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
@@ -472,10 +473,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     draft: '',
     issued: '',
     progress: '',
+    canceled: '',
   };
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('RC'),
-    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
     MJC: t('MJC)'),
@@ -506,7 +508,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     }
 
     Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO MAKE THIS TRACE PRFMD?'),
+      title: t('ARE YOU SURE YOU WANT TO CHANGE STATUS?'),
       onOk: async () => {
         try {
           await addMultiAction({ actionType, ids });
@@ -562,7 +564,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         message: t('SUCCESS'),
         description: t('ACTIONS COMPLETED'),
       });
-      setEditingProject(null);
+      // setEditingProject(null);
     } catch (error) {
       notification.error({
         message: t('ERROR'),
@@ -631,42 +633,42 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
 `;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (reportData && selectedKeys) {
-        const companyID = localStorage.getItem('companyID');
-        const queryParams = {
-          title: 'TASK_COVER_REPORT',
-          token: localStorage.getItem('token'),
-          landscape: 'portrait',
-        };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (reportData && selectedKeys) {
+  //       const companyID = localStorage.getItem('companyID');
+  //       const queryParams = {
+  //         title: 'TASK_COVER_REPORT',
+  //         token: localStorage.getItem('token'),
+  //         landscape: 'portrait',
+  //       };
 
-        try {
-          // Вызываем функцию для генерации отчета
-          setReportDataLoading(true);
-          const reportDataQ = await generateReport(
-            companyID,
-            queryParams,
-            localStorage.getItem('token')
-          );
+  //       try {
+  //         // Вызываем функцию для генерации отчета
+  //         setReportDataLoading(true);
+  //         const reportDataQ = await generateReport(
+  //           companyID,
+  //           queryParams,
+  //           localStorage.getItem('token')
+  //         );
 
-          handleOpenReport(reportDataQ);
-          setReportDataLoading(false);
+  //         handleOpenReport(reportDataQ);
+  //         setReportDataLoading(false);
 
-          // Устанавливаем состояние reportData в false
-          setReportData(false);
-          // return reportDataQ;
-        } catch (error) {
-          // Обрабатываем ошибку при загрузке отчета
-          console.error('Ошибка при загрузке отчета:', error);
-          setReportDataLoading(false);
-          setReportData(false);
-        }
-      }
-    };
+  //         // Устанавливаем состояние reportData в false
+  //         setReportData(false);
+  //         // return reportDataQ;
+  //       } catch (error) {
+  //         // Обрабатываем ошибку при загрузке отчета
+  //         console.error('Ошибка при загрузке отчета:', error);
+  //         setReportDataLoading(false);
+  //         setReportData(false);
+  //       }
+  //     }
+  //   };
 
-    fetchData();
-  }, [selectedKeys, reportData]);
+  //   fetchData();
+  // }, [selectedKeys, reportData]);
   const [visibleActionAdd, setVisibleActionAdd] = useState(false);
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
@@ -849,14 +851,22 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             />
           </PermissionGuard>
         </Col>
-        <Col>
-          <Switch
-            checkedChildren="Table"
-            unCheckedChildren="Tree"
-            defaultChecked
-            onChange={() => setIsTreeView(!isTreeView)}
-          />
-        </Col>
+        <Space>
+          <Col>
+            <Switch
+              checkedChildren="Table"
+              unCheckedChildren="Tree"
+              defaultChecked
+              onChange={() => setIsTreeView(!isTreeView)}
+            />
+          </Col>
+          {/* <Col>
+            <FloatButton.Group shape="circle" style={{ right: 24 }}>
+              <FloatButton />
+              <FloatButton icon="DOC" onClick={() => console.log('DOC')} />
+            </FloatButton.Group>
+          </Col> */}
+        </Space>
       </Space>
       <div className="h-[78vh] flex flex-col">
         <Split initialPrimarySize="30%" splitterSize="20px">
@@ -873,7 +883,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             ) : (
               <TaskList
                 isFilesVisiable={true}
-                isLoading={isLoading || isFetching}
+                isLoading={isLoading}
                 pagination={true}
                 isChekboxColumn={true}
                 columnDefs={columnDefs}
@@ -885,6 +895,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 onCheckItems={function (selectedKeys: React.Key[]): void {
                   setSelectedKeys(selectedKeys);
                 }}
+                gridKey={'woTable'}
               />
               // <MyTable
               //   columnDefs={columnDefs}

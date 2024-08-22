@@ -1,10 +1,12 @@
 import React, {
-  useRef,
-  useState,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
+  useState,
 } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -22,6 +24,12 @@ import { utils } from 'xlsx';
 import { ITask } from '@/models/ITask';
 import FileModalList from '../FileModalList';
 import { handleFileSelect, handleFileOpen } from '@/services/utilites';
+import {
+  setColumnOrder,
+  setColumnState,
+  setColumnVisible,
+} from '@/store/reducers/columnSlice';
+
 interface ColumnDef {
   field: keyof IProjectItemWO;
   headerName: string;
@@ -40,6 +48,7 @@ interface MyTableProps {
   isChekboxColumn?: boolean;
   isLoading?: boolean;
   isFilesVisiable?: boolean;
+  gridKey: string; // Уникальный ключ таблицы
 }
 
 const TaskList: React.FC<MyTableProps> = ({
@@ -52,6 +61,7 @@ const TaskList: React.FC<MyTableProps> = ({
   isChekboxColumn = false,
   isLoading,
   isFilesVisiable,
+  gridKey,
 }) => {
   const gridRef = useRef<AgGridReact>(null);
   const { t, i18n } = useTranslation();
@@ -66,6 +76,38 @@ const TaskList: React.FC<MyTableProps> = ({
   );
   const [selectedRowCount, setSelectedRowCount] = useState(0);
 
+  const dispatch = useDispatch();
+  const columnState = useSelector(
+    (state: any) => state.columns[gridKey]?.columnState
+  );
+  const columnVisible = useSelector(
+    (state: any) => state.columns[gridKey]?.columnVisible
+  );
+  const columnOrder = useSelector(
+    (state: any) => state.columns[gridKey]?.columnOrder
+  );
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi && columnState) {
+      console.log('Setting column state:', columnState);
+      // gridRef.current.columnApi.setColumnState(columnState);
+    }
+  }, [columnState]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi && columnVisible) {
+      console.log('Setting column visibility:', columnVisible);
+      Object.keys(columnVisible).forEach((key) => {
+        gridRef.current?.columnApi.setColumnVisible(key, columnVisible[key]);
+      });
+    }
+  }, [columnVisible]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi && columnOrder) {
+      console.log('Setting column order:', columnOrder);
+      gridRef.current.columnApi.applyColumnState({ state: columnOrder });
+    }
+  }, [columnOrder]);
   const handleCellContextMenu = useCallback((event: CellContextMenuEvent) => {
     const mouseEvent = event.event as MouseEvent;
     if (mouseEvent) {
@@ -360,6 +402,29 @@ const TaskList: React.FC<MyTableProps> = ({
         },
       ]
     : [];
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi) {
+      const columnState = gridRef.current.columnApi.getColumnState();
+      const columnVisible = columnDefs.reduce((acc, column) => {
+        acc[column.field] = gridRef.current?.columnApi
+          .getColumn(column.field)
+          ?.isVisible();
+        return acc;
+      }, {} as { [key: string]: boolean });
+      const columnOrder = gridRef.current.columnApi
+        .getColumnState()
+        .map((col) => ({
+          colId: col.colId,
+          sort: col.sort,
+          aggFunc: col.aggFunc,
+        }));
+      dispatch(setColumnState({ gridKey, columnState }));
+      dispatch(setColumnVisible({ gridKey, columnVisible }));
+      dispatch(setColumnOrder({ gridKey, columnOrder }));
+    }
+  }, [columnDefs, dispatch, gridKey]);
+
   return (
     <div
       className="pb-5 ag-theme-alpine"
@@ -486,24 +551,7 @@ const TaskList: React.FC<MyTableProps> = ({
           >
             {t('COPY SELECTED ROWS')}
           </div>
-          {/* <div
-            onClick={copyTable}
-            style={{
-              padding: '10px 15px',
-              cursor: 'pointer',
-              fontFamily: 'Arial, sans-serif',
-              fontSize: '14px',
-              transition: 'background-color 0.2s ease-in-out',
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = '#f5f5f5')
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = 'white')
-            }
-          >
-            {t('COPY TABLE')}
-          </div> */}
+
           <div
             onClick={exportToExcel}
             style={{

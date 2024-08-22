@@ -149,7 +149,7 @@ const StepCard: React.FC<Props> = ({
           message: t('ACTION ADDED'),
           description: t('ACTION SUCCESSFULLY ADDED'),
         });
-        setCurrentTime(Date.now());
+        // setCurrentTime(Date.now());
 
         await addBooking({
           booking: { voucherModel: 'ADD_ACTION', data: action },
@@ -204,7 +204,7 @@ const StepCard: React.FC<Props> = ({
           isEditing: false,
         }));
       refetch();
-      setCurrentTime(Date.now());
+      // setCurrentTime(Date.now());
     } catch (error) {
       notification.error({
         message: t('ERROR EDIT'),
@@ -222,7 +222,7 @@ const StepCard: React.FC<Props> = ({
   const handleNewActionSave = (newAction: Action) => {
     setVisibleActionAdd(false);
     handleActionSave(newAction);
-    console.log(newAction);
+    // console.log(newAction);
     setCurrentAction(null);
   };
 

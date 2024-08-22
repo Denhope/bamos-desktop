@@ -21,16 +21,21 @@ import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
 
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
+  formKey: string; // Уникальный ключ формы
 };
 const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   onProjectSearch,
+  formKey,
 }) => {
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
-
+  const dispatch = useDispatch();
+  const formValues = useSelector((state: any) => state.form[formKey] || {});
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -40,7 +45,15 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     setSelectedEndDate(dateString[1]);
     setSelectedStartDate(dateString[0]);
   };
-
+  const handleReset = () => {
+    form.resetFields();
+    dispatch(resetFormValues({ formKey }));
+    setSelectedEndDate(null);
+    setSelectedStartDate(null);
+  };
+  useEffect(() => {
+    form.setFieldsValue(formValues);
+  }, [form, formValues]);
   interface Option {
     value: string;
     label: string;
@@ -161,14 +174,16 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
     <ProForm
       formRef={formRef}
       onValuesChange={(changedValues, allValues) => {
-        // Handle changes in the form
+        dispatch(setFormValues({ formKey, values: allValues }));
       }}
       layout="horizontal"
       size="small"
-      onReset={() => {
-        setSelectedEndDate(null);
-        setSelectedStartDate(null);
-      }}
+      onReset={handleReset}
+      // onReset={() => {
+      //   dispatch(setFormValues({ formKey, values: {} }));
+      //   setSelectedEndDate(null);
+      //   setSelectedStartDate(null);
+      // }}
       form={form}
       onFinish={onFinish}
     >
@@ -201,7 +216,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         disabled={!WOID} // Disable the select if acTypeID is not set
       />
       <ProFormSelect
-        initialValue={['open', 'performed', 'inspect', 'inProgress']}
+        // initialValue={['open', 'performed', 'inspect', 'inProgress']}
         mode="multiple"
         name="woStatus"
         label={`${t('Wo STATUS')}`}
@@ -340,7 +355,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       />
       <ProFormSelect
-        initialValue={['RC', 'RC_ADD', 'NRC', 'NRC_ADD']}
+        // initialValue={['RC', 'CR_TASK', 'NRC', 'NRC_ADD']}
         mode="multiple"
         name="projectItemType"
         label={`${t('TASK TYPE')}`}
@@ -351,7 +366,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
               'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
             ),
           },
-          RC_ADD: { text: t('RC (Critical Task, Double Inspection)') },
+          CR_TASK: { text: t('CR TASK (CRIRICAL TASK/DI)') },
 
           NRC: { text: t('NRC (Defect)') },
           NRC_ADD: { text: t('ADHOC(Adhoc Task)') },

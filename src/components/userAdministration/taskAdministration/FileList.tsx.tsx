@@ -11,6 +11,7 @@ import {
   Space,
   Select,
   notification,
+  Checkbox,
 } from 'antd';
 import {
   PlusOutlined,
@@ -30,6 +31,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
+import { updateFilePrintAsAttachment } from '@/utils/api/thunks';
 
 // types.ts
 export interface FileData {
@@ -47,6 +49,8 @@ export interface FileData {
   taskCardNumber?: number;
   efectivityACID?: any;
   type: string; // Добавлено поле type
+  printAsAttachment?: boolean; // Добавлено поле для отметки печати как вложения
+  isDefaultFile?: boolean; // Добавлено поле для определения, является ли файл дефолтным
 }
 
 interface NewFileData extends FileData {
@@ -63,6 +67,7 @@ interface FileListEProps {
   isTaskNumberField: boolean;
   isEfectivityField?: boolean;
   isCuctomerCode?: boolean;
+  isDefaultFileDisable?: boolean; // Добавлен параметр для отключения редактирования дефолтных файлов
 }
 
 const FileListE: React.FC<FileListEProps> = ({
@@ -73,6 +78,7 @@ const FileListE: React.FC<FileListEProps> = ({
   isTaskNumberField,
   isCuctomerCode,
   isEfectivityField = false,
+  isDefaultFileDisable = true, // По умолчанию false
 }) => {
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [files, setFiles] = useState<FileData[]>(initialFiles);
@@ -123,11 +129,11 @@ const FileListE: React.FC<FileListEProps> = ({
       width: 140,
     },
     {
-      headerName: `${t('CARD No')}`,
+      headerName: `${t('REF No')}`,
       field: 'taskCardNumber',
       sortable: true,
       filter: true,
-      width: 140,
+      width: 110,
     },
     {
       headerName: `${t('TASK No')}`,
@@ -137,14 +143,14 @@ const FileListE: React.FC<FileListEProps> = ({
       width: 140,
     },
     {
-      headerName: `${t('EFECTIVITY')}`,
+      headerName: `${t('AIRCRAFT REG')}`,
       field: 'efectivityACID',
       sortable: true,
       filter: true,
       width: 140,
       valueFormatter: ({ value }) => {
         if (Array.isArray(value)) {
-          return value.map((item) => item.serialNbr).join(', ');
+          return value.map((item) => item?.regNbr).join(', ');
         }
         return '';
       },
@@ -158,7 +164,6 @@ const FileListE: React.FC<FileListEProps> = ({
       valueFormatter: ({ value }: { value: string }) =>
         new Date(value).toLocaleString(),
     },
-
     {
       field: 'fileId',
       headerName: `${t('DOC')}`,
@@ -174,6 +179,40 @@ const FileListE: React.FC<FileListEProps> = ({
         </div>
       ),
     },
+    {
+      headerName: `${t('PRINT AS ATTACHMENT')}`,
+      field: 'printAsAttachment',
+      width: 140,
+      cellRenderer: (params: any) => {
+        if (isDefaultFileDisable && params.data.isDefaultFile) {
+          return null; // Не отображаем чекбокс для дефолтных файлов, если isDefaultFileDisable === true
+        }
+        return (
+          <Checkbox
+            checked={params.data.printAsAttachment}
+            onChange={(e) => {
+              const updatedFiles = files.map((file) =>
+                file._id === params.data._id
+                  ? { ...file, printAsAttachment: e.target.checked }
+                  : file
+              );
+              setFiles(updatedFiles);
+
+              // Отправка запроса на сервер для обновления свойства printAsAttachment
+              dispatch(
+                updateFilePrintAsAttachment({
+                  fileId: params.data._id,
+                  printAsAttachment: e.target.checked,
+                  companyID: COMPANY_ID,
+                  // type: params.data.type, // Если type есть в params.data
+                  // itemID: params.data.taskNumberID, // Если itemID есть в params.data
+                })
+              );
+            }}
+          />
+        );
+      },
+    },
   ];
 
   const handleAddFile = () => {
@@ -184,6 +223,7 @@ const FileListE: React.FC<FileListEProps> = ({
         fileId: '',
         createdAt: new Date().toISOString(),
         file: uploadFile,
+        printAsAttachment: false, // Добавлено поле для отметки печати как вложения
       } as NewFileData;
       onAddFile(newFileData);
       setNewFile(null);
@@ -203,23 +243,7 @@ const FileListE: React.FC<FileListEProps> = ({
       }
     },
   };
-  // const handleDelete = (file: any) => {
-  //   Modal.confirm({
-  //     title: 'Вы уверены, что хотите удалить этот файл?',
-  //     onOk: async () => {
-  //       try {
-  //         const response = await dispatch(
-  //           deleteFileUploads({ id: file.id, companyID: COMPANY_ID })
-  //         );
-  //       } catch (error) {
-  //         notification.error({
-  //           message: t('ERROR'),
-  //           description: t('Error delete files.'),
-  //         });
-  //       }
-  //     },
-  //   });
-  // };
+
   const [editingFile, setEditinFile] = useState<any | null>(null);
   const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
   const { data: planes } = useGetPlanesQuery({});
@@ -234,6 +258,20 @@ const FileListE: React.FC<FileListEProps> = ({
       }
       return acc;
     }, {}) || {};
+  // const dispatch = useAppDispatch();
+
+  const handlePrintAsAttachmentChange = (
+    fileId: string,
+    printAsAttachment: boolean
+  ) => {
+    dispatch(
+      updateFilePrintAsAttachment({
+        fileId,
+        printAsAttachment,
+        companyID: COMPANY_ID,
+      })
+    );
+  };
   return (
     <div>
       <Space>
@@ -254,14 +292,6 @@ const FileListE: React.FC<FileListEProps> = ({
         </Button>
       </Space>
 
-      {/* <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
-        <AgGridReact
-          rowData={files}
-          columnDefs={columnDefs}
-          defaultColDef={{ flex: 1, resizable: true }}
-          domLayout="autoHeight"
-        />
-      </div> */}
       <PartsTable
         rowSelection="single"
         isFilesVisiable={false}
@@ -272,21 +302,19 @@ const FileListE: React.FC<FileListEProps> = ({
         isEditable={false}
         isAddVisiable={true}
         isButtonVisiable={false}
-        height={'35vh'}
-        // isLoading={isLoading}
+        height={'38vh'}
         rowData={files || []}
         columnDefs={columnDefs}
         partNumbers={[]}
         onAddRow={function (): void {}}
         onDelete={function (id: string): void {}}
         onSave={function (data: any): void {}}
-        onCellValueChanged={function (params: any): void {}} // onAddRow={onAddRow}
+        onCellValueChanged={function (params: any): void {}}
         onRowSelect={function (rowData: any): void {
           setEditinFile && setEditinFile(rowData);
         }}
         onCheckItems={function (keys: any): void {
           setSelectedKeys(keys);
-
           onSelectedKeys && onSelectedKeys(keys);
         }}
       />
@@ -303,6 +331,7 @@ const FileListE: React.FC<FileListEProps> = ({
               ...values,
               _id: '',
               createdAt: new Date().toISOString(),
+              printAsAttachment: false, // Добавлено поле для отметки печати как вложения
             })
           }
         >
@@ -315,15 +344,6 @@ const FileListE: React.FC<FileListEProps> = ({
                   </Select.Option>
                 ))}
               </Select>
-              {/* <Form.Item label={`${t('EFECTIVITY')}`} name="customerCodeID">
-            <Select allowClear placeholder="Select a customer">
-              {customerOptions.map((option) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item> */}
             </Form.Item>
           )}
           <Form.Item
@@ -354,7 +374,6 @@ const FileListE: React.FC<FileListEProps> = ({
               width="sm"
               valueEnum={planesValueEnum}
               onChange={(value: any) => setSelectedAcTypeID(value)}
-              // disabled={!acTypeID} // Disable the select if acTypeID is not set
             />
           )}
           <Form.Item

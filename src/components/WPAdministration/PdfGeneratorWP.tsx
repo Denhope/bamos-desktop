@@ -2,7 +2,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Modal, notification } from 'antd';
 import Handlebars from 'handlebars';
-import { PDFDocument, PDFFont, PDFPage, rgb, StandardFonts } from 'pdf-lib';
+import {
+  PDFDocument,
+  PDFFont,
+  PDFPage,
+  rgb,
+  StandardFonts,
+  degrees,
+} from 'pdf-lib';
 import QRCode from 'qrcode';
 import { getFileFromServer, uploadFileServer } from '@/utils/api/thunks';
 import fontkit from '@pdf-lib/fontkit';
@@ -77,7 +84,7 @@ const PdfGeneratorWP: React.FC<{
 
     // Добавление нумерации страниц
     page.drawText(`Page ${pageNumber} of ${totalPages}`, {
-      x: width - 100,
+      x: width - 107,
       y: height - 50,
       size: 8,
       font,
@@ -257,8 +264,8 @@ const PdfGeneratorWP: React.FC<{
               });
               // Add taskCardNumber or N/A to the right
               const taskCardNumberText =
-                task?.taskCardNumber !== undefined
-                  ? String(task.taskCardNumber)
+                task?.cardNumber !== undefined
+                  ? String(task.cardNumber)
                   : 'N/A';
               page.drawText(taskCardNumberText, {
                 x: x + 50,
@@ -727,20 +734,28 @@ const PdfGeneratorWP: React.FC<{
       const referenceTable = [
         ['Type', 'Reference', 'Description'],
         ...(task.reference
-          ? task.reference.map((part: any) => {
-              let typeAbbreviation;
-              switch (part?.referenceType) {
-                case 'TASK_CARD':
-                  typeAbbreviation = 'TC';
-                  break;
-                case 'REPORT':
-                  typeAbbreviation = 'R';
-                  break;
-                default:
-                  typeAbbreviation = 'F';
-              }
-              return [typeAbbreviation, part?.filename, part?.description];
-            })
+          ? task.reference
+              .filter((part: any) => part.printAsAttachment) // Фильтруем только файлы с printAsAttachment === true
+              .map((part: any) => {
+                let typeAbbreviation;
+                switch (part?.referenceType) {
+                  case 'TASK_CARD':
+                    typeAbbreviation = 'TC';
+                    break;
+                  case 'REPORT':
+                    typeAbbreviation = 'R';
+                    break;
+                  case 'WO':
+                    typeAbbreviation = 'WO';
+                    break;
+                  case 'AMM':
+                    typeAbbreviation = 'AMM';
+                    break;
+                  default:
+                    typeAbbreviation = 'F';
+                }
+                return [typeAbbreviation, part?.filename, part?.description];
+              })
           : []),
       ];
       const referenceColumnWidths = [50, 200, 250]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
@@ -1769,12 +1784,23 @@ const PdfGeneratorWP: React.FC<{
       //     value: task.diCloseBy !== undefined ? task.diCloseBy : 'N/A',
       //   },
       // ];
-      const cellData18 = [
+      const cellDataNotCritical = [
+        { label: '', label1: ' ', value: '' },
+
         {
-          label: '',
-          label1: ' ',
-          value: '',
+          label: 'Date',
+          label1: 'Дата',
+          value: task.closeDate !== undefined ? task.closeDate : '',
         },
+        {
+          label: 'Inspected',
+          label1: 'Проверено',
+          value: task.inspectBY !== undefined ? task.closeBy : '',
+        },
+      ];
+
+      const cellData18 = [
+        { label: '', label1: ' ', value: '' },
         {
           label: 'Date',
           label1: 'Дата',
@@ -1792,15 +1818,10 @@ const PdfGeneratorWP: React.FC<{
         },
       ];
 
-      const cellWidths = [200, 100, 100, 100]; // Ширина первой ячейки и остальных ячеек
+      const cellWidthsNotCritical = [300, 100, 100]; // Ширина первой ячейки и остальных ячеек для не isCriticalTask
+      const cellWidthsCritical = [200, 100, 100, 100]; // Ширина первой ячейки и остальных ячеек для isCriticalTask
 
-      for (let i = 0; i < cellData18.length; i++) {
-        const cell = cellData18[i];
-        const cellX = cellWidths
-          .slice(0, i)
-          .reduce((sum, width) => sum + width, 50); // Суммируем ширину предыдущих ячеек для вычисления x-координаты
-        const cellWidthAdjusted = cellWidths[i]; // Ширина текущей ячейки
-
+      const drawCell = (cell, cellX, cellWidthAdjusted, y) => {
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
@@ -1814,17 +1835,18 @@ const PdfGeneratorWP: React.FC<{
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 15,
+          y: y - 28,
           font: robotoFont,
           size: smallFontSize,
         });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
-          y: y - 23,
+          y: y - 36,
           font: robotoFont,
           size: smallFontSize,
         });
+
         // Draw the value
         page.drawText(cell.value, {
           x: cellX + 42,
@@ -1832,7 +1854,25 @@ const PdfGeneratorWP: React.FC<{
           font: robotoFont,
           size: fontSize,
         });
+      };
+
+      const currentCellData = task?.isCriticalTask
+        ? cellData18
+        : cellDataNotCritical;
+      const currentCellWidths = task?.isCriticalTask
+        ? cellWidthsCritical
+        : cellWidthsNotCritical;
+
+      for (let i = 0; i < currentCellData.length; i++) {
+        const cell = currentCellData[i];
+        const cellX = currentCellWidths
+          .slice(0, i)
+          .reduce((sum, width) => sum + width, 50); // Суммируем ширину предыдущих ячеек для вычисления x-координаты
+        const cellWidthAdjusted = currentCellWidths[i]; // Ширина текущей ячейки
+
+        drawCell(cell, cellX, cellWidthAdjusted, y);
       }
+
       y -= cellHeight;
 
       y -= 0; // / Space betwe
@@ -1840,22 +1880,24 @@ const PdfGeneratorWP: React.FC<{
       let additionalPdfs: Uint8Array[] = [];
       try {
         additionalPdfs = await Promise.all(
-          task.reference.map(async (ref) => {
-            try {
-              const pdfBytes = await getFileFromServer(
-                COMPANY_ID,
-                ref.fileId,
-                'uploads'
-              );
-              return pdfBytes;
-            } catch (error) {
-              console.error(
-                `Ошибка при загрузке PDF-документа для fileId ${ref.fileId}:`,
-                error
-              );
-              return new Uint8Array(); // Возвращаем пустой Uint8Array, чтобы не прерывать процесс
-            }
-          })
+          task.reference
+            .filter((ref) => ref.printAsAttachment) // Фильтруем только файлы с printAsAttachment === true
+            .map(async (ref) => {
+              try {
+                const pdfBytes = await getFileFromServer(
+                  COMPANY_ID,
+                  ref.fileId,
+                  'uploads'
+                );
+                return pdfBytes;
+              } catch (error) {
+                console.error(
+                  `Ошибка при загрузке PDF-документа для fileId ${ref.fileId}:`,
+                  error
+                );
+                return new Uint8Array(); // Возвращаем пустой Uint8Array, чтобы не прерывать процесс
+              }
+            })
         );
       } catch (error) {
         console.error(
@@ -1898,7 +1940,19 @@ const PdfGeneratorWP: React.FC<{
 
       pages.forEach((page, index) => {
         const pageNumber = index + 1;
-
+        // const firstPage = pdfDoc.getPage(0);
+        const { width: widthCr, height: hightCr } = page.getSize();
+        if (task?.projectItemType === 'CR_TASK' || task?.isCriticalTask) {
+          page.drawText('CRITICAL TASK', {
+            x: widthCr / 5.0,
+            y: hightCr / 3.6,
+            font: robotoFontB,
+            size: 80,
+            color: rgb(1, 0, 0), // Красный цвет
+            rotate: degrees(45), // Поворот на 45 градусов против часовой стрелки
+            opacity: 0.3, // Полупрозрачность
+          });
+        }
         addMainPageText(page, robotoFont);
         addMainPageNumber(page, pageNumber, blockTotalPages);
       });
@@ -2034,7 +2088,7 @@ const PdfGeneratorWP: React.FC<{
 
     // Добавление текста на дополнительные страницы
     page.drawText(
-      `Work Order: ${wo?.WONumber} Aircraft: ${wo?.planeId?.regNbr} Station: MSQ`,
+      `    Work Order: ${wo?.WONumber}                               Aircraft: ${wo?.planeId?.regNbr}                                                                                   Station: MSQ`,
       {
         x: 50,
         y: page.getHeight() - 50,

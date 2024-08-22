@@ -19,6 +19,7 @@ import planesStoreReducer from './reducers/MtxSlice';
 import mtbaseStoreReducer from './reducers/MtbSlice';
 import planningStoreReducer from './reducers/WPGenerationSlise';
 import storesLogisticReducer from './reducers/StoreLogisticSlice';
+import formReducer from './reducers/formSlice'; //
 import userPreferencesSlice from './reducers/UserPreferencesSlice';
 import { userApi } from '@/features/userAdministration/userApi';
 import { userGroupApi } from '@/features/userAdministration/userGroupApi';
@@ -68,6 +69,8 @@ import { wpApi } from '@/features/wpAdministration/wpApi';
 import columnWidthsReducer from './reducers/columnWidthsSlice'; // Добавьте эту строку
 import columnWidthsExpiryReducer from './reducers/columnWidthsExpirySlice';
 import columnWidthsReqReducer from './reducers/columnWidthrReqlice'; //
+import columnReducer from './reducers/columnSlice'; //
+
 import { certificatesTypeApi } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
 import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTextTypeApi';
 import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
@@ -144,6 +147,8 @@ const rootReducer = combineReducers({
   columnWidths: columnWidthsReducer, // Добавьте эту строку
   columnWidthsExpiry: columnWidthsExpiryReducer,
   columnWidthrReq: columnWidthsReqReducer,
+  form: formReducer,
+  columns: columnReducer,
 });
 
 export default rootReducer;

@@ -5396,6 +5396,30 @@ export const deleteFileUploads = createAsyncThunk(
   }
 );
 
+export const updateFilePrintAsAttachment = createAsyncThunk(
+  'common/updateFilePrintAsAttachment',
+  async (
+    data: {
+      fileId: string;
+      printAsAttachment: boolean;
+      companyID: string;
+      type?: string;
+      itemID?: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await $authHost.patch(
+        `files/uploads/companyID/${data.companyID}/file/${data.fileId}`,
+        { printAsAttachment: data.printAsAttachment }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось обновить свойство printAsAttachment');
+    }
+  }
+);
+
 export const postNewOrder = createAsyncThunk(
   'common/postNewOrder',
   async (data: any, thunkAPI) => {

@@ -12,11 +12,13 @@ import {
   useUpdateUserMutation,
 } from '@/features/userAdministration/userApi';
 import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupApi';
-import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
-interface AdminPanelProps {}
-import { Split } from '@geoffcox/react-splitter';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
+import { Split } from '@geoffcox/react-splitter';
+import { uploadFileServerReference } from '@/utils/api/thunks';
+
+interface AdminPanelProps {}
+
 const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const { data: usersGroup, isLoading } = useGetGroupUsersQuery({});
@@ -25,6 +27,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
   const [addUser] = useAddUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
+  const { t } = useTranslation();
 
   const handleCreate = () => {
     setEditingUser(null);
@@ -60,12 +63,35 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
         }).unwrap();
         message.success(t('USER  SUCCESSFULLY ADDED'));
       }
-      // setEditingUser(null);
     } catch (error) {
       message.error(t('ERROR SAVING USER '));
     }
   };
-  const { t } = useTranslation();
+
+  const handleUploadReference = async (data: any) => {
+    if (!editingUser || !editingUser.id) {
+      console.error('Невозможно загрузить файл');
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('file', data?.file);
+    formData.append('referenceType', data?.referenceType);
+    formData.append('onSavedReference', 'true');
+    formData.append('fileName', data.file.name);
+    formData.append('companyID', localStorage.getItem('companyID') || '');
+    formData.append('createDate', new Date().toISOString());
+    formData.append('createUserID', localStorage.getItem('userID') || '');
+
+    try {
+      const response = await uploadFileServerReference(formData);
+      message.success(t('File uploaded successfully'));
+    } catch (error) {
+      message.error(t('Error File uploaded.'));
+    }
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -105,29 +131,19 @@ const AdminPanel: React.FC<AdminPanelProps> = ({}) => {
         </Col>
       </Space>
 
-      <div className="  flex gap-4 justify-between">
+      <div className="flex gap-4 justify-between">
         <Split initialPrimarySize="25%" splitterSize="20px">
-          <div
-            // sm={4}
-            className=" h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3 "
-          >
-            <UserTree
-              onUserSelect={function (user: User): void {
-                setEditingUser(user);
-              }}
-              usersGroup={usersGroup || []}
-            />
+          <div className="h-[78vh] bg-white px-4 rounded-md border-gray-400 p-3">
+            <UserTree onUserSelect={handleEdit} usersGroup={usersGroup || []} />
           </div>
-          <div
-            className=" h-[73vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto  "
-            // sm={19}
-          >
+          <div className="h-[73vh] bg-white px-4 rounded-md border-gray-400 p-3 overflow-y-auto">
             <UserForm
               user={editingUser || undefined}
               onSubmit={handleSubmit}
               roles={['admin']}
               groups={groups || []}
-              skilss={usersSkill}
+              skills={usersSkill}
+              handleUploadReference={handleUploadReference}
             />
           </div>
         </Split>

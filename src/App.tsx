@@ -35,7 +35,7 @@ const App: FC = () => {
           dispatch(setAuthUserPermissions(PERMISSIONS || ''));
 
           dispatch(setAuthUserName(localStorage.getItem('name')));
-          console.log(PERMISSIONS);
+          // console.log(PERMISSIONS);
         })
         .finally(() => {
           // dispatch(getNewUserTokens(USER_ID));

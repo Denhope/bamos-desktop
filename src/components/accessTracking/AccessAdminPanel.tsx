@@ -63,6 +63,8 @@ import { ColDef } from 'ag-grid-community';
 import { transformedAccessToIAssess } from '@/services/utilites';
 import PartContainer from '../woAdministration/PartContainer';
 import ReportPrintTag from '../shared/ReportPrintTag';
+import PdfGeneratorPanel from '../woAdministration/PdfGeneratorPanel';
+import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -108,30 +110,11 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   );
 
   const [pdfData, setPdfData] = useState<string | null>(null);
-  // const {
-  //   data: accesses,
-  //   isLoading,
-  //   refetch,
-  // } = useGetProjectGroupPanelsQuery(
-  //   {
-  //     accessProjectNumber: projectSearchValues?.accessProjectNumber,
-  //     status: projectSearchValues?.status,
-  //     createStartDate: projectSearchValues?.startDate,
-  //     createFinishDate: projectSearchValues?.endDate,
-  //     projectID: projectSearchValues?.projectID,
-  //     // accessType: projectSearchValues?.projectID,
-  //     removeUserId: projectSearchValues?.removeUserId,
-  //     createUserID: projectSearchValues?.removeUserId,
-  //     installUserId: projectSearchValues?.installUserId,
-  //     inspectedUserID: projectSearchValues?.inspectedUserID,
-  //     acTypeID: projectSearchValues?.acTypeID,
-  //     isOnlyWithPanels: projectSearchValues?.isOnlyWithPanels,
-  //     userID: projectSearchValues?.userID,
-  //   },
-  //   {
-  //     skip: !triggerQuery, // Skip the query if triggerQuery is false
-  //   }
-  // );
+
+  const { data: projects } = useGetfilteredWOQuery(
+    { WOReferenceID: projectSearchValues?.WOReferenceID },
+    { skip: !projectSearchValues?.WOReferenceID }
+  );
 
   const {
     data: accesses,
@@ -208,40 +191,6 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
 
   //   fetchXmlTemplate();
   // }, []);
-
-  const products = [
-    {
-      name: 'Ноутбук',
-      price: '$1000',
-      description:
-        'Мощный ноутбук с процессором Core i7 и дискретной графикой.',
-      barcode: '1234567890123',
-    },
-    {
-      name: 'Смартфон',
-      price: '$500',
-      description: 'Смартфон с камерой на 48 Мп и батареей на 5000 мАч.',
-      barcode: '9876543210987',
-    },
-    // Добавьте другие товары по аналогии
-  ];
-  const xmlTemplate = `
-  <Document>
-    ${products
-      .map(
-        (product) => `
-      <Label>
-        <title>Product Labels</title>
-        <Name>${product.name}</Name>
-        <Price>${product.price}</Price>
-        <Description>${product.description}</Description>
-        <Barcode>${product.barcode}</Barcode>
-      </Label>
-    `
-      )
-      .join('\n')}
-  </Document>
-`;
 
   useEffect(() => {
     // Check if projectSearchValues is defined and not null
@@ -397,52 +346,6 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
     });
   };
 
-  // const generatePdf = () => {
-  //   // Загрузка XML-шаблона с сервера
-  //   // fetch('http://example.com/path/to/label.xml')
-  //   //   .then((response) => response.text())
-  //   //   .then((data) =>
-  //   setPdfData(logoImage);
-  //   // )
-  //   // .catch((error) => console.error('Ошибка загрузки XML-шаблона:', error));
-  // };
-  // const generatePdf = () => {
-  //   // Загрузка XML-шаблона с сервера
-  //   // fetch('file:///D:/dev/bamos/bamos-desktop/src/data/reports/') // Указываем полный путь к файлу
-  //   // .then((response) => response.text())
-  //   // .then((data) =>
-  //   setPdfData(data);
-  //   // )
-  //   // .catch((error) => console.error('Ошибка загрузки XML-шаблона:', error));
-  // };
-  const columns = [
-    {
-      title: t('ACCESS No'),
-      dataIndex: ['accessProjectID', 'accessNbr'],
-      key: 'accessProjectID.accessNbr',
-    },
-    {
-      title: t('BOOKING TYPE'),
-      dataIndex: 'voucherModel',
-      key: 'voucherModel',
-    },
-    {
-      title: t('STATUS'),
-      dataIndex: 'accessProjectStatus',
-      key: 'accessProjectStatus',
-    },
-    {
-      title: t('DATE'),
-      dataIndex: 'createDate',
-      key: 'createDate',
-      render: (text: string | number | Date) => new Date(text).toLocaleString(), // Преобразование даты в строку
-    },
-    {
-      title: t('USER'),
-      dataIndex: ['createUserID', 'lastName'],
-      key: 'createUserID',
-    },
-  ];
   type CellDataType = 'text' | 'number' | 'date' | 'boolean';
 
   interface ExtendedColDef extends ColDef {
@@ -682,11 +585,20 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           >
             <ReportPrintTag
               isDisabled={!selectedKeys.length > 0}
-              xmlTemplate={xmlTemplate}
-              data={products}
+              xmlTemplate={''}
+              data={[]}
               ids={selectedKeys}
             ></ReportPrintTag>
           </PermissionGuard>
+        </Col>
+
+        <Col style={{ textAlign: 'right' }}>
+          <PdfGeneratorPanel
+            // disabled={!projects && !projects.length > 0}ннннннн
+            wo={projects && projects[0]}
+            htmlTemplate={''}
+            data={[]}
+          ></PdfGeneratorPanel>
         </Col>
       </Space>
 
@@ -747,31 +659,34 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                 type="card"
               >
                 <Tabs.TabPane tab={t('INFORMATION')} key="1">
-                  <AccessCodeForm
-                    accessesData={accessesData || []}
-                    // projectTasks={projectTasks || []}
-                    accessCode={editingproject}
-                    onSubmit={function (accessCode: any): void {
-                      console.log(accessCode);
-                      Modal.confirm({
-                        title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
-                        onOk: async () => {
-                          try {
-                            await addPanels({
-                              accessIds: [accessCode.accessID],
-                              WOReferenceID: accessCode.WOReferenceID,
-                              projectTaskIds: accessCode.projectTaskID,
-                            }).unwrap();
-                            // refetchProjectItems();
-                            message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
-                            Modal.destroyAll();
-                          } catch (error) {
-                            message.error(t('ОШИБКА '));
-                          }
-                        },
-                      });
-                    }}
-                  ></AccessCodeForm>
+                  <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
+                    {' '}
+                    <AccessCodeForm
+                      accessesData={accessesData || []}
+                      // projectTasks={projectTasks || []}
+                      accessCode={editingproject}
+                      onSubmit={function (accessCode: any): void {
+                        console.log(accessCode);
+                        Modal.confirm({
+                          title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
+                          onOk: async () => {
+                            try {
+                              await addPanels({
+                                accessIds: [accessCode.accessID],
+                                WOReferenceID: accessCode.WOReferenceID,
+                                projectTaskIds: accessCode.projectTaskID,
+                              }).unwrap();
+                              // refetchProjectItems();
+                              message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
+                              Modal.destroyAll();
+                            } catch (error) {
+                              message.error(t('ОШИБКА '));
+                            }
+                          },
+                        });
+                      }}
+                    ></AccessCodeForm>
+                  </div>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab={t('BOOKING')} key="5">
                   <div className="py-5">

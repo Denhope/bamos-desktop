@@ -1081,6 +1081,7 @@ export interface ValueEnumType {
   open?: string;
   closed: string;
   canceled: string;
+  cancelled?: string;
   onOrder: string;
   onShort: string;
   draft: string;
@@ -1125,7 +1126,7 @@ export interface ValueEnumType {
 }
 export interface ValueEnumTypeTask {
   RC: string;
-  RC_ADD: string;
+  CR_TASK: string;
   NRC: string;
   MJC: string;
   CMJC: string;
@@ -1138,48 +1139,89 @@ export interface ValueEnumTypeOrder {
   PURCHASE_ORDER: string;
   QUOTATION_ORDER: string;
 }
+// export const getTypeOrderColor = (
+//   projectItemType: keyof ValueEnumTypeOrder
+// ): string => {
+//   switch (projectItemType) {
+//     case 'PURCHASE_ORDER':
+//       return '#D3D3D3'; // Light Gray
+
+//       return '#D3D3D3'; // Light Gray
+//     case 'QUOTATION_ORDER':
+//       return '#FFD700'; // Light Gray
+
+//     default:
+//       return ''; // Default color
+//   }
+// };
+// export const getTaskTypeColor = (
+//   projectItemType: keyof ValueEnumTypeTask
+// ): string => {
+//   switch (projectItemType) {
+//     case 'RC':
+//       return '#D3D3D3'; // Light Gray
+//     case 'CR_TASK':
+//       return '#800080'; // Light Gray
+//     case 'SB':
+//       return '#800080'; // Light Gray
+
+//     case 'MJC':
+//       return '#D3D3D3'; // Light Gray
+//     case 'CMJC':
+//       return '#D3D3D3'; // Light Gray
+//     case 'FC':
+//       return '#FFA07A'; // Light Salmon
+//     case 'SMC':
+//       return '#FFA07A'; // Light Salmon
+//     case 'PART_PRODUCE':
+//       return '#FFA07A'; // Light Salmon
+
+//     case 'NRC':
+//       return '#FF6347'; // Tomato Red
+//     case 'NRC_ADD':
+//       return '#FF6347'; // Tomato Red
+
+//     default:
+//       return ''; // Default color
+//   }
+// };
 export const getTypeOrderColor = (
   projectItemType: keyof ValueEnumTypeOrder
 ): string => {
   switch (projectItemType) {
     case 'PURCHASE_ORDER':
-      return '#D3D3D3'; // Light Gray
-
-      return '#D3D3D3'; // Light Gray
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'QUOTATION_ORDER':
-      return '#FFD700'; // Light Gray
-
+      return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
     default:
       return ''; // Default color
   }
 };
+
 export const getTaskTypeColor = (
   projectItemType: keyof ValueEnumTypeTask
 ): string => {
   switch (projectItemType) {
     case 'RC':
-      return '#D3D3D3'; // Light Gray
-    case 'RC_ADD':
-      return '#800080'; // Light Gray
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'CR_TASK':
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
     case 'SB':
-      return '#800080'; // Light Gray
-
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
     case 'MJC':
-      return '#D3D3D3'; // Light Gray
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'CMJC':
-      return '#D3D3D3'; // Light Gray
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'FC':
-      return '#FFA07A'; // Light Salmon
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'SMC':
-      return '#FFA07A'; // Light Salmon
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'PART_PRODUCE':
-      return '#FFA07A'; // Light Salmon
-
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'NRC':
-      return '#FF6347'; // Tomato Red
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     case 'NRC_ADD':
-      return '#FF6347'; // Tomato Red
-
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     default:
       return ''; // Default color
   }
@@ -1187,57 +1229,111 @@ export const getTaskTypeColor = (
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
     case 'draft':
-      return '#D3D3D3'; // Light Gray
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'DRAFT':
-      return '#D3D3D3'; // Light Gray
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'onShort':
-      return '#FFA07A'; // Light Salmon
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'inspect':
-      return '#FFA07A'; // Light Salmon
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'inspected':
-      return '#FFA07A'; // Light Salmon
-      return '#800080'; // Dark Blue
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'progress':
-      return '#800080'; // Dark Blue
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
     case 'inProgress':
-      return '#800080'; // Dark Blue
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
     case 'onQuatation':
-      return '#FFD700'; // Gold
+      return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
     case 'complete':
-      return '#FFD700'; // Gold
+      return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
     case 'open':
-      return '#00008B'; // Sky Blue
+      return 'rgba(0, 0, 139, 0.6)'; // Sky Blue with less transparency
     case 'OPEN':
-      return '#00008B'; // Sky Blue
+      return 'rgba(0, 0, 139, 0.6)'; // Sky Blue with less transparency
     case 'closed':
-      return '#32CD32'; // Lime Green
+      return 'rgba(50, 205, 50, 0.6)'; // Lime Green with less transparency
     case 'RECEIVED':
-      return '#32CD32'; // Lime Green
+      return 'rgba(50, 205, 50, 0.6)'; // Lime Green with less transparency
     case 'PARTLY_RECEIVED':
-      return '#90EE90'; // Light Green
+      return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
     case 'performed':
-      return '#90EE90'; // Light Green
+      return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
     case 'partlyClosed':
-      return '#90EE90'; // Light Green
+      return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
     case 'canceled':
-      return '#FF6347'; // Tomato Red
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+    case 'cancelled':
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     case 'partlyCanceled':
-      return '#FF6347'; // Tomato Red
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     case 'CANCELLED':
-      return '#FF6347'; // Tomato Red
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     case 'partyCancelled':
-      return '#FF6347'; // Tomato Red
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     case 'onOrder':
-      return '#FFA07A'; // Light Salmon
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'transfer':
-      return '#FFD700'; // Dark Blue
-
+      return 'rgba(255, 215, 0, 0.6)'; // Dark Blue with less transparency
     case 'issued':
-      return '#800080'; // Dark Blue
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
     default:
       return ''; // Default color
   }
 };
+// export const getStatusColor = (status: keyof ValueEnumType): string => {
+//   switch (status) {
+//     case 'draft':
+//       return '#D3D3D3'; // Light Gray
+//     case 'DRAFT':
+//       return '#D3D3D3'; // Light Gray
+//     case 'onShort':
+//       return '#FFA07A'; // Light Salmon
+//     case 'inspect':
+//       return '#FFA07A'; // Light Salmon
+//     case 'inspected':
+//       return '#FFA07A'; // Light Salmon
+//     case 'progress':
+//       return '#800080'; // Dark Blue
+//     case 'inProgress':
+//       return '#800080'; // Dark Blue
+//     case 'onQuatation':
+//       return '#FFD700'; // Gold
+//     case 'complete':
+//       return '#FFD700'; // Gold
+//     case 'open':
+//       return '#00008B'; // Sky Blue
+//     case 'OPEN':
+//       return '#00008B'; // Sky Blue
+//     case 'closed':
+//       return '#32CD32'; // Lime Green
+//     case 'RECEIVED':
+//       return '#32CD32'; // Lime Green
+//     case 'PARTLY_RECEIVED':
+//       return '#90EE90'; // Light Green
+//     case 'performed':
+//       return '#90EE90'; // Light Green
+//     case 'partlyClosed':
+//       return '#90EE90'; // Light Green
+//     case 'canceled':
+//       return '#FF6347'; // Tomato Red
+//     case 'cancelled':
+//       return '#FF6347'; // Tomato Red
+//     case 'partlyCanceled':
+//       return '#FF6347'; // Tomato Red
+//     case 'CANCELLED':
+//       return '#FF6347'; // Tomato Red
+//     case 'partyCancelled':
+//       return '#FF6347'; // Tomato Red
+//     case 'onOrder':
+//       return '#FFA07A'; // Light Salmon
+//     case 'transfer':
+//       return '#FFD700'; // Dark Blue
+//     case 'issued':
+//       return '#800080'; // Dark Blue
+//     default:
+//       return ''; // Default color
+//   }
+// };
 
 export const transformToITask = (data: ITask[]): any[] => {
   const result = data.map((item: ITask) => ({

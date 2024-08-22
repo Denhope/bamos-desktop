@@ -376,6 +376,7 @@ export interface ITaskResponce {
   preparationCode?: any;
 }
 export interface ITask {
+  isCriticalTask?: boolean;
   reference?: any[];
   mainWorkTime: any;
   _id: any;

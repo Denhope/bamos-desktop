@@ -563,7 +563,7 @@ const WOAdminForm: FC<UserFormProps> = ({
       form.resetFields();
       setACTypeID(undefined);
       setTaskType('PART_PRODUCE');
-      console.log(order);
+      // console.log(order);
     }
   }, [order, form]);
 
@@ -774,7 +774,7 @@ const WOAdminForm: FC<UserFormProps> = ({
           });
           setProjectTasksFormValues({
             ...projectTasksFormValues,
-            time: new Date(),
+            // time: new Date(),
           });
         } catch (error) {
           notification.error({
@@ -813,7 +813,7 @@ const WOAdminForm: FC<UserFormProps> = ({
       const response = await uploadFileServerReference(formData);
       setProjectTasksFormValues({
         ...projectTasksFormValues,
-        time: new Date(),
+        // time: new Date(),
       });
       notification.success({
         message: t('SUCCESS UPLOAD'),
@@ -890,7 +890,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                 <ProFormGroup>
                   <ProFormGroup>
                     <ProFormGroup direction="horizontal">
-                      <ProFormSelect
+                      {/* <ProFormSelect
                         disabled
                         showSearch
                         name="acTypeId"
@@ -898,7 +898,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                         width="sm"
                         valueEnum={acTypeValueEnum}
                         onChange={(value: any) => setACTypeID(value)}
-                      />
+                      /> */}
                       <ProFormSelect
                         showSearch
                         rules={[{ required: true }]}
@@ -913,7 +913,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                           { value: 'performed', label: t('PERFORMED') },
                           { value: 'inspect', label: t('INSPECTED') },
                           { value: 'closed', label: t('CLOSED') },
-                          { value: 'canceled', label: t('CANCELED') },
+                          { value: 'cancelled', label: t('CANCELLED') },
                           // { value: 'transfer', label: t('TRANSFER') },
                         ]}
                       />
@@ -921,7 +921,7 @@ const WOAdminForm: FC<UserFormProps> = ({
 
                     {taskType !== 'PART_PRODUCE' && (
                       <>
-                        <ProFormSelect
+                        {/* <ProFormSelect
                           disabled
                           mode={'multiple'}
                           showSearch
@@ -930,9 +930,9 @@ const WOAdminForm: FC<UserFormProps> = ({
                           width="lg"
                           valueEnum={mpdCodesValueEnum}
                           // disabled={!acTypeID} // Disable the select if acTypeID is not set
-                        />
+                        /> */}
                         <ProFormSelect
-                          // disabled
+                          disabled
                           showSearch
                           // initialValue={['PART_PRODUCE']}
                           name="projectItemType"
@@ -944,8 +944,8 @@ const WOAdminForm: FC<UserFormProps> = ({
                                 'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
                               ),
                             },
-                            RC_ADD: {
-                              text: t('RC (Critical Task, Double Inspection)'),
+                            CR_TASK: {
+                              text: t('CR TASK (CRIRICAL TASK/DI)'),
                             },
 
                             NRC: { text: t('NRC (Defect)') },
@@ -978,8 +978,8 @@ const WOAdminForm: FC<UserFormProps> = ({
                                 'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
                               ),
                             },
-                            RC_ADD: {
-                              text: t('RC (Critical Task, Double Inspection)'),
+                            CR_TASK: {
+                              text: t('CR TASK (CRIRICAL TASK/DI)'),
                             },
 
                             NRC: { text: t('NRC (Defect)') },
@@ -1002,10 +1002,21 @@ const WOAdminForm: FC<UserFormProps> = ({
                             },
                           ]}
                         />
+                        {/* <ProFormText
+                          disabled
+                          width={'lg'}
+                          name="title"
+                          label={t('TITLE')}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+                        /> */}
                         <ProFormTextArea
                           // disabled
                           fieldProps={{
-                            rows: 3,
+                            rows: 2,
                           }}
                           width="lg"
                           name="taskDescription"
@@ -1173,11 +1184,21 @@ const WOAdminForm: FC<UserFormProps> = ({
                             label={t('TASK NUMBER')}
                           />
                           <ProFormText
+                            width={'lg'}
+                            name="title"
+                            label={t('TITLE')}
+                            rules={[
+                              {
+                                required: true,
+                              },
+                            ]}
+                          />
+                          {/* <ProFormText
                             disabled
                             width={'xs'}
                             name="rev"
                             label={t('REVISION')}
-                          />
+                          /> */}
                           <ProFormDigit
                             // disabled={!order?.projectTaskReferenceID}
                             width={'xs'}
@@ -1352,7 +1373,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                   onRowSelect={function (rowData: IRequirement | null): void {}}
                   onCheckItems={function (selectedKeys: any[]): void {
                     handleCheckItems(selectedKeys);
-                    console.log(selectedKeys);
+                    // console.log(selectedKeys);
                   }}
                   onDelete={function (reqID: string): void {
                     throw new Error('Function not implemented.');
@@ -1429,7 +1450,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                     handleDelete={handleDeleteUpload}
                     initialFiles={order?.reference || []}
                     onAddFile={function (file: any): void {
-                      console.log(file);
+                      // console.log(file);
                       handleUploadReference(file);
                     }}
                     // onSelectedKeys={setSelectedKeys}

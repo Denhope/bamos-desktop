@@ -9,6 +9,10 @@ export default class AuthService {
       email,
       password,
     });
+    // const combinedPermissions = [
+    //   ...response.data.permissions,
+    //   ...response.data.userGroupID.permissions,
+    // ];
     localStorage.setItem('firstName', response.data.firstName);
     localStorage.setItem('lastName', response.data.lastName);
     localStorage.setItem('role', response.data.role);

@@ -127,6 +127,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     OPEN: t('OPEN'),
     closed: t('CLOSED'),
     canceled: t('CANCELLED'),
+    cancelled: t('CANCELLED'),
     CANCELLED: t('CANCELLED'),
     onOrder: t('ISSUED'),
     draft: t('DRAFT'),

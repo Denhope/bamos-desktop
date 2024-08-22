@@ -21,6 +21,7 @@ export const wpApi = createApi({
         WOType?: any;
         customerID?: string;
         time?: any;
+        WOReferenceID?: string;
       }
     >({
       query: ({
@@ -32,6 +33,7 @@ export const wpApi = createApi({
         WONumber,
         WOType,
         customerID,
+        WOReferenceID,
       }) => ({
         url: `workOrders/getFilteredWO/company/${COMPANY_ID}`,
         params: {
@@ -43,6 +45,7 @@ export const wpApi = createApi({
           WONumber,
           WOType,
           customerID,
+          WOReferenceID,
         },
       }),
       providesTags: ['WorkPackages'],

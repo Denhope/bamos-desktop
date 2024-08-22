@@ -375,134 +375,137 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                 </ProForm.Group>
               </ProFormGroup>
             )}
-            {project && project.projectType === 'baseMaintanance' && (
-              <ProFormGroup>
+            {project &&
+              (project.projectType === 'baseMaintanance' ||
+                project.projectType === 'lineMaintanance' ||
+                (project && project.projectType === 'addWork')) && (
                 <ProFormGroup>
-                  <ProFormSelect
-                    disabled
-                    width={'xl'}
-                    label={`${t(`TRACE No`)}`}
-                    mode="tags"
-                    name="projectItemNumberID"
-                  ></ProFormSelect>
-                  <ProFormSelect
-                    showSearch
-                    name="taskType"
-                    label={t('TASK TYPE')}
-                    width="xl"
-                    valueEnum={{
-                      RC: {
-                        text: t(
-                          'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
-                        ),
-                      },
-                      RC_ADD: {
-                        text: t('RC (Critical Task, Double Inspection)'),
-                      },
-                      NRC: { text: t('NRC (Defect)') },
-                      NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
-                      MJC: { text: t('MJC ((Extended MPD)') },
-                      CMJC: { text: t('CMJC (Component maintenance) ') },
-                      FC: { text: t('FC (Fabrication card)') },
-                    }}
-                  />
-                  <>
-                    <ProFormGroup>
-                      <ProFormGroup>
-                        {!useTaskNumberID && (
-                          <ProFormText
-                            rules={[{ required: true }]}
-                            width={'md'}
-                            name="taskNumber"
-                            label={t('TASK No')}
-                            hidden={useTaskNumberID}
-                          />
-                        )}
-                        {useTaskNumberID && (
-                          <ProFormSelect
-                            showSearch
-                            rules={[{ required: true }]}
-                            width={'md'}
-                            name="taskNumberID"
-                            label={`${t(`TASK No`)}`}
-                            hidden={!useTaskNumberID}
-                            onChange={(value, data) => {
-                              form.setFields([
-                                {
-                                  name: 'taskDescription',
-                                  value: data.data.taskDescription,
-                                },
-                                { name: 'amtoss', value: data.data.amtoss },
-                              ]);
-                            }}
-                            options={Object.entries(taskValueEnum).map(
-                              ([key, part]) => ({
-                                label: part.taskNumber,
-                                value: key,
-                                data: part,
-                              })
-                            )}
-                          />
-                        )}
-                        <Switch
-                          checked={useTaskNumberID}
-                          onChange={() => {
-                            setUseTaskNumberID(!useTaskNumberID);
-                            form.resetFields();
-                          }}
-                          checkedChildren={t('DB')}
-                          unCheckedChildren={t('TEXT')}
-                        />
-                      </ProFormGroup>
-
-                      <ProFormTextArea
-                        fieldProps={{
-                          rows: 4,
-                        }}
-                        width="xl"
-                        name="taskDescription"
-                        label={t('DESCRIPTION')}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      />
-                    </ProFormGroup>
-                    <ProFormTextArea
-                      width={'lg'}
-                      fieldProps={{
-                        rows: 2,
-                      }}
-                      name="amtoss"
-                      label={t('AMM')}
-                      rules={[{}]}
-                    />
-                    <ProFormTextArea
+                  <ProFormGroup>
+                    <ProFormSelect
+                      disabled
                       width={'xl'}
-                      fieldProps={{
-                        style: {
-                          resize: 'none',
-                        },
-                        rows: 2,
-                      }}
-                      name="notes"
-                      label={t('REMARKS')}
-                    />
+                      label={`${t(`TRACE No`)}`}
+                      mode="tags"
+                      name="projectItemNumberID"
+                    ></ProFormSelect>
                     <ProFormSelect
                       showSearch
-                      name="status"
-                      label={t('STATUS')}
-                      width="sm"
+                      name="taskType"
+                      label={t('TASK TYPE')}
+                      width="xl"
                       valueEnum={{
-                        ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
-                        INACTIVE: { text: t('INACTIVE'), status: 'Error' },
+                        RC: {
+                          text: t(
+                            'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                          ),
+                        },
+                        CR_TASK: {
+                          text: t('CR TASK (CRIRICAL TASK/DI)'),
+                        },
+                        NRC: { text: t('NRC (Defect)') },
+                        NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
+                        MJC: { text: t('MJC ((Extended MPD)') },
+                        CMJC: { text: t('CMJC (Component maintenance) ') },
+                        FC: { text: t('FC (Fabrication card)') },
                       }}
                     />
-                  </>
+                    <>
+                      <ProFormGroup>
+                        <ProFormGroup>
+                          {!useTaskNumberID && (
+                            <ProFormText
+                              rules={[{ required: true }]}
+                              width={'md'}
+                              name="taskNumber"
+                              label={t('TASK No')}
+                              hidden={useTaskNumberID}
+                            />
+                          )}
+                          {useTaskNumberID && (
+                            <ProFormSelect
+                              showSearch
+                              rules={[{ required: true }]}
+                              width={'md'}
+                              name="taskNumberID"
+                              label={`${t(`TASK No`)}`}
+                              hidden={!useTaskNumberID}
+                              onChange={(value, data) => {
+                                form.setFields([
+                                  {
+                                    name: 'taskDescription',
+                                    value: data.data.taskDescription,
+                                  },
+                                  { name: 'amtoss', value: data.data.amtoss },
+                                ]);
+                              }}
+                              options={Object.entries(taskValueEnum).map(
+                                ([key, part]) => ({
+                                  label: part.taskNumber,
+                                  value: key,
+                                  data: part,
+                                })
+                              )}
+                            />
+                          )}
+                          <Switch
+                            checked={useTaskNumberID}
+                            onChange={() => {
+                              setUseTaskNumberID(!useTaskNumberID);
+                              form.resetFields();
+                            }}
+                            checkedChildren={t('DB')}
+                            unCheckedChildren={t('TEXT')}
+                          />
+                        </ProFormGroup>
+
+                        <ProFormTextArea
+                          fieldProps={{
+                            rows: 4,
+                          }}
+                          width="xl"
+                          name="taskDescription"
+                          label={t('DESCRIPTION')}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+                        />
+                      </ProFormGroup>
+                      <ProFormTextArea
+                        width={'lg'}
+                        fieldProps={{
+                          rows: 2,
+                        }}
+                        name="amtoss"
+                        label={t('AMM')}
+                        rules={[{}]}
+                      />
+                      <ProFormTextArea
+                        width={'xl'}
+                        fieldProps={{
+                          style: {
+                            resize: 'none',
+                          },
+                          rows: 2,
+                        }}
+                        name="notes"
+                        label={t('REMARKS')}
+                      />
+                      <ProFormSelect
+                        showSearch
+                        name="status"
+                        label={t('STATUS')}
+                        width="sm"
+                        valueEnum={{
+                          ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
+                          INACTIVE: { text: t('INACTIVE'), status: 'Error' },
+                        }}
+                      />
+                    </>
+                  </ProFormGroup>
                 </ProFormGroup>
-              </ProFormGroup>
-            )}
+              )}
           </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('DOCS')} key="5">
@@ -510,10 +513,15 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
             {reqCode ? (
               <div>
                 <FileListE
+                  isDefaultFileDisable={false}
                   isCuctomerCode={true}
                   isEfectivityField={true}
                   handleDelete={handleDeleteUpload}
-                  initialFiles={reqCode.reference || []}
+                  initialFiles={
+                    reqCode && reqCode?.taskNumberID?.reference
+                      ? reqCode?.taskNumberID?.reference
+                      : reqCode?.reference || []
+                  }
                   onAddFile={function (file: any): void {
                     handleUploadReference(file);
                   }}

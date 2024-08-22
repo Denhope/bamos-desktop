@@ -27,6 +27,7 @@ export const taskApi = createApi({
         cardNumber?: any;
         mpdDocumentationId?: any;
         amtoss?: any;
+        isCriticalTask?: boolean;
       }
     >({
       query: ({
@@ -39,6 +40,7 @@ export const taskApi = createApi({
         cardNumber,
         mpdDocumentationId,
         amtoss,
+        isCriticalTask,
       }) => ({
         url: `tasks/administration/getFilteredTasks/company/${COMPANY_ID}`,
         params: {
@@ -51,6 +53,7 @@ export const taskApi = createApi({
           cardNumber,
           mpdDocumentationId,
           amtoss,
+          isCriticalTask,
         },
       }),
       providesTags: ['TaskTypes'],

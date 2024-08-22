@@ -48,7 +48,13 @@ import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsT
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['columnWidths', 'columnWidthsExpiry', 'columnWidthrReq'], // Добавьте эту строку, чтобы указать, какие части состояния нужно сохранять
+  whitelist: [
+    'columnWidths',
+    'columnWidthsExpiry',
+    'columnWidthrReq',
+    'form',
+    'columns',
+  ], // Добавьте эту строку, чтобы указать, какие части состояния нужно сохранять
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

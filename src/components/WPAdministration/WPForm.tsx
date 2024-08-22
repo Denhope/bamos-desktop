@@ -1,6 +1,6 @@
-//@ts-nocheck
+// @ts-nocheck
 
-import React, { FC, useEffect, useState, useMemo } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
 import {
   Button,
@@ -65,6 +65,7 @@ import {
 import TaskList from '../shared/Table/TaskList';
 import { useGetCERTSTypeQuery } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
 import { useAddMultiRequirementMutation } from '@/features/requirementAdministration/requirementApi';
+import Documents from './Documents';
 
 interface UserFormProps {
   project?: IProject;
@@ -113,11 +114,12 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const ids = projectTasks?.map((item) => item?.id);
   const handleSubmit = async (projectType: any) => {
     const newUser: any = project
-      ? { ...project, ...projectType }
+      ? { ...project, ...projectType, documents: documents }
       : {
           ...projectType,
           status: form.getFieldValue('status')[0],
           acTypeID: selectedAcTypeID,
+          documents: documents,
         };
     onSubmit(newUser);
   };
@@ -127,6 +129,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     open: t('OPEN'),
     closed: t('CLOSED'),
     canceled: t('CANCELLED'),
+    cancelled: t('CANCELLED'),
     inProgress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
@@ -140,7 +143,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   };
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('RC'),
-    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
     MJC: t('MJC)'),
@@ -591,7 +594,37 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       acc[mpdCode.id] = mpdCode.companyName;
       return acc;
     }, {}) || {};
+
+  const [documents, setDocuments] = useState<any[]>([
+    { id: 1, name: 'MPD', revision: '', revisionDate: '', description: '' },
+    { id: 2, name: 'AMM', revision: '', revisionDate: '', description: '' },
+    { id: 3, name: 'SRM', revision: '', revisionDate: '', description: '' },
+    { id: 4, name: 'TC', revision: '', revisionDate: '', description: '' },
+    { id: 5, name: 'IPC', revision: '', revisionDate: '', description: '' },
+    { id: 6, name: 'NDTM', revision: '', revisionDate: '', description: '' },
+  ]);
+
+  // Функция для обновления документов
+  const handleDocumentsChange = (updatedDocuments: Document[]) => {
+    setDocuments(updatedDocuments);
+  };
   useEffect(() => {
+    setDocuments(
+      project?.documents || [
+        { id: 1, name: 'MPD', revision: '', revisionDate: '', description: '' },
+        { id: 2, name: 'AMM', revision: '', revisionDate: '', description: '' },
+        { id: 3, name: 'SRM', revision: '', revisionDate: '', description: '' },
+        { id: 4, name: 'TC', revision: '', revisionDate: '', description: '' },
+        { id: 5, name: 'IPC', revision: '', revisionDate: '', description: '' },
+        {
+          id: 6,
+          name: 'NDTM',
+          revision: '',
+          revisionDate: '',
+          description: '',
+        },
+      ]
+    );
     if (project) {
       form.resetFields();
       form.setFieldsValue(project);
@@ -652,7 +685,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     return transformToIProjectTask(projectTasks || []);
   }, [projectTasks]);
   useEffect(() => {
-    setShowSubmitButton(activeTabKey === '1');
+    setShowSubmitButton(activeTabKey === '1' || activeTabKey === '7');
   }, [activeTabKey]);
   const [reqTypeID, setReqTypeID] = useState<any>('');
   const handleDelete = (file: any) => {
@@ -710,6 +743,9 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       },
     });
   };
+
+  // Добавляем состояние для документов
+
   return (
     <ProForm
       size="small"
@@ -725,6 +761,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       }}
       initialValues={project}
       layout="horizontal"
+      key={project?._id} // Добавляем key для пересоздания компонента
     >
       <Tabs
         onChange={(key) => {
@@ -886,14 +923,18 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                         name: file?.name,
                       });
                     }}
-                  >
-                    <Button icon={<UploadOutlined />}>
-                      {t('CLICK TO UPLOAD')}
-                    </Button>
-                  </Upload>
+                  />
                 </div>
               </ProForm.Item>
             </ProFormGroup>
+          </div>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={t('DOCUMENTS')} key="7">
+          <div className=" h-[57vh] flex flex-col overflow-auto">
+            <Documents
+              onDocumentsChange={handleDocumentsChange}
+              documents={project?.documents ? project?.documents : documents}
+            />
           </div>
         </Tabs.TabPane>
 
@@ -922,14 +963,14 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             <TaskList
               isFilesVisiable={false}
               isLoading={isLoading || isFetching}
-              pagination={true}
+              pagination={false}
               isChekboxColumn={true}
               columnDefs={columnDefs}
               rowData={transformedTasks || []}
               onRowSelect={function (rowData: any | null): void {
                 console.log(rowData);
               }}
-              height={'69vh'}
+              height={'55vh'}
               onCheckItems={function (selectedKeys: React.Key[]): void {
                 setSelectedKeys(selectedKeys);
               }}

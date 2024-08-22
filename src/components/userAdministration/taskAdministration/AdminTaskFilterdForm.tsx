@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FormInstance,
   ProForm,
-  ProFormCheckbox,
+  ProFormCheckbox, // Импортируйте ProFormCheckbox
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -20,6 +20,7 @@ export type TaskFilteredFormValues = {
   status?: string[];
   time?: any;
   taskCardNumber?: any;
+  isCriticalTask?: boolean; // Добавьте isCriticalTask в тип значений формы
 };
 
 type VendorFilteredFormProps<T> = {
@@ -95,7 +96,7 @@ const AdminTaskFilteredForm: FC<
             onKeyPress: handleKeyPress,
           }}
           name="AMM"
-          label={t('AMM')}
+          label={t('REFERENCE')}
           width="lg"
         />
         <ProFormText
@@ -148,6 +149,9 @@ const AdminTaskFilteredForm: FC<
           width="lg"
           valueEnum={statusOptions}
         />
+
+        {/* Добавьте ProFormCheckbox для isCriticalTask */}
+        <ProFormCheckbox name="isCriticalTask" label={t('CRITICAL TASK')} />
       </ProForm>
     </div>
   );

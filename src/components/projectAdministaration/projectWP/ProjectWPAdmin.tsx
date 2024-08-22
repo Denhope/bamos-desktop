@@ -60,7 +60,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   // let isLoading = false;
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('RC'),
-    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     MJC: t('MJC)'),
     CMJC: t('CMJC)'),
@@ -378,7 +378,9 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
               handleAddMultiItems(data);
             }}
             requiredFields={
-              project && project.projectType === 'baseMaintanance'
+              (project && project.projectType === 'baseMaintanance') ||
+              (project && project.projectType === 'addWork') ||
+              project.projectType === 'lineMaintanance'
                 ? ['taskNumber']
                 : ['PART_NUMBER', 'QUANTITY']
             }
@@ -471,6 +473,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             ) : (
               <PartContainer
                 isVisible
+                pagination={false}
                 onCheckItems={setSelectedKeys}
                 isChekboxColumn={true}
                 isButtonVisiable={false}

@@ -1,9 +1,13 @@
+// @ts-nocheck
+
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ProForm,
   ProFormText,
   ProFormGroup,
   ProFormSelect,
+  ProFormCheckbox,
+  ProFormSwitch, // Импортируйте ProFormSwitch
 } from '@ant-design/pro-form';
 
 import { Button, Empty, Modal, Tabs, notification } from 'antd';
@@ -262,6 +266,8 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
     }
 
     const formData = new FormData();
+
+    formData.append('isDefaultFile', true);
     formData.append('file', data?.file);
     formData.append('referenceType', data?.referenceType);
     formData.append('taskNumber', data?.taskNumber);
@@ -673,6 +679,11 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         name="mainWorkTime"
                         label={t('MHS')}
                       />
+                      <ProFormCheckbox
+                        name="isCriticalTask"
+                        label={t('CRITICAL TASK')}
+                        initialValue={task?.isCriticalTask || false}
+                      />
                       <ProFormTextArea
                         fieldProps={{
                           style: { resize: 'none' },
@@ -817,6 +828,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   />
                 </ProFormGroup>
               )} */}
+              {/* Добавьте ProFormSwitch для isCriticalTask */}
             </ProFormGroup>
           </div>
         </Tabs.TabPane>
@@ -888,6 +900,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               // style={{ width: '100%', height: '60vh' }}
               >
                 <FileListE
+                  isDefaultFileDisable={false}
                   isCuctomerCode={true}
                   isEfectivityField={true}
                   isTaskNumberField={false}

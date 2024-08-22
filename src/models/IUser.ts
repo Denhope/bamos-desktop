@@ -54,6 +54,7 @@ export enum AccountRole {
 }
 
 export interface User {
+  photoUrl?: any;
   _id?: string;
   id: string;
   firstName: string;
@@ -91,6 +92,7 @@ export interface UserGroup {
   updateUserID?: string;
   companyID?: string;
   users?: User[];
+  permissions?: any;
 }
 
 export interface ICompany {

@@ -817,7 +817,7 @@
   "FC": "ИЗГОТОВЛЕНИЕ",
   "SKILL CODE": "СПЕЦИАЛЬНОСТЬ",
   "RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)": "СТАНДАРТНАЯ РАБОТА",
-  "RC (Critical Task, Double Inspection)": "ДВОЙНАЯ ИНСПЕКЦИЯ",
+  "CR TASK (CRIRICAL TASK/DI)": "ДВОЙНАЯ ИНСПЕКЦИЯ",
   "NRC (Defect)": "ДЕФЕКТ",
   "ADHOC(Adhoc Task)": "ДОП.РАБОТА",
   "MJC (Extended MPD)": "НЕСТАНДАРТНАЯ РАБОТА",

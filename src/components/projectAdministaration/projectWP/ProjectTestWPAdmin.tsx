@@ -70,7 +70,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
   // let isLoading = false;
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('RC'),
-    RC_ADD: t('RC (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     MJC: t('MJC)'),
     CMJC: t('CMJC)'),
@@ -243,7 +243,11 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             message: t('SUCCESSFULLY UPDATED'),
             description: t('Item has been successfully updated.'),
           });
-        } else if (project && project.projectType == 'baseMaintanance') {
+        } else if (
+          (project && project && project.projectType === 'baseMaintanance') ||
+          (project && project.projectType === 'addWork') ||
+          project.projectType === 'lineMaintanance'
+        ) {
           await addProjectItem({
             projectItem: reqCode,
             projectID: projectID,
@@ -280,7 +284,11 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             description: t('Item has been successfully updated.'),
           });
         }
-      } else if (project && project.projectType == 'baseMaintanance') {
+      } else if (
+        (project && project.projectType === 'baseMaintanance') ||
+        (project && project.projectType === 'addWork') ||
+        project.projectType === 'lineMaintanance'
+      ) {
         await addMultiProjectItems({
           projectItemsDTO: data,
           projectID: projectID,
@@ -362,7 +370,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           <div
             className="cursor-pointer hover:text-blue-500"
             onClick={() => {
-              handleFileOpenTask(file.fileId, 'uploads', file.filename);
+              // handleFileOpenTask(file.fileId, 'uploads', file.filename);
             }}
           >
             <FileOutlined />
@@ -474,7 +482,8 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             }}
             requiredFields={
               (project && project.projectType === 'baseMaintanance') ||
-              (project && project.projectType === 'addWork')
+              (project && project.projectType === 'addWork') ||
+              project.projectType === 'lineMaintanance'
                 ? ['taskNumber']
                 : ['PART_NUMBER', 'QUANTITY']
             }
@@ -549,7 +558,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             ) : (
               <PartContainer
                 isVisible
-                pagination={true}
+                pagination={false}
                 onCheckItems={setSelectedKeys}
                 isChekboxColumn={true}
                 isButtonVisiable={false}
@@ -559,7 +568,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
                 partNumbers={[]}
                 rowData={transformedItems || []}
                 onUpdateData={function (data: any[]): void {}}
-                height={'55vh'}
+                height={'53vh'}
                 onRowSelect={handleEdit}
               ></PartContainer>
             )}

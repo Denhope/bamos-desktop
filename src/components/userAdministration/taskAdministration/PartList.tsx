@@ -95,7 +95,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
           onUpdateData(updatedData);
           notification.success({
             message: t('PART SUCCESSFULLY DELETE'),
-            description: t('The step has been successfully added.'),
+            description: t('The part has been successfully delete.'),
           });
           // setEditingvendor(null);
         } catch (error) {

@@ -16,11 +16,7 @@ const AccessTracking: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const items: MenuItem[] = [
-    getItem(
-      <>{t('ACCESS TRACKING')} (BAN:100500)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('ACCESS TRACKING')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>
