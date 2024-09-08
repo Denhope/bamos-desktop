@@ -269,6 +269,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                     ></ProFormSelect>
                     <ProFormGroup>
                       <ProFormSelect
+                        disabled={
+                          project.status == 'CLOSED' ||
+                          project.status == 'COMPLETED'
+                        }
                         showSearch
                         rules={[{ required: true }]}
                         width={'lg'}
@@ -303,6 +307,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                       ></ProFormText>
                     </ProFormGroup>
                     <ProFormTextArea
+                      disabled={
+                        project.status == 'CLOSED' ||
+                        project.status == 'COMPLETED'
+                      }
                       width={'xl'}
                       fieldProps={{
                         style: {
@@ -315,6 +323,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                     />
                     <ProFormGroup>
                       <ProFormDigit
+                        disabled={
+                          project.status == 'CLOSED' ||
+                          project.status == 'COMPLETED'
+                        }
                         rules={[{ required: true }]}
                         name="qty"
                         label={t('QUANTITY')}
@@ -322,6 +334,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                       ></ProFormDigit>
                       <ProFormSelect
                         showSearch
+                        disabled={
+                          project.status == 'CLOSED' ||
+                          project.status == 'COMPLETED'
+                        }
                         rules={[{ required: true }]}
                         label={t('UNIT')}
                         name="unit"
@@ -347,7 +363,13 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         }}
                       ></ProFormSelect>
                     </ProFormGroup>
-                    <ProForm.Item label={t('UPLOAD')}>
+                    <ProForm.Item
+                      disabled={
+                        project.status == 'CLOSED' ||
+                        project.status == 'COMPLETED'
+                      }
+                      label={t('UPLOAD')}
+                    >
                       <div className="overflow-y-auto max-h-64">
                         <Upload
                           name="FILES"
@@ -389,6 +411,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                       name="projectItemNumberID"
                     ></ProFormSelect>
                     <ProFormSelect
+                      disabled={
+                        project.status == 'CLOSED' ||
+                        project.status == 'COMPLETED'
+                      }
                       showSearch
                       name="taskType"
                       label={t('TASK TYPE')}
@@ -396,7 +422,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                       valueEnum={{
                         RC: {
                           text: t(
-                            'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                            'TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
                           ),
                         },
                         CR_TASK: {
@@ -414,6 +440,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         <ProFormGroup>
                           {!useTaskNumberID && (
                             <ProFormText
+                              disabled={
+                                project.status == 'CLOSED' ||
+                                project.status == 'COMPLETED'
+                              }
                               rules={[{ required: true }]}
                               width={'md'}
                               name="taskNumber"
@@ -423,6 +453,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                           )}
                           {useTaskNumberID && (
                             <ProFormSelect
+                              disabled={
+                                project.status == 'CLOSED' ||
+                                project.status == 'COMPLETED'
+                              }
                               showSearch
                               rules={[{ required: true }]}
                               width={'md'}
@@ -459,6 +493,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         </ProFormGroup>
 
                         <ProFormTextArea
+                          disabled={
+                            project.status == 'CLOSED' ||
+                            project.status == 'COMPLETED'
+                          }
                           fieldProps={{
                             rows: 4,
                           }}
@@ -473,6 +511,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         />
                       </ProFormGroup>
                       <ProFormTextArea
+                        disabled={
+                          project.status == 'CLOSED' ||
+                          project.status == 'COMPLETED'
+                        }
                         width={'lg'}
                         fieldProps={{
                           rows: 2,
@@ -482,6 +524,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         rules={[{}]}
                       />
                       <ProFormTextArea
+                        disabled={
+                          project.status == 'CLOSED' ||
+                          project.status == 'COMPLETED'
+                        }
                         width={'xl'}
                         fieldProps={{
                           style: {
@@ -493,6 +539,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         label={t('REMARKS')}
                       />
                       <ProFormSelect
+                        disabled={
+                          project.status == 'CLOSED' ||
+                          project.status == 'COMPLETED'
+                        }
                         showSearch
                         name="status"
                         label={t('STATUS')}

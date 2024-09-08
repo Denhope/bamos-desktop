@@ -122,10 +122,16 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     try {
       if (editingRequirement) {
         await updateRequirement(requirement).unwrap();
-        message.success(t('REQUIREMENT SUCCESSFULLY UPDATED'));
+        notification.success({
+          message: t('SUCCESSFULLY UPDATED'),
+          description: t('REQUIREMENT SUCCESSFULLY UPDATED'),
+        });
       } else {
         await addRequirement({ requirement }).unwrap();
-        message.success(t('REQUIREMENT SUCCESSFULLY ADDED'));
+        notification.success({
+          message: t('SUCCESSFULLY ADDED'),
+          description: t('REQUIREMENT SUCCESSFULLY ADDED'),
+        });
       }
       // setEditingRequirement(null);
     } catch (error) {
@@ -141,12 +147,12 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     onShort: t('ON SHORT'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
     onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
-    progress: t('PROGRESS'),
+    progress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     partlyClosed: t('PARTLY CLOSED'),
   };
@@ -485,7 +491,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
               />
             )}
           </div>
-          <div className="h-[68vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
+          <div className="h-[78vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <RequirementForm
               requierement={editingRequirement || undefined}
               onSubmit={handleSubmit}

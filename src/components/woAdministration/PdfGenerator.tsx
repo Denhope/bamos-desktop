@@ -53,7 +53,7 @@ const PdfGenerator: React.FC<{
   const transformedTasks = useMemo(() => {
     return projectTasks || [];
   }, [projectTasks]);
-  console.log(projectTasks);
+  // console.log(projectTasks);
   const addPageNumber = async (
     page: PDFPage,
     pageNumber: number,
@@ -167,22 +167,43 @@ const PdfGenerator: React.FC<{
         for (const row of headerTable) {
           let x = 50;
           for (let i = 0; i < row.length; i++) {
+            console.log(task);
             const cell = row[i];
             const taskCardNumberText =
               task?.taskNumber !== undefined ? String(task.taskNumber) : 'N/A';
+
+            const truncatedTaskNumberText = truncateText(
+              taskCardNumberText,
+              117,
+              robotoFont,
+              12
+            );
+
             if (cell === 'title') {
-              page.drawText(taskCardNumberText, {
+              page.drawText(truncatedTaskNumberText, {
                 x: x + 120,
                 y: y - 25,
                 font: robotoFontB,
                 size: 18,
               });
-              page.drawText('TASK CARD', {
-                x: x + 15,
-                y: y - 25,
-                font: robotoFontB,
-                size: 18,
-              });
+
+              if (task.projectItemType !== 'NRC') {
+                page.drawText('TASK CARD', {
+                  x: x + 15,
+                  y: y - 25,
+                  font: robotoFontB,
+                  size: 18,
+                });
+              }
+              if (task.projectItemType == 'NRC') {
+                page.drawText('NRC', {
+                  x: x + 15,
+                  y: y - 25,
+                  font: robotoFontB,
+                  size: 18,
+                });
+              }
+
               // page.drawText('КАРТА НА ВЫПОЛНЕНИЕ РЕГЛАМЕНТНЫХ РАБОТ', {
               //   x: x + 5,
               //   y: y - 30,
@@ -195,31 +216,64 @@ const PdfGenerator: React.FC<{
                 thickness: 1,
                 color: rgb(0, 0, 0),
               });
-              page.drawText('Title', {
-                x: x + 5,
-                y: y - 65,
-                font: robotoFont,
-                size: smallFontSize,
-              });
+              if (task.projectItemType !== 'NRC') {
+                page.drawText('Title', {
+                  x: x + 5,
+                  y: y - 65,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+              }
+              if (task.projectItemType == 'NRC') {
+                page.drawText('Title', {
+                  x: x + 5,
+                  y: y - 65,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+              }
+              if (task.projectItemType !== 'NRC') {
+                const taskNumberText =
+                  task?.title !== undefined
+                    ? String(task.title).toUpperCase()
+                    : 'N/A';
+                const truncatedTaskNumberText = truncateText(
+                  taskNumberText,
+                  260,
+                  robotoFont,
+                  12
+                );
 
-              const taskNumberText =
-                task?.title !== undefined
-                  ? String(task.title).toUpperCase()
-                  : 'N/A';
-              const truncatedTaskNumberText = truncateText(
-                taskNumberText,
-                260,
-                robotoFont,
-                12
-              );
+                // Смещение влево на 20 единиц
+                page.drawText(truncatedTaskNumberText, {
+                  x: x + 25, // Изменено с x + 85 на x + 65
+                  y: y - 55,
+                  font: robotoFont,
+                  size: 12,
+                });
+              }
 
-              // Смещение влево на 20 единиц
-              page.drawText(truncatedTaskNumberText, {
-                x: x + 25, // Изменено с x + 85 на x + 65
-                y: y - 55,
-                font: robotoFont,
-                size: 12,
-              });
+              if (task.projectItemType == 'NRC') {
+                const taskNumberText =
+                  task?.taskDescription !== undefined
+                    ? String(task.taskDescription).toUpperCase()
+                    : 'N/A';
+                const truncatedTaskNumberText = truncateText(
+                  taskNumberText,
+                  260,
+                  robotoFont,
+                  12
+                );
+
+                // Смещение влево на 20 единиц
+                page.drawText(truncatedTaskNumberText, {
+                  x: x + 25, // Изменено с x + 85 на x + 65
+                  y: y - 55,
+                  font: robotoFont,
+                  size: 12,
+                });
+              }
+
               page.drawText('Описание', {
                 x: x + 5,
                 y: y - 70,
@@ -235,7 +289,7 @@ const PdfGenerator: React.FC<{
               });
               page.drawText('Trace №', {
                 x: x + 5,
-                y: y - 60,
+                y: y - 65,
                 font: robotoFont,
                 size: smallFontSize,
               });
@@ -249,7 +303,7 @@ const PdfGenerator: React.FC<{
                 x: x + 45,
                 y: y - 60,
                 font: robotoFont,
-                size: fontSize,
+                size: lageFontSize,
               });
             } else if (cell === 'logo') {
               page.drawImage(logoImageEmbed, {
@@ -473,7 +527,7 @@ const PdfGenerator: React.FC<{
           value: task.skills !== undefined ? task.skills : 'N/A',
         },
         {
-          label: 'Act.Labor',
+          label: 'Mhrs',
           label1: 'Трудозатраты',
           value:
             task.mainWorkTime !== undefined ? String(task.mainWorkTime) : 'N/A',
@@ -749,6 +803,7 @@ const PdfGenerator: React.FC<{
           height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
+          color: rgb(0.8, 0.8, 0.8), // Gray color
         });
 
         // Draw the label
@@ -778,6 +833,7 @@ const PdfGenerator: React.FC<{
       y -= cellHeightSmall;
       const referenceTable = [
         ['Type', 'Reference', 'Description'],
+        ...(task.refTask ? [['TC', task.refTask, 'PARENT TASK']] : []), // Добавляем refTask, если он существует
         ...(task.reference
           ? task.reference
               .filter((part: any) => part.printAsAttachment) // Фильтруем только файлы с printAsAttachment === true
@@ -842,46 +898,49 @@ const PdfGenerator: React.FC<{
         },
       ];
 
-      for (let i = 0; i < cellData8.length; i++) {
-        const cell = cellData8[i];
+      if (task.projectItemType !== 'NRC') {
+        for (let i = 0; i < cellData8.length; i++) {
+          const cell = cellData8[i];
 
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted = cell.label === 'Materials' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted = cell.label === 'Materials' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
 
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeightSmall,
-          width: cellWidthAdjusted,
-          height: cellHeightSmall,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeightSmall,
+            width: cellWidthAdjusted,
+            height: cellHeightSmall,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+            color: rgb(0.8, 0.8, 0.8), // Gray color
+          });
 
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
 
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        // y -= cellHeight;
+        y -= cellHeightSmall;
       }
-      // y -= cellHeight;
-      y -= cellHeightSmall;
 
       const partNumbersTable = [
         ['Code', 'Part number', 'Description', 'Qty', 'Unit'],
@@ -907,42 +966,42 @@ const PdfGenerator: React.FC<{
 
       const partNumbersColumnWidths = [50, 150, 200, 50, 50]; // Ширина колонок
       const partNumbersRowHeight = 15; // Высота строки
+      if (task.projectItemType !== 'NRC') {
+        for (const row of partNumbersTable) {
+          let x = 50;
+          for (let i = 0; i < row.length; i++) {
+            const cell = row[i];
 
-      for (const row of partNumbersTable) {
-        let x = 50;
-        for (let i = 0; i < row.length; i++) {
-          const cell = row[i];
+            if (cell !== undefined) {
+              const cellWidth = partNumbersColumnWidths[i];
+              const truncatedCell = truncateText(
+                cell,
+                cellWidth - 10,
+                robotoFont,
+                fontSize
+              );
 
-          if (cell !== undefined) {
-            const cellWidth = partNumbersColumnWidths[i];
-            const truncatedCell = truncateText(
-              cell,
-              cellWidth - 10,
-              robotoFont,
-              fontSize
-            );
-
-            page.drawText(truncatedCell, {
-              x: x + 5,
-              y: y - 10,
-              font: robotoFont,
-              size: fontSize,
+              page.drawText(truncatedCell, {
+                x: x + 5,
+                y: y - 10,
+                font: robotoFont,
+                size: fontSize,
+              });
+            }
+            // Рисуем границу вокруг ячейки
+            page.drawRectangle({
+              x,
+              y: y - 15,
+              width: partNumbersColumnWidths[i],
+              height: partNumbersRowHeight,
+              borderColor: rgb(0, 0, 0),
+              borderWidth: 1,
             });
+            x += partNumbersColumnWidths[i];
           }
-          // Рисуем границу вокруг ячейки
-          page.drawRectangle({
-            x,
-            y: y - 15,
-            width: partNumbersColumnWidths[i],
-            height: partNumbersRowHeight,
-            borderColor: rgb(0, 0, 0),
-            borderWidth: 1,
-          });
-          x += partNumbersColumnWidths[i];
+          y -= partNumbersRowHeight;
         }
-        y -= partNumbersRowHeight;
       }
-
       // Add the new row of cells below the existing content
       const cellData9 = [
         {
@@ -953,52 +1012,52 @@ const PdfGenerator: React.FC<{
           value: '',
         },
       ];
+      if (task.projectItemType !== 'NRC') {
+        for (let i = 0; i < cellData9.length; i++) {
+          const cell = cellData9[i];
 
-      for (let i = 0; i < cellData9.length; i++) {
-        const cell = cellData9[i];
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted =
+            cell.label ===
+            'NOTE: EQUIVALENT OR ALTERNATIVE PART NUMBERS CAN BE USED IAW TECHNICAL DOCUMENTATION'
+              ? 500
+              : 100; // Adjust width for the "Cust. ID Code" cell
 
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted =
-          cell.label ===
-          'NOTE: EQUIVALENT OR ALTERNATIVE PART NUMBERS CAN BE USED IAW TECHNICAL DOCUMENTATION'
-            ? 500
-            : 100; // Adjust width for the "Cust. ID Code" cell
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - partNumbersRowHeight,
+            width: cellWidthAdjusted,
+            height: partNumbersRowHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
 
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - partNumbersRowHeight,
-          width: cellWidthAdjusted,
-          height: partNumbersRowHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 6,
+            font: robotoFont,
+            size: smallFontSize,
+          });
 
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 6,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 13,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= partNumbersRowHeight;
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 13,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+          y -= partNumbersRowHeight;
+        }
+        y -= 5; // Space between
       }
-      y -= 5; // Space between
-
       ///tooll
       const cellData11 = [
         {
@@ -1007,45 +1066,48 @@ const PdfGenerator: React.FC<{
           value: '',
         },
       ];
-      for (let i = 0; i < cellData11.length; i++) {
-        const cell = cellData11[i];
+      if (task.projectItemType !== 'NRC') {
+        for (let i = 0; i < cellData11.length; i++) {
+          const cell = cellData11[i];
 
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted =
-          cell.label === 'Tools and Equipment' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted =
+            cell.label === 'Tools and Equipment' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
 
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeightSmall,
-          width: cellWidthAdjusted,
-          height: cellHeightSmall,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeightSmall,
+            width: cellWidthAdjusted,
+            height: cellHeightSmall,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+            color: rgb(0.8, 0.8, 0.8), // Gray color
+          });
 
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
 
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= 20;
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+          y -= 20;
+        }
       }
       // y -= 5; // Space between header and part numbers table
       // const toolTable = [
@@ -1084,102 +1146,106 @@ const PdfGenerator: React.FC<{
       const toolRowHeight = 15; // Height for each row in the part numbers table
 
       y -= 0; // Space between header and part numbers table
-      for (const row of toolTable) {
-        let x = 50;
-        for (let i = 0; i < row.length; i++) {
-          const cell = row[i];
-          // if (cell !== undefined) {
-          //   page.drawText(cell, {
-          //     x: x + 5,
-          //     y: y - 15,
-          //     font: robotoFont,
-          //     size: fontSize,
-          //   });
-          // }
-          // // Draw border around the cell
-          // page.drawRectangle({
-          //   x,
-          //   y: y - 20,
-          //   width: toolColumnWidths[i],
-          //   height: 20,
-          //   borderColor: rgb(0, 0, 0),
-          //   borderWidth: 1,
-          // });
-          // x += toolColumnWidths[i];
-          if (cell !== undefined) {
-            const cellWidth = toolColumnWidths[i];
-            const truncatedCell = truncateText(
-              cell,
-              cellWidth - 10,
-              robotoFont,
-              fontSize
-            );
 
-            page.drawText(truncatedCell, {
-              x: x + 5,
-              y: y - 10,
-              font: robotoFont,
-              size: fontSize,
+      if (task.projectItemType !== 'NRC') {
+        for (const row of toolTable) {
+          let x = 50;
+          for (let i = 0; i < row.length; i++) {
+            const cell = row[i];
+            // if (cell !== undefined) {
+            //   page.drawText(cell, {
+            //     x: x + 5,
+            //     y: y - 15,
+            //     font: robotoFont,
+            //     size: fontSize,
+            //   });
+            // }
+            // // Draw border around the cell
+            // page.drawRectangle({
+            //   x,
+            //   y: y - 20,
+            //   width: toolColumnWidths[i],
+            //   height: 20,
+            //   borderColor: rgb(0, 0, 0),
+            //   borderWidth: 1,
+            // });
+            // x += toolColumnWidths[i];
+            if (cell !== undefined) {
+              const cellWidth = toolColumnWidths[i];
+              const truncatedCell = truncateText(
+                cell,
+                cellWidth - 10,
+                robotoFont,
+                fontSize
+              );
+
+              page.drawText(truncatedCell, {
+                x: x + 5,
+                y: y - 10,
+                font: robotoFont,
+                size: fontSize,
+              });
+            }
+            // Рисуем границу вокруг ячейки
+            page.drawRectangle({
+              x,
+              y: y - toolRowHeight,
+              width: toolColumnWidths[i],
+              height: partNumbersRowHeight,
+              borderColor: rgb(0, 0, 0),
+              borderWidth: 1,
             });
+            x += toolColumnWidths[i];
           }
-          // Рисуем границу вокруг ячейки
+          y -= toolRowHeight;
+        }
+      }
+      if (task.projectItemType !== 'NRC') {
+        for (let i = 0; i < cellData9.length; i++) {
+          const cell = cellData9[i];
+
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted =
+            cell.label ===
+            'NOTE: EQUIVALENT OR ALTERNATIVE PART NUMBERS CAN BE USED IAW TECHNICAL DOCUMENTATION'
+              ? 500
+              : 100; // Adjust width for the "Cust. ID Code" cell
+
+          // Draw the cell border
           page.drawRectangle({
-            x,
+            x: cellX,
             y: y - toolRowHeight,
-            width: toolColumnWidths[i],
-            height: partNumbersRowHeight,
+            width: cellWidthAdjusted,
+            height: toolRowHeight,
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
-          x += toolColumnWidths[i];
+
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 6,
+            y: y - 5,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 13,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+          y -= partNumbersRowHeight;
         }
-        y -= toolRowHeight;
+        y -= 5; // Space between
       }
-
-      for (let i = 0; i < cellData9.length; i++) {
-        const cell = cellData9[i];
-
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted =
-          cell.label ===
-          'NOTE: EQUIVALENT OR ALTERNATIVE PART NUMBERS CAN BE USED IAW TECHNICAL DOCUMENTATION'
-            ? 500
-            : 100; // Adjust width for the "Cust. ID Code" cell
-
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - toolRowHeight,
-          width: cellWidthAdjusted,
-          height: toolRowHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 6,
-          y: y - 5,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 13,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= partNumbersRowHeight;
-      }
-      y -= 5; // Space between
       ////Instructions
       const cellData10 = [
         {
@@ -1203,6 +1269,7 @@ const PdfGenerator: React.FC<{
           height: cellHeightSmall,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
+          color: rgb(0.8, 0.8, 0.8), // Gray color
         });
 
         // Draw the label
@@ -1414,195 +1481,724 @@ const PdfGenerator: React.FC<{
         const lineHeight = font.heightAtSize(size);
         return lines.length * lineHeight + 5;
       }
-
-      for (let i = 0; i < task.steps?.length; i++) {
-        const step = task.steps[i];
-        const cellData12 = {
-          label: 'Work Step Description',
-          label1: 'Описание шага рабочей операции',
-          label2: 'Raised',
-          label3: 'Подготовлено',
-          label4: 'Описание шага рабочей операции',
-          value1:
-            step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
-          value2:
-            step?.createDate !== undefined
-              ? String(new Date(step?.createDate).toLocaleDateString('en-US'))
-              : 'N/A',
-          value3:
-            step?.createUserID !== undefined
-              ? step.createUserID?.singNumber
-              : 'N/A',
-          value4:
-            step?.stepDescription !== undefined ? step.stepDescription : 'N/A',
+      const drawComponentChangeTable = (page, y, actions) => {
+        // / Function to get text height
+        const getTextHeight = (text, font, fontSize, maxWidth) => {
+          const lines = splitTextIntoLines(text, font, fontSize, maxWidth);
+          return lines.length * font.heightAtSize(fontSize);
         };
 
-        const cellX = 50;
-        const cellWidthAdjusted = 500;
+        // Function to split text into lines
+        const splitTextIntoLines = (text, font, fontSize, maxWidth) => {
+          const lines = [];
+          let currentLine = '';
+          const words = text.split(' ');
+          for (const word of words) {
+            const testLine = currentLine + ' ' + word;
+            const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+            if (testWidth < maxWidth) {
+              currentLine = testLine;
+            } else {
+              lines.push(currentLine);
+              currentLine = word;
+            }
+          }
+          lines.push(currentLine);
+          return lines;
+        };
 
-        const descriptionHeight = getTextHeight(
-          cellData12.value4,
-          robotoFont,
-          12,
-          cellWidthAdjusted - 10 // Adjust for padding
-        );
+        // Function to truncate text to fit within a given width
+        const truncateText = (text, font, fontSize, maxWidth) => {
+          let truncatedText = text;
+          while (
+            font.widthOfTextAtSize(truncatedText + '...', fontSize) >
+              maxWidth &&
+            truncatedText.length > 0
+          ) {
+            truncatedText = truncatedText.slice(0, -1);
+          }
+          return (
+            truncatedText + (truncatedText.length < text.length ? '...' : '')
+          );
+        };
+        const cellData15 = [
+          {
+            label: 'Item Change List',
+            label1: 'Перечень ЗаменённыхПозиций',
+            value: '',
+          },
+        ];
 
-        const cellHeight = 20; // Base height for the top part
+        for (let i = 0; i < cellData15.length; i++) {
+          const cell = cellData15[i];
 
-        if (y - descriptionHeight - cellHeight < 50) {
-          // Check if there is enough space for the step
-          // drawFooter(page);
-          ({ page, width, height, y } = addPage());
-        }
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted =
+            cell.label === 'Item Change List' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
 
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeight,
-          width: cellWidthAdjusted,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-        // Draw the main rectangle for the step
-        const totalHeight = cellHeight + descriptionHeight + 30; // 30 is the height of the rectangles
-        page.drawRectangle({
-          x: cellX,
-          y: y - totalHeight,
-          width: cellWidthAdjusted,
-          height: totalHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+          // Draw the cell border
+          if (y - cellHeightSmall - cellHeightSmall < 50) {
+            // Check if there is enough space for the step
+            // drawFooter(page);
+            ({ page, width, height, y } = addPage());
+          }
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeightSmall,
+            width: cellWidthAdjusted,
+            height: cellHeightSmall,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+            color: rgb(0.8, 0.8, 0.8), // Gray color
+          });
 
-        // Draw the label
-        page.drawText(cellData12.value1, {
-          x: cellX + 5,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
-        page.drawText(cellData12.value3, {
-          x: cellX + 380,
-          y: y - 15,
-          font: robotoFont,
-          size: fontSize,
-        });
-
-        const descriptionLines = splitTextIntoLines(
-          cellData12.value4,
-          robotoFont,
-          12,
-          cellWidthAdjusted - 10 // Adjust for padding
-        );
-
-        let textY = y - cellHeight - 15;
-        descriptionLines.forEach((line: string) => {
-          page.drawText(line, {
+          // Draw the label
+          page.drawText(cell.label, {
             x: cellX + 5,
-            y: textY,
+            y: y - 10,
             font: robotoFont,
             size: fontSize,
           });
-          textY -= robotoFont.heightAtSize(12);
-        });
 
-        page.drawText(cellData12.label, {
-          x: cellX + 30,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+          y -= partNumbersRowHeight;
+        }
+        y -= 5; // Space between header and part numbers table
 
-        page.drawText(cellData12.label1, {
-          x: cellX + 30,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        page.drawText(cellData12.label2, {
-          x: cellX + 300,
-          y: y - 10,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        page.drawText(cellData12.label3, {
-          x: cellX + 300,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
+        const componentTable = [
+          [
+            'P/N Off',
+            'S/N Off',
+            'P/N On',
+            'S/N On',
+            'Description',
+            'Certificate',
+            'Position',
+          ],
+          ...(actions && actions.length > 0
+            ? actions.map((action) => [
+                String(
+                  action.componentChange?.removeAction?.partNumberID
+                    ?.PART_NUMBER || ''
+                ),
+                String(
+                  action.componentChange?.removeAction?.serialNumberOf || ''
+                ),
+                String(
+                  action.componentChange?.installAction?.partNumberID
+                    ?.PART_NUMBER || ''
+                ),
+                String(
+                  action.componentChange?.installAction?.serialOnNumber || ''
+                ),
+                String(
+                  action.componentChange?.removeAction?.partNumberID
+                    ?.DESCRIPTION || ''
+                ),
+                String(
+                  action.componentChange?.installAction?.certificateNumber || ''
+                ),
+                String(action.componentChange?.removeAction?.position || ''),
+              ])
+            : [
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+              ]),
+        ];
 
-        // Draw the value
-        page.drawText(cellData12.value2, {
-          x: cellX + 450,
-          y: y - 13,
-          font: robotoFont,
-          size: smallFontSize,
-        });
+        const componentColumnWidths = [80, 70, 70, 70, 70, 70, 70]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
+        const componentRowHeight = 15; // Height for each row in the part numbers table
 
-        // Draw two rectangles side by side at the right edge
-        const rectangleWidth = 100;
-        const rectangleHeight = 30;
-        const rectangleX1 = cellX + cellWidthAdjusted - 2 * rectangleWidth;
-        const rectangleX2 = cellX + cellWidthAdjusted - rectangleWidth;
-        const rectangleY = y - cellHeight - descriptionHeight - rectangleHeight;
+        y -= 0; // Space between header and part numbers table
+        for (const row of componentTable) {
+          let x = 50;
+          for (let i = 0; i < row.length; i++) {
+            const cell = row[i];
+            const truncatedCell = truncateText(
+              cell,
+              robotoFont,
+              fontSize,
+              componentColumnWidths[i] - 10
+            ); // Adjust for padding
+            if (truncatedCell !== undefined) {
+              page.drawText(truncatedCell, {
+                x: x + 5,
+                y: y - 10,
+                font: robotoFont,
+                size: fontSize,
+              });
+            }
+            // Draw border around the cell
+            page.drawRectangle({
+              x,
+              y: y - componentRowHeight,
+              width: componentColumnWidths[i],
+              height: componentRowHeight,
+              borderColor: rgb(0, 0, 0),
+              borderWidth: 1,
+            });
+            x += componentColumnWidths[i];
+          }
+          y -= componentRowHeight;
+        }
+        y -= 5; // Space between header and part numbers table
 
-        page.drawRectangle({
-          x: rectangleX1,
-          y: rectangleY,
-          width: rectangleWidth,
-          height: rectangleHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+        return y;
+      };
 
-        page.drawRectangle({
-          x: rectangleX2,
-          y: rectangleY,
-          width: rectangleWidth,
-          height: rectangleHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+      if (task.projectItemType !== 'NRC') {
+        for (let i = 0; i < task.steps?.length; i++) {
+          const step = task.steps[i];
+          const cellData12 = {
+            label: 'Work Step Description',
+            label1: 'Описание шага рабочей операции',
+            label2: 'Raised',
+            label3: 'Подготовлено',
+            label4: 'Описание шага рабочей операции',
+            value1:
+              step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
+            value2:
+              step?.createDate !== undefined
+                ? String(new Date(step?.createDate).toLocaleDateString('en-GB'))
+                : 'N/A',
+            value3:
+              step?.createUserID !== undefined
+                ? step.createUserID?.singNumber
+                : 'N/A',
+            value4:
+              step?.stepDescription !== undefined
+                ? step.stepDescription
+                : 'N/A',
+          };
 
-        // Draw text in the rectangles
-        page.drawText('Perform', {
-          x: rectangleX1 + 5,
-          y: rectangleY + 10,
-          font: robotoFont,
-          size: 6,
-        });
-        page.drawText('Выполнил', {
-          x: rectangleX1 + 5,
-          y: rectangleY + 4,
-          font: robotoFont,
-          size: 6,
-        });
-        page.drawText('Inspected', {
-          x: rectangleX2 + 5,
-          y: rectangleY + 10,
-          font: robotoFont,
-          size: 6,
-        });
-        page.drawText('Проверил', {
-          x: rectangleX2 + 5,
-          y: rectangleY + 4,
-          font: robotoFont,
-          size: 6,
-        });
+          const cellX = 50;
+          const cellWidthAdjusted = 500;
 
-        y -= totalHeight;
+          const descriptionHeight = getTextHeight(
+            cellData12.value4,
+            robotoFont,
+            12,
+            cellWidthAdjusted - 10 // Adjust for padding
+          );
+
+          const cellHeight = 20; // Base height for the top part
+
+          if (y - descriptionHeight - cellHeight < 50) {
+            // Check if there is enough space for the step
+            // drawFooter(page);
+            ({ page, width, height, y } = addPage());
+          }
+
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidthAdjusted,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+            color: rgb(0.8, 0.8, 0.8), // Gray color
+          });
+          // Draw the main rectangle for the step
+          const totalHeight = cellHeight + descriptionHeight + 30; // 30 is the height of the rectangles
+          page.drawRectangle({
+            x: cellX,
+            y: y - totalHeight,
+            width: cellWidthAdjusted,
+            height: totalHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw the label
+          page.drawText(cellData12.value1, {
+            x: cellX + 5,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
+          page.drawText(cellData12.value3, {
+            x: cellX + 380,
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          const descriptionLines = splitTextIntoLines(
+            cellData12.value4,
+            robotoFont,
+            12,
+            cellWidthAdjusted - 10 // Adjust for padding
+          );
+
+          let textY = y - cellHeight - 15;
+          descriptionLines.forEach((line: string) => {
+            page.drawText(line, {
+              x: cellX + 5,
+              y: textY,
+              font: robotoFont,
+              size: fontSize,
+            });
+            textY -= robotoFont.heightAtSize(12);
+          });
+
+          page.drawText(cellData12.label, {
+            x: cellX + 30,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          page.drawText(cellData12.label1, {
+            x: cellX + 30,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          page.drawText(cellData12.label2, {
+            x: cellX + 300,
+            y: y - 10,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          page.drawText(cellData12.label3, {
+            x: cellX + 300,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          // Draw the value
+          page.drawText(cellData12.value2, {
+            x: cellX + 450,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          // Draw two rectangles side by side at the right edge
+          const rectangleWidth = 100;
+          const rectangleHeight = 30;
+          const rectangleX1 = cellX + cellWidthAdjusted - 2 * rectangleWidth;
+          const rectangleX2 = cellX + cellWidthAdjusted - rectangleWidth;
+          const rectangleY =
+            y - cellHeight - descriptionHeight - rectangleHeight;
+
+          page.drawRectangle({
+            x: rectangleX1,
+            y: rectangleY,
+            width: rectangleWidth,
+            height: rectangleHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          page.drawRectangle({
+            x: rectangleX2,
+            y: rectangleY,
+            width: rectangleWidth,
+            height: rectangleHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw text in the rectangles
+          page.drawText('Perform', {
+            x: rectangleX1 + 5,
+            y: rectangleY + 10,
+            font: robotoFont,
+            size: 6,
+          });
+          page.drawText('Выполнил', {
+            x: rectangleX1 + 5,
+            y: rectangleY + 4,
+            font: robotoFont,
+            size: 6,
+          });
+          page.drawText('Inspected', {
+            x: rectangleX2 + 5,
+            y: rectangleY + 10,
+            font: robotoFont,
+            size: 6,
+          });
+          page.drawText('Проверил', {
+            x: rectangleX2 + 5,
+            y: rectangleY + 4,
+            font: robotoFont,
+            size: 6,
+          });
+
+          y -= totalHeight;
+          const actionsChance = step.actions.filter(
+            (action) => action.isComponentChangeAction
+          );
+          if (actionsChance.length > 0) {
+            y = drawComponentChangeTable(page, y, actionsChance);
+          }
+          y -= 5;
+        }
       }
-      y -= 5;
+      if (task.projectItemType == 'NRC') {
+        for (let i = 0; i < task.steps?.length; i++) {
+          const step = task.steps[i];
+          const cellData12 = {
+            label: 'Work Step Description',
+            label1: 'Описание шага рабочей операции',
+            label2: 'Raised',
+            label3: 'Подготовлено',
+            label4: 'Описание шага рабочей операции',
+            value1:
+              step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
+            value2:
+              step?.createDate !== undefined
+                ? String(new Date(step?.createDate).toLocaleDateString('en-US'))
+                : 'N/A',
+            value3:
+              step?.createUserID !== undefined
+                ? step.createUserID?.organizationAuthorization ||
+                  step.createUserID?.singNumber
+                : 'N/A',
+            value4:
+              step?.stepDescription !== undefined
+                ? step.stepDescription
+                : 'N/A',
+          };
+
+          const cellX = 50;
+          const cellWidthAdjusted = 500;
+
+          const descriptionHeight = getTextHeight(
+            cellData12.value4,
+            robotoFont,
+            12,
+            cellWidthAdjusted - 10 // Adjust for padding
+          );
+
+          const cellHeight = 20; // Base height for the top part
+
+          if (y - descriptionHeight - cellHeight < 50) {
+            // Check if there is enough space for the step
+            // drawFooter(page);
+            ({ page, width, height, y } = addPage());
+          }
+
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidthAdjusted,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+            color: rgb(0.8, 0.8, 0.8), // Gray color
+          });
+          // Draw the main rectangle for the step
+          const totalHeight = cellHeight + descriptionHeight; // 30 is the height of the rectangles
+          page.drawRectangle({
+            x: cellX,
+            y: y - totalHeight,
+            width: cellWidthAdjusted,
+            height: totalHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw the label
+          page.drawText(cellData12.value1, {
+            x: cellX + 5,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
+          page.drawText(cellData12.value3, {
+            x: cellX + 380,
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          const descriptionLines = splitTextIntoLines(
+            cellData12.value4,
+            robotoFont,
+            12,
+            cellWidthAdjusted - 10 // Adjust for padding
+          );
+
+          let textY = y - cellHeight - 15;
+          descriptionLines.forEach((line: string) => {
+            page.drawText(line, {
+              x: cellX + 5,
+              y: textY,
+              font: robotoFont,
+              size: fontSize,
+            });
+            textY -= robotoFont.heightAtSize(12);
+          });
+
+          page.drawText(cellData12.label, {
+            x: cellX + 30,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          page.drawText(cellData12.label1, {
+            x: cellX + 30,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          page.drawText(cellData12.label2, {
+            x: cellX + 300,
+            y: y - 10,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          page.drawText(cellData12.label3, {
+            x: cellX + 300,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          // Draw the value
+          page.drawText(cellData12.value2, {
+            x: cellX + 450,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          // Draw two rectangles side by side at the right edge
+          const rectangleWidth = 100;
+          const rectangleHeight = 30;
+          const rectangleX1 = cellX + cellWidthAdjusted - 2 * rectangleWidth;
+          const rectangleX2 = cellX + cellWidthAdjusted - rectangleWidth;
+          const rectangleY =
+            y - cellHeight - descriptionHeight - rectangleHeight;
+
+          // page.drawRectangle({
+          //   x: rectangleX1,
+          //   y: rectangleY,
+          //   width: rectangleWidth,
+          //   height: rectangleHeight,
+          //   borderColor: rgb(0, 0, 0),
+          //   borderWidth: 1,
+          // });
+
+          // page.drawRectangle({
+          //   x: rectangleX2,
+          //   y: rectangleY,
+          //   width: rectangleWidth,
+          //   height: rectangleHeight,
+          //   borderColor: rgb(0, 0, 0),
+          //   borderWidth: 1,
+          // });
+
+          // Draw text in the rectangles
+          // page.drawText('Perform', {
+          //   x: rectangleX1 + 5,
+          //   y: rectangleY + 10,
+          //   font: robotoFont,
+          //   size: 6,
+          // });
+          // page.drawText('Выполнил', {
+          //   x: rectangleX1 + 5,
+          //   y: rectangleY + 4,
+          //   font: robotoFont,
+          //   size: 6,
+          // });
+          // page.drawText('Inspected', {
+          //   x: rectangleX2 + 5,
+          //   y: rectangleY + 10,
+          //   font: robotoFont,
+          //   size: 6,
+          // });
+          // page.drawText('Проверил', {
+          //   x: rectangleX2 + 5,
+          //   y: rectangleY + 4,
+          //   font: robotoFont,
+          //   size: 6,
+          // });
+
+          y -= totalHeight;
+
+          // Add actions to the step
+          const actions = step.actions.filter(
+            (action) => !action.isComponentChangeAction
+          );
+          console.log(step);
+          if (actions.length > 0) {
+            const actionsHeight = actions.reduce((totalHeight, action) => {
+              const actionDescriptionHeight = getTextHeight(
+                action.description,
+                robotoFont,
+                12,
+                cellWidthAdjusted - 10 // Adjust for padding
+              );
+              return totalHeight + actionDescriptionHeight + 50; // 50 is the height of the header and rectangles
+            }, 0);
+
+            if (y - actionsHeight < 50) {
+              // Check if there is enough space for the actions
+              ({ page, width, height, y } = addPage());
+            }
+
+            actions.forEach((action, index) => {
+              const actionDescriptionHeight = getTextHeight(
+                action.description,
+                robotoFont,
+                12,
+                cellWidthAdjusted - 10 // Adjust for padding
+              );
+              const actionY = y - actionDescriptionHeight - 50; // 50 is the height of the header and rectangles
+
+              // Draw the header for the action
+              page.drawRectangle({
+                x: cellX,
+                y: actionY + actionDescriptionHeight + 35,
+                width: cellWidthAdjusted,
+                height: 15,
+                borderColor: rgb(0, 0, 0),
+                borderWidth: 1,
+                color: rgb(0.8, 0.8, 0.8), // Gray color
+              });
+
+              if (action.type === 'pfmd') {
+                page.drawText(`Action-step ${step.stepNumber}-${index + 1}`, {
+                  x: cellX + 5,
+                  y: actionY + actionDescriptionHeight + 40,
+                  font: robotoFont,
+                  size: fontSize,
+                });
+              }
+              if (action.type === 'inspect') {
+                page.drawText(
+                  `Inspection-step ${step.stepNumber}-${index + 1}`,
+                  {
+                    x: cellX + 5,
+                    y: actionY + actionDescriptionHeight + 40,
+                    font: robotoFont,
+                    size: fontSize,
+                  }
+                );
+              }
+
+              // Draw the description of the action
+              page.drawRectangle({
+                x: cellX,
+                y: actionY,
+                width: cellWidthAdjusted,
+                height: actionDescriptionHeight + 50,
+                borderColor: rgb(0, 0, 0),
+                borderWidth: 1,
+              });
+
+              const descriptionLines = splitTextIntoLines(
+                action.description,
+                robotoFont,
+                12,
+                cellWidthAdjusted - 10 // Adjust for padding
+              );
+
+              let textY = actionY + actionDescriptionHeight + 15;
+              descriptionLines.forEach((line: string) => {
+                page.drawText(line, {
+                  x: cellX + 5,
+                  y: textY,
+                  font: robotoFont,
+                  size: fontSize,
+                });
+                textY -= robotoFont.heightAtSize(12);
+              });
+
+              // Draw rectangles based on action type
+              const rectangleWidth = 100;
+              const rectangleHeight = 30;
+              const rectangleX1 =
+                cellX + cellWidthAdjusted - 2 * rectangleWidth;
+              const rectangleX2 = cellX + cellWidthAdjusted - rectangleWidth;
+              const rectangleY = actionY + 10;
+
+              if (action.type === 'pfmd') {
+                page.drawRectangle({
+                  x: rectangleX2,
+                  y: actionY,
+                  width: rectangleWidth,
+                  height: rectangleHeight,
+                  borderColor: rgb(0, 0, 0),
+                  borderWidth: 1,
+                });
+
+                page.drawText('Performed', {
+                  x: rectangleX2 + 5,
+                  y: actionY + 8,
+                  font: robotoFont,
+                  size: 6,
+                });
+                page.drawText('Выполнил', {
+                  x: rectangleX2 + 5,
+                  y: actionY + 2,
+                  font: robotoFont,
+                  size: 6,
+                });
+              } else if (action.type === 'inspect') {
+                page.drawRectangle({
+                  x: rectangleX2 + 20,
+                  y: actionY,
+                  width: rectangleWidth - 20,
+                  height: rectangleHeight,
+                  borderColor: rgb(0, 0, 0),
+                  borderWidth: 1,
+                });
+
+                page.drawText('Performed', {
+                  x: rectangleX2 + 5 + 20,
+                  y: actionY + 8,
+                  font: robotoFont,
+                  size: 6,
+                });
+                page.drawText('Выполнил', {
+                  x: rectangleX2 + 5 + 20,
+                  y: actionY + 2,
+                  font: robotoFont,
+                  size: 6,
+                });
+              }
+
+              y -= actionDescriptionHeight + 50; // 50 is the height of the header and rectangles
+            });
+          }
+
+          const actionsChance = step.actions.filter(
+            (action) => action.isComponentChangeAction
+          );
+          if (actionsChance.length > 0) {
+            y = drawComponentChangeTable(page, y, actionsChance);
+          }
+          // y -= 5;
+        }
+      }
 
       ///ITEMS
-      const cellData15 = [
-        {
-          label: 'Item Change List',
-          label1: 'Перечень ЗаменённыхПозиций',
-          value: '',
-        },
-      ];
+      // const cellData15 = [
+      //   {
+      //     label: 'Item Change List',
+      //     label1: 'Перечень ЗаменённыхПозиций',
+      //     value: '',
+      //   },
+      // ];
+
       // for (let i = 0; i < cellData15.length; i++) {
       //   const cell = cellData15[i];
 
@@ -1658,25 +2254,31 @@ const PdfGenerator: React.FC<{
       //     'Certificate',
       //     'Performed',
       //   ],
-      //   ...(task.componens && task.componens.length > 0
-      //     ? task.componens.map((part: any) => [
-      //         String(part.PART_NUMBER_OFF || ''),
-      //         String(part.SN_OFF || ''),
-      //         String(part.PART_NUMBER_ON || ''),
-      //         String(part.SN_ON || ''),
-      //         String(part.QUANTITY || ''),
-      //         String(part.CERTIFICATE_NUMBER || ''),
-      //         String(part.PERFORMED || ''),
+      //   ...(actions && actions.length > 0
+      //     ? actions.map((action) => [
+      //         String(
+      //           action.componentChange?.removeAction?.partNumberID
+      //             ?.partNumber || ''
+      //         ),
+      //         String(action.componentChange?.removeAction?.serialNumber || ''),
+      //         String(
+      //           action.componentChange?.installAction?.partNumberID
+      //             ?.partNumber || ''
+      //         ),
+      //         String(action.componentChange?.installAction?.serialNumber || ''),
+      //         String(action.componentChange?.quantity || ''),
+      //         String(action.componentChange?.certificateNumber || ''),
+      //         String(action.componentChange?.performed || ''),
       //       ])
       //     : [
       //         ['', '', '', '', '', '', ''],
       //         ['', '', '', '', '', '', ''],
       //       ]),
       // ];
-      const componentColumnWidths = [80, 80, 80, 80, 40, 70, 70]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
-      const componentRowHeight = 15; // Height for each row in the part numbers table
+      // const componentColumnWidths = [80, 80, 80, 80, 40, 70, 70]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
+      // const componentRowHeight = 15; // Height for each row in the part numbers table
 
-      y -= 0; // Space between header and part numbers table
+      // y -= 0; // Space between header and part numbers table
       // for (const row of componentTable) {
       //   let x = 50;
       //   for (let i = 0; i < row.length; i++) {
@@ -1702,6 +2304,20 @@ const PdfGenerator: React.FC<{
       //   }
       //   y -= componentRowHeight;
       // }
+
+      // Main code to process tasks
+      // for (const task of tasks) {
+      // if (task.steps && task.steps.length > 0) {
+      //   for (const step of task.steps) {
+      //     const actions = step.actions.filter(
+      //       (action) => action.isComponentChangeAction
+      //     );
+      //     if (actions.length > 0) {
+      //       y = drawComponentChangeTable(page, y, actions);
+      //     }
+      //   }
+      // }
+      // }
       // y -= 5; //
       ///ITEMS
       const cellData25 = [
@@ -1719,143 +2335,150 @@ const PdfGenerator: React.FC<{
         },
       ];
 
-      for (let i = 0; i < cellData25.length; i++) {
-        const cell = cellData25[i];
+      if (task.projectItemType !== 'NRC') {
+        for (let i = 0; i < cellData25.length; i++) {
+          const cell = cellData25[i];
 
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted = cell.label === 'Findings' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted = cell.label === 'Findings' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
 
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeightSmall,
-          width: cellWidthAdjusted,
-          height: cellHeightSmall,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeightSmall,
+            width: cellWidthAdjusted,
+            height: cellHeightSmall,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+            color: rgb(0.8, 0.8, 0.8), // Gray color
+          });
 
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
 
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= partNumbersRowHeight;
-        if (y - cellHeight < 50) {
-          // Check if there is enough space for the step
-          // drawFooter(page);
-          ({ page, width, height, y } = addPage());
-        }
-      }
-      y -= 5;
-      const findingsTable = [
-        ['Defect found', 'Reference', 'Reference', 'Reference'],
-        ...(task.defects && task.defects.length > 0
-          ? task.defects.map((part: any) => [
-              String(`YES____            NO__________`),
-              String(part.NRC_REFERENCE || ''),
-              String(part.NRC_REFERENCE || ''),
-              String(part.NRC_REFERENCE || ''),
-            ])
-          : [[String(`   YES       /       NO`), '', '', '']]),
-      ];
-      const findingsColumnWidths = [100, 140, 120, 140]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
-      const findingsRowHeight = 15; // Height for each row in the part numbers table
-
-      y -= 0; // Space between header and part numbers table
-      for (const row of findingsTable) {
-        let x = 50;
-        for (let i = 0; i < row.length; i++) {
-          const cell = row[i];
-          if (cell !== undefined) {
-            page.drawText(cell, {
-              x: x + 5,
-              y: y - 10,
-              font: robotoFont,
-              size: fontSize,
-            });
-          }
-          // Draw border around the cell
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+          y -= partNumbersRowHeight;
           if (y - cellHeight < 50) {
             // Check if there is enough space for the step
             // drawFooter(page);
             ({ page, width, height, y } = addPage());
           }
+        }
+        y -= 5;
+        const findingsTable = [
+          ['Defect found', 'Reference', 'Reference', 'Reference'],
+          ...(task.defects && task.defects.length > 0
+            ? task.defects.map((part: any) => [
+                String(`YES____            NO__________`),
+                String(part.NRC_REFERENCE || ''),
+                String(part.NRC_REFERENCE || ''),
+                String(part.NRC_REFERENCE || ''),
+              ])
+            : [[String(`   YES       /       NO`), '', '', '']]),
+        ];
+        const findingsColumnWidths = [100, 140, 120, 140]; // Widths for PART_NUMBER, DESCRIPTION, QUANTITY columns
+        const findingsRowHeight = 15; // Height for each row in the part numbers table
+
+        y -= 0; // Space between header and part numbers table
+        for (const row of findingsTable) {
+          let x = 50;
+          for (let i = 0; i < row.length; i++) {
+            const cell = row[i];
+            if (cell !== undefined) {
+              page.drawText(cell, {
+                x: x + 5,
+                y: y - 10,
+                font: robotoFont,
+                size: fontSize,
+              });
+            }
+            // Draw border around the cell
+            if (y - cellHeight < 50) {
+              // Check if there is enough space for the step
+              // drawFooter(page);
+              ({ page, width, height, y } = addPage());
+            }
+            page.drawRectangle({
+              x,
+              y: y - findingsRowHeight,
+              width: findingsColumnWidths[i],
+              height: findingsRowHeight,
+              borderColor: rgb(0, 0, 0),
+              borderWidth: 1,
+            });
+            x += findingsColumnWidths[i];
+          }
+          y -= toolRowHeight;
+        }
+      }
+
+      ///release
+
+      if (task.projectItemType !== 'NRC') {
+        y -= 5; //
+        for (let i = 0; i < cellDataRemark.length; i++) {
+          const cell = cellDataRemark[i];
+
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted = cell.label === 'Remarks' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
+
+          // Draw the cell border
           page.drawRectangle({
-            x,
-            y: y - findingsRowHeight,
-            width: findingsColumnWidths[i],
-            height: findingsRowHeight,
+            x: cellX,
+            y: y - 50,
+            width: cellWidthAdjusted,
+            height: 50,
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
-          x += findingsColumnWidths[i];
+
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 10,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 55,
+            y: y - 13,
+            font: robotoFont,
+            size: fontSize,
+          });
+          y -= partNumbersRowHeight;
+          if (y - cellHeight < 50) {
+            // Check if there is enough space for the step
+            // drawFooter(page);
+            ({ page, width, height, y } = addPage());
+          }
         }
-        y -= toolRowHeight;
+        y -= 40;
       }
-      ///release
-      y -= 5; //
-      for (let i = 0; i < cellDataRemark.length; i++) {
-        const cell = cellDataRemark[i];
-
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted = cell.label === 'Remarks' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
-
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - 50,
-          width: cellWidthAdjusted,
-          height: 50,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= partNumbersRowHeight;
-        if (y - cellHeight < 50) {
-          // Check if there is enough space for the step
-          // drawFooter(page);
-          ({ page, width, height, y } = addPage());
-        }
-      }
-      y -= 40;
       const cellData16 = [
         {
           label: 'Release to Service',
@@ -1884,6 +2507,7 @@ const PdfGenerator: React.FC<{
           height: 20,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
+          color: rgb(0.8, 0.8, 0.8), // Gray color
         });
 
         // Draw the label
@@ -2004,43 +2628,128 @@ const PdfGenerator: React.FC<{
       //   },
       // ];
       const cellDataNotCritical = [
-        { label: '', label1: ' ', value: '' },
+        {
+          label: 'Form',
+          label1: 'Форма',
+          value: '060',
+          value2: '01',
+          label2: 'Revision №',
+          label3: 'Изменение №',
+          label4: 'Rev. Date',
+          label41: 'Дата Изм.',
+          label5: 'Approval №',
+          label6: 'Одобрение №',
+          value5: '285-21-057',
+          label7: 'Unitary Enterprise «407 Technics»',
+          label8: 'Унитарное предприятие «407 Техникс»',
+          value8: '23/11/2022',
+        },
 
         {
           label: 'Date',
           label1: 'Дата',
           value: task.closeDate !== undefined ? task.closeDate : '',
+          value2: '',
+          label2: '',
+          label3: '',
+          label4: '',
+          label41: '',
+          label5: '',
+          label6: '',
+          value5: '',
+          label7: '',
+          label8: '',
+          value8: '',
         },
         {
-          label: 'Inspected',
-          label1: 'Проверено',
+          label: 'Closing Sing/Stamp',
+          label1: 'Закрыто Печать/Штамп',
           value: task.inspectBY !== undefined ? task.closeBy : '',
+          value2: '',
+          label2: '',
+          label3: '',
+          label4: '',
+          label41: '',
+          label5: '',
+          label6: '',
+          value5: '',
+          label7: '',
+          label8: '',
+          value8: '',
         },
       ];
 
       const cellData18 = [
-        { label: '', label1: ' ', value: '' },
+        {
+          label: 'Form',
+          label1: 'Форма',
+          value: '060',
+          value2: '01',
+          label2: 'Revision №',
+          label3: 'Изменение №',
+          label4: 'Rev. Date',
+          label41: 'Дата Изм.',
+          label5: 'Approval №',
+          label6: 'Одобрение №',
+          value5: '285-21-057',
+          label7: 'Unitary Enterprise «407 Technics»',
+          label8: 'Унитарное предприятие «407 Техникс»',
+          value8: '23/11/2022',
+        },
         {
           label: 'Date',
           label1: 'Дата',
           value: task.closeDate !== undefined ? task.closeDate : '',
+          value2: '',
+          label2: '',
+          label3: '',
+          label4: '',
+          label41: '',
+          label5: '',
+          label6: '',
+          value5: '',
+          label7: '',
+          label8: '',
+          value8: '',
         },
         {
-          label: 'Inspected',
-          label1: 'Проверено',
+          label: 'Closing Sing/Stamp',
+          label1: 'Закрыто Печать/Штамп',
           value: task.inspectBY !== undefined ? task.closeBy : '',
+          value2: '',
+          label2: '',
+          label3: '',
+          label4: '',
+          label41: '',
+          label5: '',
+          label6: '',
+          value5: '',
+          label7: '',
+          label8: '',
+          value8: '',
         },
         {
           label: 'Double Inspected',
           label1: 'Независимо проверено',
           value: task.DICLOSE !== undefined ? task.DICLOSE : '',
+          value2: '',
+          label2: '',
+          label3: '',
+          label4: '',
+          label41: '',
+          label5: '',
+          label6: '',
+          value5: '',
+          label7: '',
+          label8: '',
+          value8: '',
         },
       ];
 
       const cellWidthsNotCritical = [300, 100, 100]; // Ширина первой ячейки и остальных ячеек для не isCriticalTask
       const cellWidthsCritical = [200, 100, 100, 100]; // Ширина первой ячейки и остальных ячеек для isCriticalTask
 
-      const drawCell = (cell, cellX, cellWidthAdjusted, y) => {
+      const drawCell = (cell, cellX, cellWidthAdjusted, y, isFirstCell) => {
         // Draw the cell border
         page.drawRectangle({
           x: cellX,
@@ -2050,11 +2759,20 @@ const PdfGenerator: React.FC<{
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
         });
+        // Draw the horizontal line in the middle of the first cell
+        if (cellWidthAdjusted == 200 || cellWidthAdjusted == 300) {
+          page.drawLine({
+            start: { x: cellX, y: y - 20 },
+            end: { x: cellX + cellWidthAdjusted, y: y - 20 },
+            thickness: 1,
+            color: rgb(0, 0, 0),
+          });
+        }
 
         // Draw the label
         page.drawText(cell.label, {
           x: cellX + 5,
-          y: y - 28,
+          y: y - 30,
           font: robotoFont,
           size: smallFontSize,
         });
@@ -2068,10 +2786,78 @@ const PdfGenerator: React.FC<{
 
         // Draw the value
         page.drawText(cell.value, {
-          x: cellX + 42,
-          y: y - 45,
+          x: cellX + 30,
+          y: y - 35,
           font: robotoFont,
-          size: fontSize,
+          size: fontSizeM,
+        });
+        page.drawText(cell.label2, {
+          x: cellX + 50,
+          y: y - 30,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+        page.drawText(cell.label3, {
+          x: cellX + 50,
+          y: y - 36,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+        page.drawText(cell.value2, {
+          x: cellX + 90,
+          y: y - 35,
+          font: robotoFont,
+          size: fontSizeM,
+        });
+        page.drawText(cell.label4, {
+          x: cellX + 110,
+          y: y - 30,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+        page.drawText(cell.label41, {
+          x: cellX + 110,
+          y: y - 36,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+        page.drawText(cell.value8, {
+          x: cellX + 150,
+          y: y - 35,
+          font: robotoFont,
+          size: fontSizeM,
+        });
+        page.drawText(cell.label5, {
+          x: cellX + 5,
+          y: y - 7,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+
+        page.drawText(cell.label6, {
+          x: cellX + 5,
+          y: y - 13,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+        page.drawText(cell.value5, {
+          x: cellX + 50,
+          y: y - 10,
+          font: robotoFont,
+          size: fontSizeM,
+        });
+        page.drawText(cell.label7, {
+          x: cellX + 100,
+          y: y - 7,
+          font: robotoFont,
+          size: smallFontSize,
+        });
+
+        page.drawText(cell.label8, {
+          x: cellX + 100,
+          y: y - 13,
+          font: robotoFont,
+          size: smallFontSize,
         });
       };
 

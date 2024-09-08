@@ -325,7 +325,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
         inStockReserve: { text: t('RESERVATION'), status: 'Success' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
+        closed: { text: t('CLOSE'), status: 'Default' },
         canceled: { text: t('CANCELED'), status: 'Error' },
         onOrder: { text: t('ISSUED'), status: 'Processing' },
       },

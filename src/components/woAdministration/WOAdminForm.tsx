@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 import React, {
   FC,
   useCallback,
@@ -7,10 +7,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import utc from 'dayjs/plugin/utc';
+import { getDefectTypes, getAtaChapters } from '@/services/utilites';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { UploadOutlined, ProjectOutlined } from '@ant-design/icons';
 import {
   ProForm,
+  ProFormDateTimePicker,
   ProFormDigit,
   ProFormGroup,
   ProFormSelect,
@@ -80,7 +83,11 @@ import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import FileListE from '../userAdministration/taskAdministration/FileList.tsx';
 import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
-
+import UserTaskAllocationPerf from './UserTaskAllocationPerf';
+import dayjs from 'dayjs';
+import { useGetUsersQuery } from '@/features/userAdministration/userApi';
+import UserTaskAllocation from './UserTaskAllocation';
+dayjs.extend(utc);
 interface UserFormProps {
   order?: any;
   orderItem?: any | {};
@@ -101,6 +108,8 @@ const WOAdminForm: FC<UserFormProps> = ({
     cellDataType: CellDataType; // Обязательное свойство
   }
 
+  const [userDurations, setUserDurations] = useState<any[]>([]);
+  const { data: users } = useGetUsersQuery({});
   const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const columnDefs = useMemo(
@@ -159,8 +168,8 @@ const WOAdminForm: FC<UserFormProps> = ({
     onShort: t('ON SHORT'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
     onOrder: t('ON ORDER'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
@@ -415,11 +424,13 @@ const WOAdminForm: FC<UserFormProps> = ({
       await refetch();
       await addBooking({
         booking: { voucherModel: 'ADD_STEP', data: step },
-      }).unwrap(); // Передаем данные о новом шаге в addBooking
+      }).unwrap();
+      // setCurrentTime(Date.now()); // Передаем данные о новом шаге в addBooking
       notification.success({
         message: t('STEP SUCCESSFULLY ADDED'),
         description: t('The step has been successfully added.'),
       });
+
       // setIsModalVisible(false); // Если у вас есть функция для закрытия модального окна после добавления шага
     } catch (error) {
       notification.error({
@@ -461,10 +472,9 @@ const WOAdminForm: FC<UserFormProps> = ({
   //   { acTypeId: acTypeID },
   //   { skip: !acTypeID }
   // );
-  const { data: zones, isLoading: loading } = useGetFilteredZonesQuery(
-    { acTypeId: acTypeID },
-    { skip: !acTypeID }
-  );
+  const { data: zones, isLoading: loading } = useGetFilteredZonesQuery({});
+  // { acTypeId: acTypeID },
+  // { skip: !acTypeID }
   const stepsToRender = projectItemID || projectTaskID ? steps : [];
 
   const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
@@ -624,64 +634,64 @@ const WOAdminForm: FC<UserFormProps> = ({
     },
     [columnWidths]
   );
-  const fakeTemplates = [
-    {
-      id: '1',
-      name: 'PERFORMED',
-      content: `TASK CARD 72-180-01-01 
-      WAS PFMD. BSI REPORT 291-23 AMM REV 77, 
-      FEB 15/22 SEE MATERIAL LIST.
-      WO: 000129`,
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '2',
-      name: 'INSPECTION',
-      content: `INSP PFMD IAW TASK CARD 72-180-01-01.
-      AMM REV 77, FEB 15/22.
-      WO: 000129
-      INSP 407T1`,
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '3',
-      name: 'Template 3',
-      content: 'Content of Template 3',
-      type: 'ACTIONS',
-      planeType: 'BOEING NG',
-    },
-    {
-      id: '4',
-      name: 'Template 4',
-      content: 'Content of Template 4',
-      type: 'STEPS',
-      planeType: 'A320',
-    },
-    {
-      id: '5',
-      name: 'Template 5',
-      content: 'Content of Template 5',
-      type: 'ACTIONS',
-      planeType: 'BOEING737',
-    },
-    {
-      id: '6',
-      name: 'Template 6',
-      content: 'Content of Template 6',
-      type: 'STEPS',
-      planeType: 'A320',
-    },
-    {
-      id: '7',
-      name: 'Template 7',
-      content: 'Content of Template 7',
-      type: 'ACTIONS',
-      planeType: 'BOEING NG',
-    },
-    // Добавьте другие фейковые шаблоны здесь
-  ];
+  // const fakeTemplates = [
+  //   {
+  //     id: '1',
+  //     name: 'PERFORMED',
+  //     content: `TASK CARD 72-180-01-01
+  //     WAS PFMD. BSI REPORT 291-23 AMM REV 77,
+  //     FEB 15/22 SEE MATERIAL LIST.
+  //     WO: 000129`,
+  //     type: 'ACTIONS',
+  //     planeType: 'BOEING737',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'INSPECTION',
+  //     content: `INSP PFMD IAW TASK CARD 72-180-01-01.
+  //     AMM REV 77, FEB 15/22.
+  //     WO: 000129
+  //     INSP 407T1`,
+  //     type: 'ACTIONS',
+  //     planeType: 'BOEING737',
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'Template 3',
+  //     content: 'Content of Template 3',
+  //     type: 'ACTIONS',
+  //     planeType: 'BOEING NG',
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'Template 4',
+  //     content: 'Content of Template 4',
+  //     type: 'STEPS',
+  //     planeType: 'A320',
+  //   },
+  //   {
+  //     id: '5',
+  //     name: 'Template 5',
+  //     content: 'Content of Template 5',
+  //     type: 'ACTIONS',
+  //     planeType: 'BOEING737',
+  //   },
+  //   {
+  //     id: '6',
+  //     name: 'Template 6',
+  //     content: 'Content of Template 6',
+  //     type: 'STEPS',
+  //     planeType: 'A320',
+  //   },
+  //   {
+  //     id: '7',
+  //     name: 'Template 7',
+  //     content: 'Content of Template 7',
+  //     type: 'ACTIONS',
+  //     planeType: 'BOEING NG',
+  //   },
+  //   // Добавьте другие фейковые шаблоны здесь
+  // ];
   const handleDelete = (file: any) => {
     Modal.confirm({
       title: 'Вы уверены, что хотите удалить этот файл?',
@@ -826,12 +836,84 @@ const WOAdminForm: FC<UserFormProps> = ({
       });
     }
   };
+
+  const options = getDefectTypes(t);
+  const optionsT = getAtaChapters(t);
+
+  const disabledDate = (current: dayjs.Dayjs) => {
+    // Запрещаем выбор будущих дат
+    return current && current > dayjs().endOf('day');
+  };
+
+  const disabledDateTime = () => {
+    const now = dayjs();
+    return {
+      disabledHours: () => {
+        const hours = now.hour();
+        return Array.from({ length: 24 }, (_, i) => i).filter((h) => h > hours);
+      },
+      disabledMinutes: (selectedHour: number) => {
+        if (selectedHour === now.hour()) {
+          return Array.from({ length: 60 }, (_, i) => i).filter(
+            (m) => m > now.minute()
+          );
+        }
+        return [];
+      },
+    };
+  };
+
   return (
     <PermissionGuard requiredPermissions={[Permission.EDIT_PROJECT_TASK]}>
       <ProForm
+        // onFinish={(values) => {
+        //   const performedDate = dayjs(values.performedDate)
+        //     .utc()
+        //     .startOf('minute');
+        //   onSubmit({
+        //     ...values,
+        //     performedDate: performedDate ? performedDate : null,
+        //     userDurations: userDurations ? userDurations : null,
+        //     projectTaskReferenceID: order?.projectTaskReferenceID,
+        //     projectID: order?.projectID,
+        //     projectId: order?.projectId,
+        //     projectItemReferenceID: order?.projectItemReferenceID,
+        //     removeInslallItemsIds: order?.removeInslallItemsIds,
+        //     status: values?.status,
+        //     PHASES: order?.PHASES,
+        //     MPD_REFERENCE: order?.MPD,
+        //     id: order.id,
+        //     // taskId: order.taskId._id,
+        //     _id: order.id,
+        //   });
+
+        // initialValues={{
+        //   performedDate: new Date(),
+        // }}
         onFinish={(values) => {
+          const performedDate = dayjs(values.inspectedDate)
+            .utc()
+            .startOf('minute');
+
+          if (order && order.projectItemType == 'NRC' && !order?.id) {
+            // if (
+            //   userDurations.length === 0 ||
+            //   userDurations.some(
+            //     (duration) => !duration.userID || !duration.duration
+            //   )
+            // ) {
+            //   notification.error({
+            //     message: 'Error',
+            //     description: 'Please fill in all user durations fields.',
+            //   });
+            //   return;
+            // }
+          }
+
           onSubmit({
             ...values,
+            performedDate: performedDate ? performedDate : null,
+            userDurations: userDurations ? userDurations : null,
             projectTaskReferenceID: order?.projectTaskReferenceID,
             projectID: order?.projectID,
             projectId: order?.projectId,
@@ -844,19 +926,7 @@ const WOAdminForm: FC<UserFormProps> = ({
             // taskId: order.taskId._id,
             _id: order.id,
           });
-          // console.log({
-          //   ...values,
-          //   projectTaskReferenceID: order?.projectTaskReferenceID,
-          //   projectID: order?.projectID,
-          //   projectId: order?.projectId,
-          //   projectItemReferenceID: order?.projectItemReferenceID,
-          //   removeInslallItemsIds: order?.removeInslallItemsIds,
-          //   status: order?.status,
-          //   projectWO: order?.projectWO,
-          //   PHASES: order?.PHASES,
-          //   MPD_REFERENCE: order?.MPD,
-          // });
-        }}
+        }} // }}
         disabled={order && order?.status === 'closed'}
         size="small"
         form={form}
@@ -879,13 +949,14 @@ const WOAdminForm: FC<UserFormProps> = ({
       >
         {/* <div className="h-[69vh] "> */}
         <Tabs
+          size="small"
           activeKey={activeTabKey}
           onChange={(key) => setActiveTabKey(key)}
           defaultActiveKey="3"
           type="card"
         >
           <Tabs.TabPane tab={tabTitles['1']} key="1">
-            {order ? (
+            {order && order.projectItemType !== 'NRC' && (
               <div className=" h-[57vh] flex flex-col overflow-auto">
                 <ProFormGroup>
                   <ProFormGroup>
@@ -911,9 +982,14 @@ const WOAdminForm: FC<UserFormProps> = ({
                           { value: 'open', label: t('OPEN') },
                           { value: 'inProgress', label: t('IN PROGRESS') },
                           { value: 'performed', label: t('PERFORMED') },
-                          { value: 'inspect', label: t('INSPECTED') },
-                          { value: 'closed', label: t('CLOSED') },
-                          { value: 'cancelled', label: t('CANCELLED') },
+                          {
+                            value: 'needInspection',
+                            label: t('NEED INSPECTION'),
+                          },
+                          { value: 'nextAction', label: t('NEXT ACTION') },
+                          { value: 'inspect', label: t('INSPECTION') },
+                          { value: 'closed', label: t('CLOSE') },
+                          { value: 'cancelled', label: t('CANCEL') },
                           // { value: 'transfer', label: t('TRANSFER') },
                         ]}
                       />
@@ -941,7 +1017,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                           valueEnum={{
                             RC: {
                               text: t(
-                                'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                                'TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
                               ),
                             },
                             CR_TASK: {
@@ -952,7 +1028,9 @@ const WOAdminForm: FC<UserFormProps> = ({
                             NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
                             MJC: { text: t('MJC (Extended MPD)') },
 
-                            CMJC: { text: t('CMJC (Component maintenance) ') },
+                            CMJC: {
+                              text: t('CMJC (Component maintenance) '),
+                            },
                             FC: { text: t('FC (Fabrication card)') },
                           }}
                           onChange={(value: string) => setTaskType(value)}
@@ -975,7 +1053,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                           valueEnum={{
                             RC: {
                               text: t(
-                                'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                                'TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
                               ),
                             },
                             CR_TASK: {
@@ -986,7 +1064,9 @@ const WOAdminForm: FC<UserFormProps> = ({
                             NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
                             MJC: { text: t('MJC (Extended MPD)') },
 
-                            CMJC: { text: t('CMJC (Component maintenance) ') },
+                            CMJC: {
+                              text: t('CMJC (Component maintenance) '),
+                            },
                             FC: { text: t('FC (Fabrication card)') },
                           }}
                           onChange={(value: string) => setTaskType(value)}
@@ -1331,8 +1411,193 @@ const WOAdminForm: FC<UserFormProps> = ({
                   </ProForm.Item>
                 </ProFormGroup>
               </div>
-            ) : (
-              <Empty />
+            )}
+
+            {order && order.projectItemType == 'NRC' && (
+              <div className=" h-[57vh] flex flex-col overflow-auto">
+                <ProFormGroup labelLayout="inline" direction="horizontal">
+                  <ProFormText
+                    disabled
+                    // disabled={!order?.projectTaskReferenceID}
+                    width={'md'}
+                    name="taskNumber"
+                    label={t('NRC NUMBER')}
+                  />
+                  <ProFormSelect
+                    disabled
+                    showSearch
+                    // initialValue={['PART_PRODUCE']}
+                    name="projectItemType"
+                    label={t('NRC TYPE')}
+                    width="md"
+                    valueEnum={{
+                      RC: {
+                        text: t(
+                          'TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+                        ),
+                      },
+                      CR_TASK: {
+                        text: t('CR TASK (CRIRICAL TASK/DI)'),
+                      },
+
+                      NRC: { text: t('NRC (Defect)') },
+                      NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
+                      MJC: { text: t('MJC (Extended MPD)') },
+
+                      CMJC: {
+                        text: t('CMJC (Component maintenance) '),
+                      },
+                      FC: { text: t('FC (Fabrication card)') },
+                    }}
+                    onChange={(value: string) => setTaskType(value)}
+                  />
+                </ProFormGroup>
+                <ProFormGroup labelLayout="inline" direction="horizontal">
+                  <ProFormTextArea
+                    disabled
+                    // disabled={!order?.projectTaskReferenceID}
+                    width={'md'}
+                    fieldProps={{ style: { resize: 'none' }, rows: 1 }}
+                    name="referenceTask"
+                    label={t('NRC REFERENCE')}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //   },
+                    // ]}
+                  />
+                  <ProFormSelect
+                    // disabled
+                    rules={[{ required: true }]}
+                    name="status"
+                    label={t('NRC STATUS')}
+                    width="sm"
+                    initialValue={'closed'}
+                    valueEnum={{
+                      closed: { text: t('CLOSE'), status: 'SUCCESS' },
+                      inspect: { text: t('INSPECTION'), status: 'inspect' },
+                      nextAction: {
+                        text: t('NEXT ACTION'),
+                        status: 'PROGRESS',
+                      },
+                      inProgress: {
+                        text: t('IN PROGRESS'),
+                        status: 'PROGRESS',
+                      },
+                      test: { text: t('TEST'), status: 'Processing' },
+                      open: { text: t('OPEN'), status: 'Processing' },
+                      cancelled: { text: t('CANCEL'), status: 'Error' },
+                      // draft: { text: t('DRAFT'), status: 'DRAFT' },
+
+                      // needInspection: { text: t('NEED INSPECTION'), status: 'PROGRESS' },
+
+                      // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
+                      // completed: { text: t('COMPLETED'), status: 'Default' },
+                      // performed: { text: t('PERFORMED'), status: 'Default' },
+                    }}
+                  />
+                </ProFormGroup>
+                <ProFormGroup>
+                  <ProFormText
+                    // disabled={!order?.projectTaskReferenceID}
+                    width={'md'}
+                    name="externalNumber"
+                    label={t('EXTERNAL NUMBER')}
+                  />
+                </ProFormGroup>
+                <ProFormGroup>
+                  <ProFormSelect
+                    // disabled
+                    showSearch
+                    rules={[{ required: true }]}
+                    name="ata"
+                    label={t('ATA CHAPTER')}
+                    width="lg"
+                    // initialValue={'draft'}
+                    options={optionsT}
+                  />
+                  <ProFormSelect
+                    rules={[{ required: true }]}
+                    showSearch
+                    name="zonesID"
+                    // mode={'multiple'}
+                    label={t('ZONE')}
+                    width="sm"
+                    valueEnum={zonesValueEnum}
+                    // disabled={!acTypeID}
+                  />
+                </ProFormGroup>
+                <ProFormTextArea
+                  // width={'xl'}
+                  name="taskDescription"
+                  label={t('WORK STEP')}
+                  fieldProps={{ style: { resize: 'block' }, rows: 4 }}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                ></ProFormTextArea>
+                <ProFormGroup>
+                  <ProFormSelect
+                    width={'md'}
+                    mode="multiple"
+                    name="skillCodeID"
+                    label={t('SKILL')}
+                    options={groupSlills}
+                    rules={[{ required: true }]}
+                  />
+                  <ProFormSelect
+                    showSearch
+                    width={'md'}
+                    // mode="multiple"
+                    name="defectCodeID"
+                    label={t('DEFECT TYPE')}
+                    options={options}
+                    rules={[{ required: true }]}
+                  />
+                </ProFormGroup>
+                {order && !order.id && (
+                  <ProFormGroup title="PERFORMED">
+                    <ProFormGroup>
+                      <ProFormDateTimePicker
+                        // disabled
+                        width={'sm'}
+                        name="performedDate"
+                        label={`${t('DATE & TIME')}`}
+                        // rules={[
+                        //   {
+                        //     required: true,
+                        //     message: t('Please select date and time'),
+                        //   },
+                        // ]}
+                        fieldProps={{
+                          format: 'YYYY-MM-DD HH:mm', // формат без секунд
+                          showTime: {
+                            defaultValue: dayjs('00:00', 'HH:mm'),
+                            format: 'HH:mm',
+                            disabledHours: disabledDateTime().disabledHours,
+                            disabledMinutes: disabledDateTime().disabledMinutes,
+                          },
+                          defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
+                          disabledDate,
+                        }}
+                      />
+                    </ProFormGroup>
+                    {order && !order.id && (
+                      <div className="disabled">
+                        <UserTaskAllocation
+                          isTime={true}
+                          isSingle={true}
+                          users={users}
+                          initialTaskAllocations={[]}
+                          onTaskAllocationsChange={setUserDurations}
+                        />
+                      </div>
+                    )}
+                  </ProFormGroup>
+                )}
+              </div>
             )}
           </Tabs.TabPane>
           <Tabs.TabPane tab={tabTitles['3']} key="3">
@@ -1340,6 +1605,7 @@ const WOAdminForm: FC<UserFormProps> = ({
             (order?.id && order?.projectItemReferenceID) ? (
               <div className=" h-[60vh] flex flex-col overflow-auto pb-3">
                 <StepContainer
+                  task={order}
                   steps={stepsToRender || []}
                   onAddStep={handleAddStep}
                   onDeleteStep={handleDeleteStep}

@@ -391,7 +391,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     status: 'SUCCESS',
                   },
                   // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
-                  CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+                  CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
                   // MISSING: { text: t('MISSING'), status: 'Error' },
                   OPEN: { text: t('OPEN'), status: 'Processing' },
                   // OPEN_AND_TRANSFER: {

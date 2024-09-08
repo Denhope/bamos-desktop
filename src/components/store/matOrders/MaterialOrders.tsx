@@ -85,8 +85,8 @@ const MaterialOrdersList: FC<MaterialOrdersListPrors> = ({
       valueEnum: {
         issued: { text: t('ISSUED'), status: 'Processing' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
-        cancelled: { text: t('CANCELLED'), status: 'Error' },
+        closed: { text: t('CLOSE'), status: 'Default' },
+        cancelled: { text: t('CANCEL'), status: 'Error' },
         partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
         transfer: { text: t('TRANSFER'), status: 'Processing' },
         completed: { text: t('COMPLETED'), status: 'SUCCESS' },

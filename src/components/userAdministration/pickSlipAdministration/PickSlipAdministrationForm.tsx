@@ -407,7 +407,7 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
                   { value: 'issued', label: t('ISSUED') },
                   { value: 'onQuatation', label: t('QUATATION') },
                   { value: 'onShort', label: t('ON SHORT') },
-                  { value: 'closed', label: t('CLOSED') },
+                  { value: 'closed', label: t('CLOSE') },
                   { value: 'partlyCanceled', label: t('PARTLY CANCELLED') },
 
                   { value: 'canceled', label: t('CANCELED') },

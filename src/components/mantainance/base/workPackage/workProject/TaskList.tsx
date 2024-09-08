@@ -889,7 +889,7 @@ const GroupTaskList: FC<IGroupTaskListPrors> = ({
       valueEnum: {
         отложен: { text: t('OPEN'), status: 'Default' },
         inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
-        closed: { text: t('CLOSED'), status: 'Success' },
+        closed: { text: t('CLOSE'), status: 'Success' },
         canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Select, Input, Typography, Button, AutoComplete, Space } from 'antd';
+import {
+  Select,
+  Input,
+  Typography,
+  Button,
+  AutoComplete,
+  Space,
+  notification,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
@@ -12,6 +20,7 @@ const TemplateSelector: React.FC<{
     code: string;
     type: string;
     acTypeID: { _id: string; code: string; name: string }[];
+    remarks: string; // Добавляем поле remarks
   }[];
   onSelectTemplate: (templateId: string, description: string) => void;
 }> = ({ templates, onSelectTemplate }) => {
@@ -23,6 +32,15 @@ const TemplateSelector: React.FC<{
 
   const handleTemplateChange = (value: string) => {
     setSelectedTemplate(value);
+    const selectedTemplateData = templates?.find((t) => t.id === value);
+    console.log(selectedTemplateData);
+    if (selectedTemplateData && selectedTemplateData.remarks) {
+      notification.info({
+        message: t('TEMPLATE SELECTED'),
+        description: selectedTemplateData.remarks,
+        duration: 5,
+      });
+    }
   };
 
   const handlePreviewHeightChange = (
@@ -113,7 +131,7 @@ const TemplateSelector: React.FC<{
                 : ''
             }
             onChange={handlePreviewHeightChange}
-            style={{ width: '100%', resize: 'none' }}
+            style={{ width: '100%' }}
           />
           <div
             style={{
@@ -128,8 +146,8 @@ const TemplateSelector: React.FC<{
             }}
           ></div>
         </div>
-        <Button type="primary" onClick={applyFilters}>
-          {t('APPLY')}
+        <Button type="dashed" onClick={applyFilters}>
+          {t('APPLY TEMPLATE')}
         </Button>
       </Space>
     </div>

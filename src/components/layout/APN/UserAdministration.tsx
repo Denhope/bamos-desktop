@@ -38,7 +38,8 @@ import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministra
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+
 import RequirementsTypesPanel from '@/components/userAdministration/requirementsTypes/RequirementsTypesPanel';
 import ProjectTypePanel from '@/components/userAdministration/projectTypesAdministaration/ProjectTypePanel';
 import AdminPanelSkills from '@/components/userAdministration/skillAdminisrtation/AdminPanelSkills';
@@ -47,6 +48,7 @@ import { useGlobalState } from '@/components/woAdministration/GlobalStateContext
 import CertificatesTypesPanel from '@/components/userAdministration/certificatesTypes/CertificatesTypesPanel';
 import OrderTextPanel from '@/components/userAdministration/orderTextAdministaration/OrderTextPanel';
 import ActionTemplateTextPanel from '@/components/views/actionTemplateAministaration/ActionTemplateTextPanel';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -418,39 +420,44 @@ const UserAdministration: FC = () => {
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={360}
+        width={460}
         collapsible
         collapsed={collapsed}
         onCollapse={(value: boolean | ((prevState: boolean) => boolean)) =>
           setCollapsed(value)
         }
       >
-        <Menu
-          theme="light"
-          mode="inline"
-          items={items}
-          onClick={onMenuClick}
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-        />
-
-        {activeKey === RouteNames.VENDORS && !collapsed && (
-          <VendorFilteredForm
-            onSubmit={function (values: VendorFilteredFormValues): void {
-              setVendorFormValues(values);
-            }}
+        <div className="h-[82vh] overflow-auto flex flex-col ">
+          <Menu
+            theme="light"
+            mode="inline"
+            items={items}
+            onClick={onMenuClick}
           />
-        )}
-        {activeKey === RouteNames.AC_TASKS && !collapsed && (
-          <AdminTaskFilterdForm
-            onSubmit={function (values: any): void {
-              setTasksFormValues(values);
-            }}
-          />
-        )}
+          {activeKey === RouteNames.VENDORS && !collapsed && (
+            <VendorFilteredForm
+              onSubmit={function (values: VendorFilteredFormValues): void {
+                setVendorFormValues(values);
+              }}
+            />
+          )}
+          {activeKey === RouteNames.AC_TASKS && !collapsed && (
+            <AdminTaskFilterdForm
+              onSubmit={function (values: any): void {
+                setTasksFormValues(values);
+                console.log(values);
+                // refetchTasks();
+              }}
+              formKey={'adminTaskForm'}
+            />
+          )}
+        </div>
       </Sider>
       <Content className="pl-4">
         <Tabs
+          // style={{
+          //   width: '97%',
+          // }}
           className="mx-auto"
           size="small"
           hideAdd

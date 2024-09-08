@@ -3,7 +3,8 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import rootReducer from './rootReducer';
 import { projectTypeApi } from '@/components/projectTypeAdministration/projectTypeApi';
-import { acApi } from '@/features/ACAdministration/acApi';
+// import { acApi } from '@/features/ACAdministration/acApi';
+import { acApi } from '@/features/acAdministration/acApi';
 import { mpdCodeApi } from '@/features/MPDAdministration/mpdCodesApi';
 import { acTypeApi } from '@/features/acTypeAdministration/acTypeApi';
 import { accessCodeApi } from '@/features/accessAdministration/accessApi';
@@ -54,6 +55,9 @@ const persistConfig = {
     'columnWidthrReq',
     'form',
     'columns',
+    'tabs',
+    'menuItems',
+    'cardPosition',
   ], // Добавьте эту строку, чтобы указать, какие части состояния нужно сохранять
 };
 

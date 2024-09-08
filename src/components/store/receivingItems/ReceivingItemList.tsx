@@ -45,8 +45,8 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
     onShort: t('ON SHORT'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
     onOrder: t('ISSUED'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
@@ -424,7 +424,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       onFilter: true,
       valueEnum: {
         RECEIVED: { text: t('RECEIVED'), status: 'SUCCESS' },
-        CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+        CANCELLED: { text: t('CANCEL'), status: 'Error' },
       },
 
       dataIndex: 'state',

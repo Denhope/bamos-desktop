@@ -489,7 +489,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
           width="sm"
           valueEnum={{
             '/NEW': t('NEW'),
-            '/INSPECTED': t('INSPECTED'),
+            '/INSPECTION': t('INSPECTION'),
             '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
             '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
             '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),

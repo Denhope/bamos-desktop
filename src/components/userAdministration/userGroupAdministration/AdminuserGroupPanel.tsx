@@ -99,13 +99,13 @@ const AdminuserGroupPanel: React.FC<AdminPanelProps> = () => {
 
       <div className="  flex gap-4 justify-between">
         <Split initialPrimarySize="20%" splitterSize="20px">
-          <div className="h-[74vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
+          <div className="h-[82vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
             <UserGroupTree
               usersGroup={usersGroup || []}
               onUsersGroupSelect={handleEdit}
             />
           </div>
-          <div className="h-[74vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  overflow-y-auto ">
+          <div className="h-[82vh] bg-white px-4 rounded-md brequierement-gray-400 p-3  overflow-y-auto ">
             <UserGroupForm
               userGroup={editingUserGroup || undefined}
               onSubmit={handleSubmit}

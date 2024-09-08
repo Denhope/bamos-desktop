@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
@@ -31,6 +31,7 @@ import {
 } from '@/features/projectItemWO/projectItemWOApi';
 import {
   ProFormDatePicker,
+  ProFormDigit,
   ProFormSelect,
   ProFormTextArea,
 } from '@ant-design/pro-components';
@@ -52,8 +53,8 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import ActionsComponent from './ActionsComponent';
 import { useGetProjectItemsQuery } from '@/features/projectItemAdministration/projectItemApi';
@@ -124,12 +125,12 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     onSubmit(newUser);
   };
   const valueEnum: ValueEnumType = {
-    inspect: t('INSPECTED'),
+    inspect: t('INSPECTION'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
-    cancelled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
+    cancelled: t('CANCEL'),
     inProgress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
@@ -142,7 +143,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     progress: '',
   };
   const valueEnumTask: ValueEnumTypeTask = {
-    RC: t('RC'),
+    RC: t('TC'),
     CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
@@ -784,10 +785,10 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 valueEnum={{
                   DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
                   OPEN: { text: t('OPEN'), status: 'Processing' },
-                  inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+                  inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
                   COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-                  CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-                  CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+                  CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
+                  CANCELLED: { text: t('CANCEL'), status: 'Error' },
                 }}
               />
               <ProFormSelect
@@ -901,6 +902,11 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 valueEnum={certificatesValueEnum}
                 // onChange={(value: any) => setSelectedAcTypeID(value)}
               />
+              <ProFormDigit
+                width={'xl'}
+                name="currentMaxTaskWONumber"
+                label={t('WO Card Seq')}
+              />
               <ProFormTextArea
                 width={'xl'}
                 fieldProps={{ style: { resize: 'none' } }}
@@ -932,6 +938,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         <Tabs.TabPane tab={t('DOCUMENTS')} key="7">
           <div className=" h-[57vh] flex flex-col overflow-auto">
             <Documents
+              wo={project}
               onDocumentsChange={handleDocumentsChange}
               documents={project?.documents ? project?.documents : documents}
             />
@@ -952,7 +959,11 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           <div className="h-[60vh] bg-white px-4  rounded-md border-gray-400 gap-2 flex flex-col">
             <Col style={{ textAlign: 'right' }}>
               <Button
-                disabled={!selectedKeys.length}
+                disabled={
+                  !selectedKeys.length ||
+                  project.status == 'CLOSED' ||
+                  project.status == 'COMPLETED'
+                }
                 size="small"
                 icon={<MinusSquareOutlined />}
                 onClick={() => handleDeleteTrace(selectedKeys)}
@@ -961,6 +972,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               </Button>
             </Col>
             <TaskList
+              wo={project}
               isFilesVisiable={false}
               isLoading={isLoading || isFetching}
               pagination={false}

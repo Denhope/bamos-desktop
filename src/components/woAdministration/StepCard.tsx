@@ -1,4 +1,4 @@
-// StepCard.tsx
+// @ts-nocheck
 import { useGlobalState } from './GlobalStateContext';
 import React, { useEffect, useState } from 'react';
 import {
@@ -10,7 +10,7 @@ import {
   notification,
   Checkbox,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, SwapOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import ActionForm from './ActionForm';
 import ActionList from './ActionListItem';
@@ -38,10 +38,17 @@ import { useGetGroupsUserQuery } from '@/features/userAdministration/userGroupAp
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
+import { ipcRenderer } from 'electron';
+import ActionInspection from './ActionInspection';
+import ActionClosed from './ActionClosed';
+import ActionChangeForm from './ActionChangeForm';
+import ComponentChangeActionList from './ComponentChangeActionList';
+import EditForm from './EditForm';
 
 interface Props {
   step: IStep;
   selectedStepItems: string[];
+  task?: any;
   handleStepClick: (
     event: React.MouseEvent<HTMLDivElement>,
     step: IStep
@@ -54,9 +61,12 @@ const StepCard: React.FC<Props> = ({
   selectedStepItems,
   handleStepClick,
   handleStepSelect,
+  task,
 }) => {
   const [visibleActionEdit, setVisibleActionEdit] = useState(false);
   const [visibleActionAdd, setVisibleActionAdd] = useState(false);
+  const [visibleActionChange, setVisibleActionChange] = useState(false);
+  const [visibleActionEditChange, setVisibleActionEditChange] = useState(false);
   const [currentAction, setCurrentAction] = useState<Action | null>(null);
   const [visibleStepEdit, setVisibleStepEdit] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // New state to track editing status
@@ -121,6 +131,30 @@ const StepCard: React.FC<Props> = ({
     }
   };
 
+  const handleComponentChangeAddClick = async () => {
+    console.log('Action add clicked');
+    const stepId = step.id;
+    try {
+      const response = await refetchEditStatus().unwrap();
+      if (response && response.isEditing && response.editingUser !== USER_ID) {
+        notification.warning({
+          message: t('STEP EDITING'),
+          description: `${t('Step is being edited by')} ${
+            response.editingUser
+          }`,
+        });
+      } else {
+        stepId && (await setStepEditStatus({ stepId, isEditing: true }));
+        setVisibleActionChange(true);
+      }
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Error checking step edit status.'),
+      });
+    }
+  };
+
   const [addAction] = useAddActionMutation();
   const [editAction] = useUpdateActionMutation();
   const [deleteAction] = useDeleteActionMutation();
@@ -134,36 +168,222 @@ const StepCard: React.FC<Props> = ({
   );
 
   const { setCurrentTime } = useGlobalState();
-  const handleActionSave = async (action: Action) => {
+  const handleActionSaveChance = async (data: any) => {
+    if (!data || !data.removeAction) {
+      notification.error({
+        message: t('VALIDATION ERROR'),
+        description: t('Removal action is required.'),
+      });
+      return;
+    }
+    if (
+      !data.removeAction.userDurations ||
+      data.removeAction.userDurations.length === 0
+    ) {
+      notification.error({
+        message: t('VALIDATION ERROR'),
+        description: t('Removal action must have at least one user duration.'),
+      });
+      return;
+    }
     try {
-      if (action) {
+      await addAction({
+        componentAction: data,
+        isComponentChangeAction: true,
+        stepId: step?.id || '',
+        projectItemID: step?.projectItemID,
+        projectId: step?.projectId,
+        projectTaskID: step?.projectTaskID,
+        // status: data.status,
+      }).unwrap();
+      notification.success({
+        message: t('ACTION ADDED'),
+        description: t('ACTION SUCCESSFULLY ADDED'),
+      });
+
+      setVisibleActionChange(false);
+      setCurrentAction(null);
+      // refetch(); // Оставляем только этот запрос
+      // refetchTasks();
+      // setCurrentTime(Date.now());
+
+      try {
+        await addBooking({
+          booking: { voucherModel: 'ADD_ACTION', data: data },
+        }).unwrap();
+      } catch (bookingError) {
+        console.error('Error adding perform booking:', bookingError);
+        notification.error({
+          message: t('ERROR SAVING'),
+          description: t('ERROR SAVING PERFORM BOOKING'),
+        });
+        return;
+      }
+    } catch (actionError) {
+      console.error('Error adding  action:', actionError);
+      notification.error({
+        message: t('ERROR SAVING'),
+        description: t('ERROR SAVING COMPONENT ACTION'),
+      });
+      return;
+    }
+  };
+  const handleActionSave = async (data: any) => {
+    try {
+      if (!data || !data.performAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t('Perform action is required.'),
+        });
+        return;
+      }
+
+      if (
+        !data.performAction.userDurations ||
+        data.performAction.userDurations.length === 0
+      ) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Perform action must have at least one user duration.'
+          ),
+        });
+        return;
+      }
+
+      const isValidPerformAction = data.performAction.userDurations.every(
+        (item) => item.userID && item.duration !== 0
+      );
+
+      if (!isValidPerformAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Please ensure that all userIDs are filled and durations are not zero in Perform durations.'
+          ),
+        });
+        return;
+      }
+
+      if (data.inspectedAction) {
+        if (
+          !data.inspectedAction.userDurations ||
+          data.inspectedAction.userDurations.length === 0
+        ) {
+          notification.error({
+            message: t('VALIDATION ERROR'),
+            description: t(
+              'Inspected action must have at least one user duration.'
+            ),
+          });
+          return;
+        }
+
+        const isValidInspectedAction = data.inspectedAction.userDurations.every(
+          (item) => item.userID && item.duration !== 0
+        );
+
+        if (!isValidInspectedAction) {
+          notification.error({
+            message: t('VALIDATION ERROR'),
+            description: t(
+              'Please ensure that all userIDs are filled and durations are not zero in Inspect durations.'
+            ),
+          });
+          return;
+        }
+      }
+
+      try {
         await addAction({
-          action,
+          action: data.performAction,
           stepId: step?.id || '',
           projectItemID: step?.projectItemID,
           projectId: step?.projectId,
           projectTaskID: step?.projectTaskID,
+          status: data.status,
         });
 
-        notification.success({
-          message: t('ACTION ADDED'),
-          description: t('ACTION SUCCESSFULLY ADDED'),
+        setVisibleActionAdd(false);
+        setCurrentTime(Date.now());
+        setCurrentAction(null);
+        // refetch(); // Оставляем только этот запрос
+        // refetchTasks();
+      } catch (actionError) {
+        console.error('Error adding perform action:', actionError);
+        notification.error({
+          message: t('ERROR SAVING'),
+          description: t('ERROR SAVING PERFORM ACTION'),
         });
-        // setCurrentTime(Date.now());
-
-        await addBooking({
-          booking: { voucherModel: 'ADD_ACTION', data: action },
-        }).unwrap();
+        return;
       }
+
+      if (data.inspectedAction) {
+        try {
+          await addAction({
+            action: data.inspectedAction,
+            stepId: step?.id || '',
+            projectItemID: step?.projectItemID,
+            projectId: step?.projectId,
+            projectTaskID: step?.projectTaskID,
+            status: data.status,
+          });
+
+          setVisibleActionAdd(false);
+          setCurrentAction(null);
+          // refetch(); // Оставляем только этот запрос
+          // refetchTasks();
+          // setCurrentTime(Date.now());
+        } catch (actionError) {
+          console.error('Error adding inspect action:', actionError);
+          notification.error({
+            message: t('ERROR SAVING'),
+            description: t('ERROR SAVING INSPECT ACTION'),
+          });
+          return;
+        }
+      }
+
+      notification.success({
+        message: t('ACTION ADDED'),
+        description: t('ACTION SUCCESSFULLY ADDED'),
+      });
+
+      try {
+        await addBooking({
+          booking: { voucherModel: 'ADD_ACTION', data: data.performAction },
+        });
+      } catch (bookingError) {
+        console.error('Error adding perform booking:', bookingError);
+        notification.error({
+          message: t('ERROR SAVING'),
+          description: t('ERROR SAVING PERFORM BOOKING'),
+        });
+        return;
+      }
+
+      if (data.inspectedAction) {
+        try {
+          await addBooking({
+            booking: { voucherModel: 'ADD_ACTION', data: data.inspectedAction },
+          });
+        } catch (bookingError) {
+          console.error('Error adding inspect booking:', bookingError);
+          notification.error({
+            message: t('ERROR SAVING'),
+            description: t('ERROR SAVING INSPECT BOOKING'),
+          });
+          return;
+        }
+      }
+
       setVisibleActionEdit(false);
       await setStepEditStatus({
         stepId: step.id || '',
         isEditing: false,
       });
-      refetch(); // Оставляем только этот запрос
-      // refetchTasks();
-      // setCurrentTime(Date.now());
     } catch (error) {
+      console.error('Unexpected error:', error);
       notification.error({
         message: t('ERROR SAVING'),
         description: t('ERROR SAVING ACTION '),
@@ -173,38 +393,286 @@ const StepCard: React.FC<Props> = ({
 
   const [addBooking] = useAddBookingMutation({});
 
-  const handleActionEditSave = async (updateAction: Action) => {
+  const handleActionEditSave = async (updateAction: any) => {
     try {
-      if (updateAction) {
-        await editAction({
-          action: {
-            id: updateAction.id,
-            type: updateAction.type,
-            headline: updateAction.headline,
-            description: updateAction.description,
-            createDate: updateAction.createDate,
-            userDurations: updateAction.userDurations,
-          },
+      if (!updateAction || !updateAction.performAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t('Perform action is required.'),
         });
-
-        await addBooking({
-          booking: { voucherModel: 'EDIT_ACTION', data: updateAction },
-        });
-        setCurrentAction(null);
-        notification.success({
-          message: t('ACTION EDIT'),
-          description: t('ACTION SUCCESSFULLY EDIT.'),
-        });
+        return;
       }
+
+      if (
+        !updateAction.performAction.userDurations ||
+        updateAction.performAction.userDurations.length === 0
+      ) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Perform action must have at least one user duration.'
+          ),
+        });
+        return;
+      }
+
+      const isValidPerformAction =
+        updateAction.performAction.userDurations.every(
+          (item) => item.userID && item.duration !== 0
+        );
+
+      if (!isValidPerformAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Please ensure that all userIDs are filled and durations are not zero in Perform durations.'
+          ),
+        });
+        return;
+      }
+
+      await editAction({
+        action: {
+          id: updateAction.performAction.id,
+          type: currentAction.type,
+          headline: updateAction.performAction.headline,
+          description: updateAction.performAction.description,
+          createDate: updateAction.performAction.createDate,
+          userDurations: updateAction.performAction.userDurations,
+          status: updateAction.status,
+        },
+      });
+
+      await addBooking({
+        booking: { voucherModel: 'EDIT_ACTION', data: updateAction },
+      });
+
       setVisibleActionEdit(false);
+      setCurrentTime(Date.now());
       setCurrentAction(null);
       step?.id &&
         (await setStepEditStatus({
           stepId: step?.id,
           isEditing: false,
         }));
-      refetch();
+      notification.success({
+        message: t('ACTION EDIT'),
+        description: t('ACTION SUCCESSFULLY EDIT.'),
+      });
+      // refetch();
+    } catch (error) {
+      notification.error({
+        message: t('ERROR EDIT'),
+        description: t('ERROR EDIT ACTION.'),
+      });
+      await setStepEditStatus({
+        stepId: updateAction?.projectStepId,
+        isEditing: false,
+      });
+      // refetch();
+    }
+  };
+
+  const handleActionEditInspectionSave = async (updateAction: any) => {
+    try {
+      if (!updateAction || !updateAction.inspectedAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t('Perform action is required.'),
+        });
+        return;
+      }
+
+      if (
+        !updateAction.inspectedAction.userDurations ||
+        updateAction.inspectedAction.userDurations.length === 0
+      ) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Perform action must have at least one user duration.'
+          ),
+        });
+        return;
+      }
+
+      const isValidPerformAction =
+        updateAction.inspectedAction.userDurations.every(
+          (item: any) => item.userID && item.duration !== 0
+        );
+
+      if (!isValidPerformAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Please ensure that all userIDs are filled and durations are not zero in Perform durations.'
+          ),
+        });
+        return;
+      }
+
+      await editAction({
+        action: {
+          id: updateAction.inspectedAction.id,
+          type: currentAction.type,
+          headline: updateAction.inspectedAction.headline,
+          description: updateAction.inspectedAction.description,
+          createDate: updateAction.inspectedAction.createDate,
+          userDurations: updateAction.inspectedAction.userDurations,
+          status: updateAction.status,
+        },
+      });
+
+      await addBooking({
+        booking: { voucherModel: 'EDIT_ACTION', data: updateAction },
+      });
+
+      notification.success({
+        message: t('ACTION EDIT'),
+        description: t('ACTION SUCCESSFULLY EDIT.'),
+      });
+
+      setVisibleActionEdit(false);
+      step?.id &&
+        (await setStepEditStatus({
+          stepId: step?.id,
+          isEditing: false,
+        }));
+      setCurrentTime(Date.now());
+      setCurrentAction(null);
+      console.log('stepId:', step);
+
+      // refetch();
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: t('ERROR EDIT'),
+        description: t('ERROR EDIT ACTION.'),
+      });
+      // await setStepEditStatus({
+      //   stepId: updateAction?.projectStepId,
+      //   isEditing: false,
+      // }).unwrap();
+
+      // refetch();
+    }
+  };
+
+  const handleActionEditChangeSave = async (updateAction: any) => {
+    // console.log(updateAction);
+    if (!updateAction || !updateAction.componentChange.removeAction) {
+      notification.error({
+        message: t('VALIDATION ERROR'),
+        description: t('Removal action is required.'),
+      });
+      return;
+    }
+    if (
+      !updateAction.componentChange.removeAction.userDurations ||
+      updateAction.componentChange.removeAction.userDurations.length === 0
+    ) {
+      notification.error({
+        message: t('VALIDATION ERROR'),
+        description: t('Removal action must have at least one user duration.'),
+      });
+      return;
+    }
+    console.log(updateAction);
+    await editAction({
+      action: {
+        id: updateAction._id,
+
+        ...updateAction,
+        // status: updateAction.status,
+      },
+    });
+    await addBooking({
+      booking: { voucherModel: 'EDIT_ACTION', data: updateAction },
+    });
+    notification.success({
+      message: t('ACTION EDIT'),
+      description: t('ACTION SUCCESSFULLY EDIT.'),
+    });
+    setVisibleActionChange(false);
+    setCurrentTime(Date.now());
+    setCurrentAction(null);
+
+    step?.id &&
+      (await setStepEditStatus({
+        stepId: step?.id,
+        isEditing: false,
+      }));
+    // refetch();
+  };
+
+  const handleActionEditClosedSave = async (updateAction: any) => {
+    try {
+      if (!updateAction || !updateAction.closedAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t('Perform action is required.'),
+        });
+        return;
+      }
+
+      if (
+        !updateAction.closedAction.userDurations ||
+        updateAction.closedAction.userDurations.length === 0
+      ) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Perform action must have at least one user duration.'
+          ),
+        });
+        return;
+      }
+
+      const isValidPerformAction =
+        updateAction.closedAction.userDurations.every(
+          (item) => item.userID && item.duration !== 0
+        );
+
+      if (!isValidPerformAction) {
+        notification.error({
+          message: t('VALIDATION ERROR'),
+          description: t(
+            'Please ensure that all userIDs are filled and durations are not zero in Perform durations.'
+          ),
+        });
+        return;
+      }
+
+      await editAction({
+        action: {
+          id: updateAction.closedAction.id,
+          type: currentAction.type,
+          headline: updateAction.closedAction.headline,
+          description: updateAction.closedAction.description,
+          createDate: updateAction.closedAction.createDate,
+          userDurations: updateAction.closedAction.userDurations,
+          status: updateAction.status,
+        },
+      });
+
+      await addBooking({
+        booking: { voucherModel: 'EDIT_ACTION', data: updateAction },
+      });
+
+      notification.success({
+        message: t('ACTION EDIT'),
+        description: t('ACTION SUCCESSFULLY EDIT.'),
+      });
+
+      setVisibleActionEdit(false);
+      setCurrentAction(null);
       // setCurrentTime(Date.now());
+      step?.id &&
+        (await setStepEditStatus({
+          stepId: step?.id,
+          isEditing: false,
+        }));
+      // refetch();
     } catch (error) {
       notification.error({
         message: t('ERROR EDIT'),
@@ -215,20 +683,31 @@ const StepCard: React.FC<Props> = ({
         isEditing: false,
       }).unwrap();
 
-      refetch();
+      // refetch();
     }
   };
 
-  const handleNewActionSave = (newAction: Action) => {
-    setVisibleActionAdd(false);
-    handleActionSave(newAction);
+  const handleNewActionSave = (data: any) => {
+    handleActionSave(data);
     // console.log(newAction);
-    setCurrentAction(null);
+    // setVisibleActionAdd(false);
+    // setCurrentAction(null);
+    // refetch(); // Оставляем только этот запрос
+    // refetchTasks();
+    // setCurrentTime(Date.now());
+  };
+  const handleNewActionSaveChange = (data: any) => {
+    handleActionSaveChance(data);
+    // console.log(newAction);
+    // setVisibleActionAdd(false);
+    // setCurrentAction(null);
+    // refetch(); // Оставляем только этот запрос
+    // refetchTasks();
+    // setCurrentTime(Date.now());
   };
 
   const handleStepSave = async (updatedStep: IStep) => {
     try {
-      setVisibleStepEdit(false);
       await updateStep({
         step: {
           id: updatedStep.id,
@@ -238,18 +717,23 @@ const StepCard: React.FC<Props> = ({
           stepType: updatedStep.stepType,
           skillID: updatedStep.skillID,
           userGroupID: updatedStep.userGroupID,
+          userDurations: updatedStep.userDurations,
+          createDate: updatedStep.createDate,
+          defectCodeID: updatedStep.defectCodeID,
+          taskStatus: updatedStep.taskStatus,
         },
       });
+      setVisibleStepEdit(false);
 
-      refetch();
-      await addBooking({
-        booking: { voucherModel: 'EDIT_STEP', data: updatedStep },
-      }).unwrap();
-
+      // refetch();
       notification.success({
         message: t('STEP SAVED'),
         description: 'The step has been successfully saved.',
       });
+      await addBooking({
+        booking: { voucherModel: 'EDIT_STEP', data: updatedStep },
+      });
+      setCurrentTime(Date.now());
     } catch (error) {
       notification.error({
         message: t('Error Saving Step'),
@@ -268,6 +752,8 @@ const StepCard: React.FC<Props> = ({
           message: t('ACTION DELETE'),
           description: t('THE ACTION HAS BEEN SUCCESSFULLY DELETED.'),
         });
+        // refetch();
+        // setCurrentTime(Date.now());
       } else {
         // Обработка случая, когда actionId не существует
       }
@@ -282,11 +768,12 @@ const StepCard: React.FC<Props> = ({
     }
     setVisibleActionEdit(false);
 
-    refetch();
+    // refetch();
   };
 
   const handleStepEditClick = async () => {
     const stepId = step.id;
+    // openNewWindow(StepEditModal, { step: stepData, onSave: handleSave });
     try {
       // Wait for the refetchEditStatus to complete
       const response = await refetchEditStatus().unwrap();
@@ -330,8 +817,8 @@ const StepCard: React.FC<Props> = ({
   };
 
   const handleActionEditCancel = async () => {
-    console.log('Action edit cancelled');
-    const stepId = step.id;
+    const stepId = step.id || step._id;
+    console.log('stepId:', stepId);
     try {
       setVisibleActionEdit(false);
       stepId && (await setStepEditStatus({ stepId, isEditing: false }));
@@ -350,6 +837,36 @@ const StepCard: React.FC<Props> = ({
     const stepId = step.id;
     try {
       setVisibleActionAdd(false);
+      // setVisibleActionChange(false);
+      stepId && (await setStepEditStatus({ stepId, isEditing: false }));
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Error updating step edit status.'),
+      });
+    }
+  };
+  const handleActionAddCancelChange = async () => {
+    console.log('Action edit cancelled');
+    const stepId = step.id;
+    try {
+      // setVisibleActionAdd(false);
+      setVisibleActionChange(false);
+      stepId && (await setStepEditStatus({ stepId, isEditing: false }));
+    } catch (error) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Error updating step edit status.'),
+      });
+    }
+  };
+
+  const handleActionAddCancelChangeEdit = async () => {
+    console.log('Action edit cancelled');
+    const stepId = step.id;
+    try {
+      // setVisibleActionAdd(false);
+      setVisibleActionEditChange(false);
       stepId && (await setStepEditStatus({ stepId, isEditing: false }));
     } catch (error) {
       notification.error({
@@ -364,14 +881,25 @@ const StepCard: React.FC<Props> = ({
 
   const isSelected = step.id && selectedStepItems.includes(step.id);
   const { t } = useTranslation();
-  useEffect(() => {
-    if (visibleStepEdit) {
-      refetchEditStatus();
-    }
-  }, [visibleStepEdit]);
+  // useEffect(() => {
+  //   if (visibleStepEdit) {
+  //     refetchEditStatus();
+  //     // <div>
+  //     //   <button onClick={openNewWindow}>Open New Window</button>
+  //     // </div>;
+  //   }
+  // }, [visibleStepEdit]);
+
+  // const openNewWindow = () => {
+  //   ipcRenderer.send('open-new-window', {
+  //     htmlPath: 'path_to_your_html_file',
+  //     data: { message: 'Hello from the main window!' },
+  //   });
+  // };
 
   return (
     <div className="my-2">
+      {/* <Button onClick={openNewWindow}>Open New Window</Button> */}
       <Card
         key={step.id}
         bodyStyle={{ padding: '5px 10px' }}
@@ -401,8 +929,14 @@ const StepCard: React.FC<Props> = ({
               </div>
               <Space className="ml-auto font-bold" style={{ fontSize: '12px' }}>
                 <div>{t('added by')}</div>
-                <Tag color="#778D45">{step.createUserID?.singNumber}</Tag>
-                <Tag color="#778D45">{step.createUserID?.name}</Tag>
+                <Tag color="#778D45">
+                  {step.createUserID?.organizationAuthorization ||
+                    step.createUserID?.singNumber}
+                </Tag>
+                <Tag color="#778D45">
+                  {step.createUserID?.firstNameEnglish?.toUpperCase()}{' '}
+                  {step.createUserID?.lastNameEnglish?.toUpperCase()}
+                </Tag>
               </Space>
               <Space className="font-bold" style={{ fontSize: '12px' }}>
                 {moment(step.createDate).format('YYYY-MM-DD HH:mm')}
@@ -410,10 +944,20 @@ const StepCard: React.FC<Props> = ({
             </Space>
 
             <>
-              <div className="font-bold" style={{ fontSize: '14px' }}>
+              {/* <div className="font-bold" style={{ fontSize: '14px' }}>
                 {`${t('STEP ID')} ${step.stepIdentificator}`}
-              </div>
-              <Popover content={t('ADD NEW ACTION')}>
+              </div> */}
+              <Popover content={t('COMPONENT CHANGE')}>
+                <Button
+                  size="small"
+                  danger
+                  // type=""
+                  // shape=""
+                  icon={<SwapOutlined />}
+                  onClick={handleComponentChangeAddClick}
+                />
+              </Popover>
+              <Popover content={t('ADD ACTION STEP')}>
                 <Button
                   size="small"
                   type="primary"
@@ -454,32 +998,102 @@ const StepCard: React.FC<Props> = ({
           </div>
         </div>
 
-        <div>
-          <ActionList
-            actions={step.actions || []}
-            selectedItems={selectedStepItems}
-            handleItemClick={handleActionClick}
-            setVisibleEdit={setVisibleActionEdit}
-            setCurrentAction={setCurrentAction}
-          />
-        </div>
+        {step?.actions?.length > 0 && (
+          <div>
+            <ActionList
+              task={task}
+              step={step}
+              actions={
+                step.actions.filter(
+                  (action) => !action.isComponentChangeAction
+                ) || []
+              }
+              selectedItems={selectedStepItems}
+              handleItemClick={handleActionClick}
+              setVisibleEdit={setVisibleActionEdit}
+              setCurrentAction={setCurrentAction}
+            />
+          </div>
+        )}
+
+        {step?.actions?.length > 0 &&
+          step.actions.some((action) => action.isComponentChangeAction) && (
+            <div>
+              <ComponentChangeActionList
+                task={task}
+                step={step}
+                actions={
+                  step.actions.filter(
+                    (action) => action.isComponentChangeAction
+                  ) || []
+                }
+                selectedItems={selectedStepItems}
+                handleItemClick={handleActionClick}
+                setVisibleEdit={setVisibleActionEditChange}
+                setCurrentAction={(data) => {
+                  console.log(data);
+                  setCurrentAction(data);
+                }}
+              />
+            </div>
+          )}
       </Card>
 
-      {currentAction && (
-        <ActionForm
-          key={currentAction._id}
-          visible={visibleActionEdit}
-          onCancel={handleActionEditCancel}
-          onSave={handleActionEditSave}
-          currentAction={currentAction}
-          onDelete={handleActionDelete}
-          templates={templates || []}
-          users={users || []}
-        />
+      {currentAction && currentAction.type == 'pfmd' && (
+        <>
+          <ActionForm
+            task={task}
+            step={step}
+            key={currentAction._id}
+            visible={visibleActionEdit}
+            onCancel={handleActionEditCancel}
+            onSave={handleActionEditSave}
+            currentAction={currentAction}
+            onDelete={handleActionDelete}
+            templates={templates || []}
+            users={users || []}
+          />
+        </>
+      )}
+      {currentAction && currentAction.type == 'inspect' && (
+        <>
+          <ActionInspection
+            task={task}
+            step={step}
+            key={currentAction._id}
+            visible={visibleActionEdit}
+            onCancel={handleActionEditCancel}
+            onSave={handleActionEditInspectionSave}
+            currentAction={currentAction}
+            onDelete={handleActionDelete}
+            templates={templates || []}
+            users={users || []}
+          />
+        </>
+      )}
+
+      {currentAction && currentAction.type == 'closed' && (
+        <>
+          <>{console.log(currentAction)}</>
+          <ActionClosed
+            task={task}
+            step={step}
+            key={currentAction._id}
+            visible={visibleActionEdit}
+            onCancel={handleActionEditCancel}
+            onSave={handleActionEditClosedSave}
+            currentAction={currentAction}
+            onDelete={handleActionDelete}
+            templates={templates || []}
+            users={users || []}
+          />
+        </>
       )}
 
       {visibleActionAdd && (
         <ActionForm
+          task={task}
+          step={step}
           key="newAction"
           visible={visibleActionAdd}
           onCancel={handleActionAddCancel}
@@ -489,10 +1103,38 @@ const StepCard: React.FC<Props> = ({
         />
       )}
 
+      {visibleActionChange && (
+        <ActionChangeForm
+          task={task}
+          step={step}
+          key="newChange"
+          visible={visibleActionChange}
+          onCancel={handleActionAddCancelChange}
+          onSave={handleNewActionSaveChange}
+          templates={templates || []}
+          users={users || []}
+        />
+      )}
+      {visibleActionEditChange && currentAction && (
+        <EditForm
+          currentAction={currentAction}
+          task={task}
+          step={step}
+          key={currentAction._id}
+          visible={visibleActionEditChange}
+          onCancel={handleActionAddCancelChangeEdit}
+          onSave={handleActionEditChangeSave}
+          templates={templates || []}
+          users={users || []}
+          onDelete={handleActionDelete}
+        />
+      )}
+
       {visibleStepEdit && (
         <Split initialPrimarySize="30%" splitterSize="20px">
           <div>
             <StepEditModal
+              task={task}
               visible={visibleStepEdit}
               onCancel={handleStepEditCancel}
               step={step}

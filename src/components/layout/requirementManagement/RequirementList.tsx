@@ -63,8 +63,8 @@ const RequirementList: FC<showProjectListType> = ({
         //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
-        canceled: { text: t('CANCELLED'), status: 'Error' },
+        closed: { text: t('CLOSE'), status: 'Default' },
+        canceled: { text: t('CANCEL'), status: 'Error' },
         onOrder: { text: t('ISSUED'), status: 'Processing' },
       },
 

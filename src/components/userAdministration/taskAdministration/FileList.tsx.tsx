@@ -28,10 +28,11 @@ import { handleFileOpenTask } from '@/services/utilites';
 import { useTranslation } from 'react-i18next';
 import PartsTable from '@/components/shared/Table/PartsTable';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 import { updateFilePrintAsAttachment } from '@/utils/api/thunks';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 
 // types.ts
 export interface FileData {

@@ -100,12 +100,17 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
               itemLayout="horizontal"
               dataSource={actions}
               renderItem={(action) => (
-                <List.Item className="flex items-center justify-between py-2 px-4 bg-gray-50 border-b border-gray-200">
+                <List.Item
+                  disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
+                  className="flex items-center justify-between py-2 px-4 bg-gray-50 border-b border-gray-200"
+                >
                   <Button
                     disabled={
-                      action.key !== 'rebuildWO' &&
-                      action.key !== 'appendTOWO' &&
-                      (actionHistory[action.key] || activeAction !== null)
+                      (action.key !== 'rebuildWO' &&
+                        action.key !== 'appendTOWO' &&
+                        (actionHistory[action.key] || activeAction !== null)) ||
+                      wo.status == 'CLOSED' ||
+                      wo.status == 'COMPLETED'
                     }
                     onClick={() => handleActionClick(action.key)}
                     className="mr-4"
@@ -125,7 +130,12 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
             />
             <div className="mt-4 flex justify-between items-center">
               <PdfGeneratorWP
-                disabled={!selectedKeys || !selectedKeys?.length}
+                disabled={
+                  !selectedKeys ||
+                  !selectedKeys?.length ||
+                  wo.status == 'CLOSED' ||
+                  wo.status == 'COMPLETED'
+                }
                 ids={selectedKeys?.length ? selectedKeys : null}
                 onClick={handlePdfGeneratorClick}
                 wo={wo}
@@ -148,11 +158,13 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
         {wo ? (
           <div>
             <List
+              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
               itemLayout="horizontal"
               dataSource={recuirementActions}
               renderItem={(action) => (
                 <List.Item className="flex items-center justify-between py-2 px-4 bg-gray-50 border-b border-gray-200">
                   <Button
+                    disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
                     // disabled={
                     //   (action.key === 'createRequirements' &&
                     //     actionHistory['createRequirements']) ||
@@ -190,6 +202,7 @@ const ActionsComponent: React.FC<ActionsComponentProps> = ({
               renderItem={(action) => (
                 <List.Item className="flex items-center justify-between py-2 px-4 bg-gray-50 border-b border-gray-200">
                   <Button
+                    disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
                     // disabled={
                     //   // actionHistory[action.key] ||
                     //   actionHistory['generateAccess']

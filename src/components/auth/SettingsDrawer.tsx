@@ -1,5 +1,7 @@
-import { Avatar, Button, Divider, Drawer, Form, Row, Space } from 'antd';
-import React, { FC } from 'react';
+// @ts-nocheck
+
+import { Avatar, Button, Divider, Drawer, Form, Row, Space, Tabs } from 'antd';
+import React, { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UpdateElectron from '@/components/update';
 import {
@@ -16,6 +18,8 @@ import { RouteNames } from '@/router';
 import { authSlice } from '@/store/reducers/AuthSlice';
 import LanguageSelector from '@/components/shared/LanguageSelector';
 import { useTranslation } from 'react-i18next';
+import NotificationListener from './NotificationListener';
+import SubscriptionManager from './SubscriptionManager'; // Импортируем компонент SubscriptionManager
 
 interface TSettingsDrawerProps {
   open: boolean;
@@ -26,6 +30,8 @@ const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
   const dispatch = useAppDispatch();
   const history = useNavigate();
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState('settings'); // Добавляем состояние для активного таба
+
   return (
     <Drawer
       placement="right"
@@ -39,19 +45,22 @@ const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
       )}`}
     >
       <Row>
-        {' '}
         <Space direction="vertical" style={{ width: '100%' }}>
           <LanguageSelector></LanguageSelector>
+
           {/* <Button className="w-full  text-start  border-none hover:bg-gray-200">
             <StarOutlined /> My Tasks
-          </Button>
-          <Button className="w-full  text-start  border-none hover:bg-gray-200">
+          </Button> */}
+          {/* <Button className="w-full  text-start  border-none hover:bg-gray-200">
             <FieldTimeOutlined /> Time logging
-          </Button>
-          <Button className="w-full  text-start  border-none hover:bg-gray-200">
+          </Button> */}
+          <Button
+            className="w-full  text-left   border-none hover:bg-gray-200"
+            onClick={() => setActiveTab('notifications')} // Переключаем на таб уведомлений
+          >
             <SettingOutlined /> Settings
           </Button>
-          <Button className="w-full  text-start  border-none hover:bg-gray-200">
+          {/* <Button className="w-full  text-start  border-none hover:bg-gray-200">
             <UsergroupDeleteOutlined /> Bamos Support
           </Button> */}
 
@@ -69,6 +78,36 @@ const SettingsDrawer: FC<TSettingsDrawerProps> = ({ open, setOpen }) => {
             <LogoutOutlined />
             {t('Sign Out')}
           </Button>
+
+          {/* Добавляем табы */}
+          <Tabs
+            activeKey={activeTab}
+            onChange={(key) => setActiveTab(key)}
+            items={[
+              {
+                key: 'settings',
+                label: 'Subscription',
+                children: (
+                  <div className="h-[60vh]">
+                    <SubscriptionManager
+                      userId={localStorage.getItem('userId')}
+                    />
+                  </div>
+                ),
+              },
+              {
+                key: 'notifications',
+                label: 'Notifications History',
+                children: (
+                  <div className="h-[61vh] overflow-auto">
+                    <NotificationListener
+                      userId={localStorage.getItem('userId')}
+                    />{' '}
+                  </div>
+                ),
+              },
+            ]}
+          />
         </Space>
       </Row>
     </Drawer>

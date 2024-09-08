@@ -780,7 +780,7 @@ export async function handleFileOpenTask(
       link.click();
     }
   } catch (error) {
-    console.error('Не удалось открыть файл', error);
+    // console.error('Не удалось открыть файл', error);
   }
 }
 
@@ -822,7 +822,7 @@ export async function handleOpenReport(
       link.click();
     }
   } catch (error) {
-    console.error('Failed to open PDF file', error);
+    // console.error('Failed to open PDF file', error);
   }
 }
 
@@ -868,7 +868,7 @@ export const transformToIPartNumber = (
   data: any[],
   isToolArray?: string[]
 ): any[] => {
-  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
   const result = data
     .filter(
@@ -897,11 +897,11 @@ export const transformToIPartNumber = (
       acTypeID: '',
     }));
 
-  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 export const transformToIPart = (data: any[]): any[] => {
-  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
   const result = data.map((item) => ({
     ...item,
@@ -910,11 +910,11 @@ export const transformToIPart = (data: any[]): any[] => {
     AC_TYPE: item?.acTypeID?.code || '',
   }));
 
-  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 export const transformToIAltPartNumber = (data: any[]): any[] => {
-  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
   const result = data?.map((item) => ({
     id: item._id,
@@ -950,7 +950,7 @@ export const transformToIAltPartNumber = (data: any[]): any[] => {
 };
 
 export const transformToIStockPartNumber = (data: any[]): any[] => {
-  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
 
   const result = data.map((item) => ({
     ...item,
@@ -972,7 +972,7 @@ export const transformToIStockPartNumber = (data: any[]): any[] => {
     RECEIVING_DATE: item?.RECEIVING_ID?.receivingDate || item?.RECEIVING_DATE,
   }));
 
-  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 
@@ -985,11 +985,11 @@ export const transformedAccessToIAssess = (data: any[]): any[] => {
     userName: item?.createUserID?.name,
   }));
 
-  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 export const transformedAccessToTable = (data: any[]): any[] => {
-  console.log('Input data to Access:', data); // Вывод входных данных
+  // console.log('Input data to Access:', data); // Вывод входных данных
 
   const result = data.map((item) => ({
     ...item,
@@ -999,12 +999,12 @@ export const transformedAccessToTable = (data: any[]): any[] => {
     id: item?.id || item?._id,
   }));
 
-  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 
 export const transformToIRequirement = (data: any[]): any[] => {
-  console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
   const result = data?.map((item) => ({
     ...item,
     QUANTITY: item.quantity,
@@ -1072,7 +1072,7 @@ export const transformToIPickSlip = (data: any[]): any[] => {
     WONumber: item?.projectID?.WOReferenceID?.WONumber,
     // id: item.id,
   }));
-  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 export interface ValueEnumType {
@@ -1081,6 +1081,7 @@ export interface ValueEnumType {
   open?: string;
   closed: string;
   canceled: string;
+  CLOSED?: string;
   cancelled?: string;
   onOrder: string;
   onShort: string;
@@ -1099,6 +1100,9 @@ export interface ValueEnumType {
   DRAFT?: string;
   OPEN?: string;
   progress?: string;
+  nextAction?: string;
+  needInspection?: string;
+  COMPLETED?: string;
 }
 export interface ValueEnumType {
   onQuatation: string;
@@ -1106,6 +1110,7 @@ export interface ValueEnumType {
   open?: string;
   closed: string;
   canceled: string;
+  cancelled: string;
   onOrder: string;
   onShort: string;
   draft: string;
@@ -1123,6 +1128,7 @@ export interface ValueEnumType {
   DRAFT?: string;
   OPEN?: string;
   progress?: string;
+  test?: string;
 }
 export interface ValueEnumTypeTask {
   RC: string;
@@ -1235,47 +1241,57 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
     case 'onShort':
       return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'inspect':
-      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+      return 'rgb(255, 182, 46)'; // Light Salmon with less transparency
     case 'inspected':
-      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+      return 'rgb(255, 182, 46)'; // Light Salmon with less transparency
     case 'progress':
-      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
+      return 'rgb(252, 252, 60)'; // Dark Blue with less transparency
     case 'inProgress':
-      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
+      return 'rgb(252, 252, 60)'; // Dark Blue with less transparency
     case 'onQuatation':
       return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
     case 'complete':
       return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
     case 'open':
-      return 'rgba(0, 0, 139, 0.6)'; // Sky Blue with less transparency
+      return 'rgb(52, 155, 240)'; // Sky Blue with less transparency
     case 'OPEN':
-      return 'rgba(0, 0, 139, 0.6)'; // Sky Blue with less transparency
+      return 'rgb(52, 155, 240)'; // Sky Blue with less transparency
     case 'closed':
-      return 'rgba(50, 205, 50, 0.6)'; // Lime Green with less transparency
+      return 'rgb(112, 255, 84)'; // Lime Green with less transparency
+    case 'CLOSED':
+      return 'rgb(112, 255, 84)'; // Lime Green with less transparency
     case 'RECEIVED':
       return 'rgba(50, 205, 50, 0.6)'; // Lime Green with less transparency
     case 'PARTLY_RECEIVED':
       return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
     case 'performed':
       return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
-    case 'partlyClosed':
+
+    case 'COMPLETED':
       return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
     case 'canceled':
-      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
     case 'cancelled':
-      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
     case 'partlyCanceled':
-      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
     case 'CANCELLED':
-      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
     case 'partyCancelled':
-      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
     case 'onOrder':
       return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'transfer':
       return 'rgba(255, 215, 0, 0.6)'; // Dark Blue with less transparency
+
+    case 'needInspection':
+      return 'rgba(255, 215, 0, 0.6)'; // Dark Blue with less transparency
+    case 'nextAction':
+      return 'rgb(217, 148, 248)'; // Dark Blue with less transparency
     case 'issued':
-      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
+      return 'rgba(128, 0, 128, 0.6)';
+    case 'test':
+      return 'rgb(127, 251, 255)'; // Dark Blue with less transparency
     default:
       return ''; // Default color
   }
@@ -1586,6 +1602,7 @@ export const transformToIProjectTask = (data: any[]): any[] => {
     mainWorkTime: item?.mainWorkTime || item?.taskId?.mainWorkTime,
     files: item?.FILES || item?.files || [],
     taskDescription: item?.taskDescription,
+    amtoss: item?.taskId?.amtoss || item?.refTask,
 
     // taskNumber: item?.taskNumber,
     // description: item?.taskDescription,
@@ -1748,3 +1765,83 @@ export const filterAPNByRole = (apnList: any[], userRole: Role) => {
   const userPermissions = rolePermissions[userRole] || [];
   return apnList.filter((apn) => userPermissions.includes(apn.APNNBR));
 };
+
+export const getDefectTypes = (t: TFunction) => [
+  { value: 'FINDING', label: t('FINDING') },
+  { value: 'CLEANING', label: t('CLEANING') },
+  { value: 'STRUCTURAL_DAMAGE', label: t('STRUCTURAL_DAMAGE') },
+  { value: 'PAINTING', label: t('PAINTING') },
+  { value: 'ADD ACCESS', label: t('ADD ACCESS') },
+];
+
+export const getAtaChapters = (t: TFunction) => [
+  { value: '05', label: '05-TIME_LIMITS/MAINTENANCE_CHECKS' },
+  { value: '06', label: '06-DIMENSIONS_AND_AREAS' },
+  { value: '07', label: '07-LIFTING_AND_SHORING' },
+  { value: '08', label: '08-LEVELING_AND_WEIGHING' },
+  { value: '09', label: '09-TOWING_AND_TAXIING' },
+  { value: '10', label: '10-PARKING_AND_MOORING' },
+  { value: '11', label: '11-PLACARDS_AND_MARKINGS' },
+  { value: '12', label: '12-SERVICING' },
+  { value: '20', label: '20-STANDARD_PRACTICES' },
+  { value: '21', label: '21-AIR_CONDITIONING' },
+  { value: '22', label: '22-AUTOFLIGHT' },
+  { value: '23', label: '23-COMMUNICATIONS' },
+  { value: '24', label: '24-ELECTRICAL_POWER' },
+  { value: '25', label: '25-EQUIPMENT/FURNISHINGS' },
+  { value: '26', label: '26-FIRE_PROTECTION' },
+  { value: '27', label: '27-FLIGHT_CONTROLS' },
+  { value: '28', label: '28-FUEL' },
+  { value: '29', label: '29-HYDRAULIC_POWER' },
+  { value: '30', label: '30-ICE_AND_RAIN_PROTECTION' },
+  { value: '31', label: '31-INDICATING/RECORDING_SYSTEMS' },
+  { value: '32', label: '32-LANDING_GEAR' },
+  { value: '33', label: '33-LIGHTS' },
+  { value: '34', label: '34-NAVIGATION' },
+  { value: '35', label: '35-OXYGEN' },
+  { value: '36', label: '36-PNEUMATIC' },
+  { value: '38', label: '38-WATER/WASTE' },
+  { value: '44', label: '44-CABIN_SYSTEMS' },
+  { value: '46', label: '46-INFORMATION_SYSTEMS' },
+  { value: '47', label: '47-INERT_GAS_SYSTEM' },
+  { value: '49', label: '49-AUXILIARY_POWER_UNIT' },
+  { value: '51', label: '51-STRUCTURES' },
+  { value: '52', label: '52-DOORS' },
+  { value: '53', label: '53-FUSELAGE' },
+  { value: '54', label: '54-NACELLES/PYLONS' },
+  { value: '55', label: '55-STABILIZERS' },
+  { value: '56', label: '56-WINDOWS' },
+  { value: '57', label: '57-WINGS' },
+  { value: '70', label: '70-STANDARD_PRACTICES' },
+  { value: '71', label: '71-POWER_PLANT' },
+  { value: '72', label: '72-ENGINE' },
+  { value: '73', label: '73-ENGINE_FUEL_AND_CONTROL' },
+  { value: '74', label: '74-IGNITION' },
+  { value: '75', label: '75-AIR' },
+  { value: '76', label: '76-ENGINE_CONTROLS' },
+  { value: '77', label: '77-ENGINE_INDICATION' },
+  { value: '78', label: '78-EXHAUST' },
+  { value: '79', label: '79-OIL' },
+  { value: '80', label: '80-STARTING' },
+];
+export enum SubscriptionType {
+  NewPickslip = 'newPickslip',
+  OtherEventType = 'otherEventType',
+  NewTask = 'newTask',
+  NewRequirement = 'newRequirement',
+  TechnicalRequest = 'technicalRequest',
+}
+
+// Создание массива объектов с метками для каждого типа подписки
+export const getSubscriptionTypes = (t) => [
+  { value: SubscriptionType.NewTask, label: t('New Task') },
+  { value: SubscriptionType.NewPickslip, label: t('New Pickslip') },
+  { value: SubscriptionType.NewRequirement, label: t('New Requirement') },
+  {
+    value: SubscriptionType.TechnicalRequest,
+    label: t('New Technical Request'),
+  },
+];
+
+// Тип для типа подписки
+export type SubscriptionTypeValue = SubscriptionType;

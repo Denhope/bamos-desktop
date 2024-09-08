@@ -5,6 +5,8 @@ import { Button, Modal, Form, Input, Empty, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { ISkill, UserGroup } from '@/models/IUser';
+import { Split } from '@geoffcox/react-splitter';
+import TemplateSelector from './TemplateSelector';
 
 interface Props {
   steps: IStep[];
@@ -12,6 +14,7 @@ interface Props {
   onDeleteStep: (stepIds: string[]) => void;
   groups: UserGroup[];
   skills: ISkill[];
+  templates?: any;
 }
 
 const StepContainer: React.FC<Props> = ({
@@ -19,6 +22,7 @@ const StepContainer: React.FC<Props> = ({
   onAddStep,
   onDeleteStep,
   groups,
+  templates,
 
   skills,
 }) => {
@@ -37,6 +41,9 @@ const StepContainer: React.FC<Props> = ({
     form.resetFields();
     setIsModalVisible(true);
   };
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  );
 
   const handleModalOk = () => {
     form.validateFields().then((values) => {
@@ -56,7 +63,15 @@ const StepContainer: React.FC<Props> = ({
   const handleModalCancel = () => {
     setIsModalVisible(false);
   };
-
+  const handleSelectTemplate = (templateId: string) => {
+    setSelectedTemplateId(templateId);
+    const selected = templates.find((t: any) => t.id === templateId);
+    if (selected) {
+      form.setFieldsValue({
+        stepDescription: selected.description,
+      });
+    }
+  };
   const handleDeleteStep = () => {
     onDeleteStep(selectedStepItems);
     setSelectedStepItems([]); // Очищаем выбранные элементы после удаления
@@ -115,13 +130,15 @@ const StepContainer: React.FC<Props> = ({
         </Button>
       </div>
       <Modal
+        width={'80%'}
         title={`${t('ADD STEP')}`}
         visible={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
       >
-        <Form form={form} layout="vertical">
-          {/* <Form.Item
+        <Split initialPrimarySize="70%" splitterSize="10px">
+          <Form form={form} layout="vertical">
+            {/* <Form.Item
             name="stepType"
             label={`${t('STEP_TYPE')}`}
             rules={[{ required: true }]}
@@ -144,36 +161,41 @@ const StepContainer: React.FC<Props> = ({
             </Select>
           </Form.Item> */}
 
-          <ProFormSelect
+            {/* <ProFormSelect
             name="userGroupID"
             mode="multiple"
             label={t('GROUP')}
             options={groupOptions}
             // rules={[{ required: true, message: t('PLEASE SELECT A GROUP') }]}
-          />
-          <ProFormSelect
-            mode="multiple"
-            name="skillID"
-            label={t('SKILL')}
-            options={skillOptions}
-            // rules={[{ required: true, message: t('PLEASE SELECT A SKILL') }]}
-          />
+          /> */}
+            <ProFormSelect
+              mode="multiple"
+              name="skillID"
+              label={t('SKILL')}
+              options={skillOptions}
+              // rules={[{ required: true, message: t('PLEASE SELECT A SKILL') }]}
+            />
 
-          {/* <Form.Item
+            {/* <Form.Item
             name="stepHeadLine"
             label="Step Headline"
             rules={[{ required: true }]}
           >
             <Input />
           </Form.Item> */}
-          <Form.Item
-            name="stepDescription"
-            label={t('STEP DESCRITION')}
-            rules={[{ required: true }]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-        </Form>
+            <Form.Item
+              name="stepDescription"
+              label={t('STEP DESCRITION')}
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea rows={4} />
+            </Form.Item>
+          </Form>
+          <TemplateSelector
+            templates={templates}
+            onSelectTemplate={handleSelectTemplate}
+          />
+        </Split>
       </Modal>
     </div>
   );

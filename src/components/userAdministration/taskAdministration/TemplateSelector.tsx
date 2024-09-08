@@ -113,7 +113,7 @@ const TemplateSelector: React.FC<{
                 : ''
             }
             onChange={handlePreviewHeightChange}
-            style={{ width: '100%', resize: 'none' }}
+            style={{ width: '100%' }}
           />
           <div
             style={{
@@ -128,8 +128,8 @@ const TemplateSelector: React.FC<{
             }}
           ></div>
         </div>
-        <Button type="primary" onClick={applyFilters}>
-          {t('APPLY')}
+        <Button type="dashed" onClick={applyFilters}>
+          {t('APPLY TEMPLATE')}
         </Button>
       </Space>
     </div>

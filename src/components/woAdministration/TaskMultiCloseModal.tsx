@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Button } from 'antd';
+import { Modal, Form, Button, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 import { ProFormDateTimePicker } from '@ant-design/pro-components';
@@ -23,6 +23,9 @@ const TaskMultiCloseModal: React.FC<{
     currentAction?.userDurations || [{ id: uuidv4(), userID: '', duration: 0 }]
   );
   const [userInspectDurations, setInspectUserDurations] = useState<any[]>(
+    currentAction?.userDurations || [{ id: uuidv4(), userID: '', duration: 0 }]
+  );
+  const [userClosedDurations, setClosedUserDurations] = useState<any[]>(
     currentAction?.userDurations || [{ id: uuidv4(), userID: '', duration: 0 }]
   );
 
@@ -74,16 +77,49 @@ const TaskMultiCloseModal: React.FC<{
       createDate: inspectDateTimeISO,
       createUserID: USER_ID,
       type: 'closed',
-      userInspectDurations: userInspectDurations,
+      userInspectDurations:
+        userInspectDurations.length > 0
+          ? [{ ...userInspectDurations[0], duration: 0 }]
+          : [],
     };
 
-    onSave([newPerfAction, newInspectfAction, newClosedfAction]);
-    onCancel();
+    const isValidPerformDurations = userPerformDurations.every(
+      (item) => item.userID && item.duration !== 0
+    );
+    const isValidInspectDurations = userInspectDurations.every(
+      (item) => item.userID && item.duration !== 0
+    );
+
+    if (
+      currentTask.projectItemType !== 'NRC' &&
+      userPerformDurations.length > 0 &&
+      userInspectDurations.length > 0 &&
+      isValidPerformDurations &&
+      isValidInspectDurations
+    ) {
+      onSave([newPerfAction, newInspectfAction, newClosedfAction]);
+      onCancel();
+    } else if (
+      currentTask.projectItemType === 'NRC' &&
+      userInspectDurations.length > 0 &&
+      isValidInspectDurations
+    ) {
+      onSave([newPerfAction, newInspectfAction, newClosedfAction]);
+      onCancel();
+    } else {
+      notification.error({
+        message: 'Validation Error',
+        description:
+          'Please ensure that all user are filled and durations are not zero in both Perform and Inspect durations.',
+      });
+    }
   };
 
   return (
     <Modal
-      width={'70%'}
+      width={
+        currentTask && currentTask.projectItemType !== 'NRC' ? '90%' : '50%'
+      }
       visible={visible}
       title={t('USERS DURATIONS')}
       onOk={form.submit}
@@ -99,37 +135,43 @@ const TaskMultiCloseModal: React.FC<{
     >
       <Form form={form} onFinish={handleFinish}>
         <div className="flex justify-between content-center justify-items-center gap-2">
-          <div
-            style={{
-              border: '0.5px solid #ccc',
-              padding: '10px',
-              marginBottom: '5px',
-              borderRadius: '5px',
-            }}
-          >
-            <h4 className="storeman">{t('PERFORM')}</h4>
-            <UserTaskAllocation
-              users={users}
-              initialTaskAllocations={userPerformDurations}
-              onTaskAllocationsChange={setPerformUserDurations}
-            />
-            <ProFormDateTimePicker
-              width={'md'}
-              name="performDateTime"
-              label={`${t('DATE & TIME')}`}
-              rules={[
-                { required: true, message: t('Please select date and time') },
-              ]}
-              fieldProps={{
-                format: 'YYYY-MM-DD HH:mm', // формат без секунд
-                showTime: {
-                  defaultValue: dayjs('00:00', 'HH:mm'),
-                  format: 'HH:mm',
-                },
-                defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
+          {currentTask && currentTask.projectItemType !== 'NRC' && (
+            <div
+              style={{
+                border: '0.5px solid #ccc',
+                padding: '10px',
+                marginBottom: '5px',
+                borderRadius: '5px',
               }}
-            />
-          </div>
+            >
+              {currentTask && currentTask.projectItemType !== 'NRC' && (
+                <h4 className="storeman">{t('PERFORM')}</h4>
+              )}
+
+              <UserTaskAllocation
+                task={currentTask}
+                users={users}
+                initialTaskAllocations={userPerformDurations}
+                onTaskAllocationsChange={setPerformUserDurations}
+              />
+              <ProFormDateTimePicker
+                width={'md'}
+                name="performDateTime"
+                label={`${t('DATE & TIME')}`}
+                rules={[
+                  { required: true, message: t('Please select date and time') },
+                ]}
+                fieldProps={{
+                  format: 'YYYY-MM-DD HH:mm', // формат без секунд
+                  showTime: {
+                    defaultValue: dayjs('00:00', 'HH:mm'),
+                    format: 'HH:mm',
+                  },
+                  defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
+                }}
+              />
+            </div>
+          )}
           <div
             style={{
               border: '0.5px solid #ccc',
@@ -138,8 +180,14 @@ const TaskMultiCloseModal: React.FC<{
               borderRadius: '5px',
             }}
           >
-            <h4 className="inspect">{t('INSPECT')}</h4>
+            {currentTask && currentTask.projectItemType !== 'NRC' && (
+              <h4 className="storeman">{t('INSPECT')}</h4>
+            )}
+            {currentTask && currentTask.projectItemType == 'NRC' && (
+              <h4 className="storeman">{t('CLOSE')}</h4>
+            )}
             <UserTaskAllocation
+              isSingle
               users={users}
               initialTaskAllocations={userInspectDurations}
               onTaskAllocationsChange={setInspectUserDurations}

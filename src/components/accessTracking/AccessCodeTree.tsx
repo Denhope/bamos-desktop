@@ -83,7 +83,7 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
                         `///L:(${accessCode.accessProjectNumber})`
                       : accessCode.status === 'inspected'
                       ? ' 🟢🟢' +
-                        '(INSPECTED)' +
+                        '(INSPECTION)' +
                         `///L:(${accessCode.accessProjectNumber})`
                       : accessCode.status === 'draft'
                       ? ' ⚪' +
@@ -142,7 +142,7 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
         (accessCode: { status: string }) => accessCode.status === 'inspected'
       )
     ) {
-      return ' 🟢🟢' + '(INSPECTED)';
+      return ' 🟢🟢' + '(INSPECTION)';
     } else if (
       item.accessCodes &&
       item.accessCodes.every(
@@ -181,7 +181,7 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
       if (openExists) {
         return ' 🔴' + '(OPEN)';
       } else if (inspectedExists) {
-        return ' 🟢🟢' + '(INSPECTED)';
+        return ' 🟢🟢' + '(INSPECTION)';
       } else if (draftExists) {
         return ' ⚪' + '(DRAFT)';
       } else {
@@ -201,7 +201,7 @@ const AccessCodeTree: FC<ZoneTreeProps> = ({
       if (openExists) {
         return ' 🔴' + '(OPEN)';
       } else if (inspectedExists) {
-        return ' 🟢🟢' + '(INSPECTED)';
+        return ' 🟢🟢' + '(INSPECTION)';
       } else if (draftExists) {
         return ' ⚪' + '(DRAFT)';
       } else {

@@ -54,6 +54,9 @@ export enum AccountRole {
 }
 
 export interface User {
+  organizationAuthorization?: any;
+  lastNameEnglish?: any;
+  firstNameEnglish?: any;
   photoUrl?: any;
   _id?: string;
   id: string;

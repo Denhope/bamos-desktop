@@ -125,10 +125,11 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
     OPEN: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
-    cancelled: t('CANCELLED'),
-    CANCELLED: t('CANCELLED'),
+    closed: t('CLOSE'),
+    CLOSED: t('CLOSED'),
+    canceled: t('CANCEL'),
+    cancelled: t('CANCEL'),
+    CANCELLED: t('CANCEL'),
     onOrder: t('ISSUED'),
     draft: t('DRAFT'),
     issued: t('ISSUED'),
@@ -136,6 +137,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     inProgress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
+    COMPLETED: t('COMPLETED'),
     PARTLY_RECEIVED: t('PARTLY RECEIVED'),
     DRAFT: t('DRAFT'),
   };
@@ -321,6 +323,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
             ) : (
               <PartContainer
                 isVisible
+                pagination={true}
                 isButtonVisiable={false}
                 isAddVisiable={true}
                 isLoading={isFetching || isLoading}

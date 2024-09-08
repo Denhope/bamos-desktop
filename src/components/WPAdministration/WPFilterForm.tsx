@@ -151,11 +151,11 @@ const WPFilterForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={{
           DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
           OPEN: { text: t('OPEN'), status: 'Processing' },
-          inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+          inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
           COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-          CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-          CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+          CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
+          CANCELLED: { text: t('CANCEL'), status: 'Error' },
         }}
       />
       <ProFormSelect

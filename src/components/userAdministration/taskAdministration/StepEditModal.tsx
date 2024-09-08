@@ -80,7 +80,7 @@ const StepEditModal: React.FC<{
         </Button>,
       ]}
     >
-      <Split initialPrimarySize="50%" splitterSize="10px">
+      <Split initialPrimarySize="70%" splitterSize="10px">
         <div>
           <Form
             form={form}
@@ -121,13 +121,13 @@ const StepEditModal: React.FC<{
                 <Option value="mainWork">{t('MAIN WORK')}</Option>
               </Select>
             </Form.Item> */}
-            <ProFormSelect
+            {/* <ProFormSelect
               name="userGroupID"
               mode="multiple"
               label={t('GROUP')}
               options={groupOptions}
               // rules={[{ required: true, message: t('PLEASE SELECT A GROUP') }]}
-            />
+            /> */}
             <ProFormSelect
               mode="multiple"
               name="skillID"
@@ -141,7 +141,6 @@ const StepEditModal: React.FC<{
               rules={[
                 {
                   required: true,
-                  message: t('REQUIRED_STEP_DESCRIPTION_MESSAGE'),
                 },
               ]}
             >

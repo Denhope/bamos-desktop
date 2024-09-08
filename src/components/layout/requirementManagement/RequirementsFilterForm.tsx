@@ -388,7 +388,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         options={[
           { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
-          { value: 'closed', label: t('CLOSED') },
+          { value: 'closed', label: t('CLOSE') },
           { value: 'canceled', label: t('CANCELED') },
           { value: 'onOrder', label: t('ISSUED') },
           { value: 'transfer', label: t('TRANSFER') },

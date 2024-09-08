@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ColumnState {
   [gridKey: string]: {
-    columnState: any;
-    columnVisible: any;
-    columnOrder: any;
+    columnState: any[];
+    columnVisible: { [key: string]: boolean };
+    columnOrder: any[];
   };
 }
 
@@ -16,48 +16,45 @@ export const columnSlice = createSlice({
   reducers: {
     setColumnState: (
       state,
-      action: PayloadAction<{ gridKey: string; columnState: any }>
+      action: PayloadAction<{ gridKey: string; columnState: any[] }>
     ) => {
       const { gridKey, columnState } = action.payload;
-      console.log(`Setting column state for gridKey: ${gridKey}`, columnState);
       if (!state[gridKey]) {
         state[gridKey] = {
-          columnState: {},
+          columnState: [],
           columnVisible: {},
-          columnOrder: {},
+          columnOrder: [],
         };
       }
       state[gridKey].columnState = columnState;
     },
     setColumnVisible: (
       state,
-      action: PayloadAction<{ gridKey: string; columnVisible: any }>
+      action: PayloadAction<{
+        gridKey: string;
+        columnVisible: { [key: string]: boolean };
+      }>
     ) => {
       const { gridKey, columnVisible } = action.payload;
-      console.log(
-        `Setting column visibility for gridKey: ${gridKey}`,
-        columnVisible
-      );
       if (!state[gridKey]) {
         state[gridKey] = {
-          columnState: {},
+          columnState: [],
           columnVisible: {},
-          columnOrder: {},
+          columnOrder: [],
         };
       }
       state[gridKey].columnVisible = columnVisible;
     },
     setColumnOrder: (
       state,
-      action: PayloadAction<{ gridKey: string; columnOrder: any }>
+      action: PayloadAction<{ gridKey: string; columnOrder: any[] }>
     ) => {
       const { gridKey, columnOrder } = action.payload;
-      console.log(`Setting column order for gridKey: ${gridKey}`, columnOrder);
       if (!state[gridKey]) {
         state[gridKey] = {
-          columnState: {},
+          columnState: [],
           columnVisible: {},
-          columnOrder: {},
+          columnOrder: [],
         };
       }
       state[gridKey].columnOrder = columnOrder;

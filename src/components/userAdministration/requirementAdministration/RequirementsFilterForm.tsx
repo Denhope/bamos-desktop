@@ -414,7 +414,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'issued', label: t('ISSUED') },
           { value: 'onQuatation', label: t('QUATATION') },
           { value: 'onShort', label: t('ON SHORT') },
-          { value: 'closed', label: t('CLOSED') },
+          { value: 'closed', label: t('CLOSE') },
           { value: 'canceled', label: t('CANCELED') },
           // { value: 'transfer', label: t('TRANSFER') },
         ]}

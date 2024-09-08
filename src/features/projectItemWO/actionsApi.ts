@@ -15,24 +15,40 @@ export const actionApi = createApi({
     addAction: builder.mutation<
       Action,
       {
-        action: Partial<Action>;
+        action?: Partial<Action>;
         stepId: string;
         projectItemID: string;
         projectId: string;
         projectTaskID?: string;
+        status?: string;
+        componentAction?: any;
+        isComponentChangeAction?: boolean;
       }
     >({
-      query: ({ action, stepId, projectItemID, projectId, projectTaskID }) => ({
+      query: ({
+        action,
+        stepId,
+        projectItemID,
+        projectId,
+        projectTaskID,
+        status,
+        isComponentChangeAction,
+        componentAction,
+      }) => ({
         url: `projectTaskStepsActions/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
           ...action,
+          componentChange: componentAction,
           createUserID: USER_ID,
           projectStepId: stepId,
           companyID: COMPANY_ID,
           projectId,
           projectItemID,
           projectTaskID,
+          status,
+          isComponentChangeAction,
+          componentAction,
         },
       }),
       invalidatesTags: ['Actions'],
@@ -80,6 +96,18 @@ export const actionApi = createApi({
       query: ({ projectStepId, status }) => ({
         url: `projectTaskStepsActions/company/${COMPANY_ID}`,
         params: { status, projectStepId },
+      }),
+      providesTags: (result, error, { projectStepId }) => [
+        { type: 'Actions', projectStepId },
+      ],
+    }),
+    getFilteredActionsForPrint: builder.query<
+      Action[],
+      { projectStepId: string; status?: string; isComponentChange?: boolean }
+    >({
+      query: ({ projectStepId, status, isComponentChange }) => ({
+        url: `projectTaskStepsActions/print/company/${COMPANY_ID}`,
+        params: { status, projectStepId, isComponentChange },
       }),
       providesTags: (result, error, { projectStepId }) => [
         { type: 'Actions', projectStepId },

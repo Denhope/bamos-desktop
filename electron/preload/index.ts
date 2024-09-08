@@ -160,3 +160,7 @@ window.onmessage = (ev: MessageEvent) => {
 
 // Explicitly annotate the setTimeout call
 setTimeout(removeLoading, 4999);
+
+ipcRenderer.on('data', (event, data) => {
+  console.log('Received data:', data);
+});

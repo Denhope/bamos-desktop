@@ -114,7 +114,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     });
   };
   const valueEnumTask: ValueEnumTypeTask = {
-    RC: t('RC'),
+    RC: t('TC'),
     CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),

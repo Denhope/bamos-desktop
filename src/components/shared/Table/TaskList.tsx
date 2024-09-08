@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {
   useCallback,
   useEffect,
@@ -6,20 +7,17 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import copy from 'copy-to-clipboard';
-
 import { CellContextMenuEvent, DomLayoutType } from 'ag-grid-community';
 import { IProjectItemWO } from '@/models/AC';
 import { Input, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import localeTextRu from '@/locales/localeTextRu';
 import localeTextEn from '@/locales/localeTextEn';
-import { saveAs } from 'file-saver'; // Importing file-saver for saving PDF
-import * as XLSX from 'xlsx'; // Importing xlsx for Excel export
+import * as XLSX from 'xlsx';
 import { utils } from 'xlsx';
 import { ITask } from '@/models/ITask';
 import FileModalList from '../FileModalList';
@@ -49,6 +47,7 @@ interface MyTableProps {
   isLoading?: boolean;
   isFilesVisiable?: boolean;
   gridKey: string; // Уникальный ключ таблицы
+  wo?: any;
 }
 
 const TaskList: React.FC<MyTableProps> = ({
@@ -62,6 +61,7 @@ const TaskList: React.FC<MyTableProps> = ({
   isLoading,
   isFilesVisiable,
   gridKey,
+  wo,
 }) => {
   const gridRef = useRef<AgGridReact>(null);
   const { t, i18n } = useTranslation();
@@ -75,6 +75,11 @@ const TaskList: React.FC<MyTableProps> = ({
     null
   );
   const [selectedRowCount, setSelectedRowCount] = useState(0);
+  const [localColumnState, setLocalColumnState] = useState<any[]>([]);
+  const [localColumnVisible, setLocalColumnVisible] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [localColumnOrder, setLocalColumnOrder] = useState<any[]>([]);
 
   const dispatch = useDispatch();
   const columnState = useSelector(
@@ -86,28 +91,51 @@ const TaskList: React.FC<MyTableProps> = ({
   const columnOrder = useSelector(
     (state: any) => state.columns[gridKey]?.columnOrder
   );
+
   useEffect(() => {
-    if (gridRef.current && gridRef.current.columnApi && columnState) {
-      console.log('Setting column state:', columnState);
-      // gridRef.current.columnApi.setColumnState(columnState);
+    if (columnState) {
+      setLocalColumnState(columnState);
     }
   }, [columnState]);
 
   useEffect(() => {
-    if (gridRef.current && gridRef.current.columnApi && columnVisible) {
-      console.log('Setting column visibility:', columnVisible);
-      Object.keys(columnVisible).forEach((key) => {
-        gridRef.current?.columnApi.setColumnVisible(key, columnVisible[key]);
-      });
+    if (columnVisible) {
+      setLocalColumnVisible(columnVisible);
     }
   }, [columnVisible]);
 
   useEffect(() => {
-    if (gridRef.current && gridRef.current.columnApi && columnOrder) {
-      console.log('Setting column order:', columnOrder);
-      gridRef.current.columnApi.applyColumnState({ state: columnOrder });
+    if (columnOrder) {
+      setLocalColumnOrder(columnOrder);
     }
   }, [columnOrder]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi && localColumnState) {
+      // console.log('Setting column state:', localColumnState);
+      gridRef.current.columnApi.applyColumnState({ state: localColumnState });
+    }
+  }, [localColumnState]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi && localColumnVisible) {
+      // console.log('Setting column visibility:', localColumnVisible);
+      Object.keys(localColumnVisible).forEach((key) => {
+        gridRef.current?.columnApi.setColumnVisible(
+          key,
+          localColumnVisible[key]
+        );
+      });
+    }
+  }, [localColumnVisible]);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi && localColumnOrder) {
+      // console.log('Setting column order:', localColumnOrder);
+      gridRef.current.columnApi.applyColumnState({ state: localColumnOrder });
+    }
+  }, [localColumnOrder]);
+
   const handleCellContextMenu = useCallback((event: CellContextMenuEvent) => {
     const mouseEvent = event.event as MouseEvent;
     if (mouseEvent) {
@@ -118,14 +146,14 @@ const TaskList: React.FC<MyTableProps> = ({
     }
   }, []);
 
-  const copyCell = () => {
+  const copyCell = useCallback(() => {
     if (selectedCell) {
       copy(selectedCell.value?.toString() || '');
     }
     setContextMenuVisible(false);
-  };
+  }, [selectedCell]);
 
-  const copyTable = () => {
+  const copyTable = useCallback(() => {
     if (gridRef.current) {
       const columnHeaders = columnDefs.map((column) => column.headerName);
       const allRowData = gridRef.current.api
@@ -162,33 +190,29 @@ const TaskList: React.FC<MyTableProps> = ({
               .map(
                 (rowData) =>
                   `<tr>
-                  ${columnDefs
-                    .map(
-                      (column) =>
-                        `<td>${
-                          rowData[column?.field] !== undefined
-                            ? rowData[column.field]
-                            : ''
-                        }</td>`
-                    )
-                    .join('')}
-                </tr>`
+                    ${columnDefs
+                      .map(
+                        (column) =>
+                          `<td>${
+                            rowData[column?.field] !== undefined
+                              ? rowData[column.field]
+                              : ''
+                          }</td>`
+                      )
+                      .join('')}
+                  </tr>`
               )
               .join('')}
           </tbody>
         </table>
       `;
 
-      const blob = new Blob([tableHtml], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
-      });
-      // saveAs(blob, 'table.xlsx');
       copy(tableHtml, { format: 'text/html' });
     }
     setContextMenuVisible(false);
-  };
+  }, [columnDefs]);
 
-  const copyRow = () => {
+  const copyRow = useCallback(() => {
     if (selectedCell) {
       const rowData = selectedCell.node?.data;
       if (rowData) {
@@ -233,18 +257,15 @@ const TaskList: React.FC<MyTableProps> = ({
       }
     }
     setContextMenuVisible(false);
-  };
+  }, [selectedCell, columnDefs]);
 
-  const exportToExcel = () => {
+  const exportToExcel = useCallback(() => {
     if (gridRef.current) {
-      // Получение заголовков столбцов
       const columnHeaders = columnDefs.map((column) => column.headerName);
-      // Получение данных строк
       const allRowData = gridRef.current.api
         .getRenderedNodes()
         .map((node) => node.data);
 
-      // Создание рабочего листа
       const worksheetData = [
         columnHeaders,
         ...allRowData.map((rowData) =>
@@ -255,25 +276,24 @@ const TaskList: React.FC<MyTableProps> = ({
       ];
       const worksheet = utils.aoa_to_sheet(worksheetData);
 
-      // Создание книги
       const workbook = utils.book_new();
       utils.book_append_sheet(workbook, worksheet, 'Data');
 
-      // Запись файла Excel
       XLSX.writeFile(workbook, 'table.xlsx');
     }
-  };
+  }, [columnDefs]);
 
   useEffect(() => {
     setSelectedRowCount(0);
   }, [rowData]);
+
   useEffect(() => {
     const handleWindowClick = () => setContextMenuVisible(false);
     window.addEventListener('click', handleWindowClick);
     return () => window.removeEventListener('click', handleWindowClick);
   }, []);
 
-  const handleRowSelection = () => {
+  const handleRowSelection = useCallback(() => {
     const selectedNodes = gridRef.current?.api.getSelectedNodes();
     const selectedKeys = selectedNodes?.map((node) => node.data.id) || [];
     onRowSelect(
@@ -283,13 +303,17 @@ const TaskList: React.FC<MyTableProps> = ({
     );
     onCheckItems(selectedKeys);
     setSelectedRowCount(selectedNodes?.length || 0);
-  };
+  }, [onRowSelect, onCheckItems]);
 
-  const checkboxColumn = {
-    headerCheckboxSelection: true,
-    checkboxSelection: true,
-    width: 50,
-  };
+  const checkboxColumn = useMemo(
+    () => ({
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      width: 50,
+    }),
+    []
+  );
+
   const localeText = useMemo(() => {
     switch (i18n.language) {
       case 'ru':
@@ -299,14 +323,21 @@ const TaskList: React.FC<MyTableProps> = ({
         return localeTextEn;
     }
   }, [i18n.language]);
-  const updatedColumnDefs = [checkboxColumn, ...columnDefs];
 
-  const gridOptions = {
-    domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
-  };
-  const copySelectedRows = () => {
+  const updatedColumnDefs = useMemo(
+    () => [checkboxColumn, ...columnDefs],
+    [checkboxColumn, columnDefs]
+  );
+
+  const gridOptions = useMemo(
+    () => ({
+      domLayout: 'autoHeight' as DomLayoutType,
+    }),
+    []
+  );
+
+  const copySelectedRows = useCallback(() => {
     if (gridRef.current) {
-      // Получаем выделенные строки
       const selectedNodes = gridRef.current.api.getSelectedNodes();
 
       if (selectedNodes.length === 0) {
@@ -314,10 +345,8 @@ const TaskList: React.FC<MyTableProps> = ({
         return;
       }
 
-      // Получаем заголовки столбцов
       const columnHeaders = columnDefs.map((column) => column.headerName);
 
-      // Формируем данные для копирования
       const selectedRowData = selectedNodes.map((node) => node.data);
 
       const tableHtml = `
@@ -367,41 +396,39 @@ const TaskList: React.FC<MyTableProps> = ({
         </table>
       `;
 
-      // Создаем Blob с HTML таблицей
-      const blob = new Blob([tableHtml], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
-      });
-
-      // Копируем HTML в буфер обмена
       copy(tableHtml, { format: 'text/html' });
     }
     setContextMenuVisible(false);
-  };
+  }, [columnDefs]);
 
-  const filesColumnDef = isFilesVisiable
-    ? [
-        {
-          field: 'files',
-          headerName: `${t('DOC')}`,
-          cellRenderer: (params: any) => (
-            <FileModalList
-              files={params?.data?.files || params?.data?.FILES}
-              onFileSelect={(file) => {
-                console.log('Selected file:', file);
-                handleFileSelect({
-                  id: file?.id,
-                  name: file?.name,
-                });
-              }}
-              onFileOpen={(file) => {
-                console.log('Opened file:', file);
-                handleFileOpen(file);
-              }}
-            />
-          ),
-        },
-      ]
-    : [];
+  const filesColumnDef = useMemo(
+    () =>
+      isFilesVisiable
+        ? [
+            {
+              field: 'files',
+              headerName: `${t('DOC')}`,
+              cellRenderer: (params: any) => (
+                <FileModalList
+                  files={params?.data?.files || params?.data?.FILES}
+                  onFileSelect={(file) => {
+                    console.log('Selected file:', file);
+                    handleFileSelect({
+                      id: file?.id,
+                      name: file?.name,
+                    });
+                  }}
+                  onFileOpen={(file) => {
+                    console.log('Opened file:', file);
+                    handleFileOpen(file);
+                  }}
+                />
+              ),
+            },
+          ]
+        : [],
+    [isFilesVisiable, t]
+  );
 
   useEffect(() => {
     if (gridRef.current && gridRef.current.columnApi) {
@@ -424,6 +451,21 @@ const TaskList: React.FC<MyTableProps> = ({
       dispatch(setColumnOrder({ gridKey, columnOrder }));
     }
   }, [columnDefs, dispatch, gridKey]);
+
+  const onGridReady = useCallback(
+    (params: any) => {
+      if (gridRef.current && gridRef.current.columnApi && columnState) {
+        console.log('Setting column state onGridReady:', columnState);
+        gridRef.current.columnApi.applyColumnState({ state: columnState });
+      }
+      if (gridRef.current && gridRef.current.columnApi && columnOrder) {
+        console.log('Setting column order onGridReady:', columnOrder);
+
+        gridRef.current.columnApi.applyColumnState({ state: columnOrder });
+      }
+    },
+    [columnState]
+  );
 
   return (
     <div
@@ -465,7 +507,6 @@ const TaskList: React.FC<MyTableProps> = ({
             menuTabs: ['filterMenuTab', 'generalMenuTab'],
             resizable: true,
           }}
-          // gridOptions={gridOptions}
           columnDefs={[
             ...(isChekboxColumn ? updatedColumnDefs : columnDefs),
             ...filesColumnDef,
@@ -497,6 +538,7 @@ const TaskList: React.FC<MyTableProps> = ({
             ],
             defaultToolPanel: 'columns',
           }}
+          onGridReady={onGridReady}
         />
       )}
 
@@ -576,4 +618,4 @@ const TaskList: React.FC<MyTableProps> = ({
   );
 };
 
-export default TaskList;
+export default React.memo(TaskList);

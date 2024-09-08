@@ -59,7 +59,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   // let projectItems = null;
   // let isLoading = false;
   const valueEnumTask: ValueEnumTypeTask = {
-    RC: t('RC'),
+    RC: t('TC'),
     CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     MJC: t('MJC)'),
@@ -333,6 +333,9 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       <Space className=" pb-3 ">
         <Col>
           <Button
+            disabled={
+              project.status == 'CLOSED' || project.status == 'COMPLETED'
+            }
             size="small"
             icon={<PlusSquareOutlined />}
             onClick={handleCreate}
@@ -343,7 +346,11 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         <Col style={{ textAlign: 'right' }}>
           {
             <Button
-              disabled={!selectedKeys.length && selectedKeys.length < 1}
+              disabled={
+                (!selectedKeys.length && selectedKeys.length < 1) ||
+                project.status == 'CLOSED' ||
+                project.status == 'COMPLETED'
+              }
               size="small"
               icon={<MinusSquareOutlined />}
               onClick={() => {
@@ -374,6 +381,9 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
         </Col>
         <Col>
           <FileUploader
+            isDisabled={
+              project.status == 'CLOSED' || project.status == 'COMPLETED'
+            }
             onFileProcessed={function (data: any[]): void {
               handleAddMultiItems(data);
             }}
@@ -403,7 +413,11 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
 
         <Col style={{ textAlign: 'right' }}>
           <Button
-            disabled={!selectedKeys.length && selectedKeys.length < 1}
+            disabled={
+              (!selectedKeys.length && selectedKeys.length < 1) ||
+              project.status == 'CLOSED' ||
+              project.status == 'COMPLETED'
+            }
             size="small"
             icon={<ProjectOutlined />}
             onClick={() => handleGenerateWOTasks(selectedKeys)}

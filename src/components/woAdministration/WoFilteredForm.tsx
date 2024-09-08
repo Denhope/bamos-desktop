@@ -16,14 +16,14 @@ import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessAp
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
-
+import { getDefectTypes, getAtaChapters } from '@/services/utilites';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
   formKey: string; // Уникальный ключ формы
@@ -155,6 +155,8 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         projectItemType: form.getFieldValue('projectItemType'),
         WOReferenceID: form.getFieldValue('WOReferenceID'),
         time: new Date(),
+        defectCodeID: form.getFieldValue('defectCodeID'),
+        ata: form.getFieldValue('ata'),
       };
 
       onProjectSearch(searchParams);
@@ -170,6 +172,9 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       }
       return acc;
     }, {} as Record<string, string>) || {};
+
+  const options = getDefectTypes(t);
+  const optionsT = getAtaChapters(t);
   return (
     <ProForm
       formRef={formRef}
@@ -222,16 +227,20 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         label={`${t('Wo STATUS')}`}
         width="lg"
         valueEnum={{
-          draft: { text: t('DRAFT'), status: 'DRAFT' },
+          closed: { text: t('CLOSE'), status: 'SUCCESS' },
+          inspect: { text: t('INSPECTION'), status: 'inspect' },
+          nextAction: { text: t('NEXT ACTION'), status: 'PROGRESS' },
+          inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
+          test: { text: t('TEST'), status: 'Processing' },
           open: { text: t('OPEN'), status: 'Processing' },
-          inspect: { text: t('INSPECTED'), status: 'inspect' },
-          inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+          cancelled: { text: t('CANCEL'), status: 'Error' },
+          // draft: { text: t('DRAFT'), status: 'DRAFT' },
+
+          // needInspection: { text: t('NEED INSPECTION'), status: 'PROGRESS' },
+
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
           // completed: { text: t('COMPLETED'), status: 'Default' },
-          performed: { text: t('PERFORMED'), status: 'Default' },
-
-          closed: { text: t('CLOSED'), status: 'SUCCESS' },
-          cancelled: { text: t('CANCELLED'), status: 'Error' },
+          // performed: { text: t('PERFORMED'), status: 'Default' },
         }}
       />
 
@@ -239,7 +248,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         mode={'multiple'}
         showSearch
         name="planeId"
-        label={t('A/C No')}
+        label={t('AC Reg')}
         width="lg"
         valueEnum={planesValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
@@ -265,11 +274,11 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={{
           DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
           OPEN: { text: t('OPEN'), status: 'Processing' },
-          inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+          inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
           COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-          CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-          CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+          CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
+          CANCELLED: { text: t('CANCEL'), status: 'Error' },
         }}
       /> */}
 
@@ -363,7 +372,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={{
           RC: {
             text: t(
-              'RC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
+              'TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
             ),
           },
           CR_TASK: { text: t('CR TASK (CRIRICAL TASK/DI)') },
@@ -375,6 +384,24 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
           CMJC: { text: t('CMJC (Component maintenance) ') },
           FC: { text: t('FC (Fabrication card)') },
         }}
+      />
+      <ProFormSelect
+        showSearch
+        width={'md'}
+        mode="multiple"
+        name="defectCodeID"
+        label={t('DEFECT TYPE')}
+        options={options}
+      />
+      <ProFormSelect
+        // disabled
+        showSearch
+        mode="multiple"
+        name="ata"
+        label={t('ATA CHAPTER')}
+        width="lg"
+        // initialValue={'draft'}
+        options={optionsT}
       />
       <ProFormDateRangePicker
         name="plannedDate"

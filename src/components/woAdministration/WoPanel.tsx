@@ -1,6 +1,6 @@
 // ts-nocheck
 
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
   Col,
@@ -81,6 +81,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const [editingProject, setEditingProject] = useState<IProjectItemWO | null>(
     null
   );
+
+  const editingProjectRef = useRef(editingProject);
   const [editingProjectNRC, setEditingProjectNRC] = useState<any | null>(null);
   const { currentTime, setProjectTasksFormValues, projectTasksFormValues } =
     useGlobalState();
@@ -91,7 +93,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   useEffect(() => {
     setProjectTasksFormValues(projectSearchValues);
     // setEditingProject(null);
-    setSelectedKeys([]);
+    // setSelectedKeys([]);
   }, [projectSearchValues]);
 
   const [createPickSlip, setOpenCreatePickSlip] = useState<boolean>(false);
@@ -125,6 +127,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       projectItemType: projectTasksFormValues?.projectItemType,
       WOReferenceID: projectTasksFormValues?.WOReferenceID,
       time: projectTasksFormValues?.time,
+      defectCodeID: projectTasksFormValues?.defectCodeID,
+      ata: projectTasksFormValues?.ata,
     },
     {
       skip: !triggerQuery,
@@ -177,9 +181,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       return acc;
     }, {} as Record<string, string>) || {};
 
-  const transformedRequirements = useMemo(() => {
-    return transformToIRequirement(requirements || []);
-  }, [requirements]);
+  // const transformedRequirements = useMemo(() => {
+  //   return transformToIRequirement(requirements || []);
+  // }, [requirements]);
   const [isTreeView, setIsTreeView] = useState(false);
   const transformedTasks = useMemo(() => {
     return transformToIProjectTask(projectTasks || []);
@@ -197,7 +201,10 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   }, [projectSearchValues]);
   useEffect(() => {
     projectTasks && refetch();
-    // setEditingProject(editingProject);
+
+    // console.log(editingProject);
+    console.log('editingProjectRef.current');
+    // setEditingProject(editingProjectRef.current);
 
     // console.log(currentTime);
   }, [currentTime]); //
@@ -205,9 +212,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     setEditingProject(project);
     setEditingProjectNRC(null);
   };
-  const handleStoreChange = (value: string) => {
-    setSelectedStoreID(value);
-  };
+  // const handleStoreChange = (value: string) => {
+  //   setSelectedStoreID(value);
+  // };
   const handleSubmit = async (task: any) => {
     try {
       if (editingProject && editingProject?.id) {
@@ -220,6 +227,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         });
       } else if (!editingProject?.id) {
         await addTask({ project: { ...task, isNRC: true } }).unwrap();
+        console.log(task);
         refetch();
         notification.success({
           message: t('TASK SUCCESSFULLY ADDED'),
@@ -311,8 +319,26 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
+    },
+    {
+      field: 'projectItemType',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      // width: 130,
+      valueGetter: (params: {
+        data: { projectItemType: keyof ValueEnumTypeTask };
+      }) => params.data.projectItemType,
+      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+        const status = params.value;
+        return valueEnumTask[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
+        backgroundColor: getTaskTypeColor(params.value),
+        // color: '#ffffff', // Text color
+      }),
+      // hide: true,
     },
     {
       field: 'taskWO',
@@ -354,24 +380,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       // hide: true,
     },
 
-    {
-      field: 'projectItemType',
-      headerName: `${t('TASK TYPE')}`,
-      filter: true,
-      // width: 130,
-      valueGetter: (params: {
-        data: { projectItemType: keyof ValueEnumTypeTask };
-      }) => params.data.projectItemType,
-      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
-        const status = params.value;
-        return valueEnumTask[status] || '';
-      },
-      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
-        backgroundColor: getTaskTypeColor(params.value),
-        color: '#ffffff', // Text color
-      }),
-      // hide: true,
-    },
     // {
     //   field: 'PART_NUMBER',
     //   headerName: `${t('PART No')}`,
@@ -379,10 +387,10 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     // },
     // { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
-    { field: 'amtoss', headerName: `${t('AMM')}`, filter: true },
+    { field: 'amtoss', headerName: `${t('REFERENCE')}`, filter: true },
     // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
     // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    // { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
+    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
     // { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
     // { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
     // {
@@ -458,11 +466,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   }
 
   const valueEnum: ValueEnumType = {
-    inspect: t('INSPECTED'),
+    inspect: t('INSPECTION'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    cancelled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
+    cancelled: t('CANCEL'),
     inProgress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
@@ -472,17 +481,21 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     onShort: '',
     draft: '',
     issued: '',
-    progress: '',
-    canceled: '',
+    test: t('TEST'),
+    progress: t('IN PROGRESS'),
+
+    nextAction: t('NEXT ACTION'),
+    needInspection: t('NEED INSPECTION'),
   };
   const valueEnumTask: ValueEnumTypeTask = {
-    RC: t('RC'),
+    RC: t('TC'),
     CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
     MJC: t('MJC)'),
     CMJC: t('CMJC)'),
     FC: t('FC'),
+    // RC_ADD: t('RC_ADD'),
   };
 
   const handleAddAction = async (
@@ -508,7 +521,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     }
 
     Modal.confirm({
-      title: t('ARE YOU SURE YOU WANT TO CHANGE STATUS?'),
+      title: t(
+        `ARE YOU SURE YOU WANT TO REOPEN TASKS? ALL ACTIONS WILL BE DELETED!`
+      ),
       onOk: async () => {
         try {
           await addMultiAction({ actionType, ids });
@@ -690,7 +705,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               disabled={
                 !selectedKeys.length ||
                 selectedKeys.length > 1 ||
-                editingProject?.status == 'closed'
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled'
               }
               size="small"
               icon={<PlusSquareOutlined />}
@@ -722,7 +738,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             {t('ADD WORKER')}
           </Button>
         </Col> */}
-        <Col>
+        {/* <Col>
           <PermissionGuard
             requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
@@ -736,7 +752,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               }}
               disabled={
                 !selectedKeys.length ||
+                selectedKeys.length > 1 ||
                 editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled' ||
                 editingProject?.status == 'performed' ||
                 editingProject?.status == 'inspect'
               }
@@ -746,8 +764,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               {t('COMPLETE WORKORDER')}
             </Button>
           </PermissionGuard>
-        </Col>
-        <Col>
+        </Col> */}
+        {/* <Col>
           <PermissionGuard
             requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
@@ -763,7 +781,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               }}
               disabled={
                 !selectedKeys.length ||
+                selectedKeys.length > 1 ||
                 editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled' ||
                 editingProject?.status == 'inspect'
               }
               size="small"
@@ -772,7 +792,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               {t('INSPECT WORKORDER')}
             </Button>
           </PermissionGuard>
-        </Col>
+        </Col> */}
         <Col>
           <PermissionGuard
             requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
@@ -803,7 +823,10 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 // ]);
               }}
               disabled={
-                !selectedKeys.length || editingProject?.status == 'closed'
+                !selectedKeys.length ||
+                selectedKeys.length > 1 ||
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled'
               }
               size="small"
               icon={<CheckCircleFilled />}
@@ -812,6 +835,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             </Button>
           </PermissionGuard>
         </Col>
+
         <Col>
           <PermissionGuard requiredPermissions={[Permission.REOPEN_TASK]}>
             <Button
@@ -819,8 +843,28 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 handleAddAction('open', selectedKeys, ['open']);
               }}
               disabled={
-                !selectedKeys.length || editingProject?.status !== 'closed'
+                !selectedKeys.length ||
+                selectedKeys.length > 1 ||
+                editingProject?.status !== 'closed'
               }
+              size="small"
+              icon={<ShrinkOutlined />}
+            >
+              {t('EDIT TASK')}
+            </Button>
+          </PermissionGuard>
+        </Col>
+        <Col>
+          <PermissionGuard requiredPermissions={[Permission.REOPEN_TASK]}>
+            <Button
+              onClick={() => {
+                handleAddAction('reOpen', selectedKeys, ['']);
+              }}
+              // disabled={
+              //   !selectedKeys.length ||
+              //   selectedKeys.length > 1 ||
+              //   editingProject?.status !== 'closed'
+              // }
               size="small"
               icon={<ShrinkOutlined />}
             >
@@ -870,7 +914,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       </Space>
       <div className="h-[78vh] flex flex-col">
         <Split initialPrimarySize="30%" splitterSize="20px">
-          <div className="h-[67vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
+          <div className="h-[78vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col">
             {isTreeView ? (
               <WOTree
                 isLoading={isLoading || isFetching}
@@ -890,12 +934,13 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 rowData={transformedTasks || []}
                 onRowSelect={function (rowData: any | null): void {
                   handleEdit(rowData);
+                  console.log(rowData);
                 }}
                 height={'64vh'}
                 onCheckItems={function (selectedKeys: React.Key[]): void {
                   setSelectedKeys(selectedKeys);
                 }}
-                gridKey={'woTable'}
+                gridKey={'woTaskList'}
               />
               // <MyTable
               //   columnDefs={columnDefs}
@@ -910,7 +955,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               // />
             )}
           </div>
-          <div className="  h-[67vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 ">
+          <div className="  h-[78vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <WOAdminForm
               order={editingProject}
               onCheckItems={function (selectedKeys: React.Key[]): void {

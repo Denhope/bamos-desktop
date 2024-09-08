@@ -282,7 +282,7 @@ const PartDetailForm: FC<Props> = ({
               width="sm"
               valueEnum={{
                 '/NEW': t('NEW'),
-                '/INSPECTED': t('INSPECTED'),
+                '/INSPECTION': t('INSPECTION'),
                 '/REPAIRED': t('REPAIRED'),
                 '/SERVICABLE': t('SERVICABLE'),
                 '/UNSERVICABLE': t('UNSERVICABLE'),

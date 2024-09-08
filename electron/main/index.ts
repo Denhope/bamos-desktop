@@ -373,3 +373,19 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg });
   }
 });
+
+ipcMain.on('open-new-window', (event, args) => {
+  const { htmlPath, data } = args;
+  const newWindow = new BrowserWindow({
+    webPreferences: {
+      preload: join(__dirname, 'preload.js'), // или ваш файл прелоадера
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  newWindow.loadFile(join(__dirname, htmlPath));
+  newWindow.webContents.on('did-finish-load', () => {
+    newWindow.webContents.send('data', data);
+  });
+});

@@ -294,7 +294,7 @@ const PickSlipCancel: FC = () => {
   //     },
   //   },
   //   {
-  //     title: `${t('CANCELLED')}`,
+  //     title: `${t('CANCEL')}`,
   //     ellipsis: true, //
   //     dataIndex: 'CANCELED_QUANTITY',
   //     key: 'CANCELED_QUANTITY',
@@ -422,8 +422,8 @@ const PickSlipCancel: FC = () => {
   //     valueEnum: {
   //       issued: { text: t('ISSUED'), status: 'Processing' },
   //       open: { text: t('NEW'), status: 'Error' },
-  //       closed: { text: t('CLOSED'), status: 'Default' },
-  //       cancelled: { text: t('CANCELLED'), status: 'Error' },
+  //       closed: { text: t('CLOSE'), status: 'Default' },
+  //       cancelled: { text: t('CANCEL'), status: 'Error' },
   //       partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
   //       transfer: { text: t('TRANSFER'), status: 'Processing' },
   //       completed: { text: t('COMPLETED'), status: 'SUCCESS' },
@@ -533,8 +533,8 @@ const PickSlipCancel: FC = () => {
     onShort: t('ON SHORT'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
     onOrder: t('ON ORDER'),
     partlyCanceled: t('PARTLY CANCELLED'),
     draft: t('DRAFT'),

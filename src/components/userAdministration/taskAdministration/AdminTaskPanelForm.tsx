@@ -50,6 +50,7 @@ import {
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
+import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
 
 interface UserFormProps {
   task?: ITask;
@@ -173,7 +174,8 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   //     }
   //     return acc1;
   //   }, {} as Record<string, string>) || {};
-
+  const { data: templates, isLoading: isTemplatesLoading } =
+    useGetActionsTemplatesQuery({});
   const zonesValueEnum: Record<string, string> =
     zones?.reduce((acc: any, zone: any) => {
       acc[zone?.id || zone?._id] =
@@ -836,6 +838,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
           <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
             {steps ? (
               <StepContainer
+                templates={templates}
                 steps={steps || []}
                 onAddStep={function (newStep: IStep): void {
                   handleAddStep(newStep);

@@ -4,25 +4,34 @@ import { useTranslation } from 'react-i18next';
 import { User } from '@/models/IUser';
 import { v4 as uuidv4 } from 'uuid';
 import { DeleteOutlined } from '@ant-design/icons';
+import { ProFormDigit } from '@ant-design/pro-components';
 
 const { Option } = Select;
 
 interface TaskAllocation {
   id: string;
-  userID: string;
+  userID: string | { _id: string };
   duration: number;
+  organizationAuthorization?: string;
+  skill?: string;
 }
 
 interface UserTaskAllocationProps {
   users: User[];
+  task?: any;
   initialTaskAllocations?: TaskAllocation[];
   onTaskAllocationsChange?: (taskAllocations: TaskAllocation[]) => void;
+  isSingle?: boolean;
+  isTime?: boolean;
 }
 
 const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
   users,
+  task,
   initialTaskAllocations = [],
   onTaskAllocationsChange = () => {},
+  isSingle,
+  isTime,
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -32,36 +41,89 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
       id: value.id || uuidv4(),
       userID: value.userID,
       duration: value.duration,
+      organizationAuthorization: value.organizationAuthorization,
+      skill: value.skill,
     }));
     onTaskAllocationsChange(taskAllocations);
-    // console.log(taskAllocations);
   };
 
   useEffect(() => {
     const currentValues = form.getFieldsValue().taskAllocations || [];
-    currentValues.forEach((value: { userID: string }, index: number) => {
-      const selectedUser = users.find((user) => user.id === value.userID);
-      currentValues[index].skill = selectedUser
-        ? selectedUser.skillID.code
-        : '';
-    });
+    currentValues.forEach(
+      (value: { userID: string | { _id: string } }, index: number) => {
+        const userID =
+          typeof value.userID === 'object' ? value.userID._id : value.userID;
+        const selectedUser = users.find((user) => user.id === userID);
+        currentValues[index].skill = selectedUser
+          ? selectedUser.skillID?.code
+          : '';
+        currentValues[index].organizationAuthorization = selectedUser
+          ? selectedUser.organizationAuthorization || selectedUser.singNumber
+          : '';
+      }
+    );
     form.setFieldsValue({ taskAllocations: currentValues });
   }, [users, form]);
+
+  useEffect(() => {
+    if (task && task.taskId && task.taskId.mainWorkTime) {
+      const currentValues = form.getFieldsValue().taskAllocations || [];
+      currentValues.forEach((value: { duration: number }, index: number) => {
+        if (!value.duration) {
+          currentValues[index].duration = task.taskId.mainWorkTime;
+        }
+      });
+      form.setFieldsValue({ taskAllocations: currentValues });
+      handleTaskAllocationChange(currentValues);
+    }
+  }, [task, form]);
 
   return (
     <Form
       form={form}
-      initialValues={{ taskAllocations: initialTaskAllocations }}
+      initialValues={{
+        taskAllocations:
+          initialTaskAllocations.length > 0
+            ? initialTaskAllocations.map((allocation) => {
+                const userID =
+                  typeof allocation.userID === 'object'
+                    ? allocation.userID._id
+                    : allocation.userID;
+                const selectedUser = users.find((user) => user.id === userID);
+                return {
+                  ...allocation,
+                  userID: userID,
+                  organizationAuthorization: selectedUser
+                    ? selectedUser.organizationAuthorization ||
+                      selectedUser.singNumber
+                    : '',
+                  skill: selectedUser ? selectedUser.skillID?.code : '',
+                };
+              })
+            : [
+                {
+                  id: uuidv4(),
+                  userID: '',
+                  duration: task?.taskId?.mainWorkTime || 0,
+                },
+              ],
+      }}
     >
       <Form.List name="taskAllocations">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => {
               const currentValues = form.getFieldsValue().taskAllocations || [];
-              const selectedUser = users.find(
-                (user) => user.id === currentValues[name]?.userID
-              );
+              const userID =
+                typeof currentValues[name]?.userID === 'object'
+                  ? currentValues[name]?.userID._id
+                  : currentValues[name]?.userID;
+              const selectedUser = users.find((user) => user.id === userID);
               const skill = selectedUser ? selectedUser?.skillID?.code : '';
+              const organizationAuthorization = selectedUser
+                ? selectedUser.organizationAuthorization ||
+                  selectedUser.singNumber
+                : '';
 
               return (
                 <Space
@@ -70,16 +132,18 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                   align="baseline"
                 >
                   <Form.Item
+                    label={t('ID')}
                     {...restField}
-                    name={[name, 'userID']}
-                    rules={[{ required: true, message: t('SELECT_USER') }]}
+                    name={[name, 'organizationAuthorization']}
+                    initialValue={organizationAuthorization}
+                    rules={[{ required: true, message: t('SELECT USER') }]}
                   >
                     <Select
                       showSearch
                       allowClear
                       size="small"
-                      placeholder={t('SELECT_USER')}
-                      style={{ width: 230 }}
+                      placeholder={t('SELECT USER')}
+                      style={{ width: 190 }}
                       onChange={(value) => {
                         currentValues[name].userID = value;
                         const selectedUser = users.find(
@@ -88,6 +152,11 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         currentValues[name].skill = selectedUser
                           ? selectedUser.skillID.code
                           : '';
+                        currentValues[name].organizationAuthorization =
+                          selectedUser
+                            ? selectedUser.organizationAuthorization ||
+                              selectedUser.singNumber
+                            : '';
                         form.setFieldsValue({ taskAllocations: currentValues });
                         handleTaskAllocationChange(currentValues);
                       }}
@@ -97,7 +166,7 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         );
                         if (user) {
                           const searchText =
-                            `${user.singNumber} ${user.firstName} ${user.lastName}`.toLowerCase();
+                            `${user?.organizationAuthorization}`.toLowerCase();
                           return searchText.indexOf(input.toLowerCase()) >= 0;
                         }
                         return false;
@@ -105,79 +174,139 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                     >
                       {users.map((user) => (
                         <Option key={user.id} value={user.id}>
-                          {`(${user.singNumber})${user.firstName} ${user.lastName}`}
+                          {String(
+                            user.organizationAuthorization || user.singNumber
+                          )?.toUpperCase()}
                         </Option>
                       ))}
                     </Select>
                   </Form.Item>
                   <Form.Item
+                    label={t('NAME')}
                     {...restField}
-                    name={[name, 'duration']}
-                    rules={[{ required: true, message: t('ENTER_DURATION') }]}
+                    name={[name, 'userID']}
+                    initialValue={userID}
+                    rules={[{ required: true, message: t('SELECT USER') }]}
                   >
-                    <Input
+                    <Select
+                      showSearch
+                      allowClear
                       size="small"
-                      placeholder={t('DURATION_HOURS')}
-                      type="number"
-                      style={{ width: 70 }}
-                      onChange={(e) => {
-                        currentValues[name].duration = parseFloat(
-                          e.target.value
+                      placeholder={t('SELECT USER')}
+                      style={{ width: 190 }}
+                      onChange={(value) => {
+                        currentValues[name].userID = value;
+                        const selectedUser = users.find(
+                          (user) => user.id === value
                         );
+                        currentValues[name].skill = selectedUser
+                          ? selectedUser.skillID.code
+                          : '';
+                        currentValues[name].organizationAuthorization =
+                          selectedUser
+                            ? selectedUser.organizationAuthorization ||
+                              selectedUser.singNumber
+                            : '';
                         form.setFieldsValue({ taskAllocations: currentValues });
                         handleTaskAllocationChange(currentValues);
                       }}
-                    />
+                      filterOption={(input, option: any) => {
+                        const user = users.find(
+                          (user) => user.id === option.value
+                        );
+                        if (user) {
+                          const searchText = `${
+                            user.singNumber
+                          } ${user.firstNameEnglish?.toUpperCase()} ${user.lastNameEnglish?.toUpperCase()}`.toLowerCase();
+                          return searchText.indexOf(input.toLowerCase()) >= 0;
+                        }
+                        return false;
+                      }}
+                    >
+                      {users.map((user) => (
+                        <Option key={user.id} value={user.id}>
+                          {`${user.firstNameEnglish?.toUpperCase()} ${user.lastNameEnglish?.toUpperCase()}`}
+                        </Option>
+                      ))}
+                    </Select>
                   </Form.Item>
-                  <span className="p-3">MHs</span>
-                  <Form.Item
-                    {...restField}
-                    name={[name, 'skill']}
-                    initialValue={skill}
-                    rules={[{ required: true, message: t('ENTER_DURATION') }]}
-                  >
-                    <Input
-                      size="small"
-                      disabled
-                      placeholder={t('SKILL')}
-                      type="string"
-                      style={{ width: 70 }}
+                  {!isTime && (
+                    <ProFormDigit
+                      label={t('MHs')}
+                      {...restField}
+                      name={[name, 'duration']}
+                      rules={[{ required: true, message: t('ENTER_DURATION') }]}
+                      placeholder={t('DURATION_HOURS')}
+                      fieldProps={{
+                        size: 'small',
+                        style: { width: 70 },
+                        step: 0.1,
+                        onChange: (value) => {
+                          currentValues[name].duration = value;
+                          form.setFieldsValue({
+                            taskAllocations: currentValues,
+                          });
+                          handleTaskAllocationChange(currentValues);
+                        },
+                      }}
                     />
-                  </Form.Item>
-                  <Button
-                    icon={<DeleteOutlined />}
-                    danger
-                    type="link"
-                    onClick={() => {
-                      remove(name);
-                      handleTaskAllocationChange(currentValues);
-                    }}
-                  >
-                    {t('DELETE')}
-                  </Button>
+                  )}
+
+                  {!isTime && (
+                    <Form.Item
+                      label={t('SKILL')}
+                      {...restField}
+                      name={[name, 'skill']}
+                      initialValue={skill}
+                      rules={[{ required: true, message: t('ENTER_DURATION') }]}
+                    >
+                      <Input
+                        size="small"
+                        disabled
+                        placeholder={t('SKILL')}
+                        type="string"
+                        style={{ width: 70 }}
+                      />
+                    </Form.Item>
+                  )}
+                  {!isTime && (
+                    <Button
+                      icon={<DeleteOutlined />}
+                      danger
+                      type="link"
+                      onClick={() => {
+                        remove(name);
+                        handleTaskAllocationChange(currentValues);
+                      }}
+                    >
+                      {t('DELETE')}
+                    </Button>
+                  )}
                 </Space>
               );
             })}
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => {
-                  const newTaskAllocation = {
-                    id: uuidv4(),
-                    userID: '',
-                    duration: 0,
-                  };
-                  add(newTaskAllocation);
-                  handleTaskAllocationChange([
-                    ...(form.getFieldsValue().taskAllocations || []),
-                    newTaskAllocation,
-                  ]);
-                }}
-                block
-              >
-                {t('ADD USER')}
-              </Button>
-            </Form.Item>
+            {(!isSingle || fields.length === 0) && (
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    const newTaskAllocation = {
+                      id: uuidv4(),
+                      userID: '',
+                      duration: task?.taskId?.mainWorkTime || 0,
+                    };
+                    add(newTaskAllocation);
+                    handleTaskAllocationChange([
+                      ...(form.getFieldsValue().taskAllocations || []),
+                      newTaskAllocation,
+                    ]);
+                  }}
+                  block
+                >
+                  {t('ADD USER')}
+                </Button>
+              </Form.Item>
+            )}
           </>
         )}
       </Form.List>

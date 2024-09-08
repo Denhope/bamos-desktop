@@ -4,10 +4,12 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface GlobalStateContextType {
   currentTime: number;
   tasksFormValues: any;
+  projectTasksFormValues: any;
+  notificationsEnabled: boolean;
   setCurrentTime: (time: number) => void;
   setTasksFormValues: (values: any) => void;
   setProjectTasksFormValues: (values: any) => void;
-  projectTasksFormValues: any;
+  setNotificationsEnabled: (enabled: boolean) => void;
 }
 
 // Создаем контекст с типом и значением по умолчанию
@@ -24,15 +26,19 @@ export const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
   const [tasksFormValues, setTasksFormValues] = useState<any>(null);
   const [projectTasksFormValues, setProjectTasksFormValues] =
     useState<any>(null);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
   return (
     <GlobalStateContext.Provider
       value={{
         currentTime,
         setCurrentTime,
-        setTasksFormValues,
         tasksFormValues,
+        setTasksFormValues,
         projectTasksFormValues,
         setProjectTasksFormValues,
+        notificationsEnabled,
+        setNotificationsEnabled,
       }}
     >
       {children}

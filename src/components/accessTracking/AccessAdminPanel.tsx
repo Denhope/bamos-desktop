@@ -325,7 +325,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             booking: {
               voucherModel: 'INSPECT_ACCESS',
               accessProjectID: selectedKeys,
-              accessProjectStatus: 'INSPECTED',
+              accessProjectStatus: 'INSPECTION',
               projectID: projectSearchValues.projectID,
             },
             acTypeId: projectSearchValues.acTypeId,
@@ -352,12 +352,12 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
     cellDataType: CellDataType;
   }
   const valueEnum: ValueEnumType = {
-    inspect: t('INSPECTED'),
-    inspected: t('INSPECTED'),
+    inspect: t('INSPECTION'),
+    inspected: t('INSPECTION'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
-    closed: t('CLOSED'),
-    canceled: t('CANCELLED'),
+    closed: t('CLOSE'),
+    canceled: t('CANCEL'),
     inProgress: t('IN PROGRESS'),
     complete: t('COMPLETE'),
     RECEIVED: t('RECEIVED'),
@@ -660,7 +660,6 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
               >
                 <Tabs.TabPane tab={t('INFORMATION')} key="1">
                   <div className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
-                    {' '}
                     <AccessCodeForm
                       accessesData={accessesData || []}
                       // projectTasks={projectTasks || []}

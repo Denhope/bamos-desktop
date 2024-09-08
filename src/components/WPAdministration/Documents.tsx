@@ -17,6 +17,7 @@ interface Document {
 interface DocumentsProps {
   documents?: Document[];
   onDocumentsChange: (documents: Document[]) => void;
+  wo?: any;
 }
 
 const defaultDocuments: Document[] = [
@@ -31,6 +32,7 @@ const defaultDocuments: Document[] = [
 const Documents: FC<DocumentsProps> = ({
   documents = defaultDocuments,
   onDocumentsChange,
+  wo,
 }) => {
   const { t } = useTranslation();
   const [documentsData, setDocuments] = useState<Document[]>(documents);
@@ -77,8 +79,12 @@ const Documents: FC<DocumentsProps> = ({
       {documentsData.map((doc, index) => (
         <div key={doc.id}>
           {index > 0 && <Divider style={{ margin: '16px 0' }} />}
-          <ProForm.Group size="small">
+          <ProForm.Group
+            disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
+            size="small"
+          >
             <ProFormText
+              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
               width="xs"
               name={`name-${doc.id}`}
               label={t('TYPE')}
@@ -86,6 +92,7 @@ const Documents: FC<DocumentsProps> = ({
               onChange={(e) => handleChange(doc.id, 'name', e.target.value)}
             />
             <ProFormText
+              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
               width="sm"
               name={`revision-${doc.id}`}
               label={t('REVISION')}
@@ -93,6 +100,7 @@ const Documents: FC<DocumentsProps> = ({
               onChange={(e) => handleChange(doc.id, 'revision', e.target.value)}
             />
             <ProFormText
+              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
               name={`revisionDate-${doc.id}`}
               label={t('DATE')}
               initialValue={doc.revisionDate}
@@ -102,6 +110,7 @@ const Documents: FC<DocumentsProps> = ({
             />
             <ProForm.Item>
               <Button
+                disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
                 type="default"
                 danger
                 icon={<MinusOutlined />}
@@ -121,6 +130,7 @@ const Documents: FC<DocumentsProps> = ({
         }}
       >
         <Button
+          disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
           type="default"
           onClick={handleAddDocument}
           icon={<PlusOutlined />}

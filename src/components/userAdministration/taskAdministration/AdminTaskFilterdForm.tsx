@@ -1,15 +1,24 @@
-import React, { FC, useRef, useCallback, useMemo, useState } from 'react';
+import React, {
+  FC,
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   FormInstance,
   ProForm,
-  ProFormCheckbox, // Импортируйте ProFormCheckbox
+  ProFormCheckbox,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
-import { notification } from 'antd';
+import { Form, notification } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
 
 export type TaskFilteredFormValues = {
   taskNumber?: string;
@@ -20,19 +29,19 @@ export type TaskFilteredFormValues = {
   status?: string[];
   time?: any;
   taskCardNumber?: any;
-  isCriticalTask?: boolean; // Добавьте isCriticalTask в тип значений формы
 };
 
 type VendorFilteredFormProps<T> = {
+  formKey: string; // Уникальный ключ формы
   onSubmit: (values: TaskFilteredFormValues) => void;
 };
 
 const AdminTaskFilteredForm: FC<
   VendorFilteredFormProps<TaskFilteredFormValues>
-> = ({ onSubmit }) => {
+> = ({ onSubmit, formKey }) => {
   const formRef = useRef<FormInstance<TaskFilteredFormValues>>(null);
   const [acTypeID, setACTypeID] = useState<any>('');
-
+  const [form] = Form.useForm();
   const handleKeyPress = useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       formRef.current?.submit();
@@ -40,7 +49,7 @@ const AdminTaskFilteredForm: FC<
   }, []);
 
   const { t } = useTranslation();
-
+  const dispatch = useDispatch();
   const statusOptions = useMemo(
     () => ({
       ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
@@ -51,11 +60,23 @@ const AdminTaskFilteredForm: FC<
 
   const handleSubmit = useCallback(
     async (values: TaskFilteredFormValues) => {
+      // if (Object.values(values).every((value) => value === '')) {
+      //   // Показываем уведомление, если все значения формы пустые
+      //   notification.warning({
+      //     message: 'Предупреждение',
+      //     description: 'Пожалуйста, введите хотя бы одно значение',
+      //   });
+      //   return false;
+      // } else {
+      //   // Вызываем onSubmit только если хотя бы одно поле заполнено
+      //   const success = onSubmit({ ...values, time: new Date() });
+      //   return success;
+      // }
       onSubmit({ ...values, time: new Date() });
     },
     [onSubmit]
   );
-
+  const formValues = useSelector((state: any) => state.form[formKey] || {});
   const { data: mpdCodes } = useGetMPDCodesQuery({ acTypeID });
 
   const { data: acTypes } = useGetACTypesQuery({});
@@ -71,13 +92,22 @@ const AdminTaskFilteredForm: FC<
       acc[acType.id] = acType.name;
       return acc;
     }, {}) || {};
+  useEffect(() => {
+    form.setFieldsValue(formValues);
+  }, [form, formValues]);
+  const handleReset = () => {
+    form.resetFields();
 
+    dispatch(resetFormValues({ formKey }));
+  };
   return (
-    <div
-      className="p-3 m-1 rounded-md bg-slate-100 overflow-y-auto"
-      style={{ maxHeight: '400px' }}
-    >
+    <div className="p-3 m-1 rounded-md bg-slate-100">
       <ProForm
+        onValuesChange={(changedValues, allValues) => {
+          dispatch(setFormValues({ formKey, values: allValues }));
+        }}
+        onReset={handleReset}
+        form={form}
         size="small"
         onFinish={handleSubmit}
         layout="horizontal"
@@ -96,7 +126,7 @@ const AdminTaskFilteredForm: FC<
             onKeyPress: handleKeyPress,
           }}
           name="AMM"
-          label={t('REFERENCE')}
+          label={t('AMM')}
           width="lg"
         />
         <ProFormText
@@ -114,10 +144,15 @@ const AdminTaskFilteredForm: FC<
           label={t('TASK TYPE')}
           width="xl"
           valueEnum={{
+            // PART_PRODUCE: { text: t('PART PRODUCE') },
             SB: { text: t('SERVICE BULLETIN') },
             SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
+            // PN: { text: t('COMPONENT') },
+            // PART_PRODUCE: { text: t('PART PRODUCE') },
+            // NRC: { text: t('NRC') },
+            // ADD_HOC: { text: t('ADD HOC') },
           }}
         />
         <ProFormSelect
@@ -149,9 +184,7 @@ const AdminTaskFilteredForm: FC<
           width="lg"
           valueEnum={statusOptions}
         />
-
-        {/* Добавьте ProFormCheckbox для isCriticalTask */}
-        <ProFormCheckbox name="isCriticalTask" label={t('CRITICAL TASK')} />
+        {/* <ProFormCheckbox name="IS_RESIDENT" label={t('RESIDENT')} /> */}
       </ProForm>
     </div>
   );

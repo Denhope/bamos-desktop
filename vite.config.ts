@@ -1,15 +1,15 @@
-import { rmSync } from 'node:fs';
-import path from 'node:path';
+import { rmSync } from 'fs';
+import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import electron from 'vite-plugin-electron/simple';
 import pkg from './package.json';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import commonjs from 'vite-plugin-commonjs';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
-  rmSync('dist-electron', { recursive: true, force: true });
+  if (command === 'build') {
+    rmSync('dist-electron', { recursive: true, force: true });
+  }
 
   const isServe = command === 'serve';
   const isBuild = command === 'build';
@@ -21,15 +21,12 @@ export default defineConfig(({ command }) => {
     },
     resolve: {
       alias: {
-        '@': path.join(__dirname, 'src'),
-        // pdfmake: path.resolve(__dirname, 'node_modules/pdfmake/build/pdfmake.js'),
-        // 'pdfmake-vfs': path.resolve(__dirname, 'node_modules/pdfmake/build/vfs_fonts.js'),
+        '@': path.resolve(__dirname, 'src'),
       },
     },
     plugins: [
       react(),
       nodePolyfills(),
-      commonjs(),
       electron({
         main: {
           entry: 'electron/main/index.ts',
@@ -47,7 +44,7 @@ export default defineConfig(({ command }) => {
               outDir: 'dist-electron/main',
               rollupOptions: {
                 external: [
-                  ...Object.keys(require('./package.json').dependencies || {}),
+                  ...Object.keys(pkg.dependencies || {}),
                   'pdfmake',
                   'pdfmake/build/vfs_fonts',
                 ],
@@ -64,29 +61,22 @@ export default defineConfig(({ command }) => {
               outDir: 'dist-electron/preload',
               rollupOptions: {
                 external: [
-                  ...Object.keys(require('./package.json').dependencies || {}),
+                  ...Object.keys(pkg.dependencies || {}),
                   'pdfmake',
                   'pdfmake/build/vfs_fonts',
                 ],
-              },
-              commonjsOptions: {
-                include: /node_modules/,
-                transformMixedEsModules: true,
               },
             },
           },
         },
       }),
     ],
-    server:
-      process.env.VSCODE_DEBUG &&
-      (() => {
-        const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL);
-        return {
-          host: url.hostname,
-          port: +url.port,
-        };
-      })(),
+    server: process.env.VSCODE_DEBUG
+      ? {
+          host: new URL(pkg.debug.env.VITE_DEV_SERVER_URL).hostname,
+          port: +new URL(pkg.debug.env.VITE_DEV_SERVER_URL).port,
+        }
+      : undefined,
     clearScreen: false,
   };
 });

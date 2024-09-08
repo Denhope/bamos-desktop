@@ -43,23 +43,23 @@ export const baseQueryWithReauth: BaseQueryFn<
   );
 
   // If the request was unauthorized, try to refresh the token
-  if (
-    (result.error && result.error.status === 401) ||
-    (result.error && result.error.status === 'PARSING_ERROR')
-  ) {
-    // AuthService.handleAuthError(Error);
-    try {
-      await AuthService.handleAuthError(Error);
-      // Re-attempt the request with the new token
-      const result = await $authHost.request(fetchArgs);
-      return { data: result.data };
-    } catch (refreshError) {
-      // Handle the refresh error or logout the user
-      console.error('Error refreshing token:', refreshError);
-      // You might want to logout the user or handle the error differently
-      // AuthService.userLogout();
-    }
-  }
+  // if (
+  //   (result.error && result.error.status === 401) ||
+  //   (result.error && result.error.status === 'PARSING_ERROR')
+  // ) {
+  //   // AuthService.handleAuthError(Error);
+  //   try {
+  //     await AuthService.handleAuthError(Error);
+  //     // Re-attempt the request with the new token
+  //     const result = await $authHost.request(fetchArgs);
+  //     return { data: result.data };
+  //   } catch (refreshError) {
+  //     // Handle the refresh error or logout the user
+  //     console.error('Error refreshing token:', refreshError);
+  //     // You might want to logout the user or handle the error differently
+  //     // AuthService.userLogout();
+  //   }
+  // }
 
   return result;
 };

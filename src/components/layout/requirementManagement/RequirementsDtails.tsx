@@ -348,8 +348,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
-                  closed: { text: t('CLOSED'), status: 'Default' },
-                  canceled: { text: t('CANCELLED'), status: 'Error' },
+                  closed: { text: t('CLOSE'), status: 'Default' },
+                  canceled: { text: t('CANCEL'), status: 'Error' },
                   onOrder: { text: t('ISSUED'), status: 'Processing' },
                 }}
               />
@@ -384,8 +384,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
-                  closed: { text: t('CLOSED'), status: 'Default' },
-                  canceled: { text: t('CANCELLED'), status: 'Error' },
+                  closed: { text: t('CLOSE'), status: 'Default' },
+                  canceled: { text: t('CANCEL'), status: 'Error' },
                   onOrder: { text: t('ISSUED'), status: 'Processing' },
                 }}
               />

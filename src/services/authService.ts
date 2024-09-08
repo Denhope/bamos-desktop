@@ -89,21 +89,32 @@ export default class AuthService {
   }
   static async handleAuthError(error: any) {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+
+    // Проверяем, существует ли error.response и имеет ли он статус 401
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
-      return AuthService.refreshTokens()
-        .then(() => {
-          return $authHost(originalRequest);
-        })
-        .catch((e) => {
-          console.log('User is not authorized');
-          // AuthService.userLogout();
-          if (!AuthService.hasRefreshed) {
-            AuthService.hasRefreshed = true;
-            window.location.reload(); // Перезагрузка страницы
-          }
-        });
+      try {
+        await AuthService.refreshTokens();
+        return $authHost(originalRequest);
+      } catch (e) {
+        console.log('User is not authorized');
+        if (!AuthService.hasRefreshed) {
+          AuthService.hasRefreshed = true;
+          window.location.reload(); // Перезагрузка страницы
+        }
+      }
     }
+
+    // Если error.response не существует, обрабатываем эту ситуацию
+    if (!error.response) {
+      console.error('Network error or request was not completed:', error);
+      // Здесь можно добавить дополнительную логику для обработки сетевых ошибок
+    }
+
     throw error;
   }
 

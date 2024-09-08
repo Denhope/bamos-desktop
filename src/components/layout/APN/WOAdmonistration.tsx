@@ -23,7 +23,7 @@ const WOAdministration: FC = () => {
       <Sider
         className="h-[87vh] overflow-hidden"
         theme="light"
-        width={350}
+        width={400}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}
@@ -38,9 +38,12 @@ const WOAdministration: FC = () => {
               display: !collapsed ? 'block' : 'none',
             }}
           >
-            <WoFilteredForm
-              onProjectSearch={(values: any) => setRequirementsSearch(values)}
-            />
+            <div className="h-[75vh] overflow-y-auto flex flex-col justify-between gap-5">
+              <WoFilteredForm
+                onProjectSearch={(values: any) => setRequirementsSearch(values)}
+                formKey={'woFiltered'}
+              />
+            </div>
           </div>
         </div>
       </Sider>

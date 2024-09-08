@@ -26,7 +26,7 @@ const WODiscription: FC<projectsDiscriptionType> = ({ project }) => {
         className="bg-white px-4  rounded-md align-middle w-full py-0"
       >
         {/* Добавление информации из project.projectID.WOReferenceID.planeId */}
-        <ProDescriptions.Item label={`${t('Reg Nbr')}`} valueType="text">
+        <ProDescriptions.Item label={`${t('AC Reg')}`} valueType="text">
           {project?.projectID?.WOReferenceID?.planeId?.regNbr && (
             <Tag
               style={{

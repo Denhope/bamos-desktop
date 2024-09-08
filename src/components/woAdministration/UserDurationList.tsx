@@ -90,11 +90,12 @@ const UserDurationList: React.FC<UserDurationListProps> = ({
                   >
                     {users.map((user) => (
                       <Option key={user.id} value={user.id}>
-                        {`${user.firstName} ${user.lastName}`}
+                        {`${user.firstNameEnglish} ${user.lastNameEnglish}`}
                       </Option>
                     ))}
                   </Select>
                 </Form.Item>
+
                 <Form.Item
                   {...restField}
                   name={[name, 'duration']}

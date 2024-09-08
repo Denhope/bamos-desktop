@@ -181,7 +181,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         mode={'multiple'}
         showSearch
         name="ACID"
-        label={t('A/C No')}
+        label={t('AC Reg')}
         width="lg"
         // valueEnum={projectTypesValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
@@ -225,8 +225,8 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         valueEnum={{
           open: { text: t('OPEN'), status: 'Processing' },
           // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-          closed: { text: t('CLOSED'), status: 'SUCCESS' },
-          inspected: { text: t('INSPECTED'), status: 'Waiting' },
+          closed: { text: t('CLOSE'), status: 'SUCCESS' },
+          inspected: { text: t('INSPECTION'), status: 'Waiting' },
           draft: { text: t('DRAFT'), status: 'Waiting' },
         }}
       />
@@ -251,7 +251,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
 
       {/* <ProFormDateRangePicker
         name="inspectedDate"
-        label={`${t('INSPECTED DATE')}`}
+        label={`${t('INSPECTION DATE')}`}
         width="lg"
         tooltip="DATE"
         fieldProps={{

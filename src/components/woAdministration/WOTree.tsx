@@ -174,7 +174,7 @@ const WOTree: FC<UserTreeProps> = ({
             checkable={true}
             isAllChecked
             searchQuery={searchQuery}
-            height={560}
+            height={620}
             onCheckItems={(selectedKeys: any[]) => {
               // console.log(selectedKeys);
               return onCheckItems && onCheckItems(selectedKeys);

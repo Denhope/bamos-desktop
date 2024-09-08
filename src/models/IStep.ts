@@ -1,6 +1,7 @@
 import { User } from './IUser';
 
 export interface IStep {
+  defectCodeID?: any;
   projectTaskID?: string;
   stepType: any;
   projectId?: any;
@@ -20,11 +21,13 @@ export interface IStep {
   taskId?: string;
   skillID?: string[];
   userGroupID?: string[];
+  taskStatus?: any;
 }
 
 type ActionType = 'pfmd' | 'inspect' | 'doubleInspect' | 'closed';
 
 export interface Action {
+  isComponentChangeAction?: boolean;
   projectStepId?: any;
   id?: string | null;
   _id?: string;

@@ -10,6 +10,8 @@ import {
   setAuthUserPermissions,
   setAuthUserRole,
 } from '@/store/reducers/AuthSlice';
+import WebSocketService from '@/services/WebSocketService';
+import { notification } from 'antd';
 
 import './App.css';
 import { ConfigProvider } from 'antd';
@@ -18,6 +20,8 @@ import { useNavigate } from 'react-router-dom';
 import { PERMISSIONS, ROLE, USER_ID } from './utils/api/http';
 import { RouteNames } from './router';
 import enGB from 'antd/lib/locale/en_GB';
+import { useGlobalState } from './components/woAdministration/GlobalStateContext';
+
 const App: FC = () => {
   const [count, setCount] = useState(0);
   const { language } = useTypedSelector((state) => state.userPreferences);
@@ -25,6 +29,8 @@ const App: FC = () => {
   const { currentProject } = useTypedSelector((state) => state.projects);
   const history = useNavigate();
   const [isLoading, setLoading] = useState(true);
+  const { notificationsEnabled } = useGlobalState();
+
   const authCheck = useCallback(async () => {
     if (localStorage.getItem('token')) {
       AuthService.check(USER_ID)
@@ -35,10 +41,34 @@ const App: FC = () => {
           dispatch(setAuthUserPermissions(PERMISSIONS || ''));
 
           dispatch(setAuthUserName(localStorage.getItem('name')));
-          // console.log(PERMISSIONS);
+          // Подключение к WebSocket при успешной авторизации
+          const token = localStorage.getItem('token');
+          token && USER_ID && WebSocketService.connect(USER_ID, token);
+
+          // Подписка на уведомления
+          WebSocketService.subscribeToNotifications(
+            (data: { message: string; timestamp: string }) => {
+              const newNotification = {
+                _id: '', // ID будет установлен на сервере
+                userId: USER_ID,
+                message: data.message,
+                timestamp: new Date(data.timestamp).toISOString(), // Преобразуем дату в ISO строку
+                isRead: false,
+              };
+
+              // Отображение уведомления на экране, если уведомления включены
+              if (notificationsEnabled) {
+                notification.info({
+                  message: 'INFORMATION!!!',
+                  description: data.message,
+                  placement: 'bottomRight', // Позиция уведомления
+                  duration: 0,
+                });
+              }
+            }
+          );
         })
         .finally(() => {
-          // dispatch(getNewUserTokens(USER_ID));
           setLoading(false);
         });
     } else {
@@ -47,7 +77,7 @@ const App: FC = () => {
       history(`${RouteNames.HOME}`);
       setLoading(false);
     }
-  }, [setAuthUserId]);
+  }, [setAuthUserId, notificationsEnabled]);
 
   useEffect(() => {
     authCheck();

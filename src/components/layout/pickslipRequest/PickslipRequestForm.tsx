@@ -378,8 +378,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             options={[
               { value: 'open', label: t('NEW') },
               { value: 'OPEN', label: t('NEW') },
-              { value: 'closed', label: t('CLOSED') },
-              { value: 'cancelled', label: t('CANCELLED') },
+              { value: 'closed', label: t('CLOSE') },
+              { value: 'cancelled', label: t('CANCEL') },
               { value: 'partyCancelled', label: t('PARTY_CANCELLED') },
               { value: 'deleted', label: t('DELETED') },
               { value: 'issued', label: t('ISSUED') },

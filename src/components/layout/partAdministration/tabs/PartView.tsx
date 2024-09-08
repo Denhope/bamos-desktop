@@ -409,7 +409,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
               tooltip={t('CONDITION')}
               valueEnum={{
                 '/NEW': t('NEW'),
-                '/INSPECTED': t('INSPECTED'),
+                '/INSPECTION': t('INSPECTION'),
                 '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
                 '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
                 '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),

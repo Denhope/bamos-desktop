@@ -34,7 +34,7 @@ const AccessCodeOnlyPanelTree: FC<ZoneTreeProps> = ({
         access.status === 'open'
           ? ' 🔴(OPEN)' + `///L:(${access.accessProjectNumber})`
           : access.status === 'inspected'
-          ? ' 🟢🟢(INSPECTED)' + `///L:(${access.accessProjectNumber})`
+          ? ' 🟢🟢(INSPECTION)' + `///L:(${access.accessProjectNumber})`
           : access.status === 'draft'
           ? ' ⚪(DRAFT)' + `///L:(${access.accessProjectNumber})`
           : ' 🟢(CLOSED)' + `///L:(${access.accessProjectNumber})`;

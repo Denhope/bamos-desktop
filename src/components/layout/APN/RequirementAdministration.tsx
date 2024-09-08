@@ -50,7 +50,6 @@ const RequirementAdministration: FC<RequirementManagementProps> = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <></>
         <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-5">
           <RequirementPanel
             requirementsSearchValues={requirementsSearch}
