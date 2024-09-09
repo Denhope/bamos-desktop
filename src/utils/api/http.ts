@@ -4,9 +4,9 @@ import { authSlice } from '@/store/reducers/AuthSlice';
 import axios from 'axios';
 // export const API_URL = 'http://localhost:4000';
 // export const API_URL = 'http://172.16.50.85:4000';
-export const API_URL = 'http://192.168.74.11:4000';
+// export const API_URL = 'http://192.168.74.11:4000';
 // export const API_URL = 'http://192.168.74.11:5000';
-// export const API_URL = 'http://82.209.232.250:4000';
+export const API_URL = 'http://82.209.232.250:4000';
 
 // export const API_URL = 'https://planebox-api-production.up.railway.app';
 export const USER_ID = localStorage.getItem('userId');
