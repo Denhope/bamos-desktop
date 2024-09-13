@@ -222,6 +222,7 @@ const UserForm: FC<UserFormProps> = ({
                   width={'md'}
                   name="role"
                   label={t('ROLE')}
+                  rules={[{ required: true }]}
                   options={[
                     { value: 'admin', label: t('ADMIN') },
                     { value: 'engineer', label: t('ENGINEER') },
@@ -248,7 +249,7 @@ const UserForm: FC<UserFormProps> = ({
                 <ProFormText
                   width={'lg'}
                   name="position"
-                  label={t('Position')}
+                  label={t('POSITION')}
                   rules={[{ required: true }]}
                 />
                 <ProFormText
@@ -256,8 +257,14 @@ const UserForm: FC<UserFormProps> = ({
                   name="organizationAuthorization"
                   label={t('ORGANIZATION AUTHORIZATION')}
                 />
-                <ProFormText name="login" label={t('LOGIN')} />
                 <ProFormText
+                  width={'sm'}
+                  rules={[{ required: true }]}
+                  name="login"
+                  label={t('LOGIN')}
+                />
+                <ProFormText
+                  width={'sm'}
                   name="email"
                   label={t('EMAIL')}
                   rules={[
@@ -269,6 +276,7 @@ const UserForm: FC<UserFormProps> = ({
                   <ProForm.Group>
                     <ProFormText.Password
                       name="password"
+                      width={'sm'}
                       label={t('PASSWORD')}
                       rules={[
                         {
@@ -285,6 +293,7 @@ const UserForm: FC<UserFormProps> = ({
                 )}
                 <ProFormText.Password
                   name="pass"
+                  width={'sm'}
                   label={t('PASS')}
                   rules={[
                     { required: true, message: 'Please enter your pass' },

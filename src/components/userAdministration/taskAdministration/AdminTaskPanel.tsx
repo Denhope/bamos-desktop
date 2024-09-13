@@ -115,14 +115,15 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
   };
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
-    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
-    MJC: t('MJC)'),
-    CMJC: t('CMJC)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
     FC: t('FC'),
     SMC: t('SMC'),
     SB: t('SB'),
+    HARD_ACCESS: t('HARD_ACCESS'),
     // PART_PRODUCE: t('FC'),
   };
   const handleSubmit = async (task: ITask) => {
@@ -193,7 +194,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
       // hide: true,
 

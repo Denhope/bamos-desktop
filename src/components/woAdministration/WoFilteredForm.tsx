@@ -16,8 +16,8 @@ import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessAp
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetFilteredRestrictionsQuery } from '@/features/restrictionAdministration/restrictionApi';
 import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
@@ -184,11 +184,6 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       layout="horizontal"
       size="small"
       onReset={handleReset}
-      // onReset={() => {
-      //   dispatch(setFormValues({ formKey, values: {} }));
-      //   setSelectedEndDate(null);
-      //   setSelectedStartDate(null);
-      // }}
       form={form}
       onFinish={onFinish}
     >
@@ -248,7 +243,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         mode={'multiple'}
         showSearch
         name="planeId"
-        label={t('AC Reg')}
+        label={t('AC REG')}
         width="lg"
         valueEnum={planesValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
@@ -354,7 +349,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       />
 
-      <ProFormSelect
+      {/* <ProFormSelect
         mode={'multiple'}
         showSearch
         name="useID"
@@ -362,7 +357,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         // valueEnum={projectsValueEnum}
         // onChange={(value: any) => setReqTypeID(value)}
-      />
+      /> */}
       <ProFormSelect
         // initialValue={['RC', 'CR_TASK', 'NRC', 'NRC_ADD']}
         mode="multiple"
@@ -375,7 +370,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
               'TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)'
             ),
           },
-          CR_TASK: { text: t('CR TASK (CRIRICAL TASK/DI)') },
+          CR_TASK: { text: t('CR TASK (CRITICAL TASK/DI)') },
 
           NRC: { text: t('NRC (Defect)') },
           NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
@@ -383,6 +378,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
 
           CMJC: { text: t('CMJC (Component maintenance) ') },
           FC: { text: t('FC (Fabrication card)') },
+          HARD_ACCESS: { text: t('HARD_ACCESS') },
         }}
       />
       <ProFormSelect

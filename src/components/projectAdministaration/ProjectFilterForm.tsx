@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import {
   ProForm,
@@ -17,16 +17,21 @@ import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
+import { useSelector, useDispatch } from 'react-redux';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
+  formKey: string; // Уникальный ключ формы
 };
 const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
   onProjectSearch,
+  formKey,
 }) => {
   const [WOID, setWOID] = useState<any>(null);
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
-
+  const dispatch = useDispatch();
+  const formValues = useSelector((state: any) => state.form[formKey] || {});
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
   const onChange = (
@@ -36,7 +41,15 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
     setSelectedEndDate(dateString[1]);
     setSelectedStartDate(dateString[0]);
   };
-
+  const handleReset = () => {
+    form.resetFields();
+    dispatch(resetFormValues({ formKey }));
+    setSelectedEndDate(null);
+    setSelectedStartDate(null);
+  };
+  useEffect(() => {
+    form.setFieldsValue(formValues);
+  }, [form, formValues]);
   interface Option {
     value: string;
     label: string;
@@ -57,16 +70,10 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
     { skip: !WOID }
   );
   const { data: companies } = useGetCompaniesQuery({});
-  const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
-  const { data: usersGroups } = useGetGroupUsersQuery({});
+
   const companiesCodesValueEnum: Record<string, string> =
     companies?.reduce<Record<string, string>>((acc, mpdCode) => {
       acc[mpdCode.id] = mpdCode.companyName;
-      return acc;
-    }, {}) || {};
-  const projectTypesValueEnum: Record<string, string> =
-    projectTypes?.reduce((acc, reqType) => {
-      acc[reqType.id] = reqType.code;
       return acc;
     }, {}) || {};
 
@@ -102,8 +109,8 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
       return acc;
     }, {} as Record<string, string>) || {};
   const projectsValueEnum: Record<string, string> =
-    projects?.reduce((acc, reqType: any) => {
-      acc[reqType._id] = `${reqType.projectName}`;
+    projects?.reduce((acc: Record<string, string>, reqType: any) => {
+      acc[reqType?._id] = `№:${reqType?.projectWO} / ${reqType.projectName}`;
       return acc;
     }, {}) || {};
 
@@ -111,14 +118,11 @@ const ProjectFilterForm: FC<RequirementsFilteredFormType> = ({
     <ProForm
       formRef={formRef}
       onValuesChange={(changedValues, allValues) => {
-        // Handle changes in the form
+        dispatch(setFormValues({ formKey, values: allValues }));
       }}
       layout="horizontal"
       size="small"
-      onReset={() => {
-        setSelectedEndDate(null);
-        setSelectedStartDate(null);
-      }}
+      onReset={handleReset}
       form={form}
       onFinish={onFinish}
     >

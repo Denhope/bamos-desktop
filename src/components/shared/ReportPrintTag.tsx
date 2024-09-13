@@ -77,6 +77,7 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
       const font = await pdfDoc.embedFont(fontBytes);
 
       for (const product of accesses) {
+        console.log(product);
         const page = pdfDoc.addPage([174, 285]);
         const { width, height } = page.getSize();
 
@@ -307,7 +308,14 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
         });
 
         page.drawText(
-          `${t('OPEN')}: ${String(product?.createUserID?.name).toUpperCase()}`,
+          `${t('OPEN')}: (${String(
+            product?.removeUserId?.organizationAuthorization ||
+              product?.removeUserId?.singNumber
+          ).toUpperCase()}) ${String(
+            product?.removeUserId?.firstNameEnglish
+          ).toUpperCase()} ${String(
+            product?.removeUserId?.lastNameEnglish
+          ).toUpperCase()}`,
           {
             x: 7,
             y: height - 240,

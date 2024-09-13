@@ -297,7 +297,7 @@ const StepContainer: React.FC<Props> = ({
                       ),
                     },
                     CR_TASK: {
-                      text: t('CR TASK (CRIRICAL TASK/DI)'),
+                      text: t('CR TASK (CRITICAL TASK/DI)'),
                     },
 
                     NRC: { text: t('NRC (Defect)') },

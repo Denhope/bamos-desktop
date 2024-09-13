@@ -86,8 +86,9 @@ const PartsTable: React.FC<PartsTableProps> = ({
   // Состояние для отслеживания ID редактируемой строки
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
-
   const [selectedRowCount, setSelectedRowCount] = useState(0);
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
+
   // Обработка начала и завершения редактирования строки
   const handleRowEditingStarted = useCallback((event: any) => {
     setEditingRowId(event.node.data._id); // Устанавливаем ID редактируемой строки
@@ -284,6 +285,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
     onCheckItems(selectedKeys);
     console.log(selectedData);
     setSelectedRowCount(selectedNodes?.length || 0);
+    setSelectedRowIds(selectedKeys);
   };
 
   const handleRowDSelection = () => {
@@ -311,21 +313,12 @@ const PartsTable: React.FC<PartsTableProps> = ({
     []
   );
 
-  // const gridOptions = useMemo(
-  //   () => ({
-  //     domLayout: 'autoHeight' as DomLayoutType, // Use a valid value for DomLayoutType
-  //   }),
-  //   []
-  // );
   const gridOptions = {
     columnDefs: columnDefs,
     defaultColDef: {
       sortable: true,
       filter: true,
     },
-    // onGridReady: (params: any) => {
-    //   params.api.setSortModel([{ colId: 'readyStatus', sort: 'red' }]);
-    // },
   };
 
   const updatedColumnDefs = useMemo(
@@ -399,6 +392,16 @@ const PartsTable: React.FC<PartsTableProps> = ({
     [isFilesVisiable, t, handleFileSelect, handleFileOpen]
   );
 
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.api && selectedRowIds.length > 0) {
+      gridRef.current.api.forEachNode((node) => {
+        if (selectedRowIds.includes(node.data._id)) {
+          node.setSelected(true);
+        }
+      });
+    }
+  }, [rowData, selectedRowIds]);
+
   return (
     <div
       className="ag-theme-alpine flex flex-col gap-2"
@@ -447,8 +450,6 @@ const PartsTable: React.FC<PartsTableProps> = ({
               menuTabs: ['filterMenuTab', 'generalMenuTab'],
               resizable: true,
             }}
-            // gridOptions={gridOptions}
-            // loadingOverlayComponent="agLoadingOverlay"
             onRowDoubleClicked={() => {
               handleRowDSelection();
             }}
@@ -456,15 +457,10 @@ const PartsTable: React.FC<PartsTableProps> = ({
             paginationPageSize={50}
             clipboardDelimiter={'\t'}
             pagination={pagination}
-            // loadingOverlayComponent={isLoading}
             ref={gridRef}
             rowSelection={rowSelection}
-            // rowSelection="multiple"
             rowHeight={30}
             quickFilterText={searchText}
-            // suppressRowClickSelection={true}
-            // isRowSelectable={isRowSelectable}
-
             onSelectionChanged={handleRowSelection}
             onCellContextMenu={handleCellContextMenu}
             onRowEditingStarted={handleRowEditingStarted} // Обработчик начала редактирования
@@ -474,7 +470,6 @@ const PartsTable: React.FC<PartsTableProps> = ({
               ...buttonColumnDef,
               ...filesColumnDef, // Условно добавленная колонка
             ]}
-            // defaultColDef={defaultColDef}
             rowData={rowData}
             editType={'fullRow'}
             onCellValueChanged={handleCellValueChanged}

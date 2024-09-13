@@ -1,4 +1,5 @@
 // @ts-nocheck
+
 import React, {
   useCallback,
   useEffect,
@@ -80,6 +81,7 @@ const TaskList: React.FC<MyTableProps> = ({
     [key: string]: boolean;
   }>({});
   const [localColumnOrder, setLocalColumnOrder] = useState<any[]>([]);
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
 
   const dispatch = useDispatch();
   const columnState = useSelector(
@@ -112,14 +114,12 @@ const TaskList: React.FC<MyTableProps> = ({
 
   useEffect(() => {
     if (gridRef.current && gridRef.current.columnApi && localColumnState) {
-      // console.log('Setting column state:', localColumnState);
       gridRef.current.columnApi.applyColumnState({ state: localColumnState });
     }
   }, [localColumnState]);
 
   useEffect(() => {
     if (gridRef.current && gridRef.current.columnApi && localColumnVisible) {
-      // console.log('Setting column visibility:', localColumnVisible);
       Object.keys(localColumnVisible).forEach((key) => {
         gridRef.current?.columnApi.setColumnVisible(
           key,
@@ -131,7 +131,6 @@ const TaskList: React.FC<MyTableProps> = ({
 
   useEffect(() => {
     if (gridRef.current && gridRef.current.columnApi && localColumnOrder) {
-      // console.log('Setting column order:', localColumnOrder);
       gridRef.current.columnApi.applyColumnState({ state: localColumnOrder });
     }
   }, [localColumnOrder]);
@@ -303,6 +302,7 @@ const TaskList: React.FC<MyTableProps> = ({
     );
     onCheckItems(selectedKeys);
     setSelectedRowCount(selectedNodes?.length || 0);
+    setSelectedRowIds(selectedKeys);
   }, [onRowSelect, onCheckItems]);
 
   const checkboxColumn = useMemo(
@@ -455,17 +455,24 @@ const TaskList: React.FC<MyTableProps> = ({
   const onGridReady = useCallback(
     (params: any) => {
       if (gridRef.current && gridRef.current.columnApi && columnState) {
-        console.log('Setting column state onGridReady:', columnState);
         gridRef.current.columnApi.applyColumnState({ state: columnState });
       }
       if (gridRef.current && gridRef.current.columnApi && columnOrder) {
-        console.log('Setting column order onGridReady:', columnOrder);
-
         gridRef.current.columnApi.applyColumnState({ state: columnOrder });
       }
     },
     [columnState]
   );
+
+  useEffect(() => {
+    if (gridRef.current && selectedRowIds.length > 0) {
+      gridRef.current.api.forEachNode((node) => {
+        if (selectedRowIds.includes(node.data.id)) {
+          node.setSelected(true);
+        }
+      });
+    }
+  }, [rowData, selectedRowIds]);
 
   return (
     <div

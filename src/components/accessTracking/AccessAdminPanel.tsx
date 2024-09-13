@@ -266,7 +266,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             description: t('ACCESS SUCCESSFULLY OPEN'),
           });
 
-          refetch();
+          // refetch();
         } catch (error) {
           console.error('Error updating access or adding booking:', error);
           notification.success({
@@ -301,7 +301,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             message: t('SUCCESS CLOSE'),
             description: t('ACCESS SUCCESSFULLY CLOSED'),
           });
-          refetch();
+          // refetch();
         } catch (error) {
           notification.success({
             message: t('ERROR CLOSED'),
@@ -335,7 +335,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             message: t('SUCCESS INSPECT'),
             description: t('ACCESS SUCCESSFULLY INSPECT'),
           });
-          refetch();
+          // refetch();
         } catch (error) {
           notification.success({
             message: t('ERROR INSPECT'),

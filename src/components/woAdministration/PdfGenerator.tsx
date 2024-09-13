@@ -464,7 +464,10 @@ const PdfGenerator: React.FC<{
         {
           label: 'Access',
           label1: 'Доступ',
-          value: task.access !== undefined ? task.access : 'N/A',
+          value:
+            task.access !== undefined || task.access !== ''
+              ? task.access
+              : 'N/A',
         },
         {
           label: 'Raised By',
@@ -693,7 +696,7 @@ const PdfGenerator: React.FC<{
       y -= 0; // / Space between the previous content and the new cells
       const cellWidths5 = [100, 200, 100, 100];
 
-      const horizontalPadding = [45, 20, 45, 45];
+      const horizontalPadding = [45, 20, 25, 45];
 
       for (let i = 0; i < cellData5.length; i++) {
         const cell = cellData5[i];
@@ -787,6 +790,7 @@ const PdfGenerator: React.FC<{
         });
       }
       y -= cellHeight;
+      y -= 5;
 
       for (let i = 0; i < cellData7.length; i++) {
         const cell = cellData7[i];
@@ -1254,48 +1258,48 @@ const PdfGenerator: React.FC<{
           value: '',
         },
       ];
-      for (let i = 0; i < cellData10.length; i++) {
-        const cell = cellData10[i];
+      // for (let i = 0; i < cellData10.length; i++) {
+      //   const cell = cellData10[i];
 
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted =
-          cell.label === 'Accomplishment Instructions' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
+      //   const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 500 : 0); // Adjust x position for the cells after the first one
+      //   const cellWidthAdjusted =
+      //     cell.label === 'Accomplishment Instructions' ? 500 : 100; // Adjust width for the "Cust. ID Code" cell
 
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeightSmall,
-          width: cellWidthAdjusted,
-          height: cellHeightSmall,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-          color: rgb(0.8, 0.8, 0.8), // Gray color
-        });
+      //   // Draw the cell border
+      //   page.drawRectangle({
+      //     x: cellX,
+      //     y: y - cellHeightSmall,
+      //     width: cellWidthAdjusted,
+      //     height: cellHeightSmall,
+      //     borderColor: rgb(0, 0, 0),
+      //     borderWidth: 1,
+      //     color: rgb(0.8, 0.8, 0.8), // Gray color
+      //   });
 
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 10,
-          font: robotoFont,
-          size: fontSize,
-        });
+      //   // Draw the label
+      //   page.drawText(cell.label, {
+      //     x: cellX + 5,
+      //     y: y - 10,
+      //     font: robotoFont,
+      //     size: fontSize,
+      //   });
 
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 55,
-          y: y - 13,
-          font: robotoFont,
-          size: fontSize,
-        });
-        y -= partNumbersRowHeight;
-      }
-      y -= 5; // Space between
+      //   page.drawText(cell.label1, {
+      //     x: cellX + 5,
+      //     y: y - 17,
+      //     font: robotoFont,
+      //     size: smallFontSize,
+      //   });
+      //   // Draw the value
+      //   page.drawText(cell.value, {
+      //     x: cellX + 55,
+      //     y: y - 13,
+      //     font: robotoFont,
+      //     size: fontSize,
+      //   });
+      //   y -= partNumbersRowHeight;
+      // }
+      // y -= 5; // Space between
       // }
 
       // STEPS
@@ -1658,7 +1662,10 @@ const PdfGenerator: React.FC<{
         return y;
       };
 
-      if (task.projectItemType !== 'NRC') {
+      if (
+        task.projectItemType !== 'NRC' &&
+        task.projectItemType !== 'NRC_ADD'
+      ) {
         for (let i = 0; i < task.steps?.length; i++) {
           const step = task.steps[i];
           const cellData12 = {
@@ -1671,12 +1678,11 @@ const PdfGenerator: React.FC<{
               step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
             value2:
               step?.createDate !== undefined
-                ? String(new Date(step?.createDate).toLocaleDateString('en-GB'))
+                ? String(new Date(step?.createDate).toLocaleDateString('ru-RU'))
                 : 'N/A',
-            value3:
-              step?.createUserID !== undefined
-                ? step.createUserID?.singNumber
-                : 'N/A',
+            value3: `${step?.createUserID?.firstNameEnglish} ${
+              step?.createUserID?.lastNameEnglish
+            } ${new Date(step?.createDate).toLocaleDateString('ru-RU')}`,
             value4:
               step?.stepDescription !== undefined
                 ? step.stepDescription
@@ -1729,10 +1735,10 @@ const PdfGenerator: React.FC<{
             size: fontSize,
           });
           page.drawText(cellData12.value3, {
-            x: cellX + 380,
+            x: cellX + 390,
             y: y - 15,
             font: robotoFont,
-            size: fontSize,
+            size: 6,
           });
 
           const descriptionLines = splitTextIntoLines(
@@ -1766,26 +1772,26 @@ const PdfGenerator: React.FC<{
             font: robotoFont,
             size: smallFontSize,
           });
-          page.drawText(cellData12.label2, {
-            x: cellX + 300,
-            y: y - 10,
-            font: robotoFont,
-            size: smallFontSize,
-          });
-          page.drawText(cellData12.label3, {
-            x: cellX + 300,
-            y: y - 17,
-            font: robotoFont,
-            size: smallFontSize,
-          });
+          // page.drawText(cellData12.label2, {
+          //   x: cellX + 300,
+          //   y: y - 10,
+          //   font: robotoFont,
+          //   size: smallFontSize,
+          // });
+          // page.drawText(cellData12.label3, {
+          //   x: cellX + 300,
+          //   y: y - 17,
+          //   font: robotoFont,
+          //   size: smallFontSize,
+          // });
 
           // Draw the value
-          page.drawText(cellData12.value2, {
-            x: cellX + 450,
-            y: y - 13,
-            font: robotoFont,
-            size: fontSize,
-          });
+          // page.drawText(cellData12.value2, {
+          //   x: cellX + 450,
+          //   y: y - 13,
+          //   font: robotoFont,
+          //   size: fontSize,
+          // });
 
           // Draw two rectangles side by side at the right edge
           const rectangleWidth = 100;
@@ -1849,7 +1855,7 @@ const PdfGenerator: React.FC<{
           y -= 5;
         }
       }
-      if (task.projectItemType == 'NRC') {
+      if (task.projectItemType == 'NRC' || task.projectItemType == 'NRC_ADD') {
         for (let i = 0; i < task.steps?.length; i++) {
           const step = task.steps[i];
           const cellData12 = {
@@ -1862,13 +1868,11 @@ const PdfGenerator: React.FC<{
               step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
             value2:
               step?.createDate !== undefined
-                ? String(new Date(step?.createDate).toLocaleDateString('en-US'))
+                ? String(new Date(step?.createDate).toLocaleDateString('ru-RU'))
                 : 'N/A',
-            value3:
-              step?.createUserID !== undefined
-                ? step.createUserID?.organizationAuthorization ||
-                  step.createUserID?.singNumber
-                : 'N/A',
+            value3: `${step?.createUserID?.firstNameEnglish} ${
+              step?.createUserID?.lastNameEnglish
+            } ${new Date(step?.createDate).toLocaleDateString('ru-RU')}`,
             value4:
               step?.stepDescription !== undefined
                 ? step.stepDescription
@@ -1921,10 +1925,10 @@ const PdfGenerator: React.FC<{
             size: fontSize,
           });
           page.drawText(cellData12.value3, {
-            x: cellX + 380,
+            x: cellX + 390,
             y: y - 15,
             font: robotoFont,
-            size: fontSize,
+            size: 6,
           });
 
           const descriptionLines = splitTextIntoLines(
@@ -1958,26 +1962,26 @@ const PdfGenerator: React.FC<{
             font: robotoFont,
             size: smallFontSize,
           });
-          page.drawText(cellData12.label2, {
-            x: cellX + 300,
-            y: y - 10,
-            font: robotoFont,
-            size: smallFontSize,
-          });
-          page.drawText(cellData12.label3, {
-            x: cellX + 300,
-            y: y - 17,
-            font: robotoFont,
-            size: smallFontSize,
-          });
+          // page.drawText(cellData12.label2, {
+          //   x: cellX + 300,
+          //   y: y - 10,
+          //   font: robotoFont,
+          //   size: smallFontSize,
+          // });
+          // page.drawText(cellData12.label3, {
+          //   x: cellX + 300,
+          //   y: y - 17,
+          //   font: robotoFont,
+          //   size: smallFontSize,
+          // });
 
           // Draw the value
-          page.drawText(cellData12.value2, {
-            x: cellX + 450,
-            y: y - 13,
-            font: robotoFont,
-            size: fontSize,
-          });
+          // page.drawText(cellData12.value2, {
+          //   x: cellX + 450,
+          //   y: y - 13,
+          //   font: robotoFont,
+          //   size: fontSize,
+          // });
 
           // Draw two rectangles side by side at the right edge
           const rectangleWidth = 100;
@@ -2035,9 +2039,11 @@ const PdfGenerator: React.FC<{
 
           // Add actions to the step
           const actions = step.actions.filter(
-            (action) => !action.isComponentChangeAction
+            (action) =>
+              !action.isComponentChangeAction && action.type !== 'closed'
           );
-          console.log(step);
+
+          // console.log(step);
           if (actions.length > 0) {
             const actionsHeight = actions.reduce((totalHeight, action) => {
               const actionDescriptionHeight = getTextHeight(
@@ -2081,6 +2087,20 @@ const PdfGenerator: React.FC<{
                   font: robotoFont,
                   size: fontSize,
                 });
+
+                page.drawText(
+                  `${action?.createUserID?.firstNameEnglish} ${
+                    action?.createUserID?.lastNameEnglish
+                  } ${new Date(action?.createDate).toLocaleDateString(
+                    'ru-RU'
+                  )}`,
+                  {
+                    x: cellX + 390,
+                    y: actionY + actionDescriptionHeight + 40,
+                    font: robotoFont,
+                    size: 6,
+                  }
+                );
               }
               if (action.type === 'inspect') {
                 page.drawText(
@@ -2090,6 +2110,19 @@ const PdfGenerator: React.FC<{
                     y: actionY + actionDescriptionHeight + 40,
                     font: robotoFont,
                     size: fontSize,
+                  }
+                );
+                page.drawText(
+                  `${action?.createUserID?.firstNameEnglish} ${
+                    action?.createUserID?.lastNameEnglish
+                  } ${new Date(action?.createDate).toLocaleDateString(
+                    'ru-RU'
+                  )}`,
+                  {
+                    x: cellX + 390,
+                    y: actionY + actionDescriptionHeight + 40,
+                    font: robotoFont,
+                    size: 6,
                   }
                 );
               }
@@ -2152,6 +2185,21 @@ const PdfGenerator: React.FC<{
                   font: robotoFont,
                   size: 6,
                 });
+                page.drawText(
+                  `${
+                    action?.userDurations[0]?.userID
+                      ?.organizationAuthorization ||
+                    action?.userDurations[0]?.userID?.singNumber
+                  } (${action?.userDurations[0]?.userID?.firstNameEnglish} ${
+                    action?.userDurations[0]?.userID?.lastNameEnglish
+                  }) `,
+                  {
+                    x: rectangleX2 + 5,
+                    y: actionY + 23,
+                    font: robotoFont,
+                    size: 5,
+                  }
+                );
               } else if (action.type === 'inspect') {
                 page.drawRectangle({
                   x: rectangleX2 + 20,
@@ -2174,6 +2222,21 @@ const PdfGenerator: React.FC<{
                   font: robotoFont,
                   size: 6,
                 });
+                page.drawText(
+                  `${
+                    action?.userDurations[0]?.userID
+                      ?.organizationAuthorization ||
+                    action?.userDurations[0]?.userID?.singNumber
+                  } (${action?.userDurations[0]?.userID?.firstNameEnglish} ${
+                    action?.userDurations[0]?.userID?.lastNameEnglish
+                  }) `,
+                  {
+                    x: rectangleX2 + 5 + 20,
+                    y: actionY + 23,
+                    font: robotoFont,
+                    size: 5,
+                  }
+                );
               }
 
               y -= actionDescriptionHeight + 50; // 50 is the height of the header and rectangles
@@ -2186,7 +2249,7 @@ const PdfGenerator: React.FC<{
           if (actionsChance.length > 0) {
             y = drawComponentChangeTable(page, y, actionsChance);
           }
-          // y -= 5;
+          y -= 5;
         }
       }
 
@@ -2627,6 +2690,42 @@ const PdfGenerator: React.FC<{
       //     value: task.diCloseBy !== undefined ? task.diCloseBy : 'N/A',
       //   },
       // ];
+
+      const closeAction = task.steps
+        .flatMap((step) => step.actions)
+        .find((action) => action.type === 'closed');
+      const diCloseAction = task.steps
+        .flatMap((step) => step.actions)
+        .find((action) => action.type === 'diClosed');
+
+      const closeUser = closeAction?.userDurations[0]?.userID
+        ? `${
+            closeAction.userDurations[0].userID.organizationAuthorization ??
+            closeAction.userDurations[0].userID.singNumber ??
+            ''
+          } (${closeAction.userDurations[0].userID.firstNameEnglish ?? ''} ${
+            closeAction.userDurations[0].userID.lastNameEnglish ?? ''
+          })`
+        : '';
+
+      const closedDate = closeAction?.createDate
+        ? new Date(closeAction.createDate).toLocaleString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          })
+        : '';
+
+      console.log(closeAction);
+      const diCloseUser = `${
+        diCloseAction?.userDurations[0].userID?.organizationAuthorization ||
+        diCloseAction?.userDurations[0].userID?.singNumber
+      } (${diCloseAction?.userDurations[0].userID?.firstNameEnglish} ${
+        diCloseAction?.userDurations[0].userID?.lastNameEnglish
+      }) `;
       const cellDataNotCritical = [
         {
           label: 'Form',
@@ -2643,12 +2742,14 @@ const PdfGenerator: React.FC<{
           label7: 'Unitary Enterprise «407 Technics»',
           label8: 'Унитарное предприятие «407 Техникс»',
           value8: '23/11/2022',
+          value9: '',
+          value10: '',
         },
 
         {
           label: 'Date',
           label1: 'Дата',
-          value: task.closeDate !== undefined ? task.closeDate : '',
+          value: '',
           value2: '',
           label2: '',
           label3: '',
@@ -2660,11 +2761,13 @@ const PdfGenerator: React.FC<{
           label7: '',
           label8: '',
           value8: '',
+          value9: '',
+          value10: closedDate || '',
         },
         {
           label: 'Closing Sing/Stamp',
           label1: 'Закрыто Печать/Штамп',
-          value: task.inspectBY !== undefined ? task.closeBy : '',
+          value: '',
           value2: '',
           label2: '',
           label3: '',
@@ -2676,6 +2779,8 @@ const PdfGenerator: React.FC<{
           label7: '',
           label8: '',
           value8: '',
+          value9: closeUser || '',
+          value10: '',
         },
       ];
 
@@ -2694,12 +2799,14 @@ const PdfGenerator: React.FC<{
           value5: '285-21-057',
           label7: 'Unitary Enterprise «407 Technics»',
           label8: 'Унитарное предприятие «407 Техникс»',
-          value8: '23/11/2022',
+          value8: '23.11.2022',
+          value9: '',
+          value10: '',
         },
         {
           label: 'Date',
           label1: 'Дата',
-          value: task.closeDate !== undefined ? task.closeDate : '',
+          value: '',
           value2: '',
           label2: '',
           label3: '',
@@ -2711,11 +2818,13 @@ const PdfGenerator: React.FC<{
           label7: '',
           label8: '',
           value8: '',
+          value9: '',
+          value10: closedDate || '',
         },
         {
           label: 'Closing Sing/Stamp',
           label1: 'Закрыто Печать/Штамп',
-          value: task.inspectBY !== undefined ? task.closeBy : '',
+          value: '',
           value2: '',
           label2: '',
           label3: '',
@@ -2727,11 +2836,13 @@ const PdfGenerator: React.FC<{
           label7: '',
           label8: '',
           value8: '',
+          value9: closeUser || '',
+          value10: '',
         },
         {
           label: 'Double Inspected',
           label1: 'Независимо проверено',
-          value: task.DICLOSE !== undefined ? task.DICLOSE : '',
+          value: '',
           value2: '',
           label2: '',
           label3: '',
@@ -2743,6 +2854,8 @@ const PdfGenerator: React.FC<{
           label7: '',
           label8: '',
           value8: '',
+          value9: diCloseUser || '',
+          value10: '',
         },
       ];
 
@@ -2776,6 +2889,12 @@ const PdfGenerator: React.FC<{
           font: robotoFont,
           size: smallFontSize,
         });
+        page.drawText(cell.value9, {
+          x: cellX + 5,
+          y: y - 7,
+          font: robotoFont,
+          size: smallFontSize,
+        });
 
         page.drawText(cell.label1, {
           x: cellX + 5,
@@ -2783,10 +2902,16 @@ const PdfGenerator: React.FC<{
           font: robotoFont,
           size: smallFontSize,
         });
+        page.drawText(cell.value10, {
+          x: cellX + 4,
+          y: y - 20,
+          font: robotoFont,
+          size: 12,
+        });
 
         // Draw the value
         page.drawText(cell.value, {
-          x: cellX + 30,
+          x: cellX + 23,
           y: y - 35,
           font: robotoFont,
           size: fontSizeM,

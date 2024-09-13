@@ -45,6 +45,7 @@ const WPAdministration: FC<RequirementManagementProps> = () => {
             }}
           >
             <WPFilterForm
+              formKey="wpFilteredForm"
               onProjectSearch={(values: any) => setRequirementsSearch(values)}
             />
           </div>

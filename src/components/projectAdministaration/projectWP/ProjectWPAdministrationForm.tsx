@@ -426,13 +426,14 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                           ),
                         },
                         CR_TASK: {
-                          text: t('CR TASK (CRIRICAL TASK/DI)'),
+                          text: t('CR TASK (CRITICAL TASK/DI)'),
                         },
                         NRC: { text: t('NRC (Defect)') },
                         NRC_ADD: { text: t('ADHOC(Adhoc Task)') },
                         MJC: { text: t('MJC ((Extended MPD)') },
                         CMJC: { text: t('CMJC (Component maintenance) ') },
                         FC: { text: t('FC (Fabrication card)') },
+                        HARD_ACCESS: { text: t('HARD_ACCESS') },
                       }}
                     />
                     <>
@@ -515,12 +516,12 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                           project.status == 'CLOSED' ||
                           project.status == 'COMPLETED'
                         }
-                        width={'lg'}
+                        width={'xl'}
                         fieldProps={{
                           rows: 2,
                         }}
                         name="amtoss"
-                        label={t('AMM')}
+                        label={t('REFERENCE')}
                         rules={[{}]}
                       />
                       <ProFormTextArea
@@ -538,7 +539,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         name="notes"
                         label={t('REMARKS')}
                       />
-                      <ProFormSelect
+                      {/* <ProFormSelect
                         disabled={
                           project.status == 'CLOSED' ||
                           project.status == 'COMPLETED'
@@ -551,7 +552,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                           ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
                           INACTIVE: { text: t('INACTIVE'), status: 'Error' },
                         }}
-                      />
+                      /> */}
                     </>
                   </ProFormGroup>
                 </ProFormGroup>

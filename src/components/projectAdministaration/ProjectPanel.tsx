@@ -79,13 +79,13 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
         try {
           await deleteProject(projectId).unwrap();
           notification.success({
-            message: t('SUCCESSFULLY ADDED'),
-            description: t('Item has been successfully added.'),
+            message: t('SUCCESSFULLY DELETED'),
+            description: t('Item has been successfully deleted.'),
           });
         } catch (error) {
           notification.error({
             message: t('FAILED '),
-            description: 'There was an error delete the alternative.',
+            description: 'There was an error delete the task.',
           });
         }
       },
@@ -113,7 +113,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     } catch (error) {
       notification.error({
         message: t('FAILED TO SAVE'),
-        description: 'There was an error adding Item.',
+        description: 'There was an error save Item.',
       });
     }
   };

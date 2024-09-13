@@ -70,12 +70,13 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
   // let isLoading = false;
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
-    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
-    MJC: t('MJC)'),
-    CMJC: t('CMJC)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
     FC: t('FC)'),
     NRC_ADD: t('ADHOC'),
+    HARD_ACCESS: { text: t('HARD_ACCESS') },
   };
 
   // if (projectID) {
@@ -215,7 +216,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
         } catch (error) {
           notification.error({
             message: t('FAILED '),
-            description: 'There was an error delete the alternative.',
+            description: 'There was an error add task.',
           });
         }
       },

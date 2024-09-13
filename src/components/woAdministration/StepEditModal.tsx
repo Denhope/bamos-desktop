@@ -225,7 +225,7 @@ const StepEditModal: React.FC<{
                     ),
                   },
                   CR_TASK: {
-                    text: t('CR TASK (CRIRICAL TASK/DI)'),
+                    text: t('CR TASK (CRITICAL TASK/DI)'),
                   },
 
                   NRC: { text: t('NRC (Defect)') },
@@ -320,6 +320,7 @@ const StepEditModal: React.FC<{
               <ProFormSelect
                 mode="multiple"
                 name="skillID"
+                width={'md'}
                 label={t('RESPONSIABLE')}
                 options={skillOptions}
                 rules={[{ required: true }]}

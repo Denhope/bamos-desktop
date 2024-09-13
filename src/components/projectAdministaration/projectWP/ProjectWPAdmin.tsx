@@ -60,10 +60,10 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   // let isLoading = false;
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
-    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
-    MJC: t('MJC)'),
-    CMJC: t('CMJC)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
     FC: t('FC)'),
     NRC_ADD: t('ADHOC'),
   };

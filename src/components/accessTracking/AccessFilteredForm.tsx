@@ -21,12 +21,18 @@ import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTyp
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { useGetZonesByGroupQuery } from '@/features/zoneAdministration/zonesApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
+import { useDispatch, useSelector } from 'react-redux';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
+  formKey: string; // Уникальный ключ формы
 };
 const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   onProjectSearch,
+  formKey,
 }) => {
+  const dispatch = useDispatch();
+  const formValues = useSelector((state: any) => state.form[formKey] || {});
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
 
@@ -124,18 +130,26 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       message.error('Failed to fetch requirements');
     }
   };
+
+  const handleReset = () => {
+    form.resetFields();
+    dispatch(resetFormValues({ formKey }));
+    setSelectedEndDate(null);
+    setSelectedStartDate(null);
+  };
+  useEffect(() => {
+    form.setFieldsValue(formValues);
+  }, [form, formValues]);
   return (
     <ProForm
       formRef={formRef}
       onValuesChange={(changedValues, allValues) => {
+        dispatch(setFormValues({ formKey, values: allValues }));
         // Handle changes in the form
       }}
       layout="horizontal"
       size="small"
-      onReset={() => {
-        setSelectedEndDate(null);
-        setSelectedStartDate(null);
-      }}
+      onReset={handleReset}
       form={form}
       onFinish={onFinish}
     >
@@ -217,7 +231,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       />
 
       <ProFormSelect
-        initialValue={['open', 'draft']}
+        // initialValue={['open', 'draft']}
         mode="multiple"
         name="status"
         label={`${t('ACCESS STATUS')}`}

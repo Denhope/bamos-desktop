@@ -42,11 +42,13 @@ import { MenuItem, filterAPNByRole, getItem } from '@/services/utilites';
 import APNTable from '@/components/layout/APNTable';
 import UTCClock from '../shared/UTCClock';
 import { ipcRenderer } from 'electron';
+import ConnectionIndicator from '../shared/ConnectionIndicator';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const BaseLayout: React.FC = () => {
   const { t } = useTranslation();
+
   const { user } = useTypedSelector((state) => state.auth);
   const APN = [
     //{
@@ -340,6 +342,7 @@ const BaseLayout: React.FC = () => {
     'sub21',
   ];
   const { Option } = Select;
+  // Redirect to login if not authenticated
 
   useEffect(() => {
     const storedSelectedTopKeys = localStorage.getItem('selectedTopKeys');
@@ -413,6 +416,12 @@ const BaseLayout: React.FC = () => {
     setValue('');
   };
   const [value, setValue] = useState('');
+
+  useEffect(() => {
+    if (!isAuth && location.pathname !== RouteNames.LOGIN) {
+      navigate(RouteNames.LOGIN);
+    }
+  }, [isAuth, navigate, location.pathname]);
 
   // const onRowClick = (
   //   record: any,
@@ -630,20 +639,23 @@ const BaseLayout: React.FC = () => {
       </Layout>
 
       <Footer
-        className="mt-0 pt-0"
+        className="mt-0 pt-0 gap-5 flex items-center justify-center"
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center', // Выравнивание по центру
           alignItems: 'center',
           position: 'sticky',
           bottom: '0',
+          width: '100%', // Убедитесь, что Footer занимает всю ширину
         }}
       >
-        <div style={{ flex: 1 }}></div>
-        {t(`©2024 Created by Kavalchuk D.`)}
+        <div className="flex-1 text-right ">
+          {t('©2024 Created by Kavalchuk D.')}
+        </div>
         <div style={{ flex: 1, textAlign: 'right' }}>
           <UTCClock />
         </div>
+        <ConnectionIndicator />
       </Footer>
 
       <SettingsDrawer

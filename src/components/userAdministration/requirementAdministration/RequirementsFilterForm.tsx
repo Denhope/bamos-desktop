@@ -30,15 +30,19 @@ import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { useGetProjectsQuery } from '@/features/projectAdministration/projectsApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
+import { useSelector } from 'react-redux';
 type RequirementsFilteredFormType = {
   onRequirementsSearch: (values: any) => void;
   nonCalculate?: boolean;
   foForecact?: boolean;
+  formKey: string; // Уникальный ключ формы
 };
 const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   onRequirementsSearch,
   nonCalculate,
   foForecact,
+  formKey,
 }) => {
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
@@ -51,6 +55,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
   );
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
+  const formValues = useSelector((state: any) => state.form[formKey] || {});
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
@@ -58,7 +63,23 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
     setSelectedEndDate(dateString[1]);
     setSelectedStartDate(dateString[0]);
   };
-
+  const handleReset = () => {
+    form.resetFields();
+    dispatch(resetFormValues({ formKey }));
+    setSelectedProjectId(null);
+    setIsResetForm(true);
+    setTimeout(() => {
+      setIsResetForm(false);
+    }, 0);
+    setinitialForm('');
+    setSecectedSinglePN(null);
+    setSelectedEndDate(null);
+    setSelectedStartDate(null);
+    setSelectedTask(null);
+  };
+  useEffect(() => {
+    form.setFieldsValue(formValues);
+  }, [form, formValues]);
   interface Option {
     value: string;
     label: string;
@@ -229,6 +250,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
       acc[reqType?._id] = `№:${reqType?.projectWO} / ${reqType.projectName}`;
       return acc;
     }, {}) || {};
+
   return (
     <ProForm
       formRef={formRef}
@@ -240,21 +262,11 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         if (changedValues.receiverTaskType) {
           setReceiverTaskType(changedValues.receiverTaskType);
         }
+        dispatch(setFormValues({ formKey, values: allValues }));
       }}
       layout="horizontal"
       size="small"
-      onReset={() => {
-        setSelectedProjectId(null);
-        setIsResetForm(true);
-        setTimeout(() => {
-          setIsResetForm(false);
-        }, 0);
-        setinitialForm('');
-        setSecectedSinglePN(null);
-        setSelectedEndDate(null);
-        setSelectedStartDate(null);
-        setSelectedTask(null);
-      }}
+      onReset={handleReset}
       form={form}
       onFinish={onFinish}
     >

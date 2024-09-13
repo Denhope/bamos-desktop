@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import {
   ProForm,
@@ -15,14 +15,20 @@ import { useTranslation } from 'react-i18next';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
 type RequirementsFilteredFormType = {
   onProjectSearch: (values: any) => void;
+  formKey: string; // Уникальный ключ формы
 };
 const WPFilterForm: FC<RequirementsFilteredFormType> = ({
   onProjectSearch,
+  formKey,
 }) => {
   const formRef = useRef<FormInstance>(null);
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const formValues = useSelector((state: any) => state.form[formKey] || {});
 
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
@@ -33,7 +39,15 @@ const WPFilterForm: FC<RequirementsFilteredFormType> = ({
     setSelectedEndDate(dateString[1]);
     setSelectedStartDate(dateString[0]);
   };
-
+  const handleReset = () => {
+    form.resetFields();
+    dispatch(resetFormValues({ formKey }));
+    setSelectedEndDate(null);
+    setSelectedStartDate(null);
+  };
+  useEffect(() => {
+    form.setFieldsValue(formValues);
+  }, [form, formValues]);
   interface Option {
     value: string;
     label: string;
@@ -44,8 +58,6 @@ const WPFilterForm: FC<RequirementsFilteredFormType> = ({
     }
   };
 
-  const [reqTypeID, setReqTypeID] = useState<any>('');
-
   const { t } = useTranslation();
   const { data: companies } = useGetCompaniesQuery({});
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
@@ -53,11 +65,6 @@ const WPFilterForm: FC<RequirementsFilteredFormType> = ({
   const companiesCodesValueEnum: Record<string, string> =
     companies?.reduce<Record<string, string>>((acc, mpdCode) => {
       acc[mpdCode.id] = mpdCode.companyName;
-      return acc;
-    }, {}) || {};
-  const projectTypesValueEnum: Record<string, string> =
-    projectTypes?.reduce((acc, reqType) => {
-      acc[reqType.id] = reqType.code;
       return acc;
     }, {}) || {};
 
@@ -79,18 +86,16 @@ const WPFilterForm: FC<RequirementsFilteredFormType> = ({
       message.error('Failed to fetch requirements');
     }
   };
+
   return (
     <ProForm
       formRef={formRef}
       onValuesChange={(changedValues, allValues) => {
-        // Handle changes in the form
+        dispatch(setFormValues({ formKey, values: allValues }));
       }}
       layout="horizontal"
       size="small"
-      onReset={() => {
-        setSelectedEndDate(null);
-        setSelectedStartDate(null);
-      }}
+      onReset={handleReset}
       form={form}
       onFinish={onFinish}
     >

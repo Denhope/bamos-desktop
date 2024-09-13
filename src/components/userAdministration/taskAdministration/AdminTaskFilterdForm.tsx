@@ -126,7 +126,7 @@ const AdminTaskFilteredForm: FC<
             onKeyPress: handleKeyPress,
           }}
           name="AMM"
-          label={t('AMM')}
+          label={t('REFERENCE')}
           width="lg"
         />
         <ProFormText
@@ -149,6 +149,7 @@ const AdminTaskFilteredForm: FC<
             SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
             AD: { text: t('AIRWORTHINESS DIRECTIVE') },
             PN: { text: t('COMPONENT') },
+            HARD_ACCESS: { text: t('HARD_ACCESS') },
             // PN: { text: t('COMPONENT') },
             // PART_PRODUCE: { text: t('PART PRODUCE') },
             // NRC: { text: t('NRC') },

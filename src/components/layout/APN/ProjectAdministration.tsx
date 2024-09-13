@@ -43,6 +43,7 @@ const ProjectAdministration: FC<RequirementManagementProps> = () => {
             }}
           >
             <ProjectFilterForm
+              formKey="projectFilteredForm"
               onProjectSearch={(values: any) => setRequirementsSearch(values)}
             />
           </div>

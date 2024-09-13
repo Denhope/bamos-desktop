@@ -15,32 +15,52 @@ import {
 } from 'antd';
 import {
   PlusSquareOutlined,
+  MinusSquareOutlined,
+  PrinterOutlined,
+  AlertTwoTone,
+  UsergroupAddOutlined,
   CheckCircleFilled,
+  ShoppingCartOutlined,
   ShrinkOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { Split } from '@geoffcox/react-splitter';
 import WOTree from './WOTree';
 import WOAdminForm from './WOAdminForm';
-
+import MyTable from '../shared/Table/MyTable';
 import { useGetProjectItemsWOQuery } from '@/features/projectItemWO/projectItemWOApi';
 import { IProjectItemWO } from '@/models/AC';
 import WODiscription from './WODiscription';
-
+import RequarementsList from './requirements/RequarementsList';
+import { IRequirement } from '@/models/IRequirement';
+import {
+  ModalForm,
+  ProForm,
+  ProFormDatePicker,
+  ProFormGroup,
+  ProFormSelect,
+} from '@ant-design/pro-components';
 import {
   ValueEnumType,
   ValueEnumTypeTask,
   getStatusColor,
   getTaskTypeColor,
+  handleOpenReport,
   transformToIProjectTask,
+  transformToIRequirement,
+  transformToITask,
 } from '@/services/utilites';
-
+import { ColDef } from 'ag-grid-community';
+import AutoCompleteEditor from '../shared/Table/ag-grid/AutoCompleteEditor';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
-
+import {
+  useGetStorePartStockQTYQuery,
+  useGetStorePartsQuery,
+} from '@/features/storeAdministration/PartsApi';
 import TaskList from '../shared/Table/TaskList';
 import { useAddMultiActionMutation } from '@/features/projectItemWO/actionsApi';
-
+import { generateReport } from '@/utils/api/thunks';
 import PdfGenerator from './PdfGenerator';
 import { useGlobalState } from './GlobalStateContext';
 import {
@@ -64,12 +84,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
 
   const editingProjectRef = useRef(editingProject);
   const [editingProjectNRC, setEditingProjectNRC] = useState<any | null>(null);
-  const {
-    currentTime,
-    setProjectTasksFormValues,
-    projectTasksFormValues,
-    setCurrentTime,
-  } = useGlobalState();
+  const { currentTime, setProjectTasksFormValues, projectTasksFormValues } =
+    useGlobalState();
+  const [selectedStoreID, setSelectedStoreID] = useState<any | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     setProjectTasksFormValues(projectSearchValues);
@@ -188,7 +207,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     setEditingProject(editingProject);
 
     // console.log(currentTime);
-  }, [currentTime, editingProject]); //
+  }, [editingProject]); //
   const handleEdit = (project: IProjectItemWO) => {
     setEditingProject(project);
     // setEditingProjectNRC(null);
@@ -209,8 +228,8 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         });
       } else if (!editingProject?.id) {
         await addTask({ project: { ...task, isNRC: true } }).unwrap();
-        // console.log(task);
-        refetch();
+        console.log(task);
+        // refetch();
         notification.success({
           message: t('TASK SUCCESSFULLY ADDED'),
           description: t('The task has been successfully added.'),
@@ -235,9 +254,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       taskId,
       taskWO,
       removeInslallItemsIds,
-      acTypeId,
-      zonesID,
-
       ...projectWithoutIds
     } = editingProjectNRC;
     setEditingProject({
@@ -262,8 +278,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       projectItemReferenceID: editingProjectNRC?.projectItemID,
       taskDescriptionCustumer: editingProjectNRC?.taskDescriptionCustumer,
       taskId,
-      acTypeId,
-      zonesID: null,
     });
   };
 
@@ -388,7 +402,46 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     // },
 
     { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    // {
+    //   field: 'RESTRICTION_1',
+    //   headerName: `${t('RESTRICTION_1')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'PREPARATION_CODE',
+    //   headerName: `${t('PREPARATION_CODE')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'REFERENCE_2',
+    //   headerName: `${t('REFERENCE_2')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'mainWorkTime',
+    //   headerName: `${t('MHS')}`,
+    //   filter: true,
+    // },
+    // {
+    //   field: 'IDENTIFICATOR',
+    //   headerName: `${t('IDENTIFICATOR')}`,
+    //   filter: true,
+    // },
 
+    // { field: 'closedByID', headerName: 'Closed By ID' },
+
+    // {
+    //   field: 'status',
+    //   headerName: `${t('STATUS')}`,
+    //   filter: true,
+    //   valueFormatter: (params: any) => {
+    //     if (!params.value) return '';
+    //     return params.value.toUpperCase();
+    //   },
+    // },
+    // { field: 'projectTaskWO', headerName: 'Project Task WO' },
+
+    // { field: 'companyID', headerName: 'Company ID' },
     {
       field: 'createDate',
       headerName: `${t('CREATE DATE')}`,
@@ -404,8 +457,15 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         });
       },
     },
+
+    // { field: 'updateDate', headerName: 'Update Date' },
+
+    // Добавьте дополнительные поля по мере необходимости
   ];
   type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType; // Обязательное свойство
+  }
 
   const valueEnum: ValueEnumType = {
     inspect: t('INSPECTION'),
@@ -437,7 +497,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     MJC: t('MJC'),
     CMJC: t('CMJC'),
     FC: t('FC'),
-    HARD_ACCESS: t('HARD_ACCESS'),
     // RC_ADD: t('RC_ADD'),
   };
 
@@ -462,50 +521,27 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       });
       return false;
     }
-    {
-      actionType == 'reOpen' &&
-        Modal.confirm({
-          title: t(
-            `ARE YOU SURE YOU WANT TO REOPEN TASKS? ALL ACTIONS WILL BE DELETED!`
-          ),
-          onOk: async () => {
-            try {
-              await addMultiAction({ actionType, ids });
-              refetch();
-              notification.success({
-                message: t('SUCCESS'),
-                description: t('ACTIONS COMPLETED'),
-              });
-            } catch (error) {
-              notification.error({
-                message: t('ERROR'),
-                description: t('ACTIONS ERROR'),
-              });
-            }
-          },
-        });
-    }
-    {
-      actionType == 'open' &&
-        Modal.confirm({
-          title: t(`ARE YOU SURE YOU WANT TO EDIT TASK?`),
-          onOk: async () => {
-            try {
-              await addMultiAction({ actionType, ids });
-              refetch();
-              notification.success({
-                message: t('SUCCESS'),
-                description: t('ACTIONS COMPLETED'),
-              });
-            } catch (error) {
-              notification.error({
-                message: t('ERROR'),
-                description: t('ACTIONS ERROR'),
-              });
-            }
-          },
-        });
-    }
+
+    Modal.confirm({
+      title: t(
+        `ARE YOU SURE YOU WANT TO REOPEN TASKS? ALL ACTIONS WILL BE DELETED!`
+      ),
+      onOk: async () => {
+        try {
+          await addMultiAction({ actionType, ids });
+          refetch();
+          notification.success({
+            message: t('SUCCESS'),
+            description: t('ACTIONS COMPLETED'),
+          });
+        } catch (error) {
+          notification.error({
+            message: t('ERROR'),
+            description: t('ACTIONS ERROR'),
+          });
+        }
+      },
+    });
   };
 
   const handleAddActionALL = async (
@@ -545,7 +581,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         message: t('SUCCESS'),
         description: t('ACTIONS COMPLETED'),
       });
-      setCurrentTime(Date.now());
       // setEditingProject(null);
     } catch (error) {
       notification.error({
@@ -561,6 +596,96 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     setReportData(true);
   };
 
+  const htmlTemplate = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Table Example</title>
+      <style>
+          table {
+              width: 720px;
+              margin-right: 9pt;
+              margin-left: 9pt;
+              border-collapse: collapse;
+              text-align: center; /* Исправлено */
+          }
+          td {
+              border: 0.5pt solid #00b050;
+              padding: 1.4pt 1.02pt;
+              vertical-align: middle;
+              height: 30px; /* Добавлено */
+              overflow: hidden; /* Добавлено */
+          }
+      </style>
+  </head>
+  <body>
+      <div>
+          <table cellspacing="0" cellpadding="0">
+              <tr style="page-break-inside: avoid">
+                  <td colspan="2" style="width: 79.8pt;">
+                      <h3 style="text-align: left; font-size: 9pt">
+                          <span style="font-family: Roboto; font-weight: normal">WP Card Seq.</span>
+                      </h3>
+                      <p style="margin-right: 2.85pt; font-size: 6pt">
+                          <span style="font-family: Roboto">Номер в пакете работ</span>
+                      </p>
+                  </td>
+                  <td style="width: 37.9pt;">
+                      <h3 style="text-align: left">
+                          <span style="font-family: Roboto; font-weight: normal">&#xa0;</span>
+                      </h3>
+                  </td>
+                  <!-- Другие ячейки -->
+              </tr>
+              <!-- Другие строки -->
+          </table>
+          <p style="font-size: 5pt">
+              <span style="font-family: Roboto">&#xa0;</span>
+          </p>
+      </div>
+  </body>
+  </html>
+
+`;
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (reportData && selectedKeys) {
+  //       const companyID = localStorage.getItem('companyID');
+  //       const queryParams = {
+  //         title: 'TASK_COVER_REPORT',
+  //         token: localStorage.getItem('token'),
+  //         landscape: 'portrait',
+  //       };
+
+  //       try {
+  //         // Вызываем функцию для генерации отчета
+  //         setReportDataLoading(true);
+  //         const reportDataQ = await generateReport(
+  //           companyID,
+  //           queryParams,
+  //           localStorage.getItem('token')
+  //         );
+
+  //         handleOpenReport(reportDataQ);
+  //         setReportDataLoading(false);
+
+  //         // Устанавливаем состояние reportData в false
+  //         setReportData(false);
+  //         // return reportDataQ;
+  //       } catch (error) {
+  //         // Обрабатываем ошибку при загрузке отчета
+  //         console.error('Ошибка при загрузке отчета:', error);
+  //         setReportDataLoading(false);
+  //         setReportData(false);
+  //       }
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [selectedKeys, reportData]);
   const [visibleActionAdd, setVisibleActionAdd] = useState(false);
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
@@ -594,10 +719,101 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           </PermissionGuard>
         </Col>
 
+        {/* <Col style={{ textAlign: 'right' }}>
+          {editingProject && (
+            <Button
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<MinusSquareOutlined />}
+              onClick={() => handleDelete(editingProject.id)}
+            >
+              {t('DELETE WORKORDER')}
+            </Button>
+          )}
+        </Col>
+        <Col>
+          <Button
+            disabled={!selectedKeys.length}
+            size="small"
+            icon={<UsergroupAddOutlined />}
+          >
+            {t('ADD WORKER')}
+          </Button>
+        </Col> */}
+        {/* <Col>
+          <PermissionGuard
+            requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
+          >
+            <Button
+              onClick={() => {
+                handleAddAction('pfmd', selectedKeys, [
+                  'inspect',
+                  'performed',
+                  'closed',
+                ]);
+              }}
+              disabled={
+                !selectedKeys.length ||
+                selectedKeys.length > 1 ||
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled' ||
+                editingProject?.status == 'performed' ||
+                editingProject?.status == 'inspect'
+              }
+              size="small"
+              icon={<AlertTwoTone />}
+            >
+              {t('COMPLETE WORKORDER')}
+            </Button>
+          </PermissionGuard>
+        </Col> */}
+        {/* <Col>
+          <PermissionGuard
+            requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
+          >
+            <Button
+              onClick={() => {
+                handleAddAction('inspect', selectedKeys, [
+                  'inspect',
+                  'doubleInspect',
+                  'closed',
+                  'inProgress',
+                  'open',
+                ]);
+              }}
+              disabled={
+                !selectedKeys.length ||
+                selectedKeys.length > 1 ||
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled' ||
+                editingProject?.status == 'inspect'
+              }
+              size="small"
+              icon={<AlertTwoTone />}
+            >
+              {t('INSPECT WORKORDER')}
+            </Button>
+          </PermissionGuard>
+        </Col> */}
         <Col>
           <PermissionGuard
             requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
           >
+            {/* <Button
+              onClick={() => {
+                handleAddAction('closed', selectedKeys, [
+                  'closed',
+                  'inProgress',
+                  'performed',
+                  'open',
+                ]);
+              }}
+              disabled={!selectedKeys.length}
+              size="small"
+              icon={<CheckCircleFilled />}
+            >
+              {t('CLOSE WORKORDER')}
+            </Button> */}
             <Button
               onClick={() => {
                 setVisibleActionAdd(true);
@@ -643,10 +859,14 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         <Col>
           <PermissionGuard requiredPermissions={[Permission.REOPEN_TASK]}>
             <Button
-              danger
               onClick={() => {
                 handleAddAction('reOpen', selectedKeys, ['']);
               }}
+              // disabled={
+              //   !selectedKeys.length ||
+              //   selectedKeys.length > 1 ||
+              //   editingProject?.status !== 'closed'
+              // }
               size="small"
               icon={<ShrinkOutlined />}
             >
@@ -654,14 +874,25 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             </Button>
           </PermissionGuard>
         </Col>
-        <Col style={{ textAlign: 'right' }}></Col>
+        <Col style={{ textAlign: 'right' }}>
+          {/* <Button
+            loading={reportDataLoading}
+            icon={<PrinterOutlined />}
+            size="small"
+            onClick={() => fetchAndHandleReport('TASK_COVER_REPORT')}
+            disabled={!selectedKeys.length}
+            // disabled
+          >
+            {`${t('PRINT WORKORDER')}`}
+          </Button> */}
+        </Col>
         <Col>
           <PermissionGuard requiredPermissions={[Permission.PRINT_TASK_CARD]}>
             <PdfGenerator
               wo={editingProject}
               disabled={!selectedKeys.length}
               ids={selectedKeys}
-              htmlTemplate={''}
+              htmlTemplate={htmlTemplate}
               data={[]}
             />
           </PermissionGuard>
@@ -675,6 +906,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               onChange={() => setIsTreeView(!isTreeView)}
             />
           </Col>
+          {/* <Col>
+            <FloatButton.Group shape="circle" style={{ right: 24 }}>
+              <FloatButton />
+              <FloatButton icon="DOC" onClick={() => console.log('DOC')} />
+            </FloatButton.Group>
+          </Col> */}
         </Space>
       </Space>
       <div className="h-[78vh] flex flex-col">
@@ -732,7 +969,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             }}
             onSave={(data) => {
               // console.log(data);
-
               handleAddActionALL(data, selectedKeys, ['closed']);
             }}
           />

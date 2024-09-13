@@ -1140,6 +1140,7 @@ export interface ValueEnumTypeTask {
   NRC_ADD: string;
   PART_PRODUCE?: string;
   SMC?: string;
+  HARD_ACCESS?: string;
 }
 export interface ValueEnumTypeOrder {
   PURCHASE_ORDER: string;
@@ -1227,7 +1228,9 @@ export const getTaskTypeColor = (
     case 'NRC':
       return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
     case 'NRC_ADD':
-      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+      return 'rgba(255, 99, 71, 0.6)';
+    case 'HARD_ACCESS':
+      return 'rgba(255, 215, 0, 0.6)'; // // Tomato Red with less transparency
     default:
       return ''; // Default color
   }

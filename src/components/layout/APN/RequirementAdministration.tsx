@@ -44,6 +44,7 @@ const RequirementAdministration: FC<RequirementManagementProps> = () => {
             }}
           >
             <RequirementsFilterForm
+              formKey="REQ"
               onRequirementsSearch={(values) => setRequirementsSearch(values)}
             />
           </div>

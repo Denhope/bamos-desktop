@@ -41,9 +41,9 @@ import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice
 import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-// import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
+import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
 // import { acApi } from '@/features/ACAdministration/acApi';
-import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
+// import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
 import menuItemsReducer from './reducers/menuItemsReducer';
 import cardPositionReducer from './reducers/cardPositionReducer';
 import tabsReducer from './reducers/TabsSlice'; //
@@ -79,7 +79,7 @@ import columnReducer from './reducers/columnSlice'; //
 import { certificatesTypeApi } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
 import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTextTypeApi';
 import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
-import { acApi } from '@/features/acAdministration/acApi';
+import { acApi } from '@/features/ACAdministration/acApi';
 const rootReducer = combineReducers({
   auth: authSlice,
   files: filesUploadeReducer,

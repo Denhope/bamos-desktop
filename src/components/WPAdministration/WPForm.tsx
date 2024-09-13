@@ -53,8 +53,8 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
-import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import ActionsComponent from './ActionsComponent';
 import { useGetProjectItemsQuery } from '@/features/projectItemAdministration/projectItemApi';
@@ -144,11 +144,11 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   };
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
-    CR_TASK: t('CR TASK (CRIRICAL TASK/DI)'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
     NRC: t('NRC (DEFECT)'),
     NRC_ADD: t('ADHOC (ADHOC TASK)'),
-    MJC: t('MJC)'),
-    CMJC: t('CMJC)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
     FC: t('FC'),
   };
   const columnDefs: any[] = [

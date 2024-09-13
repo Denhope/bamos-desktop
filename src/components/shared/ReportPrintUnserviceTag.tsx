@@ -244,10 +244,10 @@ const ReportPrintUnserviceTag: React.FC<ReportGeneratorProps> = ({
           : 'N/A';
       const organizationAuthorization =
         currentAction?.componentChange.removeAction.userDurations !== undefined
-          ? String(
+          ? `${
               currentAction?.componentChange.removeAction.userDurations[0]
                 .userID.organizationAuthorization
-            ) ||
+            } (${currentAction?.componentChange.removeAction.userDurations[0].userID.firstNameEnglish?.toUpperCase()}  ${currentAction?.componentChange.removeAction.userDurations[0].userID.lastNameEnglish?.toUpperCase()})` ||
             String(
               currentAction?.componentChange.removeAction.userDurations[0]
                 .userID.singNumber

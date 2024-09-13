@@ -51,6 +51,7 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
+import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 
 interface UserFormProps {
   task?: ITask;
@@ -147,10 +148,25 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   //   { acTypeId: acTypeID },
   //   { skip: !acTypeID }
   // );
+
+  const { data: tasksQueryHard } = useGetTasksQuery(
+    {
+      acTypeID: acTypeID,
+      time: tasksFormValues?.time,
+
+      taskType: 'HARD_ACCESS',
+    },
+    { skip: !acTypeID }
+  );
   const { data: restriction } = useGetFilteredRestrictionsQuery({});
   const restrictionValueEnum: Record<string, string> =
     restriction?.reduce((acc, reqType) => {
       acc[reqType.id || reqType?._id] = `${reqType.code}`;
+      return acc;
+    }, {}) || {};
+  const hardValueEnum: Record<string, string> =
+    tasksQueryHard?.reduce((acc, reqType) => {
+      acc[reqType.id || reqType?._id] = `${reqType.taskNumber}`;
       return acc;
     }, {}) || {};
 
@@ -406,21 +422,23 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   showSearch
                   name="acTypeId"
                   label={t('AC TYPE')}
-                  width="sm"
+                  width="lg"
                   valueEnum={acTypeValueEnum}
                   onChange={(value: any) => setACTypeID(value)}
                 />
+                {taskType !== 'PART_PRODUCE' && taskType !== 'HARD_ACCESS' && (
+                  <ProFormSelect
+                    mode={'multiple'}
+                    showSearch
+                    name="mpdDocumentationId"
+                    label={t('MPD CODE')}
+                    width="lg"
+                    valueEnum={mpdCodesValueEnum}
+                    disabled={!acTypeID} // Disable the select if acTypeID is not set
+                  />
+                )}
                 {taskType !== 'PART_PRODUCE' && (
                   <>
-                    <ProFormSelect
-                      mode={'multiple'}
-                      showSearch
-                      name="mpdDocumentationId"
-                      label={t('MPD CODE')}
-                      width="lg"
-                      valueEnum={mpdCodesValueEnum}
-                      disabled={!acTypeID} // Disable the select if acTypeID is not set
-                    />
                     <ProFormSelect
                       showSearch
                       // initialValue={['PART_PRODUCE']}
@@ -432,6 +450,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         SMC: { text: t('SHEDULED MAINTENENCE CHECK') },
                         AD: { text: t('AIRWORTHINESS DIRECTIVE') },
                         PN: { text: t('COMPONENT') },
+                        HARD_ACCESS: { text: t('HARD_ACCESS') },
                       }}
                       onChange={(value: any) => setTaskType(value)}
                     />
@@ -455,6 +474,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         // ADP: { text: t('ADP') },
                         AD: { text: t('AIRWORTHINESS DIRECTIVE') },
                         PN: { text: t('COMPONENT') },
+                        HARD_ACCESS: { text: t('HARD_ACCESS') },
                         // PART_PRODUCE: { text: t('PART PRODUCE') },
                         // NRC: { text: t('NRC') },
                         // ADD_HOC: { text: t('ADD HOC') },
@@ -681,6 +701,21 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         name="mainWorkTime"
                         label={t('MHS')}
                       />
+                      {taskType == 'HARD_ACCESS' && (
+                        <ProFormGroup>
+                          <ProFormDigit
+                            width={'xs'}
+                            name="OPEN_MHR"
+                            label={t('REMOVE MHS')}
+                          />
+                          <ProFormDigit
+                            width={'xs'}
+                            name="CLOSE_MHR"
+                            label={t('INSTALL MHS')}
+                          />
+                        </ProFormGroup>
+                      )}
+
                       <ProFormCheckbox
                         name="isCriticalTask"
                         label={t('CRITICAL TASK')}
@@ -705,7 +740,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       width={'sm'}
                       fieldProps={{ style: { resize: 'none' } }}
                       name="amtoss"
-                      label={t('TASK REFERENCE')}
+                      label={t('REFERENCE')}
                       rules={[
                         {
                           required: true,
@@ -721,15 +756,17 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       valueEnum={zonesValueEnum}
                       disabled={!acTypeID}
                     />
-                    <ProFormSelect
-                      showSearch
-                      name="accessID"
-                      mode={'multiple'}
-                      label={t('ACCESS')}
-                      width="sm"
-                      valueEnum={accessCodesValueEnum}
-                      disabled={!acTypeID}
-                    />
+                    {taskType !== 'HARD_ACCESS' && (
+                      <ProFormSelect
+                        showSearch
+                        name="accessID"
+                        mode={'multiple'}
+                        label={t('ACCESS')}
+                        width="sm"
+                        valueEnum={accessCodesValueEnum}
+                        disabled={!acTypeID}
+                      />
+                    )}
                     <ProFormSelect
                       showSearch
                       name="code"
@@ -748,6 +785,18 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       valueEnum={restrictionValueEnum}
                       // disabled={!acTypeID}
                     />
+                    {taskType !== 'HARD_ACCESS' && (
+                      <ProFormSelect
+                        // disabled={!order?.projectTaskReferenceID}
+                        showSearch
+                        mode="multiple"
+                        name="preparationID"
+                        label={t('HARD_ACCESS')}
+                        width="sm"
+                        valueEnum={hardValueEnum}
+                        // disabled={!acTypeID}
+                      />
+                    )}
                     <ProFormSelect
                       // disabled
                       mode="multiple"

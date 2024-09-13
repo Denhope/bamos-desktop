@@ -39,9 +39,9 @@ class WebSocketService {
     }
   }
 
-  unsubscribe(eventType: string) {
+  unsubscribe(eventType: string, callback: (data: any) => void) {
     if (this.socket) {
-      this.socket.off(eventType);
+      this.socket.off(eventType, callback);
     }
   }
 
@@ -65,6 +65,11 @@ class WebSocketService {
     if (this.socket) {
       this.socket.off('notification');
     }
+  }
+
+  // Метод для проверки текущего состояния соединения
+  isConnected(): boolean {
+    return this.socket?.connected ?? false;
   }
 }
 

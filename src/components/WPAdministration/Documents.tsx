@@ -76,50 +76,54 @@ const Documents: FC<DocumentsProps> = ({
 
   return (
     <div>
-      {documentsData.map((doc, index) => (
-        <div key={doc.id}>
-          {index > 0 && <Divider style={{ margin: '16px 0' }} />}
-          <ProForm.Group
-            disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
-            size="small"
-          >
-            <ProFormText
-              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
-              width="xs"
-              name={`name-${doc.id}`}
-              label={t('TYPE')}
-              initialValue={doc.name}
-              onChange={(e) => handleChange(doc.id, 'name', e.target.value)}
-            />
-            <ProFormText
-              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
-              width="sm"
-              name={`revision-${doc.id}`}
-              label={t('REVISION')}
-              initialValue={doc.revision}
-              onChange={(e) => handleChange(doc.id, 'revision', e.target.value)}
-            />
-            <ProFormText
-              disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
-              name={`revisionDate-${doc.id}`}
-              label={t('DATE')}
-              initialValue={doc.revisionDate}
-              onChange={(e) =>
-                handleChange(doc.id, 'revisionDate', e.target.value)
-              }
-            />
-            <ProForm.Item>
-              <Button
-                disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
-                type="default"
-                danger
-                icon={<MinusOutlined />}
-                onClick={() => handleRemoveDocument(doc.id)}
+      {documentsData &&
+        documentsData.length &&
+        documentsData.map((doc, index) => (
+          <div key={doc.id}>
+            {index > 0 && <Divider style={{ margin: '16px 0' }} />}
+            <ProForm.Group
+              disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
+              size="small"
+            >
+              <ProFormText
+                disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
+                width="xs"
+                name={`name-${doc.id}`}
+                label={t('TYPE')}
+                initialValue={doc.name}
+                onChange={(e) => handleChange(doc.id, 'name', e.target.value)}
               />
-            </ProForm.Item>
-          </ProForm.Group>
-        </div>
-      ))}
+              <ProFormText
+                disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
+                width="sm"
+                name={`revision-${doc.id}`}
+                label={t('REVISION')}
+                initialValue={doc.revision}
+                onChange={(e) =>
+                  handleChange(doc.id, 'revision', e.target.value)
+                }
+              />
+              <ProFormText
+                disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
+                name={`revisionDate-${doc.id}`}
+                label={t('DATE')}
+                initialValue={doc.revisionDate}
+                onChange={(e) =>
+                  handleChange(doc.id, 'revisionDate', e.target.value)
+                }
+              />
+              <ProForm.Item>
+                <Button
+                  disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
+                  type="default"
+                  danger
+                  icon={<MinusOutlined />}
+                  onClick={() => handleRemoveDocument(doc.id)}
+                />
+              </ProForm.Item>
+            </ProForm.Group>
+          </div>
+        ))}
 
       <div
         style={{
@@ -130,7 +134,7 @@ const Documents: FC<DocumentsProps> = ({
         }}
       >
         <Button
-          disabled={wo.status == 'CLOSED' || wo.status == 'COMPLETED'}
+          disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
           type="default"
           onClick={handleAddDocument}
           icon={<PlusOutlined />}

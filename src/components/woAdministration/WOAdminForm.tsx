@@ -916,6 +916,7 @@ const WOAdminForm: FC<UserFormProps> = ({
             userDurations: userDurations ? userDurations : null,
             projectTaskReferenceID: order?.projectTaskReferenceID,
             projectID: order?.projectID,
+            acTypeId: order?.acTypeId,
             projectId: order?.projectId,
             projectItemReferenceID: order?.projectItemReferenceID,
             removeInslallItemsIds: order?.removeInslallItemsIds,
@@ -925,6 +926,7 @@ const WOAdminForm: FC<UserFormProps> = ({
             id: order.id,
             // taskId: order.taskId._id,
             _id: order.id,
+            planeId: order.planeId,
           });
         }} // }}
         disabled={order && order?.status === 'closed'}
@@ -1021,7 +1023,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                               ),
                             },
                             CR_TASK: {
-                              text: t('CR TASK (CRIRICAL TASK/DI)'),
+                              text: t('CR TASK (CRITICAL TASK/DI)'),
                             },
 
                             NRC: { text: t('NRC (Defect)') },
@@ -1057,7 +1059,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                               ),
                             },
                             CR_TASK: {
-                              text: t('CR TASK (CRIRICAL TASK/DI)'),
+                              text: t('CR TASK (CRITICAL TASK/DI)'),
                             },
 
                             NRC: { text: t('NRC (Defect)') },
@@ -1351,6 +1353,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                           valueEnum={restrictionValueEnum}
                           // disabled={!acTypeID}
                         />
+
                         <ProFormSelect
                           // disabled={!order?.projectTaskReferenceID}
                           mode="multiple"
@@ -1437,7 +1440,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                         ),
                       },
                       CR_TASK: {
-                        text: t('CR TASK (CRIRICAL TASK/DI)'),
+                        text: t('CR TASK (CRITICAL TASK/DI)'),
                       },
 
                       NRC: { text: t('NRC (Defect)') },
