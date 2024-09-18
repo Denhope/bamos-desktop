@@ -225,12 +225,45 @@ const PdfGenerator: React.FC<{
                 });
               }
               if (task.projectItemType == 'NRC') {
-                page.drawText('Title', {
+                page.drawText('AC Type', {
                   x: x + 5,
                   y: y - 65,
                   font: robotoFont,
                   size: smallFontSize,
                 });
+
+                page.drawText('MSN', {
+                  x: x + 105,
+                  y: y - 65,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+                page.drawText('Customer', {
+                  x: x + 205,
+                  y: y - 65,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+
+                if ( task.projectItemType == 'NRC') {
+                  // Рисуем две вертикальные линии для разделения поля title
+                  const lineX1 = x + 100; // Первая линия
+                  const lineX2 = x + 200; // Вторая линия
+          
+                  page.drawLine({
+                    start: { x: lineX1, y: y-36.2 },
+                    end: { x: lineX1, y: y-72 },
+                    thickness: 1,
+                    color: rgb(0, 0, 0),
+                  });
+          
+                  page.drawLine({
+                    start: { x: lineX2, y: y-36.2  },
+                    end: { x: lineX2, y: y-72 },
+                    thickness: 1,
+                    color: rgb(0, 0, 0),
+                  });
+                }
               }
               if (task.projectItemType !== 'NRC') {
                 const taskNumberText =
@@ -254,32 +287,89 @@ const PdfGenerator: React.FC<{
               }
 
               if (task.projectItemType == 'NRC') {
-                const taskNumberText =
-                  task?.taskDescription !== undefined
-                    ? String(task.taskDescription).toUpperCase()
+                const acTypeText =
+                  task?.acType !== undefined
+                    ? String(task.acType).toUpperCase()
                     : 'N/A';
-                const truncatedTaskNumberText = truncateText(
-                  taskNumberText,
-                  260,
+                const truncatedAcTypeText = truncateText(
+                  acTypeText,
+                  80,
                   robotoFont,
                   12
                 );
+                const acTypeMSN =
+                task?.ACMSN !== undefined
+                  ? String(task.ACMSN).toUpperCase()
+                  : 'N/A';
+              const truncatedacTypeMSN = truncateText(
+                acTypeMSN,
+                80,
+                robotoFont,
+                12
+              );
+
+              const accustomerCode =
+                task?.customerCode !== undefined
+                  ? String(task.customerCode).toUpperCase()
+                  : 'N/A';
+                  const truncatedCode = truncateText(
+                    accustomerCode,
+                    80,
+                    robotoFont,
+                    12
+                  ); 
 
                 // Смещение влево на 20 единиц
-                page.drawText(truncatedTaskNumberText, {
+                page.drawText(truncatedAcTypeText, {
                   x: x + 25, // Изменено с x + 85 на x + 65
                   y: y - 55,
                   font: robotoFont,
                   size: 12,
                 });
-              }
 
-              page.drawText('Описание', {
-                x: x + 5,
-                y: y - 70,
-                font: robotoFont,
-                size: smallFontSize,
-              });
+                page.drawText(truncatedacTypeMSN, {
+                  x: x + 125, // Изменено с x + 85 на x + 65
+                  y: y - 55,
+                  font: robotoFont,
+                  size: 12,
+                });
+                page.drawText(accustomerCode, {
+                  x: x + 225, // Изменено с x + 85 на x + 65
+                  y: y - 55,
+                  font: robotoFont,
+                  size: 12,
+                });
+              }
+              if (task.projectItemType !== 'NRC') {
+                page.drawText('Описание', {
+                  x: x + 5,
+                  y: y - 70,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+              }
+              if (task.projectItemType == 'NRC') {
+                page.drawText('Тип ВС', {
+                  x: x + 5,
+                  y: y - 70,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+                page.drawText('Заводской номер', {
+                  x: x + 105,
+                  y: y - 70,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+                page.drawText('Заказчик', {
+                  x: x + 205,
+                  y: y - 70,
+                  font: robotoFont,
+                  size: smallFontSize,
+                });
+              }
+              
+            
             } else if (cell === 'QR Code') {
               page.drawImage(qrCodeImage, {
                 x: x + 20, // Adjusted x position for QR code
@@ -359,6 +449,7 @@ const PdfGenerator: React.FC<{
               }
             }
             // Draw border around the cell
+            
             page.drawRectangle({
               x,
               y: y - 72, // Adjusted height for the QR code cell
@@ -392,6 +483,54 @@ const PdfGenerator: React.FC<{
       };
 
       let { page, width, height, y } = addPage();
+
+      const cellDataNRC2 = [
+        {
+          label: 'Station',
+          label1: 'Произв. база',
+          value: task.station !== undefined ? task.station : 'MSQ',
+        },
+        {
+            label: '',
+            label1: 'ATA ',
+            value: task.ata !== undefined ? task.ata : 'N/A',
+        },
+        {
+          label: 'Zone',
+          label1: 'Зона',
+          value: task.zones !== undefined ? String(task.zones) : 'N/A',
+        },
+        {
+          label: 'AC Area',
+          label1: 'Область',
+          value: task.taskArea !== undefined ? task.taskArea : 'N/A',
+        },
+      ];
+
+      const cellDataNRC3 = [
+        {
+          label: 'Work Pack',
+          label1: 'Пакет Работ',
+          value: task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
+        },
+        {
+          label: 'Customer WO',
+          label1: 'Заявка Заказчика',
+          value:
+            task.custumerWO !== undefined ? String(task.custumerWO) : 'N/A',
+        },
+        {
+          label: 'Internal WO',
+          label1: 'Заказ-Наряд',
+          value: task.WONumber !== undefined ? String(task.WONumber) : 'N/A',
+        },
+        {
+          label: 'WP Card Seq',
+          label1: 'Номер в пакете',
+          value:
+            task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
+        },
+      ];
 
       const cellData = [
         {
@@ -542,6 +681,8 @@ const PdfGenerator: React.FC<{
             task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
         },
       ];
+
+      //////
       const cellData7 = [
         {
           label: 'Related documents and references',
@@ -557,6 +698,109 @@ const PdfGenerator: React.FC<{
       const cellWidths = [100, 100, 200, 100]; // Ширина первой ячейки 50, второй ячейки 200
       const totalCellWidth = cellWidths.reduce((sum, width) => sum + width, 0);
 
+      if (task.projectItemType == 'NRC') {
+        const cellWidthsNRC2 = [100, 100, 200, 100];
+        for (let i = 0; i < cellData5.length; i++) {
+          const cell = cellDataNRC2[i];
+          const horizontalPadding = [45, 20, 25, 45];
+          const truncatedValue = truncateText(
+            cell.value,
+            cellWidthsNRC2[i] - 20, // Use the adjusted width for truncation
+            robotoFont,
+            fontSize
+          );
+          const cellX =
+            50 + cellWidthsNRC2.slice(0, i).reduce((sum, width) => sum + width, 0);
+          const cellWidth1 = cellWidthsNRC2[i];
+  
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidth1,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+  
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 18,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+  
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 23,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+  
+          // Draw the value
+          page.drawText(truncatedValue, {
+            x: cellX + horizontalPadding[i],
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+  
+        y -= 0; 
+        const cellWidthsNRC3 = [100, 200, 100, 100];
+        for (let i = 0; i < cellData5.length; i++) {
+          const cell = cellDataNRC3[i];
+          const horizontalPadding = [45, 45, 45, 45];
+          const truncatedValue = truncateText(
+            cell.value,
+            cellWidthsNRC3[i] - 20, // Use the adjusted width for truncation
+            robotoFont,
+            fontSize
+          );
+          const cellX =
+            50 + cellWidthsNRC3.slice(0, i).reduce((sum, width) => sum + width, 0);
+          const cellWidth1 = cellWidthsNRC3[i];
+  
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidth1,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+  
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 18,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+  
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 23,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+  
+          // Draw the value
+          page.drawText(truncatedValue, {
+            x: cellX + horizontalPadding[i],
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+  
+        y -= 5; // / Space between the previous content and the new cells// / Space between the previous content and the new cells
+      }
+      if (task.projectItemType !== 'NRC') {
       for (let i = 0; i < cellData.length; i++) {
         const cell = cellData[i];
         const cellX =
@@ -791,7 +1035,7 @@ const PdfGenerator: React.FC<{
       }
       y -= cellHeight;
       y -= 5;
-
+    }
       for (let i = 0; i < cellData7.length; i++) {
         const cell = cellData7[i];
 
