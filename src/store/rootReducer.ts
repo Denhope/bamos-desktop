@@ -41,9 +41,9 @@ import acTypesReducer from '../../src/features/acTypeAdministration/acTypesSlice
 import zonesReducer from '../../src/features/zoneAdministration/zonesSlice';
 import taskReducer from '../../src/features/tasksAdministration/taskSlice';
 import userGroupReducer from '@/features/userAdministration/userGroupSlice';
-import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
+// import acAdministrationReducer from '../../src/features/ACAdministration/acAdminSlice';
 // import { acApi } from '@/features/ACAdministration/acApi';
-// import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
+import acAdministrationReducer from '../../src/features/acAdministration/acAdminSlice';
 import menuItemsReducer from './reducers/menuItemsReducer';
 import cardPositionReducer from './reducers/cardPositionReducer';
 import tabsReducer from './reducers/TabsSlice'; //
@@ -75,11 +75,13 @@ import columnWidthsReducer from './reducers/columnWidthsSlice'; // Добавь�
 import columnWidthsExpiryReducer from './reducers/columnWidthsExpirySlice';
 import columnWidthsReqReducer from './reducers/columnWidthrReqlice'; //
 import columnReducer from './reducers/columnSlice'; //
+import coketReducer from './reducers/WebSocketSlice'; //
 
 import { certificatesTypeApi } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
 import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTextTypeApi';
 import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
-import { acApi } from '@/features/ACAdministration/acApi';
+// import { acApi } from '@/features/ACAdministration/acApi';
+import { acApi } from '@/features/acAdministration/acApi';
 const rootReducer = combineReducers({
   auth: authSlice,
   files: filesUploadeReducer,
@@ -103,6 +105,7 @@ const rootReducer = combineReducers({
   storesLogistic: storesLogisticReducer,
   userPreferences: userPreferencesSlice,
   userGroup: userGroupReducer,
+  socket: coketReducer,
   [accessCodeApi.reducerPath]: accessCodeApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [projectItemApi.reducerPath]: projectItemApi.reducer,
@@ -145,6 +148,7 @@ const rootReducer = combineReducers({
   [certificatesTypeApi.reducerPath]: certificatesTypeApi.reducer,
   [orderTextTypeApi.reducerPath]: orderTextTypeApi.reducer,
   [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
+  // [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
 
   vendor: vendorReducer,
   acTypes: acTypesReducer,
@@ -159,6 +163,7 @@ const rootReducer = combineReducers({
   tabs: tabsReducer,
   menuItems: menuItemsReducer,
   cardPosition: cardPositionReducer,
+
 });
 
 export default rootReducer;

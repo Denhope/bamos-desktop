@@ -107,7 +107,7 @@ const WOAdminForm: FC<UserFormProps> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType; // Обязательное свойство
   }
-
+  const { setCurrentTime } = useGlobalState();
   const [userDurations, setUserDurations] = useState<any[]>([]);
   const { data: users } = useGetUsersQuery({});
   const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
@@ -420,17 +420,17 @@ const WOAdminForm: FC<UserFormProps> = ({
         projectId,
         projectItemID,
         projectTaskID,
-      }).unwrap();
-      await refetch();
-      await addBooking({
-        booking: { voucherModel: 'ADD_STEP', data: step },
-      }).unwrap();
-      // setCurrentTime(Date.now()); // Передаем данные о новом шаге в addBooking
+      }).unwrap()
+      // await refetch();
+     
+      setCurrentTime(Date.now()); // Передаем данные о новом шаге в addBooking
       notification.success({
         message: t('STEP SUCCESSFULLY ADDED'),
         description: t('The step has been successfully added.'),
-      });
-
+      })
+      await addBooking({
+        booking: { voucherModel: 'ADD_STEP', data: step },
+      })
       // setIsModalVisible(false); // Если у вас есть функция для закрытия модального окна после добавления шага
     } catch (error) {
       notification.error({

@@ -1,12 +1,12 @@
-// components/SubscriptionManager.tsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { List, Checkbox, message } from 'antd';
 import { getSubscriptionTypes, SubscriptionType } from '@/services/utilites';
-import { $authHost, $host, API_URL } from '@/utils/api/http';
-import { io, Socket } from 'socket.io-client';
+import { $authHost } from '@/utils/api/http';
 import { useTranslation } from 'react-i18next';
 import { useGlobalState } from '../woAdministration/GlobalStateContext';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { subscribeToEventType, unsubscribeFromEventType } from '@/store/reducers/WebSocketSlice';
+
 
 interface Subscription {
   _id: string;
@@ -15,8 +15,10 @@ interface Subscription {
 }
 
 const SubscriptionManager: React.FC<{ userId: string }> = ({ userId }) => {
-  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const { notificationsEnabled, setNotificationsEnabled } = useGlobalState();
+  const dispatch = useAppDispatch();
+  const { socket } = useTypedSelector((state) => state.socket);
 
   useEffect(() => {
     async function fetchSubscriptions() {
@@ -24,7 +26,7 @@ const SubscriptionManager: React.FC<{ userId: string }> = ({ userId }) => {
         const res = await $authHost.get<Subscription[]>(
           `/settings/subscrptions/${userId}`
         );
-        setSubscriptions(res.data || []); // Убедитесь, что res.data всегда массив
+        setSubscriptions(res.data || []);
       } catch (error) {
         console.error('Ошибка при загрузке подписок:', error);
       }
@@ -38,60 +40,46 @@ const SubscriptionManager: React.FC<{ userId: string }> = ({ userId }) => {
   };
 
   const toggleSubscription = async (eventType: SubscriptionType) => {
-    const socket = io(API_URL, {
-      extraHeaders: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-
-    if (isSubscribed(eventType)) {
-      await $authHost
-        .delete('/settings/subscrptions/unsubscribe', {
-          data: { userId, eventType },
-        })
-        .then(() => {
-          socket.emit('unsubscribe', userId, eventType);
-          setSubscriptions(
-            subscriptions.filter((sub) => sub.eventType !== eventType)
-          );
-          message.success(`Отписано от события: ${eventType}`);
-        });
-    } else {
-      await $authHost
-        .post<Subscription>('/settings/subscrptions/subscribe', {
-          userId,
-          eventType,
-        })
-        .then((res) => {
-          socket.emit('subscribe', userId, eventType);
-          setSubscriptions([...subscriptions, res.data]);
-          message.success(`Подписано на событие: ${eventType}`);
-        });
+    try {
+      if (isSubscribed(eventType)) {
+        await $authHost
+          .delete('/settings/subscrptions/unsubscribe', {
+            data: { userId, eventType },
+          })
+          .then(() => {
+            dispatch(unsubscribeFromEventType({ userId, eventType }));
+            setSubscriptions((prev) =>
+              prev.filter((sub) => sub.eventType !== eventType)
+            );
+            message.success(`Отписано от события: ${eventType}`);
+          });
+      } else {
+        await $authHost
+          .post<Subscription>('/settings/subscrptions/subscribe', {
+            userId,
+            eventType,
+          })
+          .then((res) => {
+            dispatch(subscribeToEventType({ userId, eventType }));
+            setSubscriptions((prev) => [...prev, res.data]);
+            message.success(`Подписано на событие: ${eventType}`);
+          });
+      }
+    } catch (error) {
+      console.error('Ошибка при изменении подписки:', error);
     }
   };
 
   const { t } = useTranslation();
   const subscriptionTypes = getSubscriptionTypes(t);
 
-  // Получение состояния из localStorage при загрузке компонента
   useEffect(() => {
     const storedNotificationsEnabled = localStorage.getItem(
       'notificationsEnabled'
     );
-    if (
-      storedNotificationsEnabled !== null &&
-      storedNotificationsEnabled == 'true'
-    ) {
-      setNotificationsEnabled(storedNotificationsEnabled === 'true');
-    } else if (
-      storedNotificationsEnabled !== null &&
-      storedNotificationsEnabled == 'false'
-    ) {
-      setNotificationsEnabled(false);
-    }
+    setNotificationsEnabled(storedNotificationsEnabled === 'true');
   }, [setNotificationsEnabled]);
 
-  // Сохранение состояния в localStorage при изменении
   useEffect(() => {
     localStorage.setItem(
       'notificationsEnabled',
@@ -126,3 +114,4 @@ const SubscriptionManager: React.FC<{ userId: string }> = ({ userId }) => {
 };
 
 export default SubscriptionManager;
+

@@ -216,7 +216,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
           description: t('The task has been successfully added.'),
         });
       }
-      setEditingProject(null);
+      // setEditingProject(null);
       // setEditingProject(task);
     } catch (error) {
       notification.error({

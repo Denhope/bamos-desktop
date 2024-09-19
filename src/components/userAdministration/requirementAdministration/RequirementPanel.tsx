@@ -469,7 +469,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             ) : (
               <RequarementsList
                 isVisible={true}
-                loading={isLoading || isFetching}
+                loading={isLoading}
                 pagination={true}
                 isEditable={false}
                 height={'64vh'}

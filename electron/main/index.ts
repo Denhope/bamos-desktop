@@ -114,8 +114,8 @@ function duplicateWindow() {
       height: focusedWindow.getSize()[1],
       webPreferences: {
         preload: preload,
-        // nodeIntegration: true,
-        // contextIsolation: false,
+        nodeIntegration: true,
+        contextIsolation: false,
       },
     });
     if (url) {
@@ -293,8 +293,8 @@ async function createWindow() {
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload: preload,
-      // nodeIntegration: false,
-      // contextIsolation: true,
+      nodeIntegration: false,
+      contextIsolation: true,
       plugins: true,
 
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -362,8 +362,8 @@ ipcMain.handle('open-win', (_, arg) => {
     webPreferences: {
       preload,
       plugins: true,
-      // nodeIntegration: false,
-      // contextIsolation: true,
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
 

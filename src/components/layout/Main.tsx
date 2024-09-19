@@ -72,7 +72,7 @@ const Main: FC = () => {
               {t('©2024 Created by Kavalchuk D.')}
             </div>
             <div className="absolute right-5">
-              <ConnectionIndicator />
+              {/* <ConnectionIndicator /> */}
             </div>
           </Footer>
         </Layout>

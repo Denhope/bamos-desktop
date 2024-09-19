@@ -48,6 +48,8 @@ class WebSocketService {
   emit(eventType: string, data: any) {
     if (this.socket) {
       this.socket.emit(eventType, data);
+      console.log('test1')
+      
     }
   }
 
@@ -57,6 +59,7 @@ class WebSocketService {
   ) {
     if (this.socket) {
       this.socket.on('notification', callback);
+      console.log(this.socket)
     }
   }
 

@@ -1,6 +1,6 @@
 // ts-nocheck
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { List, notification, Button, Select } from 'antd';
 import axios from 'axios';
@@ -34,8 +34,7 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
   const { notificationsEnabled } = useGlobalState();
   const [displayMode, setDisplayMode] = useState<'all' | 'unread'>('unread');
 
-  useEffect(() => {
-    // Загрузка истории уведомлений с сервера
+  const loadNotifications = useCallback(() => {
     $authHost
       .get<Notification[]>(`/settings/notifications/${userId}`)
       .then((res) => {
@@ -49,8 +48,9 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
         }));
         setNotifications(formattedNotifications); // Убедитесь, что res.data всегда массив
       });
+  }, [userId]);
 
-    // Загрузка подписок пользователя
+  const loadSubscriptions = useCallback(() => {
     $authHost
       .get<Subscription[]>(`/settings/subscrptions/${userId}`)
       .then((res) => {
@@ -60,6 +60,11 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
         }));
         setSubscriptions(formattedSubscriptions);
       });
+  }, [userId]);
+
+  useEffect(() => {
+    loadNotifications();
+    loadSubscriptions();
 
     const token = localStorage.getItem('token');
     const socket: Socket = io(API_URL, {
@@ -68,58 +73,58 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
       },
     });
 
-    socket.on('connect', () => {
-      console.log('Подключение к серверу WebSocket установлено');
-      setIsConnected(true);
-      socket.emit('userConnected', userId);
-    });
+    // socket.on('connected', () => {
+    //   console.log('Подключение к серверу WebSocket userConnected');
+    //   setIsConnected(true);
+    //   socket.emit('userConnected', userId);
+    // });
 
-    socket.on('disconnect', () => {
-      console.log('Потеряно соединение с сервером WebSocket');
-      setIsConnected(false);
-    });
+    // socket.on('disconnect', () => {
+    //   console.log('Потеряно соединение с сервером WebSocket');
+    //   setIsConnected(false);
+    // });
 
-    socket.on('reconnect', () => {
-      console.log('Соединение с сервером WebSocket восстановлено');
-      setIsConnected(true);
-    });
+    // socket.on('reconnect', () => {
+    //   console.log('Соединение с сервером WebSocket восстановлено');
+    //   setIsConnected(true);
+    // });
 
-    socket.on(
-      'notification',
-      (data: { message: string; timestamp: string }) => {
-        const newNotification: Notification = {
-          _id: '', // ID будет установлен на сервере
-          userId,
-          message: data.message,
-          timestamp: new Date(data.timestamp).toISOString(), // Преобразуем дату в ISO строку
-          isRead: false,
-        };
-        setNotifications((prev) => [newNotification, ...prev]);
+    // socket.on(
+    //   'notification',
+    //   (data: { message: string; timestamp: string }) => {
+    //     const newNotification: Notification = {
+    //       _id: '', // ID будет установлен на сервере
+    //       userId,
+    //       message: data.message,
+    //       timestamp: new Date(data.timestamp).toISOString(), // Преобразуем дату в ISO строку
+    //       isRead: false,
+    //     };
+    //     setNotifications((prev) => [newNotification, ...prev]);
 
-        // Отображение уведомления на экране, если уведомления включены
-        if (notificationsEnabled) {
-          notification.info({
-            message: 'INFORMATION!!!',
-            description: data.message,
-            placement: 'bottomRight', // Позиция уведомления
-            duration: 0,
-          });
-        }
-      }
-    );
+    //     // Отображение уведомления на экране, если уведомления включены
+    //     if (notificationsEnabled) {
+    //       notification.info({
+    //         message: 'INFORMATION!!!',
+    //         description: data.message,
+    //         placement: 'bottomRight', // Позиция уведомления
+    //         duration: 0,
+    //       });
+    //     }
+    //   }
+    // );
 
     return () => {
-      socket.disconnect();
+      // socket.disconnect();
     };
-  }, [userId, notificationsEnabled]);
+  }, [userId, notificationsEnabled, loadNotifications, loadSubscriptions]);
 
-  const markAsRead = (notificationId: string) => {
+  const markAsRead = useCallback((notificationId: string) => {
     $authHost.put(`/settings/notifications/${notificationId}/read`).then(() => {
       setNotifications((prev) =>
         prev.map((n) => (n._id === notificationId ? { ...n, isRead: true } : n))
       );
     });
-  };
+  }, []);
 
   // Получение состояния отображения из localStorage при загрузке компонента
   useEffect(() => {
@@ -134,17 +139,19 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
     localStorage.setItem('displayMode', displayMode);
   }, [displayMode]);
 
-  const filteredNotifications = notifications.filter((notification) => {
-    if (displayMode === 'all') return true;
-    return !notification.isRead;
-  });
+  const filteredNotifications = useMemo(() => {
+    return notifications.filter((notification) => {
+      if (displayMode === 'all') return true;
+      return !notification.isRead;
+    });
+  }, [notifications, displayMode]);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = useCallback(() => {
     const unreadNotifications = notifications.filter((n) => !n.isRead);
     unreadNotifications.forEach((notification) => {
       markAsRead(notification._id);
     });
-  };
+  }, [notifications, markAsRead]);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -193,4 +200,4 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
   );
 };
 
-export default NotificationListener;
+export default React.memo(NotificationListener);

@@ -16,19 +16,17 @@ import { GlobalStateProvider } from './components/woAdministration/GlobalStateCo
 // import './demos/node'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <HashRouter>
-      <GlobalStateProvider>
-        <Provider store={store}>
-          <I18nextProvider i18n={i18n}>
-            <PersistGate loading={null} persistor={persistor}>
-              <App />
-            </PersistGate>
-          </I18nextProvider>
-        </Provider>
-      </GlobalStateProvider>
-    </HashRouter>
-  </React.StrictMode>
+  <HashRouter>
+    <GlobalStateProvider>
+      <Provider store={store}>
+        <I18nextProvider i18n={i18n}>
+          <PersistGate loading={null} persistor={persistor}>
+            <App />
+          </PersistGate>
+        </I18nextProvider>
+      </Provider>
+    </GlobalStateProvider>
+  </HashRouter>
 );
 
 postMessage({ payload: 'removeLoading' }, '*');
