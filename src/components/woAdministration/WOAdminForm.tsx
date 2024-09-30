@@ -367,7 +367,6 @@ const WOAdminForm: FC<UserFormProps> = ({
     '3': `${t('STEPS')}`,
     '4': `${t('TOOL')}`,
     '5': `${t('REQUIREMENTS')}`,
-    '6': `${t('BULK CREATE REQUIREMENTS')}`,
   });
 
   const projectId = order?.projectId;
@@ -1625,62 +1624,50 @@ const WOAdminForm: FC<UserFormProps> = ({
               <Empty></Empty>
             )}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={tabTitles['6']} key="6">
+          <Tabs.TabPane tab={t('REQUIREMENTS')} key="5">
             {order && order?.id ? (
               <PermissionGuard
                 requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
               >
-                <BulkRequirementCreator
-                  partNumbers={partNumbers || []}
-                  order={order}
-                  onRequirementsCreated={() => {
-                    // Обновить список требований после создания
-                    refetch();
-                  }}
-                />
-              </PermissionGuard>
-            ) : (
-              <Empty></Empty>
-            )}
-          </Tabs.TabPane>
-          <Tabs.TabPane tab={tabTitles['5']} key="5">
-            {order && order?.id ? (
-              <PermissionGuard
-                requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
-              >
-                <RequarementsList
-                  isIssueVisibale={true}
-                  onColumnResized={saveColumnState}
-                  onGridReady={restoreColumnState}
-                  order={order}
-                  isAddVisiable={
-                    order && order.status === 'closed' ? true : false
-                  }
-                  isChekboxColumn={true}
-                  fetchData={transformedRequirements}
-                  columnDefs={columnRequirements}
-                  partNumbers={partNumbers || []}
-                  taskId={order?.id}
-                  onUpdateData={function (data: any[]): void {}}
-                  height={'54Vh'}
-                  onRowSelect={function (rowData: IRequirement | null): void {}}
-                  onCheckItems={function (selectedKeys: any[]): void {
-                    handleCheckItems(selectedKeys);
-                    // console.log(selectedKeys);
-                  }}
-                  onDelete={function (reqID: string): void {
-                    throw new Error('Function not implemented.');
-                  }}
-                  onSave={function (rowData: IRequirement): void {
-                    throw new Error('Function not implemented.');
-                  }}
-                ></RequarementsList>
-              </PermissionGuard>
-            ) : (
-              <Empty></Empty>
-            )}
-          </Tabs.TabPane>
-          <Tabs.TabPane tab={tabTitles['2']} key="2">
+                <Tabs defaultActiveKey="bulk">
+                  <Tabs.TabPane tab={t('ADD PARTS')} key="bulk">
+                    <BulkRequirementCreator
+                      partNumbers={partNumbers || []}
+                      order={order}
+                      onRequirementsCreated={() => {
+                        refetch();
+                      }}
+                    />
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab={t('REQUIREMENTS LIST')} key="list">
+                    <RequarementsList  
+                      isIssueVisibale={true} isButtonVisiable={false} isEditable={false}
+                      onColumnResized={saveColumnState}
+                      onGridReady={restoreColumnState}
+                      order={order}
+                      isAddVisiable={
+                        order && order.status === 'closed' ? true : true
+                      }
+                      isChekboxColumn={true}
+                      fetchData={transformedRequirements}
+                      columnDefs={columnRequirements}
+                      partNumbers={partNumbers || []}
+                      taskId={order?.id}
+                      onUpdateData={function (data: any[]): void {}}
+                      height={'50Vh'}
+                      onRowSelect={function (rowData: IRequirement | null): void {}}
+                      onCheckItems={function (selectedKeys: any[]): void {
+                        handleCheckItems(selectedKeys);
+                      }}
+                      onDelete={function (reqID: string): void {
+                        throw new Error('Function not implemented.');
+                      }}
+                      onSave={function (rowData: IRequirement): void {
+                        throw new Error('Function not implemented.');
+                      }}
+                    />
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab={tabTitles['2']} key="2">
             <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
               {order && !order?.projectItemReferenceID ? (
                 <PartContainer
@@ -1710,7 +1697,7 @@ const WOAdminForm: FC<UserFormProps> = ({
               {order && !order?.projectItemReferenceID ? (
                 <PartContainer
                   isButtonColumn={false}
-                  isButtonVisiable={false}
+                  isButtonVisiable={true}
                   isLoading={isLoading}
                   isAddVisiable={true}
                   height={'58vh'}
@@ -1730,6 +1717,13 @@ const WOAdminForm: FC<UserFormProps> = ({
               )}
             </div>
           </Tabs.TabPane>
+                </Tabs>
+              </PermissionGuard>
+            ) : (
+              <Empty />
+            )}
+          </Tabs.TabPane>
+
           <Tabs.TabPane tab={t('DOCS')} key="7">
             <div>
               {order ? (

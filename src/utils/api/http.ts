@@ -7,7 +7,7 @@ export const API_URL = 'http://localhost:80';
 // export const API_URL = 'http://192.168.74.11:8000';
 // export const API_URL = 'http://192.168.74.11:5000';
 // export const API_URL = 'http://82.209.232.250:4000';
-// export const API_URL = 'http://192.168.74.14:3001';
+// export const API_URL = 'http://192.168.74.14';
 
 // export const API_URL = 'https://planebox-api-production.up.railway.app';
 

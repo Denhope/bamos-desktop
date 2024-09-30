@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, notification, Select, InputNumber, DatePicker, Popconfirm, Space, Modal, Form, Tooltip } from 'antd';
+import { Button, notification, Select, InputNumber, DatePicker, Popconfirm, Space, Modal, Form, Tooltip, List, Typography } from 'antd';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { useAddRequirementMutation, useUpdateRequirementMutation } from '@/features/requirementAdministration/requirementApi';
@@ -13,8 +13,10 @@ import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 import { IPartNumber } from '@/models/IUser';
 import dayjs from 'dayjs';
-import { DeleteOutlined, SaveOutlined, PlusOutlined, ClearOutlined, SendOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SaveOutlined,SwapOutlined, PlusOutlined, ClearOutlined, SendOutlined } from '@ant-design/icons';
 import { useGetAvailableQuantityQuery } from '@/features/stockAdministration/stockApi';
+import { useGetAltsPartNumbersQuery } from '@/features/partAdministration/altPartApi';
+
 
 interface BulkRequirementCreatorProps {
   partNumbers: IPartNumber[];
@@ -41,6 +43,9 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
   const [rowData, setRowData] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+  const [alternativesModalVisible, setAlternativesModalVisible] = useState(false);
+  const [selectedPartNumber, setSelectedPartNumber] = useState<string | undefined>(undefined);
 
   const { data: stores } = useGetStoresQuery(
     { ids: order?.projectID?.storesID?.join(',') },
@@ -58,6 +63,11 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
     {
       skip: !order?.id,
     }
+  );
+
+  const { data: alternatives, isLoading: isLoadingAlternatives } = useGetAltsPartNumbersQuery(
+    { partNumberID: selectedPartNumber },
+    { skip: !selectedPartNumber } 
   );
 
   const storeOptions = useMemo(() => 
@@ -92,22 +102,29 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
   }, [order.id]);
 
   const PartNumberSelector = (props: any) => {
-    const onValueChange = (value: string) => {
+    const onValueChange = async (value: string) => {
       const selectedPart = partNumbers.find(part => part._id === value);
       if (selectedPart) {
-        const updatedData = rowData.map(row => 
-          row.id === props.data.id ? { 
-            ...row, 
-            PART_NUMBER: value,
-            DESCRIPTION: selectedPart.DESCRIPTION,
-            UNIT_OF_MEASURE: selectedPart.UNIT_OF_MEASURE
-          } : row
-        );
-        setRowData(updatedData);
+        setSelectedRowId(props.data.id);
+        setSelectedPartNumber(value);
+        
+        // Сразу обновляем данные строки выбранным партийным номером
+        updateRowData(selectedPart);
+        
+        // Проверяем наличие альтернатив и открываем модальное окно, если они есть
+        if (alternatives && alternatives.length > 0) {
+          setAlternativesModalVisible(true);
+        }
       }
     };
 
     return (
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        height: '100%', // Занимаем всю высоту ячейки
+        padding: '0 5px' // Добавляем небольшой отступ по бокам
+      }}>
       <Select
         showSearch
         style={{ width: '100%' }}
@@ -119,7 +136,36 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
         }
         status={!props.value ? 'error' : undefined}
       />
+      {alternatives && alternatives.length > 0 && (
+        <Tooltip title={t('Show alternatives')}>
+          <Button 
+            icon={<SwapOutlined />} 
+            onClick={ ()=>setAlternativesModalVisible(true)}
+            style={{ 
+              flexShrink: 0, // Предотвращаем сжатие кнопки
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '22px', // Устанавливаем фиксированную высоту
+              width: '22px' // Устанавливаем фиксированную ширину для квадратной кнопки
+            }}
+          />
+        </Tooltip>
+      )}
+         </div>
     );
+  };
+
+  const updateRowData = (part: any) => {
+    const updatedData = rowData.map(row => 
+      row.id === selectedRowId ? { 
+        ...row, 
+        PART_NUMBER: part._id,
+        DESCRIPTION: part.DESCRIPTION,
+        UNIT_OF_MEASURE: part.UNIT_OF_MEASURE
+      } : row
+    );
+    setRowData(updatedData);
   };
 
   const QuantityEditor = (props: any) => {
@@ -175,19 +221,31 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
   const AvailabilityIndicator = (props: any) => {
     const { data: availableQuantity, isLoading } = useGetAvailableQuantityQuery({
       companyID: order.companyID,
-      partNumberID: props.value,
+      partNumberID: props.data.PART_NUMBER,
+      storeID: order.projectID?.storesID?.join(','),
+      isAlternative: false,
+      isAllExpDate: false,
+    }, {
+      skip: !props.data.PART_NUMBER,
+    }) as { data: AvailableQuantity | undefined, isLoading: boolean };
+
+    const { data: alternativesQuantity, isLoading: isLoadingAlternatives } = useGetAvailableQuantityQuery({
+      companyID: order.companyID,
+      partNumberID: props.data.PART_NUMBER,
       storeID: order.projectID?.storesID?.join(','),
       isAlternative: true,
       isAllExpDate: false,
     }, {
-      skip: !props.value,
+      skip: !props.data.PART_NUMBER,
     }) as { data: AvailableQuantity | undefined, isLoading: boolean };
 
-    if (isLoading) {
+    if (isLoading || isLoadingAlternatives) {
       return <span>Loading...</span>;
     }
 
-    const totalQty = availableQuantity?.totalQuantity || 0;
+    const mainQty = availableQuantity?.totalQuantity || 0;
+    const altQty = alternativesQuantity?.totalQuantity || 0;
+    const totalQty = mainQty + altQty;
     const requestedQty = props.data.amout || 0;
 
     let color = 'red';
@@ -196,7 +254,9 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
 
     const tooltipContent = (
       <div>
-        <div>Total: {totalQty}</div>
+        <div>Основной: {mainQty}</div>
+        <div>Альтернативы: {altQty}</div>
+        <div>Всего: {totalQty}</div>
         {availableQuantity?.storeAvailableQTY.map((store, index) => (
           <div key={index}>{`${store.storeName}: ${store.availableQTY}`}</div>
         ))}
@@ -212,7 +272,7 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
             borderRadius: '50%', 
             backgroundColor: color,
           }}></div>
-          <span>{`${totalQty} ${availableQuantity?.unitOfMeasure || ''}`}</span>
+          <span>{`${mainQty} + ${altQty} = ${totalQty} ${availableQuantity?.unitOfMeasure || ''}`}</span>
         </div>
       </Tooltip>
     );
@@ -228,7 +288,7 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
           return { backgroundColor: '#ffcccb' };
         }
       },
-      width: 300, // Увеличиваем ширину колонки до 300
+      width: 300, // Увеличиаем ширину колонки до 300
       flex: 3, // Увеличиваем flex-коэффициент до 3
     },
     {
@@ -247,12 +307,14 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
         }
       },
       width: 120,
+      flex: 2, 
     },
     {
       headerName: t('UNIT OF MEASURE'),
       field: 'UNIT_OF_MEASURE',
       editable: false,
       width: 150,
+      flex: 2, 
     },
     {
       headerName: t('PLANNED DATE'),
@@ -274,6 +336,7 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
       field: 'PART_NUMBER',
       cellRenderer: AvailabilityIndicator,
       width: 150,
+      flex: 3,
     },
     {
       headerName: t('ACTIONS'),
@@ -448,9 +511,59 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
     }
   }, [rowData, partNumbers, order, addRequirement, addPickSlip, addPickSlipItem, t, onRequirementsCreated, clearLocalStorage, validateRows]);
 
+  const handleAlternativeSelect = (alternative: any) => {
+    updateRowData({
+      _id: alternative.altPartNumberID._id,
+      PART_NUMBER: alternative.altPartNumberID.PART_NUMBER,
+      DESCRIPTION: alternative.altPartNumberID.DESCRIPTION,
+      UNIT_OF_MEASURE: alternative.altPartNumberID.UNIT_OF_MEASURE
+    });
+    setAlternativesModalVisible(false);
+  };
+
+  const AlternativeItem = React.memo(({ item, order, onSelect }: { item: any; order: any; onSelect: (item: any) => void }) => {
+    const { data: availableQuantity, isLoading: isLoadingQuantity } = useGetAvailableQuantityQuery({
+      companyID: order.companyID,
+      partNumberID: item.altPartNumberID?._id,
+      storeID: order.projectID?.storesID?.join(','),
+      isAlternative: false,
+      isAllExpDate: false,
+    }, {
+      skip: !item.altPartNumberID?._id,
+    });
+
+    if (isLoadingQuantity) {
+      return <List.Item>Загрузка данных о количестве...</List.Item>;
+    }
+
+    return (
+      <List.Item
+        key={item.altPartNumberID?._id}
+        onClick={() => onSelect(item)}
+        className="cursor-pointer hover:bg-gray-100"
+      >
+        <List.Item.Meta
+          title={item.altPartNumberID?.PART_NUMBER}
+          description={item.altPartNumberID?.DESCRIPTION}
+        />
+        <div>
+          <Typography.Text>{`${item.altPartNumberID?.UNIT_OF_MEASURE}`}</Typography.Text>
+          <Typography.Text className="ml-2">
+            {`Доступно: ${availableQuantity?.totalQuantity || 0} ${availableQuantity?.unitOfMeasure || ''}`}
+          </Typography.Text>
+          {availableQuantity?.storeAvailableQTY && availableQuantity.storeAvailableQTY.length > 0 && (
+            <Typography.Text className="ml-2">
+              {`Склад: ${availableQuantity.storeAvailableQTY[0].storeName}`}
+            </Typography.Text>
+          )}
+        </div>
+      </List.Item>
+    );
+  });
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="ag-theme-alpine" style={{ height: '50vh', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: '48vh', width: '100%' }}>
         <AgGridReact
           columnDefs={columnDefs}
           rowData={rowData}
@@ -464,17 +577,17 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
         <Space>
           <Button icon={<PlusOutlined />} onClick={addRow}>{t('ADD ROW')}</Button>
           <Button icon={<ClearOutlined />} onClick={resetAll}>{t('RESET ALL')}</Button>
-          <Button icon={<SaveOutlined />} onClick={saveToLocalStorage}>{t('SAVE')}</Button>
+          <Button type="dashed" icon={<SaveOutlined />} onClick={saveToLocalStorage}>{t('SAVE')}</Button>
         </Space>
         <Space>
           <Button type="primary" onClick={createRequirements}>{t('CREATE REQUIREMENTS')}</Button>
-          <Button type="primary" icon={<SendOutlined />} onClick={showModal}>
-            {t('CREATE AND SEND TO WAREHOUSE')}
+          <Button danger icon={<SendOutlined />} onClick={showModal}>
+            {t('ISSUE PICKSLIP')}
           </Button>
         </Space>
       </div>
       <Modal
-        title={t('Create and Send to Warehouse')}
+        title={t('ISSUE PICKSLIP')}
         visible={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
@@ -502,6 +615,28 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
             <Select options={storeOptions} />
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title={t('Alrernatives')}
+        visible={alternativesModalVisible}
+        onCancel={() => setAlternativesModalVisible(false)}
+        footer={null}
+      >
+        {isLoadingAlternatives ? (
+          <div>{t(' Loading...')}</div>
+        ) : (
+          <List
+            dataSource={alternatives}
+            renderItem={(item: any) => (
+              <AlternativeItem 
+                key={item.altPartNumberID?._id}
+                item={item} 
+                order={order} 
+                onSelect={handleAlternativeSelect} 
+              />
+            )}
+          />
+        )}
       </Modal>
     </div>
   );

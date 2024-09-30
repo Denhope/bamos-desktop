@@ -189,7 +189,7 @@ const PdfGenerator: React.FC<{
               // HARD_ACCESS
 
               if (task.projectItemType == 'NRC_ADD') {
-                page.drawText('ADHOC CARD', {
+                page.drawText('ADHOC TASK', {
                   x: x + 15,
                   y: y - 25,
                   font: robotoFontB,
