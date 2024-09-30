@@ -10,7 +10,7 @@ import {
   setAuthUserPermissions,
   setAuthUserRole,
 } from '@/store/reducers/AuthSlice';
-import { notification } from 'antd';
+import { notification, Spin } from 'antd';
 
 import './App.css';
 import { ConfigProvider } from 'antd';
@@ -29,23 +29,25 @@ const App: FC = () => {
   const { notificationsEnabled } = useGlobalState();
   const history = useNavigate();
   const { isConnected, socket } = useTypedSelector((state) => state.socket); // Получаем состояние сокета из Redux
-
+  const { isAuth,user } = useTypedSelector((state) => state.auth);
   const authCheck = useCallback(async () => {
     console.log('Starting authCheck');
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && (USER_ID||user.userId)) {
       try {
-        await AuthService.check(USER_ID);
+        await AuthService.check(user.userId||USER_ID);
         dispatch(authSlice.actions.setIsAuth(true));
-        dispatch(setAuthUserId(USER_ID || ''));
-        dispatch(setAuthUserRole(ROLE || ''));
-        dispatch(setAuthUserPermissions(PERMISSIONS || ''));
+        dispatch(setAuthUserId(localStorage.getItem('userId') || ''));
+        dispatch(setAuthUserRole(localStorage.getItem('role') || ''));
+        dispatch(setAuthUserPermissions(localStorage.getItem('permissions') || ''));
         dispatch(setAuthUserName(localStorage.getItem('name') || ''));
 
-        // Подключение к WebSocket при успешной авторизации
         if (!isConnected) {
           console.log('Connecting to WebSocket');
-          USER_ID&&dispatch(connectSocket(USER_ID));
+          const userId = localStorage.getItem('userId');
+          if (userId) {
+            dispatch(connectSocket(userId));
+          }
         } else {
           console.log('WebSocket is already connected');
         }
@@ -53,14 +55,14 @@ const App: FC = () => {
         console.error('Authentication failed:', error);
         dispatch(authSlice.actions.setIsAuth(false));
         dispatch(setAuthUserId(''));
-        history(`${RouteNames.HOME}`);
+        history(RouteNames.HOME);
       } finally {
         setLoading(false);
       }
     } else {
       dispatch(authSlice.actions.setIsAuth(false));
       dispatch(setAuthUserId(''));
-      history(`${RouteNames.HOME}`);
+      history(RouteNames.HOME);
       setLoading(false);
     }
   }, [dispatch,  isConnected]);
@@ -70,7 +72,20 @@ const App: FC = () => {
   useEffect(() => {
     console.log('Running useEffect for authCheck');
     authCheck();
-  }, [authCheck]);
+  }, [authCheck,]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect', () => {
+        console.log('Socket reconnected, performing authCheck');
+        authCheck();
+      });
+
+      return () => {
+        socket.off('connect');
+      };
+    }
+  }, [socket, authCheck]);
 
   useEffect(() => {
     console.log('Running useEffect for notifications');
@@ -104,10 +119,17 @@ const App: FC = () => {
         socket.off('notification', notificationHandler);
       };
     }
-  }, [isConnected, socket, notificationsEnabled,authCheck]);
+  }, [isConnected, socket, notificationsEnabled, ]);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Или любой другой индикатор загрузки
+    return (
+      <Spin
+        style={{ height: '70vh' }}
+        className="flex  flex-col items-center justify-center my-auto"
+        tip="Loading"
+        size="large"
+      ></Spin>
+    );
   }
 
   return (

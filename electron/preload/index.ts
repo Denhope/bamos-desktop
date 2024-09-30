@@ -145,21 +145,6 @@ function useLoading(): LoadingMethods {
 // Explicitly annotate the return type for the contextBridge.exposeInMainWorld
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));
 
-
-// contextBridge.exposeInMainWorld('api', {
-//   fetch: (url:any, options:any) => {
-//     return fetch(url, {
-//       ...options,
-//       credentials: 'include', // Включаем передачу куки
-//       headers: {
-//         ...options.headers,
-//         'Access-Control-Allow-Origin': 'http://localhost:5173', // Указываем домен
-//         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', // Указываем методы
-//         'Access-Control-Allow-Headers': 'Content-Type, Authorization' // Указываем заголовки
-//       }
-//     });
-//   }
-// });
 // Explicitly annotate the return type for useLoading
 const { appendLoading, removeLoading } = useLoading();
 
@@ -175,7 +160,3 @@ window.onmessage = (ev: MessageEvent) => {
 
 // Explicitly annotate the setTimeout call
 setTimeout(removeLoading, 4999);
-
-ipcRenderer.on('data', (event, data) => {
-  console.log('Received data:', data);
-});

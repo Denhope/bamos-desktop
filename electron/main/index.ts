@@ -114,8 +114,8 @@ function duplicateWindow() {
       height: focusedWindow.getSize()[1],
       webPreferences: {
         preload: preload,
-        nodeIntegration: true,
-        contextIsolation: false,
+        // nodeIntegration: true,
+        // contextIsolation: false,
       },
     });
     if (url) {
@@ -293,8 +293,8 @@ async function createWindow() {
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload: preload,
-      nodeIntegration: false,
-      contextIsolation: true,
+      // nodeIntegration: false,
+      // contextIsolation: true,
       plugins: true,
 
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -362,8 +362,8 @@ ipcMain.handle('open-win', (_, arg) => {
     webPreferences: {
       preload,
       plugins: true,
-      nodeIntegration: false,
-      contextIsolation: true,
+      // nodeIntegration: false,
+      // contextIsolation: true,
     },
   });
 
@@ -372,20 +372,4 @@ ipcMain.handle('open-win', (_, arg) => {
   } else {
     childWindow.loadFile(indexHtml, { hash: arg });
   }
-});
-
-ipcMain.on('open-new-window', (event, args) => {
-  const { htmlPath, data } = args;
-  const newWindow = new BrowserWindow({
-    webPreferences: {
-      preload: join(__dirname, 'preload.js'), // или ваш файл прелоадера
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-
-  newWindow.loadFile(join(__dirname, htmlPath));
-  newWindow.webContents.on('did-finish-load', () => {
-    newWindow.webContents.send('data', data);
-  });
 });

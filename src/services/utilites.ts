@@ -1028,7 +1028,7 @@ export const transformToIRequirement = (data: any[]): any[] => {
     serialNumber: item?.serialNumber,
     partRequestNumberNew: item?.partRequestNumberNew,
     projectWO: item?.projectID?.projectWO,
-    WONumber: item?.projectID?.WOReferenceID.WONumber,
+    WONumber: item?.projectID?.WOReferenceID?.WONumber,
     projectTaskWO: item.projectTaskID?.taskWO,
     partId: item.partNumberID?._id,
     PART_NUMBER: item?.partNumberID?.PART_NUMBER,
@@ -1828,17 +1828,19 @@ export const getAtaChapters = (t: TFunction) => [
   { value: '80', label: '80-STARTING' },
 ];
 export enum SubscriptionType {
-  NewPickslip = 'newPickslip',
+  NewPickslip = 'newPickSlip',
   OtherEventType = 'otherEventType',
   NewTask = 'newTask',
   NewRequirement = 'newRequirement',
   TechnicalRequest = 'technicalRequest',
+  PickSlipUpdate = 'pickSlipUpdate',
 }
 
 // Создание массива объектов с метками для каждого типа подписки
 export const getSubscriptionTypes = (t) => [
   { value: SubscriptionType.NewTask, label: t('New Task') },
   { value: SubscriptionType.NewPickslip, label: t('New Pickslip') },
+  { value: SubscriptionType.PickSlipUpdate, label: t('PickSlip Update') },
   { value: SubscriptionType.NewRequirement, label: t('New Requirement') },
   {
     value: SubscriptionType.TechnicalRequest,

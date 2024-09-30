@@ -182,7 +182,7 @@ const RequirementTree: FC<UserTreeProps> = ({
             // console.log(requirement);
           }
         }}
-        height={540}
+        height={600}
         searchQuery={searchQuery}
       />
     </div>

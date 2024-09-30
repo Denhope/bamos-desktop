@@ -95,7 +95,7 @@ const MaterialAplicationView: FC<PickSlipTypeProps> = ({ data }) => {
         />
 
         <p className="my-1 mx-4 font-semibold ml-auto">
-          Статус: {data.status.toUpperCase()}
+          Статус: {data?.status?.toUpperCase()}
         </p>
       </div>
       <Descriptions
@@ -110,7 +110,7 @@ const MaterialAplicationView: FC<PickSlipTypeProps> = ({ data }) => {
           }
         >
           <p className="text-l font-semibold mx-0 my-0">
-            {data.pickSlipNumber}
+            {data?.pickSlipNumber}
           </p>
         </Descriptions.Item>
 
@@ -118,43 +118,43 @@ const MaterialAplicationView: FC<PickSlipTypeProps> = ({ data }) => {
           label={<p className="text-l mx-0 my-0">Номер карты</p>}
         >
           <p className="text-l font-semibold my-0">
-            {data.materialAplicationId.projectTaskWO}
+            {data?.materialAplicationId?.projectTaskWO}
           </p>
         </Descriptions.Item>
         <Descriptions.Item label="Рег. Номер ВС">
           <p className="text-l  font-semibold my-0">
-            {data.materialAplicationId.registrationNumber}
+            {data?.materialAplicationId?.registrationNumber}
           </p>
         </Descriptions.Item>
         <Descriptions.Item
           label={<p className="text-l  my-0">Внутренний W/O</p>}
         >
           <p className="text-l  font-semibold my-0">
-            {data.materialAplicationId.projectWO}
+            {data?.materialAplicationId?.projectWO}
           </p>{" "}
         </Descriptions.Item>
         <Descriptions.Item label={<p className="text-l  my-0">Номер Заявки</p>}>
           <p className="text-l  font-semibold my-0">
-            {data.materialAplicationId.materialAplicationNumber}
+            {data?.materialAplicationId?.materialAplicationNumber}
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={<p className="text-l  my-0">Получатель</p>}>
-          <p className="text-l  font-semibold my-0">{data.recipient || ""}</p>
+          <p className="text-l  font-semibold my-0">{data?.recipient || ""}</p>
         </Descriptions.Item>
         <Descriptions.Item label={<p className="text-l my-0">Дата создания</p>}>
           <p className="text-l  font-semibold my-0">
-            {data.createDate &&
-              moment(data.createDate).format("D.MM.YY, HH:mm")}
+            {data?.createDate &&
+              moment(data?.createDate).format("D.MM.YY, HH:mm")}
           </p>
         </Descriptions.Item>
         <Descriptions.Item label={<p className="text-l  my-0">Дата выдачи</p>}>
           <p className="text-l  font-semibold my-0">
-            {data.closeDate && moment(data.closeDate).format("D.MM.YY, HH:mm")}
+            {data?.closeDate && moment(data?.closeDate).format("D.MM.YY, HH:mm")}
           </p>
         </Descriptions.Item>
 
         <Descriptions.Item label={<p className="text-l  my-0">Кладовщик</p>}>
-          <p className="text-l  font-semibold my-0">{data.storeMan || ""}</p>
+          <p className="text-l  font-semibold my-0">{data?.storeMan || ""}</p>
         </Descriptions.Item>
       </Descriptions>
       <Table
@@ -162,7 +162,7 @@ const MaterialAplicationView: FC<PickSlipTypeProps> = ({ data }) => {
         scroll={{ y: "calc(60vh)" }}
         rowClassName="cursor-pointer  text-xs text-transform: uppercase"
         columns={columnsMat}
-        dataSource={data.materials}
+        dataSource={data?.materials}
       ></Table>{" "}
       <Modal
         okButtonProps={{}}

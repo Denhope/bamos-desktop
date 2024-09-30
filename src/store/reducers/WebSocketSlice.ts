@@ -36,28 +36,27 @@ export const connectSocket = createAsyncThunk<Socket, string>(
       extraHeaders: {
         Authorization: `Bearer ${token}`,
       },
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
-    socket.on('connect', () => {
-      dispatch(setConnected(true));
-      dispatch(resetRetryCount());
-      socket.emit('userConnected', userId);
-    });
+    return new Promise((resolve, reject) => {
+      socket.on('connect', () => {
+        console.log('Сокет подключен');
+        dispatch(setConnected(true));
+        dispatch(resetRetryCount());
+        socket.emit('userConnected', userId);
+        resolve(socket);
+      });
 
-    socket.on('disconnect', () => {
-      dispatch(setConnected(false));
-      dispatch(incrementRetryCount());
-      const state = getState() as { socket: SocketState };
-      if (state.socket.retryCount < state.socket.maxRetryCount) {
-        setTimeout(() => {
-          dispatch(connectSocket(userId));
-        }, 2000 * state.socket.retryCount);
-      } else {
-        console.log('Max retry count reached. Stopping reconnection attempts.');
-      }
-    });
+      socket.on('connect_error', (error) => {
+        console.error('Ошибка подключения сокета:', error);
+        reject(error);
+      });
 
-    return socket;
+      // ... остальные обработчики событий ...
+    });
   }
 );
 
@@ -81,6 +80,17 @@ export const unsubscribeFromEventType = createAsyncThunk<void, { userId: string;
   }
 );
 
+export const disconnectSocket = createAsyncThunk(
+  'socket/disconnect',
+  async (_, { getState }) => {
+    const state = getState() as { socket: SocketState };
+    if (state.socket.socket) {
+      state.socket.socket.disconnect();
+      
+    }
+  }
+);
+
 const socketSlice = createSlice({
   name: 'socket',
   initialState,
@@ -100,11 +110,18 @@ const socketSlice = createSlice({
     resetRetryCount(state) {
       state.retryCount = 0;
     },
+    disconnectSocket: (state) => {
+      if (state.socket) {
+        state.socket.disconnect();
+      }
+      state.socket = null;
+      state.isConnected = false;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(connectSocket.fulfilled, (state, action) => {
-        state.socket = action.payload;
+        state.socket = action.payload as Socket;
         state.isConnected = true;
       })
       .addCase(connectSocket.rejected, (state) => {
@@ -117,6 +134,10 @@ const socketSlice = createSlice({
       .addCase(unsubscribeFromEventType.fulfilled, (state, action) => {
         const { eventType } = action.meta.arg;
         state.subscriptions = state.subscriptions.filter(sub => sub.eventType !== eventType);
+      })
+      .addCase(disconnectSocket.fulfilled, (state) => {
+        state.socket = null;
+        state.isConnected = false;
       });
   },
 });

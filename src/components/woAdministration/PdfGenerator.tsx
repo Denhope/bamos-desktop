@@ -181,13 +181,30 @@ const PdfGenerator: React.FC<{
 
             if (cell === 'title') {
               page.drawText(truncatedTaskNumberText, {
-                x: x + 120,
+                x: x + 140,
                 y: y - 25,
                 font: robotoFontB,
                 size: 18,
               });
+              // HARD_ACCESS
 
-              if (task.projectItemType !== 'NRC') {
+              if (task.projectItemType == 'NRC_ADD') {
+                page.drawText('ADHOC CARD', {
+                  x: x + 15,
+                  y: y - 25,
+                  font: robotoFontB,
+                  size: 18,
+                });
+              }
+              if (task.projectItemType == 'HARD_ACCESS') {
+                page.drawText('HARD ACCESS', {
+                  x: x + 15,
+                  y: y - 25,
+                  font: robotoFontB,
+                  size: 18,
+                });
+              }
+              if (task.projectItemType !== 'NRC' && task.projectItemType !== 'HARD_ACCESS' && task.projectItemType !== 'NRC_ADD') {
                 page.drawText('TASK CARD', {
                   x: x + 15,
                   y: y - 25,

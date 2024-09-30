@@ -17,7 +17,7 @@ export const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args: Args | string, api: Api, extraOptions: ExtraOptions) => {
-  // Get the token from localStorage
+  // Получаем токен из localStorage каждый раз при выполнении запроса
   const token = localStorage.getItem('token');
 
   // Prepare the fetch arguments
@@ -28,7 +28,7 @@ export const baseQueryWithReauth: BaseQueryFn<
     fetchArgs = args;
   }
 
-  // Add the Authorization header to the request if a token is present
+  // Добавляем заголовок Authorization к каждому запросу
   if (token) {
     fetchArgs.headers = {
       ...fetchArgs.headers,

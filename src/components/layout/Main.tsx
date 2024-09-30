@@ -8,7 +8,8 @@ import BaseLayout from './BaseLayout';
 import { RouteNames } from '@/router';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import ConnectionIndicator from '../shared/ConnectionIndicator';
+import { COMPANY_ID } from '@/utils/api/http';
+
 
 const Main: FC = () => {
   const { isAuth } = useTypedSelector((state) => state.auth);
@@ -26,7 +27,7 @@ const Main: FC = () => {
   };
 
   useEffect(() => {
-    if (isAuth) {
+    if (isAuth&& COMPANY_ID) {
       console.log('User is authenticated, rendering BaseLayout');
     } else {
       console.log('User is not authenticated, rendering auth routes');

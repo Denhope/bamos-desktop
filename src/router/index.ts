@@ -59,6 +59,7 @@ export enum RouteNames {
   STORES = '/store/items',
   STORES_VIEWER = '/stores/viewer',
   STORES_ADMINISTRATIONS = '/stores/administrations',
+  KFC_VIEWER = '/stores/kfc/viewer',
   STORES_MATERIALS_PARTS = '/stores/materials/parts',
   STATISTICS_REQUIRED = '/statistics/requiredMaterials',
   MATERIAL_STORE = '/store/materials',

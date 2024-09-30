@@ -106,7 +106,7 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                 typeof currentValues[name]?.userID === 'object'
                   ? currentValues[name]?.userID._id
                   : currentValues[name]?.userID;
-              const selectedUser = users.find((user) => user.id === userID);
+              const selectedUser = users?.find((user) => user?.id === userID);
               const skill = selectedUser ? selectedUser?.skillID?.code : '';
               const organizationAuthorization = selectedUser
                 ? selectedUser.organizationAuthorization ||
@@ -161,10 +161,10 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         return false;
                       }}
                     >
-                      {users.map((user) => (
-                        <Option key={user.id} value={user.id}>
+                      {users?.map((user) => (
+                        <Option key={user?.id} value={user?.id}>
                           {String(
-                            user.organizationAuthorization || user.singNumber
+                            user?.organizationAuthorization || user?.singNumber
                           )?.toUpperCase()}
                         </Option>
                       ))}
@@ -213,7 +213,7 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         return false;
                       }}
                     >
-                      {users.map((user) => (
+                      {users?.map((user) => (
                         <Option key={user.id} value={user.id}>
                           {`${user.firstNameEnglish?.toUpperCase()} ${user.lastNameEnglish?.toUpperCase()}`}
                         </Option>

@@ -38,7 +38,7 @@ import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministra
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
 
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
-import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 
 import RequirementsTypesPanel from '@/components/userAdministration/requirementsTypes/RequirementsTypesPanel';
 import ProjectTypePanel from '@/components/userAdministration/projectTypesAdministaration/ProjectTypePanel';
@@ -48,7 +48,7 @@ import { useGlobalState } from '@/components/woAdministration/GlobalStateContext
 import CertificatesTypesPanel from '@/components/userAdministration/certificatesTypes/CertificatesTypesPanel';
 import OrderTextPanel from '@/components/userAdministration/orderTextAdministaration/OrderTextPanel';
 import ActionTemplateTextPanel from '@/components/views/actionTemplateAministaration/ActionTemplateTextPanel';
-// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];

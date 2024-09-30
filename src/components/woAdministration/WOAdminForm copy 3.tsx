@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 import React, {
   FC,
   useCallback,
@@ -78,7 +78,7 @@ import {
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 import PermissionGuard, { Permission } from '../auth/PermissionGuard';
-import { setColumnWidthReq } from '@/store/reducers/columnWidthrReqlice';
+import { saveColumnState } from '@/store/reducers/columnWidthrReqlice';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import FileListE from '../userAdministration/taskAdministration/FileList.tsx';
@@ -87,7 +87,6 @@ import UserTaskAllocationPerf from './UserTaskAllocationPerf';
 import dayjs from 'dayjs';
 import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 import UserTaskAllocation from './UserTaskAllocation';
-import BulkRequirementCreator from './requirements/BulkRequirementCreator';
 dayjs.extend(utc);
 interface UserFormProps {
   order?: any;
@@ -215,29 +214,6 @@ const WOAdminForm: FC<UserFormProps> = ({
         }),
       },
       {
-        headerName: `${t('PART No')}`,
-        field: 'PART_NUMBER',
-        editable: true,
-        cellEditor: AutoCompleteEditor,
-        cellEditorParams: {
-          options: partNumbers,
-        },
-        width: columnWidths['PART No'],
-      },
-      {
-        field: 'DESCRIPTION',
-        headerName: `${t('DESCRIPTION')}`,
-        cellDataType: 'text',
-        width: columnWidths['PART No'],
-      },
-      {
-        field: 'amout',
-        editable: true,
-        cellDataType: 'number',
-        headerName: `${t('QUANTITY')}`,
-        width: columnWidths['PART No'],
-      },
-      {
         field: 'projectTaskWO',
         headerName: `${t('TRACE No')}`,
         cellDataType: 'number',
@@ -256,7 +232,42 @@ const WOAdminForm: FC<UserFormProps> = ({
         width: columnWidths['WP'],
       },
 
-      
+      {
+        headerName: `${t('PART No')}`,
+        field: 'PART_NUMBER',
+        editable: true,
+        cellEditor: AutoCompleteEditor,
+        cellEditorParams: {
+          options: partNumbers,
+        },
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'DESCRIPTION',
+        headerName: `${t('DESCRIPTION')}`,
+        cellDataType: 'text',
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'GROUP',
+        headerName: `${t('GROUP')}`,
+        cellDataType: 'text',
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'TYPE',
+        headerName: `${t('TYPE')}`,
+        cellDataType: 'text',
+        editable: false,
+        width: columnWidths['PART No'],
+      },
+      {
+        field: 'amout',
+        editable: true,
+        cellDataType: 'number',
+        headerName: `${t('QUANTITY')}`,
+        width: columnWidths['PART No'],
+      },
       {
         field: 'UNIT_OF_MEASURE',
         editable: false,
@@ -265,20 +276,6 @@ const WOAdminForm: FC<UserFormProps> = ({
         cellDataType: 'text',
         width: columnWidths['PART No'],
       },
-      // {
-      //   field: 'GROUP',
-      //   headerName: `${t('GROUP')}`,
-      //   cellDataType: 'text',
-      //   width: columnWidths['PART No'],
-      // },
-      // {
-      //   field: 'TYPE',
-      //   headerName: `${t('TYPE')}`,
-      //   cellDataType: 'text',
-      //   editable: false,
-      //   width: columnWidths['PART No'],
-      // },
- 
       {
         field: 'plannedDate',
         editable: false,
@@ -367,7 +364,6 @@ const WOAdminForm: FC<UserFormProps> = ({
     '3': `${t('STEPS')}`,
     '4': `${t('TOOL')}`,
     '5': `${t('REQUIREMENTS')}`,
-    '6': `${t('BULK CREATE REQUIREMENTS')}`,
   });
 
   const projectId = order?.projectId;
@@ -942,14 +938,12 @@ const WOAdminForm: FC<UserFormProps> = ({
               activeTabKey !== '3' &&
               activeTabKey !== '4' &&
               activeTabKey !== '5' &&
-              activeTabKey !== '2' &&
-              activeTabKey !== '6' && <SubmitButton key="submit" />,
+              activeTabKey !== '2' && <SubmitButton key="submit" />,
             order &&
               activeTabKey !== '3' &&
               activeTabKey !== '4' &&
               activeTabKey !== '5' &&
               activeTabKey !== '2' &&
-              activeTabKey !== '6' &&
               dom.reverse()[1],
           ],
         }}
@@ -1393,7 +1387,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                       </>
                     )}
                   </ProFormGroup>
-                  {/* <ProForm.Item label={t('UPLOAD')}>
+                  <ProForm.Item label={t('UPLOAD')}>
                     <div className="overflow-y-auto max-h-64">
                       <Upload
                         name="FILES"
@@ -1417,7 +1411,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                         </Button>
                       </Upload>
                     </div>
-                  </ProForm.Item> */}
+                  </ProForm.Item>
                 </ProFormGroup>
               </div>
             )}
@@ -1625,24 +1619,6 @@ const WOAdminForm: FC<UserFormProps> = ({
               <Empty></Empty>
             )}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={tabTitles['6']} key="6">
-            {order && order?.id ? (
-              <PermissionGuard
-                requiredPermissions={[Permission.REQUIREMENT_ACTIONS]}
-              >
-                <BulkRequirementCreator
-                  partNumbers={partNumbers || []}
-                  order={order}
-                  onRequirementsCreated={() => {
-                    // Обновить список требований после создания
-                    refetch();
-                  }}
-                />
-              </PermissionGuard>
-            ) : (
-              <Empty></Empty>
-            )}
-          </Tabs.TabPane>
           <Tabs.TabPane tab={tabTitles['5']} key="5">
             {order && order?.id ? (
               <PermissionGuard
@@ -1730,7 +1706,7 @@ const WOAdminForm: FC<UserFormProps> = ({
               )}
             </div>
           </Tabs.TabPane>
-          <Tabs.TabPane tab={t('DOCS')} key="7">
+          <Tabs.TabPane tab={t('DOCS')} key="6">
             <div>
               {order ? (
                 <div

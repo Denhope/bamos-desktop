@@ -82,6 +82,7 @@ import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTe
 import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
 // import { acApi } from '@/features/ACAdministration/acApi';
 import { acApi } from '@/features/acAdministration/acApi';
+import { stockApi } from '@/features/stockAdministration/stockApi';
 const rootReducer = combineReducers({
   auth: authSlice,
   files: filesUploadeReducer,
@@ -148,6 +149,8 @@ const rootReducer = combineReducers({
   [certificatesTypeApi.reducerPath]: certificatesTypeApi.reducer,
   [orderTextTypeApi.reducerPath]: orderTextTypeApi.reducer,
   [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
+  [stockApi.reducerPath]: stockApi.reducer,
+ 
   // [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
 
   vendor: vendorReducer,

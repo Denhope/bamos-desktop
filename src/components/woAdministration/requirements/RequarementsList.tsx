@@ -1,8 +1,8 @@
 //@ts-nocheck
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { ColDef, IRowNode } from 'ag-grid-community';
+import { ColDef, IRowNode, ColumnResizedEvent, ColumnMovedEvent, GridReadyEvent } from 'ag-grid-community';
 import PartsTable from '@/components/shared/Table/PartsTable';
 import { IPartNumber } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,8 @@ import IssuedList from './IssuedList';
 import { useAddPickSlipMutation } from '@/features/pickSlipAdministration/pickSlipApi';
 import { useAddPickSlipItemMutation } from '@/features/pickSlipAdministration/pickSlipItemsApi';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
+import { AgGridReact } from 'ag-grid-react';
+
 type ExampleComponentProps = {
   columnDefs: ColDef[];
   partNumbers: IPartNumber[] | [];
@@ -51,8 +53,10 @@ type ExampleComponentProps = {
   order?: any;
   isIssueVisibale?: boolean;
   loading?: boolean;
-  onColumnResized?: (event: any) => void;
-  onGridReady?: (event: any) => void;
+  onColumnResized: (event: ColumnResizedEvent) => void;
+  onColumnMoved: (event: ColumnMovedEvent) => void;
+  onGridReady: (event: GridReadyEvent) => void;
+  columnState: { [key: string]: { width: number; order: number } };
 };
 
 const RequarementsList: React.FC<ExampleComponentProps> = ({
@@ -78,6 +82,8 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   isIssueVisibale,
   onGridReady,
   onColumnResized,
+  onColumnMoved,
+  columnState,
 }) => {
   const containerStyle = useMemo(() => ({ width: '100%', height: height }), []);
   const gridStyle = useMemo(() => ({ height: height, width: '100%' }), []);
@@ -91,6 +97,24 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
   const [deleteRequirement] = useDeleteRequirementMutation();
   const [addPickSlip] = useAddPickSlipMutation({});
   const [addPickSlipItem] = useAddPickSlipItemMutation({});
+
+  const gridRef = useRef<AgGridReact>(null);
+
+  useEffect(() => {
+    if (gridRef.current && gridRef.current.columnApi) {
+      const columnApi = gridRef.current.columnApi;
+      const sortedColumns = Object.entries(columnState)
+        .sort(([, a], [, b]) => a.order - b.order)
+        .map(([field]) => field);
+
+      columnApi.setColumnState({
+        state: sortedColumns.map(field => ({
+          colId: field,
+          width: columnState[field].width,
+        })),
+      });
+    }
+  }, [columnState]);
 
   useEffect(() => {
     if (fetchData && fetchData.length > 0) {
@@ -136,7 +160,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
             id: taskPart._id,
           }).unwrap();
           notification.success({
-            message: t('STEP SUCCESSFULLY UPDATED'),
+            message: t('PART SUCCESSFULLY UPDATED'),
             description: t('The step has been successfully updated.'),
           });
         } else {
@@ -274,6 +298,21 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
       editable: false,
       cellDataType: 'number',
       headerName: `${t('ДОСТУПНОЕ НА СКЛАДЕ')}`,
+    },
+    {
+      field: 'WONumber',
+      headerName: `${t('WO')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectWO',
+      headerName: `${t('WP')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectTaskWO',
+      headerName: `${t('TRACE No')}`,
+      cellDataType: 'text',
     },
   ];
   const [createPickSlip, setOpenCreatePickSlip] = useState<boolean>(false);
@@ -482,6 +521,7 @@ const RequarementsList: React.FC<ExampleComponentProps> = ({
               onRowSelect={handleRowSelect}
               onCheckItems={handleRowSheck}
               onColumnResized={onColumnResized}
+              onColumnMoved={onColumnMoved}
               onGridReady={onGridReady}
             />
           </PermissionGuard>

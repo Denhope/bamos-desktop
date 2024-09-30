@@ -1299,6 +1299,7 @@ import CancelReceiving from './APN/CancelReceiving';
 import { setCardPosition } from '@/store/reducers/cardPositionReducer';
 import { setVisibleMenuItems } from '@/store/reducers/menuItemsReducer';
 import { RootState } from '@/store';
+import PickSlipStatus from '../pickSlipStatus/PickSlipStatus';
 
 type HomePropsType = { apnRoute: any | null };
 const Home: FC<HomePropsType> = ({ apnRoute }) => {
@@ -1336,6 +1337,14 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
       tab = {
         key,
         title: `${t(`STORES ADMINISTRATION`)}`,
+        contentKey: key, // Изменено на contentKey
+        closable: true,
+      };
+    }
+    if (key == RouteNames.KFC_VIEWER) {
+      tab = {
+        key,
+        title: `${t(`KFC_VIEWER`)}`,
         contentKey: key, // Изменено на contentKey
         closable: true,
       };
@@ -1540,6 +1549,11 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         t('ADMINISTRATION'),
         RouteNames.USER_ADMINISTRATION,
         <UserOutlined />
+      ),
+      getItem(
+        t('KFC VIEWER'),
+        RouteNames.KFC_VIEWER,
+        <HomeOutlined />
       ),
       getItem(
         t('WP ADMINISTRATION'),
@@ -2043,6 +2057,12 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
             <WOAdministration />
           </div>
         );
+        case RouteNames.KFC_VIEWER:
+          return (
+            <div className="h-[82vh] overflow-hidden">
+              <PickSlipStatus />
+            </div>
+          );
       case RouteNames.WP_ADMINISTRATION:
         return (
           <div className="h-[82vh] overflow-hidden">

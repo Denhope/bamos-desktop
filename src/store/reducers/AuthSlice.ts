@@ -10,6 +10,7 @@ const initialState: IState = {
   isLoading: false,
   userCreationError: null,
   isAuth: false,
+
   user: {
     message: '',
     token: '',
@@ -18,6 +19,7 @@ const initialState: IState = {
     name: '',
     role: '',
     permissions: '',
+    companyID:''
   },
 };
 
@@ -45,6 +47,9 @@ export const authSlice = createSlice({
     },
     setAuthUserPermissions(state, action: PayloadAction<any>) {
       state.user.permissions = action.payload;
+    },
+    setAuthUserCompany(state, action: PayloadAction<string>) {
+      state.user.companyID = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -107,6 +112,7 @@ export const {
   setAuthUserId,
   setAuthUserRole,
   setAuthUserPermissions,
+  setAuthUserCompany,
 } = authSlice.actions;
 
 export default authSlice.reducer;
