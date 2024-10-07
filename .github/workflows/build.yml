@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [feature/formatedInputs]
+    branches: [develop]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout Code
@@ -32,19 +32,9 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
-
-      - name: Install canvas for Electron (Windows)
-        if: matrix.os == 'windows-latest'
         run: |
-          npm install --global --production windows-build-tools
-          npm install --global node-gyp
-          npm install canvas@2.11.2 --build-from-source
-        shell: powershell
-
-      - name: Install canvas for Electron (macOS/Linux)
-        if: matrix.os != 'windows-latest'
-        run: npm install canvas@2.11.2 --build-from-source
+          npm ci
+          npm run postinstall
 
       - name: Build
         run: npm run build
