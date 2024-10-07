@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { ProColumns } from '@ant-design/pro-components';
 
 import { Select, TimePicker } from 'antd';

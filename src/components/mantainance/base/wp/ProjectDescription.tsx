@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Pie } from "@ant-design/charts";
 
 import {

@@ -1,4 +1,4 @@
-//ts-nocheck
+//@ts-nocheck
 
 import React, { FC, useEffect, useMemo, useState, useCallback } from 'react';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';

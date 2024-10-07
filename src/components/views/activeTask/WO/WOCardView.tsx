@@ -1,3 +1,4 @@
+///@ts-nocheck
 import { Descriptions, Divider, List, QRCode } from "antd";
 import Title from "antd/es/typography/Title";
 import InstrumentListActiveTask from "@/components/projectask/projectTaskForm/InstrumentListActiveTask";

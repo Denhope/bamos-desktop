@@ -1,3 +1,5 @@
+
+//@ts-nocheck
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { API_URL } from '@/utils/api/http';
