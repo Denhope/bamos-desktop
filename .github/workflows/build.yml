@@ -31,57 +31,17 @@ jobs:
         with:
           node-version: 18
 
-      - name: Cache node modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: Log versions
-        run: |
-          node --version
-          npm --version
-
       - name: Install Dependencies
-        run: |
-          npm install -g npm@latest
-          npm cache clean --force
-          npm install --legacy-peer-deps --no-audit --no-fund --force
-
-      - name: Increase memory limit
-        shell: bash
-        run: |
-          echo "NODE_OPTIONS=--max-old-space-size=8192" >> $GITHUB_ENV
+        run: npm install
 
       - name: Build Release Files
-        run: |
-          echo "Starting build process..."
-          npm run build
-          echo "Build process completed."
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CI: false
-
-      - name: Check release directory
-        run: |
-          if [ -d "release" ]; then
-            echo "Release directory exists and contains:"
-            ls -R release
-          else
-            echo "Release directory does not exist"
-            exit 1
-          fi
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release_on_${{ matrix.os }}
+          name: release_on_${{ matrix. os }}
           path: release/
           retention-days: 5
-        if: success() && hashFiles('release/**/*') != ''
