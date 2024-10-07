@@ -11,11 +11,7 @@
   files: [
     'dist-electron',
     'dist',
-    {
-      from: 'node_modules/canvas/build/Release/',
-      to: 'node_modules/canvas/build/Release/',
-      filter: ['*.node']
-    }
+    'node_modules/**/*'
   ],
   mac: {
     artifactName: '${productName}_${version}.${ext}',

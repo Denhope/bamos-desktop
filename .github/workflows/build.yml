@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout Code
@@ -34,17 +34,17 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Rebuild canvas for Electron (Windows)
+      - name: Install canvas for Electron (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           npm install --global --production windows-build-tools
           npm install --global node-gyp
-          npx electron-rebuild -f -w canvas
+          npm install canvas@2.11.2 --build-from-source
         shell: powershell
 
-      - name: Rebuild canvas for Electron (macOS/Linux)
+      - name: Install canvas for Electron (macOS/Linux)
         if: matrix.os != 'windows-latest'
-        run: npx electron-rebuild -f -w canvas
+        run: npm install canvas@2.11.2 --build-from-source
 
       - name: Build
         run: npm run build

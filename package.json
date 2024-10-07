@@ -90,7 +90,8 @@
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
     "zod": "^3.23.8",
-    "electron-rebuild": "^3.2.9"
+    "electron-rebuild": "^3.2.9",
+    "canvas": "2.11.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
