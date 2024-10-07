@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Release Files
         run: |
-          npm run build || true
+          node --max-old-space-size=8192 ./node_modules/.bin/vite build || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: false
