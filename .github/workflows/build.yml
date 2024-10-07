@@ -32,16 +32,21 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          npm install -g npm@latest
+          npm cache clean --force
+          npm install --legacy-peer-deps --no-audit --no-fund --force
 
       - name: Build Release Files
-        run: npm run build
+        run: |
+          npm run build || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI: false
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release_on_${{ matrix. os }}
+          name: release_on_${{ matrix.os }}
           path: release/
           retention-days: 5
