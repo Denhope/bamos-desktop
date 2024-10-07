@@ -35,14 +35,31 @@ jobs:
         run: npm install
 
       - name: Build Release Files
-        run: npm run build
+        shell: pwsh
+        run: |
+          $env:ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES = "true"
+          echo "Starting build process..."
+          npm run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          echo "Build process completed."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: false
 
+      - name: Check Release Directory
+        shell: pwsh
+        run: |
+          if (Test-Path release) {
+            Get-ChildItem -Path release -Recurse
+          } else {
+            Write-Error "Release directory not found"
+            exit 1
+          }
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
+        if: success()
         with:
-          name: release_on_${{ matrix. os }}
+          name: release_on_${{ matrix.os }}
           path: release/
           retention-days: 5
