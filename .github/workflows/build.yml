@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [develop]
+    branches: [feature/formatedInputs]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
       - name: Checkout Code
