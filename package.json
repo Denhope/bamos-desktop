@@ -1,6 +1,6 @@
 {
   "name": "bamos-test",
-  "version": "0.0.48-beta.1",
+  "version": "0.0.48-beta.12",
   "private": true,
   "description": "planeSystem",
   "license": "MIT",
@@ -13,13 +13,14 @@
   "scripts": {
     "build": "tsc && vite build && electron-builder --config electron-builder.json5 --publish never",
     "dev": "vite",
+    
     "preview": "vite preview",
     "postinstall": "electron-builder install-app-deps && patch-package",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
     "lint-fix": "eslint --fix",
-
+    "build:win": "tsc && vite build && electron-builder --win --x64",
     "rebuild": "electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview"
@@ -89,9 +90,9 @@
     "xlsx": "^0.18.5",
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
-    "zod": "^3.23.8",
-    "electron-rebuild": "^3.2.9",
-    "canvas": "2.11.2"
+    "zod": "^3.23.8"
+ 
+    
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
@@ -133,7 +134,8 @@
     "vite-plugin-electron-renderer": "^0.14.5",
     "vite-plugin-node-polyfills": "^0.19.0",
     "vite-plugin-require-transform": "^1.0.21"
-  }
+  },
+    "canvas_binary_host_mirror": "https://github.com/node-gfx/node-canvas-prebuilt/releases/download/"
  
   
 }

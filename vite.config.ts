@@ -18,6 +18,7 @@ export default defineConfig(({ command }) => {
   return {
     optimizeDeps: {
       include: ['pdfmake', 'pdfmake/build/vfs_fonts'],
+      exclude: ['canvas'],
     },
     resolve: {
       alias: {
@@ -63,7 +64,7 @@ export default defineConfig(({ command }) => {
                 external: [
                   ...Object.keys(pkg.dependencies || {}),
                   'pdfmake',
-                  'pdfmake/build/vfs_fonts',
+                  'pdfmake/build/vfs_fonts','electron', 'canvas'
                 ],
               },
             },

@@ -11,7 +11,7 @@
   ],
   asarUnpack: [
     'node_modules/pdfmake/build/vfs_fonts.js',
-    'node_modules/canvas/build/Release/*.node'
+    
   ],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
@@ -37,5 +37,12 @@
     channel: 'latest',
     url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.49/',
   },
-  npmRebuild: true
+  npmRebuild: true,
+  "extraResources": [
+    {
+      "from": "node_modules/canvas/build/Release/",
+      "to": "canvas/build/Release/",
+      "filter": ["*.node"]
+    }
+  ]
 }
