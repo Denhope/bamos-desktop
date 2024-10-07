@@ -45,6 +45,7 @@ import { ipcRenderer } from 'electron';
 import ConnectionIndicator from '../shared/ConnectionIndicator';
 import SupportRequestButton from '../SupportRequestButton';
 import SupportRequestAdministration from '../supportRequestAdministration/SupportRequestAdministration';
+import ApiSwitcher from './ApiSwitcher';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -674,6 +675,7 @@ const BaseLayout: React.FC = () => {
         <div className="flex items-center gap-4">
           <UTCClock />
           <ConnectionIndicator />
+          <ApiSwitcher />
           <SupportRequestButton />
         </div>
       </Footer>

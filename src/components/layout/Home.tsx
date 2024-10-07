@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { FC, useEffect, useState } from 'react';
 import { Button, Layout, Skeleton, Tabs, Modal, Checkbox } from 'antd';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
@@ -323,7 +324,7 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.PDF_SLICER) {
       tab = {
         key,
-        title: `${t(`PDF SLISER`)}`,
+        title: `${t(`PDF SLICER`)}`,
         contentKey: key, // Изменено на contentKey
         closable: true,
       };

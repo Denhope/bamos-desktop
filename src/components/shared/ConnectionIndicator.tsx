@@ -2,41 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { Tooltip } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { checkApiConnection } from '@/utils/api/http';
+import { apiChangeSubject } from '@/utils/api/config';
 
 const ConnectionIndicator: React.FC = () => {
   const { isConnected, socket } = useTypedSelector((state) => state.socket);
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    const checkConnection = () => {
-      if (socket && socket.connected) {
-        setConnectionStatus('connected');
-      } else {
-        setConnectionStatus('disconnected');
-      }
-    };
-
-    // Начальная проверка
-    checkConnection();
-
-    // Регулярная проверка каждые 5 секунд
-    intervalId = setInterval(checkConnection, 5000);
-
-    // Обработчики событий сокета
-    if (socket) {
-      socket.on('connect', () => setConnectionStatus('connected'));
-      socket.on('disconnect', () => setConnectionStatus('disconnected'));
-      socket.on('error', () => setConnectionStatus('disconnected'));
+  const checkConnection = async () => {
+    setConnectionStatus('checking');
+    const apiConnected = await checkApiConnection();
+    if (apiConnected && socket && socket.connected) {
+      setConnectionStatus('connected');
+    } else {
+      setConnectionStatus('disconnected');
     }
+  };
 
+  useEffect(() => {
+    checkConnection();
+    const intervalId = setInterval(checkConnection, 5000);
+
+    const subscription = apiChangeSubject.subscribe(() => {
+      checkConnection();
+    });
+
+    if (socket) {
+      socket.on('connect', checkConnection);
+      socket.on('disconnect', checkConnection);
+      socket.on('error', checkConnection);
+    }
     return () => {
       clearInterval(intervalId);
+      subscription.unsubscribe();
       if (socket) {
-        socket.off('connect');
-        socket.off('disconnect');
-        socket.off('error');
+        socket.off('connect', checkConnection);
+        socket.off('disconnect', checkConnection);
+        socket.off('error', checkConnection);
       }
     };
   }, [socket]);
@@ -44,11 +46,11 @@ const ConnectionIndicator: React.FC = () => {
   const getTooltipTitle = () => {
     switch (connectionStatus) {
       case 'checking':
-        return 'Проверка соединения';
+        return 'Checking connection';
       case 'connected':
-        return 'Подключено';
+        return 'Connected';
       case 'disconnected':
-        return 'Отключено';
+        return 'Disconnected';
     }
   };
 

@@ -9,6 +9,8 @@ import { RouteNames } from '@/router';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { COMPANY_ID } from '@/utils/api/http';
+import ConnectionIndicator from '../shared/ConnectionIndicator';
+import ApiSwitcher from './ApiSwitcher';
 
 
 const Main: FC = () => {
@@ -73,7 +75,8 @@ const Main: FC = () => {
               {t('©2024 Created by Kavalchuk D.')}
             </div>
             <div className="absolute right-5">
-              {/* <ConnectionIndicator /> */}
+              <ConnectionIndicator />
+                <ApiSwitcher />
             </div>
           </Footer>
         </Layout>
