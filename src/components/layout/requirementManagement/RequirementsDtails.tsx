@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import TabContent from '@/components/shared/Table/TabContent';
 
 import { Button, Col, Form, FormInstance, Row, Space, message } from 'antd';

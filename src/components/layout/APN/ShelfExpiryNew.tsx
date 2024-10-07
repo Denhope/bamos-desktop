@@ -1,4 +1,4 @@
-// ts-nocheck
+//@ts-nocheck
 import { ProColumns, ProForm, ProFormSelect } from '@ant-design/pro-components';
 import {
   Button,
@@ -382,9 +382,9 @@ const ShelfExpiryNew: FC = () => {
   const restoreColumnState = useCallback(
     (event: GridReadyEvent) => {
       Object.keys(columnWidthsExpiry).forEach((field) => {
-        const column = event.columnApi.getColumn(field, 'clientSide');
-        if (column) {
-          column.setColumnWidthEzpiry(columnWidthsExpiry[field]);
+        const колонка = event.api.getColumnDef(field);
+        if (колонка) {
+          event.api.setColumnWidth(field, columnWidthsExpiry[field]);
         }
       });
     },

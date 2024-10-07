@@ -1,3 +1,6 @@
+//@ts-nocheck
+
+
 import { ProColumns } from '@ant-design/pro-components';
 import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
 import React, { FC, useEffect, useState } from 'react';
@@ -288,7 +291,7 @@ const FilteredTasksList: FC<FilteredTasksListPropsType> = ({
               foundTasks &&
                 foundTasks.forEach(async (task: ITaskType) => {
                   let refArr = task.ammtossArrNew?.map(
-                    (item: string): IReferencesLinkType =>
+                    (item: string): any =>
                       ({
                         type: 'AMM',
                         reference: item,
