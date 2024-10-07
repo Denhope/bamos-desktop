@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [main]
+    branches: [develop]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
@@ -37,13 +37,16 @@ jobs:
           npm cache clean --force
           npm install --legacy-peer-deps --no-audit --no-fund --force
 
-      - name: Build Release Files
+      - name: Increase memory limit
         run: |
-          npx --no-install vite build
+          export NODE_OPTIONS="--max-old-space-size=8192"
+          echo "NODE_OPTIONS=$NODE_OPTIONS" >> $GITHUB_ENV
+
+      - name: Build Release Files
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: false
-          NODE_OPTIONS: --max-old-space-size=8192
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
