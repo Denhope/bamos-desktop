@@ -13,6 +13,11 @@ import { release } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { update } from './update';
+// import path from 'path';
+import * as fs from 'fs/promises';
+
+// // Импортируйте необходимые типы из electron-updater
+// import { autoUpdater, UpdateInfo, ProgressInfo } from 'electron-updater';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -285,7 +290,7 @@ const template: Electron.MenuItemConstructorOptions[] = [
 // Создаем меню из шаблона
 const menu = Menu.buildFromTemplate(template);
 
-// Устанавливаем меню приложения
+// Устаавливаем меню приложения
 Menu.setApplicationMenu(menu);
 async function createWindow() {
   win = new BrowserWindow({
@@ -293,8 +298,8 @@ async function createWindow() {
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload: preload,
-      // nodeIntegration: false,
-      // contextIsolation: true,
+      nodeIntegration: false,
+      contextIsolation: true,
       plugins: true,
 
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -373,3 +378,53 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg });
   }
 });
+
+ipcMain.handle('open-directory-dialog', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory']
+  });
+  return result;
+});
+
+ipcMain.handle('save-file', async (_, filePath: string, data: Uint8Array) => {
+  await fs.writeFile(filePath, Buffer.from(data));
+});
+
+ipcMain.handle('open-path', async (_, path) => {
+  try {
+    await shell.openPath(path)
+  } catch (error) {
+    console.error('Ошибка при открытии пути:', error)
+    throw error
+  }
+});
+
+// ipcMain.handle('check-update', () => {
+//   // Логика проверки обновлений
+// });
+
+// ipcMain.handle('start-download', () => {
+//   // Замените на правильный метод из autoUpdater
+//   autoUpdater.downloadUpdate();
+// });
+
+// ipcMain.handle('quit-and-install', () => {
+//   autoUpdater.quitAndInstall();
+// });
+
+// // Настройка автообновления
+// autoUpdater.on('update-available', (info: UpdateInfo) => {
+//   win?.webContents.send('update-can-available', info);
+// });
+
+// autoUpdater.on('error', (error: Error) => {
+//   win?.webContents.send('update-error', error);
+// });
+
+// autoUpdater.on('download-progress', (progressObj: ProgressInfo) => {
+//   win?.webContents.send('download-progress', progressObj);
+// });
+
+// autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+//   win?.webContents.send('update-downloaded', info);
+// });

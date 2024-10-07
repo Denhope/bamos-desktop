@@ -930,7 +930,7 @@ export const transformToIAltPartNumber = (data: any[]): any[] => {
     PART_GROUP: item.partNumberID?.GROUP,
     PART_TYPE: item.partNumberID?.TYPE,
     PART_UNIT_OF_MEASURE: item?.partNumberID?.UNIT_OF_MEASURE,
-    ISTWOWAY: item.ISTWOWAYS,
+    ISTWOWAY: item.ISTWOWAY,
     TYPE: item.altPartNumberID?.TYPE,
     GROUP: item.altPartNumberID?.GROUP,
     APPROVED: item.createUserID?.name,
@@ -1661,8 +1661,11 @@ export const rolePermissions: Record<Role, string[]> = {
     '19',
     '20',
     '21',
+    '22',
+    '23',
+    '24'
   ],
-  technican: ['02', '05', '06', '08', '10', '12', '15', '21'],
+  technican: ['02', '05', '06', '08', '10', '12', '15', '21','22'],
   engineer: [
     '01',
     '02',
@@ -1678,6 +1681,7 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '20',
     '21',
+    '22'
   ],
   planning: [
     '01',
@@ -1696,6 +1700,8 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '20',
     '21',
+    '22',
+    '23'
   ],
   logistic: [
     '01',
@@ -1719,6 +1725,7 @@ export const rolePermissions: Record<Role, string[]> = {
     '19',
     '20',
     '21',
+    '22'
   ],
   storeMan: [
     '01',
@@ -1738,6 +1745,7 @@ export const rolePermissions: Record<Role, string[]> = {
     '18',
     '19',
     '20',
+    '22'
   ],
   director: [
     '01',
@@ -1761,6 +1769,7 @@ export const rolePermissions: Record<Role, string[]> = {
     '19',
     '20',
     '21',
+    '22'
   ],
 };
 
@@ -1834,6 +1843,11 @@ export enum SubscriptionType {
   NewRequirement = 'newRequirement',
   TechnicalRequest = 'technicalRequest',
   PickSlipUpdate = 'pickSlipUpdate',
+  NewPartNumber = 'newPartNumber',
+  AddAlternative = 'addAlternative',
+  PickslipError = 'pickslipError',
+  TaskError = 'taskError',
+  BugReport = 'bugReport',
 }
 
 // Создание массива объектов с метками для каждого типа подписки
@@ -1842,10 +1856,12 @@ export const getSubscriptionTypes = (t) => [
   { value: SubscriptionType.NewPickslip, label: t('New Pickslip') },
   { value: SubscriptionType.PickSlipUpdate, label: t('PickSlip Update') },
   { value: SubscriptionType.NewRequirement, label: t('New Requirement') },
-  {
-    value: SubscriptionType.TechnicalRequest,
-    label: t('New Technical Request'),
-  },
+  { value: SubscriptionType.TechnicalRequest, label: t('New Technical Request') },
+  { value: SubscriptionType.NewPartNumber, label: t('New Part Number') },
+  { value: SubscriptionType.AddAlternative, label: t('Add Alternative') },
+  { value: SubscriptionType.PickslipError, label: t('Pickslip Error') },
+  { value: SubscriptionType.TaskError, label: t('Task Error') },
+  { value: SubscriptionType.BugReport, label: t('Bug Report') },
 ];
 
 // Тип для типа подписки

@@ -124,7 +124,7 @@ export const pickSlipApi = createApi({
     updatePickSlip: builder.mutation<any, any>({
       query: (pickSlip) => ({
         url: `pickSlipAdministration/company/${COMPANY_ID}/pickSlip/${
-          pickSlip?.pickSlip.id || pickSlip?.pickSlip?._id
+          pickSlip?.id || pickSlip?._id
         }`,
         method: 'PUT',
         body: {
@@ -141,7 +141,7 @@ export const pickSlipApi = createApi({
       string
     >({
       query: (id) => ({
-        url: `pickSlipAdministration/company/${COMPANY_ID}/pickSlipItem/${id}`,
+        url: `pickSlipAdministration/company/${COMPANY_ID}/order/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['PickSlip'],

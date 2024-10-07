@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 import { ProColumns, ProForm, ProFormSelect } from '@ant-design/pro-components';
 import {
   Button,
@@ -53,6 +53,7 @@ import PartsTable from '@/components/shared/Table/PartsTable';
 import { RootState } from '@/store';
 import { setColumnWidthEzpiry } from '@/store/reducers/columnWidthsExpirySlice';
 import { useSelector, useDispatch } from 'react-redux';
+import PDFExport from '@/components/reports/ReportBase';
 
 const ShelfExpiryNew: FC = () => {
   const [reportData, setReportData] = useState<any>(false);
@@ -527,7 +528,7 @@ const ShelfExpiryNew: FC = () => {
                       ids={rowKeys}
                       isDisabled={!rowKeys.length}
                     ></ReportPrintLabel>
-                    <ReportEXEL
+                    {/* <ReportEXEL
                       isDisabled={!rowKeys.length}
                       headers={{
                         LOCAL_ID: `${t('LABEL')}`,
@@ -548,7 +549,7 @@ const ShelfExpiryNew: FC = () => {
                       }}
                       data={selectedMaterials}
                       fileName={'EXPIRES_REPORT_'}
-                    ></ReportEXEL>
+                    ></ReportEXEL> */}
                   </Space>
                 </Col>
                 <Col>
@@ -561,15 +562,50 @@ const ShelfExpiryNew: FC = () => {
                   ></ReportPrintQR>
                 </Col>
                 <Col>
-                  <Button
-                    loading={reportDataLoading}
-                    icon={<PrinterOutlined />}
-                    size="small"
-                    onClick={() => fetchAndHandleReport('dddddddddd')}
+                  <PDFExport
+                    title={t('SHELF EXPIRY REPORT')}
+                    filename={`shelf_expiry_report_${new Date().toISOString().split('T')[0]}`}
+                    // headerInfo={{
+                    //   "Store": selectedSerchValues?.storeID 
+                    //     ? loctionsCodesValueEnum[selectedSerchValues.storeID] || selectedSerchValues.storeID 
+                    //     : '-',
+                    //   "Location": selectedSerchValues?.locationID 
+                    //     ? loctionsCodesValueEnum[selectedSerchValues.locationID] || selectedSerchValues.locationID 
+                    //     : '-',
+                    //   "Date Range": selectedSerchValues?.dateIn 
+                    //     ? `${new Date(selectedSerchValues.dateIn[0]).toLocaleDateString()} - ${new Date(selectedSerchValues.dateIn[1]).toLocaleDateString()}`
+                    //     : selectedSerchValues?.datePickerValue 
+                    //       ? new Date(selectedSerchValues.datePickerValue).toLocaleDateString()
+                    //       : '-'
+                    // }}
+                    statistics={{
+                      "Total Items": parts?.length || 0,
+                      "Selected Items": rowKeys.length
+                    }}
+                    columnDefs={columnDefs}
+                    data={transformedPartNumbers?.map(part => ({
+                      ...part,
+                      RECEIVED_DATE: part.RECEIVED_DATE 
+                        ? new Date(part.RECEIVED_DATE).toLocaleDateString('ru-RU', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : '',
+                      PRODUCT_EXPIRATION_DATE: part.PRODUCT_EXPIRATION_DATE
+                        ? new Date(part.PRODUCT_EXPIRATION_DATE).toLocaleDateString('ru-RU', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })
+                        : '',
+                    })) || []}
+                    orientation="landscape"
                     disabled={!selectedSerchValues}
-                  >
-                    {`${t('PRINT REPORT')}`}
-                  </Button>
+                    loading={reportDataLoading}
+                  />
                 </Col>
               </div>
             </Row>

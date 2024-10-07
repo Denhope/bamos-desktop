@@ -40,6 +40,7 @@ import PartsTable from '@/components/shared/Table/PartsTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { setColumnWidth } from '@/store/reducers/columnWidthsSlice';
+import PDFExport from '@/components/reports/ReportBase';
 // import { RootState } from './store';
 // import { setColumnWidth } from './columnWidthsSlice';
 
@@ -474,6 +475,39 @@ const PartsTransferNew: FC = () => {
                 ids={rowKeys}
               ></ReportPrintQR>
             </Col>
+            <Col>
+            <PDFExport
+  title={t('PART ENTITY REPORT')}
+  filename={`part_entity_report_${new Date().toISOString().split('T')[0]}`}
+  
+  statistics={{
+    "Total Items": parts?.length || 0,
+    "Selected Items": rowKeys.length
+  }}
+  columnDefs={columnDefs}
+  data={transformedPartNumbers?.map(part => ({
+    ...part,
+    RECEIVED_DATE: part.RECEIVED_DATE 
+      ? new Date(part.RECEIVED_DATE).toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      : '',
+    PRODUCT_EXPIRATION_DATE: part.PRODUCT_EXPIRATION_DATE
+      ? new Date(part.PRODUCT_EXPIRATION_DATE).toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+      : '',
+  })) || []}
+  orientation="landscape"
+  disabled={!selectedSerchValues}
+  loading={reportDataLoading}
+/></Col>
           </div>
         </Row>
         <div style={containerStyle}>

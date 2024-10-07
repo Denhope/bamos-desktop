@@ -1,4 +1,4 @@
-//@ts-check
+//@ts-nocheck
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -67,7 +67,7 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
 
   const { data: alternatives, isLoading: isLoadingAlternatives } = useGetAltsPartNumbersQuery(
     { partNumberID: selectedPartNumber },
-    { skip: !selectedPartNumber } 
+    { skip: !selectedPartNumber }
   );
 
   const storeOptions = useMemo(() => 
@@ -102,71 +102,81 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
   }, [order.id]);
 
   const PartNumberSelector = (props: any) => {
-    const onValueChange = async (value: string) => {
+    const [localValue, setLocalValue] = useState(props.value);
+
+    useEffect(() => {
+      setLocalValue(props.value);
+    }, [props.value]);
+
+    const onValueChange = useCallback((value: string) => {
       const selectedPart = partNumbers.find(part => part._id === value);
       if (selectedPart) {
+        setLocalValue(value);
         setSelectedRowId(props.data.id);
         setSelectedPartNumber(value);
         
-        // Сразу обновляем данные строки выбранным партийным номером
-        updateRowData(selectedPart);
+        updateRowData(selectedPart, props.data.id);
         
-        // Проверяем наличие альтернатив и открываем модальное окно, если они есть
-        if (alternatives && alternatives.length > 0) {
-          setAlternativesModalVisible(true);
-        }
+        setAlternativesModalVisible(true);
       }
-    };
+    }, [partNumbers, props.data.id]);
+
+    useEffect(() => {
+      if (localValue !== props.value) {
+        props.setValue(localValue);
+      }
+    }, [localValue, props]);
 
     return (
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
-        height: '100%', // Занимаем всю высоту ячейки
-        padding: '0 5px' // Добавляем небольшой отступ по бокам
+        height: '100%',
+        padding: '0 5px'
       }}>
-      <Select
-        showSearch
-        style={{ width: '100%' }}
-        value={props.value}
-        onChange={onValueChange}
-        options={partNumbers.map(part => ({ label: part.PART_NUMBER, value: part._id }))}
-        filterOption={(input, option) =>
-          (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-        }
-        status={!props.value ? 'error' : undefined}
-      />
-      {alternatives && alternatives.length > 0 && (
-        <Tooltip title={t('Show alternatives')}>
-          <Button 
-            icon={<SwapOutlined />} 
-            onClick={ ()=>setAlternativesModalVisible(true)}
-            style={{ 
-              flexShrink: 0, // Предотвращаем сжатие кнопки
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '22px', // Устанавливаем фиксированную высоту
-              width: '22px' // Устанавливаем фиксированную ширину для квадратной кнопки
-            }}
-          />
-        </Tooltip>
-      )}
-         </div>
+        <Select
+          showSearch
+          style={{ width: '100%' }}
+          value={localValue}
+          onChange={onValueChange}
+          options={partNumbers.map(part => ({ label: part.PART_NUMBER, value: part._id }))}
+          filterOption={(input, option) =>
+            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+          }
+          status={!localValue ? 'error' : undefined}
+        />
+        {alternatives && alternatives.length > 0 && (
+          <Tooltip title={t('Show alternatives')}>
+            <Button 
+              icon={<SwapOutlined />} 
+              onClick={() => setAlternativesModalVisible(true)}
+              style={{ 
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '22px',
+                width: '22px'
+              }}
+            />
+          </Tooltip>
+        )}
+      </div>
     );
   };
 
-  const updateRowData = (part: any) => {
-    const updatedData = rowData.map(row => 
-      row.id === selectedRowId ? { 
-        ...row, 
-        PART_NUMBER: part._id,
-        DESCRIPTION: part.DESCRIPTION,
-        UNIT_OF_MEASURE: part.UNIT_OF_MEASURE
-      } : row
+  const updateRowData = useCallback((part: any, rowId: string) => {
+    setRowData(prevRowData => 
+      prevRowData.map(row => 
+        row.id === rowId ? { 
+          ...row, 
+          PART_NUMBER: part._id,
+          DESCRIPTION: part.DESCRIPTION,
+          UNIT_OF_MEASURE: part.UNIT_OF_MEASURE
+        } : row
+      )
     );
-    setRowData(updatedData);
-  };
+  }, []);
 
   const QuantityEditor = (props: any) => {
     return (
@@ -240,11 +250,11 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
     }) as { data: AvailableQuantity | undefined, isLoading: boolean };
 
     if (isLoading || isLoadingAlternatives) {
-      return <span>Loading...</span>;
+      return <span>{t('Loading...')}</span>;
     }
 
     const mainQty = availableQuantity?.totalQuantity || 0;
-    const altQty = alternativesQuantity?.totalQuantity || 0;
+    const altQty = (alternativesQuantity?.totalQuantity || 0) - mainQty;
     const totalQty = mainQty + altQty;
     const requestedQty = props.data.amout || 0;
 
@@ -254,10 +264,10 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
 
     const tooltipContent = (
       <div>
-        <div>Основной: {mainQty}</div>
-        <div>Альтернативы: {altQty}</div>
-        <div>Всего: {totalQty}</div>
-        {availableQuantity?.storeAvailableQTY.map((store, index) => (
+        <div>{t('Main')}: {mainQty}</div>
+        <div>{t('Alternatives')}: {altQty}</div>
+        <div>{t('Total')}: {totalQty}</div>
+        {availableQuantity?.storeAvailableQTY?.map((store, index) => (
           <div key={index}>{`${store.storeName}: ${store.availableQTY}`}</div>
         ))}
       </div>
@@ -288,8 +298,8 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
           return { backgroundColor: '#ffcccb' };
         }
       },
-      width: 300, // Увеличиаем ширину колонки до 300
-      flex: 3, // Увеличиваем flex-коэффициент до 3
+      width: 400, // Увеличиаем ширину колонки до 300
+      flex: 4, // Увеличиваем flex-коэффициент до 3
     },
     {
       headerName: t('DESCRIPTION'),
@@ -496,10 +506,10 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
         }).unwrap();
       }
 
-      notification.success({
-        message: t('SUCCESS'),
-        description: t('Requirements have been created and sent to the warehouse'),
-      });
+      // notification.success({
+      //   message: t('SUCCESS'),
+      //   description: t('Requirements have been created and sent to the warehouse'),
+      // });
       setRowData([{ id: Date.now() }]);
       clearLocalStorage();
       onRequirementsCreated();
@@ -512,13 +522,16 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
   }, [rowData, partNumbers, order, addRequirement, addPickSlip, addPickSlipItem, t, onRequirementsCreated, clearLocalStorage, validateRows]);
 
   const handleAlternativeSelect = (alternative: any) => {
-    updateRowData({
-      _id: alternative.altPartNumberID._id,
-      PART_NUMBER: alternative.altPartNumberID.PART_NUMBER,
-      DESCRIPTION: alternative.altPartNumberID.DESCRIPTION,
-      UNIT_OF_MEASURE: alternative.altPartNumberID.UNIT_OF_MEASURE
-    });
-    setAlternativesModalVisible(false);
+    if (selectedRowId) {
+      updateRowData({
+        _id: alternative.altPartNumberID._id,
+        PART_NUMBER: alternative.altPartNumberID.PART_NUMBER,
+        DESCRIPTION: alternative.altPartNumberID.DESCRIPTION,
+        UNIT_OF_MEASURE: alternative.altPartNumberID.UNIT_OF_MEASURE
+      }, selectedRowId);
+      
+      setSelectedPartNumber(alternative.altPartNumberID._id);
+    }
   };
 
   const AlternativeItem = React.memo(({ item, order, onSelect }: { item: any; order: any; onSelect: (item: any) => void }) => {
@@ -617,14 +630,18 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
         </Form>
       </Modal>
       <Modal
-        title={t('Alrernatives')}
+        title={t('Alternatives')}
         visible={alternativesModalVisible}
         onCancel={() => setAlternativesModalVisible(false)}
-        footer={null}
+        footer={[
+          <Button key="close" onClick={() => setAlternativesModalVisible(false)}>
+            {t('Close')}
+          </Button>
+        ]}
       >
         {isLoadingAlternatives ? (
-          <div>{t(' Loading...')}</div>
-        ) : (
+          <div>{t('Loading...')}</div>
+        ) : alternatives && alternatives.length > 0 ? (
           <List
             dataSource={alternatives}
             renderItem={(item: any) => (
@@ -636,6 +653,8 @@ const BulkRequirementCreator: React.FC<BulkRequirementCreatorProps> = ({
               />
             )}
           />
+        ) : (
+          <div>{t('No alternatives available')}</div>
         )}
       </Modal>
     </div>

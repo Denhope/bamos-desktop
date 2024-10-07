@@ -25,3 +25,9 @@ export const stockApi = createApi({
 });
 
 export const { useGetAvailableQuantityQuery } = stockApi;
+
+export interface AvailableQuantity {
+  totalQuantity: number;
+  storeAvailableQTY: Array<{ storeName: string; availableQTY: number }>;
+  unitOfMeasure: string;
+}

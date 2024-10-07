@@ -8,7 +8,7 @@ import {
   ToolOutlined,
   UserOutlined,
   ExclamationCircleOutlined,
-  ShoppingCartOutlined,
+  ShoppingCartOutlined,QuestionCircleOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -43,6 +43,8 @@ import APNTable from '@/components/layout/APNTable';
 import UTCClock from '../shared/UTCClock';
 import { ipcRenderer } from 'electron';
 import ConnectionIndicator from '../shared/ConnectionIndicator';
+import SupportRequestButton from '../SupportRequestButton';
+import SupportRequestAdministration from '../supportRequestAdministration/SupportRequestAdministration';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -273,6 +275,21 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`WORKORDER`)}`,
     //   route: RouteNames.WORKORDER,
     // },
+    {
+      APNNBR: '22',
+      descriptions: `${t(`SUPPORT REQUEST ADMINISTRATION`)}`,
+      route: RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+    },
+      {
+    APNNBR: '23',
+    descriptions: `${t(`PDF SLICER`)}`,
+    route: RouteNames.PDF_SLICER,
+  },
+  {
+    APNNBR: '24',
+    descriptions: `${t(`REPORTS`)}`,
+    route: RouteNames.REPORTS,
+  },
   ];
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -595,7 +612,10 @@ const BaseLayout: React.FC = () => {
               element={<Home apnRoute={selectedAPN} />}
               path={RouteNames.HOME}
             />
-
+            <Route
+              element={<SupportRequestAdministration />}
+              path={RouteNames.SUPPORT_REQUEST_ADMINISTRATION}
+            />
             <Route
               element={
                 <Result
@@ -639,23 +659,23 @@ const BaseLayout: React.FC = () => {
       </Layout>
 
       <Footer
-        className="mt-0 pt-0 gap-5 flex items-center justify-center"
+        className="mt-0 pt-0 gap-5 flex items-center justify-between"
         style={{
           display: 'flex',
-          justifyContent: 'center', // Выравнивание по центру
           alignItems: 'center',
           position: 'sticky',
           bottom: '0',
-          width: '100%', // Убедитесь, что Footer занимает всю ширину
+          width: '100%',
         }}
       >
-        <div className="flex-1 text-right ">
+        <div className="flex-1 text-left">
           {t('©2024 Created by Kavalchuk D.')}
         </div>
-        <div style={{ flex: 1, textAlign: 'right' }}>
+        <div className="flex items-center gap-4">
           <UTCClock />
+          <ConnectionIndicator />
+          <SupportRequestButton />
         </div>
-        <ConnectionIndicator />
       </Footer>
 
       <SettingsDrawer

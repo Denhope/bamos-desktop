@@ -2,12 +2,12 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import AuthService from '@/services/authService';
 import { authSlice } from '@/store/reducers/AuthSlice';
 import axios from 'axios';
-export const API_URL = 'http://localhost:80';
+// export const API_URL = 'http://localhost:3001'; // Убедитесь, что порт соответствует порту вашего сервера
 // export const API_URL = 'http://172.16.50.85:4000';
 // export const API_URL = 'http://192.168.74.11:8000';
 // export const API_URL = 'http://192.168.74.11:5000';
 // export const API_URL = 'http://82.209.232.250:4000';
-// export const API_URL = 'http://192.168.74.14';
+export const API_URL = 'http://192.168.74.14';
 
 // export const API_URL = 'https://planebox-api-production.up.railway.app';
 
@@ -104,4 +104,7 @@ $authHost.interceptors.response.use(
 );
 
 export { $host, $authHost, $authHostRefresh };
+
+$authHost.defaults.maxBodyLength = Infinity;
+$authHost.defaults.maxContentLength = Infinity;
 

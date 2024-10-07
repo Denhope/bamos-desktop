@@ -62,7 +62,7 @@ const App: FC = () => {
     } else {
       dispatch(authSlice.actions.setIsAuth(false));
       dispatch(setAuthUserId(''));
-      history(RouteNames.HOME);
+      history(RouteNames?.HOME);
       setLoading(false);
     }
   }, [dispatch,  isConnected]);
@@ -95,7 +95,7 @@ const App: FC = () => {
         const newNotification = {
           _id: '', // ID будет установлен на сервере
           userId: USER_ID,
-          message: data.message,
+          message: data?.message,
           // timestamp: new Date(data.timestamp).toISOString(), // Преобразуем дату в ISO строку
           isRead: false,
         };
@@ -104,7 +104,7 @@ const App: FC = () => {
         if (notificationsEnabled) {
           notification.info({
             message: 'INFORMATION!!!',
-            description: data.message,
+            description: data?.message,
             placement: 'bottomRight', // Позиция уведомления
             duration: 0,
           });

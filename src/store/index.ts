@@ -46,6 +46,10 @@ import { certificatesTypeApi } from '@/features/requirementsTypeAdministration/c
 import { orderTextTypeApi } from '@/features/orderTextTypeAdministration/orderTextTypeApi';
 import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsTemplatesApi';
 import { stockApi } from '@/features/stockAdministration/stockApi';
+import { supportRequestApi } from './slices/supportRequestApi';
+import { fileUploadApi } from '@/features/restrictionAdministration/fileUploadApi';
+import { reportsApi } from '@/features/reports/reportsApi';
+import { actionApi } from '@/features/projectItemWO/actionsApi';
 
 const persistConfig = {
   key: 'root',
@@ -112,7 +116,11 @@ const store = configureStore({
       certificatesTypeApi.middleware,
       orderTextTypeApi.middleware,
       actionsTemplatesApi.middleware,
-      stockApi.middleware
+      stockApi.middleware,
+      supportRequestApi.middleware,
+      fileUploadApi.middleware,
+      reportsApi.middleware,
+      actionApi.middleware
     ),
 });
 

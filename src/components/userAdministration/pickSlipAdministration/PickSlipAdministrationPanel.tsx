@@ -24,9 +24,11 @@ import {
 import PickSlipAdministrationDiscription from './PickSlipAdministrationDiscription';
 import PickSlipAdministrationTree from './PickSlipAdministrationTree';
 import PickSlipContainer from './PickSlipContainer';
-import { useGetPickSlipsQuery } from '@/features/pickSlipAdministration/pickSlipApi';
+import { useDeletePickSlipMutation, useGetPickSlipsQuery, useUpdatePickSlipMutation } from '@/features/pickSlipAdministration/pickSlipApi';
 import PickSlipAdministrationForm from './PickSlipAdministrationForm';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
+import { updatePickSlip } from '@/utils/api/thunks';
+import { useUpdatePickSlipItemsMutation } from '@/features/pickSlipAdministration/pickSlipItemsApi';
 
 interface AdminPanelProps {
   pickSlipSearchValues?: any;
@@ -63,7 +65,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
 
   const [addRequirement] = useAddRequirementMutation();
   const [updateRequirement] = useUpdateRequirementMutation();
-  const [deleteRequirement] = useDeleteRequirementMutation();
+  const [deletePick] = useDeletePickSlipMutation();
   const [isTreeView, setIsTreeView] = useState(false);
   const { data: partNumbers } = useGetPartNumbersQuery({});
   const { t } = useTranslation();
@@ -81,24 +83,24 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS PICKSLIP?'),
       onOk: async () => {
-        // try {
-        //   await deleteRequirement(companyId).unwrap();
-        //   message.success(t('REQUIREMENT SUCCESSFULLY DELETED'));
-        // } catch (error) {
-        //   message.error(t('ERROR DELETING REQUIREMENT'));
-        // }
+        try {
+          await deletePick(companyId).unwrap();
+          message.success(t('REQUIREMENT SUCCESSFULLY DELETED'));
+        } catch (error) {
+          message.error(t('ERROR DELETING REQUIREMENT'));
+        }
       },
     });
   };
-
-  const handleSubmit = async (requirement: IRequirement) => {
+  const [updatePick] = useUpdatePickSlipMutation();
+  const handleSubmit = async (requirement:any) => {
     try {
       if (editingRequirement) {
-        await updateRequirement(requirement).unwrap();
+        await updatePick(requirement).unwrap();
         message.success(t('PICKSLIP SUCCESSFULLY UPDATED'));
       } else {
-        await addRequirement({ requirement }).unwrap();
-        message.success(t('PICKSLIP SUCCESSFULLY ADDED'));
+        // await addRequirement({ requirement }).unwrap();
+        // message.success(t('PICKSLIP SUCCESSFULLY ADDED'));
       }
       setEditingRequirement(null);
     } catch (error) {

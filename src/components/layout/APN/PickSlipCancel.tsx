@@ -809,6 +809,21 @@ const PickSlipCancel: FC = () => {
     // },
     // Добавьте другие колонки по необходимости
   ]);
+
+  useEffect(() => {
+    if (locations) {
+      setColumnBookedDefs(prevDefs => prevDefs.map(def => 
+        def.field === 'LOCATION_TO' 
+          ? { 
+              ...def, 
+              cellEditorParams: { 
+                options: locations
+              } 
+            }
+          : def
+      ));
+    }
+  }, [locations]);
   const handleSubmitCancel = async () => {
     Modal.confirm({
       title: t('Confirm Cancel'),
@@ -984,6 +999,7 @@ const PickSlipCancel: FC = () => {
             }}
             onUpdateData={(data: any[]): void => {
               setIssuedRowData(data);
+              console.log(data);
             }}
             fetchData={rowDataForSecondContainer}
           />

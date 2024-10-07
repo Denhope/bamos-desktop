@@ -110,6 +110,10 @@ const LocationEditor = forwardRef<ICellEditor, LocationEditorProps>(
           <Option key={option.id} value={option.locationName}>
             {option.locationName}
           </Option>
+
+          //   <Option key={option.value} value={option.value}>
+          //   {option.label}
+          // </Option>
         ))}
       </Select>
     );

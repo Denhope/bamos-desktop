@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import { reportsApi } from '@/features/reports/reportsApi';
 import instrumentReducer from './reducers/InstrumentSlice';
 import materialReducer from './reducers/MaterialSlice';
 import applicationReducer from './reducers/AplicationSlice';
@@ -83,6 +84,10 @@ import { actionsTemplatesApi } from '@/features/templatesAdministration/actionsT
 // import { acApi } from '@/features/ACAdministration/acApi';
 import { acApi } from '@/features/acAdministration/acApi';
 import { stockApi } from '@/features/stockAdministration/stockApi';
+import { supportRequestApi } from './slices/supportRequestApi';
+import { fileUploadApi } from '@/features/restrictionAdministration/fileUploadApi';
+import { actionApi } from '@/features/projectItemWO/actionsApi';
+
 const rootReducer = combineReducers({
   auth: authSlice,
   files: filesUploadeReducer,
@@ -150,7 +155,11 @@ const rootReducer = combineReducers({
   [orderTextTypeApi.reducerPath]: orderTextTypeApi.reducer,
   [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
   [stockApi.reducerPath]: stockApi.reducer,
- 
+  [supportRequestApi.reducerPath]: supportRequestApi.reducer,
+  [fileUploadApi.reducerPath]: fileUploadApi.reducer,
+  [reportsApi.reducerPath]: reportsApi.reducer,
+  [actionApi.reducerPath]: actionApi.reducer,
+
   // [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
 
   vendor: vendorReducer,

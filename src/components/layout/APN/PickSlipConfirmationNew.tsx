@@ -36,6 +36,7 @@ import { useAddBookingMutation } from '@/features/bookings/bookingApi';
 import { generateReport } from '@/utils/api/thunks';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 import { v4 as uuidv4 } from 'uuid';
+import PDFExport from '@/components/reports/ReportBase';
 type CellDataType = 'text' | 'number' | 'date' | 'boolean' | 'Object';
 
 interface ExtendedColDef extends ColDef {
@@ -942,7 +943,7 @@ const PickSlipConfirmationNew: FC = () => {
                 {' '}
                 {t('PRINT')}
               </Button> */}
-              <Col>
+              {/* <Col>
                 <Button
                   loading={reportDataLoading}
                   icon={<PrinterOutlined />}
@@ -952,7 +953,53 @@ const PickSlipConfirmationNew: FC = () => {
                 >
                   {`${t('PRINT PICKSLIP')}`}
                 </Button>
-              </Col>
+              </Col> */}
+
+<Col>
+<>{console.log(pickSlips&&pickSlips[0]||'')}</>
+<>{console.log(pickSlipSearchValues)}</>
+  <PDFExport
+    title={t('PICKSLIP REPORT')}
+    filename={`pickslip_report_${pickSlips && pickSlips[0]?.pickSlipNumberNew}`}
+    headerInfo={{
+      "Pick Slip Number": pickSlips && pickSlips[0]?.pickSlipNumberNew || '-',
+      "Store": pickSlips && pickSlips[0]?.getFromID?.storeShortName || '-',
+      "WO": pickSlips && pickSlips[0]?.projectID?.WOReferenceID?.WONumber || '-',
+      "WP": pickSlips && pickSlips[0]?.projectID?.projectName || '-',
+      'Trace No':pickSlips && pickSlips[0]?.projectTaskID?.taskWO || '-',
+      'Task No':pickSlips && pickSlips[0]?.projectTaskID?.taskNumber || '-',
+      'Task type':pickSlips && pickSlips[0]?.projectTaskID?.projectItemType || '-',
+
+      "Booking Date": pickSlipSearchValues?.bookingDate
+      ? new Date(pickSlipSearchValues.bookingDate).toLocaleDateString('ru-RU')
+      : '-',
+      "Mech": pickSlipSearchValues?.storeManName || '-',
+      "Storeman": pickSlipSearchValues?.userName || '-',
+    }}
+    statistics={{
+      "Total Items": rowDataForSecondContainer.length,
+      // "Total Quantity": rowDataForSecondContainer.reduce((sum, item) => sum + (item.bookedQty || 0), 0),
+    }}
+    columnDefs={[
+      { headerName: t('PART No'), field: 'PART_NUMBER_BOOKED' },
+      { headerName: t('DESCRIPTION'), field: 'DESCRIPTION' },
+      { headerName: t('SERIAL/BATCH'), field: 'SERIAL_NUMBER' },
+      // { headerName: t('REQUESTED QTY'), field: 'requestedQty' },
+      { headerName: t('BOOKED QTY'), field: 'bookedQty' },
+      { headerName: t('UOM'), field: 'UNIT_OF_MEASURE' },
+      { headerName: t('STOCK'), field: 'STOCK' },
+      { headerName: t('LOCATION'), field: 'LOCATION' },
+      { headerName: t('BATCH/SERIAL'), field: 'SERIAL_NUMBER' },
+      { headerName: t('DOC NUMBER'), field: 'DOC_NUMBER' },
+      { headerName: t('DOC TYPE'), field: 'DOC_TYPE' },
+      
+    ]}
+    data={rowDataForSecondContainer}
+    orientation="landscape"
+    disabled={!(pickSlips && pickSlips[0]?.id)}
+    loading={reportDataLoading}
+  />
+</Col>
               <Button
                 disabled={
                   !pickSlips ||

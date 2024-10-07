@@ -18,13 +18,19 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+
+      // "types": ["electron", "react-pdf"]
+    "types": ["electron", "node"]
   },
   "include": [
     "src",
-    "electron",
-    "src/components/userAdministration/MPDAdministration/MPDAdministrationTree.tsx",
-    "src/components/userAdministration/taskAdministration/PartList.tsx"
+
+// "electron",
+//     "src/components/userAdministration/MPDAdministration/MPDAdministrationTree.tsx",
+//     "src/components/userAdministration/taskAdministration/PartList.tsx"
+    
+    "electron"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

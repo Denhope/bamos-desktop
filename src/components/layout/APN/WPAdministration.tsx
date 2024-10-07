@@ -1,4 +1,4 @@
-// ts-nocheck
+// @ts-nocheck
 
 import { getItem } from '@/services/utilites';
 import { Layout, Menu, MenuProps } from 'antd';

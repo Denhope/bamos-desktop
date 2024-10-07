@@ -1,4 +1,4 @@
-import { ipcRenderer, contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
 // Explicitly annotate the parameter types for withPrototype
 function withPrototype(obj: Record<string, any>): Record<string, any> {
@@ -143,7 +143,17 @@ function useLoading(): LoadingMethods {
 }
 
 // Explicitly annotate the return type for the contextBridge.exposeInMainWorld
-contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));
+contextBridge.exposeInMainWorld('electron', {
+  ipcRenderer: {
+    invoke: (channel: string, data: any) => ipcRenderer.invoke(channel, data),
+    on: (channel: string, func: (...args: any[]) => void) => {
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
+    },
+    removeAllListeners: (channel: string) => {
+      ipcRenderer.removeAllListeners(channel);
+    },
+  },
+});
 
 // Explicitly annotate the return type for useLoading
 const { appendLoading, removeLoading } = useLoading();
@@ -160,3 +170,21 @@ window.onmessage = (ev: MessageEvent) => {
 
 // Explicitly annotate the setTimeout call
 setTimeout(removeLoading, 4999);
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  openDirectoryDialog: () => ipcRenderer.invoke('open-directory-dialog'),
+  saveFile: (filePath: string, data: Uint8Array) => ipcRenderer.invoke('save-file', filePath, data),
+  openPath: (path: string) => ipcRenderer.invoke('open-path', path),
+  onUpdateCanAvailable: (callback: (event: any, info: any) => void) => 
+    ipcRenderer.on('update-can-available', callback),
+  onUpdateError: (callback: (event: any, error: any) => void) => 
+    ipcRenderer.on('update-error', callback),
+  onDownloadProgress: (callback: (event: any, progress: any) => void) => 
+    ipcRenderer.on('download-progress', callback),
+  onUpdateDownloaded: (callback: (event: any, info: any) => void) => 
+    ipcRenderer.on('update-downloaded', callback),
+  removeAllListeners: (channel: string) => ipcRenderer.removeAllListeners(channel),
+});
+
+// Add ipcRenderer exposure
+contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));

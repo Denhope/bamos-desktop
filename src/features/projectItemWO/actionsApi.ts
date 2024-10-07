@@ -91,11 +91,11 @@ export const actionApi = createApi({
     }),
     getFilteredActions: builder.query<
       Action[],
-      { projectStepId: string; status?: string }
+      { projectStepId: string; status?: string , workOrderID?:string}
     >({
-      query: ({ projectStepId, status }) => ({
-        url: `projectTaskStepsActions/company/${COMPANY_ID}`,
-        params: { status, projectStepId },
+      query: ({ projectStepId, status, workOrderID }) => ({
+        url: `projectTaskStepsActions/projectTaskStepAction/company/${COMPANY_ID}`,
+        params: { status, projectStepId,workOrderID },
       }),
       providesTags: (result, error, { projectStepId }) => [
         { type: 'Actions', projectStepId },

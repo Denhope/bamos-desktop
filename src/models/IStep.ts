@@ -27,6 +27,7 @@ export interface IStep {
 type ActionType = 'pfmd' | 'inspect' | 'doubleInspect' | 'closed';
 
 export interface Action {
+  projectTaskID: any;
   isComponentChangeAction?: boolean;
   projectStepId?: any;
   id?: string | null;

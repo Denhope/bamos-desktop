@@ -377,7 +377,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       </ProForm.Group>
 
       <ProFormSelect
-        initialValue={['open', 'closed', 'progress']}
+        // initialValue={['open', 'closed', 'progress']}
         mode="multiple"
         name="pickSlipStatus"
         label={`${t('PICKSLIP STATUS')}`}
