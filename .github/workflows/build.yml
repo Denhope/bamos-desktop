@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [main]
+    branches: [develop]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ windows-latest]
 
     steps:
       - name: Checkout Code
@@ -32,21 +32,29 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: |
-          npm install -g npm@latest
-          npm cache clean --force
-          npm install --legacy-peer-deps --no-audit --no-fund --force
+        run: npm ci
 
-      - name: Build Release Files
+      - name: Rebuild canvas for Electron (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          npm install --global --production windows-build-tools
+          npm install --global node-gyp
+          npx electron-rebuild -f -w canvas
+        shell: powershell
+
+      - name: Rebuild canvas for Electron (macOS/Linux)
+        if: matrix.os != 'windows-latest'
+        run: npx electron-rebuild -f -w canvas
+
+      - name: Build
         run: npm run build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CI: false
           NODE_OPTIONS: --max-old-space-size=8192
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: release_on_${{ matrix.os }}
-          path: release/
+          path: release
           retention-days: 5
