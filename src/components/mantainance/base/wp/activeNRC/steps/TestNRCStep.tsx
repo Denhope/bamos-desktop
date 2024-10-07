@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -15,15 +15,15 @@ import {
   Popconfirm,
   MenuProps,
   message,
-} from "antd";
-import TextArea from "antd/es/input/TextArea";
+} from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import {
   SnippetsOutlined,
   FieldTimeOutlined,
   SettingOutlined,
   EyeOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
 import {
   EditableProTable,
@@ -42,19 +42,19 @@ import {
   ProFormTimePicker,
   ProList,
   ProTable,
-} from "@ant-design/pro-components";
-import UserSearchForm from "@/components/shared/form/UserSearchProForm";
-import { UserResponce } from "@/models/IUser";
-import moment from "moment";
-import { IActionType } from "@/models/IAdditionalTaskMTB";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { useTranslation } from "react-i18next";
-import { updateAdditionalTask } from "@/utils/api/thunks";
-import { setUpdatedProjectAdditionalTask } from "@/store/reducers/MtbSlice";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { getItem } from "@/services/utilites";
-import { USER_ID } from "@/utils/api/http";
+} from '@ant-design/pro-components';
+import UserSearchForm from '@/components/shared/form/UserSearchProForm';
+import { UserResponce } from '@/models/IUser';
+import moment from 'moment';
+import { IActionType } from '@/models/IAdditionalTaskMTB';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { useTranslation } from 'react-i18next';
+import { updateAdditionalTask } from '@/utils/api/thunks';
+import { setUpdatedProjectAdditionalTask } from '@/store/reducers/MtbSlice';
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { getItem } from '@/services/utilites';
+import { USER_ID } from '@/utils/api/http';
 export interface INRCSTEPPrors {
   data: IStep[];
   currentProjectId: string | null;
@@ -209,7 +209,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         // здесь вы можете обработать значения формы
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
+        console.log('Validate Failed:', info);
       });
     setVisible(false);
   };
@@ -224,17 +224,17 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
     setVisibleTimes(false);
     setVisibleEditTimes(false);
   };
-  const dateFormat = "YYYY/MM/DD";
-  const timeFormat = "HH:mm";
+  const dateFormat = 'YYYY/MM/DD';
+  const timeFormat = 'HH:mm';
 
   useEffect(() => {
     if (currentAction) {
       formEditAction.setFields([
-        { name: "editPerformedDate", value: moment(currentAction.createDate) },
-        { name: "editPerformedTime", value: moment(currentAction.createDate) },
-        { name: "editPerformedheadline", value: currentAction.headline },
+        { name: 'editPerformedDate', value: moment(currentAction.createDate) },
+        { name: 'editPerformedTime', value: moment(currentAction.createDate) },
+        { name: 'editPerformedheadline', value: currentAction.headline },
         {
-          name: "editPerformedDescription",
+          name: 'editPerformedDescription',
           value: currentAction.description,
         },
         // Добавьте здесь другие поля, которые вы хотите обновить
@@ -244,10 +244,10 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
   useEffect(() => {
     if (currentItem) {
       formEditStep.setFields([
-        { name: "editWorkStepDate", value: moment(currentItem.createDate) },
-        { name: "editWorkStepTime", value: moment(currentItem.createDate) },
-        { name: "editWorkStepHeadline", value: currentItem.stepHeadLine },
-        { name: "editStepDescription", value: currentItem.stepDescription },
+        { name: 'editWorkStepDate', value: moment(currentItem.createDate) },
+        { name: 'editWorkStepTime', value: moment(currentItem.createDate) },
+        { name: 'editWorkStepHeadline', value: currentItem.stepHeadLine },
+        { name: 'editStepDescription', value: currentItem.stepDescription },
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
     }
@@ -256,12 +256,12 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
     if (currentTask?.finalAction) {
       formEditStep.setFields([
         {
-          name: "closingDate",
+          name: 'closingDate',
           value:
             moment(currentTask?.finalAction?.closingDate) || moment(new Date()),
         },
         {
-          name: "closingTime",
+          name: 'closingTime',
           value:
             moment(currentTask?.finalAction?.closingDate) || moment(new Date()),
         },
@@ -337,16 +337,16 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
   const [selectedInspection, setSelectedInspection] = useState<string[]>([]);
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      if (!event.target.closest(".ant-space-item")) {
+      if (!event.target.closest('.ant-space-item')) {
         setSelectedItems([]);
         setSelectedStepItems([]);
         setSelectedInspection([]);
       }
     };
 
-    window.addEventListener("click", handleClickOutside);
+    window.addEventListener('click', handleClickOutside);
     return () => {
-      window.removeEventListener("click", handleClickOutside);
+      window.removeEventListener('click', handleClickOutside);
     };
   }, [selectedItems, selectedStepItems]);
 
@@ -380,7 +380,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         updateById: USER_ID,
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       const index = projectAdditionalTasks.findIndex(
         (task: any) => task._id === currentProjectAdditionalTask?._id
       );
@@ -411,7 +411,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         updateById: USER_ID,
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       const index = projectAdditionalTasks.findIndex(
         (task: any) => task._id === currentProjectAdditionalTask?._id
       );
@@ -446,56 +446,56 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
   }
   const initialColumns: ProColumns<DataType>[] = [
     {
-      title: `${t("SING")}`,
-      dataIndex: ["user", "createSing"],
+      title: `${t('SING')}`,
+      dataIndex: ['user', 'createSing'],
       editable: (text, record, index) => {
         return false;
       },
       ellipsis: true,
     },
     {
-      title: `${t("END TIME")}`,
-      dataIndex: "endDate",
-      valueType: "dateTime",
+      title: `${t('END TIME')}`,
+      dataIndex: 'endDate',
+      valueType: 'dateTime',
       editable: (text, record, index) => {
         return true;
       },
       ellipsis: true,
       fieldProps: (form, config) => {
-        return { format: "YYYY-MM-DD HH:mm" };
+        return { format: 'YYYY-MM-DD HH:mm' };
       },
     },
     {
-      title: `${t("END TIME")}`,
-      dataIndex: "endDate",
-      valueType: "dateTime",
+      title: `${t('END TIME')}`,
+      dataIndex: 'endDate',
+      valueType: 'dateTime',
       editable: (text, record, index) => {
         return true;
       },
       fieldProps: (form, config) => {
-        return { format: "YYYY-MM-DD HH:mm" };
+        return { format: 'YYYY-MM-DD HH:mm' };
       },
 
       ellipsis: true,
     },
     {
-      title: `${t("SKILL")}`,
-      dataIndex: "skill",
-      valueType: "select",
+      title: `${t('SKILL')}`,
+      dataIndex: 'skill',
+      valueType: 'select',
       valueEnum: {
-        AF: { text: "AF" },
-        AV: { text: "AV" },
-        CA: { text: "CA" },
-        EL: { text: "EL" },
-        EN: { text: "EN" },
-        RA: { text: "RA" },
-        UT: { text: "UT" },
-        SRC: { text: "SRC" },
-        NDT: { text: "NDT" },
-        PNT: { text: "PNT" },
-        ED: { text: "ED" },
-        QI: { text: "QI" },
-        OUT: { text: "QUT A/C" },
+        AF: { text: 'AF' },
+        AV: { text: 'AV' },
+        CA: { text: 'CA' },
+        EL: { text: 'EL' },
+        EN: { text: 'EN' },
+        RA: { text: 'RA' },
+        UT: { text: 'UT' },
+        SRC: { text: 'SRC' },
+        NDT: { text: 'NDT' },
+        PNT: { text: 'PNT' },
+        ED: { text: 'ED' },
+        QI: { text: 'QI' },
+        OUT: { text: 'QUT A/C' },
       },
       editable: (text: any, record: any, index: number) => {
         return true;
@@ -503,23 +503,23 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
     },
 
     {
-      title: `${t("TYPE")}`,
-      dataIndex: "typeOfWork",
+      title: `${t('TYPE')}`,
+      dataIndex: 'typeOfWork',
       editable: (text, record, index) => {
         return true;
       },
-      valueType: "select",
+      valueType: 'select',
       valueEnum: {
-        ROUTINE: { text: "ROUTINE" },
-        ACCESS: { text: "ACCESS" },
-        ADD_WORK: { text: "ADD WORK" },
+        ROUTINE: { text: 'ROUTINE' },
+        ACCESS: { text: 'ACCESS' },
+        ADD_WORK: { text: 'ADD WORK' },
       },
       ellipsis: true,
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -539,29 +539,29 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
     setTableData(currentAction?.times);
   }, [currentAction?.times]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
-        getItem("Delete Items ", "suaab85", <EyeOutlined />, [
+        getItem('Delete Items ', 'suaab85', <EyeOutlined />, [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select Items.");
+                  message.error('Please select Items.');
                   return;
                 }
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
               }}
             >
               Selected Items
             </div>,
-            "5.18"
+            '5.18'
           ),
-          getItem(<div onClick={async () => {}}>All Items</div>, "5.1827"),
+          getItem(<div onClick={async () => {}}>All Items</div>, '5.1827'),
         ]),
       ],
     },
@@ -574,23 +574,23 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             item ? (
               <>
                 <Card
-                  bodyStyle={{ paddingTop: 2, paddingBottom: 2, width: "100%" }}
+                  bodyStyle={{ paddingTop: 2, paddingBottom: 2, width: '100%' }}
                   bordered
                   className={` ${
-                    selectedStepItems.includes(item.id) ? "bg-blue-200" : ""
+                    selectedStepItems.includes(item.id) ? 'bg-blue-200' : ''
                   }`}
-                  style={{ width: "100%", padding: 0, marginTop: 1 }} // Добавьте эту строку            key={index}
+                  style={{ width: '100%', padding: 0, marginTop: 1 }} // Добавьте эту строку            key={index}
                   title={
                     <div
                       className={`bg-slate-200 cursor-pointer flex justify-between py-0 my-0 px-2 rounded-md ${
-                        selectedStepItems.includes(item.id) ? "bg-blue-200" : ""
+                        selectedStepItems.includes(item.id) ? 'bg-blue-200' : ''
                       }`}
                       onClick={(event) => handleStepClick(event, item)}
                     >
                       <Space
                         className="cursor-pointer"
                         onDoubleClick={() => showStepModal(item)}
-                        style={{ width: "100%" }}
+                        style={{ width: '100%' }}
                       >
                         <SnippetsOutlined />
                         <div className="font-bold">
@@ -609,9 +609,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                           </Tag>
                         </Space>
                         <Space className="font-bold">
-                          {" "}
-                          on{" "}
-                          {moment(item.createDate).format("YYYY-MM-DD HH:mm")}
+                          {' '}
+                          on{' '}
+                          {moment(item.createDate).format('YYYY-MM-DD HH:mm')}
                         </Space>
                       </Space>
                       <Space>
@@ -637,7 +637,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                     <div
                       onDoubleClick={() => showStepModal(item)}
                       className={`min-w-full cursor-pointer  py-0 my-0${
-                        selectedStepItems.includes(item.id) ? "bg-blue-200" : ""
+                        selectedStepItems.includes(item.id) ? 'bg-blue-200' : ''
                       }`}
                     >
                       {item.stepHeadLine}
@@ -645,7 +645,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                     <div
                       onDoubleClick={() => showStepModal(item)}
                       className={`min-w-full cursor-pointer my-0 ${
-                        selectedStepItems.includes(item.id) ? "bg-blue-200" : ""
+                        selectedStepItems.includes(item.id) ? 'bg-blue-200' : ''
                       }`}
                     >
                       {item.stepDescription}
@@ -655,8 +655,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                     style={{
                       paddingTop: 0,
                       padding: 0,
-                      width: "100%",
-                      marginLeft: "10px",
+                      width: '100%',
+                      marginLeft: '10px',
                     }}
                     itemLayout="horizontal"
                     dataSource={item.actions}
@@ -666,15 +666,15 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                         className={` justify-between my-1 py-0 ${
                           selectedStepItems.includes(item.id) ||
                           selectedItems.includes(action.id)
-                            ? "bg-blue-200 rounded-md "
-                            : ""
+                            ? 'bg-blue-200 rounded-md '
+                            : ''
                         }`}
                       >
                         <List.Item.Meta
                           title={
                             <h3
                               style={{
-                                marginTop: "1px",
+                                marginTop: '1px',
                                 paddingTop: 0,
                                 paddingBottom: 0,
                               }}
@@ -684,8 +684,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                   className={`cursor-pointer flex my-0 justify-between py-0  rounded-sm  px-1 ${
                                     selectedStepItems.includes(item.id) ||
                                     selectedItems.includes(action.id)
-                                      ? "bg-blue-200"
-                                      : "bg-slate-100"
+                                      ? 'bg-blue-200'
+                                      : 'bg-slate-100'
                                   }`}
                                   onClick={(event) =>
                                     handleItemClick(event, action)
@@ -696,7 +696,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                       showActionEdit(action);
                                       setCurrentItem(item);
                                     }}
-                                    style={{ width: "100%" }}
+                                    style={{ width: '100%' }}
                                   >
                                     <div>Action</div>
                                     <Space className="ml-auto">
@@ -709,9 +709,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                       </Tag>
                                     </Space>
                                     <Space>
-                                      on{" "}
+                                      on{' '}
                                       {moment(action.createDate).format(
-                                        "YYYY-MM-DD HH:mm"
+                                        'YYYY-MM-DD HH:mm'
                                       )}
                                     </Space>
                                   </Space>
@@ -724,8 +724,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                         size="small"
                                         className={` ${
                                           action?.inspectionAction
-                                            ? ""
-                                            : "bg-red-400"
+                                            ? ''
+                                            : 'bg-red-400'
                                         }`}
                                         onClick={() => {
                                           setCurrentItem(item);
@@ -763,8 +763,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                   style={{ padding: 0 }}
                                   className={`py-0 my-0  cursor-pointer ${
                                     selectedItems.includes(action.id)
-                                      ? "bg-blue-200"
-                                      : "py-0 my-0"
+                                      ? 'bg-blue-200'
+                                      : 'py-0 my-0'
                                   }`}
                                   onClick={(event) =>
                                     handleItemClick(event, action)
@@ -781,25 +781,25 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                     style={{
                                       paddingTop: 0,
                                       padding: 0,
-                                      marginLeft: "5px",
+                                      marginLeft: '5px',
                                     }}
                                     className={`cursor-pointer flex my-0   rounded-sm  px-1 ${
                                       selectedStepItems.includes(item.id) ||
                                       selectedInspection.includes(action.id)
-                                        ? "bg-blue-200"
-                                        : ""
+                                        ? 'bg-blue-200'
+                                        : ''
                                     }`}
                                   >
                                     <List.Item.Meta
                                       style={{
-                                        marginTop: "1px",
+                                        marginTop: '1px',
                                         paddingTop: 0,
                                         paddingBottom: 0,
                                       }}
                                       title={
                                         <h3
                                           style={{
-                                            marginTop: "1px",
+                                            marginTop: '1px',
                                             paddingTop: 0,
                                             paddingBottom: 0,
                                           }}
@@ -813,8 +813,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                                 selectedInspection.includes(
                                                   action.id
                                                 )
-                                                  ? "bg-blue-200"
-                                                  : "bg-amber-400"
+                                                  ? 'bg-blue-200'
+                                                  : 'bg-amber-400'
                                               }`}
                                               onClick={(event) =>
                                                 handleInspectionItemClick(
@@ -831,7 +831,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                                   setCurrentItem(item);
                                                   setCurrentAction(action);
                                                 }}
-                                                style={{ width: "100%" }}
+                                                style={{ width: '100%' }}
                                               >
                                                 <div>Inspection Action </div>
                                                 <Space className="ml-auto">
@@ -850,11 +850,11 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                                   </Tag>
                                                 </Space>
                                                 <Space>
-                                                  on{" "}
+                                                  on{' '}
                                                   {moment(
                                                     action?.inspectionAction
                                                       ?.createDate
-                                                  ).format("YYYY-MM-DD HH:mm")}
+                                                  ).format('YYYY-MM-DD HH:mm')}
                                                 </Space>
                                               </Space>
                                               <Space>
@@ -890,8 +890,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                               selectedInspection.includes(
                                                 action.id
                                               )
-                                                ? "bg-blue-200"
-                                                : ""
+                                                ? 'bg-blue-200'
+                                                : ''
                                             }`}
                                             // className={`py-0 my-0  cursor-pointer
                                             //   `}
@@ -927,25 +927,25 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                     style={{
                                       paddingTop: 0,
                                       padding: 0,
-                                      marginLeft: "5px",
+                                      marginLeft: '5px',
                                     }}
                                     className={`cursor-pointer flex my-0   rounded-sm  px-1 ${
                                       selectedStepItems.includes(item.id) ||
                                       selectedItems.includes(action.id)
-                                        ? "bg-blue-200"
-                                        : ""
+                                        ? 'bg-blue-200'
+                                        : ''
                                     }`}
                                   >
                                     <List.Item.Meta
                                       style={{
-                                        marginTop: "1px",
+                                        marginTop: '1px',
                                         paddingTop: 0,
                                         paddingBottom: 0,
                                       }}
                                       title={
                                         <h3
                                           style={{
-                                            marginTop: "1px",
+                                            marginTop: '1px',
                                             paddingTop: 0,
                                             paddingBottom: 0,
                                           }}
@@ -959,8 +959,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                                 selectedItems.includes(
                                                   action.id
                                                 )
-                                                  ? "bg-blue-200"
-                                                  : "bg-slate-100"
+                                                  ? 'bg-blue-200'
+                                                  : 'bg-slate-100'
                                               }`}
                                               onClick={(event) => null}
                                             >
@@ -970,7 +970,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                                   setCurrentAction(action);
                                                   setCurrentItem(item);
                                                 }}
-                                                style={{ width: "100%" }}
+                                                style={{ width: '100%' }}
                                               >
                                                 <div>Times </div>
                                                 <Space className="ml-auto"></Space>
@@ -984,7 +984,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                           <ProDescriptions column={6}>
                                             <ProDescriptions.Item
                                               span={0.2}
-                                              label={`${t("SING")}`}
+                                              label={`${t('SING')}`}
                                               valueType="text"
                                             >
                                               <Tag>
@@ -993,7 +993,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                             </ProDescriptions.Item>
                                             <ProDescriptions.Item
                                               span={0.5}
-                                              label={`${t("NAME")}`}
+                                              label={`${t('NAME')}`}
                                               valueType="text"
                                             >
                                               <Tag>
@@ -1003,7 +1003,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                             <ProDescriptions.Item
                                               span={2}
                                               className="font-bold"
-                                              label={`${t("START TIME")}`}
+                                              label={`${t('START TIME')}`}
                                               valueType="dateTime"
                                             >
                                               {time.startTime}
@@ -1011,14 +1011,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                             <ProDescriptions.Item
                                               className="font-bold"
                                               span={2}
-                                              label={`${t("END TIME")}`}
+                                              label={`${t('END TIME')}`}
                                               valueType="dateTime"
                                             >
                                               {time.endDate}
                                             </ProDescriptions.Item>
                                             <ProDescriptions.Item
                                               span={0.5}
-                                              label={`${t("SKILL")}`}
+                                              label={`${t('SKILL')}`}
                                               valueType="text"
                                             >
                                               <Tag color="geekblue">
@@ -1027,7 +1027,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                                             </ProDescriptions.Item>
                                             <ProDescriptions.Item
                                               span={0.5}
-                                              label={`${t("TYPE")}`}
+                                              label={`${t('TYPE')}`}
                                               valueType="text"
                                             >
                                               <Tag>{time?.typeOfWork}</Tag>
@@ -1058,19 +1058,19 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
               bodyStyle={{
                 paddingTop: 2,
                 paddingBottom: 2,
-                width: "100%",
+                width: '100%',
               }}
               bordered
               title={
                 <div
                   className={
-                    "bg-slate-200 cursor-pointer flex justify-between py-0 my-0 px-2 rounded-md"
+                    'bg-slate-200 cursor-pointer flex justify-between py-0 my-0 px-2 rounded-md'
                   }
                 >
                   <Space
                     className="cursor-pointer"
                     onDoubleClick={() => null}
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                   >
                     <div className="font-bold">
                       <Space>Workorder Closed</Space>
@@ -1085,10 +1085,10 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                             </Tag>
                           </Space> */}
                     <Space className="font-bold">
-                      {" "}
-                      on{" "}
+                      {' '}
+                      on{' '}
                       {moment(currentTask?.finalAction?.closingDate).format(
-                        "YYYY-MM-DD HH:mm"
+                        'YYYY-MM-DD HH:mm'
                       )}
                     </Space>
                   </Space>
@@ -1097,37 +1097,37 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             >
               <ProDescriptions>
                 <ProDescriptions.Item
-                  label={`${t("Closing Date Time")}`}
+                  label={`${t('Closing Date Time')}`}
                   valueType="dateTime"
                 >
                   {currentTask?.finalAction?.closingDate}
                 </ProDescriptions.Item>
                 <ProDescriptions.Item
-                  label={`${t("Closing Station")}`}
+                  label={`${t('Closing Station')}`}
                   // valueType="dateTime"
                 >
                   {/* {currentTask?.finalAction?.closingDate} */}
                 </ProDescriptions.Item>
                 <ProDescriptions.Item
-                  label={`${t("Closing TAH")}`}
+                  label={`${t('Closing TAH')}`}
                   // valueType="dateTime"
                 >
                   {/* {currentTask?.finalAction?.closingDate} */}
                 </ProDescriptions.Item>
                 <ProDescriptions.Item
-                  label={`${t("Closing TAC")}`}
+                  label={`${t('Closing TAC')}`}
                   // valueType="dateTime"
                 >
                   {/* {currentTask?.finalAction?.closingDate} */}
                 </ProDescriptions.Item>
                 <ProDescriptions.Item
-                  label={`${t("Approval No.")}`}
+                  label={`${t('Approval No.')}`}
                   // valueType="dateTime"
                 >
                   {/* {currentTask?.finalAction?.closingDate} */}
                 </ProDescriptions.Item>
                 <ProDescriptions.Item
-                  label={`${t("Closing Sing")}`}
+                  label={`${t('Closing Sing')}`}
                   // valueType="dateTime"
                 >
                   <Space className="ml-auto font-bold">
@@ -1145,14 +1145,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </div>
         <Modal
           footer={false}
-          width={"60%"}
+          width={'60%'}
           title="WORK STEP EDIT"
           visible={visibleStepEdit}
           onOk={handleStepOk}
           onCancel={handleStepCancel}
         >
           <ProForm
-            disabled={currentTask?.status === "closed"}
+            disabled={currentTask?.status === 'closed'}
             loading={isLoading}
             onFinish={async (values) => {
               // Обновите текущий элемент с новыми значениями
@@ -1160,9 +1160,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 ...currentItem,
                 createDate: moment(values.editWorkStepDate)
                   .set({
-                    hour: moment(values.editWorkStepTime, "HH:mm").get("hour"),
-                    minute: moment(values.editWorkStepTime, "HH:mm").get(
-                      "minute"
+                    hour: moment(values.editWorkStepTime, 'HH:mm').get('hour'),
+                    minute: moment(values.editWorkStepTime, 'HH:mm').get(
+                      'minute'
                     ),
                   })
                   .toISOString(),
@@ -1197,7 +1197,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   updateById: USER_ID,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 // setCurrentItem(null);
                 // setCurrentAction(null);
                 const index = projectAdditionalTasks.findIndex(
@@ -1219,7 +1219,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <ProFormGroup>
               <ProFormDatePicker
                 rules={[{ required: true }]}
-                label={`${t("DATE")}`}
+                label={`${t('DATE')}`}
                 name="editWorkStepDate"
                 // initialValue={
                 //   currentItem ? moment(currentItem.createDate) : null
@@ -1227,7 +1227,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
               />
               <ProFormTimePicker
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="editWorkStepTime"
                 // initialValue={
                 //   currentItem ? moment(currentItem.createDate) : null
@@ -1237,19 +1237,19 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
 
             <ProFormText
               name="editWorkStepHeadline"
-              label={`${t("HEADLINE")}`}
+              label={`${t('HEADLINE')}`}
               rules={[{ required: true }]}
               // initialValue={currentItem ? currentItem.stepHeadLine : ''}
             ></ProFormText>
             <ProFormTextArea
               name="editStepDescription"
-              label={`${t("DESCRIPTION TEXT")}`}
+              label={`${t('DESCRIPTION TEXT')}`}
               rules={[{ required: true }]}
               fieldProps={{ autoSize: { minRows: 15, maxRows: 25 } }}
               // initialValue={currentItem ? currentItem.stepDescription : ''}
             ></ProFormTextArea>
 
-            <ProFormItem label={`${t("DESCRIPTION SING")}`}>
+            <ProFormItem label={`${t('DESCRIPTION SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
@@ -1264,7 +1264,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </Modal>
         <Modal
           footer={false}
-          width={"60%"}
+          width={'60%'}
           title="ADD NEW WORK STEP"
           visible={visibleStepAdd}
           onOk={handleStepAddOk}
@@ -1272,7 +1272,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
           onCancel={handleStepAddCancel}
         >
           <ProForm
-            disabled={currentTask?.status === "closed"}
+            disabled={currentTask?.status === 'closed'}
             loading={isLoading}
             onFinish={async (values) => {
               // Обновите текущий элемент с новыми значениями
@@ -1284,17 +1284,17 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 createUser: {
                   createName: selectedUser
                     ? selectedUser.name
-                    : localStorage.getItem("name"),
+                    : localStorage.getItem('name'),
                   createSing: selectedUser
                     ? selectedUser.singNumber
-                    : localStorage.getItem("singNumber"),
+                    : localStorage.getItem('singNumber'),
                 },
 
                 createById: selectedUser ? selectedUser._id : USER_ID, // Замените это на ID пользователя, который выполнил действие
                 createDate: moment(values.date)
                   .set({
-                    hour: moment(values.time, "HH:mm").get("hour"),
-                    minute: moment(values.time, "HH:mm").get("minute"),
+                    hour: moment(values.time, 'HH:mm').get('hour'),
+                    minute: moment(values.time, 'HH:mm').get('minute'),
                   })
                   .toISOString(),
               };
@@ -1317,7 +1317,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   updateById: USER_ID,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 setSelectedUser(null);
                 // setCurrentItem(null);
                 // setCurrentAction(null);
@@ -1340,13 +1340,13 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <ProFormGroup>
               <ProFormDatePicker
                 rules={[{ required: true }]}
-                label={`${t("DATE")}`}
+                label={`${t('DATE')}`}
                 name="date"
                 initialValue={moment(new Date())}
               />
               <ProFormTimePicker
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="time"
                 initialValue={moment(new Date())}
               />
@@ -1354,25 +1354,25 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
 
             <ProFormText
               name="stepAddHeadline"
-              label={`${t("HEADLINE")}`}
+              label={`${t('HEADLINE')}`}
               rules={[{ required: true }]}
-              initialValue={data[0]?.stepHeadLine ? data[0]?.stepHeadLine : ""}
+              initialValue={data[0]?.stepHeadLine ? data[0]?.stepHeadLine : ''}
             ></ProFormText>
             <ProFormTextArea
               name="stepAddDescription"
-              label={`${t("DESCRIPTION TEXT")}`}
+              label={`${t('DESCRIPTION TEXT')}`}
               rules={[{ required: true }]}
               fieldProps={{ autoSize: { minRows: 15, maxRows: 25 } }}
               // initialValue={currentItem ? currentItem.stepDescription : ''}
             ></ProFormTextArea>
-            <ProFormItem label={`${t("DESCRIPTION SING")}`}>
+            <ProFormItem label={`${t('DESCRIPTION SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
                 }}
                 reset={false}
-                performedSing={localStorage.getItem("singNumber")}
-                performedName={localStorage.getItem("name")}
+                performedSing={localStorage.getItem('singNumber')}
+                performedName={localStorage.getItem('name')}
                 actionNumber={null}
               ></UserSearchForm>
             </ProFormItem>
@@ -1381,14 +1381,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
 
         <Modal
           footer={false}
-          width={"60%"}
-          title={`${t("ADD NEW ACTION")}`}
+          width={'60%'}
+          title={`${t('ADD NEW ACTION')}`}
           visible={visible}
           onOk={handleOk}
           onCancel={handleCancel}
         >
           <ProForm
-            disabled={currentTask?.status === "closed"}
+            disabled={currentTask?.status === 'closed'}
             loading={isLoading}
             onFinish={async (values) => {
               const newAction = {
@@ -1398,17 +1398,17 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 createUser: {
                   createName: selectedUser
                     ? selectedUser.name
-                    : localStorage.getItem("name"),
+                    : localStorage.getItem('name'),
                   createSing: selectedUser
                     ? selectedUser.singNumber
-                    : localStorage.getItem("singNumber"),
+                    : localStorage.getItem('singNumber'),
                 },
 
                 createById: selectedUser ? selectedUser._id : USER_ID, // Замените это на ID пользователя, который выполнил действие
                 createDate: moment(values.performedDate)
                   .set({
-                    hour: moment(values.performedTime, "HH:mm").get("hour"),
-                    minute: moment(values.performedTime, "HH:mm").get("minute"),
+                    hour: moment(values.performedTime, 'HH:mm').get('hour'),
+                    minute: moment(values.performedTime, 'HH:mm').get('minute'),
                   })
                   .toISOString(),
               };
@@ -1433,7 +1433,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   _id: taskId,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 // setCurrentItem(null);
                 // setCurrentAction(null);
                 const index = projectAdditionalTasks.findIndex(
@@ -1455,38 +1455,38 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <ProFormGroup>
               <ProFormDatePicker
                 rules={[{ required: true }]}
-                label={`${t("PERFORMED DATE")}`}
+                label={`${t('PERFORMED DATE')}`}
                 name="performedDate"
                 initialValue={currentItem ? moment(new Date()) : null}
               />
               <ProFormTimePicker
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="performedTime"
               />
             </ProFormGroup>
 
             <ProFormText
-              initialValue={currentItem ? currentItem.stepHeadLine : ""}
+              initialValue={currentItem ? currentItem.stepHeadLine : ''}
               name="performedHeadline"
-              label={`${t("HEADLINE")}`}
+              label={`${t('HEADLINE')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormTextArea
               name="performedText"
-              label={`${t("ACTION TEXT")}`}
+              label={`${t('ACTION TEXT')}`}
               rules={[{ required: true }]}
               fieldProps={{ autoSize: { minRows: 15, maxRows: 15 } }}
             ></ProFormTextArea>
 
-            <ProFormItem label={`${t("DESCRIPTION SING")}`}>
+            <ProFormItem label={`${t('DESCRIPTION SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
                 }}
                 reset={false}
-                performedSing={localStorage.getItem("singNumber")}
-                performedName={localStorage.getItem("name")}
+                performedSing={localStorage.getItem('singNumber')}
+                performedName={localStorage.getItem('name')}
                 actionNumber={null}
               ></UserSearchForm>
             </ProFormItem>
@@ -1494,14 +1494,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </Modal>
         <Modal
           footer={false}
-          width={"60%"}
-          title={`${t("ADD NEW INSPECTION")}`}
+          width={'60%'}
+          title={`${t('ADD NEW INSPECTION')}`}
           visible={visibleiInspection}
           onOk={handleOk}
           onCancel={handleCancel}
         >
           <ProForm
-            disabled={currentTask?.status === "closed"}
+            disabled={currentTask?.status === 'closed'}
             loading={isLoading}
             onFinish={async (values) => {
               const inspectionAction = {
@@ -1511,18 +1511,18 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 createUser: {
                   createName: selectedUser
                     ? selectedUser.name
-                    : localStorage.getItem("name"),
+                    : localStorage.getItem('name'),
                   createSing: selectedUser
                     ? selectedUser.singNumber
-                    : localStorage.getItem("singNumber"),
+                    : localStorage.getItem('singNumber'),
                 },
 
                 createById: selectedUser ? selectedUser._id : USER_ID, // Замените это на ID пользователя, который выполнил действие
                 createDate: moment(values.performedDate)
                   .set({
-                    hour: moment(values.inspectionTime, "HH:mm").get("hour"),
-                    minute: moment(values.inspectionTime, "HH:mm").get(
-                      "minute"
+                    hour: moment(values.inspectionTime, 'HH:mm').get('hour'),
+                    minute: moment(values.inspectionTime, 'HH:mm').get(
+                      'minute'
                     ),
                   })
                   .toISOString(),
@@ -1556,7 +1556,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   _id: taskId,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 // setCurrentItem(null);
                 // setCurrentAction(null);
                 const index = projectAdditionalTasks.findIndex(
@@ -1578,38 +1578,38 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <ProFormGroup>
               <ProFormDatePicker
                 rules={[{ required: true }]}
-                label={`${t("INSPECTION DATE")}`}
+                label={`${t('INSPECTION DATE')}`}
                 name="inspectionDate"
                 initialValue={currentItem ? moment(new Date()) : null}
               />
               <ProFormTimePicker
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="inspectionTime"
               />
             </ProFormGroup>
 
             <ProFormText
-              initialValue={currentItem ? currentItem.stepHeadLine : ""}
+              initialValue={currentItem ? currentItem.stepHeadLine : ''}
               name="inspectinHeadline"
-              label={`${t("HEADLINE")}`}
+              label={`${t('HEADLINE')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormTextArea
               name="inspectionText"
-              label={`${t("INSPECTION TEXT")}`}
+              label={`${t('INSPECTION TEXT')}`}
               rules={[{ required: true }]}
               fieldProps={{ autoSize: { minRows: 15, maxRows: 15 } }}
             ></ProFormTextArea>
 
-            <ProFormItem label={`${t("INSPECTION SING")}`}>
+            <ProFormItem label={`${t('INSPECTION SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
                 }}
                 reset={false}
-                performedSing={localStorage.getItem("singNumber")}
-                performedName={localStorage.getItem("name")}
+                performedSing={localStorage.getItem('singNumber')}
+                performedName={localStorage.getItem('name')}
                 actionNumber={null}
               ></UserSearchForm>
             </ProFormItem>
@@ -1617,14 +1617,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </Modal>
         <Modal
           footer={false}
-          width={"60%"}
+          width={'60%'}
           title="EDIT INSPECTION"
           visible={visibleEditInspection}
           onOk={handleInspectionEditCancel}
           onCancel={handleInspectionEditCancel}
         >
           <ProForm
-            disabled={currentTask?.status === "closed"}
+            disabled={currentTask?.status === 'closed'}
             size="middle"
             form={formEditInspection}
             loading={isLoading}
@@ -1637,21 +1637,21 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   description: values.inspectionEditText,
                   createDate: moment(values.editInspectedDate)
                     .set({
-                      hour: moment(values.editInspectedTime, "HH:mm").get(
-                        "hour"
+                      hour: moment(values.editInspectedTime, 'HH:mm').get(
+                        'hour'
                       ),
-                      minute: moment(values.editInspectedTime, "HH:mm").get(
-                        "minute"
+                      minute: moment(values.editInspectedTime, 'HH:mm').get(
+                        'minute'
                       ),
                     })
                     .toISOString(),
                   createUser: {
                     createName: selectedUser
                       ? selectedUser.name
-                      : localStorage.getItem("name"),
+                      : localStorage.getItem('name'),
                     createSing: selectedUser
                       ? selectedUser.singNumber
-                      : localStorage.getItem("singNumber"),
+                      : localStorage.getItem('singNumber'),
                   },
                 },
                 updateDate: new Date(),
@@ -1683,7 +1683,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   _id: taskId,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 const index = projectAdditionalTasks.findIndex(
                   (task: any) => task._id === currentProjectAdditionalTask?._id
                 );
@@ -1705,7 +1705,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   currentAction ? moment(currentAction.createDate) : null
                 }
                 rules={[{ required: true }]}
-                label={`${t("INSPECTED DATE")}`}
+                label={`${t('INSPECTION DATE')}`}
                 name="editInspectedDate"
               />
               <ProFormTimePicker
@@ -1713,32 +1713,32 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   currentAction ? moment(currentAction.createDate) : null
                 }
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="editInspectedTime"
               />
             </ProFormGroup>
 
             <ProFormText
               initialValue={
-                currentAction ? currentAction?.inspectionAction?.headline : ""
+                currentAction ? currentAction?.inspectionAction?.headline : ''
               }
               name="inspectinEditHeadline"
-              label={`${t("HEADLINE")}`}
+              label={`${t('HEADLINE')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormTextArea
               initialValue={
                 currentAction
                   ? currentAction?.inspectionAction?.description
-                  : ""
+                  : ''
               }
               name="inspectionEditText"
-              label={`${t("INSPECTION TEXT")}`}
+              label={`${t('INSPECTION TEXT')}`}
               rules={[{ required: true }]}
               fieldProps={{ autoSize: { minRows: 15, maxRows: 15 } }}
             ></ProFormTextArea>
 
-            <ProFormItem label={`${t("INSPECTION SING")}`}>
+            <ProFormItem label={`${t('INSPECTION SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
@@ -1759,7 +1759,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </Modal>
         <Modal
           footer={false}
-          width={"60%"}
+          width={'60%'}
           title="EDIT ACTION"
           visible={visibleActionEdit}
           onOk={handleActionEditCancel}
@@ -1777,9 +1777,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 description: values.editPerformedDescription,
                 createDate: moment(values.editPerformedDate)
                   .set({
-                    hour: moment(values.editPerformedTime, "HH:mm").get("hour"),
-                    minute: moment(values.editPerformedTime, "HH:mm").get(
-                      "minute"
+                    hour: moment(values.editPerformedTime, 'HH:mm').get('hour'),
+                    minute: moment(values.editPerformedTime, 'HH:mm').get(
+                      'minute'
                     ),
                   })
                   .toISOString(),
@@ -1823,7 +1823,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   _id: taskId,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 // setCurrentItem(null);
                 // setCurrentAction(null);
                 // handleActionEditCancel();
@@ -1848,7 +1848,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   currentAction ? moment(currentAction.createDate) : null
                 }
                 rules={[{ required: true }]}
-                label={`${t("PERFORMED DATE")}`}
+                label={`${t('PERFORMED DATE')}`}
                 name="editPerformedDate"
               />
               <ProFormTimePicker
@@ -1856,26 +1856,26 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   currentAction ? moment(currentAction.createDate) : null
                 }
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="editPerformedTime"
               />
             </ProFormGroup>
 
             <ProFormText
-              initialValue={currentAction ? currentAction.headline : ""}
+              initialValue={currentAction ? currentAction.headline : ''}
               name="editPerformedheadline"
-              label={`${t("HEADLINE")}`}
+              label={`${t('HEADLINE')}`}
               rules={[{ required: true }]}
             ></ProFormText>
             <ProFormTextArea
-              initialValue={currentAction ? currentAction.description : ""}
+              initialValue={currentAction ? currentAction.description : ''}
               name="editPerformedDescription"
-              label={`${t("ACTION TEXT")}`}
+              label={`${t('ACTION TEXT')}`}
               rules={[{ required: true }]}
               fieldProps={{ autoSize: { minRows: 15, maxRows: 15 } }}
             ></ProFormTextArea>
 
-            <ProFormItem label={`${t("DESCRIPTION SING")}`}>
+            <ProFormItem label={`${t('DESCRIPTION SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
@@ -1926,7 +1926,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 _id: taskId,
               })
             );
-            if (result.meta.requestStatus === "fulfilled") {
+            if (result.meta.requestStatus === 'fulfilled') {
               // setCurrentItem(null);
               // setCurrentAction(null);
               // handleActionEditCancel();
@@ -1943,8 +1943,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
               }
             }
           }}
-          width={"60%"}
-          title={`${t("EDIT TIMES")}`}
+          width={'60%'}
+          title={`${t('EDIT TIMES')}`}
           open={visibleEditTimes}
           onOpenChange={setVisibleEditTimes}
           // onOk={handleOk}
@@ -1962,7 +1962,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             columns={initialColumns}
             dataSource={tableData}
             editable={{
-              type: "multiple",
+              type: 'multiple',
               editableKeys,
               onChange: setEditableRowKeys,
               onSave: async (rowKey, data) => {
@@ -1986,7 +1986,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                       );
                     }}
                   >
-                    {t("Delete")}`,
+                    {t('Delete')}`,
                   </a>,
                 ];
               },
@@ -2066,15 +2066,15 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </ModalForm>
         <Modal
           footer={false}
-          width={"60%"}
-          title={`${t("CLOSE WO")}`}
+          width={'60%'}
+          title={`${t('CLOSE WO')}`}
           visible={visibleClose}
           onOk={handleOk}
           onCancel={handleCancel}
         >
           <ProForm
             form={formClosed}
-            disabled={currentTask?.status === "closed"}
+            disabled={currentTask?.status === 'closed'}
             loading={isLoading}
             onFinish={async (values) => {
               const finalAction = {
@@ -2082,17 +2082,17 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 createUser: {
                   createName: selectedUser
                     ? selectedUser.name
-                    : localStorage.getItem("name"),
+                    : localStorage.getItem('name'),
                   createSing: selectedUser
                     ? selectedUser.singNumber
-                    : localStorage.getItem("singNumber"),
+                    : localStorage.getItem('singNumber'),
                 },
 
                 createById: selectedUser ? selectedUser._id : USER_ID, // Замените это на ID пользователя, который выполнил действие
                 closingDate: moment(values.closingDate)
                   .set({
-                    hour: moment(values.closingTime, "HH:mm").get("hour"),
-                    minute: moment(values.closingTime, "HH:mm").get("minute"),
+                    hour: moment(values.closingTime, 'HH:mm').get('hour'),
+                    minute: moment(values.closingTime, 'HH:mm').get('minute'),
                   })
                   .toISOString(),
               };
@@ -2104,10 +2104,10 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   finalAction: finalAction,
                   updateDate: new Date(),
                   updateById: USER_ID,
-                  status: "closed",
+                  status: 'closed',
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 // setCurrentItem(null);
                 // setCurrentAction(null);
                 const index = projectAdditionalTasks.findIndex(
@@ -2128,7 +2128,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <ProFormGroup>
               <ProFormDatePicker
                 rules={[{ required: true }]}
-                label={`${t("CLOSE DATE")}`}
+                label={`${t('CLOSE DATE')}`}
                 name="closingDate"
                 initialValue={
                   currentTask && currentTask?.finalAction
@@ -2138,7 +2138,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
               />
               <ProFormTimePicker
                 rules={[{ required: true }]}
-                label={`${t("TIME")}`}
+                label={`${t('TIME')}`}
                 name="closingTime"
                 initialValue={
                   currentTask
@@ -2148,14 +2148,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
               />
             </ProFormGroup>
 
-            <ProFormItem label={`${t("CLOSING SING")}`}>
+            <ProFormItem label={`${t('CLOSING SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
                 }}
                 reset={false}
-                performedSing={localStorage.getItem("singNumber")}
-                performedName={localStorage.getItem("name")}
+                performedSing={localStorage.getItem('singNumber')}
+                performedName={localStorage.getItem('name')}
                 actionNumber={null}
               ></UserSearchForm>
             </ProFormItem>
@@ -2164,8 +2164,8 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
       </div>
       <Modal
         footer={false}
-        width={"40%"}
-        title={`${t("ADD/EDIT TIME BOOKING")}`}
+        width={'40%'}
+        title={`${t('ADD/EDIT TIME BOOKING')}`}
         visible={visibleTimes}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -2185,16 +2185,16 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                       skill: values.skill,
                       startTime: moment(values.startDate)
                         .set({
-                          hour: moment(values.startTime, "HH:mm").get("hour"),
-                          minute: moment(values.startTime, "HH:mm").get(
-                            "minute"
+                          hour: moment(values.startTime, 'HH:mm').get('hour'),
+                          minute: moment(values.startTime, 'HH:mm').get(
+                            'minute'
                           ),
                         })
                         .toISOString(),
                       endDate: moment(values.startDate)
                         .set({
-                          hour: moment(values.endDate, "HH:mm").get("hour"),
-                          minute: moment(values.endDate, "HH:mm").get("minute"),
+                          hour: moment(values.endDate, 'HH:mm').get('hour'),
+                          minute: moment(values.endDate, 'HH:mm').get('minute'),
                         })
                         .toISOString(),
                       remarks: values.remarks,
@@ -2203,18 +2203,18 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                       user: {
                         createName: selectedUser
                           ? selectedUser.name
-                          : localStorage.getItem("name"),
+                          : localStorage.getItem('name'),
                         createSing: selectedUser
                           ? selectedUser.singNumber
-                          : localStorage.getItem("singNumber"),
+                          : localStorage.getItem('singNumber'),
                       },
                       createUser: {
                         createName: selectedUser
                           ? selectedUser.name
-                          : localStorage.getItem("name"),
+                          : localStorage.getItem('name'),
                         createSing: selectedUser
                           ? selectedUser.singNumber
-                          : localStorage.getItem("singNumber"),
+                          : localStorage.getItem('singNumber'),
                       },
                     },
                   ]
@@ -2224,16 +2224,16 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                       skill: values.skill,
                       startTime: moment(values.startDate)
                         .set({
-                          hour: moment(values.startTime, "HH:mm").get("hour"),
-                          minute: moment(values.startTime, "HH:mm").get(
-                            "minute"
+                          hour: moment(values.startTime, 'HH:mm').get('hour'),
+                          minute: moment(values.startTime, 'HH:mm').get(
+                            'minute'
                           ),
                         })
                         .toISOString(),
                       endDate: moment(values.startDate)
                         .set({
-                          hour: moment(values.endDate, "HH:mm").get("hour"),
-                          minute: moment(values.endDate, "HH:mm").get("minute"),
+                          hour: moment(values.endDate, 'HH:mm').get('hour'),
+                          minute: moment(values.endDate, 'HH:mm').get('minute'),
                         })
                         .toISOString(),
                       remarks: values.remarks,
@@ -2242,18 +2242,18 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                       user: {
                         createName: selectedUser
                           ? selectedUser.name
-                          : localStorage.getItem("name"),
+                          : localStorage.getItem('name'),
                         createSing: selectedUser
                           ? selectedUser.singNumber
-                          : localStorage.getItem("singNumber"),
+                          : localStorage.getItem('singNumber'),
                       },
                       createUser: {
                         createName: selectedUser
                           ? selectedUser.name
-                          : localStorage.getItem("name"),
+                          : localStorage.getItem('name'),
                         createSing: selectedUser
                           ? selectedUser.singNumber
-                          : localStorage.getItem("singNumber"),
+                          : localStorage.getItem('singNumber'),
                       },
                     },
                   ],
@@ -2286,7 +2286,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 _id: taskId,
               })
             );
-            if (result.meta.requestStatus === "fulfilled") {
+            if (result.meta.requestStatus === 'fulfilled') {
               const index = projectAdditionalTasks.findIndex(
                 (task: any) => task._id === currentProjectAdditionalTask?._id
               );
@@ -2303,14 +2303,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
           layout="vertical"
         >
           {/* <ProFormGroup> */}
-          <ProFormText bordered label={`${t("TASK WO")}`} width={"md"} disabled>
+          <ProFormText bordered label={`${t('TASK WO')}`} width={'md'} disabled>
             {currentTask?.additionalNumberId}
           </ProFormText>
           <ProFormGroup>
             <ProFormDatePicker
               rules={[{ required: true }]}
               labelAlign="left"
-              label={`${t("START DATE")}`}
+              label={`${t('START DATE')}`}
               name="startDate"
               // initialValue={
               //   currentItem ? moment(currentItem.createDate) : null
@@ -2318,14 +2318,14 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             />
             <ProFormTimePicker
               rules={[{ required: true }]}
-              label={`${t("START TIME")}`}
+              label={`${t('START TIME')}`}
               name="startTime"
             />
           </ProFormGroup>
           <ProFormGroup>
             <ProFormDatePicker
               rules={[{ required: true }]}
-              label={`${t("END DATE")}`}
+              label={`${t('END DATE')}`}
               name="endDate"
               // initialValue={
               //   currentItem ? moment(currentItem.createDate) : null
@@ -2333,34 +2333,34 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             />
             <ProFormTimePicker
               rules={[{ required: true }]}
-              label={`${t("START TIME")}`}
+              label={`${t('START TIME')}`}
               name="endTime"
             />
             <ProFormDigit
-              width={"xs"}
+              width={'xs'}
               name="duration"
-              label={`${t("DURATIONS")}`}
+              label={`${t('DURATIONS')}`}
             ></ProFormDigit>
           </ProFormGroup>
           <ProFormGroup>
             <ProFormSelect
               name="skill"
-              width={"sm"}
-              label={`${t("SKILL")}`}
+              width={'sm'}
+              label={`${t('SKILL')}`}
               valueEnum={{
-                AF: { text: "AF" },
-                AV: { text: "AV" },
-                CA: { text: "CA" },
-                EL: { text: "EL" },
-                EN: { text: "EN" },
-                RA: { text: "RA" },
-                UT: { text: "UT" },
-                SRC: { text: "SRC" },
-                NDT: { text: "NDT" },
-                PNT: { text: "PNT" },
-                ED: { text: "ED" },
-                QI: { text: "QI" },
-                OUT: { text: "QUT A/C" },
+                AF: { text: 'AF' },
+                AV: { text: 'AV' },
+                CA: { text: 'CA' },
+                EL: { text: 'EL' },
+                EN: { text: 'EN' },
+                RA: { text: 'RA' },
+                UT: { text: 'UT' },
+                SRC: { text: 'SRC' },
+                NDT: { text: 'NDT' },
+                PNT: { text: 'PNT' },
+                ED: { text: 'ED' },
+                QI: { text: 'QI' },
+                OUT: { text: 'QUT A/C' },
               }}
               rules={[
                 {
@@ -2369,13 +2369,13 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
               ]}
             ></ProFormSelect>
             <ProFormSelect
-              width={"sm"}
+              width={'sm'}
               name="typeOfWork"
-              label={`${t("TYPE OF WORK")}`}
+              label={`${t('TYPE OF WORK')}`}
               valueEnum={{
-                ROUTINE: { text: "ROUTINE" },
-                ACCESS: { text: "ACCESS" },
-                ADD_WORK: { text: "ADD WORK" },
+                ROUTINE: { text: 'ROUTINE' },
+                ACCESS: { text: 'ACCESS' },
+                ADD_WORK: { text: 'ADD WORK' },
               }}
               rules={[
                 {
@@ -2383,21 +2383,21 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                 },
               ]}
             ></ProFormSelect>
-            <ProFormItem label={`${t("USER SING")}`}>
+            <ProFormItem label={`${t('USER SING')}`}>
               <UserSearchForm
                 onUserSelect={function (user: UserResponce): void {
                   setSelectedUser(user);
                 }}
                 reset={false}
-                performedSing={localStorage.getItem("singNumber")}
-                performedName={localStorage.getItem("name")}
+                performedSing={localStorage.getItem('singNumber')}
+                performedName={localStorage.getItem('name')}
                 actionNumber={null}
               ></UserSearchForm>
             </ProFormItem>
           </ProFormGroup>
           <ProFormTextArea
             name="remarks"
-            label={`${t("REMARKS")}`}
+            label={`${t('REMARKS')}`}
           ></ProFormTextArea>
         </ProForm>
       </Modal>
@@ -2405,9 +2405,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         <Space className="flex pt-5 ">
           <Popover content="ADD WORK STEP">
             <Button
-              disabled={currentTask?.status === "closed"}
+              disabled={currentTask?.status === 'closed'}
               className={`${
-                currentTask?.status === !"closed" ? "bg-emerald-200" : ""
+                currentTask?.status === !'closed' ? 'bg-emerald-200' : ''
               }`}
               // shape="circle"
               icon="+ST"
@@ -2427,7 +2427,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         <Space className="flex pt-5 ">
           <Popconfirm
             disabled={
-              currentTask?.status === "closed" ||
+              currentTask?.status === 'closed' ||
               !currentTask?.steps ||
               currentTask?.steps.some(
                 (step: any) =>
@@ -2446,7 +2446,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <Popover content="CLOSE WO">
               <Button
                 disabled={
-                  currentTask?.status === "closed" ||
+                  currentTask?.status === 'closed' ||
                   !currentTask?.steps ||
                   currentTask?.steps.some(
                     (step: any) =>
@@ -2458,7 +2458,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                   )
                 }
                 className={`${
-                  currentTask?.status === !"closed" ? "bg-green-500" : ""
+                  currentTask?.status === !'closed' ? 'bg-green-500' : ''
                 }`}
                 // shape="circle"
               >
@@ -2469,7 +2469,7 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
         </Space>
         <Space className="flex pt-5 ">
           <Popconfirm
-            disabled={!selectedItems.length || currentTask?.status === "closed"}
+            disabled={!selectedItems.length || currentTask?.status === 'closed'}
             title="Are you sure you want to delete the selected items?"
             okText="Yes"
             cancelText="No"
@@ -2478,12 +2478,12 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             <Popover content="DELETE SELECTED ACTIONS">
               <Button
                 disabled={
-                  !selectedItems.length || currentTask?.status === "closed"
+                  !selectedItems.length || currentTask?.status === 'closed'
                 }
                 className={`${
-                  selectedItems.length && currentTask?.status === !"closed"
-                    ? "bg-red-600"
-                    : ""
+                  selectedItems.length && currentTask?.status === !'closed'
+                    ? 'bg-red-600'
+                    : ''
                 }`}
                 // shape="circle"
                 icon="-A"
@@ -2496,19 +2496,19 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
             okText="Yes"
             cancelText="No"
             disabled={
-              !selectedStepItems.length || currentTask?.status === "closed"
+              !selectedStepItems.length || currentTask?.status === 'closed'
             }
             onConfirm={() => handleDelete(selectedStepItems)}
           >
             <Popover content="DELETE SELECTED WORK STEP">
               <Button
                 disabled={
-                  !selectedStepItems.length || currentTask?.status === "closed"
+                  !selectedStepItems.length || currentTask?.status === 'closed'
                 }
                 className={`${
-                  selectedStepItems.length && currentTask?.status === !"closed"
-                    ? "bg-red-600"
-                    : ""
+                  selectedStepItems.length && currentTask?.status === !'closed'
+                    ? 'bg-red-600'
+                    : ''
                 } `}
                 // shape="circle"
                 icon="-ST"

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   AutoComplete,
   Button,
@@ -12,19 +14,19 @@ import {
   Select,
   Space,
   message,
-} from "antd";
-import React, { FC, useRef, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredProjects, updateProject } from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { RangePickerProps } from "antd/es/date-picker";
-import { IPlane } from "@/models/IPlane";
+} from 'antd';
+import React, { FC, useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getFilteredProjects, updateProject } from '@/utils/api/thunks';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { RangePickerProps } from 'antd/es/date-picker';
+import { IPlane } from '@/models/IPlane';
 
-import TextArea from "antd/es/input/TextArea";
+import TextArea from 'antd/es/input/TextArea';
 
-import { IPlaneWO } from "@/models/IPlaneWO";
-import moment from "moment";
-import { USER_ID } from "@/utils/api/http";
+import { IPlaneWO } from '@/models/IPlaneWO';
+import moment from 'moment';
+import { USER_ID } from '@/utils/api/http';
 interface EditFormProps {
   selectedWP: any;
   // planeWO: IPlaneWO | null;
@@ -33,12 +35,12 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {};
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {
     // console.log('onOk: ', value);
   };
@@ -129,7 +131,7 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
       <div
         className="flex flex-col mx-auto"
         style={{
-          width: "100%",
+          width: '100%',
         }}
       >
         <Form
@@ -150,12 +152,12 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
                 status: values.status,
                 description: values.description,
                 updateDate: new Date(),
-                updateUserID: USER_ID || "",
+                updateUserID: USER_ID || '',
               })
             );
-            if (result.meta.requestStatus === "fulfilled") {
-              message.success("WP Edit Sucсess");
-              const companyID = localStorage.getItem("companyID");
+            if (result.meta.requestStatus === 'fulfilled') {
+              message.success('WP Edit Sucсess');
+              const companyID = localStorage.getItem('companyID');
               if (companyID) {
                 dispatch(
                   getFilteredProjects({
@@ -164,7 +166,7 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
                 );
               }
             } else {
-              message.error("Error");
+              message.error('Error');
             }
           }}
           form={form}
@@ -182,15 +184,15 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
             >
               <Input placeholder="please enter A/C Number" />
             </AutoComplete>
-          </Form.Item>{" "}
+          </Form.Item>{' '}
           <Form.Item label="Work Order Number" name="WONbr">
             <Input placeholder="please enter Work Order Number" />
           </Form.Item>
-          <Form.Item label={`${t("Description")}`} name="description">
+          <Form.Item label={`${t('Description')}`} name="description">
             <TextArea placeholder="please enter decsription" />
           </Form.Item>
           <Divider />
-          <Row justify={"space-between"}>
+          <Row justify={'space-between'}>
             <Form.Item label="Date In" name="dateIn">
               <DatePicker onChange={onChange} />
             </Form.Item>
@@ -246,19 +248,19 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
           </Form.Item>
           <Divider />
           <>Hours</>
-          <Row align={"middle"} gutter={[16, 16]}>
+          <Row align={'middle'} gutter={[16, 16]}>
             <Col span={7}></Col>
             <Col span={5}>Estimated</Col>
             <Col span={8}>Actual</Col>
           </Row>
           <Form.Item>
-            <Row align={"middle"} gutter={[16, 16]}>
+            <Row align={'middle'} gutter={[16, 16]}>
               <Col span={10}>
                 <div>Labor (Hrs:Min)</div>
               </Col>
 
               <Col span={7}>
-                <Form.Item noStyle name={"projAFL"}>
+                <Form.Item noStyle name={'projAFL'}>
                   <Input
                     className="w-full"
                     // onChange={handleChange}
@@ -266,7 +268,7 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
                 </Form.Item>
               </Col>
               <Col span={7}>
-                <Form.Item noStyle name={"targetAFL"}>
+                <Form.Item noStyle name={'targetAFL'}>
                   <Input
                   // value={
                   //   value && currentPlane?.utilisation?.ACAFL
@@ -280,13 +282,13 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
             </Row>
           </Form.Item>
           <Form.Item>
-            <Row align={"middle"} gutter={[16, 16]}>
+            <Row align={'middle'} gutter={[16, 16]}>
               <Col span={10}>
                 <div>Labor Cost </div>
               </Col>
 
               <Col span={7}>
-                <Form.Item noStyle name={"projAFL"}>
+                <Form.Item noStyle name={'projAFL'}>
                   <Input
                     className="w-full"
                     // onChange={handleChange}
@@ -294,7 +296,7 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
                 </Form.Item>
               </Col>
               <Col span={7}>
-                <Form.Item noStyle name={"targetAFL"}>
+                <Form.Item noStyle name={'targetAFL'}>
                   <Input
                   // value={
                   //   value && currentPlane?.utilisation?.ACAFL
@@ -309,7 +311,7 @@ const WOEditFormPlanning: FC<EditFormProps> = ({ selectedWP }) => {
           </Form.Item>
           <Form.Item>
             <Space className="">
-              {" "}
+              {' '}
               <Button htmlType="submit" type="primary">
                 Save
               </Button>

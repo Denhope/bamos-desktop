@@ -1,9 +1,9 @@
-import { ModalForm, ProColumns } from "@ant-design/pro-components";
-import { Cascader, ConfigProvider, Input, MenuProps, Tag, message } from "antd";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import React, { FC, useEffect, useState } from "react";
-import { exportToExcel } from "@/services/utilites";
-import { IMatData } from "@/types/TypesData";
+import { ModalForm, ProColumns } from '@ant-design/pro-components';
+import { Cascader, ConfigProvider, Input, MenuProps, Tag, message } from 'antd';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import React, { FC, useEffect, useState } from 'react';
+import { exportToExcel } from '@/services/utilites';
+import { IMatData } from '@/types/TypesData';
 
 import {
   DownloadOutlined,
@@ -11,9 +11,9 @@ import {
   PlusOutlined,
   DeleteOutlined,
   AppstoreOutlined,
-} from "@ant-design/icons";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { AplicationResponce } from "@/store/reducers/WPGenerationSlise";
+} from '@ant-design/icons';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { AplicationResponce } from '@/store/reducers/WPGenerationSlise';
 import {
   createRequirement,
   getFilteredRequirements,
@@ -24,21 +24,21 @@ import {
   updateRequirementsByBody,
   createProjectTaskMaterialAplication,
   updateAdditionalTask,
-} from "@/utils/api/thunks";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import Select, { DefaultOptionType } from "antd/es/select";
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import DrawerPanel from "@/components/shared/DrawerPanel";
+} from '@/utils/api/thunks';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import Select, { DefaultOptionType } from 'antd/es/select';
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import DrawerPanel from '@/components/shared/DrawerPanel';
 
-import { IAdditionalTaskMTBCreate } from "@/models/IAdditionalTaskMTB";
-import AddMatirialRequestList from "../requeriments/AddMatirialRequestForm";
-import { setUpdatedProjectAdditionalTask } from "@/store/reducers/MtbSlice";
-import { IMaterialStoreRequestItem } from "@/models/IMaterialStoreItem";
-import DoubleClickPopover from "@/components/shared/form/DoubleClickProper";
-import MaterialItemStoreSearchFOrREq from "@/components/store/search/MaterialItemStoreSearchFOrREq";
-import { useTranslation } from "react-i18next";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
-import { USER_ID } from "@/utils/api/http";
+import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
+import AddMatirialRequestList from '../requeriments/AddMatirialRequestForm';
+import { setUpdatedProjectAdditionalTask } from '@/store/reducers/MtbSlice';
+import { IMaterialStoreRequestItem } from '@/models/IMaterialStoreItem';
+import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
+import MaterialItemStoreSearchFOrREq from '@/components/store/search/MaterialItemStoreSearchFOrREq';
+import { useTranslation } from 'react-i18next';
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+import { USER_ID } from '@/utils/api/http';
 
 type FilteredRequirementItemsListPropsType = {
   data: any;
@@ -60,50 +60,50 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
 }) => {
   const optionsRewiew = [
     {
-      label: "TO WAIT",
-      value: "waiting",
+      label: 'TO WAIT',
+      value: 'waiting',
     },
     {
-      label: "IN PROGRESS",
-      value: "inProgress",
+      label: 'IN PROGRESS',
+      value: 'inProgress',
     },
     {
-      label: "COMPLETED",
-      value: "completed",
+      label: 'COMPLETED',
+      value: 'completed',
     },
     {
-      label: "CANCELED",
-      value: "canceled",
+      label: 'CANCELED',
+      value: 'canceled',
     },
   ];
   const [selectedObject, setSelectedObject] =
     React.useState<any>(selectedObjectParent);
 
   const [tableKey, setTableKey] = useState(Math.random());
-  const onChangeRewiew: any["props"]["onChange"] = async (
+  const onChangeRewiew: any['props']['onChange'] = async (
     value: any,
     selectedOptions: any
   ) => {
     const selectedCount = selectedRowKeys && selectedRowKeys.length;
     if (selectedCount < 1) {
-      message.error("Please select Items.");
+      message.error('Please select Items.');
       return;
     }
-    const companyID = localStorage.getItem("companyID");
+    const companyID = localStorage.getItem('companyID');
     const result = await dispatch(
       updateRequirementsByIds({
         rewiewStatus: value,
         ids: selectedRowKeys,
         updateDate: new Date(),
-        updateUserID: USER_ID || "",
-        companyID: companyID || "",
+        updateUserID: USER_ID || '',
+        companyID: companyID || '',
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       const result = await dispatch(
         getFilteredRequirements({
-          companyID: companyID || "",
-          projectId: projectTaskData?.projectId._id || "",
+          companyID: companyID || '',
+          projectId: projectTaskData?.projectId._id || '',
           additionalTaskID: projectTaskData?._id,
         })
       );
@@ -125,85 +125,85 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
   }
   const options: Option[] = [
     {
-      value: "ed",
-      label: "ED",
+      value: 'ed',
+      label: 'ED',
       children: [
         {
-          value: "checking",
-          label: "CHECK",
+          value: 'checking',
+          label: 'CHECK',
         },
         {
-          value: "alternative",
-          label: "ALTERNATIVE",
+          value: 'alternative',
+          label: 'ALTERNATIVE',
         },
         {
-          value: "canceled",
-          label: "CANCELED",
+          value: 'canceled',
+          label: 'CANCELED',
         },
       ],
     },
     {
-      value: "logistic",
-      label: "LOGISTIC",
+      value: 'logistic',
+      label: 'LOGISTIC',
       children: [
         {
-          value: "checking",
-          label: "CHECK",
+          value: 'checking',
+          label: 'CHECK',
         },
         {
-          value: "purchaising",
-          label: "PURCHAICING",
+          value: 'purchaising',
+          label: 'PURCHAICING',
         },
         {
-          value: "delivery",
-          label: "DELIVERY",
+          value: 'delivery',
+          label: 'DELIVERY',
         },
         {
-          label: "AGREEMENT ON CUSTOMER",
-          value: "agreement",
+          label: 'AGREEMENT ON CUSTOMER',
+          value: 'agreement',
         },
       ],
     },
   ];
   const cascaderOptions = [
     {
-      field: "ED",
-      value: "ed",
+      field: 'ED',
+      value: 'ed',
       language: [
         {
-          field: "CHECK",
-          value: "checking",
+          field: 'CHECK',
+          value: 'checking',
         },
         {
-          field: "ALTERNATIVE",
-          value: "alternative",
+          field: 'ALTERNATIVE',
+          value: 'alternative',
         },
         {
-          field: "CANCELED",
-          value: "canceled",
+          field: 'CANCELED',
+          value: 'canceled',
         },
       ],
     },
 
     {
-      field: "LOG",
-      value: "logistic",
+      field: 'LOG',
+      value: 'logistic',
       language: [
         {
-          field: "CHECK",
-          value: "checking",
+          field: 'CHECK',
+          value: 'checking',
         },
         {
-          field: "PURCHAICING",
-          value: "purchaising",
+          field: 'PURCHAICING',
+          value: 'purchaising',
         },
         {
-          field: "DELIVERY",
-          value: "delivery",
+          field: 'DELIVERY',
+          value: 'delivery',
         },
         {
-          field: "AGREEMENT ON CUSTOMER",
-          value: "agreement",
+          field: 'AGREEMENT ON CUSTOMER',
+          value: 'agreement',
         },
       ],
     },
@@ -252,17 +252,17 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
   useEffect(() => {
     setSelectedObject(selectedObjectParent);
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
           getFilteredRequirements({
             companyID: companyID,
-            projectId: projectTaskData?.projectId._id || "",
+            projectId: projectTaskData?.projectId._id || '',
             additionalTaskID: projectTaskData?._id,
           })
         );
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           // console.log(result.payload);
 
           result.payload.length
@@ -276,45 +276,45 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
   }, [dispatch, projectTaskData?._id]);
   const initialColumns: ProColumns<any>[] = [
     {
-      title: "",
-      dataIndex: ["readyStatus", "status"],
-      key: "readyStatus",
-      width: "3%",
+      title: '',
+      dataIndex: ['readyStatus', 'status'],
+      key: 'readyStatus',
+      width: '3%',
       editable: (text, record, index) => {
         return false;
       },
-      valueType: "select",
+      valueType: 'select',
 
       filters: true,
       onFilter: true,
       valueEnum: {
-        "not Ready": { text: "NOT AVAILABLE" },
-        Ready: { text: "AVAILABLE" },
+        'not Ready': { text: 'NOT AVAILABLE' },
+        Ready: { text: 'AVAILABLE' },
       },
       render: (text: any, record: any) => {
         let color =
           record?.availableQTY &&
           record?.status &&
-          record?.status !== "closed" &&
+          record?.status !== 'closed' &&
           record.availableQTY >= (record?.amout - record?.issuedQuantity || 0)
-            ? "green"
-            : record?.status === "closed"
-            ? "#d3d3d3"
-            : "red";
+            ? 'green'
+            : record?.status === 'closed'
+            ? '#d3d3d3'
+            : 'red';
         return (
           <Tag
             color={color}
-            style={{ borderRadius: "50%", width: "16px", height: "16px" }}
+            style={{ borderRadius: '50%', width: '16px', height: '16px' }}
           />
         );
       },
     },
 
     {
-      title: `${t("Status")}`,
-      key: "status",
-      width: "10%",
-      valueType: "select",
+      title: `${t('Status')}`,
+      key: 'status',
+      width: '10%',
+      valueType: 'select',
       filterSearch: true,
       filters: true,
       editable: (text, record, index) => {
@@ -322,22 +322,22 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       },
       onFilter: true,
       valueEnum: {
-        inStockReserve: { text: t("RESERVATION"), status: "Success" },
-        onCheack: { text: t("CHECK"), status: "Warning" },
-        open: { text: t("NEW"), status: "Error" },
-        closed: { text: t("CLOSED"), status: "Default" },
-        canceled: { text: t("CANCELED"), status: "Error" },
-        onOrder: { text: t("ISSUED"), status: "Processing" },
+        inStockReserve: { text: t('RESERVATION'), status: 'Success' },
+        onCheack: { text: t('CHECK'), status: 'Warning' },
+        open: { text: t('NEW'), status: 'Error' },
+        closed: { text: t('CLOSE'), status: 'Default' },
+        canceled: { text: t('CANCELED'), status: 'Error' },
+        onOrder: { text: t('ISSUED'), status: 'Processing' },
       },
 
-      dataIndex: "status",
+      dataIndex: 'status',
     },
     {
-      title: `${t("REQUIREMENT NUMBER")}`,
-      dataIndex: "partRequestNumber",
+      title: `${t('REQUIREMENT NUMBER')}`,
+      dataIndex: 'partRequestNumber',
       // valueType: 'index',
       ellipsis: true,
-      width: "5%",
+      width: '5%',
 
       editable: (text, record, index) => {
         return false;
@@ -359,13 +359,13 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PN",
-      key: "PN",
+      title: `${t('PN')}`,
+      dataIndex: 'PN',
+      key: 'PN',
       ellipsis: true,
-      tip: "Right Click open Store search",
+      tooltip: 'Right Click open Store search',
       ...useColumnSearchProps({
-        dataIndex: "PN",
+        dataIndex: 'PN',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -387,7 +387,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             content={
               <div className="flex my-0 mx-auto  h-[45vh] flex-col relative overflow-hidden">
                 <PartNumberSearch
-                  initialParams={{ partNumber: "" }}
+                  initialParams={{ partNumber: '' }}
                   scroll={18}
                   onRowClick={function (record: any, rowIndex?: any): void {
                     // setOpenStoreFind(false);
@@ -404,7 +404,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                 />
               </div>
             }
-            overlayStyle={{ width: "70%" }}
+            overlayStyle={{ width: '70%' }}
           >
             <Input
               value={selectedObject.PART_NUMBER}
@@ -425,11 +425,11 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tooltip: 'Text Show',
       ellipsis: true, //
       renderFormItem: (item2, { onChange }) => {
         return (
@@ -437,7 +437,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             content={
               <div className="flex my-0 mx-auto  h-[45vh] flex-col relative overflow-hidden">
                 <PartNumberSearch
-                  initialParams={{ partNumber: "" }}
+                  initialParams={{ partNumber: '' }}
                   scroll={18}
                   onRowClick={function (record: any, rowIndex?: any): void {
                     // setOpenStoreFind(false);
@@ -454,7 +454,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                 />
               </div>
             }
-            overlayStyle={{ width: "70%" }}
+            overlayStyle={{ width: '70%' }}
           >
             <Input
               value={
@@ -478,9 +478,9 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     },
 
     {
-      title: `${t("QTY")}`,
-      dataIndex: "amout",
-      key: "amout",
+      title: `${t('QTY')}`,
+      dataIndex: 'amout',
+      key: 'amout',
       // editable: (text, record, index) => {
       //   return false;
       // },
@@ -488,22 +488,22 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
       editable: (text, record, index) => {
         return false;
       },
-      responsive: ["sm"],
+      responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: `${t("PLANNED DATE")}`,
-      dataIndex: "plannedDate",
-      key: "plannedDate",
+      title: `${t('PLANNED DATE')}`,
+      dataIndex: 'plannedDate',
+      key: 'plannedDate',
       ellipsis: true,
-      width: "8%",
-      valueType: "date",
+      width: '8%',
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.plannedDate && b.plannedDate) {
           const aFinishDate = new Date(a.plannedDate);
@@ -518,9 +518,9 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       // },
     },
     {
-      title: `${t("REQUESTED QTY")}`,
-      dataIndex: "requestQuantity",
-      key: "requestQuantity",
+      title: `${t('REQUESTED QTY')}`,
+      dataIndex: 'requestQuantity',
+      key: 'requestQuantity',
       editable: (text, record, index) => {
         return false;
       },
@@ -549,9 +549,9 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     //   // responsive: ['sm'],
     // },
     {
-      title: `${t(" BOOKED QTY")}`,
-      dataIndex: "issuedQuantity",
-      key: "issuedQuantity",
+      title: `${t(' BOOKED QTY')}`,
+      dataIndex: 'issuedQuantity',
+      key: 'issuedQuantity',
       editable: (text, record, index) => {
         return false;
       },
@@ -569,9 +569,9 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("AVAIL. QTY")}`,
-      dataIndex: "availableQTY",
-      key: "availableQTY",
+      title: `${t('AVAIL. QTY')}`,
+      dataIndex: 'availableQTY',
+      key: 'availableQTY',
       editable: (text, record, index) => {
         return false;
       },
@@ -580,7 +580,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
         const difference = record.amout - record.issuedQuantity;
         // Определяем цвет фона в зависимости от условия
         const backgroundColor =
-          difference <= record.availableQTY ? "#32CD32" : "red";
+          difference <= record.availableQTY ? '#32CD32' : 'red';
         return (
           <div
             onClick={() => {
@@ -595,21 +595,21 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       // responsive: ['sm'],
     },
     {
-      title: `${t("LINK QTY")}`,
-      dataIndex: "linkedQTY",
-      key: "linkedQTY",
-      width: "7%",
+      title: `${t('LINK QTY')}`,
+      dataIndex: 'linkedQTY',
+      key: 'linkedQTY',
+      width: '7%',
       editable: (text, record, index) => {
         return false;
       },
-      responsive: ["sm"],
+      responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -624,30 +624,30 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       ],
     },
   ];
-  const onChange: any["props"]["onChange"] = async (
+  const onChange: any['props']['onChange'] = async (
     value: any,
     selectedOptions: any
   ) => {
     const selectedCount = selectedRowKeys && selectedRowKeys.length;
     if (selectedCount < 1) {
-      message.error("Please select Items.");
+      message.error('Please select Items.');
       return;
     }
-    const companyID = localStorage.getItem("companyID");
+    const companyID = localStorage.getItem('companyID');
     const result = await dispatch(
       updateRequirementsByIds({
         cascader: value,
         ids: selectedRowKeys,
-        companyID: companyID || "",
+        companyID: companyID || '',
         updateDate: new Date(),
-        updateUserID: USER_ID || "",
+        updateUserID: USER_ID || '',
       })
     );
-    if (result.meta.requestStatus === "fulfilled") {
+    if (result.meta.requestStatus === 'fulfilled') {
       const result = await dispatch(
         getFilteredRequirements({
-          companyID: companyID || "",
-          projectId: projectTaskData?.projectId._id || "",
+          companyID: companyID || '',
+          projectId: projectTaskData?.projectId._id || '',
           additionalTaskID: projectTaskData?._id,
         })
       );
@@ -655,13 +655,13 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     }
   };
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -672,57 +672,57 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     } as MenuItem;
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
-        getItem("Reservation", "sub54", <AppstoreOutlined />, [
+        getItem('Reservation', 'sub54', <AppstoreOutlined />, [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select Items.");
+                  message.error('Please select Items.');
                   return;
                 }
               }}
             >
               Selected Items
             </div>,
-            "5.17"
+            '5.17'
           ),
-          getItem(<div onClick={async () => {}}>All Items</div>, "5.172"),
+          getItem(<div onClick={async () => {}}>All Items</div>, '5.172'),
         ]),
-        getItem("Update Status selected items ", "subydd09", "", [
+        getItem('Update Status selected items ', 'subydd09', '', [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
                 // console.log(selectedRowKeys);
 
                 const result = await dispatch(
                   updateRequirementsByIds({
-                    status: "open",
-                    cascader: ["logistic", "check"],
-                    rewiewStatus: "waiting",
+                    status: 'open',
+                    cascader: ['logistic', 'check'],
+                    rewiewStatus: 'waiting',
                     ids: selectedRowKeys,
-                    companyID: companyID || "",
+                    companyID: companyID || '',
                     updateDate: new Date(),
-                    updateUserID: USER_ID || "",
+                    updateUserID: USER_ID || '',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result = await dispatch(
                     getFilteredRequirements({
-                      companyID: companyID || "",
-                      projectId: projectTaskData?.projectId._id || "",
+                      companyID: companyID || '',
+                      projectId: projectTaskData?.projectId._id || '',
                       additionalTaskID: projectTaskData?._id,
                     })
                   );
@@ -732,35 +732,35 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               Open
             </div>,
-            "9sasyhqss"
+            '9sasyhqss'
           ),
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
                 // console.log(selectedRowKeys);
 
                 const result = await dispatch(
                   updateRequirementsByIds({
-                    status: "canceled",
-                    rewiewStatus: "completed",
-                    cascader: ["ed", "checking"],
+                    status: 'canceled',
+                    rewiewStatus: 'completed',
+                    cascader: ['ed', 'checking'],
                     ids: selectedRowKeys,
-                    companyID: companyID || "",
+                    companyID: companyID || '',
                     updateDate: new Date(),
-                    updateUserID: USER_ID || "",
+                    updateUserID: USER_ID || '',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result = await dispatch(
                     getFilteredRequirements({
-                      companyID: companyID || "",
-                      projectId: projectTaskData?.projectId._id || "",
+                      companyID: companyID || '',
+                      projectId: projectTaskData?.projectId._id || '',
                       additionalTaskID: projectTaskData?._id,
                     })
                   );
@@ -770,35 +770,35 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               Canceled
             </div>,
-            "9sasddyhqss"
+            '9sasddyhqss'
           ),
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
                 // console.log(selectedRowKeys);
 
                 const result = await dispatch(
                   updateRequirementsByIds({
-                    status: "onCheack",
-                    rewiewStatus: "inProgress",
-                    cascader: ["ed", "check"],
+                    status: 'onCheack',
+                    rewiewStatus: 'inProgress',
+                    cascader: ['ed', 'check'],
                     ids: selectedRowKeys,
-                    companyID: companyID || "",
+                    companyID: companyID || '',
                     updateDate: new Date(),
-                    updateUserID: USER_ID || "",
+                    updateUserID: USER_ID || '',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result = await dispatch(
                     getFilteredRequirements({
-                      companyID: companyID || "",
-                      projectId: projectTaskData?.projectId._id || "",
+                      companyID: companyID || '',
+                      projectId: projectTaskData?.projectId._id || '',
                       additionalTaskID: projectTaskData?._id,
                     })
                   );
@@ -808,35 +808,35 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               Checking
             </div>,
-            "9saysddyhqss"
+            '9saysddyhqss'
           ),
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
                 // console.log(selectedRowKeys);
 
                 const result = await dispatch(
                   updateRequirementsByIds({
-                    status: "inStockReserve",
-                    rewiewStatus: "inProgress",
-                    cascader: ["ed", "check"],
+                    status: 'inStockReserve',
+                    rewiewStatus: 'inProgress',
+                    cascader: ['ed', 'check'],
                     ids: selectedRowKeys,
-                    companyID: companyID || "",
+                    companyID: companyID || '',
                     updateDate: new Date(),
-                    updateUserID: USER_ID || "",
+                    updateUserID: USER_ID || '',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   const result = await dispatch(
                     getFilteredRequirements({
-                      companyID: companyID || "",
-                      projectId: projectTaskData?.projectId._id || "",
+                      companyID: companyID || '',
+                      projectId: projectTaskData?.projectId._id || '',
                       additionalTaskID: projectTaskData?._id,
                     })
                   );
@@ -846,10 +846,10 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               Reservation
             </div>,
-            "9saysddyццhqss"
+            '9saysddyццhqss'
           ),
         ]),
-        getItem(<div>Update Skill selected Item</div>, "updateSkill", "", [
+        getItem(<div>Update Skill selected Item</div>, 'updateSkill', '', [
           getItem(
             <div
               onClick={(e) => {
@@ -875,8 +875,8 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
           >
             Update Skill/Wait Rewiew
           </div>,
-          "updateSkill/Wait",
-          "",
+          'updateSkill/Wait',
+          '',
           [
             getItem(
               <div
@@ -895,29 +895,29 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             ),
           ]
         ),
-        getItem("Delete Items ", "sub85", <DeleteOutlined />, [
+        getItem('Delete Items ', 'sub85', <DeleteOutlined />, [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select Items.");
+                  message.error('Please select Items.');
                   return;
                 }
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
                 const result = await dispatch(
                   deleteRequirementsByIds({
                     ids: selectedRowKeys,
-                    companyID: companyID || "",
-                    projectID: projectTaskData?.projectId._id || "",
+                    companyID: companyID || '',
+                    projectID: projectTaskData?.projectId._id || '',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setSelectedRowKeys([]);
                   const result = await dispatch(
                     getFilteredRequirements({
-                      companyID: companyID || "",
-                      projectId: projectTaskData?.projectId._id || "",
+                      companyID: companyID || '',
+                      projectId: projectTaskData?.projectId._id || '',
                       projectTaskID: projectTaskData?._id,
                     })
                   );
@@ -927,25 +927,25 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               Selected Items
             </div>,
-            "5.18"
+            '5.18'
           ),
           getItem(
             <div
               onClick={async () => {
-                const companyID = localStorage.getItem("companyID");
+                const companyID = localStorage.getItem('companyID');
                 const result = await dispatch(
                   deleteRequirementsByIds({
                     ids: extractIds(materialsRequirements),
-                    companyID: companyID || "",
-                    projectID: projectTaskData?.projectId._id || "",
+                    companyID: companyID || '',
+                    projectID: projectTaskData?.projectId._id || '',
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setSelectedRowKeys([]);
                   const result = await dispatch(
                     getFilteredRequirements({
-                      companyID: companyID || "",
-                      projectId: projectTaskData?.projectId._id || "",
+                      companyID: companyID || '',
+                      projectId: projectTaskData?.projectId._id || '',
                       additionalTaskID: projectTaskData?._id,
                     })
                   );
@@ -955,29 +955,29 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               All Items
             </div>,
-            "5.1827"
+            '5.1827'
           ),
         ]),
       ],
     },
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -994,7 +994,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -1011,15 +1011,15 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
       ],
     },
     {
-      label: `${t("ISSUE PICKSLIP")}`,
-      key: "matirialAplication",
+      label: `${t('ISSUE PICKSLIP')}`,
+      key: 'matirialAplication',
       icon: null,
       children: [
         getItem(
@@ -1027,7 +1027,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             onClick={async () => {
               const selectedCount = selectedRowKeys && selectedRowKeys.length;
               if (selectedCount < 1) {
-                message.error("Please select Items.");
+                message.error('Please select Items.');
                 return;
               }
               setOpenNewMatRequestDrawer(true);
@@ -1035,20 +1035,20 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
           >
             Add Selected Items
           </div>,
-          "5.18"
+          '5.18'
         ),
         // ]),
       ],
     },
   ];
-  const [position, setPosition] = useState<"top" | "bottom" | "hidden">(
-    "bottom"
+  const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>(
+    'bottom'
   );
   const [openNewMatRequestDrawer, setOpenNewMatRequestDrawer] = useState(false);
   const [issuedFormData, setIssuedFormData] = useState({
-    getFrom: "",
-    neededOn: "",
-    remarks: "",
+    getFrom: '',
+    neededOn: '',
+    remarks: '',
     plannedDate: null,
   });
   const handleFieldsChange = (fields: any) => {
@@ -1058,11 +1058,11 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
   };
   return (
     <>
-      {" "}
+      {' '}
       <ModalForm
         title={`PART REQUEST`}
         // size={'large'}
-        width={"70vw"}
+        width={'70vw'}
         // placement={'bottom'}
         open={openNewMatRequestDrawer}
         // submitter={false}
@@ -1070,11 +1070,11 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
         onFinish={async () => {
           // actionRef.current?.reload();
           const updatedTableData = tableData.map((item: any) => {
-            if (typeof item === "object" && item !== null) {
+            if (typeof item === 'object' && item !== null) {
               return {
                 ...(item as object), // Явно указываем, что item является объектом
                 updateDate: new Date(),
-                updateUserID: USER_ID || "",
+                updateUserID: USER_ID || '',
                 // requestQuantity: item?.amout,
               };
             }
@@ -1085,15 +1085,15 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             createProjectTaskMaterialAplication({
               materials: tableData,
               createDate: new Date(),
-              createUserId: USER_ID || "",
+              createUserId: USER_ID || '',
               projectTaskWO: projectTaskData?.additionalNumberId,
               additionalTaskID: projectTaskData?._id,
-              projectId: projectTaskData?.projectId._id || "",
+              projectId: projectTaskData?.projectId._id || '',
               projectWO: projectTaskData?.projectWO,
               planeType: projectTaskData?.plane?.type,
               registrationNumber: projectTaskData?.plane?.registrationNumber,
-              status: "issued",
-              companyID: projectTaskData?.companyID || "",
+              status: 'issued',
+              companyID: projectTaskData?.companyID || '',
               taskNumber: projectTaskData?.taskHeadLine,
               plannedDate: issuedFormData && issuedFormData?.plannedDate,
               getFrom: issuedFormData && issuedFormData?.getFrom,
@@ -1101,10 +1101,10 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
               neededOn: issuedFormData && issuedFormData?.neededOn,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             const updatedMaterialsData = result.payload.materials.map(
               (item: any) => {
-                if (typeof item === "object" && item !== null) {
+                if (typeof item === 'object' && item !== null) {
                   return {
                     ...(item as object), // Явно указываем, что item является объектом
                     materialOrderID: result.payload.id || result.payload._id,
@@ -1119,20 +1119,20 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
 
             const result1 = await dispatch(
               updateRequirementsByBody({
-                companyID: projectTaskData?.companyID || "",
+                companyID: projectTaskData?.companyID || '',
                 newData: {
                   updatedMaterialsData,
                 },
-                status: "onOrder",
+                status: 'onOrder',
               })
             );
           }
 
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             const result = await dispatch(
               getFilteredRequirements({
-                companyID: projectTaskData?.companyID || "",
-                projectId: projectTaskData?.projectId._id || "",
+                companyID: projectTaskData?.companyID || '',
+                projectId: projectTaskData?.projectId._id || '',
                 additionalTaskID: projectTaskData?._id,
               })
             );
@@ -1142,7 +1142,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             setTableKey(Math.random()); // Изменение ключа, чтобы пересоздать таблицу
           }
 
-          message.success("PARTS IISUED SUCCESSFULLY ");
+          message.success('PARTS IISUED SUCCESSFULLY ');
 
           return true;
         }}
@@ -1156,7 +1156,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
           isLoading={isLoading}
           ids={selectedRowKeys}
           onReqClick={function (record: any): void {
-            throw new Error("Function not implemented.");
+            throw new Error('Function not implemented.');
           }}
         ></AddMatirialRequestList>
       </ModalForm>
@@ -1164,22 +1164,22 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
         <EditableTable
           key={tableKey}
           recordCreatorProps={
-            position !== "hidden"
+            position !== 'hidden'
               ? {
-                  position: position as "top",
+                  position: position as 'top',
 
                   record: () => ({
                     id: Date.now(),
-                    projectID: projectTaskData?.projectId?._id || "",
+                    projectID: projectTaskData?.projectId?._id || '',
                     companyID: projectTaskData?.companyID,
                     createDate: new Date(),
-                    createUserID: USER_ID || "",
-                    status: "open",
-                    cascader: ["ed", "check"],
-                    rewiewStatus: "waiting",
+                    createUserID: USER_ID || '',
+                    status: 'open',
+                    cascader: ['ed', 'check'],
+                    rewiewStatus: 'waiting',
                     isNew: true,
                   }),
-                  creatorButtonText: "ADD NEW REQUIREMENT",
+                  creatorButtonText: 'ADD NEW REQUIREMENT',
                 }
               : false
           }
@@ -1192,8 +1192,8 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
           }}
           isSelectable={(record) => {
             return !(
-              record.status === "onCheack" ||
-              record.status === "closed" ||
+              record.status === 'onCheack' ||
+              record.status === 'closed' ||
               record.amout <= record.requestQuantity ||
               record.amount <= 0
             );
@@ -1204,25 +1204,25 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             row: any
           ): Promise<void> {
             if (data.isNew) {
-              const companyID = localStorage.getItem("companyID");
+              const companyID = localStorage.getItem('companyID');
               const result = await dispatch(
                 createSingleRequirement({
                   rewiewStatus: data.rewiewStatus,
                   cascader: data.cascader,
                   status: data.status,
-                  companyID: companyID || "",
-                  createUserID: USER_ID || "",
-                  projectID: projectTaskData?.projectId._id || "",
+                  companyID: companyID || '',
+                  createUserID: USER_ID || '',
+                  projectID: projectTaskData?.projectId._id || '',
                   quantity: data.amout,
                   alternative: data.alternative,
                   unit: selectedObject.UNIT_OF_MEASURE,
-                  description: selectedObject.DESCRIPTION || "",
-                  partNumber: selectedObject.PART_NUMBER || "",
+                  description: selectedObject.DESCRIPTION || '',
+                  partNumber: selectedObject.PART_NUMBER || '',
                   group: selectedObject.GROUP,
                   type: selectedObject.TYPE,
                   isNewAdded: false,
                   createDate: new Date(),
-                  taskNumber: projectTaskData?.taskHeadLine || "",
+                  taskNumber: projectTaskData?.taskHeadLine || '',
                   issuedQuantity: 0,
                   additionalTaskID: projectTaskData?._id,
                   additionalTaskWO: projectTaskData?.additionalNumberId,
@@ -1231,20 +1231,20 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                     projectTaskData?.plane?.registrationNumber,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 setSelectedObject({
-                  PART_NUMBER: "",
+                  PART_NUMBER: '',
                   QUANTITY: 0,
-                  NAME_OF_MATERIAL: "",
-                  DESCRIPTION: "",
-                  UNIT_OF_MEASURE: "",
-                  GROUP: "",
-                  TYPE: "",
+                  NAME_OF_MATERIAL: '',
+                  DESCRIPTION: '',
+                  UNIT_OF_MEASURE: '',
+                  GROUP: '',
+                  TYPE: '',
                 });
                 const resultTask = await dispatch(
                   updateAdditionalTask({
                     _id: projectTaskData?._id,
-                    projectId: projectTaskData?.projectId._id || "",
+                    projectId: projectTaskData?.projectId._id || '',
                     requirementItemsIds: [
                       ...(projectTaskData &&
                       Array.isArray(projectTaskData.requirementItemsIds)
@@ -1254,7 +1254,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                     ],
                   })
                 );
-                if (resultTask.meta.requestStatus === "fulfilled") {
+                if (resultTask.meta.requestStatus === 'fulfilled') {
                   const index = projectAdditionalTasks.findIndex(
                     (task) => task._id === projectTaskData?._id
                   );
@@ -1267,8 +1267,8 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                 }
                 const result1 = await dispatch(
                   getFilteredRequirements({
-                    companyID: companyID || "",
-                    projectId: projectTaskData?.projectId._id || "",
+                    companyID: companyID || '',
+                    projectId: projectTaskData?.projectId._id || '',
                     additionalTaskID: projectTaskData?._id,
                   })
                 );
@@ -1276,7 +1276,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                 setInitialRequirements(result1.payload);
               }
             } else {
-              const companyID = localStorage.getItem("companyID");
+              const companyID = localStorage.getItem('companyID');
               const result = await dispatch(
                 updateRequirementByID({
                   id: rowKey,
@@ -1284,9 +1284,9 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                   cascader: data.cascader,
                   note: data.note,
                   status: data.status,
-                  companyID: companyID || "",
-                  updateUserID: USER_ID || "",
-                  projectID: projectTaskData?.projectId._id || "",
+                  companyID: companyID || '',
+                  updateUserID: USER_ID || '',
+                  projectID: projectTaskData?.projectId._id || '',
                   updateDate: new Date(),
                   amout: data.amout,
                   alternative: data.alternative,
@@ -1295,24 +1295,24 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
                   PN: selectedObject.PART_NUMBER,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 setSelectedObject({
-                  PART_NUMBER: "",
+                  PART_NUMBER: '',
                   QUANTITY: 0,
-                  NAME_OF_MATERIAL: "",
-                  UNIT_OF_MEASURE: "",
-                  DESCRIPTION: "",
-                  GROUP: "",
-                  TYPE: "",
+                  NAME_OF_MATERIAL: '',
+                  UNIT_OF_MEASURE: '',
+                  DESCRIPTION: '',
+                  GROUP: '',
+                  TYPE: '',
                 });
                 const result1 = await dispatch(
                   getFilteredRequirements({
-                    companyID: companyID || "",
-                    projectId: projectTaskData?.projectId._id || "",
+                    companyID: companyID || '',
+                    projectId: projectTaskData?.projectId._id || '',
                     additionalTaskID: projectTaskData?._id,
                   })
                 );
-                if (result1.meta.requestStatus === "fulfilled") {
+                if (result1.meta.requestStatus === 'fulfilled') {
                   setRequirements(result1.payload);
                   setInitialRequirements(result1.payload);
                 }
@@ -1324,11 +1324,11 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
           onVisibleColumnsChange={handleVisibleColumnsChange}
           externalReload={async function (): Promise<void> {
             try {
-              const companyID = localStorage.getItem("companyID");
+              const companyID = localStorage.getItem('companyID');
               const result = await dispatch(
                 getFilteredRequirements({
-                  companyID: companyID || "",
-                  projectId: projectTaskData?.projectId._id || "",
+                  companyID: companyID || '',
+                  projectId: projectTaskData?.projectId._id || '',
                   projectTaskID: projectTaskData?._id,
                 })
               );
@@ -1337,7 +1337,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
             }
           }}
         ></EditableTable>
-      </div>{" "}
+      </div>{' '}
     </>
   );
 };

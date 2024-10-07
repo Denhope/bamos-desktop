@@ -1,19 +1,18 @@
-import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { IActionType } from "@/store/reducers/AdditionalTaskSlice";
-import { MatRequestAplication } from "@/store/reducers/ProjectTaskSlise";
-import { IMatDataAdditional, ITaskType } from "@/types/TypesData";
+import { IActionType } from '@/store/reducers/AdditionalTaskSlice';
+import { MatRequestAplication } from '@/store/reducers/ProjectTaskSlise';
+import { IMatDataAdditional, ITaskType } from '@/types/TypesData';
 
 export type TDifficulty =
-  | "routine"
-  | "hardTime"
-  | "additional"
-  | "PIREP"
-  | "CABIN"
-  | "MAINT"
-  | "partRepare"
-  | "";
+  | 'routine'
+  | 'hardTime'
+  | 'additional'
+  | 'PIREP'
+  | 'CABIN'
+  | 'MAINT'
+  | 'partRepare'
+  | '';
 
-export type TStatus = "отложен" | "в работе" | "выполнен" | "закрыт";
+export type TStatus = 'отложен' | 'в работе' | 'выполнен' | 'закрыт';
 
 export interface IMatPrintItem {
   PART_NUMBER?: string;
@@ -49,7 +48,7 @@ export type INRCInfoType = {
   position?: string;
 };
 export type IReferencesLinkType = {
-  type: "WO" | "AMM" | "SB" | "" | "NRC";
+  type: 'WO' | 'AMM' | 'SB' | '' | 'NRC';
   reference: string;
   description: string;
 };
@@ -61,7 +60,7 @@ export interface IAdditionalTask {
   _id?: string;
   id?: string;
   taskType?: NRCType | ScheduledType;
-  resourcesRequests: CheckboxValueType[];
+  resourcesRequests: any[];
   taskHeadLine?: string;
   taskDescription?: string;
   isDoubleInspectionRequired: boolean;
@@ -112,10 +111,10 @@ export interface IAdditionalTask {
   taskPickSlipsMaterials?: any[];
   materialForPrint?: IMatPrintItem[];
 }
-export type NRCType = "PIREP" | "CABIN" | "MAINT";
+export type NRCType = 'PIREP' | 'CABIN' | 'MAINT';
 export type ScheduledType =
-  | "routine"
-  | "hardTime"
-  | "additional"
-  | "partRepare"
-  | "";
+  | 'routine'
+  | 'hardTime'
+  | 'additional'
+  | 'partRepare'
+  | '';

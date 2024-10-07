@@ -1,8 +1,9 @@
-import { ITaskType } from "@/types/TypesData";
-import { IUser } from "./IUser";
+import { ITaskType } from '@/types/TypesData';
+import { IUser } from './IUser';
+import { IACType } from './AC';
 
 export interface IPlaneTask {
-  tasktypeLookup?: "PKGOP" | "SB" | "SMC" | "ADP" | "AD" | "PN";
+  tasktypeLookup?: 'PKGOP' | 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
   planeID: IPlane;
   companyID?: string;
   status: Status;
@@ -97,7 +98,7 @@ export interface IPlaneTaskResponce {
   toleranceAFL?: number;
   toleranceMOS?: number;
   toleranceMHS?: string;
-  tasktypeLookup?: "PKGOP" | "SB" | "SMC" | "ADP" | "AD" | "PN";
+  tasktypeLookup?: 'PKGOP' | 'SB' | 'SMC' | 'ADP' | 'AD' | 'PN';
   planeID?: IPlane;
   companyID?: string;
   status?: Status;
@@ -221,5 +222,216 @@ export interface IPlane {
     eng4?: { date: Date; HRS: string; AFL: number };
   };
 }
-type PlaneType = "ERJ-190" | "737-600/700/800/900" | "RRJ-95";
-type Status = "permormed" | "delete" | "in Maintenance";
+type PlaneType = 'ERJ-190' | '737-600/700/800/900' | 'RRJ-95';
+type Status = 'permormed' | 'delete' | 'in Maintenance';
+
+export interface ITaskCode {
+  _id: string;
+  id: string;
+  title: string;
+  code: string;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId: string;
+  acTypeTitle: string;
+}
+
+export interface IMPD {
+  id: string;
+  title: string;
+  code: string;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId: string;
+}
+
+export interface ITaskCodeGroup {
+  acTypeId: string;
+  acTypeTitle: string;
+  tasksCodes: ITaskCode[] | [];
+}
+
+export interface IZoneCode {
+  accessCodes?: IAccessCode[];
+  id: string;
+  _id?: string;
+  majoreZoneNbr: number;
+  majoreZoneDescription: string;
+  majoreZoneShortDescription: string;
+  subZoneNbr?: number;
+  subZoneDescription?: string;
+  subZoneShortDescription?: string;
+  areaNbr?: string | number;
+  accessNbr?: string | number;
+  areaDescription?: string;
+  accessDescription?: string;
+  acTypeId: string;
+  accessID?: string;
+  areaCodeID?: string;
+  acTypeTitle: string;
+  acType: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  status?: string;
+}
+export interface ISubZoneCode extends IZoneCode {
+  areasCode?: IZoneCode[];
+}
+export interface IAreaCode extends IZoneCode {}
+
+export interface IZoneCodeGroup extends IZoneCode {
+  subZonesCode?: ISubZoneCode[];
+}
+
+export interface IAreaCode {
+  id: string;
+  majoreZoneNbr: number;
+  majoreZoneDescription: string;
+  majoreZoneShortDescription: string;
+  subZoneNbr?: number;
+  subZoneDescription?: string;
+  subZoneShortDescription?: string;
+  areaNbr?: string | number;
+  areaDescription?: string;
+  accessNumber?: string | number;
+  accessDescription?: string;
+  acTypeId: string;
+  acTypeTitle: string;
+  acType: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  zoneCodeId: string;
+  status?: string;
+}
+
+export interface IAccessCode {
+  accessProjectNumber: any;
+  areaCode: any;
+  _id: any;
+  accessNbr: any;
+  id: string;
+  majoreZoneNbr: number;
+  majoreZoneDescription: string;
+  majoreZoneShortDescription: string;
+  subZoneNbr?: number;
+  subZoneDescription?: string;
+  subZoneShortDescription?: string;
+  areaNbr?: string | number;
+  areaDescription?: string;
+  accessDescription?: string;
+  acTypeId: string;
+  acTypeTitle: string;
+  acType: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  zoneCodeId: string;
+  areaCodeId: string;
+  accessNumber?: string | number;
+  accessCodeId: string;
+  status?: string;
+}
+
+export interface ITaskResponce {
+  taskNumber?: string;
+  id: any;
+  description: string;
+  createDate: string;
+  createUserID: string;
+  updateDate?: string;
+  updateUserID?: string;
+  companyID: string;
+  acTypeId?: IACType;
+  zonesID?: IAreaCode[];
+  accessID?: any[];
+  taskCodeId?: ITaskCode;
+  taskType?: 'AC_TASK' | 'COMMON_TASK';
+  workerNumber?: number;
+  specialization?: string;
+  prepareTaskTime?: number;
+  allTaskTime?: number;
+  applicability?: any;
+  workInterval?: string;
+  amtoss?: string;
+  document?: string;
+  taskDepartment?: 'sceduledTask' | 'piper' | '';
+  revision?: any;
+  mpdDocumentationId?: any;
+  preparationCode?: any;
+}
+export interface ITask {
+  isCriticalTask?: boolean;
+  reference?: any[];
+  mainWorkTime: any;
+  _id: any;
+  instrumentID: any;
+  partNumberID: any;
+  partNumber: any;
+  taskDescription: any;
+  taskNumber?: string;
+  id?: any;
+  description: string;
+  createDate: any;
+  createUserID: any;
+  updateDate?: string;
+  updateUserID?: any;
+  companyID: string;
+  acTypeId?: IACType | string;
+  zonesID?: IAreaCode[] | string[];
+  accessID?: any[];
+  taskCodeId?: string;
+  ata?: any;
+  // taskType?: 'AC_TASK' | 'COMMON_TASK';
+  workerNumber?: number;
+  specialization?: string;
+  prepareTaskTime?: number;
+  allTaskTime?: number;
+  applicability?: any;
+  workInterval?: string;
+  amtoss?: string;
+  document?: string;
+  taskDepartment?: 'sceduledTask' | 'piper' | '';
+  revision?: any;
+  mpdDocumentationId?: any;
+  note?: any;
+  isDoubleInspectionRequired?: boolean;
+  position?: string;
+  intervalMOS?: number; //месяцы
+  intervalHRS?: number;
+  intervalAFL?: number;
+  intervalAPUS?: number;
+  intervalENC?: number;
+  intervalDAYS?: number;
+  preparationCode?: any;
+  toleranceAFL?: number;
+  toleranceMOS?: number;
+  toleranceDAY?: number;
+  toleranceMHS?: string;
+  status?: string;
+  quantity?: any;
+  taskType?:
+    | 'SB'
+    | 'SMC'
+    | 'ADP'
+    | 'AD'
+    | 'PN'
+    | 'PART_PRODUCE'
+    | 'NRC'
+    | 'ADD_HOC';
+}

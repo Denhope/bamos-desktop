@@ -1,26 +1,30 @@
 // @ts-nocheck
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IAuth } from "@/models/IAuth";
-import { IState } from "@/store/types";
-import { registration, getNewUserTokens } from "../../utils/api/thunks";
-import { login } from "../../utils/api/thunks";
-import { IUser } from "@/models/IUser";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IAuth } from '@/models/IAuth';
+import { IState } from '@/store/types';
+import { registration, getNewUserTokens } from '../../utils/api/thunks';
+import { login } from '../../utils/api/thunks';
+import { IUser } from '@/models/IUser';
 
 const initialState: IState = {
   isLoading: false,
   userCreationError: null,
   isAuth: false,
+
   user: {
-    message: "",
-    token: "",
-    refreshToken: "",
-    userId: "",
-    name: "",
+    message: '',
+    token: '',
+    refreshToken: '',
+    userId: '',
+    name: '',
+    role: '',
+    permissions: '',
+    companyID:''
   },
 };
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setIsAuth: (state, action: PayloadAction<boolean>) => {
@@ -37,6 +41,15 @@ export const authSlice = createSlice({
     },
     setAuthUserId(state, action: PayloadAction<any>) {
       state.user.userId = action.payload;
+    },
+    setAuthUserRole(state, action: PayloadAction<any>) {
+      state.user.role = action.payload;
+    },
+    setAuthUserPermissions(state, action: PayloadAction<any>) {
+      state.user.permissions = action.payload;
+    },
+    setAuthUserCompany(state, action: PayloadAction<string>) {
+      state.user.companyID = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -93,6 +106,13 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setIsAuth, setAuthUserName, setAuthUserId } = authSlice.actions;
+export const {
+  setIsAuth,
+  setAuthUserName,
+  setAuthUserId,
+  setAuthUserRole,
+  setAuthUserPermissions,
+  setAuthUserCompany,
+} = authSlice.actions;
 
 export default authSlice.reducer;

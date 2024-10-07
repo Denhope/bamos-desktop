@@ -6,20 +6,20 @@ import {
   ProFormSelect,
   ProFormTimePicker,
   ProColumns,
-} from "@ant-design/pro-components";
-import { Form, message } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IReceiving } from "@/models/IReceiving";
-import moment from "moment";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@ant-design/pro-components';
+import { Form, message } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IReceiving } from '@/models/IReceiving';
+import moment from 'moment';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getFilteredReceivingItems,
   updateManyMaterialItems,
   updateManyReceivingItems,
   updateReceivingByNumber,
-} from "@/utils/api/thunks";
+} from '@/utils/api/thunks';
 type ModifyReceivingType = {
   selectedRowKeys?: any[];
   onEditReceivings: (orders: any[] | []) => void;
@@ -39,17 +39,17 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       const result = dispatch(
         getFilteredReceivingItems({
           companyID: currentCompanyID,
           receiningNumber: data?.RECEIVING_NUMBER,
         })
       );
-      if ((await result).meta.requestStatus === "fulfilled") {
+      if ((await result).meta.requestStatus === 'fulfilled') {
         setFeachItems((await result).payload || []);
       } else {
-        message.error("Error");
+        message.error('Error');
       }
     };
     fetchData();
@@ -57,12 +57,12 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
   useEffect(() => {
     if (data) {
       form.setFields([
-        { name: "awbType", value: data.AWB_TYPE },
-        { name: "awbNumber", value: data.AWB_NUMBER },
-        { name: "awbDate", value: data.AWB_DATE },
-        { name: "awbReference", value: data.AWB_REFERENCE },
-        { name: "receivingDate", value: moment(data.RECEIVED_DATE) },
-        { name: "receivingTime", value: moment(data.RECEIVED_DATE) },
+        { name: 'awbType', value: data.AWB_TYPE },
+        { name: 'awbNumber', value: data.AWB_NUMBER },
+        { name: 'awbDate', value: data.AWB_DATE },
+        { name: 'awbReference', value: data.AWB_REFERENCE },
+        { name: 'receivingDate', value: moment(data.RECEIVED_DATE) },
+        { name: 'receivingTime', value: moment(data.RECEIVED_DATE) },
 
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -71,50 +71,50 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
 
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("ORDER NUMBER")}`,
-      dataIndex: "ORDER_NUMBER",
-      key: "ORDER_NUMBER",
-      // tip: 'ITEM STORE',
+      title: `${t('ORDER NUMBER')}`,
+      dataIndex: 'ORDER_NUMBER',
+      key: 'ORDER_NUMBER',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
-        name: "ORDER_NUMBER",
+        name: 'ORDER_NUMBER',
       },
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("PART NUMBER")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PART No')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
 
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
     },
     {
-      title: `${t("BATCH NUMBER")}`,
-      dataIndex: "SUPPLIER_BATCH_NUMBER",
-      key: "SUPPLIER_BATCH_NUMBER",
+      title: `${t('BATCH NUMBER')}`,
+      dataIndex: 'SUPPLIER_BATCH_NUMBER',
+      key: 'SUPPLIER_BATCH_NUMBER',
       ellipsis: true,
       render: (text: any, record: any) => record?.SUPPLIER_BATCH_NUMBER,
       // остальные свойства...
     },
     {
-      title: `${t("SERIAL NUMBER")}`,
-      dataIndex: "SERIAL_NUMBER",
-      key: "SERIAL_NUMBER",
+      title: `${t('SERIAL NUMBER')}`,
+      dataIndex: 'SERIAL_NUMBER',
+      key: 'SERIAL_NUMBER',
       ellipsis: true,
       render: (text: any, record: any) => record?.SERIAL_NUMBER,
       // остальные свойства...
     },
     {
-      title: `${t("CERTIFICATE NUMBER")}`,
-      dataIndex: "APPROVED_CERT",
-      key: "APPROVED_CERT",
+      title: `${t('CERTIFICATE NUMBER')}`,
+      dataIndex: 'APPROVED_CERT',
+      key: 'APPROVED_CERT',
       ellipsis: true,
       render: (text: any, record: any) => record?.APPROVED_CERT,
       // остальные свойства...
@@ -126,7 +126,7 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
     <div>
       <ProForm
         onFinish={async (values) => {
-          const currentCompanyID = localStorage.getItem("companyID") || "";
+          const currentCompanyID = localStorage.getItem('companyID') || '';
           const result = dispatch(
             updateReceivingByNumber({
               COMPANY_ID: currentCompanyID,
@@ -137,42 +137,42 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
               awbReference: values.awbReference,
               receivingDate: values.receivingDate,
               updateDate: new Date(),
-              updateUserID: localStorage.getItem("companyID") || "",
-              updateUserSing: localStorage.getItem("singNumber") || "",
+              updateUserID: localStorage.getItem('companyID') || '',
+              updateUserSing: localStorage.getItem('singNumber') || '',
             })
           );
-          if ((await result).meta.requestStatus === "fulfilled") {
+          if ((await result).meta.requestStatus === 'fulfilled') {
             const result = dispatch(
               updateManyReceivingItems({
-                companyID: currentCompanyID || "",
+                companyID: currentCompanyID || '',
                 ids: items && items.map((item: any) => item._id),
                 AWB_DATE: values.awbDate,
                 AWB_NUMBER: values.awbNumber,
                 AWB_TYPE: values.awbType,
                 RECEIVED_DATE: moment(values.receivingDate)
                   .set({
-                    hour: moment(values.receivingTime, "HH:mm").get("hour"),
-                    minute: moment(values.receivingTime, "HH:mm").get("minute"),
+                    hour: moment(values.receivingTime, 'HH:mm').get('hour'),
+                    minute: moment(values.receivingTime, 'HH:mm').get('minute'),
                   })
                   .toISOString(),
                 AWB_REFERENCE: values.awbReference,
                 updateDate: new Date(),
-                updateUserID: localStorage.getItem("companyID") || "",
-                updateUserSing: localStorage.getItem("singNumber") || "",
+                updateUserID: localStorage.getItem('companyID') || '',
+                updateUserSing: localStorage.getItem('singNumber') || '',
               })
             );
-            if ((await result).meta.requestStatus === "fulfilled") {
+            if ((await result).meta.requestStatus === 'fulfilled') {
               const result = dispatch(
                 getFilteredReceivingItems({
                   companyID: currentCompanyID,
                   receiningNumber: data?.RECEIVING_NUMBER,
                 })
               );
-              if ((await result).meta.requestStatus === "fulfilled") {
+              if ((await result).meta.requestStatus === 'fulfilled') {
                 onEditReceivings((await result).payload || []);
                 dispatch(
                   updateManyMaterialItems({
-                    companyID: currentCompanyID || "",
+                    companyID: currentCompanyID || '',
                     ids:
                       (await result).payload &&
                       (await result).payload.map(
@@ -184,9 +184,9 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
                     AWB_TYPE: values.awbType,
                     RECEIVED_DATE: moment(values.receivingDate)
                       .set({
-                        hour: moment(values.receivingTime, "HH:mm").get("hour"),
-                        minute: moment(values.receivingTime, "HH:mm").get(
-                          "minute"
+                        hour: moment(values.receivingTime, 'HH:mm').get('hour'),
+                        minute: moment(values.receivingTime, 'HH:mm').get(
+                          'minute'
                         ),
                       })
                       .toISOString(),
@@ -194,7 +194,7 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
                   })
                 );
               } else {
-                message.error("Error");
+                message.error('Error');
               }
             }
           }
@@ -210,62 +210,62 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
             <ProFormSelect
               rules={[{ required: true }]}
               name="awbType"
-              label={t("DOC TYPE")}
+              label={t('DOC TYPE')}
               valueEnum={{
-                ТН: t("Товарная накладная"),
-                ТТН: t("Товарно-транспортная накладная"),
-                УПД: t("Универсальный передаточный документ"),
-                СФ: t("Счет-фактура"),
-                ДТ: t("Декларация на товары"),
-                Инв: t("Инвойс"),
-                АПП: t("Акт приема-передачи"),
+                ТН: t('Товарная накладная'),
+                ТТН: t('Товарно-транспортная накладная'),
+                УПД: t('Универсальный передаточный документ'),
+                СФ: t('Счет-фактура'),
+                ДТ: t('Декларация на товары'),
+                Инв: t('Инвойс'),
+                АПП: t('Акт приема-передачи'),
               }}
               width="sm"
-              tooltip={t("DOC TYPE")}
+              tooltip={t('DOC TYPE')}
             ></ProFormSelect>
             <ProFormText
               name="awbNumber"
-              label={t(" DOC No")}
+              label={t('DOC No')}
               rules={[{ required: true }]}
               width="sm"
-              tooltip={t(" DOC NNUMBER")}
+              tooltip={t(' DOC NNUMBER')}
             ></ProFormText>
           </ProFormGroup>
           <ProFormGroup direction="vertical">
             <ProFormDatePicker
               name="awbDate"
               rules={[{ required: true }]}
-              label={t("DOC DATE")}
+              label={t('DOC DATE')}
               width="sm"
             ></ProFormDatePicker>
             <ProFormText
               name="awbReference"
               rules={[{ required: false }]}
-              label={t(" REFERENCE")}
+              label={t(' REFERENCE')}
               width="sm"
-              tooltip={t(" REFERENCE")}
+              tooltip={t(' REFERENCE')}
             ></ProFormText>
           </ProFormGroup>
           <ProFormGroup direction="vertical">
             <ProFormDatePicker
               name="receivingDate"
               rules={[{ required: true }]}
-              label={t("RECEIVING DATE")}
+              label={t('RECEIVING DATE')}
               width="sm"
             ></ProFormDatePicker>
             <ProFormTimePicker
               name="receivingTime"
               rules={[{ required: true }]}
-              label={t("RECEIVING TIME")}
+              label={t('RECEIVING TIME')}
               width="sm"
               fieldProps={{
-                format: "HH:mm",
+                format: 'HH:mm',
               }}
             ></ProFormTimePicker>
           </ProFormGroup>
         </ProFormGroup>
         <div className="py-5">
-          {" "}
+          {' '}
           <EditableTable
             data={items}
             showSearchInput
@@ -284,7 +284,7 @@ const ModifyReceiving: FC<ModifyReceivingType> = ({
             onSave={function (rowKey: any, data: any, row: any): void {}}
             yScroll={23}
             externalReload={function () {
-              throw new Error("Function not implemented.");
+              throw new Error('Function not implemented.');
             }}
           ></EditableTable>
         </div>

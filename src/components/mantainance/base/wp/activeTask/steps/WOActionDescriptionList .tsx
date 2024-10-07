@@ -1,22 +1,22 @@
-import React, { FC, useEffect, useState } from "react";
-import { MenuProps } from "antd";
+import React, { FC, useEffect, useState } from 'react';
+import { MenuProps } from 'antd';
 
-import { DownloadOutlined, StopOutlined } from "@ant-design/icons";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import { DownloadOutlined, StopOutlined } from '@ant-design/icons';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 
-import { exportToExcel } from "@/services/utilites";
+import { exportToExcel } from '@/services/utilites';
 import {
   setCurrentAction,
   setCurrentActionIndexMtb,
   setUpdatedProjectTask,
-} from "@/store/reducers/MtbSlice";
+} from '@/store/reducers/MtbSlice';
 
-import { updateProjectTask } from "@/utils/api/thunks";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { ProColumns } from "@ant-design/pro-components";
-import { IActionType } from "@/models/IProjectTaskMTB";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
+import { updateProjectTask } from '@/utils/api/thunks';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { ProColumns } from '@ant-design/pro-components';
+import { IActionType } from '@/models/IProjectTaskMTB';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
 export interface IActionDescriptionListPrors {
   data: IActionType[];
 }
@@ -32,48 +32,48 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
   const [openAddStepForm, setOpenAddStepForm] = useState(false);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [editingDescription, setEditingDescription] = useState("");
+  const [editingDescription, setEditingDescription] = useState('');
 
   const [editableRecord, setEditableRecord] = useState<IActionType | null>(
     null
   );
   const columns: ProColumns<IActionType>[] = [
     {
-      title: `${t("Steps")}`,
-      dataIndex: "actionNumber",
-      key: "actionNumber",
-      responsive: ["sm"],
-      width: "9%",
+      title: `${t('Steps')}`,
+      dataIndex: 'actionNumber',
+      key: 'actionNumber',
+      responsive: ['sm'],
+      width: '9%',
       editable: (text, record, index) => {
         return false;
       },
     },
     {
-      title: `${t("DESCRIPTIONS")}`,
-      dataIndex: "actionDescription",
-      key: "actionDescription",
+      title: `${t('DESCRIPTIONS')}`,
+      dataIndex: 'actionDescription',
+      key: 'actionDescription',
       //ellipsis: true,
 
       // },
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
     {
-      title: `${t("PERFOMED")}`,
-      dataIndex: "performedSing",
-      width: "15%",
-      key: "performedSing",
-      responsive: ["sm"],
+      title: `${t('PERFOMED')}`,
+      dataIndex: 'performedSing',
+      width: '15%',
+      key: 'performedSing',
+      responsive: ['sm'],
       editable: (text, record, index) => {
         return false;
       },
       // width: '8%',
     },
     {
-      title: `${t("INSPECTED")}`,
-      dataIndex: "inspectedSing",
-      width: "14%",
-      key: "inspectedSing",
-      responsive: ["sm"],
+      title: `${t('INSPECTION')}`,
+      dataIndex: 'inspectedSing',
+      width: '14%',
+      key: 'inspectedSing',
+      responsive: ['sm'],
       // width: '8%',
       editable: (text, record, index) => {
         return false;
@@ -82,10 +82,10 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
 
     // },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
-      width: "14%",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
+      width: '14%',
       render: (text, record, _, action) => [
         <a
           key="editable"
@@ -128,20 +128,20 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
         currentProjectTask.actions?.[currentProjectTask.actions?.length - 1] ||
           null
       );
-      setEditingDescription(editableRecord?.actionDescription || "");
+      setEditingDescription(editableRecord?.actionDescription || '');
     }
   }, [editableRecord]);
 
   const dataEmpty = [
     {
-      actionDescription: "",
-      performedSing: "",
-      performedDate: "",
-      performedTime: "",
+      actionDescription: '',
+      performedSing: '',
+      performedDate: '',
+      performedTime: '',
     },
   ];
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const [selectedRowKey, setSelectedRowKey] = useState<number | null>(1);
@@ -166,13 +166,13 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
     // Очищаем выбранные ключи
     setSelectedRowKeys([]);
   };
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -183,15 +183,15 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
     } as MenuItem;
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
         // getItem('Print Status Report', 'sub4', <PrinterOutlined />, [
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -210,7 +210,7 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -229,7 +229,7 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
             >
               <DownloadOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -237,28 +237,28 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
     },
 
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
-        getItem(" Update Selected Steps", "subydd09", "", [
+        getItem(' Update Selected Steps', 'subydd09', '', [
           getItem(
-            <div onClick={() => console.log("New Work Order open Form")}>
+            <div onClick={() => console.log('New Work Order open Form')}>
               Perfomed Step
             </div>,
-            "9saqrrss"
+            '9saqrrss'
           ),
           getItem(
-            <div onClick={() => console.log("New Work Order open Form")}>
+            <div onClick={() => console.log('New Work Order open Form')}>
               Inspected Step
             </div>,
-            "9saryjsyhqss"
+            '9saryjsyhqss'
           ),
           getItem(
-            <div onClick={() => console.log("New Work Order open Form")}>
+            <div onClick={() => console.log('New Work Order open Form')}>
               DInspected Step
             </div>,
-            "9sasmvfyhqss"
+            '9sasmvfyhqss'
           ),
         ]),
 
@@ -266,21 +266,21 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
           <div onClick={handleDeleteSelectedItems}>
             <StopOutlined /> Delete Selected Items
           </div>,
-          "9ss2hhhxs"
+          '9ss2hhhxs'
         ),
       ],
     },
   ];
-  const [position, setPosition] = useState<"top" | "bottom" | "hidden">(
-    "bottom"
+  const [position, setPosition] = useState<'top' | 'bottom' | 'hidden'>(
+    'bottom'
   );
   return (
     <div className="flex my-0 mx-auto flex-col  overflow-hidden relative ">
       <EditableTable
         recordCreatorProps={
-          currentProjectTask?.status !== "closed"
+          currentProjectTask?.status !== 'closed'
             ? {
-                position: position as "top",
+                position: position as 'top',
                 record: () => ({
                   actionNumber: currentProjectTask?.actions?.length
                     ? currentProjectTask.actions.length + 1
@@ -322,7 +322,7 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
               id: currentProjectTask?._id,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             const index = projectTasks.findIndex(
               (task) => task._id === currentProjectTask?._id
             );
@@ -342,7 +342,7 @@ const WOActionDescriptionList: FC<IActionDescriptionListPrors> = ({ data }) => {
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onVisibleColumnsChange={handleVisibleColumnsChange}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
     </div>

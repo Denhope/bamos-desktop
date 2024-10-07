@@ -1,12 +1,14 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { DatePicker } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import { DatePicker } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 type showProjectListType = {
   scroll: number;
-  onSelectedProjects: (record: any) => void;
+
   onSelectedIds?: (record: any) => void;
+  onSingleRowClick?: (record: any) => void;
+  onDoubleRowClick?: (record: any) => void;
   selectedProjects?: any;
   projects?: any;
 };
@@ -15,46 +17,48 @@ const { RangePicker } = DatePicker;
 
 const ProjectViewList: FC<showProjectListType> = ({
   scroll,
+  onDoubleRowClick,
+  onSingleRowClick,
   onSelectedIds,
-  onSelectedProjects,
+
   projects,
   selectedProjects,
 }) => {
   const { t } = useTranslation();
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("PROJECT No")}`,
-      dataIndex: "projectWO",
-      key: "projectWO",
-      // tip: 'LOCAL_ID',
+      title: `${t('PROJECT No')}`,
+      dataIndex: 'projectWO',
+      key: 'projectWO',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       // width: '13%',
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("NAME")}`,
-      dataIndex: "projectName", // обновлено
-      key: "projectName", // обновлено
+      title: `${t('NAME')}`,
+      dataIndex: 'projectName', // обновлено
+      key: 'projectName', // обновлено
       ellipsis: true,
     },
     {
-      title: `${t("TYPE")}`,
-      dataIndex: "projectType", // обновлено
-      key: "projectType", // обновлено
+      title: `${t('TYPE')}`,
+      dataIndex: 'projectType', // обновлено
+      key: 'projectType', // обновлено
       ellipsis: true,
     },
     {
-      title: `${t("CUSTOMER")}`,
-      dataIndex: "customer", // обновлено
-      key: "customer", // обновлено
+      title: `${t('CUSTOMER')}`,
+      dataIndex: 'customer', // обновлено
+      key: 'customer', // обновлено
       ellipsis: true,
     },
 
     {
-      title: `${t("STATUS")}`,
-      dataIndex: "status",
-      key: "status",
+      title: `${t('STATUS')}`,
+      dataIndex: 'status',
+      key: 'status',
       ellipsis: true,
       // width: '10%',
 
@@ -64,16 +68,16 @@ const ProjectViewList: FC<showProjectListType> = ({
       render: (text: any, record: any) => {
         // Определяем цвет фона в зависимости от условия
         let backgroundColor;
-        if (record.state === "CLOSED") {
-          backgroundColor = "#62d156";
+        if (record.state === 'CLOSED') {
+          backgroundColor = '#62d156';
         } else if (
-          record.status === "OPEN" ||
-          record.status === "open" ||
-          record.status === "DRAFT"
+          record.status === 'OPEN' ||
+          record.status === 'open' ||
+          record.status === 'DRAFT'
         ) {
-          backgroundColor = "	#BEBEBE";
+          backgroundColor = '	#BEBEBE';
         } else {
-          backgroundColor = "#f0be37";
+          backgroundColor = '#f0be37';
         }
         return (
           <div style={{ backgroundColor }}>
@@ -83,16 +87,16 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t("CREATE DATE")}`,
+      title: `${t('CREATE DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "createDate",
-      key: "createDate",
+      dataIndex: 'createDate',
+      key: 'createDate',
       // width: '9%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.createDate && b.createDate) {
           const aFinishDate = new Date(a.createDate);
@@ -107,16 +111,16 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t("PLANED START DATE")}`,
+      title: `${t('PLANNED START DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "planedStartDate",
-      key: "planedStartDate",
+      dataIndex: 'planedStartDate',
+      key: 'planedStartDate',
       // width: '9%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.planedStartDate && b.planedStartDate) {
           const aFinishDate = new Date(a.planedStartDate);
@@ -131,16 +135,16 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t("PLANED FINISH DATE")}`,
+      title: `${t('PLANNED FINISH DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "planedFinishDate",
-      key: "planedFinishDate",
+      dataIndex: 'planedFinishDate',
+      key: 'planedFinishDate',
       // width: '9%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.planedFinishDate && b.planedFinishDate) {
           const aFinishDate = new Date(a.planedFinishDate);
@@ -155,16 +159,16 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t(" DATE IN")}`,
+      title: `${t('DATE IN')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "startDate",
-      key: "startDate",
+      dataIndex: 'startDate',
+      key: 'startDate',
       // width: '9%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.startDate && b.startDate) {
           const aFinishDate = new Date(a.startDate);
@@ -179,16 +183,16 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t(" DATE OUT")}`,
+      title: `${t('DATE OUT')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "finishDate",
-      key: "finishDate",
+      dataIndex: 'finishDate',
+      key: 'finishDate',
       // width: '9%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.finishDate && b.finishDate) {
           const aFinishDate = new Date(a.finishDate);
@@ -214,17 +218,19 @@ const ProjectViewList: FC<showProjectListType> = ({
         recordCreatorProps={false}
         isNoneRowSelection={true}
         xScroll={450}
-        onDoubleRowClick={function (record: any, rowIndex?: any): void {}}
+        onDoubleRowClick={function (record: any, rowIndex?: any): void {
+          onDoubleRowClick?.(record);
+        }}
         onRowClick={function (record: any, rowIndex?: any): void {
-          onSelectedProjects(record);
-          console.log(record);
+          onSingleRowClick?.(record);
+          // console.log(record);
         }}
         onSave={function (rowKey: any, data: any, row: any): void {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         yScroll={scroll}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         isLoading={false}
       />

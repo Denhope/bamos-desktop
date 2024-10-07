@@ -1,15 +1,16 @@
-import { IAplicationInfo } from "@/types/TypesData";
-import { IUser } from "./IUser";
+import { IAplicationInfo } from '@/types/TypesData';
+import { IUser } from './IUser';
 
 export type TStatus =
-  | "В работе"
-  | "завершен"
-  | "отложен"
-  | "open"
-  | "complete"
-  | "inProgress"
-  | "close"
-  | "canceled";
+  | 'В работе'
+  | 'завершен'
+  | 'отложен'
+  | 'open'
+  | 'draft'
+  | 'completed'
+  | 'inProgress'
+  | 'close'
+  | 'canceled';
 export interface IProjectInfo {
   id?: string;
   projectId?: string;
@@ -56,4 +57,33 @@ export interface IProjectResponce {
   finishDate: any;
   description?: string;
   planeStatus?: any[];
+}
+
+export interface IProject {
+  WONumber?: any;
+  WPNumber?: any;
+  WOName?: any;
+  projectType?: string;
+  _id: any;
+  id: string;
+  projectName: string;
+  aplicationId?: string | IAplicationInfo;
+  planedStartDate?: Date;
+  planedFinishDate?: Date;
+  startDate?: Date;
+  finishDate?: Date;
+  status?: TStatus;
+  projectWO?: number | string;
+  description?: string;
+  createDate: string;
+  createUserID: string | any;
+  updateDate?: string;
+  updateUserID?: string | any;
+  FILES?: any[];
+  workPackageIds?: any[];
+  isEditing?: boolean;
+  planeId?: string | any;
+  acTypeID?: string | any;
+  customerID?: string;
+  actionHistory?: any;
 }

@@ -1,19 +1,19 @@
-import TabContent from "@/components/shared/Table/TabContent";
-import React, { FC, useState } from "react";
-import TaskDetails from "./taskTabs/TaskDetails";
-import StepsContent from "./taskTabs/StepsContent";
+import TabContent from '@/components/shared/Table/TabContent';
+import React, { FC, useState } from 'react';
+import TaskDetails from './taskTabs/TaskDetails';
+import StepsContent from './taskTabs/StepsContent';
 
-import RequirementItems from "./taskTabs/RequirementItems";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import RequirementItems from './taskTabs/RequirementItems';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 
-import { ModalForm, ProColumns } from "@ant-design/pro-components";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import CloseContent from "../../wp/activeTask/close/CloseContent";
-import NRCStepForm from "../../wp/activeTask/addNRC/NRCStepForm";
-import GeneretedWOPdf from "@/components/pdf/GeneretedWOPdf";
-import { useTranslation } from "react-i18next";
-import NavigationPanel from "@/components/shared/NavigationPanel";
-import { MenuProps, Row, Space, Tag, message } from "antd";
+import { ModalForm, ProColumns } from '@ant-design/pro-components';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import CloseContent from '../../wp/activeTask/close/CloseContent';
+import NRCStepForm from '../../wp/activeTask/addNRC/NRCStepForm';
+import GeneretedWOPdf from '@/components/pdf/GeneretedWOPdf';
+import { useTranslation } from 'react-i18next';
+import NavigationPanel from '@/components/shared/NavigationPanel';
+import { MenuProps, Row, Space, Tag, message } from 'antd';
 import {
   DownloadOutlined,
   StopOutlined,
@@ -21,19 +21,19 @@ import {
   PlusOutlined,
   PrinterOutlined,
   EditOutlined,
-} from "@ant-design/icons";
-import { updateProjectTask } from "@/utils/api/thunks";
-import { setUpdatedProjectTask } from "@/store/reducers/MtbSlice";
-import Title from "antd/es/typography/Title";
+} from '@ant-design/icons';
+import { updateProjectTask } from '@/utils/api/thunks';
+import { setUpdatedProjectTask } from '@/store/reducers/MtbSlice';
+import Title from 'antd/es/typography/Title';
 type WOTaskProps = { currentTask: any };
 
 const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
   const [currentUpdatedTask, setUpdatedTask] = useState(currentTask);
 
   const [selectedObject, setSelectedObject] = useState({
-    PART_NUMBER: "",
+    PART_NUMBER: '',
     QUANTITY: 0,
-    NAME_OF_MATERIAL: "",
+    NAME_OF_MATERIAL: '',
   });
   const [requirementRecord, setRequirementRecord] = useState(false);
   const { t } = useTranslation();
@@ -51,12 +51,12 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
   };
   const initialBlockColumns: ProColumns<any>[] = [
     {
-      title: "LOCAL ID",
-      dataIndex: "LOCAL_ID",
+      title: 'LABEL',
+      dataIndex: 'LOCAL_ID',
       // valueType: 'index',
       ellipsis: true,
-      key: "LOCAL_ID",
-      width: "12%",
+      key: 'LOCAL_ID',
+      width: '12%',
 
       editable: (text, record, index) => {
         return false;
@@ -78,66 +78,66 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      responsive: ["sm"],
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: "B/S NUMBER",
-      dataIndex: "BATCH_ID",
-      key: "BATCH_ID",
+      title: 'B/S NUMBER',
+      dataIndex: 'BATCH_ID',
+      key: 'BATCH_ID',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: "STOCK",
-      dataIndex: "STOCK",
-      key: "BATCH_ID",
+      title: 'STOCK',
+      dataIndex: 'STOCK',
+      key: 'BATCH_ID',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
       editable: (text, record, index) => {
         return false;
       },
@@ -157,13 +157,13 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
       setSelectedColumns([...selectedColumns, e.key]);
     }
   };
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -174,15 +174,15 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
     } as MenuItem;
   }
   const dispatch = useAppDispatch();
-  const taskItems: MenuProps["items"] = [
+  const taskItems: MenuProps['items'] = [
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: <SettingOutlined />,
       children: [
         {
-          label: `${"Print"}`,
-          key: "printAction",
+          label: `${'Print'}`,
+          key: 'printAction',
           icon: null,
           children: [
             getItem(
@@ -191,7 +191,7 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
               >
                 Print Work Card with options
               </div>,
-              "9sshsssswishhxs"
+              '9sshsssswishhxs'
             ),
             getItem(
               <div
@@ -199,31 +199,31 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
               >
                 Print Material list
               </div>,
-              "9sshsssswishhxs"
+              '9sshsssswishhxs'
             ),
           ],
         },
         getItem(
-          <div onClick={() => console.log("New Work Order open Form")}>
+          <div onClick={() => console.log('New Work Order open Form')}>
             <EditOutlined /> Edit in Data
           </div>,
-          "9sssxxss"
+          '9sssxxss'
         ),
 
-        getItem("Update Status", "subydd09", "", [
+        getItem('Update Status', 'subydd09', '', [
           getItem(
             <div
               onClick={async () => {
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectTask({
-                    status: "inProgress",
+                    status: 'inProgress',
                     id: currentUpdatedTask?._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setUpdatedTask(result.payload);
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const index = projectTasks.findIndex(
                     (task) => task._id === currentUpdatedTask?._id
                   );
@@ -235,15 +235,15 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
                       })
                     );
                   }
-                  message.success("Task successfully updated ");
+                  message.success('Task successfully updated ');
                 } else {
-                  message.error("Task not updated");
+                  message.error('Task not updated');
                 }
               }}
             >
               In Progress
             </div>,
-            "9saqss"
+            '9saqss'
           ),
           getItem(
             <div
@@ -251,13 +251,13 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
                 // console.log(selectedRowKeys);
                 const result = await dispatch(
                   updateProjectTask({
-                    status: "open",
+                    status: 'open',
                     id: currentUpdatedTask?._id,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   setUpdatedTask(result.payload);
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
                   const index = projectTasks.findIndex(
                     (task) => task._id === currentUpdatedTask?._id
                   );
@@ -269,15 +269,15 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
                       })
                     );
                   }
-                  message.success("Task successfully updated ");
+                  message.success('Task successfully updated ');
                 } else {
-                  message.error("Task not updated");
+                  message.error('Task not updated');
                 }
               }}
             >
               Open
             </div>,
-            "open"
+            'open'
           ),
         ]),
       ],
@@ -288,21 +288,21 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
     <div className="flex flex-col mx-auto h-[78vh] overflow-hidden">
       {currentUpdatedTask && (
         <>
-          <Row align={"middle"} justify={"space-between"}>
+          <Row align={'middle'} justify={'space-between'}>
             <Title className="py-0 my-0 w-5/6" level={5}>
-              {`${currentUpdatedTask?.taskNumber?.toUpperCase()} ###${currentUpdatedTask?.taskDescription?.toUpperCase()}`}{" "}
+              {`${currentUpdatedTask?.taskNumber?.toUpperCase()} ###${currentUpdatedTask?.taskDescription?.toUpperCase()}`}{' '}
             </Title>
 
-            <Row align={"middle"}>
+            <Row align={'middle'}>
               <Tag
                 color={
-                  currentUpdatedTask?.status === "closed" ? "green" : "red"
+                  currentUpdatedTask?.status === 'closed' ? 'green' : 'red'
                 }
               >
                 {String(
-                  currentUpdatedTask?.status ? currentUpdatedTask?.status : ""
+                  currentUpdatedTask?.status ? currentUpdatedTask?.status : ''
                 ).toUpperCase()}
-              </Tag>{" "}
+              </Tag>{' '}
               <div className=" ml-auto w-40">
                 <NavigationPanel
                   onMenuClick={handleMenuClick}
@@ -323,7 +323,7 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
             tabs={[
               {
                 content: <TaskDetails task={currentUpdatedTask} />,
-                title: `${t("Details")}`,
+                title: `${t('Details')}`,
               },
               {
                 content: (
@@ -337,10 +337,10 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
                         onIssuedClick={onIssuedClick}
                         selectedObjectParent={selectedObject}
                       />
-                    </div>{" "}
+                    </div>{' '}
                   </>
                 ),
-                title: `${t("Requests/Parts")}`,
+                title: `${t('Requests/Parts')}`,
               },
               {
                 content: (
@@ -349,7 +349,7 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
                     upData={setUpdatedTask}
                   />
                 ),
-                title: `${t("Steps")}`,
+                title: `${t('Steps')}`,
               },
               {
                 content: (
@@ -358,23 +358,23 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
                     upData={setUpdatedTask}
                   />
                 ),
-                title: `${t("Close Work Order")}`,
+                title: `${t('Close Work Order')}`,
               },
               {
                 content: (
                   <NRCStepForm
-                    disabled={currentUpdatedTask?.status !== "inProgress"}
+                    disabled={currentUpdatedTask?.status !== 'inProgress'}
                     task={currentUpdatedTask}
                     projectTasks={projectTasks}
                   />
                 ),
-                title: `${t("+ Add NRC")}`,
+                title: `${t('+ Add NRC')}`,
               },
               {
                 content: (
                   <GeneretedWOPdf scroll="68vh" task={currentUpdatedTask} />
                 ),
-                title: `${t("Work Card")}`,
+                title: `${t('Work Card')}`,
               },
             ]}
           />
@@ -383,11 +383,11 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
 
       <ModalForm
         title={`ISSUE PICKSLIP INFORMARION`}
-        size={"small"}
+        size={'small'}
         // placement={'bottom'}
         open={issuedtDrawer}
         submitter={false}
-        width={"70vw"}
+        width={'70vw'}
         onOpenChange={setOpenIssuedDrawer}
         // getContainer={false}
       >
@@ -405,7 +405,7 @@ const WOTask: FC<WOTaskProps> = ({ currentTask }) => {
           }}
           yScroll={26}
           externalReload={function (): Promise<void> {
-            throw new Error("Function not implemented.");
+            throw new Error('Function not implemented.');
           }}
           // onTableDataChange={}
         />

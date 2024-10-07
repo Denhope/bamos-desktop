@@ -1,9 +1,9 @@
-import { ProTable } from "@ant-design/pro-components";
-import { Empty, Form, Input, Space, Table } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC, RefObject, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { RouteNames } from "@/router";
+import { ProTable } from '@ant-design/pro-components';
+import { Empty, Form, Input, Space, Table } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { RouteNames } from '@/router';
 
 interface APNT {
   APNNBR: string;
@@ -24,19 +24,19 @@ const APNTable: FC<APNTableProps> = ({
   const columns = [
     {
       title: `${t(`BAN`)}`,
-      dataIndex: "APNNBR",
-      key: "APNNBR",
+      dataIndex: 'APNNBR',
+      key: 'APNNBR',
 
-      width: "15%",
-      className: "rounded-tl-none",
+      width: '15%',
+      className: 'rounded-tl-none',
     },
     {
       title: `${t(`DESCRIPTIONS`)}`,
-      dataIndex: "descriptions",
-      key: "descriptions",
+      dataIndex: 'descriptions',
+      key: 'descriptions',
 
       // width: '17%',
-      className: "rounded-tl-none",
+      className: 'rounded-tl-none',
     },
   ];
   const searchInputRef: RefObject<any> = React.createRef();
@@ -61,41 +61,41 @@ const APNTable: FC<APNTableProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
-      if (event.key === "ArrowUp") {
+      if (event.key === 'ArrowUp') {
         setSelectedRowIndex((oldIndex) => Math.max(0, oldIndex - 1));
-      } else if (event.key === "ArrowDown") {
+      } else if (event.key === 'ArrowDown') {
         setSelectedRowIndex((oldIndex) =>
           Math.min(data.length - 1, oldIndex + 1)
         );
-      } else if (event.key === "Enter") {
+      } else if (event.key === 'Enter') {
         const selectedRecord = data[selectedRowIndex];
         setSelectedRowKey(selectedRecord?.APNNBR);
         onRowClick(selectedRecord);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [data, selectedRowIndex]);
 
   const rowClassName = (record: any) => {
     if (record.APNNBR) {
       return record.APNNBR === selectedRowKey
-        ? "cursor-pointer text-xs text-transform: uppercase bg-blue-100 py-0 my-0 "
-        : "cursor-pointer  text-xs text-transform: uppercase  py-0 my-0";
+        ? 'cursor-pointer text-xs text-transform: uppercase bg-blue-100 py-0 my-0 '
+        : 'cursor-pointer  text-xs text-transform: uppercase  py-0 my-0';
     } else {
-      return "cursor-pointer  text-xs text-transform: uppercase py-0 my-0";
+      return 'cursor-pointer  text-xs text-transform: uppercase py-0 my-0';
     }
   };
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [dataSource, setDataSource] = useState<readonly any[]>(data);
   const handleSearch = (e: { target: { value: any } }) => {
     const value = e.target.value;
     setSearchText(value);
-    if (value === "") {
+    if (value === '') {
       setDataSource(data);
     } else {
       const filteredData = data.filter(
@@ -122,7 +122,7 @@ const APNTable: FC<APNTableProps> = ({
               placeholder="Search"
               value={searchText}
               onChange={handleSearch}
-              style={{ width: "100%", marginBottom: "1em" }}
+              style={{ width: '100%', marginBottom: '1em' }}
             />
           </Form.Item>
         </div>
@@ -131,6 +131,7 @@ const APNTable: FC<APNTableProps> = ({
         cardBordered
         // rowClassName={rowClassName}
         columns={columns}
+        pagination={false}
         size="small"
         bordered
         search={false}
@@ -157,11 +158,11 @@ const APNTable: FC<APNTableProps> = ({
         }}
         rowClassName={(record, rowIndex) =>
           rowIndex === selectedRowIndex
-            ? "cursor-pointer text-xs text-transform: uppercase bg-blue-100 py-0 my-0 "
-            : "cursor-pointer  text-xs text-transform: uppercase  py-0 my-0"
+            ? 'cursor-pointer text-xs text-transform: uppercase bg-blue-100 py-0 my-0 '
+            : 'cursor-pointer  text-xs text-transform: uppercase  py-0 my-0'
         }
         scroll={
-          { y: "calc(49vh)" }
+          { y: 'calc(49vh)' }
           // !isProjectTAskListFull ? { y: 'calc(55vh)' } : { y: 'calc(25vh)' }
         }
         dataSource={dataSource}

@@ -1,26 +1,26 @@
-import React, { useState, useEffect, FC } from "react";
-import { Layout, Menu, MenuProps, TabPaneProps, Tabs } from "antd";
+import React, { useState, useEffect, FC } from 'react';
+import { Layout, Menu, MenuProps, TabPaneProps, Tabs } from 'antd';
 
-import { DatabaseOutlined } from "@ant-design/icons";
+import { DatabaseOutlined } from '@ant-design/icons';
 
-import { RouteNames } from "@/router";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
-import { ApartmentOutlined } from "@ant-design/icons";
+import { RouteNames } from '@/router';
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
+import { ApartmentOutlined } from '@ant-design/icons';
 
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 
-import TabPane from "antd/es/tabs/TabPane";
+import TabPane from 'antd/es/tabs/TabPane';
 
-import RemoverdItems from "@/components/mantainance/removeInstallComponents/RemoverdItems";
-import { useTranslation } from "react-i18next";
-import WOFilterForm from "@/components/mantainance/base/systemWO/woProcess/WOProcessForm";
+import RemoverdItems from '@/components/mantainance/removeInstallComponents/RemoverdItems';
+import { useTranslation } from 'react-i18next';
+import WOFilterForm from '@/components/mantainance/base/systemWO/woProcess/WOProcessForm';
 
-import WOTask from "@/components/mantainance/base/systemWO/woProcess/Task";
-import { ProCard } from "@ant-design/pro-components";
-import Title from "antd/es/typography/Title";
-import RequirementItems from "@/components/store/RequirementItems";
-import ForecastFilteredForm from "../planning/planningForecast/ForecastFilteredForm";
-import { getItem } from "@/services/utilites";
+import WOTask from '@/components/mantainance/base/systemWO/woProcess/Task';
+import { ProCard } from '@ant-design/pro-components';
+import Title from 'antd/es/typography/Title';
+import RequirementItems from '@/components/store/RequirementItems';
+import ForecastFilteredForm from '../planning/planningForecast/ForecastFilteredForm';
+import { getItem } from '@/services/utilites';
 
 const { Sider, Content } = Layout;
 interface PartsForecast {
@@ -35,9 +35,9 @@ const PartsForecast: FC<PartsForecast> = ({
   const [issuedRecord, setIssuedRecord] = useState(false);
   const [issuedtDrawer, setOpenIssuedDrawer] = useState(false);
   const [selectedObject, setSelectedObject] = useState({
-    PART_NUMBER: "",
+    PART_NUMBER: '',
     QUANTITY: 0,
-    NAME_OF_MATERIAL: "",
+    NAME_OF_MATERIAL: '',
   });
   const onIssuedClick = (record: any) => {
     setIssuedRecord(record);
@@ -53,9 +53,9 @@ const PartsForecast: FC<PartsForecast> = ({
     isLoadingWO,
   } = useTypedSelector((state) => state.mtbase);
 
-  const rootSubmenuKeys = [""];
+  const rootSubmenuKeys = [''];
 
-  const [openKeys, setOpenKeys] = useState(["sub1", "sub2"]);
+  const [openKeys, setOpenKeys] = useState(['sub1', 'sub2']);
   const [selectedKey, setSelectedKey] = useState<string>(
     RouteNames.BASETASKLIST
   );
@@ -64,7 +64,7 @@ const PartsForecast: FC<PartsForecast> = ({
     RouteNames.BASETASKLIST,
   ]);
   useEffect(() => {
-    const storedKeys = localStorage.getItem("selectedKeys");
+    const storedKeys = localStorage.getItem('selectedKeys');
     if (storedKeys) {
       setSelectedKeys(JSON.parse(storedKeys));
 
@@ -76,7 +76,7 @@ const PartsForecast: FC<PartsForecast> = ({
       key: `${record.projectTaskWO}`, // уникальный ключ для каждой вкладки
       title: `WO: ${record.projectTaskWO}`,
       content: (
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <WOTask currentTask={record}></WOTask>
         </ProCard>
       ),
@@ -95,9 +95,9 @@ const PartsForecast: FC<PartsForecast> = ({
     title: string;
     content: React.ReactNode;
   }
-  const [activeKey, setActiveKey] = useState<string>(""); // Используйте строку вместо массива
+  const [activeKey, setActiveKey] = useState<string>(''); // Используйте строку вместо массива
   const [panes, setPanes] = useState<TabData[]>([]);
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
@@ -112,10 +112,10 @@ const PartsForecast: FC<PartsForecast> = ({
       | string
       | React.MouseEvent<Element, MouseEvent>
       | React.KeyboardEvent<Element>,
-    action: "add" | "remove"
+    action: 'add' | 'remove'
   ) => {
-    if (typeof targetKey === "string") {
-      if (action === "remove") {
+    if (typeof targetKey === 'string') {
+      if (action === 'remove') {
         const newPanes = panes.filter((pane) => pane.key !== targetKey);
         setPanes(newPanes);
         if (newPanes.length > 0) {
@@ -126,12 +126,12 @@ const PartsForecast: FC<PartsForecast> = ({
       // Обработка события мыши или клавиатуры
     }
   };
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
 
   const items: MenuItem[] = [
     getItem(
-      <>{t("PARTS CONSUMPTION FORECAST")} (BAN:204)</>,
-      "sub1",
+      <>{t('PARTS CONSUMPTION FORECAST')} (BAN:204)</>,
+      'sub1',
       <ApartmentOutlined />
     ),
   ];
@@ -173,7 +173,7 @@ const PartsForecast: FC<PartsForecast> = ({
         <div className="mx-auto px-5">
           <div
             style={{
-              display: !collapsed ? "block" : "none",
+              display: !collapsed ? 'block' : 'none',
             }}
           >
             <ForecastFilteredForm
@@ -183,7 +183,7 @@ const PartsForecast: FC<PartsForecast> = ({
         </div>
       </Sider>
       <Content className="pl-4">
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <RequirementItems
             onDoubleRowClick={(record) => {
               onDoubleClick && onDoubleClick(record);
@@ -194,7 +194,7 @@ const PartsForecast: FC<PartsForecast> = ({
             scrollX={2500}
             projectTaskData={null}
             onReqClick={function (record: any): void {
-              console.log("");
+              console.log('');
             }}
           />
         </ProCard>

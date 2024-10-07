@@ -1,28 +1,26 @@
-import TabContent from "@/components/shared/Table/TabContent";
-import ScrapPartsFilteredForm from "@/components/store/scrap/scrapParts/ScrapPartsFilteredForm";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import ShowParts from "../store/storeManagment/ShowParts";
-import { Button, Modal, Space, message } from "antd";
+import TabContent from '@/components/shared/Table/TabContent';
+import ScrapPartsFilteredForm from '@/components/store/scrap/scrapParts/ScrapPartsFilteredForm';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import ShowParts from '../store/storeManagment/ShowParts';
+import { Button, Modal, Space, message } from 'antd';
 import {
-  TransactionOutlined,
-  EditOutlined,
   ApartmentOutlined,
   PrinterOutlined,
   SaveOutlined,
   ArrowRightOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   createBookingItem,
   getFilteredShops,
   updateManyMaterialItems,
-} from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import GeneretedTransferPdf from "@/components/pdf/GeneretedTransferLabels";
-import { ModalForm, ProCard } from "@ant-design/pro-components";
-import SearchTable from "../SearchElemTable";
-import form from "antd/es/form";
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
+import { ModalForm, ProCard } from '@ant-design/pro-components';
+import SearchTable from '../SearchElemTable';
+
+import { USER_ID } from '@/utils/api/http';
 
 const ScrapMaterial: FC = () => {
   const dispatch = useAppDispatch();
@@ -40,21 +38,20 @@ const ScrapMaterial: FC = () => {
   const [onFilterTransferDEtails, setOnFilterTransferDEtails] =
     useState<any>(null);
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
-  const [partsOpenModify, setOpenPartsModify] = useState<boolean>(false);
+
   const { t } = useTranslation();
   const [selectedSingleLocation, setSecectedSingleLocation] =
     useState<any>(null);
   useEffect(() => {
     if (onFilterTransferDEtails && onFilterTransferDEtails.store) {
-      // Если модальное окно открыто
-      const currentCompanyID = localStorage.getItem("companyID") || "";
+      const currentCompanyID = localStorage.getItem('companyID') || '';
       dispatch(
         getFilteredShops({
           companyID: currentCompanyID,
           shopShortName: onFilterTransferDEtails.store,
         })
       ).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
+        if (action.meta.requestStatus === 'fulfilled') {
           const transformedData = action.payload[0].locations.map(
             (item: any) => ({
               ...item,
@@ -63,20 +60,19 @@ const ScrapMaterial: FC = () => {
           );
 
           setLOCATION(transformedData);
-          // Обновляем состояние с преобразованными данными
         }
       });
     }
   }, [onFilterTransferDEtails, dispatch]);
-  const [isScrap, setIsOnlyScrap] = useState<any>(false);
+
   const tabs = [
     {
       content: (
-        <div className="h-[73vh] overflow-hidden flex flex-col justify-between gap-1">
+        <div className="h-[76vh] overflow-hidden flex flex-col justify-between gap-1">
           <div className="flex flex-col gap-5">
             <ScrapPartsFilteredForm
               onSelectLocation={function (record: any): void {
-                throw new Error("Function not implemented.");
+                setSecectedLocation(record);
               }}
               onReset={() => {
                 // Сброс состояний
@@ -87,19 +83,30 @@ const ScrapMaterial: FC = () => {
                 setSelectedComStore(null);
                 setSecectedLocation(null);
               }}
-              onSelectedValues={setOnFilterTransferDEtails}
+              onSelectedValues={function (record: any): void {
+                setOnFilterTransferDEtails(record);
+              }}
+              onSelectSelectedStore={function (record: any): void {
+                setSecectedStore(record);
+                setSelectedComStore(record);
+              }}
             />
             {/* {onFilterTransferDEtails &&
               onFilterTransferDEtails?.isAllSCPAPPED && ( */}
             <ShowParts
               serialNumber={onFilterTransferDEtails?.serialNumber}
               isOnlyScrapped={onFilterTransferDEtails?.isAllSCPAPPED[0]}
-              storeName={onFilterTransferDEtails?.store?.toUpperCase().trim()}
+              storeName={
+                // onFilterTransferDEtails &&
+                // onFilterTransferDEtails.store &&
+                onFilterTransferDEtails?.store?.toUpperCase().trim()
+                // console.log(onFilterTransferDEtails)
+              }
               store={selectedStore || selectedComStore}
               partGroup={onFilterTransferDEtails?.partGroup}
-              selectedPN={onFilterTransferDEtails?.partNumber
-                ?.toUpperCase()
-                .trim()}
+              selectedPN={[
+                onFilterTransferDEtails?.partNumber?.toUpperCase().trim(),
+              ]}
               selectedLabel={onFilterTransferDEtails?.label}
               selectedLocations={[
                 onFilterTransferDEtails?.location?.toUpperCase().trim(),
@@ -110,7 +117,7 @@ const ScrapMaterial: FC = () => {
               onSelectedParts={(record: any): void => {
                 setSecectedParts(record);
               }}
-              scroll={35}
+              scroll={40}
             />
             {/* )} */}
           </div>
@@ -120,27 +127,27 @@ const ScrapMaterial: FC = () => {
                 icon={<SaveOutlined />}
                 disabled={!rowKeys.length || !onFilterBookingDEtails}
                 onClick={() => {
-                  const currentCompanyID = localStorage.getItem("companyID");
+                  const currentCompanyID = localStorage.getItem('companyID');
                   Modal.confirm({
                     title: `${t(
-                      "YOU WANT TRANSFER PARTS TO SCRAP LOCATION"
+                      'YOU WANT TRANSFER PARTS TO SCRAP LOCATION'
                     )}  ${onFilterBookingDEtails?.targetLocation}`,
                     onOk: async () => {
                       Modal.confirm({
-                        title: t("CONFIRM CHANGE"),
-                        okText: "CONFIRM",
-                        cancelText: "CANCEL",
+                        title: t('CONFIRM CHANGE'),
+                        okText: 'CONFIRM',
+                        cancelText: 'CANCEL',
                         okButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         cancelButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         content: (
                           <div
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Button
@@ -172,16 +179,16 @@ const ScrapMaterial: FC = () => {
                         onOk: async () => {
                           const result = await dispatch(
                             updateManyMaterialItems({
-                              companyID: currentCompanyID || "",
+                              companyID: currentCompanyID || '',
                               ids: rowKeys,
                               // STOCK: onFilterBookingDEtails.targetStore,
                               LOCATION:
-                                onFilterBookingDEtails?.targetLocation || "",
-                              OWNER: onFilterBookingDEtails?.owner || "",
+                                onFilterBookingDEtails?.targetLocation || '',
+                              OWNER: onFilterBookingDEtails?.owner || '',
                             })
                           );
-                          if (result.meta.requestStatus === "fulfilled") {
-                            message.success(t("SCRAP PART SUCCESSFULY"));
+                          if (result.meta.requestStatus === 'fulfilled') {
+                            message.success(t('SCRAP PART SUCCESSFULY'));
                             setselectedRowKeys([]);
                           }
                         },
@@ -191,37 +198,38 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {t("SCRAP PART")}
+                {t('SCRAP PART')}
               </Button>
             </Space>
             <Space>
               <Button
                 icon={<ArrowRightOutlined />}
                 disabled={
-                  !rowKeys.length || selectedParts[0]?.SHELF_NUMBER === "SCRAP"
+                  !rowKeys.length ||
+                  (selectedParts && selectedParts[0]?.SHELF_NUMBER === 'SCRAP')
                 }
                 onClick={() => {
-                  const currentCompanyID = localStorage.getItem("companyID");
+                  const currentCompanyID = localStorage.getItem('companyID');
                   Modal.confirm({
                     title: `${t(
-                      "YOU WANT TRANSFER PARTS TO SCRAP LOCATION"
+                      'YOU WANT TRANSFER PARTS TO SCRAP LOCATION'
                     )}  `,
                     onOk: async () => {
                       Modal.confirm({
-                        title: t("CONFIRM TRANSFER"),
-                        okText: "CONFIRM",
-                        cancelText: "CANCEL",
+                        title: t('CONFIRM TRANSFER'),
+                        okText: 'CONFIRM',
+                        cancelText: 'CANCEL',
                         okButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         cancelButtonProps: {
-                          style: { display: "inline-block", margin: "1 auto" },
+                          style: { display: 'inline-block', margin: '1 auto' },
                         },
                         content: (
                           <div
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Button
@@ -233,8 +241,8 @@ const ScrapMaterial: FC = () => {
                                 const updatedSelectedParts = selectedParts.map(
                                   (part: any) => ({
                                     ...part,
-                                    SHELF_NUMBER: "SCRAP",
-                                    STOCK: onFilterTransferDEtails.store,
+                                    SHELF_NUMBER: 'SCRAP',
+                                    STOCK: onFilterTransferDEtails?.store,
                                   })
                                 );
 
@@ -248,14 +256,14 @@ const ScrapMaterial: FC = () => {
                         onOk: async () => {
                           const result = await dispatch(
                             updateManyMaterialItems({
-                              companyID: currentCompanyID || "",
+                              companyID: currentCompanyID || '',
                               ids: rowKeys,
-                              STOCK: onFilterTransferDEtails.store,
-                              LOCATION: "SCRAP",
+                              STOCK: onFilterTransferDEtails?.store,
+                              LOCATION: 'SCRAP',
                             })
                           );
-                          if (result.meta.requestStatus === "fulfilled") {
-                            message.success(t("SCRAP PART SUCCESSFULY"));
+                          if (result.meta.requestStatus === 'fulfilled') {
+                            message.success(t('SCRAP PART SUCCESSFULY'));
                             setselectedRowKeys([]);
                             selectedParts.forEach(async (result: any) => {
                               await dispatch(
@@ -264,25 +272,65 @@ const ScrapMaterial: FC = () => {
                                   data: {
                                     companyID: result.COMPANY_ID,
                                     userSing:
-                                      localStorage.getItem("singNumber") || "",
-                                    userID: USER_ID || "",
+                                      localStorage.getItem('singNumber') || '',
+                                    userID: USER_ID || '',
                                     createDate: new Date(),
-                                    partNumber: result.PART_NUMBER,
+                                    PART_NUMBER: result.PART_NUMBER,
                                     station:
-                                      result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                    voucherModel: "CHANGE_LOCATION",
-                                    location: result?.SHELF_NUMBER,
-                                    orderNumber: result?.ORDER_NUMBER,
-                                    price: result?.PRICE,
-                                    currency: result?.CURRENCY,
-                                    quantity: -result?.QUANTITY,
-                                    owner: result?.OWNER_SHORT_NAME,
-                                    batchNumber: result?.SUPPLIER_BATCH_NUMBER,
-                                    serialNumber: result?.SERIAL_NUMBER,
-                                    partGroup: result?.GROUP,
-                                    partType: result?.TYPE,
-                                    condition: result?.CONDITION,
-                                    description: result?.NAME_OF_MATERIAL,
+                                      result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                    WAREHOUSE_RECEIVED_AT:
+                                      result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                    SHELF_NUMBER: result?.SHELF_NUMBER,
+                                    ORDER_NUMBER: result?.ORDER_NUMBER,
+                                    PRICE: result?.PRICE,
+                                    CURRENCY: result?.CURRENCY,
+                                    QUANTITY: -result?.QUANTITY,
+                                    SUPPLIER_BATCH_NUMBER:
+                                      result?.SUPPLIER_BATCH_NUMBER,
+                                    OWNER: result?.OWNER_SHORT_NAME,
+                                    GROUP: result?.GROUP,
+                                    TYPE: result?.TYPE,
+                                    CONDITION: result?.CONDITION,
+                                    NAME_OF_MATERIAL: result?.NAME_OF_MATERIAL,
+                                    STOCK: result?.STOCK,
+                                    RECEIVED_DATE: result?.RECEIVED_DATE,
+                                    UNIT_OF_MEASURE: result.UNIT_OF_MEASURE,
+                                    SUPPLIES_CODE: result?.SUPPLIES_CODE || '',
+                                    SUPPLIES_LOCATION:
+                                      result?.SUPPLIES_LOCATION || '',
+                                    SUPPLIER_NAME: result?.SUPPLIER_NAME,
+                                    SUPPLIER_SHORT_NAME:
+                                      result?.SUPPLIER_SHORT_NAME,
+                                    SUPPLIER_UNP: result?.SUPPLIER_UNP,
+                                    SUPPLIES_ID: result?.SUPPLIES_ID,
+                                    IS_RESIDENT: result?.IS_RESIDENT,
+                                    ADD_UNIT_OF_MEASURE:
+                                      result?.ADD_UNIT_OF_MEASURE,
+                                    ADD_NAME_OF_MATERIAL:
+                                      result?.ADD_NAME_OF_MATERIAL,
+                                    ADD_PART_NUMBER: result?.ADD_PART_NUMBER,
+                                    ADD_QUANTITY: result?.ADD_QUANTITY,
+                                    OWNER_SHORT_NAME: result?.OWNER_SHORT_NAME,
+                                    OWNER_LONG_NAME: result?.OWNER_LONG_NAME,
+                                    PRODUCT_EXPIRATION_DATE:
+                                      result?.PRODUCT_EXPIRATION_DATE,
+                                    SERIAL_NUMBER: result.SERIAL_NUMBER,
+                                    APPROVED_CERT: result?.APPROVED_CERT,
+                                    AWB_REFERENCE: result?.AWB_REFERENCE || '',
+                                    AWB_TYPE: result?.AWB_TYPE || '',
+                                    AWB_NUMBER: result?.AWB_NUMBER || '',
+                                    AWB_DATE: result?.AWB_DATE || '',
+                                    RECEIVING_NUMBER: result?.RECEIVING_NUMBER,
+                                    RECEIVING_ITEM_NUMBER:
+                                      result.RECEIVING_ITEM_NUMBER,
+                                    CERTIFICATE_NUMBER:
+                                      result?.CERTIFICATE_NUMBER,
+                                    CERTIFICATE_TYPE: result?.CERTIFICATE_TYPE,
+                                    REVISION: result?.REVISION,
+                                    IS_CUSTOMER_GOODS:
+                                      result?.IS_CUSTOMER_GOODS,
+                                    LOCAL_ID: result?.LOCAL_ID,
+                                    voucherModel: 'SCRAP',
                                   },
                                 })
                               );
@@ -294,25 +342,65 @@ const ScrapMaterial: FC = () => {
                                   data: {
                                     companyID: result.COMPANY_ID,
                                     userSing:
-                                      localStorage.getItem("singNumber") || "",
-                                    userID: USER_ID || "",
+                                      localStorage.getItem('singNumber') || '',
+                                    userID: USER_ID || '',
                                     createDate: new Date(),
-                                    partNumber: result.PART_NUMBER,
+                                    PART_NUMBER: result.PART_NUMBER,
                                     station:
-                                      result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                                    voucherModel: "CHANGE_LOCATION",
-                                    location: result?.SHELF_NUMBER,
-                                    orderNumber: result?.ORDER_NUMBER,
-                                    price: result?.PRICE,
-                                    currency: result?.CURRENCY,
-                                    quantity: result?.QUANTITY,
-                                    owner: result?.OWNER_SHORT_NAME,
-                                    batchNumber: result?.SUPPLIER_BATCH_NUMBER,
-                                    serialNumber: result?.SERIAL_NUMBER,
-                                    partGroup: result?.GROUP,
-                                    partType: result?.TYPE,
-                                    condition: result?.CONDITION,
-                                    description: result?.NAME_OF_MATERIAL,
+                                      result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                    voucherModel: 'CHANGE_LOCATION',
+                                    WAREHOUSE_RECEIVED_AT:
+                                      result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                                    SHELF_NUMBER: result?.SHELF_NUMBER,
+                                    ORDER_NUMBER: result?.ORDER_NUMBER,
+                                    PRICE: result?.PRICE,
+                                    CURRENCY: result?.CURRENCY,
+                                    QUANTITY: result?.QUANTITY,
+                                    SUPPLIER_BATCH_NUMBER:
+                                      result?.SUPPLIER_BATCH_NUMBER,
+                                    OWNER: result?.OWNER_SHORT_NAME,
+                                    GROUP: result?.GROUP,
+                                    TYPE: result?.TYPE,
+                                    CONDITION: result?.CONDITION,
+                                    NAME_OF_MATERIAL: result?.NAME_OF_MATERIAL,
+                                    STOCK: result?.STOCK,
+                                    RECEIVED_DATE: result?.RECEIVED_DATE,
+                                    UNIT_OF_MEASURE: result.UNIT_OF_MEASURE,
+                                    SUPPLIES_CODE: result?.SUPPLIES_CODE || '',
+                                    SUPPLIES_LOCATION:
+                                      result?.SUPPLIES_LOCATION || '',
+                                    SUPPLIER_NAME: result?.SUPPLIER_NAME,
+                                    SUPPLIER_SHORT_NAME:
+                                      result?.SUPPLIER_SHORT_NAME,
+                                    SUPPLIER_UNP: result?.SUPPLIER_UNP,
+                                    SUPPLIES_ID: result?.SUPPLIES_ID,
+                                    IS_RESIDENT: result?.IS_RESIDENT,
+                                    ADD_UNIT_OF_MEASURE:
+                                      result?.ADD_UNIT_OF_MEASURE,
+                                    ADD_NAME_OF_MATERIAL:
+                                      result?.ADD_NAME_OF_MATERIAL,
+                                    ADD_PART_NUMBER: result?.ADD_PART_NUMBER,
+                                    ADD_QUANTITY: result?.ADD_QUANTITY,
+                                    OWNER_SHORT_NAME: result?.OWNER_SHORT_NAME,
+                                    OWNER_LONG_NAME: result?.OWNER_LONG_NAME,
+                                    PRODUCT_EXPIRATION_DATE:
+                                      result?.PRODUCT_EXPIRATION_DATE,
+                                    SERIAL_NUMBER: result.SERIAL_NUMBER,
+                                    APPROVED_CERT: result?.APPROVED_CERT,
+                                    AWB_REFERENCE: result?.AWB_REFERENCE || '',
+                                    AWB_TYPE: result?.AWB_TYPE || '',
+                                    AWB_NUMBER: result?.AWB_NUMBER || '',
+                                    AWB_DATE: result?.AWB_DATE || '',
+                                    RECEIVING_NUMBER: result?.RECEIVING_NUMBER,
+                                    RECEIVING_ITEM_NUMBER:
+                                      result.RECEIVING_ITEM_NUMBER,
+                                    CERTIFICATE_NUMBER:
+                                      result?.CERTIFICATE_NUMBER,
+                                    CERTIFICATE_TYPE: result?.CERTIFICATE_TYPE,
+                                    REVISION: result?.REVISION,
+                                    IS_CUSTOMER_GOODS:
+                                      result?.IS_CUSTOMER_GOODS,
+                                    LOCAL_ID: result?.LOCAL_ID,
                                   },
                                 })
                               );
@@ -325,7 +413,7 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {t("MOOVE TO SCRAP LOCATION")}
+                {t('MOOVE TO SCRAP LOCATION')}
               </Button>
               <Button
                 icon={<ApartmentOutlined />}
@@ -334,7 +422,7 @@ const ScrapMaterial: FC = () => {
                   !selectedParts ||
                   !selectedParts.length ||
                   selectedParts.some(
-                    (part: any) => part.SHELF_NUMBER !== "SCRAP"
+                    (part: any) => part.SHELF_NUMBER !== 'SCRAP'
                   )
                 }
                 onClick={() => {
@@ -342,7 +430,7 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {t("REMOVE FROM SCRAP LOCATION")}
+                {t('REMOVE FROM SCRAP LOCATION')}
               </Button>
             </Space>
             <Space>
@@ -354,7 +442,7 @@ const ScrapMaterial: FC = () => {
                   !selectedParts ||
                   !selectedParts.length ||
                   selectedParts.some(
-                    (part: any) => part.SHELF_NUMBER !== "SCRAP"
+                    (part: any) => part.SHELF_NUMBER !== 'SCRAP'
                   )
                 }
                 onClick={() => {
@@ -363,14 +451,14 @@ const ScrapMaterial: FC = () => {
                 }}
                 size="small"
               >
-                {" "}
-                {t("PRINT LABELS")}
+                {' '}
+                {t('PRINT LABELS')}
               </Button>
             </Space>
             <Modal
-              title={t("PRINT LABEL")}
+              title={t('PRINT LABEL')}
               open={labelsOpenPrint}
-              width={"30%"}
+              width={'30%'}
               onCancel={() => {
                 setOpenLabelsPrint(false);
                 setSecectedLocation(null);
@@ -386,20 +474,20 @@ const ScrapMaterial: FC = () => {
             </Modal>
             <ModalForm
               onFinish={async () => {
-                const currentCompanyID = localStorage.getItem("companyID");
+                const currentCompanyID = localStorage.getItem('companyID');
                 setSecectedLocation(selectedSingleLocation);
                 if (selectedSingleLocation) {
                   const result = await dispatch(
                     updateManyMaterialItems({
-                      companyID: currentCompanyID || "",
+                      companyID: currentCompanyID || '',
                       ids: rowKeys,
-                      STOCK: onFilterTransferDEtails.store,
-                      LOCATION: selectedLocation.locationName,
-                      OWNER: selectedLocation?.ownerShotName || "",
+                      STOCK: onFilterTransferDEtails?.store,
+                      LOCATION: selectedLocation?.locationName,
+                      OWNER: selectedLocation?.ownerShotName || '',
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
-                    message.success(t("TRANSFER PART SUCCESSFULY"));
+                  if (result.meta.requestStatus === 'fulfilled') {
+                    message.success(t('TRANSFER PART SUCCESSFULY'));
                     setselectedRowKeys([]);
                     setOpenLabelsPrint(true);
                     selectedParts.forEach(async (result: any) => {
@@ -408,24 +496,57 @@ const ScrapMaterial: FC = () => {
                           companyID: result.COMPANY_ID,
                           data: {
                             companyID: result.COMPANY_ID,
-                            userSing: localStorage.getItem("singNumber") || "",
-                            userID: USER_ID || "",
+                            userSing: localStorage.getItem('singNumber') || '',
+                            userID: USER_ID || '',
                             createDate: new Date(),
-                            partNumber: result.PART_NUMBER,
-                            station: result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                            voucherModel: "CHANGE_LOCATION",
-                            location: result?.SHELF_NUMBER,
-                            orderNumber: result?.ORDER_NUMBER,
-                            price: result?.PRICE,
-                            currency: result?.CURRENCY,
-                            quantity: -result?.QUANTITY,
-                            owner: result?.OWNER_SHORT_NAME,
-                            batchNumber: result?.SUPPLIER_BATCH_NUMBER,
-                            serialNumber: result?.SERIAL_NUMBER,
-                            partGroup: result?.GROUP,
-                            partType: result?.TYPE,
-                            condition: result?.CONDITION,
-                            description: result?.NAME_OF_MATERIAL,
+                            PART_NUMBER: result.PART_NUMBER,
+                            station: result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                            voucherModel: 'CHANGE_LOCATION',
+                            WAREHOUSE_RECEIVED_AT:
+                              result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                            SHELF_NUMBER: result?.SHELF_NUMBER,
+                            ORDER_NUMBER: result?.ORDER_NUMBER,
+                            PRICE: result?.PRICE,
+                            CURRENCY: result?.CURRENCY,
+                            QUANTITY: -result?.QUANTITY,
+                            SUPPLIER_BATCH_NUMBER:
+                              result?.SUPPLIER_BATCH_NUMBER,
+                            OWNER: result?.OWNER_SHORT_NAME,
+                            GROUP: result?.GROUP,
+                            TYPE: result?.TYPE,
+                            CONDITION: result?.CONDITION,
+                            NAME_OF_MATERIAL: result?.NAME_OF_MATERIAL,
+                            STOCK: result?.STOCK,
+                            RECEIVED_DATE: result?.RECEIVED_DATE,
+                            UNIT_OF_MEASURE: result.UNIT_OF_MEASURE,
+                            SUPPLIES_CODE: result?.SUPPLIES_CODE || '',
+                            SUPPLIES_LOCATION: result?.SUPPLIES_LOCATION || '',
+                            SUPPLIER_NAME: result?.SUPPLIER_NAME,
+                            SUPPLIER_SHORT_NAME: result?.SUPPLIER_SHORT_NAME,
+                            SUPPLIER_UNP: result?.SUPPLIER_UNP,
+                            SUPPLIES_ID: result?.SUPPLIES_ID,
+                            IS_RESIDENT: result?.IS_RESIDENT,
+                            ADD_UNIT_OF_MEASURE: result?.ADD_UNIT_OF_MEASURE,
+                            ADD_NAME_OF_MATERIAL: result?.ADD_NAME_OF_MATERIAL,
+                            ADD_PART_NUMBER: result?.ADD_PART_NUMBER,
+                            ADD_QUANTITY: result?.ADD_QUANTITY,
+                            OWNER_SHORT_NAME: result?.OWNER_SHORT_NAME,
+                            OWNER_LONG_NAME: result?.OWNER_LONG_NAME,
+                            PRODUCT_EXPIRATION_DATE:
+                              result?.PRODUCT_EXPIRATION_DATE,
+                            SERIAL_NUMBER: result.SERIAL_NUMBER,
+                            APPROVED_CERT: result?.APPROVED_CERT,
+                            AWB_REFERENCE: result?.AWB_REFERENCE || '',
+                            AWB_TYPE: result?.AWB_TYPE || '',
+                            AWB_NUMBER: result?.AWB_NUMBER || '',
+                            AWB_DATE: result?.AWB_DATE || '',
+                            RECEIVING_NUMBER: result?.RECEIVING_NUMBER,
+                            RECEIVING_ITEM_NUMBER: result.RECEIVING_ITEM_NUMBER,
+                            CERTIFICATE_NUMBER: result?.CERTIFICATE_NUMBER,
+                            CERTIFICATE_TYPE: result?.CERTIFICATE_TYPE,
+                            REVISION: result?.REVISION,
+                            IS_CUSTOMER_GOODS: result?.IS_CUSTOMER_GOODS,
+                            LOCAL_ID: result?.LOCAL_ID,
                           },
                         })
                       );
@@ -436,24 +557,57 @@ const ScrapMaterial: FC = () => {
                           companyID: result.COMPANY_ID,
                           data: {
                             companyID: result.COMPANY_ID,
-                            userSing: localStorage.getItem("singNumber") || "",
-                            userID: USER_ID || "",
+                            userSing: localStorage.getItem('singNumber') || '',
+                            userID: USER_ID || '',
                             createDate: new Date(),
-                            partNumber: result.PART_NUMBER,
-                            station: result?.WAREHOUSE_RECEIVED_AT || "N/A",
-                            voucherModel: "CHANGE_LOCATION",
-                            location: result?.SHELF_NUMBER,
-                            orderNumber: result?.ORDER_NUMBER,
-                            price: result?.PRICE,
-                            currency: result?.CURRENCY,
-                            quantity: result?.QUANTITY,
-                            owner: result?.OWNER_SHORT_NAME,
-                            batchNumber: result?.SUPPLIER_BATCH_NUMBER,
-                            serialNumber: result?.SERIAL_NUMBER,
-                            partGroup: result?.GROUP,
-                            partType: result?.TYPE,
-                            condition: result?.CONDITION,
-                            description: result?.NAME_OF_MATERIAL,
+                            PART_NUMBER: result.PART_NUMBER,
+                            station: result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                            voucherModel: 'CHANGE_LOCATION',
+                            WAREHOUSE_RECEIVED_AT:
+                              result?.WAREHOUSE_RECEIVED_AT || 'N/A',
+                            SHELF_NUMBER: result?.SHELF_NUMBER,
+                            ORDER_NUMBER: result?.ORDER_NUMBER,
+                            PRICE: result?.PRICE,
+                            CURRENCY: result?.CURRENCY,
+                            QUANTITY: result?.QUANTITY,
+                            SUPPLIER_BATCH_NUMBER:
+                              result?.SUPPLIER_BATCH_NUMBER,
+                            OWNER: result?.OWNER_SHORT_NAME,
+                            GROUP: result?.GROUP,
+                            TYPE: result?.TYPE,
+                            CONDITION: result?.CONDITION,
+                            NAME_OF_MATERIAL: result?.NAME_OF_MATERIAL,
+                            STOCK: result?.STOCK,
+                            RECEIVED_DATE: result?.RECEIVED_DATE,
+                            UNIT_OF_MEASURE: result.UNIT_OF_MEASURE,
+                            SUPPLIES_CODE: result?.SUPPLIES_CODE || '',
+                            SUPPLIES_LOCATION: result?.SUPPLIES_LOCATION || '',
+                            SUPPLIER_NAME: result?.SUPPLIER_NAME,
+                            SUPPLIER_SHORT_NAME: result?.SUPPLIER_SHORT_NAME,
+                            SUPPLIER_UNP: result?.SUPPLIER_UNP,
+                            SUPPLIES_ID: result?.SUPPLIES_ID,
+                            IS_RESIDENT: result?.IS_RESIDENT,
+                            ADD_UNIT_OF_MEASURE: result?.ADD_UNIT_OF_MEASURE,
+                            ADD_NAME_OF_MATERIAL: result?.ADD_NAME_OF_MATERIAL,
+                            ADD_PART_NUMBER: result?.ADD_PART_NUMBER,
+                            ADD_QUANTITY: result?.ADD_QUANTITY,
+                            OWNER_SHORT_NAME: result?.OWNER_SHORT_NAME,
+                            OWNER_LONG_NAME: result?.OWNER_LONG_NAME,
+                            PRODUCT_EXPIRATION_DATE:
+                              result?.PRODUCT_EXPIRATION_DATE,
+                            SERIAL_NUMBER: result.SERIAL_NUMBER,
+                            APPROVED_CERT: result?.APPROVED_CERT,
+                            AWB_REFERENCE: result?.AWB_REFERENCE || '',
+                            AWB_TYPE: result?.AWB_TYPE || '',
+                            AWB_NUMBER: result?.AWB_NUMBER || '',
+                            AWB_DATE: result?.AWB_DATE || '',
+                            RECEIVING_NUMBER: result?.RECEIVING_NUMBER,
+                            RECEIVING_ITEM_NUMBER: result.RECEIVING_ITEM_NUMBER,
+                            CERTIFICATE_NUMBER: result?.CERTIFICATE_NUMBER,
+                            CERTIFICATE_TYPE: result?.CERTIFICATE_TYPE,
+                            REVISION: result?.REVISION,
+                            IS_CUSTOMER_GOODS: result?.IS_CUSTOMER_GOODS,
+                            LOCAL_ID: result?.LOCAL_ID,
                           },
                         })
                       );
@@ -465,9 +619,9 @@ const ScrapMaterial: FC = () => {
                         ...part,
                         SHELF_NUMBER: selectedLocation.locationName,
                         // onFilterTransferDEtails.targetLocation,
-                        STOCK: onFilterTransferDEtails.store,
-                        OWNER_LONG_NAME: selectedLocation.ownerLongName,
-                        OWNER_SHORT_NAME: selectedLocation.ownerShotName,
+                        STOCK: onFilterTransferDEtails?.store,
+                        OWNER_LONG_NAME: selectedLocation?.ownerLongName,
+                        OWNER_SHORT_NAME: selectedLocation?.ownerShotName,
                       })
                     );
 
@@ -477,9 +631,9 @@ const ScrapMaterial: FC = () => {
                   setOpenLocationViewer(false);
                 }
               }}
-              title={`${t("LOCATION SEARCH")}`}
+              title={`${t('LOCATION SEARCH')}`}
               open={openLocationViewer}
-              width={"35vw"}
+              width={'35vw'}
               onOpenChange={setOpenLocationViewer}
             >
               <ProCard
@@ -491,7 +645,7 @@ const ScrapMaterial: FC = () => {
                     data={LOCATION}
                     onRowClick={function (record: any, rowIndex?: any): void {
                       setSecectedLocation(record);
-
+                      setSecectedSingleLocation(record);
                       setOpenLocationViewer(false);
                     }}
                     onRowSingleClick={function (
@@ -499,6 +653,7 @@ const ScrapMaterial: FC = () => {
                       rowIndex?: any
                     ): void {
                       setSecectedSingleLocation(record);
+                      setSecectedLocation(record);
                     }}
                   ></SearchTable>
                 )}
@@ -507,7 +662,7 @@ const ScrapMaterial: FC = () => {
           </div>
         </div>
       ),
-      title: `${t("SCRAP PARTS")}`,
+      title: `${t('SCRAP PARTS')}`,
     },
     // {
     //   content: <></>,
@@ -515,7 +670,7 @@ const ScrapMaterial: FC = () => {
     // },
   ];
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh]  bg-white overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <TabContent tabs={tabs}></TabContent>
       </div>

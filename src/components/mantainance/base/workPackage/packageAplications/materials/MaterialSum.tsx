@@ -1,15 +1,15 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { MenuProps } from "antd";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import React, { FC, useEffect, useState } from "react";
-import { exportToExcel } from "@/services/utilites";
-import { IMatData } from "@/types/TypesData";
-import { DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { AplicationResponce } from "@/store/reducers/WPGenerationSlise";
-import { findMaterialsByTaskNumbers } from "@/utils/api/thunks";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import { MenuProps } from 'antd';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import React, { FC, useEffect, useState } from 'react';
+import { exportToExcel } from '@/services/utilites';
+import { IMatData } from '@/types/TypesData';
+import { DownloadOutlined, PrinterOutlined } from '@ant-design/icons';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { AplicationResponce } from '@/store/reducers/WPGenerationSlise';
+import { findMaterialsByTaskNumbers } from '@/utils/api/thunks';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useTranslation } from 'react-i18next';
 
 type FilteredTasksListPropsType = {
   data: any;
@@ -37,7 +37,7 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
@@ -45,7 +45,7 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
             taskDTO: data.tasks || data || [],
           })
         );
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           // console.log(result.payload);
 
           setMaterials(result.payload.result);
@@ -56,10 +56,10 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
   }, [dispatch]);
   const initialColumns: ProColumns<IMatData>[] = [
     {
-      title: "Index",
-      dataIndex: "id",
-      valueType: "index",
-      width: "5%",
+      title: 'Index',
+      dataIndex: 'id',
+      valueType: 'index',
+      width: '5%',
 
       editable: (text, record, index) => {
         return false;
@@ -68,51 +68,51 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
     },
 
     {
-      title: `${t("CODE")}`,
-      dataIndex: "code",
-      key: "code",
+      title: `${t('CODE')}`,
+      dataIndex: 'code',
+      key: 'code',
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
-    { title: `${t("PN")}`, dataIndex: "PN", key: "PN", responsive: ["sm"] },
+    { title: `${t('PN')}`, dataIndex: 'PN', key: 'PN', responsive: ['sm'] },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "nameOfMaterial",
-      tip: "Text Show",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'nameOfMaterial',
+      tooltip: 'Text Show',
       ellipsis: true,
-      key: "nameOfMaterial",
-      responsive: ["sm"],
+      key: 'nameOfMaterial',
+      responsive: ['sm'],
     },
     {
-      title: `${t("ALTERNATIVE")}`,
-      dataIndex: "alternative",
-      key: "alternative",
-      responsive: ["sm"],
+      title: `${t('ALTERNATIVE')}`,
+      dataIndex: 'alternative',
+      key: 'alternative',
+      responsive: ['sm'],
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "amoutSum",
-      key: "amoutSum",
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'amoutSum',
+      key: 'amoutSum',
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
   ];
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -123,25 +123,25 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
     } as MenuItem;
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -158,7 +158,7 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -175,7 +175,7 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -210,7 +210,7 @@ const MaterialSum: FC<FilteredTasksListPropsType> = ({
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onVisibleColumnsChange={handleVisibleColumnsChange}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       {/* )} */}

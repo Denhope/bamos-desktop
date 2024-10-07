@@ -1,9 +1,9 @@
-import { ModalForm, ProColumns } from "@ant-design/pro-components";
-import { ConfigProvider, Modal } from "antd";
+import { ModalForm, ProColumns } from '@ant-design/pro-components';
+import { ConfigProvider, Modal } from 'antd';
 
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 interface IssuedMatFormProps {
   issuedRecord: any;
   isLoading: boolean;
@@ -23,12 +23,12 @@ const IssuedMatForm: FC<IssuedMatFormProps> = ({
   const { t } = useTranslation();
   const initialBlockColumns: ProColumns<any>[] = [
     {
-      title: "LOCAL ID",
-      dataIndex: "LOCAL_ID",
+      title: 'LABEL',
+      dataIndex: 'LOCAL_ID',
       // valueType: 'index',
       ellipsis: true,
-      key: "LOCAL_ID",
-      width: "12%",
+      key: 'LOCAL_ID',
+      width: '12%',
 
       editable: (text, record, index) => {
         return false;
@@ -50,66 +50,66 @@ const IssuedMatForm: FC<IssuedMatFormProps> = ({
     },
 
     {
-      title: `${t("PN")}`,
-      dataIndex: "PART_NUMBER",
-      key: "PART_NUMBER",
+      title: `${t('PN')}`,
+      dataIndex: 'PART_NUMBER',
+      key: 'PART_NUMBER',
       ellipsis: true,
       formItemProps: {
-        name: "PART_NUMBER",
+        name: 'PART_NUMBER',
       },
 
       // responsive: ['sm'],
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "NAME_OF_MATERIAL",
-      key: "NAME_OF_MATERIAL",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'NAME_OF_MATERIAL',
+      key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: "Text Show",
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "QUANTITY",
-      key: "QUANTITY",
-      responsive: ["sm"],
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'QUANTITY',
+      key: 'QUANTITY',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "UNIT_OF_MEASURE",
-      key: "UNIT_OF_MEASURE",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'UNIT_OF_MEASURE',
+      key: 'UNIT_OF_MEASURE',
+      responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
 
     {
-      title: "B/S NUMBER",
-      dataIndex: "BATCH_ID",
-      key: "BATCH_ID",
+      title: 'B/S NUMBER',
+      dataIndex: 'BATCH_ID',
+      key: 'BATCH_ID',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: "STOCK",
-      dataIndex: "STOCK",
-      key: "BATCH_ID",
+      title: 'STOCK',
+      dataIndex: 'STOCK',
+      key: 'BATCH_ID',
       editable: (text, record, index) => {
         return false;
       },
       search: false,
     },
     {
-      title: `${t("DOC")}`,
-      dataIndex: "DOC",
-      key: "DOC",
+      title: `${t('DOC')}`,
+      dataIndex: 'DOC',
+      key: 'DOC',
       editable: (text, record, index) => {
         return false;
       },
@@ -118,13 +118,13 @@ const IssuedMatForm: FC<IssuedMatFormProps> = ({
   ];
   return (
     <div>
-      {" "}
+      {' '}
       <Modal
         title={`ISSUE PICKSLIP INFORMARION`}
         // placement={'bottom'}
         open={open}
         onCancel={onClose}
-        width={"70vw"}
+        width={'70vw'}
 
         // getContainer={false}
       >
@@ -142,7 +142,7 @@ const IssuedMatForm: FC<IssuedMatFormProps> = ({
           }}
           yScroll={yScroll}
           externalReload={function (): Promise<void> {
-            throw new Error("Function not implemented.");
+            throw new Error('Function not implemented.');
           }}
           // onTableDataChange={}
         />

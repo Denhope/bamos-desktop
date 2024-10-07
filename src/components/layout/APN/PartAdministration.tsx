@@ -1,10 +1,10 @@
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
-import SearchPartForm from "../partAdministration/SearchPartForm";
-import TabContent from "@/components/shared/Table/TabContent";
-import PartView from "../partAdministration/tabs/PartView";
-import RemarksView from "../partAdministration/tabs/RemarksView";
-import MainView from "../partAdministration/tabs/mainView/MainView";
+import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import SearchPartForm from '../partAdministration/SearchPartForm';
+import TabContent from '@/components/shared/Table/TabContent';
+import PartView from '../partAdministration/tabs/PartView';
+import RemarksView from '../partAdministration/tabs/RemarksView';
+import MainView from '../partAdministration/tabs/mainView/MainView';
 interface PartAdministrationType {
   onDoubleClick?: (record: any, rowIndex?: any) => void;
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
@@ -22,7 +22,7 @@ const PartAdministration: FC<PartAdministrationType> = ({}) => {
           }}
         ></PartView>
       ),
-      title: `${t("PART")}`,
+      title: `${t('PART')}`,
     },
     {
       content: (
@@ -31,7 +31,7 @@ const PartAdministration: FC<PartAdministrationType> = ({}) => {
           onEditPartDetailsEdit={function (data: any): void {}}
         ></MainView>
       ),
-      title: `${t("MAIN")}`,
+      title: `${t('INFORMATION')}`,
     },
     {
       content: (
@@ -42,16 +42,16 @@ const PartAdministration: FC<PartAdministrationType> = ({}) => {
           }}
         ></RemarksView>
       ),
-      title: `${t("REMARKS")}`,
+      title: `${t('REMARKS')}`,
     },
     {
       content: <></>,
-      title: `${t("PRICE HISTORY")}`,
+      title: `${t('PRICE HISTORY')}`,
     },
   ];
 
   return (
-    <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-1">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
         <SearchPartForm
           currentPart={part}

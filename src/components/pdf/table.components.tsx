@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   table: {
     borderColor: '#000',
     borderWidth: 0.5,
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
     flexFlow: 1,
   },
 

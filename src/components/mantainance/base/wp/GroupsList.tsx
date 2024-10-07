@@ -1,19 +1,19 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { DatePicker, MenuProps, message } from "antd";
-import MenuItem from "antd/es/menu/MenuItem";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import DrawerPanel from "@/components/shared/DrawerPanel";
-import GroupAddForm from "./GroupAddForm";
+import { ProColumns } from '@ant-design/pro-components';
+import { DatePicker, MenuProps, message } from 'antd';
+import MenuItem from 'antd/es/menu/MenuItem';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import DrawerPanel from '@/components/shared/DrawerPanel';
+import GroupAddForm from './GroupAddForm';
 import {
   deleteGroupsByIds,
   getFilteredGroups,
   updateGroupByID,
-} from "@/utils/api/thunks";
-import { useTranslation } from "react-i18next";
+} from '@/utils/api/thunks';
+import { useTranslation } from 'react-i18next';
 type GroupsListPropsType = {
   // isLoading: boolean;
   onRowClick: (record: any) => void;
@@ -24,7 +24,7 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
   const [dataSource, setDataSource] = useState<any[]>([]);
   const { projectTasks, isLoading, currentProject, projectGroups } =
     useTypedSelector((state) => state.mtbase);
-  const companyID = localStorage.getItem("companyID");
+  const companyID = localStorage.getItem('companyID');
   const [openAddGroupForm, setOpenAddGroupForm] = useState(false);
   const { t } = useTranslation();
   useEffect(() => {
@@ -41,9 +41,9 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
   };
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("GROUP NAME")}`,
-      dataIndex: "groupName",
-      key: "groupName",
+      title: `${t('GROUP NAME')}`,
+      dataIndex: 'groupName',
+      key: 'groupName',
       // width: '7%',
       editable: (text, record, index) => {
         return true;
@@ -63,7 +63,7 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
         );
       },
       ...useColumnSearchProps({
-        dataIndex: "groupName",
+        dataIndex: 'groupName',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -84,16 +84,16 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
       }),
     },
     {
-      title: `${t("GROUP DESCRIPTION")}`,
-      dataIndex: "groupDescription",
-      key: "groupDescription",
+      title: `${t('GROUP DESCRIPTION')}`,
+      dataIndex: 'groupDescription',
+      key: 'groupDescription',
       // width: '7%',
       editable: (text, record, index) => {
         return true;
       },
 
       ...useColumnSearchProps({
-        dataIndex: "groupDescription",
+        dataIndex: 'groupDescription',
         onSearch: (value) => {
           if (value) {
             // Отфильтруйте данные на основе поискового запроса
@@ -114,16 +114,16 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
       }),
     },
     {
-      title: `${t("CREATE DATE")}`,
+      title: `${t('CREATE DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "createDate",
-      key: "createDate",
+      dataIndex: 'createDate',
+      key: 'createDate',
       // width: '7%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.createDate && b.createDate) {
           const aFinishDate = new Date(a.createDate);
@@ -138,39 +138,39 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
       },
     },
     {
-      title: `${t("CREATE BY")}`,
-      dataIndex: ["createUser", "name"],
-      key: "name",
+      title: `${t('CREATE BY')}`,
+      dataIndex: ['createUser', 'name'],
+      key: 'name',
       // width: '7%',
       editable: (text, record, index) => {
         return false;
       },
     },
     {
-      title: `${t("Status")}`,
-      dataIndex: "status",
+      title: `${t('Status')}`,
+      dataIndex: 'status',
 
-      key: "status",
-      width: "9%",
+      key: 'status',
+      width: '9%',
       editable: (text, record, index) => {
         return true;
       },
 
       filters: true,
       onFilter: true,
-      valueType: "select",
+      valueType: 'select',
       filterSearch: true,
       valueEnum: {
-        open: { text: t("OPEN"), status: "Default" },
-        inProgress: { text: t("IN_PROGRESS"), status: "Processing" },
-        closed: { text: t("CLOSED"), status: "Success" },
-        canceled: { text: t("CANCELED"), status: "Error" },
+        open: { text: t('OPEN'), status: 'Default' },
+        inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
+        closed: { text: t('CLOSE'), status: 'SUCCESS' },
+        canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },
     {
-      title: `${t("OPTION")}`,
-      valueType: "option",
-      key: "option",
+      title: `${t('OPTION')}`,
+      valueType: 'option',
+      key: 'option',
       // width: '9%',
       render: (text, record, _, action) => [
         <a
@@ -184,13 +184,13 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
       ],
     },
   ];
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -200,18 +200,18 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
       type,
     } as MenuItem;
   }
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Add Group")}`,
-      key: "add",
+      label: `${t('Add Group')}`,
+      key: 'add',
       icon: <PlusOutlined />,
       onClick: () => {
         setOpenAddGroupForm(true);
       },
     },
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
         getItem(
@@ -219,7 +219,7 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
             onClick={async () => {
               const selectedCount = selectedRowKeys && selectedRowKeys.length;
               if (selectedCount < 1) {
-                message.error("Please select  Items.");
+                message.error('Please select  Items.');
                 return;
               }
               const result = dispatch(
@@ -228,15 +228,15 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
                   projectID: currentProject?._id,
                 })
               );
-              if ((await result).meta.requestStatus === "fulfilled") {
+              if ((await result).meta.requestStatus === 'fulfilled') {
                 const res = await dispatch(
                   getFilteredGroups({
-                    projectId: currentProject?._id || "",
-                    companyID: currentProject?.companyID || "",
+                    projectId: currentProject?._id || '',
+                    companyID: currentProject?.companyID || '',
                   })
                 );
 
-                if ((await res).meta.requestStatus === "fulfilled") {
+                if ((await res).meta.requestStatus === 'fulfilled') {
                   setDataSource(res.payload);
                 }
               }
@@ -244,8 +244,8 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
           >
             Delete selected Item
           </div>,
-          "deleteGroup",
-          ""
+          'deleteGroup',
+          ''
         ),
 
         //   getItem('Update Status selected items', 'subydd09', '', [
@@ -362,17 +362,17 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
           const result = await dispatch(
             updateGroupByID({
               id: rowKey,
-              projectID: currentProject ? currentProject._id : "",
+              projectID: currentProject ? currentProject._id : '',
               groupName: data.groupName,
               groupDescription: data.groupDescription,
               status: data.status,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             dispatch(
               getFilteredGroups({
-                projectId: currentProject?._id || "",
-                companyID: currentProject?.companyID || "",
+                projectId: currentProject?._id || '',
+                companyID: currentProject?.companyID || '',
               })
             );
           }
@@ -382,20 +382,20 @@ const GroupsList: FC<GroupsListPropsType> = ({ onRowClick }) => {
         onVisibleColumnsChange={handleVisibleColumnsChange}
         recordCreatorProps={false}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       <DrawerPanel
         title={`Add New Group`}
-        size={"medium"}
-        placement={"right"}
+        size={'medium'}
+        placement={'right'}
         open={openAddGroupForm}
         onClose={setOpenAddGroupForm}
         getContainer={false}
       >
         <GroupAddForm
-          projectID={currentProject?._id || ""}
-          companyID={companyID || ""}
+          projectID={currentProject?._id || ''}
+          companyID={companyID || ''}
         ></GroupAddForm>
       </DrawerPanel>
     </div>

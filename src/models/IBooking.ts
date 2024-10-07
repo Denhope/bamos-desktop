@@ -1,7 +1,13 @@
 export interface IBookingItem {
-  createDate: Date;
+  data?: any;
+  restriction?: string;
   voucherModel: VaucherModelType;
-  partNumber: string;
+  createDate?: any;
+  accessProjectID?: any;
+  accessProjectStatus?: string;
+  createUserID?: any;
+  state?: any;
+  partNumber?: string;
   serialNumber?: string | number;
   batchNumber?: string | number;
   owner?: string;
@@ -11,9 +17,10 @@ export interface IBookingItem {
   currency?: any;
   store?: any;
   projectID?: string;
+  projectTaskID?: string;
   orderNumber?: any;
   location?: string;
-  station: string;
+  station?: string;
   userID: string;
   userSing: any;
   companyID: string;
@@ -24,13 +31,89 @@ export interface IBookingItem {
   addDescription?: string;
   registrationNumber?: any;
   planeType?: any;
+  customer?: any;
   projectWO?: any;
   workshop?: any;
   additionalTaskID?: string;
   projectTaskWO?: string;
   label?: any;
+  receivingNumber?: any;
+  receivingItemNumber?: any;
+  suppliesCode?: any;
+  suppliesId?: any;
+  orderId?: string;
+  orderType?: string;
+  IS_CUSTOMER_GOODS?: boolean;
+  PART_NUMBER?: string | number;
+  NAME_OF_MATERIAL?: string;
+  QUANTITY?: any;
+  GROUP?: string;
+  TYPE?: string;
+  CONDITION?: string;
+  SHELF_NUMBER?: string;
+  STOCK?: string;
+  OWNER?: string;
+  PRICE?: any;
+  RECEIVED_DATE?: Date;
+  PART_REMARKS?: any;
+  ORDER_NUMBER?: any;
+  UNIT_OF_MEASURE?: string;
+  CURRENCY?: any;
+  COMPANY_ID?: any;
+  SUPPLIER_BATCH_NUMBER?: any;
+  SUPPLIES_CODE?: string;
+  SUPPLIES_LOCATION?: string;
+  SUPPLIER_NAME?: string;
+  SUPPLIER_SHORT_NAME?: string;
+  SUPPLIER_UNP?: any;
+  SUPPLIES_ID?: any;
+  IS_RESIDENT?: boolean;
+  ADD_UNIT_OF_MEASURE?: string;
+  ADD_NAME_OF_MATERIAL?: string;
+  ADD_PART_NUMBER?: any;
+  ADD_QUANTITY?: any;
+  OWNER_SHORT_NAME?: string;
+  OWNER_LONG_NAME?: string;
+  PRODUCT_EXPIRATION_DATE?: Date;
+  WAREHOUSE_RECEIVED_AT?: any;
+  SERIAL_NUMBER?: any;
+  APPROVED_CERT?: any;
+  AWB_REFERENCE?: any;
+  AWB_TYPE?: any;
+  AWB_NUMBER?: any;
+  AWB_DATE?: Date;
+  RECEIVING_NUMBER?: any;
+  RECEIVING_ITEM_NUMBER?: any;
+  CERTIFICATE_NUMBER?: any;
+  CERTIFICATE_TYPE?: string;
+  REVISION?: 'C' | 'B' | 'A';
+  LOCAL_ID?: string;
+  ORDER_ID?: string;
+  ORDER_TYPE?: string;
+  receivingGoodsId?: string;
+  STATUS?: string;
+  PART_RECEIVING_REMARKS?: string;
+  PART_PICKSLIP_REMARKS?: string;
+  PART_REPARE_REMARKS?: string;
+  PART_PURCHASE_REMARKS?: string;
+  ORDER_ITEM_ID?: string;
+  pickDate?: any;
+  pickSlipNumber?: any;
+  partID?: any;
+  locationID?: string;
+  ownerID?: string;
+  storeID?: string;
+  partsIDs?: any[];
+  RECEIVING_ITEMS_ID?: any;
+  RECEIVING_ID?: any;
 }
 type VaucherModelType =
+  | 'ADD_STEP'
+  | 'DELETE_STEP'
+  | 'EDIT_STEP'
+  | 'ADD_ACTION'
+  | 'DELETE_ACTION'
+  | 'EDIT_ACTION'
   | 'ADD_NEW_PART'
   | 'STORE_TO_A/C'
   | 'CHANGE_LOCATION'
@@ -75,4 +158,9 @@ type VaucherModelType =
   | 'TOOL_LOST_NOTICE'
   | 'VENDOR_INSTALATION'
   | 'INCOMING_SHIPMENT_SENT'
+  | 'OPEN_ACCESS'
+  | 'CLOSE_ACCESS'
+  | 'INSPECT_ACCESS'
+  | 'ADD_PROJECT_ACCESS'
+  | 'ADD_TASK_ACCESS'
   | 'OUTGOIN SHIPMENT ARRIVED';

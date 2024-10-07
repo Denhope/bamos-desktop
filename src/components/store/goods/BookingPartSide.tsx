@@ -1,22 +1,23 @@
-import React, { FC, useState, useMemo, useEffect } from "react";
-import GoodsReceivingSrarchForm from "./GoodsReceivingSrarchForm";
-import OrderDetailsForm from "./OrderDetailsForm";
-import BookingOrderPartsList from "./BookingOrderPartsList";
-import { IOrder } from "@/models/IOrder";
-import TabContent from "@/components/shared/Table/TabContent";
-import { t } from "i18next";
-import { useTranslation } from "react-i18next";
-import { Button, Modal, Space, message } from "antd";
-import Receiving from "./Receiving";
-import { IReceiving } from "@/models/IReceiving";
+import React, { FC, useState, useMemo, useEffect } from 'react';
+import GoodsReceivingSrarchForm from './GoodsReceivingSrarchForm';
+import OrderDetailsForm from './OrderDetailsForm';
+import BookingOrderPartsList from './BookingOrderPartsList';
+import { IOrder } from '@/models/IOrder';
+import TabContent from '@/components/shared/Table/TabContent';
+import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { Button, Modal, Space, message } from 'antd';
+import Receiving from './Receiving';
+import { IReceiving } from '@/models/IReceiving';
 import {
   ProFormGroup,
   ProFormText,
   ProFormTextArea,
-} from "@ant-design/pro-components";
-import GeneretedTransferPdf from "@/components/pdf/GeneretedTransferLabels";
-import { getFilteredShops } from "@/utils/api/thunks";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
+} from '@ant-design/pro-components';
+import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
+import { getFilteredShops } from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 type BookingPartSideType = {
   order: IOrder | null;
   onUpdateOrder?: (data: any) => void;
@@ -27,14 +28,14 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
   const [partsToPrint, setPartsToPrint] = useState<any>(null);
   const [openPart, setOpenPart] = useState<any>(null);
   const [selectedPart, setSelectedPart] = useState<any>();
-  const [selectedOrderType, setSelectedOrderType] = useState<any>("ORDER");
+  const [selectedOrderType, setSelectedOrderType] = useState<any>('ORDER');
   const { t } = useTranslation();
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(order);
   const [selecteReceiving, setSelectedreceiving] = useState<IReceiving | null>(
     null
   );
-  const [receivingType, setReceivingType] = useState<"ORDER" | "UN_ORDER">(
-    "ORDER"
+  const [receivingType, setReceivingType] = useState<'ORDER' | 'UN_ORDER'>(
+    'ORDER'
   );
 
   const handleSelectedPart = (record: any, rowIndex?: any) => {
@@ -50,12 +51,12 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
   const handleOpenPart = () => {
     if (
       !selectedPart ||
-      selectedPart.state === "RECEIVED" ||
-      selectedPart.state === "CANCELLED" ||
-      selectedPart.state === "CLOSED" ||
-      (selectedOrder && selectedOrder?.state === "CLOSED") ||
-      (selectedOrder && selectedOrder?.state === "CANCELLED") ||
-      (selectedOrder && selectedOrder?.state === "RECEIVED")
+      selectedPart.state === 'RECEIVED' ||
+      selectedPart.state === 'CANCELLED' ||
+      selectedPart.state === 'CLOSED' ||
+      (selectedOrder && selectedOrder?.state === 'CLOSED') ||
+      (selectedOrder && selectedOrder?.state === 'CANCELLED') ||
+      (selectedOrder && selectedOrder?.state === 'RECEIVED')
     ) {
       return;
     }
@@ -66,37 +67,52 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
     () =>
       [
         selectedOrderType &&
-          selectedOrderType === "ORDER" && {
+          selectedOrderType === 'ORDER' && {
             content: (
-              <>
-                <BookingOrderPartsList
-                  onSelectedPart={handleSelectedPart}
-                  parts={selectedOrder?.parts}
-                  scroll={20}
-                />
+              <div className="flex h-[46vh] flex-col justify-between">
+                <div className="flex">
+                  <BookingOrderPartsList
+                    onSelectedPart={handleSelectedPart}
+                    parts={selectedOrder?.orderItemsID}
+                    scroll={20}
+                  />
+                </div>
+
                 <Space className="mt-5" align="center">
-                  <Button
-                    size="small"
-                    onClick={handleOpenPart}
-                    disabled={
-                      !!(
-                        !selectedPart ||
-                        selectedPart.record.state === "RECEIVED" ||
-                        selectedPart.record.state === "CANCELLED" ||
-                        selectedPart.record.state === "CLOSED" ||
-                        (selectedOrder && selectedOrder?.state === "CLOSED") ||
-                        (selectedOrder &&
-                          selectedOrder?.state === "CANCELLED") ||
-                        (selectedOrder && selectedOrder?.state === "RECEIVED")
-                      )
-                    }
+                  <PermissionGuard
+                    requiredPermissions={[
+                      Permission.PICKSLIP_CONFIRMATION_ACTIONS,
+                    ]}
                   >
-                    {t("PROCESS RECEIVING")}
-                  </Button>
+                    <Button
+                      size="small"
+                      onClick={handleOpenPart}
+                      disabled={
+                        !!(
+                          !selectedPart ||
+                          selectedPart.record.state === 'RECEIVED' ||
+                          selectedPart.record.state === 'CANCELLED' ||
+                          selectedPart.record.state === 'CLOSED' ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'CLOSED') ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'CANCELLED') ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'RECEIVED') ||
+                          !selecteReceiving ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'onQuatation') ||
+                          !selecteReceiving
+                        )
+                      }
+                    >
+                      {t('PROCESS RECEIVING')}
+                    </Button>
+                  </PermissionGuard>
                 </Space>
-              </>
+              </div>
             ),
-            title: `${t("ORDER DETAILS")}`,
+            title: `${t('ORDER DETAILS')}`,
           },
 
         openPart &&
@@ -109,8 +125,8 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   currentPart={openPart.record}
                   onUpdateOrder={function (data: any): void {
                     setOpenPart(null);
-                    setSelectedOrder(data);
-                    onUpdateOrder && onUpdateOrder(data);
+                    setSelectedOrder(data.data);
+                    // onUpdateOrder && onUpdateOrder(data.data);
                   }}
                   // onReceivingPart={(data) => {
                   //   setPartsToPrint(data);
@@ -118,7 +134,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   // }}
                   onReceivingPart={async (data) => {
                     const currentCompanyID =
-                      localStorage.getItem("companyID") || "";
+                      localStorage.getItem('companyID') || '';
 
                     if (data) {
                       const getStoreInfo = await dispatch(
@@ -127,23 +143,23 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                           companyID: currentCompanyID,
                         })
                       );
-                      if (getStoreInfo.meta.requestStatus === "fulfilled") {
+                      if (getStoreInfo.meta.requestStatus === 'fulfilled') {
                         const location = getStoreInfo.payload[0].locations.find(
                           (loc: any) =>
                             loc.locationName === data[0].SHELF_NUMBER
                         );
                         const locationState =
-                          location?.rectriction === "standart" ||
-                          location?.rectriction === "restricted"
-                            ? "SERVICEABLE"
-                            : "UNSERVICEABLE";
+                          location?.rectriction === 'standart' ||
+                          location?.rectriction === 'restricted'
+                            ? 'SERVICEABLE'
+                            : 'UNSERVICEABLE';
                         setPartsToPrint([
                           { ...data[0], RESTRICTION: locationState },
                         ]);
 
                         setOpenLabelsPrint(true);
                       } else {
-                        message.error("Error");
+                        message.error('Error');
                       }
                     }
 
@@ -152,40 +168,13 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 />
               </>
             ),
-            title: `${t("RECEIVING")}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
-          },
-        openPart &&
-          openPart?.index !== undefined && {
-            content: <ProFormTextArea></ProFormTextArea>,
-            title: `${t("REMARKS")}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
-          },
-        openPart &&
-          openPart?.index !== undefined && {
-            content: (
-              <ProFormGroup>
-                <ProFormText
-                  name="unitPrice"
-                  label={t("UNIT PRICE")}
-                  width="sm"
-                ></ProFormText>
-                <ProFormText
-                  name="unitLocalPrice"
-                  label={t("UNIT LOCAL PRICE")}
-                  width="sm"
-                ></ProFormText>
-              </ProFormGroup>
-            ),
-            title: `${t("FINANCIAL DATA")}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
+            title: `${t('RECEIVING')}№${
+              selecteReceiving?.receivingNumber
+            } -  ${t('POS.')} ${openPart?.index + 1}`,
           },
 
         selectedOrderType &&
-          selectedOrderType === "UN_ORDER" && {
+          selectedOrderType === 'UN_ORDER' && {
             content: (
               <>
                 <Receiving
@@ -195,12 +184,13 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   onUpdateOrder={function (data: any): void {
                     setOpenPart(null);
                     setSelectedOrder(data);
-                    // setSelectedOrderType('');
+                    setSelectedOrderType('');
+                    console.log(data);
                     onUpdateOrder && onUpdateOrder(data);
                   }}
                   onReceivingPart={async (data) => {
                     const currentCompanyID =
-                      localStorage.getItem("companyID") || "";
+                      localStorage.getItem('companyID') || '';
 
                     if (data) {
                       const getStoreInfo = await dispatch(
@@ -209,32 +199,30 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                           companyID: currentCompanyID,
                         })
                       );
-                      if (getStoreInfo.meta.requestStatus === "fulfilled") {
+                      if (getStoreInfo.meta.requestStatus === 'fulfilled') {
                         const location = getStoreInfo.payload[0].locations.find(
                           (loc: any) =>
                             loc.locationName === data[0].SHELF_NUMBER
                         );
                         const locationState =
-                          location?.rectriction === "standart" ||
-                          location?.restriction === "restricted"
-                            ? "SERVICEABLE"
-                            : "UNSERVICEABLE";
+                          location?.rectriction === 'standart' ||
+                          location?.restriction === 'restricted'
+                            ? 'SERVICEABLE'
+                            : 'UNSERVICEABLE';
                         setPartsToPrint([
                           { ...data[0], RESTRICTION: locationState },
                         ]);
 
                         setOpenLabelsPrint(true);
                       } else {
-                        message.error("Error");
+                        message.error('Error');
                       }
                     }
-
-                    //
                   }}
                 />
               </>
             ),
-            title: `${t("SINGLE RECEIVING")}`,
+            title: `${t('SINGLE RECEIVING')}`,
             closable: true,
           },
       ].filter(Boolean),
@@ -246,13 +234,11 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
       selectedPart,
       selecteReceiving,
       setSelectedOrderType,
-
-      t,
     ]
   );
 
   return (
-    <div className=" bg-white px-4 py-3 rounded-md border-gray-400 overflow-hidden h-[78vh] flex flex-col justify-between gap-2">
+    <div className=" bg-white px-4 py-3 rounded-md border-gray-400 overflow-hidden h-[82vh] flex flex-col justify-between gap-2">
       <div className="flex flex-col gap-2">
         <OrderDetailsForm
           order={selectedOrder}
@@ -270,9 +256,9 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
         <TabContent tabs={tabs}></TabContent>
       </div>
       <Modal
-        title={t("PRINT LABEL")}
+        title={t('PRINT LABEL')}
         open={labelsOpenPrint}
-        width={"30%"}
+        width={'30%'}
         onCancel={() => {
           setOpenLabelsPrint(false);
           setPartsToPrint(null);

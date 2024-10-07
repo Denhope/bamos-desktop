@@ -1,10 +1,10 @@
-import React, { useState, useEffect, FC } from "react";
-import { Layout, Menu, MenuProps, TabPaneProps, Tabs } from "antd";
+import React, { useState, useEffect, FC } from 'react';
+import { Layout, Menu, MenuProps, TabPaneProps, Tabs } from 'antd';
 
-import { DatabaseOutlined } from "@ant-design/icons";
+import { DatabaseOutlined } from '@ant-design/icons';
 
-import { RouteNames } from "@/router";
-import { v4 as originalUuidv4 } from "uuid"; // Импортируйте библиотеку uuid
+import { RouteNames } from '@/router';
+import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 import {
   UnorderedListOutlined,
   SelectOutlined,
@@ -16,19 +16,19 @@ import {
   ExpandAltOutlined,
   FundProjectionScreenOutlined,
   ShoppingCartOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 
-import TabPane from "antd/es/tabs/TabPane";
+import TabPane from 'antd/es/tabs/TabPane';
 
-import RemoverdItems from "@/components/mantainance/removeInstallComponents/RemoverdItems";
-import { useTranslation } from "react-i18next";
-import WOFilterForm from "@/components/mantainance/base/systemWO/woProcess/WOProcessForm";
+import RemoverdItems from '@/components/mantainance/removeInstallComponents/RemoverdItems';
+import { useTranslation } from 'react-i18next';
+import WOFilterForm from '@/components/mantainance/base/systemWO/woProcess/WOProcessForm';
 
-import WOTask from "@/components/mantainance/base/systemWO/woProcess/Task";
-import { ProCard } from "@ant-design/pro-components";
-import Title from "antd/es/typography/Title";
+import WOTask from '@/components/mantainance/base/systemWO/woProcess/Task';
+import { ProCard } from '@ant-design/pro-components';
+import Title from 'antd/es/typography/Title';
 
 const { Sider, Content } = Layout;
 
@@ -37,9 +37,9 @@ const WorkOrder: FC = () => {
   const [issuedRecord, setIssuedRecord] = useState(false);
   const [issuedtDrawer, setOpenIssuedDrawer] = useState(false);
   const [selectedObject, setSelectedObject] = useState({
-    PART_NUMBER: "",
+    PART_NUMBER: '',
     QUANTITY: 0,
-    NAME_OF_MATERIAL: "",
+    NAME_OF_MATERIAL: '',
   });
   const onIssuedClick = (record: any) => {
     setIssuedRecord(record);
@@ -55,9 +55,9 @@ const WorkOrder: FC = () => {
     isLoadingWO,
   } = useTypedSelector((state) => state.mtbase);
 
-  const rootSubmenuKeys = [""];
+  const rootSubmenuKeys = [''];
 
-  const [openKeys, setOpenKeys] = useState(["sub1", "sub2"]);
+  const [openKeys, setOpenKeys] = useState(['sub1', 'sub2']);
   const [selectedKey, setSelectedKey] = useState<string>(
     RouteNames.BASETASKLIST
   );
@@ -66,7 +66,7 @@ const WorkOrder: FC = () => {
     RouteNames.BASETASKLIST,
   ]);
   useEffect(() => {
-    const storedKeys = localStorage.getItem("selectedKeys");
+    const storedKeys = localStorage.getItem('selectedKeys');
     if (storedKeys) {
       setSelectedKeys(JSON.parse(storedKeys));
 
@@ -78,7 +78,7 @@ const WorkOrder: FC = () => {
       key: `${record.projectTaskWO}`, // уникальный ключ для каждой вкладки
       title: `WO: ${record.projectTaskWO}`,
       content: (
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <WOTask currentTask={record}></WOTask>
         </ProCard>
       ),
@@ -97,9 +97,9 @@ const WorkOrder: FC = () => {
     title: string;
     content: React.ReactNode;
   }
-  const [activeKey, setActiveKey] = useState<string>(""); // Используйте строку вместо массива
+  const [activeKey, setActiveKey] = useState<string>(''); // Используйте строку вместо массива
   const [panes, setPanes] = useState<TabData[]>([]);
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
       setOpenKeys(keys);
@@ -114,10 +114,10 @@ const WorkOrder: FC = () => {
       | string
       | React.MouseEvent<Element, MouseEvent>
       | React.KeyboardEvent<Element>,
-    action: "add" | "remove"
+    action: 'add' | 'remove'
   ) => {
-    if (typeof targetKey === "string") {
-      if (action === "remove") {
+    if (typeof targetKey === 'string') {
+      if (action === 'remove') {
         const newPanes = panes.filter((pane) => pane.key !== targetKey);
         setPanes(newPanes);
         if (newPanes.length > 0) {
@@ -128,14 +128,14 @@ const WorkOrder: FC = () => {
       // Обработка события мыши или клавиатуры
     }
   };
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
     children?: MenuItem[],
     // path?: any,
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -147,7 +147,7 @@ const WorkOrder: FC = () => {
     } as MenuItem;
   }
   const items: MenuItem[] = [
-    getItem(<>{t("WORKORDER (BAN:1418)")}</>, "sub1", null, []),
+    getItem(<>{t('WORKORDER (BAN:1418)')}</>, 'sub1', null, []),
   ];
   return (
     <Layout>
@@ -187,10 +187,10 @@ const WorkOrder: FC = () => {
         <div className="mx-auto px-5">
           <div
             style={{
-              display: !collapsed ? "block" : "none",
+              display: !collapsed ? 'block' : 'none',
             }}
           >
-            {" "}
+            {' '}
             <WOFilterForm onFilterWO={onFilterWO}></WOFilterForm>
           </div>
         </div>
@@ -198,7 +198,7 @@ const WorkOrder: FC = () => {
       <Content>
         <Tabs
           style={{
-            width: "98%",
+            width: '98%',
           }}
           className="mx-auto"
           size="small"

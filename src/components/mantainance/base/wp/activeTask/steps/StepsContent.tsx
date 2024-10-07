@@ -1,11 +1,11 @@
-import React, { FC } from "react";
-import WOActionDescriptionList from "./WOActionDescriptionList ";
-import WOPerfomedForm from "./WOPerfomedForm";
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import TabContent from "@/components/shared/Table/TabContent";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import WOInspectionForm from "../close/WOInspectionForm";
-import WODInspectionForm from "./WODInspectionForm";
+import React, { FC } from 'react';
+import WOActionDescriptionList from './WOActionDescriptionList ';
+import WOPerfomedForm from './WOPerfomedForm';
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import TabContent from '@/components/shared/Table/TabContent';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import WOInspectionForm from '../close/WOInspectionForm';
+import WODInspectionForm from './WODInspectionForm';
 
 type StepsProps = { task: IProjectTask | null };
 const StepsContent: FC<StepsProps> = ({ task }) => {
@@ -32,10 +32,10 @@ const StepsContent: FC<StepsProps> = ({ task }) => {
                   currentAction={currentAction}
                   isLoading={isLoading}
                   projectTasks={projectTasks}
-                  disabled={task ? task.status !== "inProgress" : false}
+                  disabled={task ? task.status !== 'inProgress' : false}
                 />
               ),
-              title: "PERFOMED",
+              title: 'PERFOMED',
             },
             {
               content: (
@@ -47,11 +47,11 @@ const StepsContent: FC<StepsProps> = ({ task }) => {
                   projectTasks={projectTasks}
                   disabled={
                     !(currentAction && currentAction.performedName) ||
-                    (task ? task.status !== "inProgress" : false)
+                    (task ? task.status !== 'inProgress' : false)
                   }
                 />
               ),
-              title: "INSPECTED",
+              title: 'INSPECTION',
             },
             {
               content: (
@@ -60,7 +60,7 @@ const StepsContent: FC<StepsProps> = ({ task }) => {
                     !(currentAction && currentAction.performedName) ||
                     !(currentAction && currentAction.inspectedName) ||
                     !task?.isDoubleInspectionRequired ||
-                    (task ? task.status !== "inProgress" : false)
+                    (task ? task.status !== 'inProgress' : false)
                   }
                   currentProjectTask={task}
                   currentActiveIndex={currentActiveIndex}
@@ -68,11 +68,11 @@ const StepsContent: FC<StepsProps> = ({ task }) => {
                   isLoading={isLoading}
                   projectTasks={projectTasks}
                   onFinish={function (record: any): void {
-                    throw new Error("Function not implemented.");
+                    throw new Error('Function not implemented.');
                   }}
                 />
               ),
-              title: "DIINSPECTED",
+              title: 'DIINSPECTION',
             },
           ]}
         />

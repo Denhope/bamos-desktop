@@ -1,11 +1,11 @@
-import { Button, Checkbox, Col, Form, Row, Space } from "antd";
-import type { CheckboxValueType } from "antd/es/checkbox/Group";
-import Title from "antd/es/typography/Title";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import React, { FC, useState } from "react";
+import { Button, Checkbox, Col, Form, Row, Space } from 'antd';
 
-import { updateResourcesRequests } from "@/store/reducers/AdditionalTaskSlice";
-import { useDispatch } from "react-redux";
+import Title from 'antd/es/typography/Title';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import React, { FC, useState } from 'react';
+
+import { updateResourcesRequests } from '@/store/reducers/AdditionalTaskSlice';
+import { useDispatch } from 'react-redux';
 export interface IWorkStepClassificationProps {
   onFinish?: () => void;
 }
@@ -19,9 +19,8 @@ const WorkStepClassifications: FC<IWorkStepClassificationProps> = ({
   );
   const defaultCheckedList = currentAdditionalTask?.resourcesRequests;
 
-  const [checkedList, setCheckedList] =
-    useState<CheckboxValueType[]>(defaultCheckedList);
-  const onChange = (list: CheckboxValueType[]) => {
+  const [checkedList, setCheckedList] = useState<any[]>(defaultCheckedList);
+  const onChange = (list: any[]) => {
     setCheckedList(list);
   };
 
@@ -37,7 +36,7 @@ const WorkStepClassifications: FC<IWorkStepClassificationProps> = ({
         <Form.Item rules={[{ required: true }]}>
           <Checkbox.Group onChange={onChange} value={checkedList}>
             <Space direction="vertical">
-              {" "}
+              {' '}
               <Checkbox value="powerlessRequired">
                 Power Off / Обесточивание
               </Checkbox>

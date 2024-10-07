@@ -1,8 +1,8 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { DatePicker } from "antd";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
+import { ProColumns } from '@ant-design/pro-components';
+import { DatePicker } from 'antd';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 type showProjectListType = {
   scroll: number;
   onSelectedProjects: (record: any) => void;
@@ -23,32 +23,32 @@ const ProjectList: FC<showProjectListType> = ({
   const { t } = useTranslation();
   const initialColumns: ProColumns<any>[] = [
     {
-      title: `${t("PROJECT No")}`,
-      dataIndex: "projectWO",
-      key: "projectWO",
-      // tip: 'LOCAL_ID',
+      title: `${t('PROJECT No')}`,
+      dataIndex: 'projectWO',
+      key: 'projectWO',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       // width: '13%',
 
       // responsive: ['sm'],
     },
     {
-      title: `${t("NAME")}`,
-      dataIndex: "projectName", // обновлено
-      key: "projectName", // обновлено
+      title: `${t('NAME')}`,
+      dataIndex: 'projectName', // обновлено
+      key: 'projectName', // обновлено
       ellipsis: true,
     },
     {
-      title: `${t("CUSTOMER")}`,
-      dataIndex: "customer", // обновлено
-      key: "customer", // обновлено
+      title: `${t('CUSTOMER')}`,
+      dataIndex: 'customer', // обновлено
+      key: 'customer', // обновлено
       ellipsis: true,
     },
 
     {
-      title: `${t("STATE")}`,
-      dataIndex: "status",
-      key: "status",
+      title: `${t('STATUS')}`,
+      dataIndex: 'status',
+      key: 'status',
       ellipsis: true,
       // width: '10%',
 
@@ -58,16 +58,16 @@ const ProjectList: FC<showProjectListType> = ({
       render: (text: any, record: any) => {
         // Определяем цвет фона в зависимости от условия
         let backgroundColor;
-        if (record.state === "CLOSED") {
-          backgroundColor = "#62d156";
+        if (record.state === 'CLOSED') {
+          backgroundColor = '#62d156';
         } else if (
-          record.status === "OPEN" ||
-          record.status === "open" ||
-          record.status === "DRAFT"
+          record.status === 'OPEN' ||
+          record.status === 'open' ||
+          record.status === 'DRAFT'
         ) {
-          backgroundColor = "red";
+          backgroundColor = 'red';
         } else {
-          backgroundColor = "#f0be37";
+          backgroundColor = '#f0be37';
         }
         return (
           <div style={{ backgroundColor }}>
@@ -77,16 +77,16 @@ const ProjectList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t("DATE")}`,
+      title: `${t('DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
 
-      dataIndex: "createDate",
-      key: "createDate",
+      dataIndex: 'createDate',
+      key: 'createDate',
       // width: '9%',
-      responsive: ["lg"],
-      valueType: "date",
+      responsive: ['lg'],
+      valueType: 'date',
       sorter: (a, b) => {
         if (a.createDate && b.createDate) {
           const aFinishDate = new Date(a.createDate);
@@ -118,11 +118,11 @@ const ProjectList: FC<showProjectListType> = ({
           console.log(record);
         }}
         onSave={function (rowKey: any, data: any, row: any): void {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         yScroll={scroll}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
         isLoading={false}
       />

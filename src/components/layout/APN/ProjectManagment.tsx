@@ -1,20 +1,20 @@
-import { ApartmentOutlined } from "@ant-design/icons";
-import { Col, Layout, Menu, MenuProps, Row } from "antd";
-import Sider from "antd/es/layout/Sider";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { getItem } from "@/services/utilites";
-import ProjectFilterForm from "../projectManagment/ProjectFilterForm";
-import { Content } from "antd/es/layout/layout";
-import ProjectList from "../projectManagment/ProjectList";
-import ProjectDescription from "../projectManagment/ProjectDescription";
-import ProjectDetails from "../projectManagment/ProjectDetails";
+import { ApartmentOutlined } from '@ant-design/icons';
+import { Col, Layout, Menu, MenuProps, Row } from 'antd';
+import Sider from 'antd/es/layout/Sider';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getItem } from '@/services/utilites';
+import ProjectFilterForm from '../projectManagment/ProjectFilterForm';
+import { Content } from 'antd/es/layout/layout';
+import ProjectList from '../projectManagment/ProjectList';
+import ProjectDescription from '../projectManagment/ProjectDescription';
+import ProjectDetails from '../projectManagment/ProjectDetails';
 
 const ProjectManagment: FC = () => {
   const [project, setProject] = useState<any | null>(null);
-  const [onUpdateOrder, setUpdateOrder] = useState<any | null>(null);
+
   const [collapsed, setCollapsed] = useState(false);
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   const { t } = useTranslation();
   const [projects, setProjects] = useState<any[] | []>([]);
   const [data, setdata] = useState<any[] | []>(projects);
@@ -25,8 +25,8 @@ const ProjectManagment: FC = () => {
   }, [projects]);
   const items: MenuItem[] = [
     getItem(
-      <>{t("PROJECT MANAGMENT")} (BAN:100)</>,
-      "sub1",
+      <>{t('PROJECT ADMINISTRATION')} (BAN:100)</>,
+      'sub1',
       <ApartmentOutlined />
     ),
   ];
@@ -47,7 +47,7 @@ const ProjectManagment: FC = () => {
         <div className="mx-auto px-5">
           <div
             style={{
-              display: !collapsed ? "block" : "none",
+              display: !collapsed ? 'block' : 'none',
             }}
           >
             <ProjectFilterForm onProjectSearch={setProjects} />
@@ -60,7 +60,7 @@ const ProjectManagment: FC = () => {
         </div>
       </Sider>
       <Content className="pl-4">
-        <div className="h-[79vh] overflow-hidden flex flex-col justify-between gap-5">
+        <div className="h-[82vh] overflow-hidden flex flex-col justify-between ">
           <ProjectDescription onProjectSearch={setProject} project={project} />
           <ProjectDetails
             project={project}

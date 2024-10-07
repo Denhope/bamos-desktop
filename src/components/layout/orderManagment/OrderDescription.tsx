@@ -3,12 +3,12 @@ import {
   ProFormDatePicker,
   ProFormGroup,
   ProFormText,
-} from "@ant-design/pro-components";
-import { Button, Divider, Form, FormInstance } from "antd";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { getFilteredOrders } from "@/utils/api/thunks";
+} from '@ant-design/pro-components';
+import { Button, Divider, Form, FormInstance } from 'antd';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getFilteredOrders } from '@/utils/api/thunks';
 type OrderDescriptionType = {
   order: any | null;
   onOrderSearch?: (orders: any | null) => void;
@@ -25,21 +25,15 @@ const OrderDescription: FC<OrderDescriptionType> = ({
     if (order) {
       // onSelectSelectedStore && onSelectSelectedStore(selectedStore);
       form.setFields([
-        { name: "orderNumber", value: order?.orderNumber },
-        { name: "lastModificateBy", value: order?.updateBySing },
-        { name: "modificationDate", value: order?.updateDate },
-        { name: "createBy", value: order.createBySing },
-        { name: "createDate", value: order.createDate },
+        { name: 'orderNumber', value: order?.orderNumber },
+        { name: 'lastModificateBy', value: order?.updateBySing },
+        { name: 'modificationDate', value: order?.updateDate },
+        { name: 'createBy', value: order.createBySing },
+        { name: 'createDate', value: order.createDate },
       ]);
-
-      // onFilterTransferprojects(form.getFieldsValue());
     }
   }, [order]);
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      formRef.current?.submit(); // вызываем метод submit формы при нажатии Enter
-    }
-  };
+
   return (
     <div className="flex flex-col gap-5">
       <ProForm
@@ -54,19 +48,19 @@ const OrderDescription: FC<OrderDescriptionType> = ({
           <ProFormText
             name="orderSearch"
             width="sm"
-            label={t("ORDER No")}
+            label={t('ORDER No')}
             fieldProps={{
               onPressEnter: async () => {
                 const currentCompanyID =
-                  localStorage.getItem("companyID") || "";
-                if (form.getFieldValue("orderSearch")) {
+                  localStorage.getItem('companyID') || '';
+                if (form.getFieldValue('orderSearch')) {
                   const result = await dispatch(
                     getFilteredOrders({
                       companyID: currentCompanyID,
-                      orderNumber: form.getFieldValue("orderSearch"),
+                      orderNumber: form.getFieldValue('orderSearch'),
                     })
                   );
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     onOrderSearch && onOrderSearch(result.payload[0] || {});
                   } else {
                     form.resetFields();
@@ -78,17 +72,16 @@ const OrderDescription: FC<OrderDescriptionType> = ({
           ></ProFormText>
           <Button
             type="primary"
-            // disabled={!form.getFieldValue('order')}
             onClick={async () => {
-              const currentCompanyID = localStorage.getItem("companyID") || "";
-              if (form.getFieldValue("orderSearch")) {
+              const currentCompanyID = localStorage.getItem('companyID') || '';
+              if (form.getFieldValue('orderSearch')) {
                 const result = await dispatch(
                   getFilteredOrders({
                     companyID: currentCompanyID,
-                    orderNumber: form.getFieldValue("orderSearch"),
+                    orderNumber: form.getFieldValue('orderSearch'),
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
+                if (result.meta.requestStatus === 'fulfilled') {
                   onOrderSearch && onOrderSearch(result.payload[0] || {});
                 } else {
                   form.resetFields();
@@ -96,14 +89,14 @@ const OrderDescription: FC<OrderDescriptionType> = ({
               }
             }}
           >
-            {t("LOAD")}
+            {t('LOAD')}
           </Button>
         </ProFormGroup>
         <Divider className="my-0 py-0 pb-5"></Divider>
         <ProFormGroup>
           <ProFormText
             disabled
-            label={t("ORDER No")}
+            label={t('ORDER No')}
             name="orderNumber"
             width="sm"
           ></ProFormText>
@@ -111,11 +104,11 @@ const OrderDescription: FC<OrderDescriptionType> = ({
             disabled
             name="createBy"
             width="sm"
-            label={t("CREATE BY")}
+            label={t('CREATE BY')}
           ></ProFormText>
           <ProFormDatePicker
             disabled
-            label={t("CREATE DATE")}
+            label={t('CREATE DATE')}
             name="createDate"
             width="sm"
           ></ProFormDatePicker>
@@ -123,14 +116,14 @@ const OrderDescription: FC<OrderDescriptionType> = ({
         <ProFormGroup>
           <ProFormText
             disabled
-            label={t("LAST MODIFIED BY")}
+            label={t('LAST MODIFIED BY')}
             name="lastModificateBy"
             width="sm"
           ></ProFormText>
 
           <ProFormDatePicker
             disabled
-            label={t("MODIFICATION DATE")}
+            label={t('MODIFICATION DATE')}
             name="modificationDate"
             width="sm"
           ></ProFormDatePicker>

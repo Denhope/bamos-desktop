@@ -1,27 +1,52 @@
-import { ITaskDTO } from "@/components/mantainance/base/workPackage/packageAplications/AddAplicationForm";
-import { IAdditionalTask } from "@/models/IAdditionalTask";
-import { TDifficulty, IActionType } from "@/models/IAdditionalTaskMTB";
-import { IBookingItem } from "@/models/IBooking";
-import { IMaterialStoreRequestItem } from "@/models/IMaterialStoreItem";
-import { IPickSlip, IReturnSlip, IPickSlipResponse } from "@/models/IPickSlip";
-import { IPlane } from "@/models/IPlane";
-import { IPlaneWO } from "@/models/IPlaneWO";
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import { IRemovedItemResponce } from "@/models/IRemovedItem";
-import { IStore } from "@/models/IStore";
-import { IUser } from "@/models/IUser";
-import AuthService from "@/services/authService";
-import TaskService, { taskFilters } from "@/services/taskService";
-import { MatRequestAplication } from "@/store/reducers/ProjectTaskSlise";
-import { ISignIn } from "@/store/types";
-import { IPurchaseMaterial } from "@/types/TypesData";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { $authHost, API_URL } from "./http";
+import { ITaskDTO } from '@/components/mantainance/base/workPackage/packageAplications/AddAplicationForm';
+import { IAdditionalTask } from '@/models/IAdditionalTask';
+import { TDifficulty, IActionType } from '@/models/IAdditionalTaskMTB';
+import { IBookingItem } from '@/models/IBooking';
+import { IMaterialStoreRequestItem } from '@/models/IMaterialStoreItem';
+import { IPickSlip, IReturnSlip, IPickSlipResponse } from '@/models/IPickSlip';
+import { IPlane } from '@/models/IPlane';
+import { IPlaneWO } from '@/models/IPlaneWO';
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import { IRemovedItemResponce } from '@/models/IRemovedItem';
+import { IStore } from '@/models/IStore';
+import { IUser } from '@/models/IUser';
+import AuthService from '@/services/authService';
+import TaskService, { taskFilters } from '@/services/taskService';
+import { MatRequestAplication } from '@/store/reducers/ProjectTaskSlise';
+import { ISignIn } from '@/store/types';
+import { IPurchaseMaterial } from '@/types/TypesData';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { $authHost, API_URL } from './http';
+export const generateReport = async (
+  companyID: any,
+  queryParams: any,
+  token: any
+) => {
+  const url = `${API_URL}/reports/generate-report/companyID/${companyID}/`;
 
+  try {
+    const response = await $authHost.get(url, {
+      params: queryParams,
+      // headers,
+      responseType: 'blob',
+    });
+    const contentType = response.headers['content-type'];
+
+    if (contentType !== 'application/pdf') {
+      throw new Error(`Неверный тип содержимого: ${contentType}`);
+    }
+
+    console.log('Отчет успешно сгенерирован:', response.data); // После проверки типа содержимого
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при загрузке отчета:', error);
+    throw error;
+  }
+};
 //Auth
 export const registration = createAsyncThunk(
-  "auth/createUser",
+  'auth/createUser',
 
   async (data: IUser, thunkAPI) => {
     const { name, email, password, firstName, lastName, role, singNumber } =
@@ -42,14 +67,14 @@ export const registration = createAsyncThunk(
         console.error(e.message);
       }
       return thunkAPI.rejectWithValue(
-        "Не удалось создать нового пользователя!"
+        'Не удалось создать нового пользователя!'
       );
     }
   }
 );
 
 export const login = createAsyncThunk(
-  "auth/login",
+  'auth/login',
   async (data: ISignIn, thunkAPI) => {
     const { email, password } = data;
     try {
@@ -57,13 +82,13 @@ export const login = createAsyncThunk(
 
       return response.data;
     } catch (e) {
-      return thunkAPI.rejectWithValue("Неверный логин или пароль");
+      return thunkAPI.rejectWithValue('Неверный логин или пароль');
     }
   }
 );
 //User
 export const getUserById = createAsyncThunk(
-  "user/getUserById",
+  'user/getUserById',
   async (userId: string, thunkAPI) => {
     try {
       const response = await $authHost.get(`/users/${userId}`, {});
@@ -75,7 +100,7 @@ export const getUserById = createAsyncThunk(
 );
 
 export const getNewUserTokens = createAsyncThunk(
-  "user/getUserTokens",
+  'user/getUserTokens',
   async (userId: any, thunkAPI) => {
     try {
       const response = await AuthService.getNewTokens(userId);
@@ -88,7 +113,7 @@ export const getNewUserTokens = createAsyncThunk(
 );
 
 export const getAllTasks = createAsyncThunk(
-  "getAllTasks",
+  'getAllTasks',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/tasks`);
@@ -100,7 +125,7 @@ export const getAllTasks = createAsyncThunk(
 );
 
 export const getAllMaterials = createAsyncThunk(
-  "getAllMaterials",
+  'getAllMaterials',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/materials`);
@@ -111,7 +136,7 @@ export const getAllMaterials = createAsyncThunk(
   }
 );
 export const getAllPanels = createAsyncThunk(
-  "getAllPanels",
+  'getAllPanels',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/panels`);
@@ -122,7 +147,7 @@ export const getAllPanels = createAsyncThunk(
   }
 );
 export const getAllZones = createAsyncThunk(
-  "getAllZones",
+  'getAllZones',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/zones`);
@@ -133,7 +158,7 @@ export const getAllZones = createAsyncThunk(
   }
 );
 export const getInspectionScope = createAsyncThunk(
-  "getInspectionScope",
+  'getInspectionScope',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/inspectionscope`);
@@ -145,7 +170,7 @@ export const getInspectionScope = createAsyncThunk(
 );
 
 export const getAllAplication = createAsyncThunk(
-  "getAllAplications",
+  'getAllAplications',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/aplications`);
@@ -157,7 +182,7 @@ export const getAllAplication = createAsyncThunk(
 );
 
 export const getAllInstruments = createAsyncThunk(
-  "getAllInstruments",
+  'getAllInstruments',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/instruments`);
@@ -169,7 +194,7 @@ export const getAllInstruments = createAsyncThunk(
 );
 
 export const fetchAllProjects = createAsyncThunk(
-  "fetchAllProjects",
+  'fetchAllProjects',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`/projects`);
@@ -181,10 +206,10 @@ export const fetchAllProjects = createAsyncThunk(
 );
 
 export const fetchProjectById = createAsyncThunk(
-  "fetchAllProjectbyId",
+  'fetchAllProjectbyId',
   async (projectId: string, thunkAPI) => {
     try {
-      const response = await $authHost.get(`/projects/${projectId}`, {});
+      const response = await $authHost.get(`/projects/${projectId}`);
       return response.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -192,7 +217,7 @@ export const fetchProjectById = createAsyncThunk(
   }
 );
 export const createProject = createAsyncThunk(
-  "saveProject",
+  'saveProject',
   async (data: any, { rejectWithValue }) => {
     const {
       aplicationId,
@@ -260,13 +285,13 @@ export const createProject = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать проект");
+      return rejectWithValue('Не удалось создать проект');
     }
   }
 );
 
 export const updateProject = createAsyncThunk(
-  "updateProject",
+  'updateProject',
   async (data: any, { rejectWithValue }) => {
     const {
       aplicationId,
@@ -333,13 +358,13 @@ export const updateProject = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить проект");
+      return rejectWithValue('Не удалось обновить проект');
     }
   }
 );
 
 export const deleteProjectById = createAsyncThunk(
-  "deleteProjectbyId",
+  'deleteProjectbyId',
   async (projectId: string, thunkAPI) => {
     try {
       const response = await $authHost.delete(`/projects/${projectId}`, {});
@@ -351,7 +376,7 @@ export const deleteProjectById = createAsyncThunk(
 );
 
 export const createProjectTask = createAsyncThunk(
-  "saveProjectTask",
+  'saveProjectTask',
   async (data: any, { rejectWithValue }) => {
     const {
       ownerId,
@@ -407,13 +432,13 @@ export const createProjectTask = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать задачу");
+      return rejectWithValue('Не удалось создать задачу');
     }
   }
 );
 
 export const updateProjectTask = createAsyncThunk(
-  "updateProjectTask",
+  'updateProjectTask',
   async (data: any, { rejectWithValue }) => {
     const {
       ownerId,
@@ -494,37 +519,37 @@ export const updateProjectTask = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить задачу");
+      return rejectWithValue('Не удалось обновить задачу');
     }
   }
 );
 
 export const featchAllProjectsTasks = createAsyncThunk(
-  "featchAllProjectsTasks",
+  'featchAllProjectsTasks',
   async (projectId: string, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(`projects/tasks`, {});
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить задачи");
+      return rejectWithValue('Не удалось загрузить задачи');
     }
   }
 );
 
 export const featchAllTasksByProjectId = createAsyncThunk(
-  "featchAllTasksByProjectId",
+  'featchAllTasksByProjectId',
   async (projectId: string, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(`projects/${projectId}/tasks/`);
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить задачи проекта");
+      return rejectWithValue('Не удалось загрузить задачи проекта');
     }
   }
 );
 
 export const featchFilteredTasksByProjectId = createAsyncThunk(
-  "featchFilteredTasks",
+  'featchFilteredTasks',
   async (data: IFetchFilteredProjectDatasks, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(
@@ -532,7 +557,7 @@ export const featchFilteredTasksByProjectId = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить задачи проекта");
+      return rejectWithValue('Не удалось загрузить задачи проекта');
     }
   }
 );
@@ -541,7 +566,7 @@ export interface IfeatchProjectTasksByProjectId {
   projectTaskId: string;
 }
 export const featchProjectTasksByProjectId = createAsyncThunk(
-  "featchProjectTasksByProjectId",
+  'featchProjectTasksByProjectId',
   async (data: IfeatchProjectTasksByProjectId, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(
@@ -549,7 +574,7 @@ export const featchProjectTasksByProjectId = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить задачи проекта");
+      return rejectWithValue('Не удалось загрузить задачи проекта');
     }
   }
 );
@@ -569,7 +594,7 @@ export interface IFetchProjectDatasksData {
 }
 
 export const featchRoutineProjectTasks = createAsyncThunk(
-  "featchRoutineProjectTasks}",
+  'featchRoutineProjectTasks}',
   async (data: IFetchProjectDatasksData, { rejectWithValue }) => {
     const { projectId } = data;
     try {
@@ -579,13 +604,13 @@ export const featchRoutineProjectTasks = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить рутинные задачи проекта");
+      return rejectWithValue('Не удалось загрузить рутинные задачи проекта');
     }
   }
 );
 
 export const featchHardTimeProjectTasks = createAsyncThunk(
-  "featchHardTimeProjectTasks}",
+  'featchHardTimeProjectTasks}',
   async (projectId: string, { rejectWithValue }) => {
     // const { projectId, page } = data;
     try {
@@ -595,13 +620,13 @@ export const featchHardTimeProjectTasks = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить рутинные задачи проекта");
+      return rejectWithValue('Не удалось загрузить рутинные задачи проекта');
     }
   }
 );
 
 export const createNRC = createAsyncThunk(
-  "saveNRC",
+  'saveNRC',
   async (data: IAdditionalTask, { rejectWithValue }) => {
     const {
       ownerId,
@@ -669,7 +694,7 @@ export const createNRC = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать задачу");
+      return rejectWithValue('Не удалось создать задачу');
     }
   }
 );
@@ -695,7 +720,7 @@ export interface IFetchFilteredProjectNRC {
   filter?: TDifficulty;
 }
 export const featchFilteredNRCProject = createAsyncThunk(
-  "featchFilteredNRC",
+  'featchFilteredNRC',
   async (data: IFetchFilteredProjectNRC, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(
@@ -703,7 +728,7 @@ export const featchFilteredNRCProject = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить задачи проекта");
+      return rejectWithValue('Не удалось загрузить задачи проекта');
     }
   }
 );
@@ -713,7 +738,7 @@ export interface IFetchFilteredProjectTaskNRC {
   // filter?: TDifficulty;
 }
 export const featchFilteredNRCProjectTask = createAsyncThunk(
-  "featchFilteredNRCProjectTask",
+  'featchFilteredNRCProjectTask',
   async (data: IFetchFilteredProjectTaskNRC, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(
@@ -721,13 +746,13 @@ export const featchFilteredNRCProjectTask = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить задачи проекта");
+      return rejectWithValue('Не удалось загрузить задачи проекта');
     }
   }
 );
 
 export const updateAdditionalTask = createAsyncThunk(
-  "updateAdditionalTask",
+  'updateAdditionalTask',
   async (data: any, { rejectWithValue }) => {
     const {
       actions,
@@ -797,13 +822,13 @@ export const updateAdditionalTask = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить задачу");
+      return rejectWithValue('Не удалось обновить задачу');
     }
   }
 );
 
 export const featchCountByStatus = createAsyncThunk(
-  "featchProjectTasksCountByStatus",
+  'featchProjectTasksCountByStatus',
   async (projectId: string, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(
@@ -811,12 +836,12 @@ export const featchCountByStatus = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить количество задач");
+      return rejectWithValue('Не удалось загрузить количество задач');
     }
   }
 );
 export const featchCountAdditionalByStatus = createAsyncThunk(
-  "featchAdditionalCountByStatus",
+  'featchAdditionalCountByStatus',
   async (projectId: string, { rejectWithValue }) => {
     try {
       const response = await $authHost.get(
@@ -824,7 +849,7 @@ export const featchCountAdditionalByStatus = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить количество задач");
+      return rejectWithValue('Не удалось загрузить количество задач');
     }
   }
 );
@@ -837,11 +862,11 @@ export const uploadFile = createAsyncThunk<
   UploadFileResponse,
   File,
   { rejectValue: UploadFileResponse }
->("files/uploadFile", async (file, thunkAPI) => {
+>('files/uploadFile', async (file, thunkAPI) => {
   try {
     const formData = new FormData();
-    formData.append("pdf", file);
-    const response = await $authHost.post("upload", formData);
+    formData.append('pdf', file);
+    const response = await $authHost.post('upload', formData);
     return response.data;
   } catch (error) {
     return error;
@@ -849,7 +874,7 @@ export const uploadFile = createAsyncThunk<
 });
 
 export const searchFiles = createAsyncThunk(
-  "files/searchFiles",
+  'files/searchFiles',
   async (query: string, thunkAPI) => {
     try {
       const response = await $authHost.get(`files/search?q=${query}`);
@@ -862,7 +887,7 @@ export const searchFiles = createAsyncThunk(
 );
 
 export const createProjectTaskMaterialAplication = createAsyncThunk(
-  "sendProjectTaskMatirialAplication",
+  'sendProjectTaskMatirialAplication',
   async (data: any, { rejectWithValue }) => {
     const {
       createDate,
@@ -889,6 +914,10 @@ export const createProjectTaskMaterialAplication = createAsyncThunk(
       getFrom,
       remarks,
       neededOn,
+      neededOnID,
+      reqTypesID,
+
+      reqCodesID,
     } = data;
 
     try {
@@ -916,16 +945,19 @@ export const createProjectTaskMaterialAplication = createAsyncThunk(
         getFrom,
         remarks,
         neededOn,
+        neededOnID,
+        reqTypesID,
+        reqCodesID,
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать заявку");
+      return rejectWithValue('Не удалось создать заявку');
     }
   }
 );
 
 export const getAllMaterialAplication = createAsyncThunk(
-  "getAllMaterialAplication",
+  'getAllMaterialAplication',
   async (_, thunkAPI) => {
     // const {} = data;
 
@@ -933,12 +965,12 @@ export const getAllMaterialAplication = createAsyncThunk(
       const response = await $authHost.get(`/materialAplications`);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось загрузить заявки");
+      return thunkAPI.rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 export const getCountByStatusProjectAplications = createAsyncThunk(
-  "getCountByStatusProjectAplications",
+  'getCountByStatusProjectAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -948,13 +980,13 @@ export const getCountByStatusProjectAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить счетчик");
+      return rejectWithValue('Не удалось загрузить счетчик');
     }
   }
 );
 
 export const getAllProjectAplications = createAsyncThunk(
-  "getAllProjectAplications",
+  'getAllProjectAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -964,12 +996,12 @@ export const getAllProjectAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 export const getAllProjectTaskAplications = createAsyncThunk(
-  "getAllProjectTaskAplications",
+  'getAllProjectTaskAplications',
   async (projectTaskId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -979,13 +1011,13 @@ export const getAllProjectTaskAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 
 export const getProjectClosedAplications = createAsyncThunk(
-  "getProjectActiveAplications",
+  'getProjectActiveAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -995,12 +1027,12 @@ export const getProjectClosedAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 export const getProjectActiveAplications = createAsyncThunk(
-  "getProjectActiveAplications",
+  'getProjectActiveAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1010,13 +1042,13 @@ export const getProjectActiveAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 
 export const getProjectPostponedAplications = createAsyncThunk(
-  "getProjectPostponedAplications",
+  'getProjectPostponedAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1026,12 +1058,12 @@ export const getProjectPostponedAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 export const getProjectCompletedAplications = createAsyncThunk(
-  "getProjectCompletedAplications",
+  'getProjectCompletedAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1041,13 +1073,13 @@ export const getProjectCompletedAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 
 export const getProjectNotClosedAplications = createAsyncThunk(
-  "getProjectNotClosedAplications",
+  'getProjectNotClosedAplications',
   async (projectId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1057,12 +1089,12 @@ export const getProjectNotClosedAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 export const getAplicationById = createAsyncThunk(
-  "common/getAplicationById",
+  'common/getAplicationById',
   async (materialAplicationId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1072,12 +1104,12 @@ export const getAplicationById = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
 export const getAplicationByNumber = createAsyncThunk(
-  "getAplicationByNumber",
+  'getAplicationByNumber',
   async (materialAplicationNumber: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1087,13 +1119,13 @@ export const getAplicationByNumber = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
 
 export const updateAplicationById = createAsyncThunk(
-  "updateAplicationById",
+  'updateAplicationById',
   async (data: MatRequestAplication, { rejectWithValue }) => {
     const {
       _id,
@@ -1140,13 +1172,13 @@ export const updateAplicationById = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
 
 export const createPickSlip = createAsyncThunk(
-  "createPickSlip",
+  'createPickSlip',
   async (data: IPickSlip, { rejectWithValue }) => {
     const {
       materialAplicationId,
@@ -1172,6 +1204,9 @@ export const createPickSlip = createAsyncThunk(
       recipientID,
       storeManID,
       companyID,
+      projectTaskID,
+      projectID,
+      neededOnID,
     } = data;
 
     try {
@@ -1199,15 +1234,18 @@ export const createPickSlip = createAsyncThunk(
         recipientID,
         storeManID,
         companyID,
+        projectTaskID,
+        projectID,
+        neededOnID,
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать расходное требование");
+      return rejectWithValue('Не удалось создать расходное требование');
     }
   }
 );
 export const createReturnSlip = createAsyncThunk(
-  "createReturnSlip",
+  'createReturnSlip',
   async (data: IReturnSlip, { rejectWithValue }) => {
     const {
       materialAplicationId,
@@ -1233,6 +1271,7 @@ export const createReturnSlip = createAsyncThunk(
       recipientID,
       storeManID,
       companyID,
+      projectID,
     } = data;
 
     try {
@@ -1260,23 +1299,24 @@ export const createReturnSlip = createAsyncThunk(
         recipientID,
         storeManID,
         companyID,
+        projectID,
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать расходное требование");
+      return rejectWithValue('Не удалось создать расходное требование');
     }
   }
 );
 
 export const getAllPickSlips = createAsyncThunk(
-  "getAllPickSlips",
+  'getAllPickSlips',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`pickSlips`, {});
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Не удалось загрузить расходное требование"
+        'Не удалось загрузить расходное требование'
       );
     }
   }
@@ -1301,7 +1341,7 @@ export interface IUpdatePickSlip {
 //   }
 // );
 export const updatePickSlip = createAsyncThunk(
-  "updatePickSlipById",
+  'updatePickSlipById',
   async (data: any, { rejectWithValue }) => {
     const {
       materialAplicationId,
@@ -1353,13 +1393,13 @@ export const updatePickSlip = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить Расходное Требование");
+      return rejectWithValue('Не удалось обновить Расходное Требование');
     }
   }
 );
 
 export const fetchProjectTasks = createAsyncThunk(
-  "projectTasks/fetchProjectTasks",
+  'projectTasks/fetchProjectTasks',
   async (data: any, thunkAPI) => {
     const {
       status,
@@ -1387,7 +1427,7 @@ export const fetchProjectTasks = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось загрузить Задачи");
+      return thunkAPI.rejectWithValue('Не удалось загрузить Задачи');
     }
   }
 );
@@ -1401,7 +1441,7 @@ export const fetchTotalQuantity = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось загрузить ");
+      return thunkAPI.rejectWithValue('Не удалось загрузить ');
     }
   }
 );
@@ -1415,7 +1455,7 @@ export const fetchCurrentMaterials = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось загрузить ");
+      return thunkAPI.rejectWithValue('Не удалось загрузить ');
     }
   }
 );
@@ -1428,13 +1468,13 @@ export const fetchSameMaterials = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось загрузить ");
+      return thunkAPI.rejectWithValue('Не удалось загрузить ');
     }
   }
 );
 
 export const updateForReservation = createAsyncThunk(
-  "updateForReservation",
+  'updateForReservation',
   async (data: IMaterialStoreRequestItem, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -1443,12 +1483,12 @@ export const updateForReservation = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
 export const updateAfterIssued = createAsyncThunk(
-  "updateMaterialStoreItemByID",
+  'updateMaterialStoreItemByID',
   async (data: IMaterialStoreRequestItem, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -1457,13 +1497,13 @@ export const updateAfterIssued = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
 
 export const getCountAllprojectsAplications = createAsyncThunk(
-  "getCountAllprojectsAplications",
+  'getCountAllprojectsAplications',
   async (_, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1473,13 +1513,13 @@ export const getCountAllprojectsAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить счетчик");
+      return rejectWithValue('Не удалось загрузить счетчик');
     }
   }
 );
 
 export const createRemoveItem = createAsyncThunk(
-  "createRemoveItem",
+  'createRemoveItem',
   async (data: IRemovedItemResponce, { rejectWithValue }) => {
     const {
       id,
@@ -1544,26 +1584,26 @@ export const createRemoveItem = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать новую запись");
+      return rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 
 export const getAllRemovedItems = createAsyncThunk(
-  "getAllRemovedItems",
+  'getAllRemovedItems',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`removedItems`, {});
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Не удалось загрузить перечень снятого оборудования"
+        'Не удалось загрузить перечень снятого оборудования'
       );
     }
   }
 );
 export const getAllProjectRemovedItems = createAsyncThunk(
-  "getAllRemovedItems",
+  'getAllRemovedItems',
   async (projectWO: any, thunkAPI) => {
     try {
       const response = await $authHost.get(
@@ -1572,14 +1612,14 @@ export const getAllProjectRemovedItems = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Не удалось загрузить перечень снятого оборудования"
+        'Не удалось загрузить перечень снятого оборудования'
       );
     }
   }
 );
 
 export const updateremovedItem = createAsyncThunk(
-  "updateremovedItem",
+  'updateremovedItem',
   async (data: any, { rejectWithValue }) => {
     const {
       id,
@@ -1647,13 +1687,13 @@ export const updateremovedItem = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить Расходное Требование");
+      return rejectWithValue('Не удалось обновить Расходное Требование');
     }
   }
 );
 
 export const getSelectedItems = createAsyncThunk(
-  "getSelectedItems",
+  'getSelectedItems',
   async (ids: any[], thunkAPI) => {
     try {
       const response = await $authHost.post(`removedItems/project/printItems`, {
@@ -1662,40 +1702,40 @@ export const getSelectedItems = createAsyncThunk(
       return response.data as IRemovedItemResponce[];
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Не удалось загрузить перечень снятого оборудования"
+        'Не удалось загрузить перечень снятого оборудования'
       );
     }
   }
 );
 
 export const getAllPurchaseItems = createAsyncThunk(
-  "getAllPurchaseItems",
+  'getAllPurchaseItems',
   async (_, thunkAPI) => {
     try {
       const response = await $authHost.get(`purchase`, {});
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        "Не удалось загрузить перечень заказанных материалов"
+        'Не удалось загрузить перечень заказанных материалов'
       );
     }
   }
 );
 
 export const createPurchaseItems = createAsyncThunk(
-  "createPurchaseItems",
+  'createPurchaseItems',
   async (data: IPurchaseMaterial[], thunkAPI) => {
     try {
       const response = await $authHost.post(`purchase`, data);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 
 export const getAllAdditionalTaskAplications = createAsyncThunk(
-  "getAllAdditionalTaskAplications",
+  'getAllAdditionalTaskAplications',
   async (additionalTaskId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1705,13 +1745,13 @@ export const getAllAdditionalTaskAplications = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 
 export const updatePushesItem = createAsyncThunk(
-  "updatePushesItem",
+  'updatePushesItem',
   async (data: IPurchaseMaterial, { rejectWithValue }) => {
     const {
       id,
@@ -1776,13 +1816,13 @@ export const updatePushesItem = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить расходное Требование");
+      return rejectWithValue('Не удалось обновить расходное Требование');
     }
   }
 );
 
 export const getAllProjectMaterialsForStatistic = createAsyncThunk(
-  "getAllProjectMaterialsForStatistic",
+  'getAllProjectMaterialsForStatistic',
   async (projectWO: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1792,13 +1832,13 @@ export const getAllProjectMaterialsForStatistic = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявки");
+      return rejectWithValue('Не удалось загрузить заявки');
     }
   }
 );
 
 export const getAllProjectTaskMaterialsForStatistic = createAsyncThunk(
-  "getAllProjectTaskMaterialsForStatistic",
+  'getAllProjectTaskMaterialsForStatistic',
   async (data: IFetchFilteredProjectTasksMaterials, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1808,13 +1848,13 @@ export const getAllProjectTaskMaterialsForStatistic = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить материалы");
+      return rejectWithValue('Не удалось загрузить материалы');
     }
   }
 );
 
 export const getAllAdditionalTaskMaterialsForStatistic = createAsyncThunk(
-  "getAllAdditionalTaskMaterialsForStatistic",
+  'getAllAdditionalTaskMaterialsForStatistic',
   async (data: IFetchFilteredProjectTasksMaterials, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1824,7 +1864,7 @@ export const getAllAdditionalTaskMaterialsForStatistic = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить материалы");
+      return rejectWithValue('Не удалось загрузить материалы');
     }
   }
 );
@@ -1838,7 +1878,7 @@ export const getTasks = async (taskNumber: any) => {
     );
     return response.data;
   } catch (error) {
-    return "Не удалось загрузить задачи";
+    return 'Не удалось загрузить задачи';
   }
 };
 
@@ -1851,12 +1891,12 @@ export const getProjectNumber = async (projectNumber: any) => {
     );
     return response.data;
   } catch (error) {
-    return "Не удалось загрузить материалы";
+    return 'Не удалось загрузить материалы';
   }
 };
 
 export const createNewPlane = createAsyncThunk(
-  "mtx/createPlane",
+  'mtx/createPlane',
 
   async (data: IPlane, thunkAPI) => {
     const {
@@ -1893,13 +1933,13 @@ export const createNewPlane = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось создать new A/C!");
+      return thunkAPI.rejectWithValue('Не удалось создать new A/C!');
     }
   }
 );
 
 export const getAllPlanes = createAsyncThunk(
-  "mtx/getAll",
+  'mtx/getAll',
   async (_, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1907,12 +1947,12 @@ export const getAllPlanes = createAsyncThunk(
       const response = await $authHost.get(`/planes`);
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 export const getPlaneByID = createAsyncThunk(
-  "mtx/getPlaneByID",
+  'mtx/getPlaneByID',
   async (planeId: string, { rejectWithValue }) => {
     // const {} = data;
 
@@ -1920,13 +1960,13 @@ export const getPlaneByID = createAsyncThunk(
       const response = await $authHost.get(`/planes/${planeId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 
 export const editPlane = createAsyncThunk(
-  "mtx/editPlane",
+  'mtx/editPlane',
 
   async (data: IPlane, thunkAPI) => {
     const {
@@ -1965,7 +2005,7 @@ export const editPlane = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось update A/C!");
+      return thunkAPI.rejectWithValue('Не удалось update A/C!');
     }
   }
 );
@@ -1993,7 +2033,7 @@ export const getPlane = async (planeID: string) => {
     const response = await $authHost.get(`/planes/${planeID}`);
     return response.data;
   } catch (error) {
-    return "Не удалось get A/C!";
+    return 'Не удалось get A/C!';
   }
 };
 export interface IfeatchuploadExcelFile {
@@ -2034,7 +2074,7 @@ export const uploadExcelAppFile = async (data: IfeatchUploadAppExcelFile) => {
 };
 
 export const createNewAplications = createAsyncThunk(
-  "mtx/createAplication",
+  'mtx/createAplication',
 
   async (data: IfeatchUploadAppExcelFile, thunkAPI) => {
     const {
@@ -2071,7 +2111,7 @@ export const createNewAplications = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось создать new Aplication!");
+      return thunkAPI.rejectWithValue('Не удалось создать new Aplication!');
     }
   }
 );
@@ -2085,7 +2125,7 @@ export const getPlanesNumber = async (regNumber: any) => {
     );
     return response.data;
   } catch (error) {
-    return "Не удалось загрузить planes";
+    return 'Не удалось загрузить planes';
   }
 };
 export const getPlanesTaskNumber = async (taskNumber: any, planeID: string) => {
@@ -2097,7 +2137,7 @@ export const getPlanesTaskNumber = async (taskNumber: any, planeID: string) => {
     );
     return response.data;
   } catch (error) {
-    return "Не удалось загрузить planes";
+    return 'Не удалось загрузить planes';
   }
 };
 export interface IfeatchFilteredPlanesTasks {
@@ -2117,57 +2157,57 @@ interface SearchParams {
 
 export const createSearchUrl = (params: any) => {
   const url = new URL(
-    "/planesTasks/getPlaneTasks/tasks",
+    '/planesTasks/getPlaneTasks/tasks',
     window.location.origin
   );
   if (params.ata) {
-    url.searchParams.append("ata", params.ata.join(","));
+    url.searchParams.append('ata', params.ata.join(','));
   }
   if (params.taskType) {
-    url.searchParams.append("taskType", params.taskType.join(","));
+    url.searchParams.append('taskType', params.taskType.join(','));
   }
   if (params.taskNbr) {
-    url.searchParams.append("taskNbr", params.taskNbr.join(","));
+    url.searchParams.append('taskNbr', params.taskNbr.join(','));
   }
   if (params.description) {
-    url.searchParams.append("description", params.description.join(","));
+    url.searchParams.append('description', params.description.join(','));
   }
   if (params.planeID) {
-    url.searchParams.append("planeID", params.planeID);
+    url.searchParams.append('planeID', params.planeID);
   }
 
   return url.toString();
 };
 
 export const getFilteredPlanesTasks = createAsyncThunk(
-  "mtx/getFilteredPlaneTasks",
+  'mtx/getFilteredPlaneTasks',
   async (params: IfeatchFilteredPlanesTasks, { rejectWithValue }) => {
     // const { ataArr, taskTypeArr, planeID } = data;
-    const url = new URL("/planesTasks/getFilteredPlanesTasks/tasks", API_URL);
+    const url = new URL('/planesTasks/getFilteredPlanesTasks/tasks', API_URL);
     const searchParams = new URLSearchParams();
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.planeID) searchParams.append("planeID", params.planeID);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
+      searchParams.append('description', params.description);
+    if (params.planeID) searchParams.append('planeID', params.planeID);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
     url.search = searchParams.toString();
 
     try {
       const response = await $authHost.get(url.toString());
-      localStorage.setItem("taskSearchUrl", url.toString());
+      localStorage.setItem('taskSearchUrl', url.toString());
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 export const getAllPlaneTasks = createAsyncThunk(
-  "mtx/getAllPlaneTasks",
+  'mtx/getAllPlaneTasks',
   async (_, { rejectWithValue }) => {
     // const {} = data;
 
@@ -2176,13 +2216,13 @@ export const getAllPlaneTasks = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 
 export const createNewPlaneWO = createAsyncThunk(
-  "mtx/createPlaneWO",
+  'mtx/createPlaneWO',
 
   async (data: IPlaneWO, thunkAPI) => {
     const {
@@ -2229,12 +2269,12 @@ export const createNewPlaneWO = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось создать new W/O!");
+      return thunkAPI.rejectWithValue('Не удалось создать new W/O!');
     }
   }
 );
 export const editPlaneWO = createAsyncThunk(
-  "mtx/updatePlaneWO",
+  'mtx/updatePlaneWO',
 
   async (data: IPlaneWO, thunkAPI) => {
     const {
@@ -2287,7 +2327,7 @@ export const editPlaneWO = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось создать new W/O!");
+      return thunkAPI.rejectWithValue('Не удалось создать new W/O!');
     }
   }
 );
@@ -2307,23 +2347,23 @@ export interface IfeatchFilteredPlanesWO {
 }
 
 export const getFilteredPlanesWO = createAsyncThunk(
-  "mtx/getFilteredPlaneWO",
+  'mtx/getFilteredPlaneWO',
   async (params: IfeatchFilteredPlanesWO, { rejectWithValue }) => {
     // const { ataArr, taskTypeArr, planeID } = data;
-    const url = new URL("/planeswo/getFilteredPlanesWO/wo", API_URL);
+    const url = new URL('/planeswo/getFilteredPlanesWO/wo', API_URL);
     const searchParams = new URLSearchParams();
     if (params.classification)
-      searchParams.append("classification", params.classification.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.WOType) searchParams.append("WOType", params.WOType.join(","));
-    if (params.regNbr) searchParams.append("regNbr", params.regNbr);
+      searchParams.append('classification', params.classification.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.WOType) searchParams.append('WOType', params.WOType.join(','));
+    if (params.regNbr) searchParams.append('regNbr', params.regNbr);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.WONbr) searchParams.append("WONbr", params.WONbr);
-    if (params.planeID) searchParams.append("planeID", params.planeID);
-    if (params.dateIn) searchParams.append("dateIn", params.dateIn);
-    if (params.dateOut) searchParams.append("dateOut", params.dateOut);
-    if (params.dateCreate) searchParams.append("dateCreate", params.dateCreate);
+      searchParams.append('description', params.description);
+    if (params.WONbr) searchParams.append('WONbr', params.WONbr);
+    if (params.planeID) searchParams.append('planeID', params.planeID);
+    if (params.dateIn) searchParams.append('dateIn', params.dateIn);
+    if (params.dateOut) searchParams.append('dateOut', params.dateOut);
+    if (params.dateCreate) searchParams.append('dateCreate', params.dateCreate);
     url.search = searchParams.toString();
 
     try {
@@ -2331,7 +2371,7 @@ export const getFilteredPlanesWO = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2345,7 +2385,7 @@ export const getPlanesWONumber = async (WONumber: any, planeID: string) => {
     );
     return response.data;
   } catch (error) {
-    return "Не удалось загрузить planes";
+    return 'Не удалось загрузить planes';
   }
 };
 
@@ -2370,7 +2410,7 @@ export const getPlanesWONumber = async (WONumber: any, planeID: string) => {
 // };
 
 export const updatePlaneTasksByIds = createAsyncThunk(
-  "mtx/updatePlaneTasksByIds",
+  'mtx/updatePlaneTasksByIds',
 
   async (data: any, thunkAPI) => {
     const { ids, workOrderID, workOrderNbr } = data;
@@ -2388,13 +2428,13 @@ export const updatePlaneTasksByIds = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
 
 export const getFilteredPlanesTasksForUpdate = createAsyncThunk(
-  "mtx/getFilteredPlaneTasksWO",
+  'mtx/getFilteredPlaneTasksWO',
   async (params: string, { rejectWithValue }) => {
     // const { ataArr, taskTypeArr, planeID } = data;
 
@@ -2403,13 +2443,13 @@ export const getFilteredPlanesTasksForUpdate = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить PlanesTasks");
+      return rejectWithValue('Не удалось загрузить PlanesTasks');
     }
   }
 );
 
 export const updatePlaneTasksForTimes = createAsyncThunk(
-  "mtx/updatePlaneTasksForTimes",
+  'mtx/updatePlaneTasksForTimes',
 
   async (data: any, thunkAPI) => {
     const { planeID, timeMOS, timeHRS, timeAFL, timeENC, timeAPUS } = data;
@@ -2430,7 +2470,7 @@ export const updatePlaneTasksForTimes = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
@@ -2445,39 +2485,39 @@ export interface IfeatchFilteredPlanesWODUE {
 }
 
 export const getFilteredPlanesTasksForDue = createAsyncThunk(
-  "mtx/getFilteredPlanesWOForDue",
+  'mtx/getFilteredPlanesWOForDue',
   async (params: IfeatchFilteredPlanesWODUE, { rejectWithValue }) => {
     const url = new URL(
-      "/planesTasks/getFilteredPlanesWOForDue/tasks",
+      '/planesTasks/getFilteredPlanesWOForDue/tasks',
       API_URL
     );
     const searchParams = new URLSearchParams();
 
-    if (params.planeID) searchParams.append("planeID", params.planeID);
-    if (params.dateIn) searchParams.append("dateIn", params.dateIn);
-    if (params.dateOut) searchParams.append("dateOut", params.dateOut);
+    if (params.planeID) searchParams.append('planeID', params.planeID);
+    if (params.dateIn) searchParams.append('dateIn', params.dateIn);
+    if (params.dateOut) searchParams.append('dateOut', params.dateOut);
     if (params.targetACAFL)
-      searchParams.append("targetACAFL", params.targetACAFL);
+      searchParams.append('targetACAFL', params.targetACAFL);
     if (params.targetACHRS)
-      searchParams.append("targetACHRS", params.targetACHRS);
+      searchParams.append('targetACHRS', params.targetACHRS);
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
+      searchParams.append('taskType', params.taskType.join(','));
 
     url.search = searchParams.toString();
 
     try {
       const response = await $authHost.get(url.toString());
-      localStorage.setItem("dueSearchUrl", url.toString());
+      localStorage.setItem('dueSearchUrl', url.toString());
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 
 export const getFilteredPlanesTasksForDueUpdate = createAsyncThunk(
-  "mtx/getFilteredPlanesTasksForDueUpdate",
+  'mtx/getFilteredPlanesTasksForDueUpdate',
   async (params: string, { rejectWithValue }) => {
     // const { ataArr, taskTypeArr, planeID } = data;
 
@@ -2486,7 +2526,7 @@ export const getFilteredPlanesTasksForDueUpdate = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить PlanesTasks");
+      return rejectWithValue('Не удалось загрузить PlanesTasks');
     }
   }
 );
@@ -2505,38 +2545,38 @@ export interface IfeatchFilteredPlanesTasksForWO {
   status?: string;
 }
 export const getFilteredPlanesTasksForWO = createAsyncThunk(
-  "mtx/getFilteredPlanesTasksForWO",
+  'mtx/getFilteredPlanesTasksForWO',
   async (params: IfeatchFilteredPlanesTasksForWO, { rejectWithValue }) => {
     // const { ataArr, taskTypeArr, planeID } = data;
     const url = new URL(
-      "/planesTasks/getFilteredPlanesTasksForWO/tasks",
+      '/planesTasks/getFilteredPlanesTasksForWO/tasks',
       API_URL
     );
     const searchParams = new URLSearchParams();
 
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.workOrderNbr)
-      searchParams.append("workOrderNbr", params.workOrderNbr);
-    if (params.status) searchParams.append("status", params.status);
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+      searchParams.append('workOrderNbr', params.workOrderNbr);
+    if (params.status) searchParams.append('status', params.status);
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.planeID) searchParams.append("planeID", params.planeID);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
+      searchParams.append('description', params.description);
+    if (params.planeID) searchParams.append('planeID', params.planeID);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
     url.search = searchParams.toString();
 
     try {
       const response = await $authHost.get(url.toString());
-      localStorage.setItem("taskSearchUrl", url.toString());
+      localStorage.setItem('taskSearchUrl', url.toString());
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2548,7 +2588,7 @@ export const getPlaneWOByID = async (workOrderID: string) => {
     const response = await $authHost.get(`/planeswo/${workOrderID}`);
     return response.data;
   } catch (error) {
-    return "Не удалось get planeswo!";
+    return 'Не удалось get planeswo!';
   }
 };
 
@@ -2574,33 +2614,33 @@ export interface IfeatchFilteredProjectTasks {
   projectGroprojectGroupID?: string;
 }
 export const getFilteredProjectTasks = createAsyncThunk(
-  "mtb/getFilteredProjectTasks",
+  'mtb/getFilteredProjectTasks',
   async (params: IfeatchFilteredProjectTasks, { rejectWithValue }) => {
     const url = new URL(
-      "/projects/tasks/getFilteredProjectsTasks/tasks",
+      '/projects/tasks/getFilteredProjectsTasks/tasks',
       API_URL
     );
     const searchParams = new URLSearchParams();
 
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.workOrderNbr)
-      searchParams.append("workOrderNbr", params.workOrderNbr);
+      searchParams.append('workOrderNbr', params.workOrderNbr);
 
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -2609,38 +2649,38 @@ export const getFilteredProjectTasks = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 export const getFilteredProjectTask = createAsyncThunk(
-  "mtb/getFilteredProjectTask",
+  'mtb/getFilteredProjectTask',
   async (params: IfeatchFilteredProjectTasks, { rejectWithValue }) => {
     const url = new URL(
-      "/projects/tasks/getFilteredProjectsTasks/tasks",
+      '/projects/tasks/getFilteredProjectsTasks/tasks',
       API_URL
     );
     const searchParams = new URLSearchParams();
 
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.workOrderNbr)
-      searchParams.append("workOrderNbr", params.workOrderNbr);
+      searchParams.append('workOrderNbr', params.workOrderNbr);
 
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -2649,7 +2689,7 @@ export const getFilteredProjectTask = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2677,7 +2717,7 @@ export interface IfeatchFilteredAplications {
   aplicationID?: string;
 }
 export const getFilteredAplications = createAsyncThunk(
-  "mplaning/getFilteredAplications",
+  'mplaning/getFilteredAplications',
   async (params: IfeatchFilteredAplications, { rejectWithValue }) => {
     const url = new URL(
       `aplications/getFilteredAplications/company/${params.companyID}`,
@@ -2685,26 +2725,26 @@ export const getFilteredAplications = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
 
-    if (params.amtoss) searchParams.append("amtoss", params.amtoss);
+    if (params.amtoss) searchParams.append('amtoss', params.amtoss);
     if (params.workOrderNbr)
-      searchParams.append("workOrderNbr", params.workOrderNbr);
+      searchParams.append('workOrderNbr', params.workOrderNbr);
 
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.aplicationID)
-      searchParams.append("aplicationID", params.aplicationID);
+      searchParams.append('aplicationID', params.aplicationID);
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.description)
-      searchParams.append("description", params.description);
+      searchParams.append('description', params.description);
 
-    if (params.dateIn) searchParams.append("dateIn", params.dateIn);
-    if (params.dateOut) searchParams.append("endDate", params.dateOut);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.dateIn) searchParams.append('dateIn', params.dateIn);
+    if (params.dateOut) searchParams.append('endDate', params.dateOut);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.aplicationName)
-      searchParams.append("aplicationName", params.aplicationName);
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('aplicationName', params.aplicationName);
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -2713,7 +2753,7 @@ export const getFilteredAplications = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузитьAplications");
+      return rejectWithValue('Не удалось загрузитьAplications');
     }
   }
 );
@@ -2723,7 +2763,7 @@ export interface IFeatchplication {
   aplicationID: string;
 }
 export const getAplicationByID = createAsyncThunk(
-  "mtp/getAplicationByID",
+  'mtp/getAplicationByID',
   async (data: IFeatchplication, { rejectWithValue }) => {
     const { aplicationID, companyID } = data;
 
@@ -2731,7 +2771,7 @@ export const getAplicationByID = createAsyncThunk(
       const response = await $authHost.get(`/aplications/${aplicationID}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2741,7 +2781,7 @@ export interface IUpdateProjectAplicationByID {
   newData: any;
 }
 export const updateProjectAplicationByID = createAsyncThunk(
-  "mtp/updateProjectAplicationByID",
+  'mtp/updateProjectAplicationByID',
   async (data: IUpdateProjectAplicationByID, { rejectWithValue }) => {
     const { aplicationID, companyID, newData } = data;
 
@@ -2752,7 +2792,7 @@ export const updateProjectAplicationByID = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2761,7 +2801,7 @@ export interface IfindTasksAndCalculateTotalTime {
   taskDTO: ITaskDTO[];
 }
 export const findTasksAndCalculateTotalTime = createAsyncThunk(
-  "mtp/findTasksAndCalculateTotalTime",
+  'mtp/findTasksAndCalculateTotalTime',
   async (data: IfindTasksAndCalculateTotalTime, { rejectWithValue }) => {
     const { taskDTO } = data;
 
@@ -2772,7 +2812,7 @@ export const findTasksAndCalculateTotalTime = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2780,7 +2820,7 @@ export interface IfindMaterialsByTaskNumbers {
   taskDTO: ITaskDTO[];
 }
 export const findMaterialsByTaskNumbers = createAsyncThunk(
-  "mtp/findMaterialsByTaskNumbers",
+  'mtp/findMaterialsByTaskNumbers',
   async (data: IfindMaterialsByTaskNumbers, { rejectWithValue }) => {
     const { taskDTO } = data;
 
@@ -2791,7 +2831,7 @@ export const findMaterialsByTaskNumbers = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -2799,7 +2839,7 @@ export interface IfindInstrumentsByTaskNumbers {
   taskDTO: ITaskDTO[];
 }
 export const findInstrumentsByTaskNumbers = createAsyncThunk(
-  "mtp/findInstrumentsByTaskNumbers",
+  'mtp/findInstrumentsByTaskNumbers',
   async (data: IfindInstrumentsByTaskNumbers, { rejectWithValue }) => {
     const { taskDTO } = data;
 
@@ -2810,7 +2850,7 @@ export const findInstrumentsByTaskNumbers = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить instruments");
+      return rejectWithValue('Не удалось загрузить instruments');
     }
   }
 );
@@ -2845,7 +2885,7 @@ export interface IfeatchFilteredProjects {
   createFinishDate?: any;
 }
 export const getFilteredProjects = createAsyncThunk(
-  "mplaning/getFilteredProjects",
+  'mplaning/getFilteredProjects',
   async (params: IfeatchFilteredProjects, { rejectWithValue }) => {
     const url = new URL(
       `projects/getFilteredProjects/company/${params.companyID}`,
@@ -2853,29 +2893,29 @@ export const getFilteredProjects = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.createStartDate)
-      searchParams.append("createStartDate", params.createStartDate);
+      searchParams.append('createStartDate', params.createStartDate);
     if (params.createFinishDate)
-      searchParams.append("createFinishDate", params.createFinishDate);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.customer) searchParams.append("customer", params.customer);
+      searchParams.append('createFinishDate', params.createFinishDate);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.customer) searchParams.append('customer', params.customer);
     if (params.planedStartDate)
-      searchParams.append("planedStartDate", params.planedStartDate);
+      searchParams.append('planedStartDate', params.planedStartDate);
     if (params.planedEndDate)
-      searchParams.append("planedEndDate", params.planedEndDate);
+      searchParams.append('planedEndDate', params.planedEndDate);
     if (params.planeNumber)
-      searchParams.append("planeNumber", params.planeNumber);
-    if (params.projectWO) searchParams.append("projectWO", params.projectWO);
+      searchParams.append('planeNumber', params.planeNumber);
+    if (params.projectWO) searchParams.append('projectWO', params.projectWO);
     if (params.woPackageType)
-      searchParams.append("woPackageType", params.woPackageType.join(","));
+      searchParams.append('woPackageType', params.woPackageType.join(','));
     if (params.projectType)
-      searchParams.append("projectType", params.projectType.join(","));
+      searchParams.append('projectType', params.projectType.join(','));
     if (params.planeType)
-      searchParams.append("planeType", params.planeType.join(","));
+      searchParams.append('planeType', params.planeType.join(','));
 
-    if (params.dateIn) searchParams.append("dateIn", params.dateIn);
-    if (params.dateOut) searchParams.append("endDate", params.dateOut);
-    if (params.status) searchParams.append("status", params.status.join(","));
+    if (params.dateIn) searchParams.append('dateIn', params.dateIn);
+    if (params.dateOut) searchParams.append('endDate', params.dateOut);
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -2883,7 +2923,7 @@ export const getFilteredProjects = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Projects");
+      return rejectWithValue('Не удалось загрузить Projects');
     }
   }
 );
@@ -2894,7 +2934,7 @@ export interface IupdateProjectTaskActions {
   currentProjectTask: IProjectTask | null;
 }
 export const updateProjectTaskActions = createAsyncThunk(
-  "tasks/updateProjectTaskAction",
+  'tasks/updateProjectTaskAction',
   async (data: IupdateProjectTaskActions, { rejectWithValue }) => {
     // Получить текущий документ задачи из базы данных
 
@@ -2928,7 +2968,7 @@ export const updateProjectTaskActions = createAsyncThunk(
         },
       };
     } catch (error) {
-      return rejectWithValue("Не удалось update action");
+      return rejectWithValue('Не удалось update action');
     }
 
     // Вернуть обновленный документ задачи
@@ -2946,9 +2986,9 @@ export const getFilteredUsers = async (params: IgetFilteredUsersprops) => {
     API_URL
   );
   const searchParams = new URLSearchParams();
-  if (params.pass) searchParams.append("pass", String(params.pass));
+  if (params.pass) searchParams.append('pass', String(params.pass));
   if (params.singNumber)
-    searchParams.append("singNumber", String(params.singNumber));
+    searchParams.append('singNumber', String(params.singNumber));
   url.search = searchParams.toString();
   try {
     const response = await $authHost.get(url.toString());
@@ -2960,7 +3000,7 @@ export const getFilteredUsers = async (params: IgetFilteredUsersprops) => {
 };
 
 export const createNRCMTB = createAsyncThunk(
-  "saveNRC",
+  'saveNRC',
   async (data: any, { rejectWithValue }) => {
     const {
       ownerId,
@@ -3048,7 +3088,7 @@ export const createNRCMTB = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось создать задачу");
+      return rejectWithValue('Не удалось создать задачу');
     }
   }
 );
@@ -3089,7 +3129,7 @@ export interface IfeatchFilteredAditionalTask {
 }
 
 export const getFilteredAditionalTasks = createAsyncThunk(
-  "mtb/getFilteredAditionalTasks",
+  'mtb/getFilteredAditionalTasks',
   async (params: IfeatchFilteredAditionalTask, { rejectWithValue }) => {
     const url = new URL(
       `/additionalTask/getFilteredAditionalTasks/company/${params.companyID}/tasks`,
@@ -3097,32 +3137,32 @@ export const getFilteredAditionalTasks = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.companyName)
-      searchParams.append("companyName", params.companyName);
+      searchParams.append('companyName', params.companyName);
     if (params.registrationNumber)
-      searchParams.append("registrationNumber", params.registrationNumber);
+      searchParams.append('registrationNumber', params.registrationNumber);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.taskHeadLine)
-      searchParams.append("taskHeadLine", params.taskHeadLine);
+      searchParams.append('taskHeadLine', params.taskHeadLine);
     if (params.tResources)
-      searchParams.append("tResources", params.tResources.join(","));
+      searchParams.append('tResources', params.tResources.join(','));
     if (params.nrcType)
-      searchParams.append("nrcType", params.nrcType.join(","));
-    if (params.skill) searchParams.append("skill", params.skill.join(","));
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+      searchParams.append('nrcType', params.nrcType.join(','));
+    if (params.skill) searchParams.append('skill', params.skill.join(','));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.taskDescription)
-      searchParams.append("taskDescription", params.taskDescription);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+      searchParams.append('taskDescription', params.taskDescription);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -3131,13 +3171,13 @@ export const getFilteredAditionalTasks = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить NRC");
+      return rejectWithValue('Не удалось загрузить NRC');
     }
   }
 );
 
 export const getFilteredAditionalTask = createAsyncThunk(
-  "mtb/getFilteredAditionalTask",
+  'mtb/getFilteredAditionalTask',
   async (params: IfeatchFilteredAditionalTask, { rejectWithValue }) => {
     const url = new URL(
       `/additionalTask/getFilteredAditionalTasks/company/${params.companyID}/tasks`,
@@ -3145,34 +3185,34 @@ export const getFilteredAditionalTask = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.workOrderNbr)
-      searchParams.append("workOrderNbr", params.workOrderNbr);
+      searchParams.append('workOrderNbr', params.workOrderNbr);
     if (params.companyName)
-      searchParams.append("companyName", params.companyName);
+      searchParams.append('companyName', params.companyName);
     if (params.registrationNumber)
-      searchParams.append("registrationNumber", params.registrationNumber);
+      searchParams.append('registrationNumber', params.registrationNumber);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.taskHeadLine)
-      searchParams.append("taskHeadLine", params.taskHeadLine);
+      searchParams.append('taskHeadLine', params.taskHeadLine);
     if (params.tResources)
-      searchParams.append("tResources", params.tResources.join(","));
+      searchParams.append('tResources', params.tResources.join(','));
     if (params.nrcType)
-      searchParams.append("nrcType", params.nrcType.join(","));
-    if (params.skill) searchParams.append("skill", params.skill.join(","));
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+      searchParams.append('nrcType', params.nrcType.join(','));
+    if (params.skill) searchParams.append('skill', params.skill.join(','));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.taskDescription)
-      searchParams.append("taskDescription", params.taskDescription);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+      searchParams.append('taskDescription', params.taskDescription);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -3181,7 +3221,7 @@ export const getFilteredAditionalTask = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить NRC");
+      return rejectWithValue('Не удалось загрузить NRC');
     }
   }
 );
@@ -3195,7 +3235,7 @@ export interface IUpdateProjectTasksByIds {
   projectGroprojectGroupID?: string;
 }
 export const updateProjectTasksByIds = createAsyncThunk(
-  "mtb/updateProjectTasksByIds",
+  'mtb/updateProjectTasksByIds',
 
   async (data: IUpdateProjectTasksByIds, thunkAPI) => {
     const {
@@ -3223,7 +3263,7 @@ export const updateProjectTasksByIds = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
@@ -3238,7 +3278,7 @@ export interface ICreateProjectGroup {
 }
 
 export const createProjectGroup = createAsyncThunk(
-  "mtx/createProjectGroup",
+  'mtx/createProjectGroup',
 
   async (data: ICreateProjectGroup, thunkAPI) => {
     const {
@@ -3268,7 +3308,7 @@ export const createProjectGroup = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось создать new W/O!");
+      return thunkAPI.rejectWithValue('Не удалось создать new W/O!');
     }
   }
 );
@@ -3289,7 +3329,7 @@ export interface IfeatchFilteredGroups {
 }
 
 export const getFilteredGroups = createAsyncThunk(
-  "mtb/getFilteredGroups",
+  'mtb/getFilteredGroups',
   async (params: IfeatchFilteredGroups, { rejectWithValue }) => {
     const url = new URL(
       `/groups/getFilteredProjectGroups/company/${params.companyID}`,
@@ -3297,23 +3337,23 @@ export const getFilteredGroups = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.companyName)
-      searchParams.append("companyName", params.companyName);
+      searchParams.append('companyName', params.companyName);
     if (params.registrationNumber)
-      searchParams.append("registrationNumber", params.registrationNumber);
+      searchParams.append('registrationNumber', params.registrationNumber);
 
     if (params.taskDescription)
-      searchParams.append("taskDescription", params.taskDescription);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('taskDescription', params.taskDescription);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
       const response = await $authHost.get(url.toString());
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить NRC");
+      return rejectWithValue('Не удалось загрузить NRC');
     }
   }
 );
@@ -3340,38 +3380,38 @@ export interface IfeatchFilteredProjectTasks {
   projectGroprojectGroupID?: string;
 }
 export const getFilteredGroupsTasks = createAsyncThunk(
-  "mtb/getFilteredGroupsTasks",
+  'mtb/getFilteredGroupsTasks',
   async (params: IfeatchFilteredProjectTasks, { rejectWithValue }) => {
     const url = new URL(
-      "/projects/tasks/getFilteredProjectsTasks/tasks",
+      '/projects/tasks/getFilteredProjectsTasks/tasks',
       API_URL
     );
     const searchParams = new URLSearchParams();
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.workOrderNbr)
-      searchParams.append("workOrderNbr", params.workOrderNbr);
+      searchParams.append('workOrderNbr', params.workOrderNbr);
 
-    if (params.ata) searchParams.append("ata", params.ata.join(","));
+    if (params.ata) searchParams.append('ata', params.ata.join(','));
     if (params.taskType)
-      searchParams.append("taskType", params.taskType.join(","));
-    if (params.taskNbr) searchParams.append("taskNbr", params.taskNbr);
+      searchParams.append('taskType', params.taskType.join(','));
+    if (params.taskNbr) searchParams.append('taskNbr', params.taskNbr);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -3380,7 +3420,7 @@ export const getFilteredGroupsTasks = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -3443,7 +3483,7 @@ export const deleteGroupsByIds = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
@@ -3455,7 +3495,7 @@ export interface IUpdateGroupByID {
   status: string;
 }
 export const updateGroupByID = createAsyncThunk(
-  "mtb/updateGroupByID",
+  'mtb/updateGroupByID',
   async (data: IUpdateGroupByID, { rejectWithValue }) => {
     const { id, projectID, groupName, groupDescription, status } = data;
 
@@ -3467,7 +3507,7 @@ export const updateGroupByID = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить задачу");
+      return rejectWithValue('Не удалось обновить задачу');
     }
   }
 );
@@ -3482,7 +3522,7 @@ export interface IUpdateProjectAdditionalTasksByIds {
   projectId?: string;
 }
 export const updateProjectAdditionalTasksByIds = createAsyncThunk(
-  "mtb/updateProjectTasksByIds",
+  'mtb/updateProjectTasksByIds',
 
   async (data: IUpdateProjectAdditionalTasksByIds, thunkAPI) => {
     const {
@@ -3512,7 +3552,7 @@ export const updateProjectAdditionalTasksByIds = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
@@ -3526,10 +3566,10 @@ export interface ICreateRequirement {
   cascader?: string[];
   rewiewStatus?: string;
   issuedQuantity?: number;
-  status: "onCheack" | "canceled" | "open";
+  status: 'onCheack' | 'canceled' | 'open';
 }
 export const createRequirement = createAsyncThunk(
-  "createPurchaseItems",
+  'createPurchaseItems',
   async (data: ICreateRequirement, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -3538,7 +3578,7 @@ export const createRequirement = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
@@ -3551,13 +3591,14 @@ export interface ICreateSingleRequirement {
   additionalTaskID?: string;
   cascader?: string[];
   rewiewStatus?: string;
-  status: "onCheack" | "canceled" | "open";
+  status: 'onCheack' | 'canceled' | 'open';
   registrationNumber?: any;
   taskNumber: string;
   partNumber: string;
   description: string;
   quantity: number;
   alternative?: string;
+  serialNumber?: any;
   unit: string;
   isNewAdded: boolean;
   issuedQuantity: any;
@@ -3568,7 +3609,7 @@ export interface ICreateSingleRequirement {
   type?: any;
 }
 export const createSingleRequirement = createAsyncThunk(
-  "mtb/createSingleRequirement",
+  'mtb/createSingleRequirement',
   async (data: ICreateSingleRequirement, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -3577,7 +3618,7 @@ export const createSingleRequirement = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
@@ -3611,12 +3652,14 @@ export interface IfeatchFilteredRequirements {
   foForecast?: any;
   group?: string[];
   type?: string[];
-  partNumbers?: string[];
+  partNumbers?: any[];
   isAlternatine?: any;
   partRequestNumbers?: number[];
+  nonColculate?: any;
+  includeAlternative?: any;
 }
 export const getFilteredRequirements = createAsyncThunk(
-  "mtb/getFilteredRequirements",
+  'mtb/getFilteredRequirements',
   async (params: IfeatchFilteredRequirements, { rejectWithValue }) => {
     const url = new URL(
       `/requirements/getFilteredRequirements/company/${params.companyID}`,
@@ -3626,36 +3669,39 @@ export const getFilteredRequirements = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
     if (params.partRequestNumbers)
       searchParams.append(
-        "partRequestNumbers",
-        params.partRequestNumbers.join(",")
+        'partRequestNumbers',
+        params.partRequestNumbers.join(',')
       );
+
     if (params.partNumbers)
-      searchParams.append("partNumbers", params.partNumbers.join(","));
+      searchParams.append('partNumbers', params.partNumbers.join(','));
     if (params.additionalTaskID)
-      searchParams.append("additionalTaskID", params.additionalTaskID);
+      searchParams.append('additionalTaskID', params.additionalTaskID);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
+    if (params.nonColculate)
+      searchParams.append('nonColculate', params.nonColculate);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectID", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectID', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -3664,12 +3710,12 @@ export const getFilteredRequirements = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 export const getFilteredRequirementsForecast = createAsyncThunk(
-  "mtb/getFilteredRequirementsForecast",
+  'mtb/getFilteredRequirementsForecast',
   async (params: IfeatchFilteredRequirements, { rejectWithValue }) => {
     const url = new URL(
       `/requirements/getFilteredRequirements/company/${params.companyID}`,
@@ -3679,45 +3725,45 @@ export const getFilteredRequirementsForecast = createAsyncThunk(
 
     if (params.partRequestNumber)
       searchParams.append(
-        "partRequestNumber",
+        'partRequestNumber',
         String(params.partRequestNumber)
       );
-    if (params.foForecast) searchParams.append("foForecast", params.foForecast);
+    if (params.foForecast) searchParams.append('foForecast', params.foForecast);
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
     if (params.needOnLocationShop)
-      searchParams.append("needOnLocationShop", params.needOnLocationShop);
+      searchParams.append('needOnLocationShop', params.needOnLocationShop);
     if (params.additionalTaskID)
-      searchParams.append("additionalTaskID", params.additionalTaskID);
+      searchParams.append('additionalTaskID', params.additionalTaskID);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
-    if (params.regNbr) searchParams.append("planeNumber", params.regNbr);
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
+    if (params.regNbr) searchParams.append('planeNumber', params.regNbr);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectID", params.projectId);
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.group) searchParams.append("group", params.group.join(","));
-    if (params.type) searchParams.append("type", params.type.join(","));
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectID', params.projectId);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.group) searchParams.append('group', params.group.join(','));
+    if (params.type) searchParams.append('type', params.type.join(','));
     if (params.projectIds)
-      searchParams.append("projectIDs", params.projectIds.join(","));
-    if (params.position) searchParams.append("position", params.position);
+      searchParams.append('projectIDs', params.projectIds.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
     if (params.isAlternatine)
-      searchParams.append("isAlternatine", params.isAlternatine);
+      searchParams.append('isAlternatine', params.isAlternatine);
 
     try {
       const response = await $authHost.get(url.toString());
@@ -3725,7 +3771,75 @@ export const getFilteredRequirementsForecast = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
+    }
+  }
+);
+export const getFilteredRequirementsManager = createAsyncThunk(
+  'requirements/getFilteredRequirements',
+  async (params: IfeatchFilteredRequirements, { rejectWithValue }) => {
+    const url = new URL(
+      `/requirements/getFilteredRequirements/company/${params.companyID}`,
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+
+    if (params.partRequestNumber)
+      searchParams.append(
+        'partRequestNumber',
+        String(params.partRequestNumber)
+      );
+    if (params.partNumbers)
+      searchParams.append('partNumbers', params.partNumbers.join(','));
+    if (params.foForecast) searchParams.append('foForecast', params.foForecast);
+    if (params.includeAlternative)
+      searchParams.append('includeAlternative', params.includeAlternative);
+    if (params.nonColculate)
+      searchParams.append('nonColculate', params.nonColculate);
+    if (params.projectGroprojectGroupID)
+      searchParams.append(
+        'projectGroprojectGroupID',
+        params.projectGroprojectGroupID
+      );
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.needOnLocationShop)
+      searchParams.append('needOnLocationShop', params.needOnLocationShop);
+    if (params.additionalTaskID)
+      searchParams.append('additionalTaskID', params.additionalTaskID);
+    if (params.projectTaskID)
+      searchParams.append('projectTaskID', params.projectTaskID);
+    if (params.workOrderID)
+      searchParams.append('workOrderID', params.workOrderID);
+    if (params.projectTaskWO)
+      searchParams.append('projectTaskWO', params.projectTaskWO);
+    if (params.regNbr) searchParams.append('planeNumber', params.regNbr);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
+    if (params.description)
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectID', params.projectId);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.group) searchParams.append('group', params.group.join(','));
+    if (params.type) searchParams.append('type', params.type.join(','));
+    if (params.projectIds)
+      searchParams.append('projectIDs', params.projectIds.join(','));
+    if (params.position) searchParams.append('position', params.position);
+    if (params.projectNames)
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
+    url.search = searchParams.toString();
+    if (params.isAlternatine)
+      searchParams.append('isAlternatine', params.isAlternatine);
+
+    try {
+      const response = await $authHost.get(url.toString());
+      //localStorage.setItem('taskSearchUrl', url.toString());
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -3733,14 +3847,14 @@ export interface IUpdateRequirementsByIds {
   ids: any[];
   updateUserID: string;
   updateDate: Date;
-  status?: "onCheack" | "canceled" | "open" | "inStockReserve";
+  status?: 'onCheack' | 'canceled' | 'open' | 'inStockReserve';
   companyID: string;
   cascader?: string[];
   rewiewStatus?: string;
 }
 
 export const updateRequirementsByIds = createAsyncThunk(
-  "mtb/updateRequirementsByIds",
+  'mtb/updateRequirementsByIds',
 
   async (data: IUpdateRequirementsByIds, thunkAPI) => {
     const {
@@ -3770,7 +3884,7 @@ export const updateRequirementsByIds = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
@@ -3778,12 +3892,13 @@ export interface IUpdateRequirementByID {
   id: any;
   updateUserID: string;
   updateDate: Date;
-  status?: "onCheack" | "canceled" | "open" | "closed";
+  status?: 'onCheack' | 'canceled' | 'open' | 'closed';
   companyID: string;
   cascader?: string[];
   rewiewStatus?: string;
   projectID: string;
   projectTaskID?: string;
+  additionalTaskID?: string;
   createDate?: string;
   createUserID?: string;
   optional?: any;
@@ -3804,13 +3919,16 @@ export interface IUpdateRequirementByID {
   requestQuantity?: number;
   issuedQuantity?: number;
   plannedDate?: any;
+  group?: any;
+  type?: any;
 }
 export const updateRequirementByID = createAsyncThunk(
-  "mtb/updateRequirementByID",
+  'mtb/updateRequirementByID',
   async (data: IUpdateRequirementByID, { rejectWithValue }) => {
     const {
       id,
       projectID,
+      additionalTaskID,
       projectTaskID,
       updateUserID,
       createUserID,
@@ -3838,6 +3956,8 @@ export const updateRequirementByID = createAsyncThunk(
 
       projectTaskWO,
       plannedDate,
+      type,
+      group,
     } = data;
 
     try {
@@ -3846,6 +3966,7 @@ export const updateRequirementByID = createAsyncThunk(
         {
           id,
           projectID,
+          additionalTaskID,
           projectTaskID,
           updateUserID,
           createUserID,
@@ -3872,12 +3993,14 @@ export const updateRequirementByID = createAsyncThunk(
           issuedQuantity,
           requestQuantity,
           plannedDate,
+          type,
+          group,
         }
       );
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось обновить задачу");
+      return rejectWithValue('Не удалось обновить задачу');
     }
   }
 );
@@ -3901,21 +4024,21 @@ export const deleteRequirementsByIds = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
 
 export interface updateRequirementsByBody {
   newData: any;
-  status?: "onCheack" | "canceled" | "open" | "inStockReserve" | "onOrder";
+  status?: 'onCheack' | 'canceled' | 'open' | 'inStockReserve' | 'onOrder';
   companyID: string;
   plannedDate?: any;
   neededOn?: string;
 }
 
 export const updateRequirementsByBody = createAsyncThunk(
-  "mtb/updateRequirementsByBody",
+  'mtb/updateRequirementsByBody',
 
   async (data: updateRequirementsByBody, thunkAPI) => {
     const { status, newData, companyID, plannedDate, neededOn } = data;
@@ -3926,6 +4049,7 @@ export const updateRequirementsByBody = createAsyncThunk(
           newData,
           plannedDate,
           neededOn,
+          status,
         }
       );
       return response.data;
@@ -3933,7 +4057,7 @@ export const updateRequirementsByBody = createAsyncThunk(
       if (e instanceof Error) {
         console.error(e.message);
       }
-      return thunkAPI.rejectWithValue("Не удалось updateTasks");
+      return thunkAPI.rejectWithValue('Не удалось updateTasks');
     }
   }
 );
@@ -3941,6 +4065,8 @@ export const updateRequirementsByBody = createAsyncThunk(
 export interface getFilteredMaterialOrders {
   taskNumber?: string;
   description?: string;
+  neededOn?: string;
+  getFrom?: string;
   regNbr?: string;
   startDate?: any;
   endDate?: any;
@@ -3960,10 +4086,11 @@ export interface getFilteredMaterialOrders {
   materialOrders?: any[];
   materialAplicationNumber?: any;
   partNumber?: string;
+  additionalNumberId?: string;
 }
 
 export const getFilteredMaterialOrders = createAsyncThunk(
-  "mtb/getFilteredMaterialOrders",
+  'mtb/getFilteredMaterialOrders',
   async (params: getFilteredMaterialOrders, { rejectWithValue }) => {
     const url = new URL(
       `/materialAplications/getFilteredMaterialOrders/company/${params.companyID}`,
@@ -3973,36 +4100,40 @@ export const getFilteredMaterialOrders = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
     if (params.materialAplicationNumber)
       searchParams.append(
-        "materialAplicationNumber",
+        'materialAplicationNumber',
         params.materialAplicationNumber
       );
+    if (params.getFrom) searchParams.append('getFrom', params.getFrom);
+    if (params.neededOn) searchParams.append('neededOn', params.neededOn);
+    if (params.additionalNumberId)
+      searchParams.append('additionalNumberId', params.additionalNumberId);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.regNbr) searchParams.append("registrationNumber", params.regNbr);
+      searchParams.append('projectTaskID', params.projectTaskID);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.regNbr) searchParams.append('registrationNumber', params.regNbr);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4011,12 +4142,12 @@ export const getFilteredMaterialOrders = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredCancelMaterialOrders = createAsyncThunk(
-  "mtb/getFilteredCancelMaterialOrders",
+  'mtb/getFilteredCancelMaterialOrders',
   async (params: getFilteredMaterialOrders, { rejectWithValue }) => {
     const url = new URL(
       `/materialAplications/getFilteredMaterialOrders/company/${params.companyID}`,
@@ -4026,36 +4157,39 @@ export const getFilteredCancelMaterialOrders = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
+
+    if (params.additionalNumberId)
+      searchParams.append('additionalNumberId', params.additionalNumberId);
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
     if (params.materialAplicationNumber)
       searchParams.append(
-        "materialAplicationNumber",
+        'materialAplicationNumber',
         params.materialAplicationNumber
       );
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.regNbr) searchParams.append("registrationNumber", params.regNbr);
+      searchParams.append('projectTaskID', params.projectTaskID);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.regNbr) searchParams.append('registrationNumber', params.regNbr);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4064,12 +4198,12 @@ export const getFilteredCancelMaterialOrders = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredPickSlip = createAsyncThunk(
-  "store/getFilteredPickSlip",
+  'store/getFilteredPickSlip',
   async (params: getFilteredMaterialOrders, { rejectWithValue }) => {
     const url = new URL(
       `/materialAplications/getFilteredMaterialOrders/company/${params.companyID}`,
@@ -4079,36 +4213,36 @@ export const getFilteredPickSlip = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
     if (params.materialAplicationNumber)
       searchParams.append(
-        "materialAplicationNumber",
+        'materialAplicationNumber',
         params.materialAplicationNumber
       );
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.regNbr) searchParams.append("registrationNumber", params.regNbr);
+      searchParams.append('projectTaskID', params.projectTaskID);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.regNbr) searchParams.append('registrationNumber', params.regNbr);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4117,7 +4251,7 @@ export const getFilteredPickSlip = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
@@ -4156,7 +4290,7 @@ export interface getFilteredMaterialItems {
 }
 
 export const getFilteredMaterialItems = createAsyncThunk(
-  "mtb/getFilteredMaterialItems",
+  'mtb/getFilteredMaterialItems',
   async (params: getFilteredMaterialItems, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItems/company/${params.companyID}`,
@@ -4164,39 +4298,39 @@ export const getFilteredMaterialItems = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.location)
-      searchParams.append("location", params.location.join(","));
-    if (params.isAllDate) searchParams.append("isAllExpDate", params.isAllDate);
+      searchParams.append('location', params.location.join(','));
+    if (params.isAllDate) searchParams.append('isAllExpDate', params.isAllDate);
     if (params.isAlternative)
-      searchParams.append("isAlternative", params.isAlternative);
-    if (params.localID) searchParams.append("localID", params.localID);
-    if (params.ID) searchParams.append("ID", params.ID);
+      searchParams.append('isAlternative', params.isAlternative);
+    if (params.localID) searchParams.append('localID', params.localID);
+    if (params.ID) searchParams.append('ID', params.ID);
     if (params.PART_NUMBER)
-      searchParams.append("PART_NUMBER", params.PART_NUMBER);
+      searchParams.append('PART_NUMBER', params.PART_NUMBER);
     if (params.SERIAL_NUMBER)
-      searchParams.append("SERIAL_NUMBER", params.SERIAL_NUMBER);
-    if (params.GROUP) searchParams.append("GROUP", params.GROUP.join(","));
+      searchParams.append('SERIAL_NUMBER', params.SERIAL_NUMBER);
+    if (params.GROUP) searchParams.append('GROUP', params.GROUP.join(','));
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
     if (params.alternatives)
-      searchParams.append("alternatives", params.alternatives.join(","));
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
-    if (params.STOCK) searchParams.append("STOCK", params.STOCK);
+      searchParams.append('alternatives', params.alternatives.join(','));
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
+    if (params.STOCK) searchParams.append('STOCK', params.STOCK);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
     url.search = searchParams.toString();
 
     try {
@@ -4205,12 +4339,12 @@ export const getFilteredMaterialItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredMaterialItemsStock = createAsyncThunk(
-  "mtb/getFilteredMaterialStockItems",
+  'mtb/getFilteredMaterialStockItems',
   async (params: getFilteredMaterialItems, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItems/company/${params.companyID}`,
@@ -4218,32 +4352,32 @@ export const getFilteredMaterialItemsStock = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
 
-    if (params.isAllDate) searchParams.append("isAllExpDate", params.isAllDate);
+    if (params.isAllDate) searchParams.append('isAllExpDate', params.isAllDate);
 
     if (params.alternatives)
-      searchParams.append("alternatives", params.alternatives.join(","));
-    if (params.ID) searchParams.append("ID", params.ID);
+      searchParams.append('alternatives', params.alternatives.join(','));
+    if (params.ID) searchParams.append('ID', params.ID);
     if (params.PART_NUMBER)
-      searchParams.append("PART_NUMBER", params.PART_NUMBER);
+      searchParams.append('PART_NUMBER', params.PART_NUMBER);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
-    if (params.STOCK) searchParams.append("STOCK", params.STOCK);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
+    if (params.STOCK) searchParams.append('STOCK', params.STOCK);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4252,12 +4386,12 @@ export const getFilteredMaterialItemsStock = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredTransferStockItems = createAsyncThunk(
-  "mtb/getFilteredTransferStockItems",
+  'mtb/getFilteredTransferStockItems',
   async (params: getFilteredMaterialItems, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItems/company/${params.companyID}`,
@@ -4265,31 +4399,31 @@ export const getFilteredTransferStockItems = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.alternatives)
-      searchParams.append("alternatives", params.alternatives.join(","));
-    if (params.ID) searchParams.append("ID", params.ID);
+      searchParams.append('alternatives', params.alternatives.join(','));
+    if (params.ID) searchParams.append('ID', params.ID);
     if (params.PART_NUMBER)
-      searchParams.append("PART_NUMBER", params.PART_NUMBER);
+      searchParams.append('PART_NUMBER', params.PART_NUMBER);
     if (params.location)
-      searchParams.append("location", params.location.join(","));
+      searchParams.append('location', params.location.join(','));
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
-    if (params.STOCK) searchParams.append("STOCK", params.STOCK);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
+    if (params.STOCK) searchParams.append('STOCK', params.STOCK);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4298,12 +4432,12 @@ export const getFilteredTransferStockItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredUnserviseStockItems = createAsyncThunk(
-  "mtb/getFilteredUnserviseStockItems",
+  'mtb/getFilteredUnserviseStockItems',
   async (params: getFilteredMaterialItems, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItems/company/${params.companyID}`,
@@ -4311,32 +4445,32 @@ export const getFilteredUnserviseStockItems = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.alternatives)
-      searchParams.append("alternatives", params.alternatives.join(","));
-    if (params.ID) searchParams.append("ID", params.ID);
-    if (params.condition) searchParams.append("condition", params.condition);
+      searchParams.append('alternatives', params.alternatives.join(','));
+    if (params.ID) searchParams.append('ID', params.ID);
+    if (params.condition) searchParams.append('condition', params.condition);
     if (params.PART_NUMBER)
-      searchParams.append("PART_NUMBER", params.PART_NUMBER);
+      searchParams.append('PART_NUMBER', params.PART_NUMBER);
     if (params.location)
-      searchParams.append("location", params.location.join(","));
+      searchParams.append('location', params.location.join(','));
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
-    if (params.STOCK) searchParams.append("STOCK", params.STOCK);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
+    if (params.STOCK) searchParams.append('STOCK', params.STOCK);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4345,43 +4479,43 @@ export const getFilteredUnserviseStockItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredStockDetails = createAsyncThunk(
-  "mtb/getFilteredStockDetails",
+  'mtb/getFilteredStockDetails',
   async (params: getFilteredMaterialItems, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItems/company/${params.companyID}`,
       API_URL
     );
     const searchParams = new URLSearchParams();
-    if (params.isAllDate) searchParams.append("isAllExpDate", params.isAllDate);
+    if (params.isAllDate) searchParams.append('isAllExpDate', params.isAllDate);
     if (params.alternatives)
-      searchParams.append("alternatives", params.alternatives.join(","));
-    if (params.ID) searchParams.append("ID", params.ID);
+      searchParams.append('alternatives', params.alternatives.join(','));
+    if (params.ID) searchParams.append('ID', params.ID);
     if (params.PART_NUMBER)
-      searchParams.append("PART_NUMBER", params.PART_NUMBER);
+      searchParams.append('PART_NUMBER', params.PART_NUMBER);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
-    if (params.STOCK) searchParams.append("STOCK", params.STOCK);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
+    if (params.STOCK) searchParams.append('STOCK', params.STOCK);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4390,12 +4524,12 @@ export const getFilteredStockDetails = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 export const getFilteredItemsStockQuantity = createAsyncThunk(
-  "mtb/getFilteredItemsStockQuantity",
+  'mtb/getFilteredItemsStockQuantity',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItemsStockQuantity/company/${params.companyID}`,
@@ -4403,30 +4537,30 @@ export const getFilteredItemsStockQuantity = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
 
-    if (params.ID) searchParams.append("ID", params.ID);
-    if (params.isAllDate) searchParams.append("isAllDate", params.isAllDate);
+    if (params.ID) searchParams.append('ID', params.ID);
+    if (params.isAllDate) searchParams.append('isAllDate', params.isAllDate);
     if (params.PART_NUMBER)
       if (params.isAlternative)
-        searchParams.append("isAlternative", params.isAlternative);
-    searchParams.append("PART_NUMBER", params.PART_NUMBER);
+        searchParams.append('isAlternative', params.isAlternative);
+    searchParams.append('PART_NUMBER', params.PART_NUMBER);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4435,13 +4569,13 @@ export const getFilteredItemsStockQuantity = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 
 export const updatedMaterialOrdersById = createAsyncThunk(
-  "store/updatedMaterialOrdersById",
+  'store/updatedMaterialOrdersById',
   async (data: any, { rejectWithValue }) => {
     const {
       _id,
@@ -4473,6 +4607,7 @@ export const updatedMaterialOrdersById = createAsyncThunk(
       updateBy,
       updateDate,
       returnPickIDs,
+      neededOnID,
     } = data;
 
     try {
@@ -4505,10 +4640,11 @@ export const updatedMaterialOrdersById = createAsyncThunk(
         updateBy,
         updateDate,
         returnPickIDs,
+        neededOnID,
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
@@ -4552,7 +4688,7 @@ export interface IUpdatedMaterialItemsById {
 }
 
 export const updatedMaterialItemsById = createAsyncThunk(
-  "updatedMaterialItemsById",
+  'updatedMaterialItemsById',
   async (data: IUpdatedMaterialItemsById, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -4563,13 +4699,13 @@ export const updatedMaterialItemsById = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
 
 export const updatedMaterialItemsByIdAfterIssued = createAsyncThunk(
-  "updatedMaterialItemsByIdAfterIssued",
+  'updatedMaterialItemsByIdAfterIssued',
   async (data: IMaterialStoreRequestItem, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -4578,7 +4714,7 @@ export const updatedMaterialItemsByIdAfterIssued = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
@@ -4589,7 +4725,7 @@ export interface IFeatchPickSlipByID {
   returnSlipID?: string;
 }
 export const featchPickSlipByID = createAsyncThunk(
-  "featchPickSlipByID",
+  'featchPickSlipByID',
   async (data: IFeatchPickSlipByID, thunkAPI) => {
     try {
       const response = await $authHost.get(
@@ -4597,12 +4733,12 @@ export const featchPickSlipByID = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("ERROR");
+      return thunkAPI.rejectWithValue('ERROR');
     }
   }
 );
 export const featchReturnSlipByID = createAsyncThunk(
-  "featchReturnSlipByID",
+  'featchReturnSlipByID',
   async (data: IFeatchPickSlipByID, thunkAPI) => {
     try {
       const response = await $authHost.get(
@@ -4610,7 +4746,7 @@ export const featchReturnSlipByID = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("ERROR");
+      return thunkAPI.rejectWithValue('ERROR');
     }
   }
 );
@@ -4637,7 +4773,7 @@ export interface getFilteredPickSlips {
   pickSlips?: any[];
 }
 export const getFilteredPickSlips = createAsyncThunk(
-  "store/getFilteredPickSlips",
+  'store/getFilteredPickSlips',
   async (params: getFilteredPickSlips, { rejectWithValue }) => {
     const url = new URL(
       `/pickSlips/getFilteredPickSlips/company/${params.companyID}`,
@@ -4647,27 +4783,27 @@ export const getFilteredPickSlips = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectId", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectId', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4676,7 +4812,7 @@ export const getFilteredPickSlips = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
@@ -4691,7 +4827,7 @@ export interface IcreateRemoveInstallComponents {
   additionalTaskIds?: string[];
 }
 export const createRemoveInstallComponents = createAsyncThunk(
-  "planning/createRemoveInstallComponents",
+  'planning/createRemoveInstallComponents',
   async (data: IcreateRemoveInstallComponents, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -4700,7 +4836,7 @@ export const createRemoveInstallComponents = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
@@ -4728,7 +4864,7 @@ export interface IfeatchFilteredRemovedItems {
   additionalTaskID?: string;
 }
 export const getFilteredRemoverdItemsForPrint = createAsyncThunk(
-  "mtb/getFilteredRemoverdItemsForPrint",
+  'mtb/getFilteredRemoverdItemsForPrint',
   async (params: IfeatchFilteredRemovedItems, { rejectWithValue }) => {
     const url = new URL(
       `removedItems/getFilteredRemovedItems/company/${params.companyID}`,
@@ -4738,29 +4874,29 @@ export const getFilteredRemoverdItemsForPrint = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
     if (params.additionalTaskID)
-      searchParams.append("additionalTaskID", params.additionalTaskID);
+      searchParams.append('additionalTaskID', params.additionalTaskID);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectID", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectID', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4769,13 +4905,13 @@ export const getFilteredRemoverdItemsForPrint = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
 
 export const getFilteredRemoverdItems = createAsyncThunk(
-  "mtb/getFilteredRemoverdItems",
+  'mtb/getFilteredRemoverdItems',
   async (params: IfeatchFilteredRemovedItems, { rejectWithValue }) => {
     const url = new URL(
       `removedItems/getFilteredRemovedItems/company/${params.companyID}`,
@@ -4785,29 +4921,29 @@ export const getFilteredRemoverdItems = createAsyncThunk(
 
     if (params.projectGroprojectGroupID)
       searchParams.append(
-        "projectGroprojectGroupID",
+        'projectGroprojectGroupID',
         params.projectGroprojectGroupID
       );
     if (params.additionalTaskID)
-      searchParams.append("additionalTaskID", params.additionalTaskID);
+      searchParams.append('additionalTaskID', params.additionalTaskID);
     if (params.projectTaskID)
-      searchParams.append("projectTaskID", params.projectTaskID);
+      searchParams.append('projectTaskID', params.projectTaskID);
     if (params.workOrderID)
-      searchParams.append("workOrderID", params.workOrderID);
+      searchParams.append('workOrderID', params.workOrderID);
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.taskNumber) searchParams.append("taskNumber", params.taskNumber);
+    if (params.taskNumber) searchParams.append('taskNumber', params.taskNumber);
     if (params.description)
-      searchParams.append("description", params.description);
-    if (params.projectId) searchParams.append("projectID", params.projectId);
+      searchParams.append('description', params.description);
+    if (params.projectId) searchParams.append('projectID', params.projectId);
 
-    if (params.code) searchParams.append("code", params.code.join(","));
-    if (params.position) searchParams.append("position", params.position);
+    if (params.code) searchParams.append('code', params.code.join(','));
+    if (params.position) searchParams.append('position', params.position);
     if (params.projectNames)
-      searchParams.append("projectNames", params.projectNames.join(","));
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.ids) searchParams.append("ids", params.ids.join(","));
+      searchParams.append('projectNames', params.projectNames.join(','));
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.ids) searchParams.append('ids', params.ids.join(','));
     url.search = searchParams.toString();
 
     try {
@@ -4816,7 +4952,7 @@ export const getFilteredRemoverdItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить Planes");
+      return rejectWithValue('Не удалось загрузить Planes');
     }
   }
 );
@@ -4841,20 +4977,20 @@ export const getfilteredAccessNumbers = async (
   );
   const searchParams = new URLSearchParams();
 
-  if (params.accessNbr) searchParams.append("accessNbr", params.accessNbr);
-  if (params.acType) searchParams.append("acType", params.acType);
+  if (params.accessNbr) searchParams.append('accessNbr', params.accessNbr);
+  if (params.acType) searchParams.append('acType', params.acType);
   if (params.description)
-    searchParams.append("description", params.description);
-  if (params.zone) searchParams.append("zone", params.zone);
-  if (params.subZone) searchParams.append("subZone", params.subZone);
-  if (params.type) searchParams.append("type", params.type);
+    searchParams.append('description', params.description);
+  if (params.zone) searchParams.append('zone', params.zone);
+  if (params.subZone) searchParams.append('subZone', params.subZone);
+  if (params.type) searchParams.append('type', params.type);
   url.search = searchParams.toString();
 
   try {
     const response = await $authHost.get(url.toString());
     return response.data;
   } catch (error) {
-    return "Не удалось загрузить задачи";
+    return 'Не удалось загрузить задачи';
   }
 };
 
@@ -4876,7 +5012,7 @@ export interface IcreateRemoveInstallSingleComponent {
 }
 
 export const createRemoveInstallSingleComponent = createAsyncThunk(
-  "planning/createRemoveInstallSingleComponent",
+  'planning/createRemoveInstallSingleComponent',
   async (data: IcreateRemoveInstallSingleComponent, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -4885,7 +5021,7 @@ export const createRemoveInstallSingleComponent = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
@@ -4905,7 +5041,7 @@ export type updateRemovedItemProps = {
 };
 
 export const updateRemovedItemByIds = createAsyncThunk(
-  "mtb/updateremovedItem",
+  'mtb/updateremovedItem',
   async (data: updateRemovedItemProps, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -4914,7 +5050,7 @@ export const updateRemovedItemByIds = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заявку");
+      return rejectWithValue('Не удалось загрузить заявку');
     }
   }
 );
@@ -4927,7 +5063,7 @@ export type getfilteredPartNumbersProps = {
 };
 
 export const getFilteredAlternativePN = createAsyncThunk(
-  "mtb/getFilteredAlternativePN",
+  'mtb/getFilteredAlternativePN',
   async (params: getfilteredPartNumbersProps, { rejectWithValue }) => {
     const url = new URL(
       `alternative/getFilteredAlternativePN/company/${params.companyID}`,
@@ -4935,11 +5071,11 @@ export const getFilteredAlternativePN = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
 
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
-    if (params.group) searchParams.append("group", params.group.join(","));
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
+    if (params.group) searchParams.append('group', params.group.join(','));
 
     if (params.alternatine)
-      searchParams.append("alternatine", params.alternatine);
+      searchParams.append('alternatine', params.alternatine);
 
     url.search = searchParams.toString();
 
@@ -4947,12 +5083,12 @@ export const getFilteredAlternativePN = createAsyncThunk(
       const response = await $authHost.get(url.toString());
       return response.data;
     } catch (error) {
-      return "Не удалось загрузить PN";
+      return 'Не удалось загрузить PN';
     }
   }
 );
 export const getFilteredPartNumber = createAsyncThunk(
-  "enginiring/getFilteredPartNumber",
+  'enginiring/getFilteredPartNumber',
   async (params: getfilteredPartNumbersProps, { rejectWithValue }) => {
     const url = new URL(
       `partNumbers/getFilteredPartNumber/company/${params.companyID}`,
@@ -4960,11 +5096,11 @@ export const getFilteredPartNumber = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
 
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
-    if (params.group) searchParams.append("group", params.group.join(","));
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
+    if (params.group) searchParams.append('group', params.group.join(','));
 
     if (params.alternatine)
-      searchParams.append("alternatine", params.alternatine);
+      searchParams.append('alternatine', params.alternatine);
 
     url.search = searchParams.toString();
 
@@ -4972,7 +5108,34 @@ export const getFilteredPartNumber = createAsyncThunk(
       const response = await $authHost.get(url.toString());
       return response.data;
     } catch (error) {
-      return "Не удалось загрузить PN";
+      return 'Не удалось загрузить PN';
+    }
+  }
+);
+export type getFilteredVendorsProps = {
+  companyID: string;
+  code?: string;
+  name?: string;
+};
+export const getFilteredVendors = createAsyncThunk(
+  'vendors/getFilteredVendors',
+  async (params: getFilteredVendorsProps, { rejectWithValue }) => {
+    const url = new URL(
+      `vendors/getFilteredVendors/company/${params.companyID}`,
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+
+    if (params.code) searchParams.append('code', params.code);
+    if (params.name) searchParams.append('name', params.name);
+
+    url.search = searchParams.toString();
+
+    try {
+      const response = await $authHost.get(url.toString());
+      return response.data;
+    } catch (error) {
+      return 'Не удалось загрузить VENDORS';
     }
   }
 );
@@ -4989,7 +5152,7 @@ export interface IfeatchFilteredShops {
   updateUserID?: string;
 }
 export const getFilteredShops = createAsyncThunk(
-  "common/getFilteredShops",
+  'common/getFilteredShops',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
       `shops/getFilteredShops/company/${params.companyID}`,
@@ -4998,10 +5161,10 @@ export const getFilteredShops = createAsyncThunk(
     const searchParams = new URLSearchParams();
 
     if (params.shopShortName)
-      searchParams.append("shopShortName", params.shopShortName);
+      searchParams.append('shopShortName', params.shopShortName);
 
     if (params.shopLongName)
-      searchParams.append("shopLongName", params.shopLongName);
+      searchParams.append('shopLongName', params.shopLongName);
 
     url.search = searchParams.toString();
 
@@ -5010,12 +5173,12 @@ export const getFilteredShops = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить SHOPS");
+      return rejectWithValue('Не удалось загрузить SHOPS');
     }
   }
 );
 export const updateStoreByID = createAsyncThunk(
-  "common/updateStoreByID",
+  'common/updateStoreByID',
   async (data: IStore, { rejectWithValue }) => {
     try {
       console.log(data);
@@ -5025,13 +5188,13 @@ export const updateStoreByID = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось update store");
+      return rejectWithValue('Не удалось update store');
     }
   }
 );
 
 export const postNewStoreShop = createAsyncThunk(
-  "common/postNewStoreShop",
+  'common/postNewStoreShop',
   async (data: IStore, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5040,7 +5203,7 @@ export const postNewStoreShop = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
@@ -5051,7 +5214,7 @@ export type reservationItemProps = {
   updateDate?: Date;
 };
 export const reservationRequarementByIds = createAsyncThunk(
-  "logistic/reservationRequarementByIds",
+  'logistic/reservationRequarementByIds',
   async (data: reservationItemProps, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -5060,13 +5223,13 @@ export const reservationRequarementByIds = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить");
+      return rejectWithValue('Не удалось загрузить');
     }
   }
 );
 
 export const updateManyMaterialItems = createAsyncThunk(
-  "common/updateManyMaterialItes",
+  'common/updateManyMaterialItes',
   async (data: IUpdatedMaterialItemsById, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -5075,12 +5238,12 @@ export const updateManyMaterialItems = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось ");
+      return rejectWithValue('Не удалось ');
     }
   }
 );
 export const updateManyMaterialItemByID = createAsyncThunk(
-  "common/updateManyMaterialItemByID",
+  'common/updateManyMaterialItemByID',
   async (data: IUpdatedMaterialItemsById, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -5089,7 +5252,7 @@ export const updateManyMaterialItemByID = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось ");
+      return rejectWithValue('Не удалось ');
     }
   }
 );
@@ -5122,51 +5285,143 @@ export async function uploadFileServer(formData: any) {
       formData,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       }
     );
     return response.data;
   } catch (error) {
-    console.error("Не удалось загрузить файл", error);
+    console.error('Не удалось загрузить файл', error);
+    throw error;
+  }
+}
+export async function uploadFileServerReference(formData: any) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/files/upload/reference/company`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Не удалось загрузить файл', error);
     throw error;
   }
 }
 
 // Функция для просмотра файла
-export async function getFileFromServer(companyID: string, fileId: string) {
+// export async function getFileFromServer(
+//   companyID: string,
+//   fileId: string,
+//   prop?: string
+// ) {
+//   try {
+//     const response = await axios.get(
+//       `${API_URL}/files/getById/company/${companyID}/file/${fileId}/prop/${prop}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem('token')}`,
+//         },
+//         responseType: 'blob', // Важно указать, что ответ должен быть в виде blob
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error('Не удалось получить файл', error);
+//     throw error;
+//   }
+// }
+export async function getFileFromServer(
+  companyID: string,
+  fileId: string,
+  prop?: string
+): Promise<Uint8Array> {
   try {
     const response = await axios.get(
-      `${API_URL}/files/getById/company/${companyID}/file/${fileId}`,
+      `${API_URL}/files/getById/company/${companyID}/file/${fileId}/prop/${prop}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        responseType: "blob", // Важно указать, что ответ должен быть в виде blob
+        responseType: 'blob', // Важно указать, что ответ должен быть в виде blob
       }
     );
-    return response.data;
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result instanceof ArrayBuffer) {
+          resolve(new Uint8Array(reader.result));
+        } else {
+          reject(new Error('Failed to read blob as ArrayBuffer'));
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(response.data);
+    });
   } catch (error) {
-    console.error("Не удалось получить файл", error);
+    console.error('Не удалось получить файл', error);
     throw error;
   }
 }
-
 // Функция для удаления файла
 export const deleteFile = createAsyncThunk(
-  "common/deleteFile",
-  async (id: string, { rejectWithValue }) => {
+  'common/deleteFile',
+  async (data: any, { rejectWithValue }) => {
     try {
-      const response = await $authHost.delete(`/file/${id}`);
+      const response = await $authHost.delete(
+        `files/companyID/${data.companyID}/file/${data.id}`
+      );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось удалить файл");
+      return rejectWithValue('Не удалось удалить файл');
+    }
+  }
+);
+export const deleteFileUploads = createAsyncThunk(
+  'common/deleteFile/uploads',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const response = await $authHost.delete(
+        `files/uploads/companyID/${data.companyID}/file/${data.id}/type/${data?.type}/itemID/${data?.itemID}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось удалить файл');
+    }
+  }
+);
+
+export const updateFilePrintAsAttachment = createAsyncThunk(
+  'common/updateFilePrintAsAttachment',
+  async (
+    data: {
+      fileId: string;
+      printAsAttachment: boolean;
+      companyID: string;
+      type?: string;
+      itemID?: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await $authHost.patch(
+        `files/uploads/companyID/${data.companyID}/file/${data.fileId}`,
+        { printAsAttachment: data.printAsAttachment }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось обновить свойство printAsAttachment');
     }
   }
 );
 
 export const postNewOrder = createAsyncThunk(
-  "common/postNewOrder",
+  'common/postNewOrder',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5175,91 +5430,91 @@ export const postNewOrder = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 export const updateOrderByID = createAsyncThunk(
-  "common/updateOrderByID",
+  'common/updateOrderByID',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.put(
-        `orders/${data._id || data.id}/companyID/${data.companyID}/`,
+        `ordersNew/companyID/${data.companyID}/order/${data._id || data.id}`,
 
         data
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 
 export const getFilteredOrders = createAsyncThunk(
-  "common/getFilteredOrders",
+  'common/getFilteredOrders',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
-      `orders/getFilteredOrders/companyID/${params.companyID}`,
+      `ordersNew/getFilteredOrders/companyID/${params.companyID}`,
 
       API_URL
     );
     const searchParams = new URLSearchParams();
+    if (params.vendorName) searchParams.append('vendorName', params.vendorName);
+    if (params.customer) searchParams.append('customer', params.customer);
 
-    if (params.vendorName) searchParams.append("vendorName", params.vendorName);
-
-    if (params.orderType) searchParams.append("orderType", params.orderType);
+    if (params.orderType) searchParams.append('orderType', params.orderType);
 
     if (params.orderCreateDate)
-      searchParams.append("orderCreateDate", params.orderCreateDate);
+      searchParams.append('orderCreateDate', params.orderCreateDate);
 
     if (params.orderItems)
-      searchParams.append("orderItems", params.orderItems.join(","));
-    if (params.state) searchParams.append("state", params.state.join(","));
+      searchParams.append('orderItems', params.orderItems.join(','));
+    if (params.state) searchParams.append('state', params.state.join(','));
 
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
 
-    if (params.costType) searchParams.append("costType", params.costType);
+    if (params.costType) searchParams.append('costType', params.costType);
 
     if (params.updateUserID)
-      searchParams.append("updateUserID", params.updateUserID);
+      searchParams.append('updateUserID', params.updateUserID);
 
-    if (params.address) searchParams.append("address", params.address);
+    if (params.address) searchParams.append('address', params.address);
 
-    if (params.updateDate) searchParams.append("updateDate", params.updateDate);
+    if (params.updateDate) searchParams.append('updateDate', params.updateDate);
 
     if (params.createUserID)
-      searchParams.append("createUserID", params.createUserID);
+      searchParams.append('createUserID', params.createUserID);
 
     if (params.shippingAddress)
-      searchParams.append("shippingAddress", params.shippingAddress);
+      searchParams.append('shippingAddress', params.shippingAddress);
 
     if (params.paymentMethod)
-      searchParams.append("paymentMethod", params.paymentMethod);
+      searchParams.append('paymentMethod', params.paymentMethod);
 
     if (params.paymentResult)
-      searchParams.append("paymentResult", params.paymentResult);
+      searchParams.append('paymentResult', params.paymentResult);
 
     if (params.taxPrice)
-      searchParams.append("taxPrice", params.taxPrice.toString());
+      searchParams.append('taxPrice', params.taxPrice.toString());
 
     if (params.shippingPrice)
-      searchParams.append("shippingPrice", params.shippingPrice.toString());
+      searchParams.append('shippingPrice', params.shippingPrice.toString());
 
     if (params.totalPrice)
-      searchParams.append("totalPrice", params.totalPrice.toString());
+      searchParams.append('totalPrice', params.totalPrice.toString());
 
-    if (params.isPaid) searchParams.append("isPaid", params.isPaid.toString());
+    if (params.isPaid) searchParams.append('isPaid', params.isPaid.toString());
 
-    if (params.paidAt) searchParams.append("paidAt", params.paidAt);
+    if (params.paidAt) searchParams.append('paidAt', params.paidAt);
 
     if (params.isDelivered)
-      searchParams.append("isDelivered", params.isDelivered.toString());
+      searchParams.append('isDelivered', params.isDelivered.toString());
 
     if (params.deliveredAt)
-      searchParams.append("deliveredAt", params.deliveredAt);
+      searchParams.append('deliveredAt', params.deliveredAt);
 
     if (params.orderNumber)
-      searchParams.append("orderNumber", params.orderNumber.toString());
+      searchParams.append('orderNumber', params.orderNumber.toString());
 
     url.search = searchParams.toString();
 
@@ -5268,13 +5523,97 @@ export const getFilteredOrders = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заказы");
+      return rejectWithValue('Не удалось загрузить заказы');
+    }
+  }
+);
+export const getFilteredOrdersParts = createAsyncThunk(
+  'common/getFilteredOrdersParts',
+  async (params: any, { rejectWithValue }) => {
+    const url = new URL(
+      `orders/getFilteredOrdersParts/companyID/${params.companyID}`,
+
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.createBySing)
+      searchParams.append('createBySing', params.createBySing);
+    if (params.vendorName) searchParams.append('vendorName', params.vendorName);
+    if (params.customer) searchParams.append('customer', params.customer);
+
+    if (params.orderType) searchParams.append('orderType', params.orderType);
+    if (params.partGroup)
+      searchParams.append('partGroup', params.partGroup.join(','));
+    if (params.partType)
+      searchParams.append('partType', params.partType.join(','));
+    if (params.orderCreateDate)
+      searchParams.append('orderCreateDate', params.orderCreateDate);
+
+    if (params.orderItems)
+      searchParams.append('orderItems', params.orderItems.join(','));
+    if (params.state) searchParams.append('state', params.state.join(','));
+
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
+
+    if (params.costType) searchParams.append('costType', params.costType);
+
+    if (params.updateUserID)
+      searchParams.append('updateUserID', params.updateUserID);
+
+    if (params.address) searchParams.append('address', params.address);
+
+    if (params.updateDate) searchParams.append('updateDate', params.updateDate);
+
+    if (params.createUserID)
+      searchParams.append('createUserID', params.createUserID);
+
+    if (params.shippingAddress)
+      searchParams.append('shippingAddress', params.shippingAddress);
+
+    if (params.paymentMethod)
+      searchParams.append('paymentMethod', params.paymentMethod);
+
+    if (params.paymentResult)
+      searchParams.append('paymentResult', params.paymentResult);
+
+    if (params.taxPrice)
+      searchParams.append('taxPrice', params.taxPrice.toString());
+
+    if (params.shippingPrice)
+      searchParams.append('shippingPrice', params.shippingPrice.toString());
+
+    if (params.totalPrice)
+      searchParams.append('totalPrice', params.totalPrice.toString());
+
+    if (params.isPaid) searchParams.append('isPaid', params.isPaid.toString());
+
+    if (params.paidAt) searchParams.append('paidAt', params.paidAt);
+
+    if (params.isDelivered)
+      searchParams.append('isDelivered', params.isDelivered.toString());
+
+    if (params.deliveredAt)
+      searchParams.append('deliveredAt', params.deliveredAt);
+
+    if (params.orderNumber)
+      searchParams.append('orderNumber', params.orderNumber.toString());
+
+    url.search = searchParams.toString();
+
+    try {
+      const response = await $authHost.get(url.toString());
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось загрузить заказы');
     }
   }
 );
 
 export const postNewReceiving = createAsyncThunk(
-  "common/postNewReceiving",
+  'common/postNewReceiving',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5283,12 +5622,12 @@ export const postNewReceiving = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 export const getFilteredReceivingItems = createAsyncThunk(
-  "common/getFilteredReceivingItems",
+  'common/getFilteredReceivingItems',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
       `receivingItem/getFilteredReceivingItem/companyID/${params.companyID}`,
@@ -5297,39 +5636,39 @@ export const getFilteredReceivingItems = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
 
-    if (params.vendorName) searchParams.append("vendorName", params.vendorName);
-    if (params.isReturned) searchParams.append("isReturned", params.isReturned);
+    if (params.vendorName) searchParams.append('vendorName', params.vendorName);
+    if (params.isReturned) searchParams.append('isReturned', params.isReturned);
     if (params.isCancelled)
-      searchParams.append("isCancelled", params.isCancelled);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
+      searchParams.append('isCancelled', params.isCancelled);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
     if (params.orderType)
-      searchParams.append("orderType", params.orderType.join(","));
-    if (params.label) searchParams.append("label", params.label);
+      searchParams.append('orderType', params.orderType.join(','));
+    if (params.label) searchParams.append('label', params.label);
 
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
-    if (params.store) searchParams.append("store", params.store);
-    if (params.location) searchParams.append("location", params.location);
-    if (params.updateDate) searchParams.append("updateDate", params.updateDate);
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
+    if (params.store) searchParams.append('store', params.store);
+    if (params.location) searchParams.append('location', params.location);
+    if (params.updateDate) searchParams.append('updateDate', params.updateDate);
     if (params.orderNumber)
-      searchParams.append("orderNumber", params.orderNumber.toString());
+      searchParams.append('orderNumber', params.orderNumber.toString());
     if (params.receiningItemNumber)
-      searchParams.append("receiningItemNumber", params.receiningItemNumber);
+      searchParams.append('receiningItemNumber', params.receiningItemNumber);
     if (params.batchNumber)
-      searchParams.append("batchNumber", params.batchNumber);
+      searchParams.append('batchNumber', params.batchNumber);
     if (params.serialNumber)
-      searchParams.append("serialNumber", params.serialNumber);
+      searchParams.append('serialNumber', params.serialNumber);
 
     if (params.receiningNumber)
-      searchParams.append("receiningNumber", params.receiningNumber);
+      searchParams.append('receiningNumber', params.receiningNumber);
 
-    if (params.store) searchParams.append("store", params.store);
-    if (params.station) searchParams.append("station", params.station);
+    if (params.store) searchParams.append('store', params.store);
+    if (params.station) searchParams.append('station', params.station);
     if (params.partGroup)
-      searchParams.append("partGroup", params.partGroup.join(","));
+      searchParams.append('partGroup', params.partGroup.join(','));
     if (params.partType)
-      searchParams.append("partType", params.partType.join(","));
-    if (params.receivedBy) searchParams.append("receivedBy", params.receivedBy);
+      searchParams.append('partType', params.partType.join(','));
+    if (params.receivedBy) searchParams.append('receivedBy', params.receivedBy);
     url.search = searchParams.toString();
 
     try {
@@ -5337,13 +5676,38 @@ export const getFilteredReceivingItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заказы");
+      return rejectWithValue('Не удалось загрузить заказы');
+    }
+  }
+);
+
+export const getFilteredReceiving = createAsyncThunk(
+  'common/ getFilteredReceiving',
+  async (params: any, { rejectWithValue }) => {
+    const url = new URL(
+      `receiving/getFilteredReceiving/companyID/${params.companyID}`,
+
+      API_URL
+    );
+    const searchParams = new URLSearchParams();
+
+    if (params.receivingNumber)
+      searchParams.append('receivingNumber', params.receivingNumber);
+
+    url.search = searchParams.toString();
+
+    try {
+      const response = await $authHost.get(url.toString());
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось загрузить заказы');
     }
   }
 );
 
 export const postNewReceivingItem = createAsyncThunk(
-  "common/postNewReceiving",
+  'common/postNewReceiving',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5352,12 +5716,12 @@ export const postNewReceivingItem = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 export const postNewStoreItem = createAsyncThunk(
-  "common/postNewStoreItem",
+  'common/postNewStoreItem',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5366,7 +5730,7 @@ export const postNewStoreItem = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
@@ -5399,7 +5763,7 @@ export const postNewStoreItem = createAsyncThunk(
 // );
 
 export const updateReceivingByNumber = createAsyncThunk(
-  "common/updateReceivingByNumber",
+  'common/updateReceivingByNumber',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.put(
@@ -5409,13 +5773,13 @@ export const updateReceivingByNumber = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось обновить");
+      return thunkAPI.rejectWithValue('Не удалось обновить');
     }
   }
 );
 
 export const updateManyReceivingItems = createAsyncThunk(
-  "common/updateManyReceivingItems",
+  'common/updateManyReceivingItems',
   async (data: any, { rejectWithValue }) => {
     try {
       const response = await $authHost.put(
@@ -5424,13 +5788,13 @@ export const updateManyReceivingItems = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось ");
+      return rejectWithValue('Не удалось ');
     }
   }
 );
 
 export const updatePartByID = createAsyncThunk(
-  "common/updatePart",
+  'common/updatePart',
   async (data: any, { rejectWithValue }) => {
     const id = data?.id;
     const companyID = data?.companyID;
@@ -5443,13 +5807,13 @@ export const updatePartByID = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("error");
+      return rejectWithValue('error');
     }
   }
 );
 
 export const postNewPart = createAsyncThunk(
-  "common/postNewPart",
+  'common/postNewPart',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5458,13 +5822,13 @@ export const postNewPart = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 
 export const updateAlternativePartByID = createAsyncThunk(
-  "common/updatePart",
+  'common/updatePart',
   async (data: any, { rejectWithValue }) => {
     const id = data?.id;
     const companyID = data?.companyID;
@@ -5477,12 +5841,12 @@ export const updateAlternativePartByID = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("error");
+      return rejectWithValue('error');
     }
   }
 );
 export const updateReceivingByID = createAsyncThunk(
-  "common/updateReceivingByID",
+  'common/updateReceivingByID',
   async (data: any, { rejectWithValue }) => {
     const id = data?.id;
     const companyID = data?.companyID;
@@ -5495,13 +5859,13 @@ export const updateReceivingByID = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("error");
+      return rejectWithValue('error');
     }
   }
 );
 
 export const getFilteredMaterialItemsExpiry = createAsyncThunk(
-  "common/getFilteredMaterialItemsExpiry",
+  'common/getFilteredMaterialItemsExpiry',
   async (params: getFilteredMaterialItems, { rejectWithValue }) => {
     const url = new URL(
       `/materialStore/getFilteredItemsExpiry/company/${params.companyID}`,
@@ -5509,21 +5873,21 @@ export const getFilteredMaterialItemsExpiry = createAsyncThunk(
     );
     const searchParams = new URLSearchParams();
     if (params.location)
-      searchParams.append("location", params.location.join(","));
-    if (params.isAllDate) searchParams.append("isAllExpDate", params.isAllDate);
+      searchParams.append('location', params.location.join(','));
+    if (params.isAllDate) searchParams.append('isAllExpDate', params.isAllDate);
 
-    if (params.localID) searchParams.append("localID", params.localID);
-    if (params.ID) searchParams.append("ID", params.ID);
+    if (params.localID) searchParams.append('localID', params.localID);
+    if (params.ID) searchParams.append('ID', params.ID);
     if (params.SERIAL_NUMBER)
-      searchParams.append("SERIAL_NUMBER", params.SERIAL_NUMBER);
+      searchParams.append('SERIAL_NUMBER', params.SERIAL_NUMBER);
     if (params.PART_NUMBER)
-      searchParams.append("PART_NUMBER", params.PART_NUMBER);
-    if (params.GROUP) searchParams.append("GROUP", params.GROUP.join(","));
-    if (params.TYPE) searchParams.append("TYPE", params.TYPE.join(","));
-    if (params.STOCK) searchParams.append("STOCK", params.STOCK);
-    if (params.status) searchParams.append("status", params.status.join(","));
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
+      searchParams.append('PART_NUMBER', params.PART_NUMBER);
+    if (params.GROUP) searchParams.append('GROUP', params.GROUP.join(','));
+    if (params.TYPE) searchParams.append('TYPE', params.TYPE.join(','));
+    if (params.STOCK) searchParams.append('STOCK', params.STOCK);
+    if (params.status) searchParams.append('status', params.status.join(','));
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
     url.search = searchParams.toString();
 
     try {
@@ -5532,13 +5896,13 @@ export const getFilteredMaterialItemsExpiry = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить MaterialOrders");
+      return rejectWithValue('Не удалось загрузить MaterialOrders');
     }
   }
 );
 
 export const postNewAlternativePart = createAsyncThunk(
-  "common/postNewAlternativePart",
+  'common/postNewAlternativePart',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5547,13 +5911,13 @@ export const postNewAlternativePart = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 
 export const deleteAlternativePartByID = createAsyncThunk(
-  "common/deleteAlternativePartByID",
+  'common/deleteAlternativePartByID',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.delete(
@@ -5568,7 +5932,7 @@ export const deleteAlternativePartByID = createAsyncThunk(
 );
 
 export const deleteMaterialStoreItemByID = createAsyncThunk(
-  "common/deleteMaterialStoreItemByID",
+  'common/deleteMaterialStoreItemByID',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.delete(
@@ -5585,21 +5949,21 @@ export const deleteMaterialStoreItemByID = createAsyncThunk(
 export const getBookingItem = createAsyncThunk<
   any,
   { id: string; data: IBookingItem }
->("booking/get", async ({ id, data }, thunkAPI) => {
+>('booking/get', async ({ id, data }, thunkAPI) => {
   try {
     const response = await $authHost.get(
       `/bookingItems/companyID/${data.companyID}/${id}`
     );
     return response.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue("Не удалось получить запись");
+    return thunkAPI.rejectWithValue('Не удалось получить запись');
   }
 });
 
 export const createBookingItem = createAsyncThunk<
   any,
   { companyID: string; data: IBookingItem }
->("booking/create", async (data, thunkAPI) => {
+>('booking/create', async (data, thunkAPI) => {
   try {
     const response = await $authHost.post(
       `/bookingItems/companyID/${data.companyID}/`,
@@ -5607,14 +5971,14 @@ export const createBookingItem = createAsyncThunk<
     );
     return response.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+    return thunkAPI.rejectWithValue('Не удалось создать новую запись');
   }
 });
 
 export const updateBookingItem = createAsyncThunk<
   any,
   { id: string; data: IBookingItem }
->("booking/update", async ({ id, data }, thunkAPI) => {
+>('booking/update', async ({ id, data }, thunkAPI) => {
   try {
     const response = await $authHost.put(
       `/bookingItems/companyID/${data.companyID}/${id}`,
@@ -5622,26 +5986,26 @@ export const updateBookingItem = createAsyncThunk<
     );
     return response.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue("Не удалось обновить запись");
+    return thunkAPI.rejectWithValue('Не удалось обновить запись');
   }
 });
 
 export const deleteBookingItem = createAsyncThunk<
   any,
   { id: string; data: IBookingItem }
->("booking/delete", async ({ id, data }, thunkAPI) => {
+>('booking/delete', async ({ id, data }, thunkAPI) => {
   try {
     const response = await $authHost.delete(
       `/bookingItems/companyID/${data.companyID}/${id}`
     );
     return response.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue("Не удалось удалить запись");
+    return thunkAPI.rejectWithValue('Не удалось удалить запись');
   }
 });
 
 export const getLocationDetails = createAsyncThunk(
-  "common/getLocationDetails",
+  'common/getLocationDetails',
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.post(
@@ -5651,13 +6015,13 @@ export const getLocationDetails = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Не удалось создать новую запись");
+      return thunkAPI.rejectWithValue('Не удалось создать новую запись');
     }
   }
 );
 
 export const getFilteredBookingItems = createAsyncThunk(
-  "common/getFilteredBookingItems",
+  'common/getFilteredBookingItems',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
       `bookingItems/getFilteredBookingItem/companyID/${params.companyID}`,
@@ -5665,43 +6029,45 @@ export const getFilteredBookingItems = createAsyncThunk(
       API_URL
     );
     const searchParams = new URLSearchParams();
-
-    if (params.workshop) searchParams.append("workshop", params.workshop);
-    if (params.isReturned) searchParams.append("isReturned", params.isReturned);
+    if (params.WOReferenceID)
+      searchParams.append('WOReferenceID', params.WOReferenceID);
+    if (params.neededOnID) searchParams.append('neededOnID', params.neededOnID);
+    if (params.workshop) searchParams.append('workshop', params.workshop);
+    if (params.isReturned) searchParams.append('isReturned', params.isReturned);
     if (params.isCancelled)
-      searchParams.append("isCancelled", params.isCancelled);
-    if (params.startDate) searchParams.append("startDate", params.startDate);
-    if (params.endDate) searchParams.append("endDate", params.endDate);
-    if (params.projectWO)
-      searchParams.append("projectWO", params.projectWO.join(","));
-    if (params.label) searchParams.append("label", params.label);
+      searchParams.append('isCancelled', params.isCancelled);
+    if (params.startDate) searchParams.append('startDate', params.startDate);
+    if (params.endDate) searchParams.append('endDate', params.endDate);
+    if (params.projectID)
+      searchParams.append('projectID', params.projectID.join(','));
+    if (params.label) searchParams.append('label', params.label);
 
-    if (params.partNumber) searchParams.append("partNumber", params.partNumber);
-    if (params.store) searchParams.append("store", params.store);
-    if (params.location) searchParams.append("location", params.location);
-    if (params.updateDate) searchParams.append("updateDate", params.updateDate);
+    if (params.partNumber) searchParams.append('partNumber', params.partNumber);
+    if (params.store) searchParams.append('store', params.store);
+    if (params.location) searchParams.append('location', params.location);
+    if (params.updateDate) searchParams.append('updateDate', params.updateDate);
     if (params.orderNumber)
-      searchParams.append("orderNumber", params.orderNumber.toString());
+      searchParams.append('orderNumber', params.orderNumber.toString());
     if (params.registrationNumber)
-      searchParams.append("registrationNumber", params.registrationNumber);
+      searchParams.append('registrationNumber', params.registrationNumber);
     if (params.batchNumber)
-      searchParams.append("batchNumber", params.batchNumber);
+      searchParams.append('batchNumber', params.batchNumber);
     if (params.serialNumber)
-      searchParams.append("serialNumber", params.serialNumber);
+      searchParams.append('serialNumber', params.serialNumber);
 
     if (params.projectTaskWO)
-      searchParams.append("projectTaskWO", params.projectTaskWO);
+      searchParams.append('projectTaskWO', params.projectTaskWO);
 
-    if (params.storeShop) searchParams.append("storeShop", params.storeShop);
-    if (params.store) searchParams.append("store", params.store);
-    if (params.station) searchParams.append("station", params.station);
+    if (params.storeShop) searchParams.append('storeShop', params.storeShop);
+    if (params.store) searchParams.append('store', params.store);
+    if (params.station) searchParams.append('station', params.station);
     if (params.partGroup)
-      searchParams.append("partGroup", params.partGroup.join(","));
+      searchParams.append('partGroup', params.partGroup.join(','));
     if (params.partType)
-      searchParams.append("partType", params.partType.join(","));
+      searchParams.append('partType', params.partType.join(','));
     if (params.voucherModel)
-      searchParams.append("voucherModel", params.voucherModel.join(","));
-    if (params.receivedBy) searchParams.append("receivedBy", params.receivedBy);
+      searchParams.append('voucherModel', params.voucherModel.join(','));
+    if (params.receivedBy) searchParams.append('receivedBy', params.receivedBy);
     url.search = searchParams.toString();
 
     try {
@@ -5709,7 +6075,7 @@ export const getFilteredBookingItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue("Не удалось загрузить заказы");
+      return rejectWithValue('Не удалось загрузить заказы');
     }
   }
 );

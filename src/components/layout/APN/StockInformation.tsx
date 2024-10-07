@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, FC } from 'react';
 import {
   Checkbox,
   Form,
@@ -9,66 +9,58 @@ import {
   Row,
   Space,
   Tabs,
-} from "antd";
-import { useNavigate } from "react-router-dom";
+} from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-import { RouteNames } from "@/router";
+import { RouteNames } from '@/router';
 
-import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined } from '@ant-design/icons';
 
-import TabPane, { TabPaneProps } from "antd/es/tabs/TabPane";
-import RequirementItems from "@/components/store/RequirementItems";
-import AplicationList from "@/components/store/materialAplications/MaterialAplicationList";
+import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
+
 import {
   getFilteredItemsStockQuantity,
   getFilteredStockDetails,
   getFilteredTransferStockItems,
   getFilteredUnserviseStockItems,
   getFilteredPartNumber,
-} from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import MaterialOrdersList from "@/components/store/matOrders/MaterialOrders";
-import { v4 as originalUuidv4 } from "uuid";
+} from '@/utils/api/thunks';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
 
-import MarerialOrderContent from "@/components/store/matOrders/MarerialOrderContent";
-import PickSlipsList from "@/components/store/pickSlip/PickSlips";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 import {
   ModalForm,
   ProCard,
   ProForm,
   ProFormCheckbox,
-} from "@ant-design/pro-components";
-import SearchSelect from "@/components/shared/form/SearchSelect";
-import FilterSiderForm from "@/components/shared/form/FilterSiderForm";
-import StockInfo from "@/components/store/search/stockInfo/StockInfo";
+} from '@ant-design/pro-components';
+import SearchSelect from '@/components/shared/form/SearchSelect';
+
+import StockInfo from '@/components/store/search/stockInfo/StockInfo';
 import {
   setFilteredCurrentStockItems,
   setSelectedFlterDate,
   setSelectedMaterial,
-} from "@/store/reducers/StoreLogisticSlice";
-import { getItem } from "@/services/utilites";
-import Title from "antd/es/typography/Title";
-import ContextMenuWrapper from "@/components/shared/ContextMenuWrapperProps";
-import AlternativeTable, { Aternative } from "../AlternativeTable";
-import ModalSearchContent from "@/components/store/matOrders/ModalContent";
-import EditableSearchTable from "@/components/shared/Table/EditableSearchTable";
-import MaterialItemStoreSearchNew from "@/components/store/search/MaterialItemStoreSearchFOrREq";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
+} from '@/store/reducers/StoreLogisticSlice';
+import { getItem } from '@/services/utilites';
+import Title from 'antd/es/typography/Title';
+import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
+import AlternativeTable, { Aternative } from '../AlternativeTable';
+
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 
 const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
 
 const StockInformstion: FC = () => {
   const [form] = Form.useForm();
   const [isReset, setIsReset] = useState(false);
-  const [activeKey, setActiveKey] = useState<string>(""); // Используйте строку вместо массива
+  const [activeKey, setActiveKey] = useState<string>(''); // Используйте строку вместо массива
   const [data, setData] = useState<any>(null);
   const { t } = useTranslation();
   const [dataPN, setDataPN] = useState<any>([]);
   const [selectedPN, setSelectedPN] = useState<any>(null);
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   const [group, setGroup] = useState<any>();
   const [isAltertative, setIsAltertative] = useState<any>(true);
   const [isAllDate, setIsAllDAte] = useState<any>(true);
@@ -79,12 +71,12 @@ const StockInformstion: FC = () => {
   const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
   const handleAdd = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    console.log("Добавить:", value);
+    console.log('Добавить:', value);
   };
 
   const handleAddPick = (target: EventTarget | null) => {
     const value = (target as HTMLDivElement).innerText;
-    console.log("Добавить Pick:", value);
+    console.log('Добавить Pick:', value);
   };
   const handleSearch = async (value: any) => {
     if (value) {
@@ -120,92 +112,36 @@ const StockInformstion: FC = () => {
     setIsReset(true); // затем обратно в true
     setIsReset(false); // сначала установите в false
   };
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
     getItem(
-      <>{t("STOCK INFORMATION (BAN:221)")}</>,
-      "sub1",
+      <>{t('STOCK INFORMATION (BAN:221)')}</>,
+      'sub1',
       <ShoppingCartOutlined />
     ),
     // ]
     // ),
   ];
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [alternativeValues, setAlternative] = useState<Aternative[]>([]);
-  const rootSubmenuKeys = ["-"];
-  const [openKeys, setOpenKeys] = useState(["06", "06-2"]);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>(["06"]);
 
-  const { isLoading, filteredMaterialOrders, filteredItemsStockQuantity } =
-    useTypedSelector((state) => state.storesLogistic);
   useEffect(() => {
-    const storedKeys = localStorage.getItem("selectedKeys");
+    const storedKeys = localStorage.getItem('selectedKeys');
     if (storedKeys) {
-      setSelectedKeys(JSON.parse(storedKeys));
-
       // navigate(storedKey);
     }
   }, []);
 
-  const handleClick = ({ selectedKeys }: { selectedKeys: string[] }) => {
-    setSelectedKeys(selectedKeys);
-    localStorage.setItem("selectedKeys", JSON.stringify(selectedKeys));
-  };
-
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-      setOpenKeys(keys);
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
-    }
-  };
   interface TabData extends TabPaneProps {
     key: string;
     title: string;
     content: React.ReactNode;
   }
-  const uuidv4: () => string = originalUuidv4;
-  const onRowClick = (record: any) => {
-    const tab: TabData = {
-      key: uuidv4(), // уникальный ключ для каждой вкладки
-      title: `PICKSLIP: ${record.materialAplicationNumber}`,
-      content: (
-        <ProCard className="flex justify-center items-center h-[79vh]">
-          <MarerialOrderContent order={record} />
-        </ProCard>
-      ),
-      closable: true,
-    };
-    if (!panes.find((pane) => pane.key === tab.key)) {
-      setPanes((prevPanes) => [...prevPanes, tab]);
-    }
-    setActiveKey(tab.key);
-  };
 
   const [panes, setPanes] = useState<TabData[]>([]);
   const [collapsed, setCollapsed] = useState(false);
-  const onEdit = (
-    targetKey:
-      | string
-      | React.MouseEvent<Element, MouseEvent>
-      | React.KeyboardEvent<Element>,
-    action: "add" | "remove"
-  ) => {
-    if (typeof targetKey === "string") {
-      if (action === "remove") {
-        const newPanes = panes.filter((pane) => pane.key !== targetKey);
-        setPanes(newPanes);
-        if (newPanes.length > 0) {
-          setActiveKey(newPanes[newPanes.length - 1].key);
-        }
-      }
-    } else {
-      // Обработка события мыши или клавиатуры
-    }
-  };
+
   const onMenuClick = ({ key }: { key: string }) => {
     if (key === RouteNames.MATERIAL_STORE) {
       const tab = {
@@ -214,12 +150,12 @@ const StockInformstion: FC = () => {
         content: (
           <>
             {!selectedPN ? (
-              <ProCard className="h-[79vh] overflow-hidden">
+              <ProCard className="h-[82vh] overflow-hidden">
                 <StockInfo selectedItem={selectedPN}></StockInfo>
               </ProCard>
             ) : (
               <>
-                <ProCard className="h-[79vh] overflow-hidden">
+                <ProCard className="h-[82vh] overflow-hidden">
                   <StockInfo selectedItem={selectedPN}></StockInfo>
                 </ProCard>
               </>
@@ -240,12 +176,12 @@ const StockInformstion: FC = () => {
   }, [data]); // Зависимость от data
 
   useEffect(() => {
-    if (localStorage.getItem("filteredPN")) {
-      setSelectedPN(localStorage.getItem("filteredPN"));
+    if (localStorage.getItem('filteredPN')) {
+      setSelectedPN(localStorage.getItem('filteredPN'));
     }
   }, []);
 
-  const [initialPN, setInitialPN] = useState("");
+  const [initialPN, setInitialPN] = useState('');
 
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
   const [updatetOrderMaterials, setUpdatedOrderMaterials] = useState(null);
@@ -257,8 +193,6 @@ const StockInformstion: FC = () => {
         style={{
           paddingBottom: 0,
           marginBottom: 0,
-          // marginLeft: 'auto',
-          // background: 'rgba(255, 255, 255, 0.2)',
         }}
         width={350}
         // trigger
@@ -268,11 +202,6 @@ const StockInformstion: FC = () => {
           setCollapsed(value)
         }
       >
-        {/* {!collapsed && (
-          <Title className="px-5" level={5}>
-            <>{t('STOCK INFORMATION (BAN:221)')}</>
-          </Title>
-        )} */}
         <Menu
           theme="light"
           className="pt-5"
@@ -286,15 +215,15 @@ const StockInformstion: FC = () => {
               size="small"
               onReset={() => {
                 setSelectedPN(null);
-                setInitialPN("");
+                setInitialPN('');
                 setIsReset(true);
               }}
               //</Sider>}}ЪЪ
               className="p-5"
               style={{
-                display: !collapsed ? "block" : "none",
-                width: "100%",
-                height: `${!collapsed ? "100%" : "35vh"}`,
+                display: !collapsed ? 'block' : 'none',
+                width: '100%',
+                height: `${!collapsed ? '100%' : '35vh'}`,
               }}
               form={form}
               onFinish={async (values: any) => {
@@ -303,7 +232,7 @@ const StockInformstion: FC = () => {
                   dispatch(setSelectedMaterial(selectedPN));
                   dispatch(setSelectedFlterDate(isAllDate));
 
-                  const companyID = localStorage.getItem("companyID");
+                  const companyID = localStorage.getItem('companyID');
 
                   const result = await dispatch(
                     getFilteredItemsStockQuantity({
@@ -314,7 +243,7 @@ const StockInformstion: FC = () => {
                     })
                   );
 
-                  if (result.meta.requestStatus === "fulfilled") {
+                  if (result.meta.requestStatus === 'fulfilled') {
                     const alternativeValues =
                       result.payload?.alternatives &&
                       result.payload?.alternatives.map(
@@ -323,32 +252,25 @@ const StockInformstion: FC = () => {
 
                     const resultFilteredStockDetails = await dispatch(
                       getFilteredStockDetails({
-                        companyID: companyID || "",
+                        companyID: companyID || '',
                         PART_NUMBER: selectedPN.PART_NUMBER,
                         alternatives: alternativeValues,
                         isAllDate: true,
                       })
                     );
-                    // const resultFilteredTransferDetails = await dispatch(
-                    //   getFilteredTransferStockItems({
-                    //     companyID: companyID || '',
-                    //     PART_NUMBER: selectedPN.PART_NUMBER,
-                    //     alternatives: alternativeValues,
-                    //     location: ['TRANSFER'],
-                    //   })
-                    // );
+
                     const resultFilteredUnserviceDetails = await dispatch(
                       getFilteredUnserviseStockItems({
-                        companyID: companyID || "",
+                        companyID: companyID || '',
                         PART_NUMBER: selectedPN.PART_NUMBER,
                         alternatives: alternativeValues,
-                        condition: "US/",
+                        condition: 'US/',
                       })
                     );
 
                     setDataPN(result.payload);
                     setAlternative(result.payload?.alternatives);
-                    localStorage.setItem("filteredPN", selectedPN.PART_NUMBER);
+                    localStorage.setItem('filteredPN', selectedPN.PART_NUMBER);
                   }
                 }
               }}
@@ -356,18 +278,18 @@ const StockInformstion: FC = () => {
               <Space>
                 <ProFormCheckbox.Group
                   className="my-0 py-0"
-                  initialValue={["true"]}
+                  initialValue={['true']}
                   labelAlign="left"
                   name="isAlternative"
                   fieldProps={{
                     onChange: (value) => setIsAltertative(value),
                   }}
                   options={[
-                    { label: `${t("Include Alternative")}`, value: "true" },
+                    { label: `${t('INCLUDE ALTERNATIVE')}`, value: 'true' },
                     // { label: 'Load all Exp. Dates', value: 'allDate' },
                   ].map((option) => ({
                     ...option,
-                    style: { display: "flex", flexWrap: "wrap" }, // Добавьте эту строку
+                    style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
                   }))}
                 />
                 <ProFormCheckbox.Group
@@ -378,27 +300,27 @@ const StockInformstion: FC = () => {
                   fieldProps={{
                     onChange: (value) => setIsAllDAte(value),
                   }}
-                  options={[
-                    { label: `${t("Load all Exp. Dates")}`, value: "true" },
-                  ].map((option) => ({
-                    ...option,
-                    style: { display: "flex", flexWrap: "wrap" }, // Добавьте эту строку
-                  }))}
+                  options={[{ label: `${t('ALL DATES')}`, value: 'true' }].map(
+                    (option) => ({
+                      ...option,
+                      style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+                    })
+                  )}
                 />
               </Space>
 
               <ContextMenuWrapper
                 items={[
                   {
-                    label: "Copy",
+                    label: 'Copy',
                     action: handleCopy,
                   },
                   {
-                    label: "Open with",
+                    label: 'Open with',
                     action: () => {},
                     submenu: [
-                      { label: "Part Tracking", action: handleAdd },
-                      { label: "PickSlip Request", action: handleAddPick },
+                      { label: 'PART TRACKING', action: handleAdd },
+                      { label: 'PICKSLIP REQUEST', action: handleAddPick },
                     ],
                   },
                 ]}
@@ -413,10 +335,10 @@ const StockInformstion: FC = () => {
                   optionLabel1="PART_NUMBER"
                   optionLabel2="DESCRIPTION"
                   onSelect={handleSelect}
-                  label={`${t("PART NUMBER")}`}
-                  tooltip={`${t("DOUBE CLICK OPEN PART NUMBER BOOK")}`}
+                  label={`${t('PART No')}`}
+                  tooltip={`${t('DOUBE CLICK OPEN PART No BOOK')}`}
                   rules={[]}
-                  name={"PART_NUMBER"}
+                  name={'PART_NUMBER'}
                 />
               </ContextMenuWrapper>
               <ProFormCheckbox.Group
@@ -426,14 +348,14 @@ const StockInformstion: FC = () => {
                   onChange: (value) => setGroup(value),
                 }}
                 options={[
-                  { label: "TOOL", value: "TOOL" },
-                  { label: "ROT", value: "ROT" },
-                  { label: "CONS", value: "CONS" },
-                  { label: "GSE", value: "GSE" },
-                  { label: "CHEM", value: "CHEM" },
+                  { label: `${t('TOOL')}`, value: 'TOOL' },
+                  { label: `${t('ROT')}`, value: 'ROT' },
+                  { label: `${t('CONS')}`, value: 'CONS' },
+                  { label: `${t('GSE')}`, value: 'GSE' },
+                  { label: `${t('CHEM')}`, value: 'CHEM' },
                 ].map((option) => ({
                   ...option,
-                  style: { display: "flex", flexWrap: "wrap" }, // Добавьте эту строку
+                  style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
                 }))}
               />
             </ProForm>
@@ -441,15 +363,15 @@ const StockInformstion: FC = () => {
               scrolly={59}
               data={alternativeValues}
               onRowClick={function (record: any, rowIndex?: any): void {
-                throw new Error("Function not implemented.");
+                throw new Error('Function not implemented.');
               }}
               onRowSingleClick={function (record: any, rowIndex?: any): void {
-                throw new Error("Function not implemented.");
+                throw new Error('Function not implemented.');
               }}
             ></AlternativeTable>
             <ModalForm
               // title={`Search on Store`}
-              width={"70vw"}
+              width={'70vw'}
               // placement={'bottom'}
               open={openStoreFindModal}
               // submitter={false}
@@ -460,11 +382,11 @@ const StockInformstion: FC = () => {
               ): Promise<void> {
                 setOpenStoreFind(false);
                 handleSelect(selectedSinglePN);
-                setInitialPN(selectedSinglePN?.PART_NUMBER || "");
+                setInitialPN(selectedSinglePN?.PART_NUMBER || '');
               }}
             >
               <PartNumberSearch
-                initialParams={{ partNumber: "" }}
+                initialParams={{ partNumber: '' }}
                 scroll={45}
                 onRowClick={function (record: any, rowIndex?: any): void {
                   setOpenStoreFind(false);
@@ -481,7 +403,7 @@ const StockInformstion: FC = () => {
         )}
       </Sider>
       <Content className="pl-4">
-        <ProCard className="h-[79vh] overflow-hidden">
+        <ProCard className="h-[82vh] overflow-hidden">
           <StockInfo selectedItem={selectedPN}></StockInfo>
         </ProCard>
       </Content>

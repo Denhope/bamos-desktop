@@ -1,30 +1,19 @@
 import {
   IActionType,
   IAdditionalTaskMTBCreate,
-} from "@/models/IAdditionalTaskMTB";
-import { IProjectResponce } from "@/models/IProject";
-import { IProjectTask } from "@/models/IProjectTaskMTB";
+} from '@/models/IAdditionalTaskMTB';
+import { IProjectResponce } from '@/models/IProject';
+import { IProjectTask } from '@/models/IProjectTaskMTB';
 import {
-  ICreateProjectGroup,
-  createNRCMTB,
-  createProjectGroup,
-  deleteGroupsByIds,
-  getFilteredAditionalTask,
   getFilteredAditionalTasks,
   getFilteredGroups,
   getFilteredGroupsTasks,
-  getFilteredProjectTasks,
   getFilteredProjects,
-  getFilteredRemoverdItems,
-  getFilteredRequirements,
   updateAdditionalTask,
   updateGroupByID,
   updateProjectAdditionalTasksByIds,
-  updateProjectTask,
-  updateProjectTaskActions,
-  updateProjectTasksByIds,
-} from "@/utils/api/thunks";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+} from '@/utils/api/thunks';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type MTBState = {
   projects: any[] | [];
@@ -69,7 +58,7 @@ export type IActiveActionProps = {
 };
 
 export const PlaneSlice = createSlice({
-  name: "projectTasks/mtb",
+  name: 'projectTasks/mtb',
   initialState,
   reducers: {
     setCurrentProject: (state, action: PayloadAction<IProjectResponce>) => {
@@ -176,7 +165,7 @@ export const PlaneSlice = createSlice({
       )
       .addCase(updateProjectAdditionalTasksByIds.rejected, (state, action) => {
         state.isLoading = false;
-        state.planesFetchError = action.error.message || "An error occurred";
+        state.planesFetchError = action.error.message || 'An error occurred';
         console.error(action.error);
       })
       .addCase(updateAdditionalTask.pending, (state) => {
@@ -197,9 +186,27 @@ export const PlaneSlice = createSlice({
       )
       .addCase(updateAdditionalTask.rejected, (state, action) => {
         state.isLoading = false;
-        state.planesFetchError = action.error.message || "An error occurred";
+        state.planesFetchError = action.error.message || 'An error occurred';
         console.error(action.error);
       })
+
+      .addCase(getFilteredGroups.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        getFilteredGroups.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.isLoading = false;
+          state.projectGroups = action.payload || [];
+          // Handle the fulfilled action as needed
+        }
+      )
+      .addCase(getFilteredGroups.rejected, (state, action) => {
+        state.isLoading = false;
+        state.planesFetchError = action.error.message || 'An error occurred';
+        console.error(action.error);
+      })
+
       // ... (other cases for updateGroupByID, deleteGroupsByIds, getFilteredGroupsTasks, getFilteredRemoverdItems, getFilteredGroups, createProjectGroup, updateProjectTasksByIds, and getFilteredAditionalTasks)
       .addCase(getFilteredAditionalTasks.pending, (state) => {
         state.isLoading = true;
@@ -213,9 +220,29 @@ export const PlaneSlice = createSlice({
       )
       .addCase(getFilteredAditionalTasks.rejected, (state, action) => {
         state.isLoading = false;
-        state.planesFetchError = action.error.message || "An error occurred";
+        state.planesFetchError = action.error.message || 'An error occurred';
         console.error(action.error);
       });
+
+    // getFilteredProjects
+    builder.addCase(getFilteredProjects.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      getFilteredProjects.fulfilled,
+      (state, action: PayloadAction<any[] | []>) => {
+        state.isLoading = false;
+        state.projects = action.payload || [];
+      }
+    );
+    builder.addCase(
+      getFilteredProjects.rejected,
+      (state, action: PayloadAction<any>) => {
+        state.planesFetchError = action.payload;
+        console.error(action.payload);
+        state.isLoading = false;
+      }
+    );
   },
 });
 

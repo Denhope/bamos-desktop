@@ -5,8 +5,13 @@ export interface IOrder {
   vendors?: any[];
   id?: string;
   companyID?: any;
+  projectWO?: any;
+  projectID?: any;
   _id?: string;
   orderNumber: any;
+  registrationNumber?: any;
+  customer?: any;
+  planeType?: any;
   orderName?: string;
   state?: TOrderStatus;
   adress?: string;
@@ -15,6 +20,7 @@ export interface IOrder {
   closeDate?: Date;
   type?: OrderType;
   orderType: OrderType;
+  orderId?: string;
   parts?: any[];
   сostType?: ActivityType;
   shipTo?: any;
@@ -25,6 +31,8 @@ export interface IOrder {
   projectNumbers?: any;
   startDate?: any;
   finishDate?: any;
+  orderItemsID?: any;
+  orderNumberNew?: any;
 }
 export type TOrderStatus =
   | 'ARRIVED'
@@ -43,7 +51,9 @@ export type TOrderStatus =
   | 'UNKNOWN'
   | 'RECEIVED'
   | 'CANCELLED'
-  | 'RECEIVED';
+  | 'RECEIVED'
+  | 'onQuatation'
+  | 'open';
 export type OrderType =
   | 'PURCHASE_ORDER'
   | 'REPAIR_ORDER'

@@ -1,11 +1,11 @@
-import TabContent from "@/components/shared/Table/TabContent";
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import StockGrid from "./StockGrid";
+import TabContent from '@/components/shared/Table/TabContent';
+import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import StockGrid from './StockGrid';
 
-import StockDetails from "./StockDetails";
-import StockUnServise from "./StockUnServise";
-import TransferDetailes from "./Trafer";
+import StockDetails from './StockDetails';
+import StockUnServise from './StockUnServise';
+import TransferDetailes from './Trafer';
 export interface IGroupTaskListPrors {
   stocks: any;
   totalQuantity?: number;
@@ -32,20 +32,16 @@ const StockTab: FC<IGroupTaskListPrors> = ({
                 ></StockGrid>
               </div>
             ),
-            title: `${t("STOCK INFO")}`,
+            title: `${t('STOCK INFO')}`,
           },
           {
-            content: <StockDetails></StockDetails>,
-            title: `${t("STOCK DETAIL")}`,
+            content: <StockDetails ></StockDetails>,
+            title: `${t('STOCK DETAIL')}`,
           },
 
-          // {
-          //   content: <TransferDetailes></TransferDetailes>,
-          //   title: `${t('TRANSFER')}`,
-          // },
           {
             content: <StockUnServise></StockUnServise>,
-            title: `${t("U/S")}`,
+            title: `${t('U/S')}`,
           },
         ]}
       />

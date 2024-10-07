@@ -7,21 +7,22 @@ import {
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
-} from "@ant-design/pro-components";
-import { Button, Col, Form, Modal, Row, Space, message } from "antd";
-import AlternativeTable from "@/components/layout/AlternativeTable";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@ant-design/pro-components';
+import { Button, Col, Form, Modal, Row, Space, message } from 'antd';
+import AlternativeTable from '@/components/layout/AlternativeTable';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   deleteAlternativePartByID,
   getFilteredAlternativePN,
   postNewAlternativePart,
   updateAlternativePartByID,
-} from "@/utils/api/thunks";
-import { EditOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import PartNumberSearch from "@/components/store/search/PartNumberSearch";
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import PartNumberSearch from '@/components/store/search/PartNumberSearch';
+import { USER_ID } from '@/utils/api/http';
+import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 type AlternatesFormType = {
   onEditPart?: (part?: any) => void;
   currentPart?: any;
@@ -31,7 +32,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
   const [form] = Form.useForm();
   const [formCreate] = Form.useForm();
   const [openCreateAlternate, setOpenCreateAlternate] = useState(false);
-  const companyID = localStorage.getItem("companyID") || "";
+  const companyID = localStorage.getItem('companyID') || '';
   const [isEditing, setIsEditing] = useState(true);
   const [isEditingView, setIsEditingView] = useState(false);
   const [groupTwoWays, setGroupTwoWays] = useState<any>(false);
@@ -39,11 +40,12 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
   const [currentAlternate, setCurrentAlternate] = useState<any>(null);
   const dispatch = useAppDispatch();
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
-  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
+  const [selectedSingleAlternativePN, setSecectedSingleAlternativePN] =
+    useState<any>();
   useEffect(() => {
     if (currentPart) {
       const fetchData = async () => {
-        const storedKeys = localStorage.getItem("selectedKeys");
+        const storedKeys = localStorage.getItem('selectedKeys');
         const result = await dispatch(
           getFilteredAlternativePN({
             companyID: companyID,
@@ -51,7 +53,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
           })
         );
 
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           setAlternates(result.payload);
           setCurrentAlternate(null);
         }
@@ -64,37 +66,37 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
   useEffect(() => {
     // if (currentAlternate) {
     form.setFields([
-      { name: "alternativeType", value: currentAlternate?.ALTERNATIVE_TYPE },
+      { name: 'alternativeType', value: currentAlternate?.ALTERNATIVE_TYPE },
       {
-        name: "alternative",
+        name: 'alternative',
         value:
           currentAlternate?.ALTERNATIVE || currentAlternate?.ALTERNATIVE_NUMBER,
       },
       {
-        name: "description",
+        name: 'description',
         value: currentAlternate?.ALTERNATIVE_DESCRIPTION,
       },
       {
-        name: "alternativeRemarks",
+        name: 'alternativeRemarks',
         value: currentAlternate?.ALTERNATIVE_REMARKS,
       },
       {
-        name: "createDate",
+        name: 'createDate',
         value: currentAlternate?.DATE_ENTERED || currentAlternate?.createDate,
       },
-      { name: "updateUserSing", value: currentAlternate?.updateUserSing },
+      { name: 'updateUserSing', value: currentAlternate?.updateUserSing },
       {
-        name: "updateDate",
+        name: 'updateDate',
         value: currentAlternate?.updateDate,
       },
-      { name: "createUserSing", value: currentAlternate?.createUserSing },
+      { name: 'createUserSing', value: currentAlternate?.createUserSing },
     ]);
     // }
   }, [currentAlternate]);
   useEffect(() => {
     if (currentPart) {
       formCreate.setFields([
-        { name: "partNumber", value: currentPart?.PART_NUMBER },
+        { name: 'partNumber', value: currentPart?.PART_NUMBER },
       ]);
     }
   }, [currentPart]);
@@ -112,6 +114,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
       setIsEditing(false);
     }
   }, [isEditingView]);
+  const [initialFormPN, setinitialFormPN] = useState<any>('');
   return (
     <div>
       <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-5">
@@ -143,36 +146,36 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                 }
                 className={`cursor-pointer transform transition px-3 ${
                   !currentAlternate
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:text-blue-500"
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:text-blue-500'
                 }`}
               >
                 <EditOutlined />
-                <div className="p-1 bg-neutral-100"> {t("ALTERNATES")}</div>
+                <div className="p-1 bg-neutral-100"> {t('ALTERNATES')}</div>
               </Space>
               <Space>
                 <PlusOutlined
                   onClick={() => setOpenCreateAlternate(true)}
                   className={`cursor-pointer transform transition px-3 ${
                     isEditingView || !currentPart
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:text-blue-500"
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:text-blue-500'
                   }`}
                 />
                 <DeleteOutlined
                   onClick={() => {
                     Modal.confirm({
-                      title: t("ARE YOU SURE YOU WANT TO DELETE?"),
+                      title: t('ARE YOU SURE YOU WANT TO DELETE?'),
                       onOk: async () => {
                         const currentCompanyID =
-                          localStorage.getItem("companyID") || "";
+                          localStorage.getItem('companyID') || '';
                         const result = await dispatch(
                           deleteAlternativePartByID({
                             companyID: currentCompanyID,
                             id: currentAlternate._id || currentAlternate.id,
                           })
                         );
-                        if (result.meta.requestStatus === "fulfilled") {
+                        if (result.meta.requestStatus === 'fulfilled') {
                           setAlternates((prevAlternates) =>
                             prevAlternates.filter(
                               (item) => item?._id !== currentAlternate?._id
@@ -187,7 +190,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                                 alternatine: currentPart?.PART_NUMBER,
                               })
                             );
-                            if (resultADD.meta.requestStatus === "fulfilled") {
+                            if (resultADD.meta.requestStatus === 'fulfilled') {
                               // console.log(resultADD.payload[0]);
                               const result = await dispatch(
                                 deleteAlternativePartByID({
@@ -196,11 +199,11 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                                 })
                               );
                               setCurrentAlternate(null);
-                              message.success("SUCCESS");
+                              message.success('SUCCESS');
                             }
                           } else {
                             setCurrentAlternate(null);
-                            message.success("SUCCESS");
+                            message.success('SUCCESS');
                           }
                         }
                       },
@@ -208,8 +211,8 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                   }}
                   className={`cursor-pointer transform transition px-3 ${
                     !currentAlternate || !isEditingView
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:text-blue-500"
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:text-blue-500'
                   }`}
                 />
               </Space>
@@ -218,23 +221,23 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
               <ProForm
                 onFinish={async (values) => {
                   const currentCompanyID =
-                    localStorage.getItem("companyID") || "";
+                    localStorage.getItem('companyID') || '';
                   if (isEditing) {
                     const result = await dispatch(
                       updateAlternativePartByID({
                         companyID: currentCompanyID,
                         id: currentAlternate._id,
                         updateDate: new Date(),
-                        updateUserID: USER_ID || "",
+                        updateUserID: USER_ID || '',
                         updateUserSing:
-                          localStorage.getItem("singNumber") || "",
+                          localStorage.getItem('singNumber') || '',
                         ALTERNATIVE_REMARKS: values?.alternativeRemarks,
                         ALTERNATIVE_DESCRIPTION: values?.description,
                         ALTERNATIVE: values?.alternative,
                         ALTERNATIVE_TYPE: values?.alternativeType,
                       })
                     );
-                    if (result.meta.requestStatus === "fulfilled") {
+                    if (result.meta.requestStatus === 'fulfilled') {
                       setCurrentAlternate(result.payload);
                       setAlternates(
                         alternates.map((item) =>
@@ -243,7 +246,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                             : item
                         )
                       );
-                      message.success("SUCCESS");
+                      message.success('SUCCESS');
                     }
                   }
                 }}
@@ -259,12 +262,12 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                               isEditing && setIsEditingView(!isEditingView);
                             }}
                           >
-                            {t("Cancel")}
+                            {t('Cancel')}
                           </Button>,
                         ]
                       : [],
                   submitButtonProps: {
-                    children: "Search",
+                    children: 'Search',
                   },
                 }}
                 size="small"
@@ -274,23 +277,23 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                   rules={[{ required: true }]}
                   name="alternativeType"
                   disabled={!isEditing}
-                  label={`${t("TYPE")}`}
+                  label={`${t('TYPE')}`}
                   width="sm"
-                  tooltip={`${t("SELECT ALTERNATIVE TYPE")}`}
-                  options={[{ value: "A", label: t("ALTERNATIVE PARTNUMBER") }]}
+                  tooltip={`${t('SELECT ALTERNATIVE TYPE')}`}
+                  options={[{ value: 'A', label: t('ALTERNATIVE PARTNUMBER') }]}
                 />
                 <ProFormText
-                  disabled={!isEditing}
+                  disabled
                   rules={[{ required: true }]}
                   name="alternative"
-                  label={t("ALTERNATE NUMBER")}
+                  label={t('ALTERNATE NUMBER')}
                   width="sm"
-                  tooltip={t("ALTERNATE NUMBER")}
+                  tooltip={t('ALTERNATE NUMBER')}
                 ></ProFormText>
                 <ProFormText
-                  disabled={!isEditing}
+                  disabled
                   rules={[{ required: true }]}
-                  label={t("DESCRIPTION")}
+                  label={t('DESCRIPTION')}
                   name="description"
                   width="lg"
                 ></ProFormText>
@@ -302,34 +305,34 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                     onChange: (value) => setGroupTwoWays(!groupTwoWays),
                   }}
                   options={[
-                    { label: "TWO WAYS INTERCHANGEBILITY", value: "group" },
+                    { label: 'TWO WAYS INTERCHANGEBILITY', value: 'group' },
                   ].map((option) => ({
                     ...option,
-                    style: { display: "flex", flexWrap: "wrap" }, // Добавьте эту строку
+                    style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
                   }))}
                 />
                 <ProFormTextArea
                   disabled={!isEditing}
-                  fieldProps={{ style: { resize: "none" } }}
+                  fieldProps={{ style: { resize: 'none' } }}
                   colSize={2}
-                  label={t("REMARKS")}
+                  label={t('REMARKS')}
                   name="alternativeRemarks"
                   width="lg"
-                  tooltip={t("PURCHASE REMARKS")}
+                  tooltip={t('PURCHASE REMARKS')}
                 ></ProFormTextArea>
 
                 <ProFormGroup>
                   <ProFormText
                     disabled
                     // rules={[{ required: true }]}
-                    label={t("UPDATE BY")}
+                    label={t('UPDATE BY')}
                     name="updateUserSing"
                     width="xs"
                   ></ProFormText>
                   <ProFormDatePicker
                     disabled
                     name="updateDate"
-                    label={t("ON")}
+                    label={t('ON')}
                     width="sm"
                   ></ProFormDatePicker>
                 </ProFormGroup>
@@ -337,14 +340,14 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                   <ProFormText
                     disabled
                     // rules={[{ required: true }]}
-                    label={t("CREATE BY")}
+                    label={t('CREATE BY')}
                     name="createUserSing"
                     width="xs"
-                  ></ProFormText>{" "}
+                  ></ProFormText>{' '}
                   <ProFormDatePicker
                     disabled
                     name="createDate"
-                    label={t("ON")}
+                    label={t('ON')}
                     width="sm"
                   ></ProFormDatePicker>
                 </ProFormGroup>
@@ -353,20 +356,21 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
           </Space>
         </Col>
         <ModalForm
+          layout="horizontal"
           form={formCreate}
           size="small"
           onFinish={async (values) => {
-            const currentCompanyID = localStorage.getItem("companyID") || "";
+            const currentCompanyID = localStorage.getItem('companyID') || '';
             if (openCreateAlternate) {
               const result = await dispatch(
                 postNewAlternativePart({
                   companyID: currentCompanyID,
                   createDate: new Date(),
-                  createUserID: USER_ID || "",
-                  createUserSing: localStorage.getItem("singNumber") || "",
+                  createUserID: USER_ID || '',
+                  createUserSing: localStorage.getItem('singNumber') || '',
                   ALTERNATIVE_REMARKS: values?.alternativeRemarks,
                   ALTERNATIVE_DESCRIPTION: values?.description,
-                  ALTERNATIVE: values?.alternative,
+                  ALTERNATIVE: selectedSingleAlternativePN?.PART_NUMBER,
                   ALTERNATIVE_TYPE: values?.alternativeType,
                   PART_NUMBER: currentPart?.PART_NUMBER,
                   DESCRIPTION: currentPart?.DESCRIPTION,
@@ -376,19 +380,19 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                   ISTWOWAYS: groupTwoWays,
                 })
               );
-              if (result.meta.requestStatus === "fulfilled") {
+              if (result.meta.requestStatus === 'fulfilled') {
                 if (groupTwoWays) {
                   const resultAdd = await dispatch(
                     postNewAlternativePart({
                       companyID: currentCompanyID,
                       createDate: new Date(),
-                      createUserID: USER_ID || "",
-                      createUserSing: localStorage.getItem("singNumber") || "",
+                      createUserID: USER_ID || '',
+                      createUserSing: localStorage.getItem('singNumber') || '',
                       ALTERNATIVE_REMARKS: currentPart?.PART_REMARKS,
                       ALTERNATIVE_DESCRIPTION: currentPart?.DESCRIPTION,
                       ALTERNATIVE: currentPart?.PART_NUMBER,
                       ALTERNATIVE_TYPE: values?.alternativeType,
-                      PART_NUMBER: values?.alternative,
+                      PART_NUMBER: selectedSingleAlternativePN?.PART_NUMBER,
                       DESCRIPTION: values?.description,
                       TYPE: currentPart.TYPE,
                       GROUP: currentPart.GROUP,
@@ -402,13 +406,14 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
                   ...prevAlternates,
                   result.payload,
                 ]);
-                message.success("SUCCESS");
+                message.success('SUCCESS');
+                setOpenCreateAlternate(false);
               }
             }
           }}
-          title={`${t("ADD NEW ALTERNATE")}`}
+          title={`${t('ADD NEW ALTERNATE')}`}
           open={openCreateAlternate}
-          width={"40vw"}
+          width={'40vw'}
           onOpenChange={setOpenCreateAlternate}
         >
           <ProFormText
@@ -416,34 +421,49 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
             disabled
             rules={[{ required: true }]}
             name="partNumber"
-            label={t("PART NUMBER")}
+            label={t('PART No')}
             width="sm"
-            tooltip={t("PART NUMBER")}
+            tooltip={t('PART No')}
           ></ProFormText>
           <ProFormSelect
             // initialValue={['A']}
             rules={[{ required: true }]}
             name="alternativeType"
-            label={`${t("TYPE")}`}
+            label={`${t('TYPE')}`}
             width="sm"
-            tooltip={`${t("SELECT ALTERNATIVE TYPE")}`}
-            options={[{ value: "A", label: t("ALTERNATIVE PARTNUMBER") }]}
+            tooltip={`${t('SELECT ALTERNATIVE TYPE')}`}
+            options={[{ value: 'A', label: t('ALTERNATIVE PARTNUMBER') }]}
           />
-          <ProFormText
+          {/* <ProFormText
             rules={[{ required: true }]}
             name="alternative"
-            label={t("ALTERNATE NUMBER")}
+            label={t('ALTERNATE NUMBER')}
             width="sm"
-            tooltip={t("DOUBLE CLICK OPEN PARTlIST")}
+            tooltip={t('DOUBLE CLICK OPEN PARTlIST')}
             fieldProps={{
               onDoubleClick: () => {
                 setOpenStoreFind(true);
               },
             }}
-          ></ProFormText>
+          ></ProFormText> */}
+          <ContextMenuPNSearchSelect
+            label={t('PART No')}
+            // isResetForm={isResetForm}
+            rules={[{ required: true }]}
+            onSelectedPN={function (PN: any): void {
+              setSecectedSingleAlternativePN(PN),
+                // form.setFields([{ name: 'partNumber', value: PN.PART_NUMBER }]);
+                formCreate.setFields([
+                  { name: 'description', value: PN.DESCRIPTION },
+                ]);
+            }}
+            name={'alternative'}
+            initialFormPN={initialFormPN}
+            width={'sm'}
+          ></ContextMenuPNSearchSelect>
           <ProFormText
             rules={[{ required: true }]}
-            label={t("DESCRIPTION")}
+            label={t('DESCRIPTION')}
             name="description"
             width="xl"
           ></ProFormText>
@@ -452,7 +472,7 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
             name="GROUP"
             fieldProps={{
               onChange: (value) => {
-                if (value.includes("group")) {
+                if (value.includes('group')) {
                   setGroupTwoWays(true);
                 } else {
                   setGroupTwoWays(false);
@@ -460,24 +480,24 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
               },
             }}
             options={[
-              { label: "TWO WAYS INTERCHANGEBILITY", value: "group" },
+              { label: 'TWO WAYS INTERCHANGEBILITY', value: 'group' },
             ].map((option) => ({
               ...option,
-              style: { display: "flex", flexWrap: "wrap" }, // Добавьте эту строку
+              style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
             }))}
           />
           <ProFormTextArea
-            fieldProps={{ style: { resize: "none" } }}
+            fieldProps={{ style: { resize: 'none' } }}
             colSize={2}
-            label={t("REMARKS")}
+            label={t('REMARKS')}
             name="alternativeRemarks"
             width="lg"
-            tooltip={t("PURCHASE REMARKS")}
+            tooltip={t('PURCHASE REMARKS')}
           ></ProFormTextArea>
         </ModalForm>
-        <ModalForm
+        {/* <ModalForm
           // title={`Search on Store`}
-          width={"70vw"}
+          width={'70vw'}
           // placement={'bottom'}
           open={openStoreFindModal}
           // submitter={false}
@@ -489,22 +509,22 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
             setOpenStoreFind(false);
 
             form.setFields([
-              { name: "partNumber", value: selectedSinglePN.PART_NUMBER },
-              { name: "description", value: record.DESCRIPTION },
+              { name: 'partNumber', value: selectedSinglePN.PART_NUMBER },
+              { name: 'description', value: record.DESCRIPTION },
             ]);
           }}
         >
           <PartNumberSearch
-            initialParams={{ partNumber: "" }}
+            initialParams={{ partNumber: '' }}
             scroll={45}
             onRowClick={function (record: any, rowIndex?: any): void {
               setOpenStoreFind(false);
 
               formCreate.setFields([
-                { name: "alternative", value: record.PART_NUMBER },
+                { name: 'alternative', value: record.PART_NUMBER },
               ]);
               formCreate.setFields([
-                { name: "description", value: record.DESCRIPTION },
+                { name: 'description', value: record.DESCRIPTION },
               ]);
             }}
             isLoading={false}
@@ -512,14 +532,14 @@ const Alternates: FC<AlternatesFormType> = ({ currentPart }) => {
               setSecectedSinglePN(record);
 
               formCreate.setFields([
-                { name: "alternative", value: record.PART_NUMBER },
+                { name: 'alternative', value: record.PART_NUMBER },
               ]);
               formCreate.setFields([
-                { name: "description", value: record.DESCRIPTION },
+                { name: 'description', value: record.DESCRIPTION },
               ]);
             }}
           />
-        </ModalForm>
+        </ModalForm> */}
       </Row>
     </div>
   );
