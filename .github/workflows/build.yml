@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - "**.md"
       - "**.spec.js"
-      - ".idea"s
+      - ".idea"
       - ".vscode"
       - ".dockerignore"
       - "Dockerfile"
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout Code
