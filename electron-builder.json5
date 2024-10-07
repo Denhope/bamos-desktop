@@ -4,8 +4,19 @@
   directories: {
     output: 'release/${version}',
   },
-  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
-  files: ['dist-electron', 'dist'],
+  asarUnpack: [
+    'node_modules/pdfmake/build/vfs_fonts.js',
+    'node_modules/canvas/build/Release/*.node'
+  ],
+  files: [
+    'dist-electron',
+    'dist',
+    {
+      from: 'node_modules/canvas/build/Release/',
+      to: 'node_modules/canvas/build/Release/',
+      filter: ['*.node']
+    }
+  ],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
     target: ['dmg', 'zip'],
@@ -30,4 +41,6 @@
     channel: 'latest',
     url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.49/',
   },
+  npmRebuild: false,
+  nodeGypRebuild: false
 }
