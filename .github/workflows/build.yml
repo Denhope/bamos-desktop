@@ -38,11 +38,12 @@ jobs:
           npm install --legacy-peer-deps --no-audit --no-fund --force
       
       - name: Increase memory limit
-        run: export NODE_OPTIONS="--max-old-space-size=8192"
+        
 
       - name: Build Release Files
         run: npm run build
         env:
+          NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: false
 
