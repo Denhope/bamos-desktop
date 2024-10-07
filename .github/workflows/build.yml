@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [feature/formatedImputs]
+    branches: [feature/formatedInputs]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
