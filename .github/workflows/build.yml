@@ -39,10 +39,11 @@ jobs:
 
       - name: Build Release Files
         run: |
-          node --max-old-space-size=8192 ./node_modules/.bin/vite build || true
+          npx --no-install vite build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: false
+          NODE_OPTIONS: --max-old-space-size=8192
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
