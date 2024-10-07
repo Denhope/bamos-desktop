@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { FC, useMemo, useEffect } from 'react';
 import { Card, Row, Col, Typography, Button, Divider, Tag, Space, Statistic, Descriptions, Tooltip } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';

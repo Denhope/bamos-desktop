@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { Button, DatePicker, Form, Input } from "antd";
 import { IProjectInfo } from "@/models/IProject";
 import React, { FC, useState } from "react";

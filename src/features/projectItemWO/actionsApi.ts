@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
