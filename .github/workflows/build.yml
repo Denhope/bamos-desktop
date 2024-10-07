@@ -1,3 +1,26 @@
+Skip to content
+Navigation Menu
+Denhope
+/
+bamos-desktop
+
+Type / to search
+Code
+Issues
+Pull requests
+3
+Actions
+Projects
+Security
+4
+Insights
+Settings
+Build
+fix:fix #34
+Jobs
+Run details
+Workflow file for this run
+.github/workflows/build.yml at 8add525
 name: Build
 
 on:
@@ -34,13 +57,15 @@ jobs:
       - name: Clear npm cache
         run: npm cache clean --force
 
-    
-
-     - name: Install Dependencies
+      - name: Install Dependencies
         run: |
           npm install --no-audit --no-fund || true
           npm run postinstall || true
-
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install gtk-runtime
+          choco install libjpeg-turbo
       - name: Build
         run: npm run build || true
         env:
@@ -48,7 +73,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
 
-      
+      - name: Check for build artifacts
+        run: |
+          if [ -d "release" ]; then
+            echo "Build artifacts found"
+          else
+            echo "No build artifacts found, but continuing anyway"
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         if: always()
@@ -56,3 +87,4 @@ jobs:
           name: release_on_${{ matrix.os }}
           path: release
           retention-days: 5
+fix:fix · Denhope/bamos-desktop@8add525 
