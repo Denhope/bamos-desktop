@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          npm run postinstall
+          npm run rebuild-canvas
 
       - name: Build
         run: npm run build
