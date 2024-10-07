@@ -11,7 +11,7 @@
   "type": "module",
   "main": "dist-electron/main/index.js",
   "scripts": {
-    "build": "tsc && vite build && electron-builder --config electron-builder.json5 --publish never",
+    "build": "tsc && vite build && electron-builder",
     "dev": "vite",
     
     "preview": "vite preview",
