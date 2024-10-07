@@ -87,4 +87,3 @@ jobs:
           name: release_on_${{ matrix.os }}
           path: release
           retention-days: 5
-fix:fix · Denhope/bamos-desktop@8add525 
