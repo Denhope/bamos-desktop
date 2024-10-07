@@ -1,0 +1,19 @@
+diff --git a/binding.gyp b/binding.gyp
+index 123456..789012 100644
+--- a/binding.gyp
++++ b/binding.gyp
+@@ -16,10 +16,10 @@
+       ],
+       'conditions': [
+         ['OS=="win"', {
+-          'libraries': [ '-l<(GTK_Root)/lib/cairo.lib' ],
++          'libraries': [ '-l<(module_root_dir)/build/Release/cairo.lib' ],
+           'include_dirs': [
+-            '<(GTK_Root)/include',
++            '<(module_root_dir)/deps/include',
+           ],
+         }]
+       ]
+     }
+   ]
+}

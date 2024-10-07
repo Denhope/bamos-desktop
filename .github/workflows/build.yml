@@ -2,11 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [feature/formatedInputs]
+    branches: [feature/formatedImputs]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
-      - ".idea"
+      - ".idea"s
       - ".vscode"
       - ".dockerignore"
       - "Dockerfile"
@@ -32,9 +32,13 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest'
         run: |
-          npm install
-          npm run rebuild-canvas
+          choco install gtk-runtime
+          choco install libjpeg-turbo
 
       - name: Build
         run: npm run build
