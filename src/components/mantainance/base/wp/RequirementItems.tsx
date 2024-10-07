@@ -329,7 +329,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
         inStockReserve: { text: t('RESERVATION'), status: 'Success' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
+        closed: { text: t('CLOSE'), status: 'Default' },
         canceled: { text: t('CANCELED'), status: 'Error' },
         onOrder: { text: t('ISSUED'), status: 'Processing' },
       },
@@ -495,7 +495,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
       key: 'nameOfMaterial',
       responsive: ['sm'],
       // width: '19%',
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true,
       renderFormItem: (item2, { onChange }) => {
         return (
@@ -682,7 +682,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     //   width: '6%',
     //   key: 'cascader',
     //   dataIndex: 'cascader',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
 
     //   fieldProps: {
@@ -721,7 +721,7 @@ const RequirementItems: FC<FilteredRequirementItemsListPropsType> = ({
     //   key: 'rewiewStatus',
     //   width: '8%',
     //   valueType: 'select',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
     //   // initialValue: 'all',
     //   filters: true,

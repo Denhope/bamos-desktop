@@ -1,13 +1,13 @@
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import React, { FC, useEffect, useState } from "react";
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import React, { FC, useEffect, useState } from 'react';
 
-import TabContent from "@/components/shared/Table/TabContent";
-import WOPerfomedForm from "@/components/mantainance/base/wp/activeTask/steps/WOPerfomedForm";
-import WOInspectionForm from "@/components/mantainance/base/wp/activeTask/close/WOInspectionForm";
-import WODInspectionForm from "@/components/mantainance/base/wp/activeTask/steps/WODInspectionForm";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import WOActionDescriptionList from "./steps/WOActions";
-import { getFilteredProjectTask } from "@/utils/api/thunks";
+import TabContent from '@/components/shared/Table/TabContent';
+import WOPerfomedForm from '@/components/mantainance/base/wp/activeTask/steps/WOPerfomedForm';
+import WOInspectionForm from '@/components/mantainance/base/wp/activeTask/close/WOInspectionForm';
+import WODInspectionForm from '@/components/mantainance/base/wp/activeTask/steps/WODInspectionForm';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import WOActionDescriptionList from './steps/WOActions';
+import { getFilteredProjectTask } from '@/utils/api/thunks';
 type StepsContentProps = {
   task: IProjectTask | null;
   upData: (record: any) => void;
@@ -40,11 +40,11 @@ const StepsContent: FC<StepsContentProps> = ({ task, upData }) => {
                   currentAction={currentAction}
                   isLoading={isLoading}
                   projectTasks={projectTasks}
-                  disabled={task ? task.status !== "inProgress" : false}
+                  disabled={task ? task.status !== 'inProgress' : false}
                   onFinish={upData}
                 />
               ),
-              title: "PERFOMED",
+              title: 'PERFOMED',
             },
             {
               content: (
@@ -57,11 +57,11 @@ const StepsContent: FC<StepsContentProps> = ({ task, upData }) => {
                   onFinish={upData}
                   disabled={
                     !(currentAction && currentAction.performedName) ||
-                    (task ? task.status !== "inProgress" : false)
+                    (task ? task.status !== 'inProgress' : false)
                   }
                 />
               ),
-              title: "INSPECTED",
+              title: 'INSPECTION',
             },
             {
               content: (
@@ -70,7 +70,7 @@ const StepsContent: FC<StepsContentProps> = ({ task, upData }) => {
                     !(currentAction && currentAction.performedName) ||
                     !(currentAction && currentAction.inspectedName) ||
                     !task?.isDoubleInspectionRequired ||
-                    (task ? task.status !== "inProgress" : false)
+                    (task ? task.status !== 'inProgress' : false)
                   }
                   currentProjectTask={task}
                   currentActiveIndex={currentActiveIndex}
@@ -80,7 +80,7 @@ const StepsContent: FC<StepsContentProps> = ({ task, upData }) => {
                   onFinish={upData}
                 />
               ),
-              title: "DIINSPECTED",
+              title: 'DIINSPECTION',
             },
           ]}
         />

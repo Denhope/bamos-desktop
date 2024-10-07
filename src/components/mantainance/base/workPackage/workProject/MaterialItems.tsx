@@ -1,23 +1,23 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { MenuProps, message } from "antd";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import React, { FC, useEffect, useState } from "react";
-import { exportToExcel } from "@/services/utilites";
-import { IMatData } from "@/types/TypesData";
+import { ProColumns } from '@ant-design/pro-components';
+import { MenuProps, message } from 'antd';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import React, { FC, useEffect, useState } from 'react';
+import { exportToExcel } from '@/services/utilites';
+import { IMatData } from '@/types/TypesData';
 import {
   DownloadOutlined,
   PrinterOutlined,
   PlusOutlined,
-} from "@ant-design/icons";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { AplicationResponce } from "@/store/reducers/WPGenerationSlise";
+} from '@ant-design/icons';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { AplicationResponce } from '@/store/reducers/WPGenerationSlise';
 import {
   createRequirement,
   findMaterialsByTaskNumbers,
-} from "@/utils/api/thunks";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useTranslation } from "react-i18next";
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useTranslation } from 'react-i18next';
+import { USER_ID } from '@/utils/api/http';
 type FilteredTasksListPropsType = {
   data: any;
   projectData: any;
@@ -63,7 +63,7 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
   const dispatch = useAppDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
@@ -71,7 +71,7 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
             taskDTO: data.tasks || data || [],
           })
         );
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           // console.log(result.payload);
 
           setMaterials(result.payload.materials);
@@ -82,10 +82,10 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
   }, [dispatch, data]);
   const initialColumns: ProColumns<IMatData>[] = [
     {
-      title: "Index",
-      dataIndex: "id",
-      valueType: "index",
-      width: "5%",
+      title: 'Index',
+      dataIndex: 'id',
+      valueType: 'index',
+      width: '5%',
 
       editable: (text, record, index) => {
         return false;
@@ -93,58 +93,58 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
       // sorter: (a, b) => (a.id || 0) - (b.id || 0),
     },
     {
-      title: "Task Nbr",
-      key: "taskNumber",
-      width: "10%",
+      title: 'Task Nbr',
+      key: 'taskNumber',
+      width: '10%',
 
-      dataIndex: "taskNumber",
+      dataIndex: 'taskNumber',
     },
     {
-      title: "Код",
-      dataIndex: "code",
-      key: "code",
+      title: 'Код',
+      dataIndex: 'code',
+      key: 'code',
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
-    { title: `${t("PN")}`, dataIndex: "PN", key: "PN", responsive: ["sm"] },
+    { title: `${t('PN')}`, dataIndex: 'PN', key: 'PN', responsive: ['sm'] },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "nameOfMaterial",
-      key: "nameOfMaterial",
-      responsive: ["sm"],
-      tip: "Text Show",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'nameOfMaterial',
+      key: 'nameOfMaterial',
+      responsive: ['sm'],
+      tooltip: 'Text Show',
       ellipsis: true,
     },
     {
-      title: `${t("ALTERNATIVE")}`,
-      dataIndex: "alternative",
-      key: "alternative",
-      responsive: ["sm"],
+      title: `${t('ALTERNATIVE')}`,
+      dataIndex: 'alternative',
+      key: 'alternative',
+      responsive: ['sm'],
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "amout",
-      key: "amout",
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'amout',
+      key: 'amout',
       // sorter: (a, b) => a.amout - b.amout,
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
     {
-      title: `${t("UNIT")}`,
-      dataIndex: "unit",
-      key: "unit",
-      responsive: ["sm"],
+      title: `${t('UNIT')}`,
+      dataIndex: 'unit',
+      key: 'unit',
+      responsive: ['sm'],
       // sorter: (a, b) => a.unit.length - b.unit.length,
     },
   ];
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -155,19 +155,19 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
     } as MenuItem;
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Actions")}`,
-      key: "actions",
+      label: `${t('Actions')}`,
+      key: 'actions',
       icon: null,
       children: [
-        getItem("Add Items to Requirements", "sub5", <PlusOutlined />, [
+        getItem('Add Items to Requirements', 'sub5', <PlusOutlined />, [
           getItem(
             <div
               onClick={async () => {
                 const selectedCount = selectedRowKeys && selectedRowKeys.length;
                 if (selectedCount < 1) {
-                  message.error("Please select  Items.");
+                  message.error('Please select  Items.');
                   return;
                 }
                 const result = await dispatch(
@@ -176,21 +176,21 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
                     projectID: projectData._id,
                     companyID: projectData.companyID,
                     createDate: new Date(),
-                    createUserID: USER_ID || "",
-                    status: "onCheack",
-                    cascader: ["ed", "check"],
-                    rewiewStatus: "waiting",
+                    createUserID: USER_ID || '',
+                    status: 'onCheack',
+                    cascader: ['ed', 'check'],
+                    rewiewStatus: 'waiting',
                     issuedQuantity: 0,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
-                  message.success("Selected Requirements created");
+                if (result.meta.requestStatus === 'fulfilled') {
+                  message.success('Selected Requirements created');
                 }
               }}
             >
               Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -201,43 +201,43 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
                     projectID: projectData._id,
                     companyID: projectData.companyID,
                     createDate: new Date(),
-                    createUserID: USER_ID || "",
-                    status: "onCheack",
-                    cascader: ["ed", "check"],
-                    rewiewStatus: "waiting",
+                    createUserID: USER_ID || '',
+                    status: 'onCheack',
+                    cascader: ['ed', 'check'],
+                    rewiewStatus: 'waiting',
                     issuedQuantity: 0,
                   })
                 );
-                if (result.meta.requestStatus === "fulfilled") {
-                  message.success("All Requirements created");
+                if (result.meta.requestStatus === 'fulfilled') {
+                  message.success('All Requirements created');
                 }
               }}
             >
               All Items
             </div>,
-            "5.12"
+            '5.12'
           ),
         ]),
       ],
     },
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -254,7 +254,7 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -271,7 +271,7 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -296,7 +296,7 @@ const MaterialItems: FC<FilteredTasksListPropsType> = ({
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onVisibleColumnsChange={handleVisibleColumnsChange}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       {/* )} */}

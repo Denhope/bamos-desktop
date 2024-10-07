@@ -44,7 +44,7 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
         className="bg-white px-4 py-3 rounded-md border-gray-400"
         size="small"
         layout="horizontal"
-        labelCol={{ span: 12 }}
+        // labelCol={{ span: 12 }}
         formRef={formRef}
         form={form}
         onFinish={async (values) => {
@@ -83,13 +83,12 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
           width="sm"
           tooltip={t('PROJECT TYPE')}
           valueEnum={{
-            MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C '),
-            REPAIR_AC_PROJECT: t('REPAIR A/C '),
-            REPAIR_COMPONENT_PROJECT: t('REPAIR COMPONENT '),
-            SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE '),
-            COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR '),
-            PRODUCTION_PROJECT: t('PRODUCTION '),
-            PURCHASE_PROJECT: t('PURCHASE '),
+            MAINTENANCE_AC_PROJECT: t('MAINTENANCE A/C'),
+            REPAIR_AC_PROJECT: t('REPAIR A/C'),
+            SERVICE_COMPONENT_PROJECT: t('COMPONENT SERVICE'),
+            COMPONENT_REPAIR_PROJECT: t('COMPONENT REPAIR'),
+            PRODUCTION_PROJECT: t('PRODUCTION'),
+            PURCHASE_PROJECT: t('PURCHASE'),
             MINIMUM_SUPPLY_LIST: t('MINIMUM SUPPLY LIST'),
           }}
         />
@@ -128,17 +127,17 @@ const ProjectFilterForm: FC<ProjectFilterFormType> = ({ onProjectSearch }) => {
           showSearch
           mode="multiple"
           name="projectState"
-          label={t('PROJECT STATE')}
+          label={t('PROJECT STATUS')}
           width="sm"
           initialValue={['DRAFT', 'OPEN']}
           valueEnum={{
             DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
             OPEN: { text: t('OPEN'), status: 'Processing' },
-            inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+            inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
             PLANNED: { text: t('PLANNED'), status: 'Waiting' },
             COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-            CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-            CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+            CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
+            CANCELLED: { text: t('CANCEL'), status: 'Error' },
           }}
         />
       </ProForm>

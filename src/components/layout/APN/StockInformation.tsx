@@ -14,11 +14,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { RouteNames } from '@/router';
 
-import { SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 
 import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
-import RequirementItems from '@/components/store/RequirementItems';
-import AplicationList from '@/components/store/materialAplications/MaterialAplicationList';
+
 import {
   getFilteredItemsStockQuantity,
   getFilteredStockDetails,
@@ -26,12 +25,8 @@ import {
   getFilteredUnserviseStockItems,
   getFilteredPartNumber,
 } from '@/utils/api/thunks';
-import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
-import MaterialOrdersList from '@/components/store/matOrders/MaterialOrders';
-import { v4 as originalUuidv4 } from 'uuid';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
 
-import MarerialOrderContent from '@/components/store/matOrders/MarerialOrderContent';
-import PickSlipsList from '@/components/store/pickSlip/PickSlips';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -41,7 +36,7 @@ import {
   ProFormCheckbox,
 } from '@ant-design/pro-components';
 import SearchSelect from '@/components/shared/form/SearchSelect';
-import FilterSiderForm from '@/components/shared/form/FilterSiderForm';
+
 import StockInfo from '@/components/store/search/stockInfo/StockInfo';
 import {
   setFilteredCurrentStockItems,
@@ -52,13 +47,10 @@ import { getItem } from '@/services/utilites';
 import Title from 'antd/es/typography/Title';
 import ContextMenuWrapper from '@/components/shared/ContextMenuWrapperProps';
 import AlternativeTable, { Aternative } from '../AlternativeTable';
-import ModalSearchContent from '@/components/store/matOrders/ModalContent';
-import EditableSearchTable from '@/components/shared/Table/EditableSearchTable';
-import MaterialItemStoreSearchNew from '@/components/store/search/MaterialItemStoreSearchFOrREq';
+
 import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 
 const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
 
 const StockInformstion: FC = () => {
   const [form] = Form.useForm();
@@ -131,81 +123,25 @@ const StockInformstion: FC = () => {
     // ),
   ];
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [alternativeValues, setAlternative] = useState<Aternative[]>([]);
-  const rootSubmenuKeys = ['-'];
-  const [openKeys, setOpenKeys] = useState(['06', '06-2']);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>(['06']);
 
-  const { isLoading, filteredMaterialOrders, filteredItemsStockQuantity } =
-    useTypedSelector((state) => state.storesLogistic);
   useEffect(() => {
     const storedKeys = localStorage.getItem('selectedKeys');
     if (storedKeys) {
-      setSelectedKeys(JSON.parse(storedKeys));
-
       // navigate(storedKey);
     }
   }, []);
 
-  const handleClick = ({ selectedKeys }: { selectedKeys: string[] }) => {
-    setSelectedKeys(selectedKeys);
-    localStorage.setItem('selectedKeys', JSON.stringify(selectedKeys));
-  };
-
-  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-      setOpenKeys(keys);
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
-    }
-  };
   interface TabData extends TabPaneProps {
     key: string;
     title: string;
     content: React.ReactNode;
   }
-  const uuidv4: () => string = originalUuidv4;
-  const onRowClick = (record: any) => {
-    const tab: TabData = {
-      key: uuidv4(), // уникальный ключ для каждой вкладки
-      title: `PICKSLIP: ${record.materialAplicationNumber}`,
-      content: (
-        <ProCard className="flex justify-center items-center h-[82vh]">
-          <MarerialOrderContent order={record} />
-        </ProCard>
-      ),
-      closable: true,
-    };
-    if (!panes.find((pane) => pane.key === tab.key)) {
-      setPanes((prevPanes) => [...prevPanes, tab]);
-    }
-    setActiveKey(tab.key);
-  };
 
   const [panes, setPanes] = useState<TabData[]>([]);
   const [collapsed, setCollapsed] = useState(false);
-  const onEdit = (
-    targetKey:
-      | string
-      | React.MouseEvent<Element, MouseEvent>
-      | React.KeyboardEvent<Element>,
-    action: 'add' | 'remove'
-  ) => {
-    if (typeof targetKey === 'string') {
-      if (action === 'remove') {
-        const newPanes = panes.filter((pane) => pane.key !== targetKey);
-        setPanes(newPanes);
-        if (newPanes.length > 0) {
-          setActiveKey(newPanes[newPanes.length - 1].key);
-        }
-      }
-    } else {
-      // Обработка события мыши или клавиатуры
-    }
-  };
+
   const onMenuClick = ({ key }: { key: string }) => {
     if (key === RouteNames.MATERIAL_STORE) {
       const tab = {
@@ -257,8 +193,6 @@ const StockInformstion: FC = () => {
         style={{
           paddingBottom: 0,
           marginBottom: 0,
-          // marginLeft: 'auto',
-          // background: 'rgba(255, 255, 255, 0.2)',
         }}
         width={350}
         // trigger
@@ -268,11 +202,6 @@ const StockInformstion: FC = () => {
           setCollapsed(value)
         }
       >
-        {/* {!collapsed && (
-          <Title className="px-5" level={5}>
-            <>{t('STOCK INFORMATION (BAN:221)')}</>
-          </Title>
-        )} */}
         <Menu
           theme="light"
           className="pt-5"
@@ -329,14 +258,7 @@ const StockInformstion: FC = () => {
                         isAllDate: true,
                       })
                     );
-                    // const resultFilteredTransferDetails = await dispatch(
-                    //   getFilteredTransferStockItems({
-                    //     companyID: companyID || '',
-                    //     PART_NUMBER: selectedPN.PART_NUMBER,
-                    //     alternatives: alternativeValues,
-                    //     location: ['TRANSFER'],
-                    //   })
-                    // );
+
                     const resultFilteredUnserviceDetails = await dispatch(
                       getFilteredUnserviseStockItems({
                         companyID: companyID || '',
@@ -363,7 +285,7 @@ const StockInformstion: FC = () => {
                     onChange: (value) => setIsAltertative(value),
                   }}
                   options={[
-                    { label: `${t('Include Alternative')}`, value: 'true' },
+                    { label: `${t('INCLUDE ALTERNATIVE')}`, value: 'true' },
                     // { label: 'Load all Exp. Dates', value: 'allDate' },
                   ].map((option) => ({
                     ...option,
@@ -378,12 +300,12 @@ const StockInformstion: FC = () => {
                   fieldProps={{
                     onChange: (value) => setIsAllDAte(value),
                   }}
-                  options={[
-                    { label: `${t('Load all Exp. Dates')}`, value: 'true' },
-                  ].map((option) => ({
-                    ...option,
-                    style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
-                  }))}
+                  options={[{ label: `${t('ALL DATES')}`, value: 'true' }].map(
+                    (option) => ({
+                      ...option,
+                      style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+                    })
+                  )}
                 />
               </Space>
 
@@ -426,11 +348,11 @@ const StockInformstion: FC = () => {
                   onChange: (value) => setGroup(value),
                 }}
                 options={[
-                  { label: 'TOOL', value: 'TOOL' },
-                  { label: 'ROT', value: 'ROT' },
-                  { label: 'CONS', value: 'CONS' },
-                  { label: 'GSE', value: 'GSE' },
-                  { label: 'CHEM', value: 'CHEM' },
+                  { label: `${t('TOOL')}`, value: 'TOOL' },
+                  { label: `${t('ROT')}`, value: 'ROT' },
+                  { label: `${t('CONS')}`, value: 'CONS' },
+                  { label: `${t('GSE')}`, value: 'GSE' },
+                  { label: `${t('CHEM')}`, value: 'CHEM' },
                 ].map((option) => ({
                   ...option,
                   style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку

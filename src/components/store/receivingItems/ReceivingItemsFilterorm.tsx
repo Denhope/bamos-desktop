@@ -188,7 +188,7 @@ const ReceivingItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               }}
               initialForm={selectedSinglePN?.receivingNumber || initialForm}
               width={'sm'}
-              label={'RECEIVING No'}
+              label={t('RECEIVING No')}
             />
 
             <ProFormText
@@ -260,7 +260,7 @@ const ReceivingItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 setSecectedSingleVendor(record);
               }}
               initialForm={selectedSingleVendor?.CODE || initialForm}
-              label={'VENDOR'}
+              label={`${t('VENDOR')}`}
             />
 
             <ProFormText
@@ -308,7 +308,7 @@ const ReceivingItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               name="partGroup"
               label={`${t('PART GROUP')}`}
               width="sm"
-              tooltip={`${t('SELECT SPESIAL GROUP')}`}
+              tooltip={`${t('SELECT SPECIAL GROUP')}`}
               options={[
                 { value: 'CONS', label: t('CONS') },
                 { value: 'TOOL', label: t('TOOL') },

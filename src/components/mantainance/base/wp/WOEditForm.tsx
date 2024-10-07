@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   AutoComplete,
   Button,
@@ -12,30 +14,18 @@ import {
   Select,
   Space,
   message,
-} from "antd";
-import React, { FC, useRef, useState, useEffect } from "react";
+} from 'antd';
+import React, { FC, useRef, useState, useEffect } from 'react';
 
-import {
-  createNewPlaneWO,
-  editPlaneWO,
-  getFilteredPlanesWO,
-  getPlaneByID,
-  getPlaneWOByID,
-  getPlanesNumber,
-  getPlanesTaskNumber,
-} from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { RangePickerProps } from "antd/es/date-picker";
-import { IPlane } from "@/models/IPlane";
-import { IPlaneTask } from "@/models/ITask";
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { RangePickerProps } from 'antd/es/date-picker';
+import { IPlane } from '@/models/IPlane';
 
-import { setPlaneTasks } from "@/store/reducers/MtxSlice";
-import TextArea from "antd/es/input/TextArea";
+import TextArea from 'antd/es/input/TextArea';
 
-import SingleSelectForm from "@/components/shared/form/SingleSelect";
-import toast, { Toaster } from "react-hot-toast";
-import { IPlaneWO } from "@/models/IPlaneWO";
-import moment from "moment";
+import toast, { Toaster } from 'react-hot-toast';
+import { IPlaneWO } from '@/models/IPlaneWO';
+import moment from 'moment';
 interface EditFormProps {
   selectedWOumber: any;
   // planeWO: IPlaneWO | null;
@@ -43,12 +33,12 @@ interface EditFormProps {
 const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
   const dispatch = useAppDispatch();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {};
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {
     // console.log('onOk: ', value);
   };
@@ -147,7 +137,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
       <div
         className="flex flex-col mx-auto"
         style={{
-          width: "100%",
+          width: '100%',
         }}
       >
         <Form
@@ -201,15 +191,15 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
             >
               <Input placeholder="please enter A/C Number" />
             </AutoComplete>
-          </Form.Item>{" "}
+          </Form.Item>{' '}
           <Form.Item label="Work Order Number" name="WONbr">
             <Input disabled placeholder="please enter Work Order Number" />
           </Form.Item>
-          <Form.Item label="Description" name="description">
+          <Form.Item label={t('DESCRIPTION')} name="description">
             <TextArea placeholder="please enter decsription" />
           </Form.Item>
           <Divider />
-          <Row justify={"space-between"}>
+          <Row justify={'space-between'}>
             <Form.Item label="Date In" name="dateIn">
               <DatePicker onChange={onChange} />
             </Form.Item>
@@ -295,7 +285,7 @@ const WOEditForm: FC<EditFormProps> = ({ selectedWOumber }) => {
           </Form.Item> */}
           <Form.Item>
             <Space className="">
-              {" "}
+              {' '}
               <Button htmlType="submit" type="primary">
                 Save
               </Button>

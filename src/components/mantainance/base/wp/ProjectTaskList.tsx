@@ -604,7 +604,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -788,7 +788,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
       editable: (text, record, index) => {
         return false;
       },
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       // width: '30%',
 
       responsive: ['lg'],
@@ -847,7 +847,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
     {
       title: `${t('REFERENCE')}`,
       dataIndex: 'amtoss',
-      tip: 'REFERENCE',
+      tooltip: 'REFERENCE',
       ellipsis: true,
       key: 'amtoss',
       responsive: ['lg'],
@@ -878,7 +878,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   dataIndex: 'phase',
     //   key: 'phase',
     //   // width: '5%',
-    //   tip: 'Phases maint',
+    //   tooltip: 'Phases maint',
     //   ellipsis: true,
     //   responsive: ['lg'],
     //   editable: (text, record, index) => {
@@ -908,7 +908,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   dataIndex: 'skillCode',
     //   key: 'skill',
     //   width: '5%',
-    //   tip: 'Skill code',
+    //   tooltip: 'Skill code',
     //   ellipsis: true,
     //   responsive: ['lg'],
     //   editable: (text, record, index) => {
@@ -1064,7 +1064,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
     // },
 
     {
-      title: `${t('PROGRESS')}`,
+      title: `${t('IN PROGRESS')}`,
       dataIndex: 'status',
 
       key: 'status',
@@ -1080,7 +1080,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
       valueEnum: {
         open: { text: t('OPEN'), status: 'Default' },
         inProgress: { text: t('IN_PROGRESS'), status: 'Processing' },
-        closed: { text: t('CLOSED'), status: 'Success' },
+        closed: { text: t('CLOSE'), status: 'Success' },
         canceled: { text: t('CANCELED'), status: 'Error' },
       },
     },
@@ -1126,7 +1126,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   title: `${t('SKILL')}`,
     //   key: 'cascader',
     //   dataIndex: 'cascader',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
 
     //   fieldProps: {
@@ -1163,7 +1163,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
       title: `${t('NEXT SKILL')}`,
       key: 'cascader',
       dataIndex: 'cascader',
-      // tip: 'Text Show',
+      // tooltip: 'Text Show',
       ellipsis: true,
       valueType: 'treeSelect',
       width: '7%',
@@ -1193,7 +1193,7 @@ const ProjectTaskList: FC<IProjectTaskListPrors> = ({}) => {
     //   key: 'rewiewStatus',
     //   width: '6%',
     //   valueType: 'select',
-    //   tip: 'Text Show',
+    //   tooltip: 'Text Show',
     //   ellipsis: true,
     //   // initialValue: 'all',
     //   filters: true,

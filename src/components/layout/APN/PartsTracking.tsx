@@ -32,7 +32,7 @@ const PartsTracking: FC<PartsTracking> = ({
   }, [bookings]);
   type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
-    getItem(<>{t('PARTS TRACKING')} (BAN:188)</>, 'sub1', <SwapOutlined />),
+    getItem(<>{t('PARTS TRACKING')}</>, 'sub1', <SwapOutlined />),
   ];
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null);
@@ -45,16 +45,35 @@ const PartsTracking: FC<PartsTracking> = ({
           onSingleRowClick={function (part?: any): void {
             setSelectedMaterial(part);
           }}
+          isLoading={false}
         />
       ),
       title: `${t('LIST OF BOOKING')}`,
     },
     {
-      content: <StoreView scroll={48} data={data} />,
+      content: (
+        <StoreView
+          onSingleRowClick={function (part?: any): void {
+            setSelectedMaterial(part);
+          }}
+          scroll={48}
+          data={data}
+          isLoading={false}
+        />
+      ),
       title: `${t('STORE VIEW')}`,
     },
     {
-      content: <TechnicalView scroll={48} data={data} />,
+      content: (
+        <TechnicalView
+          onSingleRowClick={function (part?: any): void {
+            setSelectedMaterial(part);
+          }}
+          scroll={48}
+          data={data}
+          isLoading={false}
+        />
+      ),
       title: `${t('TECHNICAL VIEW')}`,
     },
     // {
@@ -97,18 +116,18 @@ const PartsTracking: FC<PartsTracking> = ({
         <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1 bg-white">
           <div className="flex flex-col gap-5 bg-white px-4 py-3 rounded-md border-gray-400">
             <ProDescriptions loading={false} column={5} size="small">
-              <ProDescriptions.Item label="PART No" valueType="text">
+              <ProDescriptions.Item label={t('PART No')} valueType="text">
                 <div className="font-bold">
                   {selectedMaterial && selectedMaterial?.PART_NUMBER}
                 </div>
               </ProDescriptions.Item>
-              <ProDescriptions.Item label="DESCRIPTIONS" valueType="text">
+              <ProDescriptions.Item label={t('DESCRIPTIONS')} valueType="text">
                 <div className="font-bold">
                   {selectedMaterial && selectedMaterial?.NAME_OF_MATERIAL}
                 </div>
               </ProDescriptions.Item>
 
-              <ProDescriptions.Item label="GROUP" valueType="text">
+              <ProDescriptions.Item valueType="text">
                 {' '}
                 <div className="font-bold">
                   {' '}
@@ -116,13 +135,13 @@ const PartsTracking: FC<PartsTracking> = ({
                 </div>
               </ProDescriptions.Item>
 
-              <ProDescriptions.Item label="TYPE" valueType="text">
+              <ProDescriptions.Item label={t('TYPE')} valueType="text">
                 <div className="font-bold">
                   {' '}
                   {selectedMaterial && selectedMaterial?.TYPE}
                 </div>
               </ProDescriptions.Item>
-              <ProDescriptions.Item label="MEASURE UNIT" valueType="text">
+              <ProDescriptions.Item label={t('UNIT')} valueType="text">
                 {' '}
                 <div className="font-bold">
                   {' '}

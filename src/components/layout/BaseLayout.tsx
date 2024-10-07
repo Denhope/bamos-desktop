@@ -8,7 +8,7 @@ import {
   ToolOutlined,
   UserOutlined,
   ExclamationCircleOutlined,
-  ShoppingCartOutlined,
+  ShoppingCartOutlined,QuestionCircleOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -38,14 +38,20 @@ import MaintenanceMTX from './maintenance/mtx/MaintenanceMTX';
 import { useTranslation } from 'react-i18next';
 import HomeWEB from './HomeWEB';
 import { ModalForm, ProCard, ProFormItem } from '@ant-design/pro-components';
-import { MenuItem, getItem } from '@/services/utilites';
+import { MenuItem, filterAPNByRole, getItem } from '@/services/utilites';
 import APNTable from '@/components/layout/APNTable';
 import UTCClock from '../shared/UTCClock';
+import { ipcRenderer } from 'electron';
+import ConnectionIndicator from '../shared/ConnectionIndicator';
+import SupportRequestButton from '../SupportRequestButton';
+import SupportRequestAdministration from '../supportRequestAdministration/SupportRequestAdministration';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const BaseLayout: React.FC = () => {
   const { t } = useTranslation();
+
+  const { user } = useTypedSelector((state) => state.auth);
   const APN = [
     //{
     //  APNNBR: '1',
@@ -54,37 +60,66 @@ const BaseLayout: React.FC = () => {
     //},
 
     {
-      APNNBR: '58',
-      descriptions: `${t(`VIEW WORKPACKAGE`)}`,
-      route: RouteNames.BASE,
+      APNNBR: '01',
+      descriptions: `${t(`ADMINISTRATION`)}`,
+      route: RouteNames.USER_ADMINISTRATION,
     },
     {
-      APNNBR: '59',
+      APNNBR: '02',
       descriptions: `${t(`PART ADMINISTRATION`)}`,
-      route: RouteNames.PART_ADMINISTRATIONS,
+      route: RouteNames.PART_ADMINISTRATIONS_NEW,
     },
     {
-      APNNBR: '100',
-      descriptions: `${t(`PROJECT MANAGMENT`)}`,
-      route: RouteNames.PROJECT_MANAGMENT,
+      APNNBR: '03',
+      descriptions: `${t(`WP ADMINISTRATION`)}`,
+      route: RouteNames.WP_ADMINISTRATION,
+    },
+
+    {
+      APNNBR: '04',
+      descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
+      route: RouteNames.PROJECT_ADMINISTRATION,
+    },
+
+    {
+      APNNBR: '05',
+      descriptions: `${t(`WORKORDER ADMINISTRATION`)}`,
+      route: RouteNames.WORKORDER_ADMINISTRATION,
     },
     {
-      APNNBR: '101',
-      descriptions: `${t(`PROJECT VIEWER`)}`,
-      route: RouteNames.PROJECT_VIEWER,
+      APNNBR: '06',
+
+      descriptions: `${t(`PICKSLIP ADMINISTRATION`)}`,
+      route: RouteNames.PICKSLIP_ADMINISTRATION,
     },
+    // {
+    //   APNNBR: '58',
+    //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,
+    //   route: RouteNames.BASE,
+    // },
+    // {
+    //   APNNBR: '59',
+    //   descriptions: `${t(`PART ADMINISTRATION`)}`,
+    //   route: RouteNames.PART_ADMINISTRATIONS,
+    // },
+
+    // {
+    //   APNNBR: '101',
+    //   descriptions: `${t(`PROJECT VIEWER`)}`,
+    //   route: RouteNames.PROJECT_VIEWER,
+    // },
+    // {
+    //   APNNBR: '1001',
+    //   descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
+    //   route: RouteNames.MTXT,
+    // },
+    // {
+    //   APNNBR: '1002',
+    //   descriptions: `${t(`WORK PACKAGE CREATE`)}`,
+    //   route: RouteNames.WORKPACKGEN,
+    // },
     {
-      APNNBR: '1001',
-      descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
-      route: RouteNames.MTXT,
-    },
-    {
-      APNNBR: '1002',
-      descriptions: `${t(`WORK PACKAGE CREATE`)}`,
-      route: RouteNames.WORKPACKGEN,
-    },
-    {
-      APNNBR: '1198',
+      APNNBR: '07',
       descriptions: `${t(`RECEIVING VIEWER`)}`,
       route: RouteNames.RESERVING_TRACK,
     },
@@ -94,113 +129,167 @@ const BaseLayout: React.FC = () => {
     //   descriptions: `${t(`ORDER CREATOR`)}`,
     //   route: RouteNames.ORDER_CREATOR,
     // },
+    // {
+    //   APNNBR: '1200',
+    //   descriptions: `${t(`ORDER VIEWER`)}`,
+    //   route: RouteNames.ORDER_VIEWER,
+    // },
     {
-      APNNBR: '1200',
+      APNNBR: '08',
       descriptions: `${t(`ORDER VIEWER`)}`,
-      route: RouteNames.ORDER_VIEWER,
+      route: RouteNames.ORDER_VIEWER_NEW,
     },
+    // {
+    //   APNNBR: '1201',
+    //   descriptions: `${t(`ORDER MANAGMENT`)}`,
+    //   route: RouteNames.ORDER_MANAGMENT,
+    // },
     {
-      APNNBR: '1201',
-      descriptions: `${t(`ORDER MANAGMENT`)}`,
-      route: RouteNames.ORDER_MANAGMENT,
+      APNNBR: '09',
+      descriptions: `${t(`ORDER ADMINISTRATION`)}`,
+      route: RouteNames.ORDERS_ADMINISTRATION,
     },
+    // {
+    //   APNNBR: '1203',
+    //   descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
+    //   route: RouteNames.REQUIREMENT_MANAGMENT,
+    // },
     {
-      APNNBR: '1202',
-      descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
-      route: RouteNames.REQUIREMENT_MANAGMENT,
+      APNNBR: '10',
+      descriptions: `${t(`REQUIREMENT ADMINISTRATION`)}`,
+      route: RouteNames.REQUIREMENT_ADMINISTRATION,
     },
 
     {
-      APNNBR: '2121',
+      APNNBR: '11',
 
       descriptions: `${t(`GOODS RECEIVING`)}`,
-      route: RouteNames.GOODS_RESERVING,
+      route: RouteNames.GOODS_RESERVING_NEW,
     },
     {
-      APNNBR: '188',
+      APNNBR: '12',
 
       descriptions: `${t(`PARTS TRACKING`)}`,
       route: RouteNames.PARTS_TRACKING,
     },
-    {
-      APNNBR: '204',
+    // {
+    //   APNNBR: '204',
 
-      descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
-      route: RouteNames.PARTS_FORECAST,
+    //   descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
+    //   route: RouteNames.PARTS_FORECAST,
+    // },
+    // {
+    //   APNNBR: '205',
+
+    //   descriptions: `${t(`REQUIREMENT VIEWER`)}`,
+    //   route: RouteNames.REQUIREMENT_VIEWER,
+    // },
+
+    // {
+    //   APNNBR: '205',
+
+    //   descriptions: `${t(`REQUIREMENT VIEWER`)}`,
+    //   route: RouteNames.REQUIREMENT_VIEWER_VIEWER,
+    // },
+    {
+      APNNBR: '14',
+
+      descriptions: `${t(`STORES ADMINISTRATION`)}`,
+      route: RouteNames.STORES_ADMINISTRATIONS,
     },
     {
-      APNNBR: '205',
-
-      descriptions: `${t(`REQUIREMENT VIEWER`)}`,
-      route: RouteNames.REQUIREMENT_VIEWER,
-    },
-    {
-      APNNBR: '220',
-
-      descriptions: `${t(`STORE MANAGEMENT`)}`,
-      route: RouteNames.STORE_MANAGMENT,
-    },
-    {
-      APNNBR: '221',
+      APNNBR: '15',
 
       descriptions: `${t(`STOCK INFORMATION`)}`,
       route: RouteNames.STOCK_NFORMATIONS,
     },
 
     {
-      APNNBR: '222',
+      APNNBR: '16',
 
       descriptions: `${t(`PARTS TRANSFER`)}`,
       route: RouteNames.PARTS_TRANSFER,
     },
-    {
-      APNNBR: '225',
+    // {
+    //   APNNBR: '225',
 
-      descriptions: `${t(`PICKSLIP REQUEST`)}`,
-      route: RouteNames.PICKSLIP_REQUEST,
-    },
+    //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
+    //   route: RouteNames.PICKSLIP_REQUEST,
+    // },
+    // {
+    //   APNNBR: '225',
+
+    //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
+    //   route: RouteNames.PICKSLIP_REQUEST_NEW,
+    // },
+    // {
+    //   APNNBR: '230',
+
+    //   descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
+    //   route: RouteNames.PICKSLIP_CONFIRMATIONS,
+    // },
     {
-      APNNBR: '230',
+      APNNBR: '17',
 
       descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
-      route: RouteNames.PICKSLIP_CONFIRMATIONS,
+      route: RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
     },
     {
-      APNNBR: '309',
+      APNNBR: '18',
 
       descriptions: `${t(`CANCEL PICKSLIP`)}`,
       route: RouteNames.PICKSLIP_CANCEL,
     },
-    {
-      APNNBR: '334',
+    // {
+    //   APNNBR: '334',
 
-      descriptions: `${t(`SCRAP MATERIAL`)}`,
-      route: RouteNames.SCRAP_MATERIAL,
-    },
+    //   descriptions: `${t(`SCRAP MATERIAL`)}`,
+    //   route: RouteNames.SCRAP_MATERIAL,
+    // },
     {
-      APNNBR: '335',
+      APNNBR: '19',
 
       descriptions: `${t(`CANCEL RECEIVING`)}`,
       route: RouteNames.CANCEL_RESERVING,
     },
     {
-      APNNBR: '359',
+      APNNBR: '20',
 
       descriptions: `${t(`SHELF EXPIRY`)}`,
       route: RouteNames.SHELF_LIFE,
     },
     {
-      APNNBR: '375',
-
-      descriptions: `${t(`PICKSLIP VIEWER`)}`,
-      route: RouteNames.PICKSLIP_VIEWER,
+      APNNBR: '21',
+      descriptions: `${t(`ACCESS TRACKING`)}`,
+      route: RouteNames.ACCESS_TRACKING,
     },
+    // {
+    //   APNNBR: '375',
+
+    //   descriptions: `${t(`PICKSLIP VIEWER`)}`,
+    //   route: RouteNames.PICKSLIP_VIEWER,
+    // },
 
     // {
     //   APNNBR: '1418',
     //   descriptions: `${t(`WORKORDER`)}`,
     //   route: RouteNames.WORKORDER,
     // },
+    {
+      APNNBR: '22',
+      descriptions: `${t(`SUPPORT REQUEST ADMINISTRATION`)}`,
+      route: RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+    },
+      {
+    APNNBR: '23',
+    descriptions: `${t(`PDF SLICER`)}`,
+    route: RouteNames.PDF_SLICER,
+  },
+  {
+    APNNBR: '24',
+    descriptions: `${t(`REPORTS`)}`,
+    route: RouteNames.REPORTS,
+  },
   ];
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -211,38 +300,6 @@ const BaseLayout: React.FC = () => {
   );
   if (localStorage.getItem('role') === 'admin') {
   }
-  const itemsModal: MenuItem[] = [
-    getItem(
-      t('PARTS ADMINISTRATIONS'),
-      RouteNames.WORKPACKGEN,
-      <ProjectOutlined />
-    ),
-
-    getItem(
-      <>{t('WORKPACKAGE VIEWER')}</>,
-      RouteNames.BASE,
-      <ProjectOutlined />
-    ),
-    getItem(
-      t('PLANNING FORECAST'),
-      RouteNames.PLANNINGFORECAST,
-      <ProjectOutlined />
-    ),
-
-    // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
-    getItem(
-      t('Maintenance Management (MTX)'),
-      RouteNames.MTXT,
-      <ExclamationCircleOutlined />
-    ),
-
-    getItem(
-      <>{t('STORES/LOGISTICS')}</>,
-      RouteNames.STORE,
-      <ShoppingCartOutlined />
-    ),
-    getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
-  ];
 
   const itemsHorisontal: MenuItem[] = [
     getItem(<>{t('Engineering')}</>, '03'),
@@ -265,7 +322,7 @@ const BaseLayout: React.FC = () => {
         RouteNames.BASE,
         <ProjectOutlined />
       ),
-      // getItem('Line Maintenance', RouteNames.LINE, <ProjectOutlined />),
+
       getItem(
         t('Maintenance Management (MTX)'),
         RouteNames.MTXT,
@@ -302,14 +359,7 @@ const BaseLayout: React.FC = () => {
     'sub21',
   ];
   const { Option } = Select;
-  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-      setOpenKeys(keys);
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
-    }
-  };
+  // Redirect to login if not authenticated
 
   useEffect(() => {
     const storedSelectedTopKeys = localStorage.getItem('selectedTopKeys');
@@ -322,19 +372,33 @@ const BaseLayout: React.FC = () => {
     setSelectedTopKeys(selectedKeys);
     localStorage.setItem('selectedTopKeys', JSON.stringify(selectedKeys));
   };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
   const location = useLocation();
   const [selectedAPN, setSecectedAPN] = useState<any | null>(null);
   const [selectedSingleAPN, setSecectedSingleAPN] = useState(null);
   useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.ctrlKey && event.key === 'b') {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Ctrl + B or Ctrl + Р (Russian 'B' key)
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        (event.key === 'b' || event.key === 'и')
+      ) {
+        event.preventDefault(); // Prevent the default action if needed
         setIsModalOpen(true);
       }
     };
 
+    // Add the event listener
     window.addEventListener('keydown', handleKeyDown);
 
-    // Удаляем обработчик событий при размонтировании компонента
+    // Cleanup function to remove the event listener
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -369,14 +433,34 @@ const BaseLayout: React.FC = () => {
     setValue('');
   };
   const [value, setValue] = useState('');
+
+  useEffect(() => {
+    if (!isAuth && location.pathname !== RouteNames.LOGIN) {
+      navigate(RouteNames.LOGIN);
+    }
+  }, [isAuth, navigate, location.pathname]);
+
+  // const onRowClick = (
+  //   record: any,
+  //   rowIndex?: any,
+  //   event: React.MouseEvent<HTMLTableRowElement>
+  // ) => {
+  //   if (event.ctrlKey) {
+  //     // Send an IPC event to open the link in a new Electron window
+  //     ipcRenderer.send('open-link-in-window', record.route);
+  //   } else {
+  //     setSelectedAPN(record);
+  //     setIsModalOpen(false);
+  //   }
+  // };
+
+  const filteredAPN = filterAPNByRole(APN, user.role);
   return (
     <Layout style={{ minHeight: '100vh' }}>
       {location.pathname === RouteNames.WEB ? (
         <Header
           className="flex justify-between "
           style={{
-            // marginLeft: 'auto',
-            // background: 'rgba(255, 255, 255, 0.2)',
             background: 'rgba(255, 255, 255, 0.2)',
           }}
         >
@@ -394,7 +478,6 @@ const BaseLayout: React.FC = () => {
                 <Menu
                   style={{
                     width: '100%',
-                    // marginLeft: 'auto',
                     background: 'rgba(255, 255, 255, 0.0)',
                   }}
                   onClick={({ key }) => {
@@ -433,9 +516,8 @@ const BaseLayout: React.FC = () => {
         <Header
           className="flex justify-between my-0 "
           style={{
-            // marginLeft: 'auto',
             // background: 'rgba(255, 255, 255, 0.2)',
-            background: 'rgba(255, 255, 255, 0.2)',
+            background: 'rgba(255, 0, 0, 0.2)',
           }}
         >
           <div
@@ -443,15 +525,16 @@ const BaseLayout: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <a className="text-xl  px-3 uppercase cursor-pointer text-gray-500">
-              bamos
+              BAMOS TEST
             </a>
             <ProFormItem
               label
-              tooltip={'DOUBLE CLICK OPEN APN BOOK'}
+              tooltip={`${t(`DOUBLE CLICK OPEN APN BOOK`)}`}
               className="flex justify-center align-middle my-10"
             >
               <div style={{ width: '300px' }}>
                 <Select
+                  allowClear
                   showSearch
                   placeholder="BAN"
                   onChange={handleChange}
@@ -459,6 +542,8 @@ const BaseLayout: React.FC = () => {
                   open={isFocused}
                   onSearch={handleSearch}
                   onSelect={handleSelect}
+                  onFocus={handleFocus} // Добавляем обработчик события onFocus
+                  onBlur={handleBlur} // Добавляем обработчик события onBlur
                   value={value}
                   filterOption={(input, option) => {
                     if (option && option.children) {
@@ -469,7 +554,7 @@ const BaseLayout: React.FC = () => {
                     return false;
                   }}
                 >
-                  {APN.map((apn) => (
+                  {filteredAPN.map((apn) => (
                     <Option key={apn.APNNBR} value={apn.APNNBR}>
                       {apn.descriptions}
                     </Option>
@@ -517,7 +602,6 @@ const BaseLayout: React.FC = () => {
         <Content
           style={
             {
-              // marginLeft: 'auto',
               // background: 'rgba(255, 255, 255, 0.2)',
               // background: 'rgba(255, 255, 255, 0.8)',
             }
@@ -528,12 +612,10 @@ const BaseLayout: React.FC = () => {
               element={<Home apnRoute={selectedAPN} />}
               path={RouteNames.HOME}
             />
-            <Route element={<HomeWEB />} path={RouteNames.WEB} />
-            <Route element={<MaintenanceMTX />} path={RouteNames.MTXT} />
-            <Route element={<MaintenanceBase />} path={RouteNames.BASE} />{' '}
-            <Route element={<MaintenanceLine />} path={RouteNames.LINE} />
-            <Route element={<MaterialsStore />} path={RouteNames.STORE} />
-            <Route element={<WPGeneration />} path={RouteNames.WORKPACKGEN} />
+            <Route
+              element={<SupportRequestAdministration />}
+              path={RouteNames.SUPPORT_REQUEST_ADMINISTRATION}
+            />
             <Route
               element={
                 <Result
@@ -542,7 +624,6 @@ const BaseLayout: React.FC = () => {
                   status="404"
                   title="404"
                   subTitle="Sorry, the page you visited does not exist."
-                  //extra={<Button type="primary">Back Home</Button>}
                 />
               }
               path={'*'}
@@ -555,20 +636,16 @@ const BaseLayout: React.FC = () => {
             setIsModalOpen(false);
           }}
           onOpenChange={setIsModalOpen}
-          //onCancel={() => setIsModalOpen(false)}
           title={`${t(`BAN BOOK`)}`}
-          // placement={'bottom'}
           open={isModalOpen}
           width={'30vw'}
-
-          // getContainer={false}
         >
           <ProCard
             className="flex mx-auto justify-center align-middle"
             style={{}}
           >
             <APNTable
-              data={APN}
+              data={filteredAPN}
               onRowClick={function (record: any, rowIndex?: any): void {
                 setSecectedAPN(record);
                 setIsModalOpen(false);
@@ -582,19 +659,22 @@ const BaseLayout: React.FC = () => {
       </Layout>
 
       <Footer
-        className="mt-0 pt-0"
+        className="mt-0 pt-0 gap-5 flex items-center justify-between"
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
           position: 'sticky',
           bottom: '0',
+          width: '100%',
         }}
       >
-        <div style={{ flex: 1 }}></div>
-        <div>©2023 Created by Kavalchuk D.</div>
-        <div style={{ flex: 1, textAlign: 'right' }}>
+        <div className="flex-1 text-left">
+          {t('©2024 Created by Kavalchuk D.')}
+        </div>
+        <div className="flex items-center gap-4">
           <UTCClock />
+          <ConnectionIndicator />
+          <SupportRequestButton />
         </div>
       </Footer>
 

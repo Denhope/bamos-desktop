@@ -1,14 +1,14 @@
-import React, { FC } from "react";
-import WOActionDescriptionList from "./NRCActionDescriptionList ";
-import WOPerfomedForm from "./NRCPerfomedForm";
-import { IProjectTask } from "@/models/IProjectTaskMTB";
-import TabContent from "@/components/shared/Table/TabContent";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
+import React, { FC } from 'react';
+import WOActionDescriptionList from './NRCActionDescriptionList ';
+import WOPerfomedForm from './NRCPerfomedForm';
+import { IProjectTask } from '@/models/IProjectTaskMTB';
+import TabContent from '@/components/shared/Table/TabContent';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
-import WODInspectionForm from "./NRCDInspectionForm";
-import WOInspectionForm from "../close/NRCInspectionForm";
-import { IAdditionalTaskMTBCreate } from "@/models/IAdditionalTaskMTB";
-import TestNRCStep from "./TestNRCStep";
+import WODInspectionForm from './NRCDInspectionForm';
+import WOInspectionForm from '../close/NRCInspectionForm';
+import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
+import TestNRCStep from './TestNRCStep';
 
 type StepsProps = { task: any | null };
 const StepsContent: FC<StepsProps> = ({ task }) => {
@@ -66,7 +66,7 @@ const StepsContent: FC<StepsProps> = ({ task }) => {
                   }
                 />
               ),
-              title: 'INSPECTED',
+              title: 'INSPECTION',
             },
             {
               content: (
@@ -90,7 +90,7 @@ const StepsContent: FC<StepsProps> = ({ task }) => {
                   projectTasks={projectAdditionalTasks}
                 />
               ),
-              title: 'DIINSPECTED',
+              title: 'DIINSPECTION',
             },
           ]}
         />

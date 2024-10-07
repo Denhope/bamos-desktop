@@ -23,6 +23,7 @@ import { USER_ID } from '@/utils/api/http';
 import { getFilteredOrders, postNewReceiving } from '@/utils/api/thunks';
 
 import ContextMenuReceivingsSearchSelect from '@/components/shared/form/ContextMenuReceivingsSearchSelect';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 
 type OrderDetailsFormType = {
   order: IOrder | null;
@@ -45,13 +46,13 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   useEffect(() => {
     if (order && !currentReceiving) {
       form.setFields([
-        { name: 'order', value: order?.orderNumber },
+        { name: 'order', value: order?.orderNumberNew },
         { name: 'SUPPLIES_CODE', value: order?.supplier },
         { name: 'WAREHOUSE_RECEIVED_AT', value: order?.shipTo || 'MSQ' },
       ]);
     }
     if (order && currentReceiving) {
-      form.setFields([{ name: 'order', value: order?.orderNumber }]);
+      form.setFields([{ name: 'order', value: order?.orderNumberNew }]);
     }
   }, [order]);
   useEffect(() => {
@@ -173,21 +174,28 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 currentReceiving && Object.keys(currentReceiving).length === 0
               ) || !selectedSingleVendor?.CODE,
           },
-          render: (_, dom) =>
-            isCreating
-              ? [
-                  ...dom,
-                  <Button
-                    key="cancel"
-                    onClick={() => {
-                      isCreating && setIsCreating(false);
-                      onCurrentReceiving(null);
-                    }}
-                  >
-                    {t('Cancel')}
-                  </Button>,
-                ]
-              : [],
+          render: (_, dom) => (
+            <PermissionGuard
+              requiredPermissions={[Permission.PICKSLIP_CONFIRMATION_ACTIONS]}
+            >
+              <div>
+                {isCreating
+                  ? [
+                      ...dom,
+                      <Button
+                        key="cancel"
+                        onClick={() => {
+                          isCreating && setIsCreating(false);
+                          onCurrentReceiving(null);
+                        }}
+                      >
+                        {t('Cancel')}
+                      </Button>,
+                    ]
+                  : []}
+              </div>
+            </PermissionGuard>
+          ),
         }}
         onReset={() => {
           setinitialForm('');
@@ -271,7 +279,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 currentReceiving?.receivingNumber
               }
               width={'sm'}
-              label={'RECEIVING No'}
+              label={t('RECEIVING No')}
             />
 
             <ProFormDatePicker
@@ -279,7 +287,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               rules={[{ required: true }]}
               name="receivingDate"
               label={t('RECEIVING DATE')}
-              width="xs"
+              width="sm"
             ></ProFormDatePicker>
             <ProFormTimePicker
               disabled={!isCreating}
@@ -313,7 +321,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <ProFormText
               disabled={!isCreating}
               name="awbNumber"
-              label={t(' DOC No')}
+              label={t('DOC No')}
               rules={[{ required: true }]}
               width="sm"
               tooltip={t(' DOC NNUMBER')}
@@ -323,18 +331,18 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               name="awbDate"
               label={t('DOC DATE')}
               rules={[{ required: true }]}
-              width="xs"
-            ></ProFormDatePicker>
-            <ProFormText
-              disabled={!isCreating}
-              name="awbReference"
-              label={t(' REFERENCE')}
               width="sm"
-              tooltip={t('REFERENCE')}
-            ></ProFormText>
+            ></ProFormDatePicker>
           </ProFormGroup>
         </Space>
         <ProFormGroup>
+          <ProFormText
+            disabled={!isCreating}
+            name="awbReference"
+            label={t('CONTRACT')}
+            width="sm"
+            tooltip={t('CONTRACT')}
+          ></ProFormText>
           <ContextMenuVendorsSearchSelect
             disabled={!isCreating}
             width="lg"
@@ -348,7 +356,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
               initialForm ||
               currentReceiving?.SUPPLIES_CODE
             }
-            label={'SUPPLIES CODE'}
+            label={t('SUPPLIES CODE')}
           />
           <ProFormText
             disabled={!isCreating}

@@ -1,27 +1,25 @@
-import { CheckboxValueType } from "antd/es/checkbox/Group";
-
-import { MatRequestAplication } from "@/store/reducers/ProjectTaskSlise";
-import { IMatDataAdditional, ITaskType } from "@/types/TypesData";
+import { MatRequestAplication } from '@/store/reducers/ProjectTaskSlise';
+import { IMatDataAdditional, ITaskType } from '@/types/TypesData';
 
 export type TDifficulty =
-  | "routine"
-  | "hardTime"
-  | "additional"
-  | "PIREP"
-  | "CABIN"
-  | "MAINT"
-  | "partRepare"
-  | "";
+  | 'routine'
+  | 'hardTime'
+  | 'additional'
+  | 'PIREP'
+  | 'CABIN'
+  | 'MAINT'
+  | 'partRepare'
+  | '';
 
 export type TStatus =
-  | "отложен"
-  | "в работе"
-  | "выполнен"
-  | "закрыт"
-  | "open"
-  | "closed"
-  | "canceled"
-  | "inProgress";
+  | 'отложен'
+  | 'в работе'
+  | 'выполнен'
+  | 'закрыт'
+  | 'open'
+  | 'closed'
+  | 'canceled'
+  | 'inProgress';
 
 export interface IMatPrintItem {
   PART_NUMBER?: string;
@@ -64,7 +62,7 @@ export type INRCInfoType = {
   skill: string[];
 };
 export type IReferencesLinkType = {
-  type: "WO" | "AMM" | "SB" | "" | "NRC";
+  type: 'WO' | 'AMM' | 'SB' | '' | 'NRC';
   reference: string;
   description: string;
 };
@@ -143,13 +141,13 @@ export interface IAdditionalTaskMTBCreate {
   materialForPrint?: IMatPrintItem[];
   requirementItemsIds?: any[];
 }
-export type NRCType = "PIREP" | "CABIN" | "MAINT";
+export type NRCType = 'PIREP' | 'CABIN' | 'MAINT';
 export type ScheduledType =
-  | "routine"
-  | "hardTime"
-  | "additional"
-  | "partRepare"
-  | "";
+  | 'routine'
+  | 'hardTime'
+  | 'additional'
+  | 'partRepare'
+  | '';
 
 export type IActionType = {
   actionDescription?: string;

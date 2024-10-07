@@ -181,7 +181,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               }}
               initialForm={selectedSinglePN?.receivingNumber || initialForm}
               width={'sm'}
-              label={'RECEIVING No'}
+              label={t('RECEIVING No')}
             /> */}
 
             {/* <ProFormText
@@ -264,16 +264,16 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                 setSecectedSingleVendor(record);
               }}
               initialForm={selectedSingleVendor?.CODE || initialForm}
-              label={'VENDOR'}
+              label={t('VENDOR')}
             />
 
             <ProFormSelect
               showSearch
               mode="multiple"
               name="orderState"
-              label={t('ORDER STATE')}
+              label={t('ORDER STATUS')}
               width="sm"
-              tooltip={t('ORDER STATE')}
+              tooltip={t('ORDER STATUS')}
               // initialValue={['PARTLY_RECEIVED', 'OPEN']}
               valueEnum={{
                 PARTLY_RECEIVED: {
@@ -285,7 +285,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
                   status: 'SUCCESS',
                 },
                 // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
-                CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+                CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
                 // MISSING: { text: t('MISSING'), status: 'Error' },
                 OPEN: { text: t('OPEN'), status: 'Processing' },
                 // OPEN_AND_TRANSFER: {
@@ -336,7 +336,7 @@ const OrdersItemsFilterorm: FC<ReceivingItemsFilterFormType> = ({
               name="partGroup"
               label={`${t('PART GROUP')}`}
               width="sm"
-              tooltip={`${t('SELECT SPESIAL GROUP')}`}
+              tooltip={`${t('SELECT SPECIAL GROUP')}`}
               options={[
                 { value: 'CONS', label: t('CONS') },
                 { value: 'TOOL', label: t('TOOL') },

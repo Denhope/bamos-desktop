@@ -1,12 +1,10 @@
-/**
- * @see https://www.electron.build/configuration/configuration
- */
 {
-  appId: 'Bamos',
+  appId: 'BAMOS-TEST',
   asar: true,
   directories: {
     output: 'release/${version}',
   },
+  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
   files: ['dist-electron', 'dist'],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
@@ -30,6 +28,6 @@
   publish: {
     provider: 'generic',
     channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v1.0.11/',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.49/',
   },
 }

@@ -1,17 +1,22 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { TimePicker } from 'antd';
 import EditableTable from '@/components/shared/Table/EditableTable';
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import PartContainer from '@/components/woAdministration/PartContainer';
+import { ColDef } from 'ag-grid-community';
+import { transformToPartBooking } from '@/services/utilites';
 type TechnicalViewType = {
   scroll: number;
   data: any[];
+  isLoading: boolean;
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
 };
 const TechnicalView: FC<TechnicalViewType> = ({
   data,
   scroll,
   onSingleRowClick,
+  isLoading,
 }) => {
   const { t } = useTranslation();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -21,7 +26,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       dataIndex: 'createDate',
 
       key: 'createDate',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       valueType: 'date',
 
@@ -47,7 +52,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('BOOKING')}`,
       dataIndex: 'voucherModel',
       key: 'voucherModel',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
@@ -57,7 +62,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
 
       formItemProps: {
@@ -76,7 +81,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('CONDITION')}`,
       dataIndex: 'CONDITION',
       key: 'CONDITION',
-      //tip: 'CONDITION',
+      //tooltip: 'CONDITION',
       ellipsis: true,
 
       formItemProps: {
@@ -92,7 +97,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('A/C')}`,
       dataIndex: 'registrationNumber',
       key: 'registrationNumber',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       // responsive: ['sm'],
@@ -111,7 +116,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('LABEL')}`,
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       formItemProps: {
@@ -125,7 +130,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('PROJECT No')}`,
       dataIndex: 'projectWO',
       key: 'projectWO',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       formItemProps: {
@@ -139,7 +144,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('WO No')}`,
       dataIndex: 'projectTaskWO',
       key: 'projectTaskWO',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
 
       formItemProps: {
@@ -153,7 +158,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       title: `${t('DESCRIPTION')}`,
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
@@ -163,35 +168,156 @@ const TechnicalView: FC<TechnicalViewType> = ({
       // responsive: ['sm'],
     },
   ];
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType;
+  }
+  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
+    {
+      field: 'createDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('CREATE DATE')}`,
+      width: 150,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      },
+    },
+
+    {
+      headerName: `${t('BOOKING')}`,
+      field: 'voucherModel',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      headerName: `${t('PART No')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SUPPLIER_BATCH_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('BATCH')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SERIAL_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('SERIAL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'STOCK',
+      editable: false,
+      filter: false,
+      headerName: `${t('STORE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SHELF_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('LOCATION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CONDITION',
+      editable: false,
+      filter: false,
+      headerName: `${t('CONDITION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'NAME_OF_MATERIAL',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'LOCAL_ID',
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'QUANTITY',
+      editable: false,
+      filter: false,
+      headerName: `${t('QTY')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+
+    // {
+    //   field: 'projectWO',
+    //   headerName: `${t('WO No')}`,
+    //   cellDataType: 'text',
+    // },
+    {
+      field: 'projectWO',
+      headerName: `${t('PROJECT No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectTaskWO',
+      headerName: `${t('TRACE No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CREATE_BY',
+      editable: false,
+      filter: false,
+      headerName: `${t('CREATE BY')}`,
+      cellDataType: 'text',
+    },
+  ]);
+
   const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
+  const transformedPartNumbers = useMemo(() => {
+    return transformToPartBooking(data || []);
+  }, [data]);
   return (
     <div>
-      <EditableTable
-        isNoneRowSelection
-        data={data}
-        showSearchInput
-        initialColumns={initialColumns}
-        isLoading={false}
-        menuItems={undefined}
-        recordCreatorProps={false}
-        onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        // onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        onRowClick={function (record: any, rowIndex?: any): void {
-          onSingleRowClick &&
-            onSingleRowClick((prevSelectedItems: (string | undefined)[]) =>
-              prevSelectedItems && prevSelectedItems.includes(record._id)
-                ? []
-                : [record]
-            );
+      <PartContainer
+        isLoading={isLoading}
+        isFilesVisiable={true}
+        isVisible={true}
+        pagination={true}
+        isAddVisiable={true}
+        isButtonVisiable={false}
+        isEditable={true}
+        height={'68vh'}
+        columnDefs={columnDefs}
+        partNumbers={[]}
+        isChekboxColumn={true}
+        onUpdateData={(data: any[]): void => {}}
+        rowData={transformedPartNumbers}
+        onCheckItems={setSelectedRowKeys}
+        //
+        onRowSelect={(data: any): void => {
+          onSingleRowClick && onSingleRowClick(data);
         }}
-        onSave={function (rowKey: any, data: any, row: any): void {}}
-        yScroll={scroll}
-        externalReload={function () {
-          throw new Error('Function not implemented.');
-        }}
-      ></EditableTable>
+      />
     </div>
   );
 };

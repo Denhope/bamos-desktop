@@ -64,7 +64,7 @@ const StockGrid: React.FC<StockGridProps> = ({
       title: `${t('LOCAL_ID')}`,
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -78,7 +78,7 @@ const StockGrid: React.FC<StockGridProps> = ({
       title: `${t('PN')}`,
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       // width: '15%',
       formItemProps: {
@@ -121,7 +121,7 @@ const StockGrid: React.FC<StockGridProps> = ({
       title: `${t('STORE')}`,
       dataIndex: 'STOCK',
       key: 'STOCK',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
       width: '6%',
       formItemProps: {
@@ -147,7 +147,7 @@ const StockGrid: React.FC<StockGridProps> = ({
       title: `${t('CONDITION')}`,
       dataIndex: 'CONDITION',
       key: 'CONDITION',
-      //tip: 'CONDITION',
+      //tooltip: 'CONDITION',
       ellipsis: true,
       width: '10%',
       formItemProps: {
@@ -174,7 +174,7 @@ const StockGrid: React.FC<StockGridProps> = ({
       title: `${t('LOCATION')}`,
       dataIndex: 'SHELF_NUMBER',
       key: 'SHELF_NUMBER',
-      //tip: 'ITEM LOCATION',
+      //tooltip: 'ITEM LOCATION',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -190,7 +190,7 @@ const StockGrid: React.FC<StockGridProps> = ({
     //   key: 'NAME_OF_MATERIAL',
 
     //   // responsive: ['sm'],
-    //   tip: 'ITEM DESCRIPTION',
+    //   tooltip: 'ITEM DESCRIPTION',
     //   ellipsis: true, //
     //   width: '20%',
     // },
@@ -212,7 +212,7 @@ const StockGrid: React.FC<StockGridProps> = ({
       title: `${t('RESEIVING')}`,
       dataIndex: 'ORDER_NUMBER',
       key: 'ORDER_NUMBER',
-      //tip: 'ITEM ORDER_NUMBER',
+      //tooltip: 'ITEM ORDER_NUMBER',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -410,7 +410,8 @@ const StockGrid: React.FC<StockGridProps> = ({
       </div>
       <div className={`flex flex-col text-sm ml-auto font-bold`}>
         <div className="ml-auto pr-24">
-          TOTAL STOCK QTY:
+          {t('TOTAL STOCK QTY:')}
+
           <span
             className={`highlight ${
               totalQuantity ? 'bg-green-500' : 'bg-red-500'
@@ -423,7 +424,7 @@ const StockGrid: React.FC<StockGridProps> = ({
 
       <div className="py-5 flex flex-col w-[99%]">
         <Title level={5}>
-          {t('DETAILS FOR STORE ')} -
+          {t('DETAILS FOR STORE')} -
           <a className="font-bold text-lg">
             {filteredCurrentStockItems && filteredCurrentStockItems.length > 0
               ? selectedKey

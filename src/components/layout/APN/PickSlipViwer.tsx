@@ -32,7 +32,7 @@ const PickSlipViwer: FC<PickSlipViwer> = ({
   const onRowClick = (record: any) => {
     const tab: TabData = {
       key: String(record.materialAplicationNumber), // уникальный ключ для каждой вкладки
-      title: `PICKSLIP: ${String(record.materialAplicationNumber)}`,
+      title: `${t('PICKSLIP')}: ${String(record.materialAplicationNumber)}`,
       content: (
         <ProCard className="">
           <MarerialOrderContent order={record} />
@@ -69,7 +69,7 @@ const PickSlipViwer: FC<PickSlipViwer> = ({
   const [panes, setPanes] = useState<TabData[]>([
     {
       key: `pickSlipsList`, // уникальный ключ для каждой вкладки
-      title: t('PICKSLIPS'),
+      title: t('PICKSLIPS LIST'),
       content: (
         <ProCard className="h-[82vh] overflow-hidden">
           <MaterialOrdersList

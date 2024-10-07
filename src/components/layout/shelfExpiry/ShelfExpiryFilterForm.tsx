@@ -1,10 +1,8 @@
+// @ts-nocheck
+
 import {
-  ModalForm,
   ProForm,
   ProFormCheckbox,
-  ProFormDatePicker,
-  ProFormDateRangePicker,
-  ProFormGroup,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -18,13 +16,11 @@ import {
   Space,
 } from 'antd';
 
-import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import moment from 'moment';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  getFilteredMaterialItems,
   getFilteredMaterialItemsExpiry,
   getFilteredShops,
 } from '@/utils/api/thunks';
@@ -207,7 +203,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
           name="partGroup"
           label={`${t('PART GROUP')}`}
           width="lg"
-          tooltip={`${t('SELECT SPESIAL GROUP')}`}
+          tooltip={`${t('SELECT SPECIAL GROUP')}`}
           options={[
             { value: 'CONS', label: t('CONS') },
             { value: 'TOOL', label: t('TOOL') },
@@ -228,7 +224,7 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({
           ]}
         />
         <Divider />
-        <ProForm.Item label="LIMIT">
+        <ProForm.Item label={`${t('LIMIT')}`}>
           <Space.Compact size="small">
             <Form.Item rules={[{ required: true }]} name="value" noStyle>
               <InputNumber

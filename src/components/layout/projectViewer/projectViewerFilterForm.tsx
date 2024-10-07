@@ -10,11 +10,12 @@ import {
 import { DatePickerProps, Form } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import { t } from 'i18next';
+
 import React, { FC, useRef, useState } from 'react';
 import { getFilteredProjects } from '@/utils/api/thunks';
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
 import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenuProjectSearchSelect';
+import { useTranslation } from 'react-i18next';
 type ProjectViewerFilterFormType = {
   onProjectSearch: (orders: any[] | []) => void;
 };
@@ -22,6 +23,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
   onProjectSearch,
 }) => {
   const formRef = useRef<FormInstance>(null);
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [selectedCreateDate, setSelectedCreateDate] = useState<any>();
   const [selectedCreateEndDate, setSelectedCreateEndDate] = useState<any>();
@@ -119,17 +121,17 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
               showSearch
               mode="multiple"
               name="projectState"
-              label={t('PROJECT STATE')}
+              label={t('PROJECT STATUS')}
               width="sm"
               initialValue={['inProgress']}
               valueEnum={{
                 DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
                 OPEN: { text: t('OPEN'), status: 'Processing' },
-                inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+                inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
                 PLANNED: { text: t('PLANNED'), status: 'Waiting' },
                 COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-                CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-                CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+                CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
+                CANCELLED: { text: t('CANCEL'), status: 'Error' },
               }}
             />
             <ProFormSelect
@@ -154,7 +156,7 @@ const ProjectViewerFilterForm: FC<ProjectViewerFilterFormType> = ({
           <ProFormGroup direction="vertical" size={'small'}>
             <ProFormText
               name="planeNumber"
-              label="A/C REGISTRATION"
+              label={t('A/C REGISTRATION')}
               width="sm"
               fieldProps={{
                 // onDoubleClick: () => setOpenPickViewer(true),

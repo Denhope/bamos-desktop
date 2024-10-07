@@ -6,46 +6,34 @@ import {
   Form,
   Input,
   InputNumber,
-} from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
-import form from "antd/es/form";
-import Title from "antd/es/typography/Title";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { IPlane } from "@/models/IPlane";
+} from 'antd';
+import { RangePickerProps } from 'antd/es/date-picker';
+import form from 'antd/es/form';
+import Title from 'antd/es/typography/Title';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { IPlane } from '@/models/IPlane';
 
-import React, { FC } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { createNewPlane } from "@/utils/api/thunks";
-import { useTranslation } from "react-i18next";
+import React, { FC } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { createNewPlane } from '@/utils/api/thunks';
+import { useTranslation } from 'react-i18next';
 import {
   ProForm,
   ProFormDigit,
   ProFormGroup,
   ProFormText,
-} from "@ant-design/pro-components";
+} from '@ant-design/pro-components';
 const AddForm: FC = () => {
   const dispatch = useAppDispatch();
   const timeFormat = /^\d{1,4}:\d{2}$/;
-  const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
-    dateString: [string, string] | string
-  ) => {
-    // console.log('Selected Time: ', value);
-    // console.log('Formatted Selected Time: ', dateString);
-  };
 
-  const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
-  ) => {
-    // console.log('onOk: ', value);
-  };
   const [form] = Form.useForm();
   const { t } = useTranslation();
   return (
     <div
       className="flex flex-col mx-auto"
       style={{
-        width: "93%",
+        width: '93%',
       }}
     >
       <ProForm
@@ -62,7 +50,7 @@ const AddForm: FC = () => {
               regNbr: values.regNbr,
               serialNbr: values.serialNbr,
               certification: values.certification,
-              status: "FLY",
+              status: 'FLY',
               apu: {
                 APUmodel: values.APUmodel,
                 APUSerialNumber: values.APUSerialNumber,
@@ -95,8 +83,8 @@ const AddForm: FC = () => {
               },
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
-            toast.success("New A/C Added");
+          if (result.meta.requestStatus === 'fulfilled') {
+            toast.success('New A/C Added');
             form.resetFields();
           }
         }}
@@ -109,18 +97,18 @@ const AddForm: FC = () => {
             rules={[{ required: true }]}
             label="Registration Number"
             name="regNbr"
-            width={"sm"}
+            width={'sm'}
             allowClear
           />
           <ProFormText
             rules={[{ required: true }]}
-            label={`${t("Serial Number")}`}
+            label={`${t('Serial Number')}`}
             name="serialNbr"
-            width={"sm"}
+            width={'sm'}
             allowClear
           />
           <ProFormText
-            width={"xs"}
+            width={'xs'}
             rules={[{ required: true }]}
             label="Model"
             name="model"
@@ -140,8 +128,8 @@ const AddForm: FC = () => {
             label="Certification"
             name="certification"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
-          </Form.Item>{" "}
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
+          </Form.Item>{' '}
         </ProForm.Group>
         <ProForm.Group>
           <ProForm.Item
@@ -149,7 +137,7 @@ const AddForm: FC = () => {
             label="A/C Times (Date)"
             name="ACDATE"
           >
-            <DatePicker size="middle" onChange={onChange} onOk={onOk} />
+            {/* <DatePicker size="middle" onChange={onChange} onOk={onOk} /> */}
           </ProForm.Item>
           <Form.Item
             rules={[{ required: true }]}
@@ -172,12 +160,12 @@ const AddForm: FC = () => {
           <ProFormText
             allowClear
             rules={[{ required: true }]}
-            label={`${t("Serial Number")}`}
+            label={`${t('Serial Number')}`}
             name="ENC1SerialNumber"
           />
 
           <ProFormText
-            width={"xs"}
+            width={'xs'}
             allowClear
             rules={[{ required: true }]}
             label="Model"
@@ -189,7 +177,7 @@ const AddForm: FC = () => {
             label="Certification"
             name="ENC1Certification"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
           </ProForm.Item>
         </ProFormGroup>
         <ProFormGroup>
@@ -198,7 +186,7 @@ const AddForm: FC = () => {
             label="ENGINE Times (Date)"
             name="ENC1DATE"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
           </Form.Item>
           <Form.Item
             rules={[{ required: true }]}
@@ -221,14 +209,14 @@ const AddForm: FC = () => {
         <ProFormGroup>
           <Form.Item
             rules={[{ required: true }]}
-            label={`${t("Serial Number")}`}
+            label={`${t('Serial Number')}`}
             name="ENC2SerialNumber"
           >
             <Input allowClear />
           </Form.Item>
 
           <ProFormText
-            width={"xs"}
+            width={'xs'}
             rules={[{ required: true }]}
             label="Model"
             name="ENC2model"
@@ -240,7 +228,7 @@ const AddForm: FC = () => {
             label="Certification"
             name="ENC2Certification"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
           </Form.Item>
         </ProFormGroup>
         <ProFormGroup>
@@ -249,7 +237,7 @@ const AddForm: FC = () => {
             label="ENGINE Times (Date)"
             name="ENC2DATE"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
           </Form.Item>
           <Form.Item
             rules={[{ required: true }]}
@@ -272,14 +260,14 @@ const AddForm: FC = () => {
         <ProFormGroup>
           <Form.Item
             rules={[{ required: true }]}
-            label={`${t("Serial Number")}`}
+            label={`${t('Serial Number')}`}
             name="APUSerialNumber"
           >
             <Input allowClear />
           </Form.Item>
 
           <ProFormText
-            width={"xs"}
+            width={'xs'}
             rules={[{ required: true }]}
             label="Model"
             name="APUmodel"
@@ -291,7 +279,7 @@ const AddForm: FC = () => {
             label="Certification"
             name="APUCertification"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
           </Form.Item>
         </ProFormGroup>
         <ProFormGroup>
@@ -300,7 +288,7 @@ const AddForm: FC = () => {
             label="APU Times (Date)"
             name="APUDATE"
           >
-            <DatePicker onChange={onChange} onOk={onOk} />
+            {/* <DatePicker onChange={onChange} onOk={onOk} /> */}
           </Form.Item>
           <Form.Item
             rules={[{ required: true }]}

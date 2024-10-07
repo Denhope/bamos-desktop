@@ -1,0 +1,10 @@
+import React, { useEffect, useState } from 'react'; import { ipcRenderer } from
+'electron'; function NewWindowComponent() { const [data, setData] =
+useState(null); useEffect(() => { ipcRenderer.on('new-window-data', (event,
+receivedData) => { setData(receivedData); }); return () => {
+ipcRenderer.removeAllListeners('new-window-data'); }; }, []); return (
+<div>
+  <h1>Data in new window:</h1>
+  <pre>{JSON.stringify(data, null, 2)}</pre>
+</div>
+); } export default NewWindowComponent;

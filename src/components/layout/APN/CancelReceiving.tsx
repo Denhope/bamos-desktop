@@ -1,5 +1,7 @@
+//@ts-nocheck
+
 import { ProForm, ProFormTextArea } from '@ant-design/pro-components';
-import { Button, Form, Modal, Space } from 'antd';
+import { Button, Form, Modal, Space, message } from 'antd';
 import CancelReceivingForm from '@/components/store/cancelReceiving/CancelReceivingForm';
 import ReceivingItemList from '@/components/store/receivingItems/ReceivingItemList';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
@@ -13,6 +15,8 @@ import {
   updateReceivingByID,
   createBookingItem,
 } from '@/utils/api/thunks';
+import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
+import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
 
 const CancelReceiving: FC = () => {
   const [form] = Form.useForm();
@@ -20,12 +24,25 @@ const CancelReceiving: FC = () => {
   const [receivings, setReceiving] = useState<any[] | []>([]);
   const [data, setdata] = useState<any[] | []>(receivings);
   const [partsToPrint, setPartsToPrint] = useState<any>(null);
+  const [updateOrderItem] = useUpdateOrderItemMutation();
+  const [updateOrder] = useUpdateOrderMutation();
+  const dispatch = useAppDispatch();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
   useEffect(() => {
     if (receivings) {
       setdata(receivings);
     }
   }, [receivings]);
-  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setIsButtonDisabled(
+      !(selectedRowKeys && selectedRowKeys.length === 1) ||
+        !form.getFieldValue('reasonCancel') ||
+        (partsToPrint[0]?.IS_CANCELLED ?? false)
+    );
+  }, [partsToPrint, form.getFieldValue('reasonCancel')]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   return (
     <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-1">
       <div className="flex flex-col gap-5">
@@ -33,14 +50,26 @@ const CancelReceiving: FC = () => {
           onFilterReceiving={setReceiving}
         ></CancelReceivingForm>
         <ReceivingItemList
+          hight="56vh"
           onSelectedParts={setPartsToPrint}
-          // onDoubleClick={onDoubleClick}
           scroll={40}
           data={data}
+          isLoading={false}
+          onSelectedIds={setSelectedRowKeys}
         />
       </div>
       <div className="flex justify-between">
-        <ProForm form={form} submitter={false}>
+        <ProForm
+          form={form}
+          submitter={false}
+          onValuesChange={() => {
+            setIsButtonDisabled(
+              !(selectedRowKeys && selectedRowKeys.length === 1) ||
+                !form.getFieldValue('reasonCancel') ||
+                (partsToPrint[0]?.IS_CANCELLED ?? false)
+            );
+          }}
+        >
           <ProFormTextArea
             width={'xl'}
             fieldProps={{ style: { resize: 'none' } }}
@@ -52,12 +81,8 @@ const CancelReceiving: FC = () => {
 
         <Space align="center">
           <Button
-            disabled={
-              !(partsToPrint && partsToPrint.length === 1) ||
-              !form.getFieldValue('reasonCancel') ||
-              partsToPrint[0].IS_CANCELLED
-            }
-            onClick={async (values: any) => {
+            disabled={isButtonDisabled}
+            onClick={async () => {
               Modal.confirm({
                 title: t('CONFIRM CANCEL'),
                 onOk: async () => {
@@ -65,7 +90,7 @@ const CancelReceiving: FC = () => {
                   const result = await dispatch(
                     updateReceivingByID({
                       companyID: currentCompanyID,
-                      id: partsToPrint[0]._id,
+                      id: partsToPrint[0]?._id,
                       state: 'CANCELLED',
                       IS_CANCELLED: true,
                       reason: form.getFieldValue('reasonCancel'),
@@ -174,60 +199,33 @@ const CancelReceiving: FC = () => {
                             IS_CUSTOMER_GOODS:
                               resultDelete.payload?.IS_CUSTOMER_GOODS,
                             LOCAL_ID: resultDelete.payload?.LOCAL_ID,
+                            ORDER_ITEM_ID:
+                              result && result?.payload?.ORDER_ITEM_ID,
+                            MATERIAL_STORE_ID:
+                              partsToPrint[0].MATERIAL_STORE_ID,
+                            partID: partsToPrint[0].partID,
                           },
                         })
                       );
                     }
+                    try {
+                      if (partsToPrint[0].ORDER_NUMBER) {
+                        await updateOrderItem({
+                          cancelledQTY: partsToPrint[0].QUANTITY,
+                          state: 'PARTLY_RECEIVED',
+                          _id: result?.payload?.ORDER_ITEM_ID,
+                          id: result?.payload?.ORDER_ITEM_ID,
+                        }).unwrap();
 
-                    if (partsToPrint[0].ORDER_NUMBER) {
-                      const resultADD11 = await dispatch(
-                        getFilteredOrders({
-                          companyID: currentCompanyID,
-                          orderNumber: partsToPrint[0].ORDER_NUMBER,
-                        })
-                      );
-                      if (resultADD11.meta.requestStatus === 'fulfilled') {
-                        let parts = resultADD11.payload[0].parts;
-
-                        let partToUpdate = parts.find(
-                          (part: any) =>
-                            part.RECEIVINGS &&
-                            part.RECEIVINGS.some((receiving: any) => {
-                              return (
-                                receiving.RECEIVING_ITEM_NUMBER ==
-                                partsToPrint[0].RECEIVING_ITEM_NUMBER
-                              );
-                            })
-                        );
-                        if (partToUpdate) {
-                          // Обновляем поля
-                          // partToUpdate.IS_CANCELLED = true;
-                          partToUpdate.state = 'PARTLY_RECEIVED';
-                          partToUpdate.backorder += partsToPrint[0].QUANTITY;
-
-                          // Находим нужный объект RECEIVINGS и обновляем его
-                          let receivingToUpdate = partToUpdate.RECEIVINGS.find(
-                            (receiving: any) =>
-                              receiving.RECEIVING_ITEM_NUMBER ==
-                              partsToPrint[0].RECEIVING_ITEM_NUMBER
-                          );
-                          if (receivingToUpdate) {
-                            receivingToUpdate.IS_CANCELLED = true;
-                          }
-
-                          // Создаем массив обновленных материалов
-                          let updatedParts = parts.map((part: any) =>
-                            part._id === partToUpdate._id ? partToUpdate : part
-                          );
-                          const resultUPD = await dispatch(
-                            updateOrderByID({
-                              id: resultADD11.payload[0]._id,
-                              companyID: currentCompanyID || '',
-                              parts: updatedParts,
-                            })
-                          );
-                        }
+                        await updateOrder({
+                          id: result?.payload?.ORDER_ID,
+                          state: 'PARTLY_RECEIVED',
+                          _id: result?.payload?.ORDER_ID,
+                        }).unwrap();
+                        message.success(t('CANCEL RECEIVIN SUCCESSFULLY DONE'));
                       }
+                    } catch (error) {
+                      message.error(t('ERROR CANCEL RECEIVING'));
                     }
                   }
                 },

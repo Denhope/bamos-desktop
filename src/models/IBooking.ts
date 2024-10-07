@@ -1,6 +1,10 @@
 export interface IBookingItem {
+  data?: any;
+  restriction?: string;
   voucherModel: VaucherModelType;
   createDate?: any;
+  accessProjectID?: any;
+  accessProjectStatus?: string;
   createUserID?: any;
   state?: any;
   partNumber?: string;
@@ -13,6 +17,7 @@ export interface IBookingItem {
   currency?: any;
   store?: any;
   projectID?: string;
+  projectTaskID?: string;
   orderNumber?: any;
   location?: string;
   station?: string;
@@ -91,8 +96,24 @@ export interface IBookingItem {
   PART_PICKSLIP_REMARKS?: string;
   PART_REPARE_REMARKS?: string;
   PART_PURCHASE_REMARKS?: string;
+  ORDER_ITEM_ID?: string;
+  pickDate?: any;
+  pickSlipNumber?: any;
+  partID?: any;
+  locationID?: string;
+  ownerID?: string;
+  storeID?: string;
+  partsIDs?: any[];
+  RECEIVING_ITEMS_ID?: any;
+  RECEIVING_ID?: any;
 }
 type VaucherModelType =
+  | 'ADD_STEP'
+  | 'DELETE_STEP'
+  | 'EDIT_STEP'
+  | 'ADD_ACTION'
+  | 'DELETE_ACTION'
+  | 'EDIT_ACTION'
   | 'ADD_NEW_PART'
   | 'STORE_TO_A/C'
   | 'CHANGE_LOCATION'
@@ -137,4 +158,9 @@ type VaucherModelType =
   | 'TOOL_LOST_NOTICE'
   | 'VENDOR_INSTALATION'
   | 'INCOMING_SHIPMENT_SENT'
+  | 'OPEN_ACCESS'
+  | 'CLOSE_ACCESS'
+  | 'INSPECT_ACCESS'
+  | 'ADD_PROJECT_ACCESS'
+  | 'ADD_TASK_ACCESS'
   | 'OUTGOIN SHIPMENT ARRIVED';

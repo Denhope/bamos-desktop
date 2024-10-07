@@ -25,7 +25,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import PartsForecast from '../APN/PartsForecast';
 import RequirementItemsQuatation from './RequirementItemsQuatation';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
 import RequirementViewer from '../APN/RequirementViewer';
 type AddDetailFormType = {
@@ -278,7 +278,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
               companyID: currentCompanyID || '',
               updateByID: USER_ID,
               updateBySing: localStorage.getItem('singNumber'),
-              updateByName: localStorage.getItem('name'),
+              updateByName: FULL_NAME,
               updateDate: new Date(),
               parts: updatedParts,
             })
@@ -341,7 +341,7 @@ const EditDetailForm: FC<AddDetailFormType> = ({
                 name="GROUP"
                 label={`${t('PART GROUP')}`}
                 width="sm"
-                tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                tooltip={`${t('SELECT SPECIAL GROUP')}`}
                 options={[
                   { value: 'CONS', label: t('CONS') },
                   { value: 'TOOL', label: t('TOOL') },

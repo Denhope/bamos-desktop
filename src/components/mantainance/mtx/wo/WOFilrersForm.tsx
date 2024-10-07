@@ -1,15 +1,15 @@
-import { AutoComplete, DatePicker, DatePickerProps, Form, Input } from "antd";
-import React, { FC, useRef, useState, useEffect } from "react";
+import { AutoComplete, DatePicker, DatePickerProps, Form, Input } from 'antd';
+import React, { FC, useRef, useState, useEffect } from 'react';
 
-import { getFilteredPlanesWO, getPlanesWONumber } from "@/utils/api/thunks";
-import { useAppDispatch, useTypedSelector } from "@/hooks/useTypedSelector";
-import { RangePickerProps } from "antd/es/date-picker";
+import { getFilteredPlanesWO, getPlanesWONumber } from '@/utils/api/thunks';
+import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
+import { RangePickerProps } from 'antd/es/date-picker';
 
-import MultiSelectForm from "@/components/shared/form/MultiSelectForm";
-import { IPlaneWO } from "@/models/IPlaneWO";
-import { Toaster } from "react-hot-toast";
-import { useTranslation } from "react-i18next";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import MultiSelectForm from '@/components/shared/form/MultiSelectForm';
+import { IPlaneWO } from '@/models/IPlaneWO';
+import { Toaster } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { ProForm, ProFormText } from '@ant-design/pro-components';
 const { RangePicker } = DatePicker;
 
 interface WOFilrersFormProps {
@@ -23,7 +23,7 @@ const WOFilrersForm: FC<WOFilrersFormProps> = ({
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {
     setSelectedEndDate(dateString[1]);
@@ -105,8 +105,8 @@ const WOFilrersForm: FC<WOFilrersFormProps> = ({
     <div
       className="flex flex-col mx-auto "
       style={{
-        width: "100%",
-        height: `${!isMenuCollapse ? "100%" : "35vh"}`,
+        width: '100%',
+        height: `${!isMenuCollapse ? '100%' : '35vh'}`,
       }}
     >
       <ProForm
@@ -125,7 +125,7 @@ const WOFilrersForm: FC<WOFilrersFormProps> = ({
               regNbr: currentPlane?.regNbr,
             })
           );
-          if (result.meta.requestStatus === "fulfilled") {
+          if (result.meta.requestStatus === 'fulfilled') {
             // toast.success('WO Create Sucsess');
             // dispatch(fetchAllProjects());
           } else {
@@ -148,43 +148,43 @@ const WOFilrersForm: FC<WOFilrersFormProps> = ({
           </AutoComplete>
         </Form.Item>
 
-        <ProFormText allowClear label="DESCRIPTION" name="description" />
+        <ProFormText allowClear label={t('DESCRIPTION')} name="description" />
 
         <Form.Item label="ACTIVE DATE" name="dateIn">
           <RangePicker allowClear onChange={onChange}></RangePicker>
         </Form.Item>
-        <Form.Item label={`${t("TYPE")}`} name="WOType">
+        <Form.Item label={`${t('TYPE')}`} name="WOType">
           <MultiSelectForm
             options={[
-              { key: "PLANNED", value: "PLANNED" },
-              { key: "UNPLANNED", value: "UNPLANNED" },
+              { key: 'PLANNED', value: 'PLANNED' },
+              { key: 'UNPLANNED', value: 'UNPLANNED' },
             ]}
             onChange={handleMultiSelectWOType}
-            mode={"multiple"}
+            mode={'multiple'}
           />
         </Form.Item>
 
         <Form.Item label="CLASSIFICATION" name="classification">
           <MultiSelectForm
             options={[
-              { key: "SCHEDULED", value: "SCHEDULED" },
-              { key: "UNSCHEDULED", value: "UNSCHEDULED" },
+              { key: 'SCHEDULED', value: 'SCHEDULED' },
+              { key: 'UNSCHEDULED', value: 'UNSCHEDULED' },
             ]}
             onChange={handleMultiSelectChange}
-            mode={"multiple"}
+            mode={'multiple'}
           />
         </Form.Item>
         <Form.Item label="STATUS" name="status">
           <MultiSelectForm
             options={[
-              { key: "OPEN", value: "OPEN" },
-              { key: "C/W", value: "C/W" },
-              { key: "CANCELLED", value: "CANCELLED" },
-              { key: "RTS PENDING", value: "RTS PENDING" },
-              { key: "RTS OVERDUE", value: "RTS OVERDUE" },
+              { key: 'OPEN', value: 'OPEN' },
+              { key: 'C/W', value: 'C/W' },
+              { key: 'CANCELLED', value: 'CANCELLED' },
+              { key: 'RTS PENDING', value: 'RTS PENDING' },
+              { key: 'RTS OVERDUE', value: 'RTS OVERDUE' },
             ]}
             onChange={handleMultiSelectStatusChange}
-            mode={"multiple"}
+            mode={'multiple'}
           />
         </Form.Item>
       </ProForm>

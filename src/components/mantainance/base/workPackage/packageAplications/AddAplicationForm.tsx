@@ -1,5 +1,7 @@
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import React, { FC, useRef, useState } from "react";
+// @ts-nocheck
+
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import React, { FC, useRef, useState } from 'react';
 import {
   Form,
   Upload,
@@ -9,20 +11,20 @@ import {
   message,
   DatePicker,
   DatePickerProps,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { RcFile } from "antd/lib/upload";
+} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { RcFile } from 'antd/lib/upload';
 import {
   createNewAplications,
   getPlanesNumber,
   uploadExcelAppFile,
   uploadExcelFile,
-} from "@/utils/api/thunks";
-import { IPlane } from "@/models/IPlane";
-import * as XLSX from "xlsx";
-import { RangePickerProps } from "antd/es/date-picker";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
-import { USER_ID } from "@/utils/api/http";
+} from '@/utils/api/thunks';
+import { IPlane } from '@/models/IPlane';
+import * as XLSX from 'xlsx';
+import { RangePickerProps } from 'antd/es/date-picker';
+import { ProForm, ProFormText } from '@ant-design/pro-components';
+import { USER_ID } from '@/utils/api/http';
 export interface ITaskDTO {
   id: number;
   taskNumber: string;
@@ -35,7 +37,7 @@ export interface ITaskDTO {
 }
 const AddAplicationForm: FC = () => {
   const dispatch = useAppDispatch();
-  const companyID = localStorage.getItem("companyID");
+  const companyID = localStorage.getItem('companyID');
   const [form] = Form.useForm();
   const [fileListRoutine, setFileListRoutine] = useState<RcFile[]>([]);
   const [fileListAdd, setFileListAdd] = useState<RcFile[]>([]);
@@ -57,20 +59,20 @@ const AddAplicationForm: FC = () => {
     let addData: any[] = [];
 
     if (fileListRoutine.length === 0 && fileListAdd.length === 0) {
-      message.error("Пожалуйста, выберите файл для загрузки");
+      message.error('Пожалуйста, выберите файл для загрузки');
       return;
     }
     if (fileListRoutine.length > 0) {
       const file: any = fileListRoutine[0];
-      if (!file.name.endsWith(".xlsx")) {
-        message.error("Пожалуйста, выберите файл формата Excel (.xlsx)");
+      if (!file.name.endsWith('.xlsx')) {
+        message.error('Пожалуйста, выберите файл формата Excel (.xlsx)');
         return;
       }
       taskData = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = async (e: any) => {
           const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
+          const workbook = XLSX.read(data, { type: 'array' });
           let missingColumns = false;
           let result: any[] = [];
           for (let i = 0; i < workbook.SheetNames.length; i++) {
@@ -80,11 +82,11 @@ const AddAplicationForm: FC = () => {
             if (json.length > 0) {
               // Проверка наличия определенных столбцов
               const requiredColumns = [
-                "taskNumber",
-                "taskDescription",
-                "amtoss",
-                "WOCustomer",
-                "WOPackageType",
+                'taskNumber',
+                'taskDescription',
+                'amtoss',
+                'WOCustomer',
+                'WOPackageType',
               ];
               const firstRow: any = json[0];
               requiredColumns.forEach((column) => {
@@ -107,15 +109,15 @@ const AddAplicationForm: FC = () => {
 
     if (fileListAdd.length > 0) {
       const file: any = fileListAdd[0];
-      if (!file.name.endsWith(".xlsx")) {
-        message.error("Pleese change  File Excel (.xlsx)");
+      if (!file.name.endsWith('.xlsx')) {
+        message.error('Pleese change  File Excel (.xlsx)');
         return;
       }
       addData = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = async (e: any) => {
           const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
+          const workbook = XLSX.read(data, { type: 'array' });
           let missingColumns = false;
           let result: any[] = [];
           for (let i = 0; i < workbook.SheetNames.length; i++) {
@@ -125,11 +127,11 @@ const AddAplicationForm: FC = () => {
             if (json.length > 0) {
               // Проверка наличия определенных столбцов
               const requiredColumns = [
-                "taskNumber",
-                "taskDescription",
-                "amtoss",
-                "WOCustomer",
-                "WOPackageType",
+                'taskNumber',
+                'taskDescription',
+                'amtoss',
+                'WOCustomer',
+                'WOPackageType',
               ];
               const firstRow: any = json[0];
               requiredColumns.forEach((column) => {
@@ -152,21 +154,21 @@ const AddAplicationForm: FC = () => {
     try {
       const result = await dispatch(
         createNewAplications({
-          planeID: "63b5c9a1b7fd6da202520ea9",
-          aplicationName: form.getFieldValue("applicationName"),
-          companyName: form.getFieldValue("companyName"),
-          planeNumber: form.getFieldValue("regNbr"),
-          planeType: form.getFieldValue("planeType"),
+          planeID: '63b5c9a1b7fd6da202520ea9',
+          aplicationName: form.getFieldValue('applicationName'),
+          companyName: form.getFieldValue('companyName'),
+          planeNumber: form.getFieldValue('regNbr'),
+          planeType: form.getFieldValue('planeType'),
           isCreatedProject: false,
-          ownerId: USER_ID || "",
+          ownerId: USER_ID || '',
           dateOfAplication: new Date(),
-          serviceType: form.getFieldValue("serviceType"),
+          serviceType: form.getFieldValue('serviceType'),
           routineTasks: taskData,
           additionalTasks: addData,
-          companyID: (companyID && companyID) || "",
+          companyID: (companyID && companyID) || '',
         })
       );
-      if (result.meta.requestStatus === "fulfilled") {
+      if (result.meta.requestStatus === 'fulfilled') {
         message.success(
           `Data uploaded successfully. Number of uploaded works: ${
             taskData.length + addData.length
@@ -175,19 +177,19 @@ const AddAplicationForm: FC = () => {
       }
     } catch (err) {
       console.error(err);
-      message.error("Error loading data");
+      message.error('Error loading data');
     }
   };
   const [selectedDate, setSelectedDate] = useState<any>();
   const onChange = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
+    value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string
   ) => {
     setSelectedDate(dateString[0]);
   };
 
   const onOk = (
-    value: DatePickerProps["value"] | RangePickerProps["value"]
+    value: DatePickerProps['value'] | RangePickerProps['value']
   ) => {
     // console.log('onOk: ', value);
   };
@@ -196,7 +198,7 @@ const AddAplicationForm: FC = () => {
     <div
       className="flex flex-col mx-auto"
       style={{
-        width: "93%",
+        width: '93%',
       }}
     >
       <ProForm

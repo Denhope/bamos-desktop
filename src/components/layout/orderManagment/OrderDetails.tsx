@@ -18,7 +18,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder, OrderType } from '@/models/IOrder';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { USER_ID } from '@/utils/api/http';
+import { COMPANY_ID, FULL_NAME, USER_ID } from '@/utils/api/http';
 import {
   getFilteredProjects,
   postNewOrder,
@@ -177,7 +177,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
     if (isCreating) {
       form.setFields([
         { name: 'createBySingNew', value: localStorage.getItem('singNumber') },
-        { name: 'createByNameNew', value: localStorage.getItem('name') },
+        { name: 'createByNameNew', value: FULL_NAME },
       ]);
     } else {
       setIsEditing(false);
@@ -185,7 +185,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
   }, [isCreating]);
 
   useEffect(() => {
-    const currentCompanyID = localStorage.getItem('companyID');
+    const currentCompanyID = COMPANY_ID;
     if (selectedProjectType) {
       let action;
       let url;
@@ -259,7 +259,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     planedDate: values.planedDate,
                     updateByID: USER_ID,
                     updateBySing: localStorage.getItem('singNumber'),
-                    updateByName: localStorage.getItem('name'),
+                    updateByName: FULL_NAME,
                     updateDate: new Date(),
                     startDate: values?.startDate,
                     finishDate: values?.finishDate,
@@ -287,7 +287,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     projectNumbers: values.projectNumbers,
                     createByID: USER_ID,
                     createBySing: localStorage.getItem('singNumber'),
-                    createByName: localStorage.getItem('name'),
+                    createByName: FULL_NAME,
                     createDate: new Date(),
                     startDate: null,
                     finishDate: null,
@@ -378,7 +378,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 disabled={isCreating || !isEditing}
                 rules={[{ required: true }]}
                 name="orderState"
-                label={t('ORDER STATE')}
+                label={t('ORDER STATUS')}
                 width="sm"
                 initialValue={['DRAFT']}
                 valueEnum={{
@@ -391,7 +391,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     status: 'SUCCESS',
                   },
                   // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
-                  CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+                  CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
                   // MISSING: { text: t('MISSING'), status: 'Error' },
                   OPEN: { text: t('OPEN'), status: 'Processing' },
                   // OPEN_AND_TRANSFER: {
@@ -419,7 +419,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     <ProFormText
                       rules={[{ required: true }]}
                       name="orderName"
-                      label={t('ORDER SHOT NAME')}
+                      label={t('ORDER SHORT NAME')}
                       width="sm"
                     ></ProFormText>{' '}
                     <ProFormSelect
@@ -445,7 +445,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                       mode="multiple"
                       rules={[{ required: true }]}
                       name="projectNumbers"
-                      label={`${t(`PROJECT LINK`)}`}
+                      label={`${t(`PROJECT`)}`}
                       width="sm"
                       options={options}
                     />
@@ -481,12 +481,12 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                 ></ProFormText>
                 <ProFormGroup>
                   <ProFormDatePicker
-                    label={t('ORDER START DATE')}
+                    label={t('START DATE')}
                     name="startDate"
                     width="sm"
                   ></ProFormDatePicker>
                   <ProFormDatePicker
-                    label={t('ORDER FINISH DATE')}
+                    label={t('FINISH DATE')}
                     name="finishDate"
                     width="sm"
                   ></ProFormDatePicker>
@@ -512,7 +512,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             files: updatedFiles,
                           })
@@ -559,7 +559,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                     <ProFormText
                       rules={[{ required: true }]}
                       name="orderName"
-                      label={t('ORDER SHOT NAME')}
+                      label={t('ORDER SHORT NAME')}
                       width="sm"
                     ></ProFormText>{' '}
                     {/* <ProFormSelect
@@ -585,7 +585,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                       mode="multiple"
                       rules={[{ required: true }]}
                       name="projectNumbers"
-                      label={`${t(`PROJECT LINK`)}`}
+                      label={`${t(`PROJECT`)}`}
                       width="sm"
                       options={options}
                     />
@@ -652,7 +652,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             files: updatedFiles,
                           })
@@ -794,7 +794,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
             }}
           >
             <SettingOutlined />
-            <div>{t('NEW ORDER')}</div>
+            <div>{t('NEW')}</div>
           </Space>
           <Space
             onClick={() => order && setIsEditingView(!isEditingView)}
@@ -866,7 +866,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })
@@ -942,7 +942,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })
@@ -1029,7 +1029,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })
@@ -1105,7 +1105,7 @@ const OrderDetails: FC<ProjectDetailsFormType> = ({
                             companyID: currentCompanyID || '',
                             updateByID: USER_ID,
                             updateBySing: localStorage.getItem('singNumber'),
-                            updateByName: localStorage.getItem('name'),
+                            updateByName: FULL_NAME,
                             updateDate: new Date(),
                             parts: updatedParts,
                           })

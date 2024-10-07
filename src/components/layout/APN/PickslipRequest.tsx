@@ -7,19 +7,12 @@ import DoubleClickPopover from '@/components/shared/form/DoubleClickProper';
 import PartNumberSearch from '@/components/store/search/PartNumberSearch';
 import { useTranslation } from 'react-i18next';
 import { v4 as originalUuidv4 } from 'uuid';
-import {
-  TransactionOutlined,
-  EditOutlined,
-  PrinterOutlined,
-  CloseCircleOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
+import { CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import {
   createProjectTaskMaterialAplication,
   createSingleRequirement,
-  updateProjectTask,
   updateRequirementsByBody,
   updatedMaterialOrdersById,
 } from '@/utils/api/thunks';
@@ -37,7 +30,7 @@ const PickslipRequest: FC = () => {
       title: `${t('PART No')}`,
       dataIndex: 'PN',
       key: 'PN',
-      tip: ' Click open Store search',
+      tooltip: ' Click open Store search',
       ellipsis: true,
       width: '14%',
       formItemProps: (form, { rowIndex }) => {
@@ -94,7 +87,7 @@ const PickslipRequest: FC = () => {
       // responsive: ['sm'],
     },
     {
-      title: `${t('QTY REQ ')}`,
+      title: `${t('QTY REQ')}`,
       dataIndex: 'amout',
       key: 'amout',
       width: '7%',
@@ -151,9 +144,9 @@ const PickslipRequest: FC = () => {
   const dispatch = useAppDispatch();
   const uuidv4: () => string = originalUuidv4;
   return (
-    <div className="h-[82vh]  bg-white px-4 py-3  overflow-hidden flex flex-col justify-between gap-1">
-      <div className="flex flex-col">
-        <div className="py-4">
+    <div className="h-[82vh]   px-4 py-3 gap-4  overflow-hidden flex flex-col justify-between ">
+      <div className="flex flex-col gap-4">
+        <div className="py-4 bg-white">
           <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
             <Col sm={18}>
               <PickslipRequestForm
@@ -163,7 +156,6 @@ const PickslipRequest: FC = () => {
                 }}
                 onCurrentPickSlip={function (data: any): void {
                   setCurrentPickData(data);
-                  console.log(data);
                 }}
                 setCancel={isCancel}
                 onCreate={function (data: boolean): void {
@@ -348,6 +340,7 @@ const PickslipRequest: FC = () => {
                       materials: updatedRequirements,
                       createDate: new Date(),
                       createUserId: USER_ID || '',
+                      mechSing: currentPickData && currentPickData?.neededOn,
                       additionalTaskID:
                         currentPickData?.receiverType === 'NRC'
                           ? currentPickData?.taskId

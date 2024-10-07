@@ -31,7 +31,7 @@ const PartAdministration: FC<PartAdministrationType> = ({}) => {
           onEditPartDetailsEdit={function (data: any): void {}}
         ></MainView>
       ),
-      title: `${t('MAIN')}`,
+      title: `${t('INFORMATION')}`,
     },
     {
       content: (

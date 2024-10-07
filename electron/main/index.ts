@@ -13,6 +13,11 @@ import { release } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { update } from './update';
+// import path from 'path';
+import * as fs from 'fs/promises';
+
+// // Импортируйте необходимые типы из electron-updater
+// import { autoUpdater, UpdateInfo, ProgressInfo } from 'electron-updater';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -52,6 +57,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 let win: BrowserWindow | null = null;
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.mjs');
+// const preload= fileURLToPath(new URL('../preload/index.mjs', import.meta.url)) /
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, 'index.html');
 
@@ -61,18 +67,9 @@ const indexHtml = join(process.env.DIST, 'index.html');
 // Функция для вывода информации о программе
 function showAboutInfo() {
   const message = `
-    Program: ${app.getName()}
-    Version: ${app.getVersion()}
-    
-    license: PROPRIETARY
-
-      Information: BAMOS is a software program designed to organize and manage the production processes of an aircraft repair facility. The program is specifically tailored to meet the unique needs of the aviation industry, providing a comprehensive solution for managing the repair and maintenance of aircraft.
-
-      The BAMOS program offers a range of features that enable users to streamline their production processes, improve efficiency, and reduce costs. The program includes tools for managing inventory, scheduling maintenance and repair work, tracking parts and materials, and generating reports and analytics.
-    
-      One of the key benefits of the BAMOS program is its ability to integrate with other systems and software used in the aviation industry. This allows for seamless data transfer and communication between different departments and teams, improving overall productivity and reducing the risk of errors or miscommunications.
-    
-      Overall, the BAMOS program is an essential tool for any aircraft repair facility looking to optimize their production processes and improve their bottom line. With its comprehensive features and user-friendly interface, the program is a valuable asset for any organization in the aviation industry.
+    Program: ${app.getName().toUpperCase()}
+    Version: ${app.getVersion()}    
+   
   `;
   dialog.showMessageBox({
     type: 'info',
@@ -82,6 +79,15 @@ function showAboutInfo() {
   });
 }
 
+// license: PROPRIETARY
+
+// Information: BAMOS is a software program designed to organize and manage the production processes of an aircraft repair facility. The program is specifically tailored to meet the unique needs of the aviation industry, providing a comprehensive solution for managing the repair and maintenance of aircraft.
+
+// The BAMOS program offers a range of features that enable users to streamline their production processes, improve efficiency, and reduce costs. The program includes tools for managing inventory, scheduling maintenance and repair work, tracking parts and materials, and generating reports and analytics.
+
+// One of the key benefits of the BAMOS program is its ability to integrate with other systems and software used in the aviation industry. This allows for seamless data transfer and communication between different departments and teams, improving overall productivity and reducing the risk of errors or miscommunications.
+
+// Overall, the BAMOS program is an essential tool for any aircraft repair facility looking to optimize their production processes and improve their bottom line. With its comprehensive features and user-friendly interface, the program is a valuable asset for any organization in the aviation industry.
 // Функция для проверки обновлений
 function checkForUpdates() {
   autoUpdater.checkForUpdates();
@@ -102,7 +108,31 @@ function resizeWindow(width: number, height: number) {
     win.setSize(width, height);
   }
 }
-
+// Функция для дублирования окна
+function duplicateWindow() {
+  const focusedWindow = BrowserWindow.getFocusedWindow();
+  if (focusedWindow) {
+    let newWindow = new BrowserWindow({
+      title: 'Main window',
+      icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
+      width: focusedWindow.getSize()[0],
+      height: focusedWindow.getSize()[1],
+      webPreferences: {
+        preload: preload,
+        // nodeIntegration: true,
+        // contextIsolation: false,
+      },
+    });
+    if (url) {
+      // electron-vite-vue#298
+      newWindow.loadURL(url);
+      // Open devTool if the app is not packaged
+      newWindow.webContents.openDevTools();
+    } else {
+      newWindow.loadFile(indexHtml);
+    }
+  }
+}
 // Функция для переключения полноэкранного режима
 function toggleFullScreen() {
   const win = BrowserWindow.getFocusedWindow();
@@ -144,6 +174,17 @@ const template: Electron.MenuItemConstructorOptions[] = [
           app.quit();
         },
       },
+      {
+        label: 'Print',
+        accelerator: 'CmdOrCtrl+P',
+        click: () => {
+          const win = BrowserWindow.getFocusedWindow();
+          // Вызываем стандартное окно печати
+          if (win) {
+            win.webContents.print();
+          }
+        },
+      },
     ],
   },
   // {
@@ -159,13 +200,29 @@ const template: Electron.MenuItemConstructorOptions[] = [
   //     { role: 'selectAll' }
   //   ]
   // },
+
   {
     label: 'View',
     submenu: [
       {
+        label: 'Toggle Developer Tools',
+        accelerator: 'CmdOrCtrl+Shift+I',
+        click: () => {
+          const win = BrowserWindow.getFocusedWindow();
+          if (win) {
+            win.webContents.toggleDevTools();
+          }
+        },
+      },
+      {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click: reloadWindow,
+      },
+      {
+        label: 'Duplicate Window',
+        accelerator: 'CmdOrCtrl+D',
+        click: duplicateWindow,
       },
       {
         label: 'Actual Size',
@@ -233,16 +290,17 @@ const template: Electron.MenuItemConstructorOptions[] = [
 // Создаем меню из шаблона
 const menu = Menu.buildFromTemplate(template);
 
-// Устанавливаем меню приложения
+// Устаавливаем меню приложения
 Menu.setApplicationMenu(menu);
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
-      preload,
-      // nodeIntegration: false,
-      // contextIsolation: true,
+      preload: preload,
+      nodeIntegration: false,
+      contextIsolation: true,
+      plugins: true,
 
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
       // nodeIntegration: true,
@@ -263,15 +321,15 @@ async function createWindow() {
   }
 
   // Test actively push message to the Electron-Renderer
-  win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', new Date().toLocaleString());
-  });
+  // win.webContents.on('did-finish-load', () => {
+  //   win?.webContents.send('main-process-message', new Date().toLocaleString());
+  // });
 
-  // Make all links open with the browser, not with the application
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https:')) shell.openExternal(url);
-    return { action: 'deny' };
-  });
+  // // Make all links open with the browser, not with the application
+  // win.webContents.setWindowOpenHandler(({ url }) => {
+  //   if (url.startsWith('https:')) shell.openExternal(url);
+  //   return { action: 'deny' };
+  // });
 
   // Apply electron-updater
   update(win);
@@ -305,10 +363,12 @@ app.on('activate', () => {
 
 ipcMain.handle('open-win', (_, arg) => {
   const childWindow = new BrowserWindow({
+    icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
-      nodeIntegration: false,
-      contextIsolation: true,
+      plugins: true,
+      // nodeIntegration: false,
+      // contextIsolation: true,
     },
   });
 
@@ -319,31 +379,52 @@ ipcMain.handle('open-win', (_, arg) => {
   }
 });
 
-// function createWindowWithUrl(url: string) {
-//   let childWindow: BrowserWindow | null = new BrowserWindow({
-//     webPreferences: {
-//       preload,
-//       nodeIntegration: false,
-//       contextIsolation: true,
-//     },
-//   });
+ipcMain.handle('open-directory-dialog', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory']
+  });
+  return result;
+});
 
-//   if (process.env.VITE_DEV_SERVER_URL) {
-//     childWindow.loadURL(url);
-//   } else {
-//     childWindow.loadFile(indexHtml);
-//   }
+ipcMain.handle('save-file', async (_, filePath: string, data: Uint8Array) => {
+  await fs.writeFile(filePath, Buffer.from(data));
+});
 
-//   // Обработчик закрытия окна
-//   childWindow.on('closed', () => {
-//     childWindow = null;
-//   });
+ipcMain.handle('open-path', async (_, path) => {
+  try {
+    await shell.openPath(path)
+  } catch (error) {
+    console.error('Ошибка при открытии пути:', error)
+    throw error
+  }
+});
 
-//   // Отображение окна
-//   childWindow.show();
-// }
+// ipcMain.handle('check-update', () => {
+//   // Логика проверки обновлений
+// });
 
-// // Обработчик IPC для открытия нового окна с URL
-// ipcMain.handle('open-win', (_, url: string) => {
-//   createWindowWithUrl(url);
+// ipcMain.handle('start-download', () => {
+//   // Замените на правильный метод из autoUpdater
+//   autoUpdater.downloadUpdate();
+// });
+
+// ipcMain.handle('quit-and-install', () => {
+//   autoUpdater.quitAndInstall();
+// });
+
+// // Настройка автообновления
+// autoUpdater.on('update-available', (info: UpdateInfo) => {
+//   win?.webContents.send('update-can-available', info);
+// });
+
+// autoUpdater.on('error', (error: Error) => {
+//   win?.webContents.send('update-error', error);
+// });
+
+// autoUpdater.on('download-progress', (progressObj: ProgressInfo) => {
+//   win?.webContents.send('download-progress', progressObj);
+// });
+
+// autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+//   win?.webContents.send('update-downloaded', info);
 // });

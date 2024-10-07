@@ -17,6 +17,7 @@ import {
 import GeneretedTransferPdf from '@/components/pdf/GeneretedTransferLabels';
 import { getFilteredShops } from '@/utils/api/thunks';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
+import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 type BookingPartSideType = {
   order: IOrder | null;
   onUpdateOrder?: (data: any) => void;
@@ -68,36 +69,46 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
         selectedOrderType &&
           selectedOrderType === 'ORDER' && {
             content: (
-              <div className="flex h-[48vh] flex-col justify-between">
+              <div className="flex h-[46vh] flex-col justify-between">
                 <div className="flex">
                   <BookingOrderPartsList
                     onSelectedPart={handleSelectedPart}
-                    parts={selectedOrder?.parts}
+                    parts={selectedOrder?.orderItemsID}
                     scroll={20}
                   />
                 </div>
 
                 <Space className="mt-5" align="center">
-                  <Button
-                    size="small"
-                    onClick={handleOpenPart}
-                    disabled={
-                      !!(
-                        !selectedPart ||
-                        selectedPart.record.state === 'RECEIVED' ||
-                        selectedPart.record.state === 'CANCELLED' ||
-                        selectedPart.record.state === 'CLOSED' ||
-                        (selectedOrder && selectedOrder?.state === 'CLOSED') ||
-                        (selectedOrder &&
-                          selectedOrder?.state === 'CANCELLED') ||
-                        (selectedOrder &&
-                          selectedOrder?.state === 'RECEIVED') ||
-                        !selecteReceiving
-                      )
-                    }
+                  <PermissionGuard
+                    requiredPermissions={[
+                      Permission.PICKSLIP_CONFIRMATION_ACTIONS,
+                    ]}
                   >
-                    {t('PROCESS RECEIVING')}
-                  </Button>
+                    <Button
+                      size="small"
+                      onClick={handleOpenPart}
+                      disabled={
+                        !!(
+                          !selectedPart ||
+                          selectedPart.record.state === 'RECEIVED' ||
+                          selectedPart.record.state === 'CANCELLED' ||
+                          selectedPart.record.state === 'CLOSED' ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'CLOSED') ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'CANCELLED') ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'RECEIVED') ||
+                          !selecteReceiving ||
+                          (selectedOrder &&
+                            selectedOrder?.state === 'onQuatation') ||
+                          !selecteReceiving
+                        )
+                      }
+                    >
+                      {t('PROCESS RECEIVING')}
+                    </Button>
+                  </PermissionGuard>
                 </Space>
               </div>
             ),
@@ -114,8 +125,8 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   currentPart={openPart.record}
                   onUpdateOrder={function (data: any): void {
                     setOpenPart(null);
-                    setSelectedOrder(data);
-                    onUpdateOrder && onUpdateOrder(data);
+                    setSelectedOrder(data.data);
+                    // onUpdateOrder && onUpdateOrder(data.data);
                   }}
                   // onReceivingPart={(data) => {
                   //   setPartsToPrint(data);
@@ -157,36 +168,9 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                 />
               </>
             ),
-            title: `${t('RECEIVING')}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
-          },
-        openPart &&
-          openPart?.index !== undefined && {
-            content: <ProFormTextArea></ProFormTextArea>,
-            title: `${t('REMARKS')}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
-          },
-        openPart &&
-          openPart?.index !== undefined && {
-            content: (
-              <ProFormGroup>
-                <ProFormText
-                  name="unitPrice"
-                  label={t('UNIT PRICE')}
-                  width="sm"
-                ></ProFormText>
-                <ProFormText
-                  name="unitLocalPrice"
-                  label={t('UNIT LOCAL PRICE')}
-                  width="sm"
-                ></ProFormText>
-              </ProFormGroup>
-            ),
-            title: `${t('FINANCIAL DATA')}${selectedOrder?.orderNumber} POS. ${
-              openPart?.index + 1
-            }`,
+            title: `${t('RECEIVING')}№${
+              selecteReceiving?.receivingNumber
+            } -  ${t('POS.')} ${openPart?.index + 1}`,
           },
 
         selectedOrderType &&
@@ -200,7 +184,8 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                   onUpdateOrder={function (data: any): void {
                     setOpenPart(null);
                     setSelectedOrder(data);
-                    // setSelectedOrderType('');
+                    setSelectedOrderType('');
+                    console.log(data);
                     onUpdateOrder && onUpdateOrder(data);
                   }}
                   onReceivingPart={async (data) => {
@@ -233,8 +218,6 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
                         message.error('Error');
                       }
                     }
-
-                    //
                   }}
                 />
               </>
@@ -251,8 +234,6 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
       selectedPart,
       selecteReceiving,
       setSelectedOrderType,
-
-      t,
     ]
   );
 

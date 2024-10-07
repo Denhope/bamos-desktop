@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IAplicationInfo, IDTO, ITaskType } from "@/types/TypesData";
-import { createNewAplications, getAllAplication } from "@/utils/api/thunks";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IAplicationInfo, IDTO, ITaskType } from '@/types/TypesData';
+import { createNewAplications, getAllAplication } from '@/utils/api/thunks';
 
 type AplicationState = {
   allAplications: IAplicationInfo[];
@@ -15,11 +15,11 @@ const initialState: AplicationState = {
   isSetCurrentAplication: false,
   allAplications: [],
   currentAplication: {
-    id: "",
-    aplicationName: "",
-    planeID: "",
-    serviceType: "",
-    companyID: "",
+    id: '',
+    aplicationName: '',
+    planeID: '',
+    serviceType: '',
+    companyID: '',
     dateOfAplication: undefined,
     routineTasks: [],
     additionalTasks: [],
@@ -28,7 +28,7 @@ const initialState: AplicationState = {
   allAplicationsFetchError: null,
 };
 export const aplicationSlice = createSlice({
-  name: "aplication",
+  name: 'aplication',
   initialState,
   reducers: {
     setCurrentAplication: (state, action: PayloadAction<IAplicationInfo>) => {

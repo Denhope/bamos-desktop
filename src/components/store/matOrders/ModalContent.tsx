@@ -102,7 +102,7 @@ const ModalSearchContent: FC<ModalSearchContentProps> = ({
       dataIndex: 'STOCK',
       key: 'STOCK',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -112,7 +112,7 @@ const ModalSearchContent: FC<ModalSearchContentProps> = ({
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -128,7 +128,7 @@ const ModalSearchContent: FC<ModalSearchContentProps> = ({
       title: `${t('EXPIRY DATE')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       width: '9%',
       formItemProps: {
@@ -230,7 +230,7 @@ const ModalSearchContent: FC<ModalSearchContentProps> = ({
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },

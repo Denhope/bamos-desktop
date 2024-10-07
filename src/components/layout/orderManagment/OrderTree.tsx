@@ -246,7 +246,7 @@ const QuatationTree: React.FC<ProjectDetailsFormType> = React.memo(
                     key: uuidv4(),
                   },
                   {
-                    title: `PLANED DATE
+                    title: `PLANNED DATE
                     :${(order?.vendors && order?.finishDate) || ''}`,
                     key: uuidv4(),
                   },

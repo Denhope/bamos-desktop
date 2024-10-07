@@ -155,7 +155,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -321,8 +321,8 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
       valueEnum: {
         issued: { text: t('ISSUED'), status: 'Processing' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
-        cancelled: { text: t('CANCELLED'), status: 'Error' },
+        closed: { text: t('CLOSE'), status: 'Default' },
+        cancelled: { text: t('CANCEL'), status: 'Error' },
         partyCancelled: { text: t('PARTY_CANCELLED'), status: 'Error' },
         transfer: { text: t('TRANSFER'), status: 'Processing' },
         completed: { text: t('COMPLETED'), status: 'SUCCESS' },
@@ -345,7 +345,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
       dataIndex: 'description',
       key: 'description',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -403,6 +403,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
     useState<UserResponce | null>();
   const [reset, setReset] = useState(false);
   const [form] = Form.useForm();
+
   return (
     <div className="flex flex-col  h-[73vh]  gap-2 w-[99%]">
       <ModalForm
@@ -446,7 +447,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                 />
               </div>
             ),
-            title: 'REQUIREMENT ITEMS',
+            title: `${t('REQUIREMENT ITEMS')}`,
           },
           {
             content: (
@@ -468,7 +469,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                 />
               </div>
             ),
-            title: 'BOOKED ITEMS',
+            title: `${t('BOOKED ITEMS')}`,
           },
         ]}
       />
@@ -513,6 +514,7 @@ const MarerialOrderContent: FC<MarerialOrderContentProps> = ({
                     store: '10',
                     workshop: '0700',
                     companyID: currentCompanyID,
+                    neededOnID: '',
                   })
                 );
                 //добавитьUpdateUser

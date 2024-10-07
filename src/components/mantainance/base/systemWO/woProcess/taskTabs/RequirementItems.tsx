@@ -308,7 +308,7 @@ const RequirementItems: FC<RequirementItemsProps> = ({
         inStockReserve: { text: t('RESERVATION'), status: 'SUCCESS' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
+        closed: { text: t('CLOSE'), status: 'Default' },
         canceled: { text: t('CANCELED'), status: 'Error' },
         onOrder: { text: t('ISSUED'), status: 'Processing' },
         draft: { text: t('DRAFT'), status: 'Error' },
@@ -321,7 +321,7 @@ const RequirementItems: FC<RequirementItemsProps> = ({
       title: `${t('PART No')}`,
       dataIndex: 'PN',
       key: 'PN',
-      tip: 'Right Click open Store search',
+      tooltip: 'Right Click open Store search',
       ellipsis: true,
       width: '13%',
       ...useColumnSearchProps({
@@ -390,7 +390,7 @@ const RequirementItems: FC<RequirementItemsProps> = ({
       dataIndex: 'nameOfMaterial',
       key: 'nameOfMaterial',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '15%',
       renderFormItem: (item2, { onChange }) => {

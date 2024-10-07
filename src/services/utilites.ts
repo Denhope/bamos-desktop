@@ -1,5 +1,7 @@
-import { Excel } from 'antd-table-saveas-excel';
+// @ts-nocheck
 
+import { Excel } from 'antd-table-saveas-excel';
+import { v4 as uuidv4 } from 'uuid';
 import { IProjectTaskAll } from '@/models/IProjectTask';
 
 import {
@@ -19,6 +21,10 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { MenuProps } from 'antd';
 import { getFileFromServer } from '@/utils/api/thunks';
+import { $authHost } from '@/utils/api/http';
+import { IPartNumber } from '@/models/IUser';
+import { ITask } from '@/models/ITask';
+import { IOrderItem, IRequirement } from '@/models/IRequirement';
 // import { fileTypeFromBuffer } from 'file-type';
 export const includeTasks = (
   arrayOfAllObjectsData: ITaskType[],
@@ -679,96 +685,1184 @@ export async function handleFileSelect(file: {
   }
 }
 
-// export async function handleFileOpen(file: any): Promise<void> {
-//   try {
-//     const companyID = localStorage.getItem('companyID') || '';
-//     const fileData = await getFileFromServer(companyID, file.id);
-
-//     // Создайте Blob из файла
-//     const blob = new Blob([fileData], { type: file.type });
-
-//     // Создайте временный URL для Blob
-//     const fileURL = window.URL.createObjectURL(blob);
-
-//     // Откройте файл в новой вкладке или окне
-//     window.open(fileURL, '_blank');
-//     console.log(fileURL);
-//   } catch (error) {
-//     console.error('Не удалось открыть файл', error);
-//   }
-// }
-
 export async function handleFileOpen(file: any): Promise<void> {
   try {
     const companyID = localStorage.getItem('companyID') || '';
     const fileData = await getFileFromServer(companyID, file.id);
 
-    // Создайте Blob из файла
-    const blob = new Blob([fileData], { type: file.type });
+    // Определяем MIME-тип на основе расширения файла
+    const mimeType = getMimeType(file.name);
 
-    // Создайте временный URL для Blob
-    const fileURL = window.URL.createObjectURL(blob);
+    // Проверяем, можно ли файл открыть внутри браузера
+    if (isInlineViewable(mimeType)) {
+      // Создаем Blob из файла с соответствующим MIME-типом
+      const blob = new Blob([fileData], { type: mimeType });
 
-    // Откройте файл в новом окне или вкладке браузера
-    const newWindow = window.open(fileURL, '_blank');
+      // Создаем временный URL для Blob
+      const fileURL = window.URL.createObjectURL(blob);
 
-    // Если браузер блокирует открытие файла, предложите сохранить его
-    if (
-      !newWindow ||
-      newWindow.closed ||
-      typeof newWindow.closed === 'undefined'
-    ) {
-      alert('Заблокировано открытие файла. Пожалуйста загрузите файл.');
+      // Открываем файл в новом окне или вкладке браузера
+      const newWindow = window.open(fileURL, '_blank');
+
+      // if (newWindow && mimeType.startsWith('image/')) {
+      //   newWindow.print();
+      // }
+
+      // Если браузер блокирует открытие файла, предлагаем сохранить его
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+      } else {
+        newWindow.focus();
+      }
+
+      // Не забываем очищать URL после открытия файла
+      window.URL.revokeObjectURL(fileURL);
     } else {
-      newWindow.focus();
+      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new Blob([fileData]));
+      link.download = file.name;
+      link.click();
     }
-
-    // Не забывайте очищать URL после открытия файла
-    window.URL.revokeObjectURL(fileURL);
   } catch (error) {
     console.error('Не удалось открыть файл', error);
   }
 }
 
-// export const valueEnumCurrency = {
-//   USD: `USD/${t('USD/US Dollar').toUpperCase()}`,
-//   EUR: `EUR/${t('EUR/Euro').toUpperCase()}`,
-//   GBP: `GBP/${t('GBP/British Pound').toUpperCase()}`,
-//   JPY: `JPY/${t('JPY/Japanese Yen').toUpperCase()}`,
-//   AUD: `AUD/${t('AUD/Australian Dollar').toUpperCase()}`,
-//   CAD: `CAD/${t('CAD/Canadian Dollar').toUpperCase()}`,
-//   CHF: `CHF/${t('CHF/Swiss Franc').toUpperCase()}`,
-//   CNY: `CNY/${t('CNY/Chinese Yuan').toUpperCase()}`,
-//   HKD: `HKD/${t('HKD/Hong Kong Dollar').toUpperCase()}`,
-//   NZD: `NZD/${t('NZD/New Zealand Dollar').toUpperCase()}`,
-//   SEK: `SEK/${t('SEK/Swedish Krona').toUpperCase()}`,
-//   KRW: `KRW/${t('KRW/South Korean Won').toUpperCase()}`,
-//   SGD: `SGD/${t('SGD/Singapore Dollar').toUpperCase()}`,
-//   NOK: `NOK/${t('NOK/Norwegian Krone').toUpperCase()}`,
-//   MXN: `MXN/${t('MXN/Mexican Peso').toUpperCase()}`,
-//   INR: `INR/${t('INR/Indian Rupee').toUpperCase()}`,
-//   RUB: `RUB/${t('RUB/Russian Ruble').toUpperCase()}`,
-//   ZAR: `ZAR/${t('ZAR/South African Rand').toUpperCase()}`,
-//   BRL: `BRL/${t('BRL/Brazilian Real').toUpperCase()}`,
-//   TWD: `TWD/${t('TWD/New Taiwan Dollar').toUpperCase()}`,
+export async function handleFileOpenTask(
+  fileID: any,
+  prop?: string,
+  name: string
+): Promise<void> {
+  try {
+    const companyID = localStorage.getItem('companyID') || '';
+    const fileData = await getFileFromServer(companyID, fileID, prop);
+
+    const mimeType = getMimeType(name);
+
+    // Проверяем, можно ли файл открыть внутри браузера
+    if (isInlineViewable(mimeType)) {
+      // Создаем Blob из файла с соответствующим MIME-типом
+      const blob = new Blob([fileData], { type: mimeType });
+
+      // Создаем временный URL для Blob
+      const fileURL = window.URL.createObjectURL(blob);
+
+      // Открываем файл в новом окне или вкладке браузера
+      const newWindow = window.open(fileURL, '_blank');
+
+      // if (newWindow && mimeType.startsWith('image/')) {
+      //   newWindow.print();
+      // }
+
+      // Если браузер блокирует открытие файла, предлагаем сохранить его
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('Заблокировано открытие файла. Пожалуйста, сохраните файл.');
+      } else {
+        newWindow.focus();
+      }
+
+      // Не забываем очищать URL после открытия файла
+      window.URL.revokeObjectURL(fileURL);
+    } else {
+      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new Blob([fileData]));
+      link.download = fileID;
+      link.click();
+    }
+  } catch (error) {
+    // console.error('Не удалось открыть файл', error);
+  }
+}
+
+export async function handleOpenReport(
+  fileData: any,
+  linkD?: any,
+  loading?: boolean
+): Promise<void> {
+  try {
+    const mimeType = getMimeType('pdf');
+    if (isInlineViewable(mimeType)) {
+      // Create a Blob from the file data with the MIME type 'application/pdf'
+      const blob = new Blob([fileData], { type: mimeType });
+
+      // Create a URL for the Blob
+      const fileURL = URL.createObjectURL(blob);
+
+      // Open the PDF in a new window or tab
+      const newWindow = window.open(fileURL, '_blank');
+
+      // If the window was blocked, alert the user to save the file
+      if (
+        !newWindow ||
+        newWindow.closed ||
+        typeof newWindow.closed === 'undefined'
+      ) {
+        alert('The PDF file could not be opened. Please save the file.');
+      } else {
+        newWindow.focus();
+      }
+
+      // Revoke the URL to free up memory
+      URL.revokeObjectURL(fileURL);
+    } else {
+      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new Blob([fileData]));
+      link.download = fileData.name;
+      link.click();
+    }
+  } catch (error) {
+    // console.error('Failed to open PDF file', error);
+  }
+}
+
+function getMimeType(fileName: string): string {
+  const extension = fileName.split('.').pop()?.toLowerCase() || '';
+  switch (extension) {
+    case 'pdf':
+      return 'application/pdf';
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return `image/${extension}`;
+    case 'txt':
+    case 'doc':
+    case 'docx':
+    case 'rtf':
+      return `text/${extension}`;
+    // Добавьте здесь другие расширения и соответствующие MIME-типы
+    default:
+      return 'application/octet-stream'; // По умолчанию для неизвестных типов
+  }
+}
+
+// Функция для проверки, можно ли файл открыть внутри браузера
+function isInlineViewable(mimeType: string): boolean {
+  // Список MIME-типов, которые можно открывать внутри браузера
+  const inlineViewableMimeTypes = [
+    'application/pdf',
+    'image/jpg',
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+
+    // 'text/plain',
+    // 'text/txt',
+    // 'text/doc',
+    // Добавьте здесь другие типы, которые вы хотите открывать внутри браузера
+  ];
+  return inlineViewableMimeTypes.includes(mimeType);
+}
+export const transformToIPartNumber = (
+  data: any[],
+  isToolArray?: string[]
+): any[] => {
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data
+    .filter(
+      (item) => isToolArray && !isToolArray.includes(item.partNumberID?.GROUP)
+    )
+    .map((item) => ({
+      QUANTITY: item.quantity,
+      id: item._id,
+      status: '',
+      _id: item._id,
+      partId: item.partNumberID?._id,
+      PART_NUMBER: item.partNumberID?.PART_NUMBER,
+      DESCRIPTION:
+        item.partNumberID?.DESCRIPTION || item.partNumberID?.NAME_OF_MATERIAL,
+      TYPE: item.partNumberID?.TYPE,
+      GROUP: item.partNumberID?.GROUP,
+      UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+      UNIT_OF_MEASURE_LONG: item.partNumberID?.UNIT_OF_MEASURE,
+      ADD_DESCRIPTION: item.partNumberID?.ADD_DESCRIPTION,
+      ADD_UNIT_OF_MEASURE: item.partNumberID?.ADD_UNIT_OF_MEASURE,
+      companyID: item.companyID,
+      createDate: item.createDate,
+      createUserID: item.createUserID?._id,
+      updateDate: item.updateDate,
+      updateUserID: item.updateUserID?._id,
+      acTypeID: '',
+    }));
+
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+export const transformToIPart = (data: any[]): any[] => {
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    DESCRIPTION:
+      item?.NAME_OF_MATERIAL?.toUpperCase() || item?.DESCRIPTION?.toUpperCase(),
+    AC_TYPE: item?.acTypeID?.code || '',
+  }));
+
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+export const transformToIAltPartNumber = (data: any[]): any[] => {
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data?.map((item) => ({
+    id: item._id,
+    _id: item._id,
+    partId: item?.altPartNumberID?._id,
+    altPartNumberID: item?.altPartNumberID,
+    partNumberID: item?.partNumberID?._id,
+    ALTERNATIVE: item?.altPartNumberID?.PART_NUMBER,
+    ALTERNATIVE_REMARKS: item.ALTERNATIVE_REMARKS,
+    ALTERNATIVE_DESCRIPTION: item?.altPartNumberID?.DESCRIPTION,
+    PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    PART_DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    PART_GROUP: item.partNumberID?.GROUP,
+    PART_TYPE: item.partNumberID?.TYPE,
+    PART_UNIT_OF_MEASURE: item?.partNumberID?.UNIT_OF_MEASURE,
+    ISTWOWAY: item.ISTWOWAY,
+    TYPE: item.altPartNumberID?.TYPE,
+    GROUP: item.altPartNumberID?.GROUP,
+    APPROVED: item.createUserID?.name,
+    UNIT_OF_MEASURE: item.altPartNumberID?.UNIT_OF_MEASURE,
+    ADD_DESCRIPTION: item.altPartNumberID?.ADD_DESCRIPTION,
+    ADD_UNIT_OF_MEASURE: item.altPartNumberID?.ADD_UNIT_OF_MEASURE,
+    companyID: item.companyID,
+    createDate: item?.createDate,
+    createUserID: item.createUserID?._id,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+    AC_TYPE: item?.partNumberID?.acTypeID?.code || '',
+  }));
+
+  console.log('Output data from transformToALTIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIStockPartNumber = (data: any[]): any[] => {
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    STOCK: item?.storeID?.storeShortName,
+    STORE_ID: item?.storeID?._id,
+    LOCATION: item?.locationID?.locationName,
+
+    files: item?.FILES || item?.files,
+    OWNER: item?.locationID?.ownerID?.title,
+    restrictionID: item?.locationID?.restrictionID,
+    locationType: item?.locationID?.locationType,
+    SUPPLIER_BATCH_NUMBER: item?.SUPPLIER_BATCH_NUMBER,
+    PRODUCT_EXPIRATION_DATE: item?.PRODUCT_EXPIRATION_DATE || item?.nextDueMOS,
+    SERIAL_NUMBER: item?.SERIAL_NUMBER,
+    RECEIVING_NUMBER: item?.RECEIVING_ID?.receivingNumber,
+    DOC_NUMBER: item?.RECEIVING_ID?.awbNumber || item?.DOC_NUMBER,
+    DOC_TYPE: item?.RECEIVING_ID?.awbType || item?.DOC_TYPE,
+    DOC_DATE: item?.RECEIVING_ID?.awbDate || item?.DOC_DATE,
+    RECEIVING_DATE: item?.RECEIVING_ID?.receivingDate || item?.RECEIVING_DATE,
+  }));
+
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformedAccessToIAssess = (data: any[]): any[] => {
+  console.log('Input data to Access:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    accessNbr: item?.accessProjectID?.accessNbr,
+    userName: item?.createUserID?.name,
+  }));
+
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+export const transformedAccessToTable = (data: any[]): any[] => {
+  // console.log('Input data to Access:', data); // Вывод входных данных
+
+  const result = data.map((item) => ({
+    ...item,
+    ...item?.areaCodeID,
+    status: item.status,
+    _id: item?.id || item?._id,
+    id: item?.id || item?._id,
+  }));
+
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIRequirement = (data: any[]): any[] => {
+  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+  const result = data?.map((item) => ({
+    ...item,
+    QUANTITY: item.quantity,
+
+    availableAllStoreQTY: item?.availableAllStoreQTY,
+    restrictedAllStoreQTY: item?.restrictedAllStoreQTY,
+    requestQuantity: item?.requestQuantity,
+    pickSlipNumber: item?.pickSlipID?.pickSlipNumberNew,
+    amout: item.amout,
+    availableQTY: item?.availableQTY,
+    _id: item?.id || item?._id,
+    plannedDate: item?.plannedDate,
+    note: item?.note,
+    status: item?.status,
+    reqTypesID: item.reqTypesID,
+    neededOnID: item?.neededOnID,
+    neededOnIDTitle: item?.neededOnID?.title,
+    projectID: item?.projectID,
+    projectTaskID: item?.projectTaskID,
+    partNumberID: item?.partNumberID,
+    serialNumber: item?.serialNumber,
+    partRequestNumberNew: item?.partRequestNumberNew,
+    projectWO: item?.projectID?.projectWO,
+    WONumber: item?.projectID?.WOReferenceID?.WONumber,
+    projectTaskWO: item.projectTaskID?.taskWO,
+    partId: item.partNumberID?._id,
+    PART_NUMBER: item?.partNumberID?.PART_NUMBER,
+    DESCRIPTION: item?.partNumberID?.DESCRIPTION,
+    TYPE: item?.partNumberID?.TYPE,
+    GROUP: item?.partNumberID?.GROUP,
+    UNIT_OF_MEASURE: item?.partNumberID?.UNIT_OF_MEASURE,
+    UNIT_OF_MEASURE_LONG: item?.partNumberID?.UNIT_OF_MEASURE,
+    ADD_DESCRIPTION: '', // Добавить описание, если требуется
+    ADD_UNIT_OF_MEASURE: item?.partNumberID?.ADD_UNIT_OF_MEASURE,
+    companyID: item?.companyID,
+    createDate: item?.createDate,
+    createUserID: item?.createUserID?._id,
+    updateDate: item?.updateDate,
+    updateUserID: item?.updateUserID ? item.updateUserID?._id : '',
+
+    acTypeID: item?.acTypeID, // Добавить тип AC, если требуется,
+  }));
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+export const transformToIPickSlip = (data: any[]): any[] => {
+  console.log('Input data to transformToIPickslipr:', data); // Вывод входных данных
+  const result = data?.map((item) => ({
+    ...item,
+    status: item?.state,
+    getFromID: item?.getFromID?._id,
+    store: item?.getFromID?.storeShortName,
+    // neededOnID: item?.neededOnID?._id,
+    neededOnIDTitle: item?.neededOnID?.title,
+    // projectID: item?.projectID?._id,
+    // projectTaskID: item?.projectTaskID?._id,
+    projectWO: item?.projectID?.projectWO,
+    projectTaskWO: item.projectTaskID?.taskWO,
+    companyID: item?.companyID,
+    createDate: item?.createDate,
+    createUserID: item?.createUserID,
+    createUserName: item?.createUserID?.name,
+    updateDate: item?.updateDate,
+    updateUserID: item?.updateUserID ? item.updateUserID : '',
+    WONumber: item?.projectID?.WOReferenceID?.WONumber,
+    // id: item.id,
+  }));
+  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+export interface ValueEnumType {
+  onQuatation: string;
+  partlyCanceled?: string;
+  open?: string;
+  closed: string;
+  canceled: string;
+  CLOSED?: string;
+  cancelled?: string;
+  onOrder: string;
+  onShort: string;
+  draft: string;
+  issued: string;
+  inProgress?: string;
+  complete: string;
+  RECEIVED?: string;
+  PARTLY_RECEIVED?: string;
+  CANCELLED?: string;
+  partyCancelled?: string;
+  partlyClosed?: string;
+  inspect?: string;
+  performed?: string;
+  inspected?: string;
+  DRAFT?: string;
+  OPEN?: string;
+  progress?: string;
+  nextAction?: string;
+  needInspection?: string;
+  COMPLETED?: string;
+}
+export interface ValueEnumType {
+  onQuatation: string;
+  partlyCanceled?: string;
+  open?: string;
+  closed: string;
+  canceled: string;
+  cancelled: string;
+  onOrder: string;
+  onShort: string;
+  draft: string;
+  issued: string;
+  inProgress?: string;
+  complete: string;
+  RECEIVED?: string;
+  PARTLY_RECEIVED?: string;
+  CANCELLED?: string;
+  partyCancelled?: string;
+  partlyClosed?: string;
+  inspect?: string;
+  performed?: string;
+  inspected?: string;
+  DRAFT?: string;
+  OPEN?: string;
+  progress?: string;
+  test?: string;
+}
+export interface ValueEnumTypeTask {
+  RC: string;
+  CR_TASK: string;
+  NRC: string;
+  MJC: string;
+  CMJC: string;
+  FC: string;
+  NRC_ADD: string;
+  PART_PRODUCE?: string;
+  SMC?: string;
+  HARD_ACCESS?: string;
+}
+export interface ValueEnumTypeOrder {
+  PURCHASE_ORDER: string;
+  QUOTATION_ORDER: string;
+}
+// export const getTypeOrderColor = (
+//   projectItemType: keyof ValueEnumTypeOrder
+// ): string => {
+//   switch (projectItemType) {
+//     case 'PURCHASE_ORDER':
+//       return '#D3D3D3'; // Light Gray
+
+//       return '#D3D3D3'; // Light Gray
+//     case 'QUOTATION_ORDER':
+//       return '#FFD700'; // Light Gray
+
+//     default:
+//       return ''; // Default color
+//   }
+// };
+// export const getTaskTypeColor = (
+//   projectItemType: keyof ValueEnumTypeTask
+// ): string => {
+//   switch (projectItemType) {
+//     case 'RC':
+//       return '#D3D3D3'; // Light Gray
+//     case 'CR_TASK':
+//       return '#800080'; // Light Gray
+//     case 'SB':
+//       return '#800080'; // Light Gray
+
+//     case 'MJC':
+//       return '#D3D3D3'; // Light Gray
+//     case 'CMJC':
+//       return '#D3D3D3'; // Light Gray
+//     case 'FC':
+//       return '#FFA07A'; // Light Salmon
+//     case 'SMC':
+//       return '#FFA07A'; // Light Salmon
+//     case 'PART_PRODUCE':
+//       return '#FFA07A'; // Light Salmon
+
+//     case 'NRC':
+//       return '#FF6347'; // Tomato Red
+//     case 'NRC_ADD':
+//       return '#FF6347'; // Tomato Red
+
+//     default:
+//       return ''; // Default color
+//   }
+// };
+export const getTypeOrderColor = (
+  projectItemType: keyof ValueEnumTypeOrder
+): string => {
+  switch (projectItemType) {
+    case 'PURCHASE_ORDER':
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'QUOTATION_ORDER':
+      return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
+    default:
+      return ''; // Default color
+  }
+};
+
+export const getTaskTypeColor = (
+  projectItemType: keyof ValueEnumTypeTask
+): string => {
+  switch (projectItemType) {
+    case 'RC':
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'CR_TASK':
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
+    case 'SB':
+      return 'rgba(128, 0, 128, 0.6)'; // Dark Blue with less transparency
+    case 'MJC':
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'CMJC':
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'FC':
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+    case 'SMC':
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+    case 'PART_PRODUCE':
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+    case 'NRC':
+      return 'rgba(255, 99, 71, 0.6)'; // Tomato Red with less transparency
+    case 'NRC_ADD':
+      return 'rgba(255, 99, 71, 0.6)';
+    case 'HARD_ACCESS':
+      return 'rgba(255, 215, 0, 0.6)'; // // Tomato Red with less transparency
+    default:
+      return ''; // Default color
+  }
+};
+export const getStatusColor = (status: keyof ValueEnumType): string => {
+  switch (status) {
+    case 'draft':
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'DRAFT':
+      return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
+    case 'onShort':
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+    case 'inspect':
+      return 'rgb(255, 182, 46)'; // Light Salmon with less transparency
+    case 'inspected':
+      return 'rgb(255, 182, 46)'; // Light Salmon with less transparency
+    case 'progress':
+      return 'rgb(252, 252, 60)'; // Dark Blue with less transparency
+    case 'inProgress':
+      return 'rgb(252, 252, 60)'; // Dark Blue with less transparency
+    case 'onQuatation':
+      return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
+    case 'complete':
+      return 'rgba(255, 215, 0, 0.6)'; // Gold with less transparency
+    case 'open':
+      return 'rgb(52, 155, 240)'; // Sky Blue with less transparency
+    case 'OPEN':
+      return 'rgb(52, 155, 240)'; // Sky Blue with less transparency
+    case 'closed':
+      return 'rgb(112, 255, 84)'; // Lime Green with less transparency
+    case 'CLOSED':
+      return 'rgb(112, 255, 84)'; // Lime Green with less transparency
+    case 'RECEIVED':
+      return 'rgba(50, 205, 50, 0.6)'; // Lime Green with less transparency
+    case 'PARTLY_RECEIVED':
+      return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
+    case 'performed':
+      return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
+
+    case 'COMPLETED':
+      return 'rgba(144, 238, 144, 0.6)'; // Light Green with less transparency
+    case 'canceled':
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
+    case 'cancelled':
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
+    case 'partlyCanceled':
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
+    case 'CANCELLED':
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
+    case 'partyCancelled':
+      return 'rgb(255, 82, 82)'; // Tomato Red with less transparency
+    case 'onOrder':
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+    case 'transfer':
+      return 'rgba(255, 215, 0, 0.6)'; // Dark Blue with less transparency
+
+    case 'needInspection':
+      return 'rgba(255, 215, 0, 0.6)'; // Dark Blue with less transparency
+    case 'nextAction':
+      return 'rgb(217, 148, 248)'; // Dark Blue with less transparency
+    case 'issued':
+      return 'rgba(128, 0, 128, 0.6)';
+    case 'test':
+      return 'rgb(127, 251, 255)'; // Dark Blue with less transparency
+    default:
+      return ''; // Default color
+  }
+};
+// export const getStatusColor = (status: keyof ValueEnumType): string => {
+//   switch (status) {
+//     case 'draft':
+//       return '#D3D3D3'; // Light Gray
+//     case 'DRAFT':
+//       return '#D3D3D3'; // Light Gray
+//     case 'onShort':
+//       return '#FFA07A'; // Light Salmon
+//     case 'inspect':
+//       return '#FFA07A'; // Light Salmon
+//     case 'inspected':
+//       return '#FFA07A'; // Light Salmon
+//     case 'progress':
+//       return '#800080'; // Dark Blue
+//     case 'inProgress':
+//       return '#800080'; // Dark Blue
+//     case 'onQuatation':
+//       return '#FFD700'; // Gold
+//     case 'complete':
+//       return '#FFD700'; // Gold
+//     case 'open':
+//       return '#00008B'; // Sky Blue
+//     case 'OPEN':
+//       return '#00008B'; // Sky Blue
+//     case 'closed':
+//       return '#32CD32'; // Lime Green
+//     case 'RECEIVED':
+//       return '#32CD32'; // Lime Green
+//     case 'PARTLY_RECEIVED':
+//       return '#90EE90'; // Light Green
+//     case 'performed':
+//       return '#90EE90'; // Light Green
+//     case 'partlyClosed':
+//       return '#90EE90'; // Light Green
+//     case 'canceled':
+//       return '#FF6347'; // Tomato Red
+//     case 'cancelled':
+//       return '#FF6347'; // Tomato Red
+//     case 'partlyCanceled':
+//       return '#FF6347'; // Tomato Red
+//     case 'CANCELLED':
+//       return '#FF6347'; // Tomato Red
+//     case 'partyCancelled':
+//       return '#FF6347'; // Tomato Red
+//     case 'onOrder':
+//       return '#FFA07A'; // Light Salmon
+//     case 'transfer':
+//       return '#FFD700'; // Dark Blue
+//     case 'issued':
+//       return '#800080'; // Dark Blue
+//     default:
+//       return ''; // Default color
+//   }
 // };
 
-// export const valueEnumUnit = {
-//   EA: `EA/${t('EA/EACH').toUpperCase()}`,
-//   M: `M/${t('Meters').toUpperCase()}`,
-//   ML: `ML/${t('Milliliters').toUpperCase()}`,
-//   SI: `SI/${t('Sq Inch').toUpperCase()}`,
-//   CM: `CM/${t('Centimeters').toUpperCase()}`,
-//   GM: `GM/${t('Grams').toUpperCase()}`,
-//   YD: `YD/${t('Yards').toUpperCase()}`,
-//   FT: `FT/${t('Feet').toUpperCase()}`,
-//   SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
-//   IN: `IN/${t('Inch').toUpperCase()}`,
-//   SH: `SH/${t('Sheet').toUpperCase()}`,
-//   SM: `SM/${t('Sq Meters').toUpperCase()}`,
-//   RL: `RL/${t('Roll').toUpperCase()}`,
-//   KT: `KT/${t('Kit').toUpperCase()}`,
-//   LI: `LI/${t('Liters').toUpperCase()}`,
-//   KG: `KG/${t('Kilograms').toUpperCase()}`,
-//   JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
-// };
+export const transformToITask = (data: ITask[]): any[] => {
+  const result = data.map((item: ITask) => ({
+    ...item,
+    QUANTITY: item.quantity,
+    id: item._id || item?.id,
+    status: item?.status,
+    _id: item._id || item?.id,
+    taskNumber: item?.taskNumber,
+    description: item?.taskDescription,
+    allTaskTime: item?.allTaskTime,
+    mainWorkTime: item?.mainWorkTime,
+    partId: item.partNumberID?._id,
+    PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    REVISION: item.partNumberID?.REVISION,
+    TYPE: item.partNumberID?.TYPE,
+    GROUP: item.partNumberID?.GROUP,
+    UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+    UNIT_OF_MEASURE_LONG: item.partNumberID?.UNIT_OF_MEASURE,
+    ADD_DESCRIPTION: item.partNumberID?.ADD_DESCRIPTION,
+    ADD_UNIT_OF_MEASURE: item.partNumberID?.ADD_UNIT_OF_MEASURE,
+    companyID: item.companyID,
+    createDate: item.createDate,
+    createUserID: item.createUserID?._id,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+    acTypeID: item?.acTypeId,
+    partNumberID: item?.partNumberID,
+  }));
+
+  console.log('Output data from transformToIPartNumber:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIORderItem = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    id: item._id || item.id,
+    status: item?.state,
+    _id: item._id || item.id,
+    orderNumber: item.orderID?.orderNumberNew,
+    orderID: item?.orderID,
+    orderType: item?.orderID?.orderType,
+    index: item?.index + 1,
+    PART_NUMBER: item?.partID?.PART_NUMBER,
+    DESCRIPTION: item.partID?.DESCRIPTION,
+    TYPE: item?.partID?.TYPE,
+    GROUP: item.partID?.GROUP,
+    UNIT_OF_MEASURE: item.partID?.UNIT_OF_MEASURE,
+    vendorCode: item?.vendorID?.CODE,
+    companyID: item?.companyID,
+    createDate: item?.createDate,
+    createUserID: item?.createUserID?._id,
+    createUserName: item?.createUserID?.name,
+    updateDate: item.updateDate,
+    updateUserID: item?.updateUserID?._id,
+    partNumberID: item?.partID,
+    amout: item?.amout,
+    allPrice: item?.allPrice,
+    currency: item.currency,
+    backorderQty: item?.backorderQty,
+    paymentTerms: item?.paymentTerms,
+    leadTime: item?.leadTime,
+    requirementsID: item?.requirementsID,
+    nds: item?.nds,
+    price: item?.price,
+    files: item?.files,
+  }));
+
+  return result;
+};
+export const transformToPickSlipItemItem = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    // id: item?._id || item?.id,
+    status: item?.state,
+    // _id: item?._id || item?.id,
+    orderID: item?.orderID,
+    orderType: item?.orderID?.orderType,
+    index: item?.index,
+    PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    TYPE: item.partNumberID?.TYPE,
+    GROUP: item.partNumberID?.GROUP,
+    UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+
+    companyID: item.companyID,
+    createDate: item.createDate,
+    createUserID: item.createUserID?._id,
+    createUserName: item.createUserID?.name,
+    updateDate: item.updateDate,
+    updateUserID: item.updateUserID?._id,
+    partNumberID: item?.partNumberID,
+    requirementsID: item?.requirementsID,
+
+    files: item?.files,
+  }));
+
+  return result;
+};
+
+export const transformToPartBooking = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item.MATERIAL_STORE_ID,
+    QUANTITY:
+      parseInt(
+        `${item.qyantityMode === 'minus' ? '-' : ''}${
+          item.MATERIAL_STORE_ID?.QUANTITY ||
+          item?.MATERIAL_STORE_ID?.ADD_QUANTITY
+        }`,
+        10
+      ) || item.QUANTITY,
+    SERIAL_NUMBER:
+      item?.MATERIAL_STORE_ID?.SERIAL_NUMBER || item?.SERIAL_NUMBER,
+    SHELF_NUMBER:
+      item.MATERIAL_STORE_ID?.locationID?.locationName || item?.SHELF_NUMBER,
+    files: item.MATERIAL_STORE_ID?.FILES,
+    CREATE_BY: item?.createUserID?.name || item?.userID?.name,
+
+    // index: item?.index,
+    // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,
+    // DESCRIPTION: item.MATERIAL_STORE_ID?.NAME_OF_MATERIAL,
+    // TYPE: item.MATERIAL_STORE_ID?.TYPE,
+    // GROUP: item.MATERIAL_STORE_ID?.GROUP,
+    // UNIT_OF_MEASURE: item.MATERIAL_STORE_ID?.UNIT_OF_MEASURE,
+
+    // companyID: item.companyID,
+    // createDate: item.createDate,
+    // createUserID: item.createUserID?._id,
+    // createUserName: item.createUserID?.name,
+    // updateDate: item.updateDate,
+    // updateUserID: item.updateUserID?._id,
+    // partNumberID: item?.partNumberID,
+    // requirementsID: item?.requirementsID,
+
+    // files: item?.files,
+  }));
+
+  return result;
+};
+export const transformToIRecevingItems = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item?.MATERIAL_STORE_ID,
+  }));
+
+  return result;
+};
+
+export const transformToPickSlipItemBooked = (data: any[]): any[] => {
+  const result = data.flatMap((item: any) => {
+    // Создаем новый объект с теми же свойствами, что и item
+
+    const newItem = { ...item };
+
+    // Проверяем, пустой ли bookedItems
+    if (!newItem.bookedItems || newItem.bookedItems.length === 0) {
+      newItem.bookedItems = [
+        {
+          id: uuidv4(), // Добавляем уникальный идентификатор
+          requestedPartNumberID: newItem.partNumberID._id,
+          PART_NUMBER_REQUEST: newItem.partNumberID?.PART_NUMBER,
+          requestedQty: newItem.requestedQty,
+          pickSlipItemID: newItem.id,
+          pickSlipID: newItem.pickSlipID,
+          projectID: newItem.projectID?._id,
+          projectTaskID: newItem.projectTaskID?._id,
+          requirementID: newItem?.requirementID?._id,
+          projectWO: newItem?.projectID?.projectWO,
+          projectTaskWO: newItem.projectTaskID?.taskWO,
+          registrationNumber: newItem?.projectID?.acRegistrationNumber,
+
+          status: 'progress',
+        },
+      ];
+    } else {
+      // Если bookedItems не пустой, добавляем уникальный идентификатор к каждому элементу
+      newItem.bookedItems = newItem.bookedItems.map((bookedItem: any) => ({
+        ...bookedItem,
+        ...bookedItem?.storeItemID,
+        // ...bookedItem?.projectID,
+        // ...bookedItem.projectTaskID,
+        id: bookedItem._id || bookedItem.id,
+
+        PART_NUMBER_REQUEST: bookedItem?.requestedPartNumberID?.PART_NUMBER,
+        requestedPartNumberID: bookedItem?.requestedPartNumberID?._id,
+        requestedQty: bookedItem?.requestedQty || newItem.requestedQty,
+        canceledQty: bookedItem.canceledQty,
+        // projectID: bookedItem.projectID?._id,
+        // projectTaskID: bookedItem.projectTaskID?._id,
+        projectWO: bookedItem?.projectID?.projectWO,
+        projectTaskWO: bookedItem.projectTaskID?.taskWO,
+        registrationNumber: bookedItem?.projectID?.acRegistrationNumber,
+        PART_NUMBER_BOOKED: bookedItem?.storeItemID?.PART_NUMBER,
+        DESCRIPTION: bookedItem?.storeItemID?.NAME_OF_MATERIAL,
+        GROUP: bookedItem?.storeItemID?.GROUP,
+        CONDITION: bookedItem?.storeItemID?.CONDITION,
+        TYPE: bookedItem?.storeItemID?.TYPE,
+        SERIAL_NUMBER:
+          bookedItem?.storeItemID?.SERIAL_NUMBER ||
+          bookedItem?.storeItemID?.SUPPLIER_BATCH_NUMBER,
+        PRODUCT_EXPIRATION_DATE:
+          bookedItem?.storeItemID?.PRODUCT_EXPIRATION_DATE,
+        UNIT_OF_MEASURE: bookedItem?.storeItemID?.UNIT_OF_MEASURE,
+        LOCAL_ID: bookedItem?.storeItemID?.LOCAL_ID,
+        OWNER: bookedItem?.storeItemID?.locationID?.ownerID?.title,
+        STORE: bookedItem?.storeItemID?.storeID?.storeShortName,
+        LOCATION: bookedItem?.storeItemID?.locationID?.locationName,
+        state: bookedItem.status,
+        files: bookedItem?.storeItemID?.files || bookedItem?.storeItemID?.FILES,
+      }));
+    }
+
+    return newItem.bookedItems;
+  });
+  console.log(result);
+  return result;
+};
+
+export const transformToIProjectItem = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item,
+    ...item?.taskNumberID,
+    zonesID: item?.zonesID,
+    id: item?.id,
+    ...item.createUserID,
+    taskType: item.taskType,
+    _id: item?.id || item._id,
+    reference: item?.reference,
+  }));
+
+  console.log('Output data from transformToIProjectItem:', result); // Вывод результата
+  return result;
+};
+
+export const transformToIProjectTask = (data: any[]): any[] => {
+  const result = data.map((item: any) => ({
+    ...item?.taskId,
+    ...item,
+    ...item?.partNumberID,
+    // QUANTITY: item.quantity,
+    id: item._id || item?.id,
+    // status: item?.status,
+    _id: item._id || item?.id,
+    zonesID: item?.zonesID,
+    accessID: item?.accessID,
+    projectWO: item?.projectID?.projectWO,
+    projectName: item?.projectID?.projectName,
+    mainWorkTime: item?.mainWorkTime || item?.taskId?.mainWorkTime,
+    files: item?.FILES || item?.files || [],
+    taskDescription: item?.taskDescription,
+    amtoss: item?.taskId?.amtoss || item?.refTask,
+
+    // taskNumber: item?.taskNumber,
+    // description: item?.taskDescription,
+    // allTaskTime: item?.allTaskTime,
+    // partId: item.partNumberID?._id,
+    // PART_NUMBER: item.partNumberID?.PART_NUMBER,
+    // DESCRIPTION: item.partNumberID?.DESCRIPTION,
+    // TYPE: item.partNumberID?.TYPE,
+    // GROUP: item.partNumberID?.GROUP,
+    // UNIT_OF_MEASURE: item.partNumberID?.UNIT_OF_MEASURE,
+    // UNIT_OF_MEASURE_LONG: item.partNumberID?.UNIT_OF_MEASURE,
+    // ADD_DESCRIPTION: item.partNumberID?.ADD_DESCRIPTION,
+    // ADD_UNIT_OF_MEASURE: item.partNumberID?.ADD_UNIT_OF_MEASURE,
+    // companyID: item.companyID,
+    // createDate: item.createDate,
+    // createUserID: item.createUserID?._id,
+    // updateDate: item.updateDate,
+    // updateUserID: item.updateUserID?._id,
+    // acTypeID: item?.acTypeId,
+    // partNumberID: item?.partNumberID,
+  }));
+
+  return result;
+};
+type Role =
+  | 'admin'
+  | 'engineer'
+  | 'planning'
+  | 'logistic'
+  | 'storeMan'
+  | 'director'
+  | 'technican';
+export const rolePermissions: Record<Role, string[]> = {
+  admin: [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24'
+  ],
+  technican: ['02', '05', '06', '08', '10', '12', '15', '21','22'],
+  engineer: [
+    '01',
+    '02',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '12',
+    '13',
+    '15',
+    '16',
+    '20',
+    '21',
+    '22'
+  ],
+  planning: [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '12',
+    '13',
+    '15',
+    '16',
+    '20',
+    '21',
+    '22',
+    '23'
+  ],
+  logistic: [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22'
+  ],
+  storeMan: [
+    '01',
+    '02',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '22'
+  ],
+  director: [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22'
+  ],
+};
+
+export const filterAPNByRole = (apnList: any[], userRole: Role) => {
+  const userPermissions = rolePermissions[userRole] || [];
+  return apnList.filter((apn) => userPermissions.includes(apn.APNNBR));
+};
+
+export const getDefectTypes = (t: TFunction) => [
+  { value: 'FINDING', label: t('FINDING') },
+  { value: 'CLEANING', label: t('CLEANING') },
+  { value: 'STRUCTURAL_DAMAGE', label: t('STRUCTURAL_DAMAGE') },
+  { value: 'PAINTING', label: t('PAINTING') },
+  { value: 'ADD ACCESS', label: t('ADD ACCESS') },
+];
+
+export const getAtaChapters = (t: TFunction) => [
+  { value: '05', label: '05-TIME_LIMITS/MAINTENANCE_CHECKS' },
+  { value: '06', label: '06-DIMENSIONS_AND_AREAS' },
+  { value: '07', label: '07-LIFTING_AND_SHORING' },
+  { value: '08', label: '08-LEVELING_AND_WEIGHING' },
+  { value: '09', label: '09-TOWING_AND_TAXIING' },
+  { value: '10', label: '10-PARKING_AND_MOORING' },
+  { value: '11', label: '11-PLACARDS_AND_MARKINGS' },
+  { value: '12', label: '12-SERVICING' },
+  { value: '20', label: '20-STANDARD_PRACTICES' },
+  { value: '21', label: '21-AIR_CONDITIONING' },
+  { value: '22', label: '22-AUTOFLIGHT' },
+  { value: '23', label: '23-COMMUNICATIONS' },
+  { value: '24', label: '24-ELECTRICAL_POWER' },
+  { value: '25', label: '25-EQUIPMENT/FURNISHINGS' },
+  { value: '26', label: '26-FIRE_PROTECTION' },
+  { value: '27', label: '27-FLIGHT_CONTROLS' },
+  { value: '28', label: '28-FUEL' },
+  { value: '29', label: '29-HYDRAULIC_POWER' },
+  { value: '30', label: '30-ICE_AND_RAIN_PROTECTION' },
+  { value: '31', label: '31-INDICATING/RECORDING_SYSTEMS' },
+  { value: '32', label: '32-LANDING_GEAR' },
+  { value: '33', label: '33-LIGHTS' },
+  { value: '34', label: '34-NAVIGATION' },
+  { value: '35', label: '35-OXYGEN' },
+  { value: '36', label: '36-PNEUMATIC' },
+  { value: '38', label: '38-WATER/WASTE' },
+  { value: '44', label: '44-CABIN_SYSTEMS' },
+  { value: '46', label: '46-INFORMATION_SYSTEMS' },
+  { value: '47', label: '47-INERT_GAS_SYSTEM' },
+  { value: '49', label: '49-AUXILIARY_POWER_UNIT' },
+  { value: '51', label: '51-STRUCTURES' },
+  { value: '52', label: '52-DOORS' },
+  { value: '53', label: '53-FUSELAGE' },
+  { value: '54', label: '54-NACELLES/PYLONS' },
+  { value: '55', label: '55-STABILIZERS' },
+  { value: '56', label: '56-WINDOWS' },
+  { value: '57', label: '57-WINGS' },
+  { value: '70', label: '70-STANDARD_PRACTICES' },
+  { value: '71', label: '71-POWER_PLANT' },
+  { value: '72', label: '72-ENGINE' },
+  { value: '73', label: '73-ENGINE_FUEL_AND_CONTROL' },
+  { value: '74', label: '74-IGNITION' },
+  { value: '75', label: '75-AIR' },
+  { value: '76', label: '76-ENGINE_CONTROLS' },
+  { value: '77', label: '77-ENGINE_INDICATION' },
+  { value: '78', label: '78-EXHAUST' },
+  { value: '79', label: '79-OIL' },
+  { value: '80', label: '80-STARTING' },
+];
+export enum SubscriptionType {
+  NewPickslip = 'newPickSlip',
+  OtherEventType = 'otherEventType',
+  NewTask = 'newTask',
+  NewRequirement = 'newRequirement',
+  TechnicalRequest = 'technicalRequest',
+  PickSlipUpdate = 'pickSlipUpdate',
+  NewPartNumber = 'newPartNumber',
+  AddAlternative = 'addAlternative',
+  PickslipError = 'pickslipError',
+  TaskError = 'taskError',
+  BugReport = 'bugReport',
+}
+
+// Создание массива объектов с метками для каждого типа подписки
+export const getSubscriptionTypes = (t) => [
+  { value: SubscriptionType.NewTask, label: t('New Task') },
+  { value: SubscriptionType.NewPickslip, label: t('New Pickslip') },
+  { value: SubscriptionType.PickSlipUpdate, label: t('PickSlip Update') },
+  { value: SubscriptionType.NewRequirement, label: t('New Requirement') },
+  { value: SubscriptionType.TechnicalRequest, label: t('New Technical Request') },
+  { value: SubscriptionType.NewPartNumber, label: t('New Part Number') },
+  { value: SubscriptionType.AddAlternative, label: t('Add Alternative') },
+  { value: SubscriptionType.PickslipError, label: t('Pickslip Error') },
+  { value: SubscriptionType.TaskError, label: t('Task Error') },
+  { value: SubscriptionType.BugReport, label: t('Bug Report') },
+];
+
+// Тип для типа подписки
+export type SubscriptionTypeValue = SubscriptionType;

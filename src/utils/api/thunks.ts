@@ -18,7 +18,32 @@ import { IPurchaseMaterial } from '@/types/TypesData';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { $authHost, API_URL } from './http';
+export const generateReport = async (
+  companyID: any,
+  queryParams: any,
+  token: any
+) => {
+  const url = `${API_URL}/reports/generate-report/companyID/${companyID}/`;
 
+  try {
+    const response = await $authHost.get(url, {
+      params: queryParams,
+      // headers,
+      responseType: 'blob',
+    });
+    const contentType = response.headers['content-type'];
+
+    if (contentType !== 'application/pdf') {
+      throw new Error(`Неверный тип содержимого: ${contentType}`);
+    }
+
+    console.log('Отчет успешно сгенерирован:', response.data); // После проверки типа содержимого
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при загрузке отчета:', error);
+    throw error;
+  }
+};
 //Auth
 export const registration = createAsyncThunk(
   'auth/createUser',
@@ -889,6 +914,10 @@ export const createProjectTaskMaterialAplication = createAsyncThunk(
       getFrom,
       remarks,
       neededOn,
+      neededOnID,
+      reqTypesID,
+
+      reqCodesID,
     } = data;
 
     try {
@@ -916,6 +945,9 @@ export const createProjectTaskMaterialAplication = createAsyncThunk(
         getFrom,
         remarks,
         neededOn,
+        neededOnID,
+        reqTypesID,
+        reqCodesID,
       });
       return response.data;
     } catch (error) {
@@ -1172,6 +1204,9 @@ export const createPickSlip = createAsyncThunk(
       recipientID,
       storeManID,
       companyID,
+      projectTaskID,
+      projectID,
+      neededOnID,
     } = data;
 
     try {
@@ -1199,6 +1234,9 @@ export const createPickSlip = createAsyncThunk(
         recipientID,
         storeManID,
         companyID,
+        projectTaskID,
+        projectID,
+        neededOnID,
       });
       return response.data;
     } catch (error) {
@@ -1233,6 +1271,7 @@ export const createReturnSlip = createAsyncThunk(
       recipientID,
       storeManID,
       companyID,
+      projectID,
     } = data;
 
     try {
@@ -1260,6 +1299,7 @@ export const createReturnSlip = createAsyncThunk(
         recipientID,
         storeManID,
         companyID,
+        projectID,
       });
       return response.data;
     } catch (error) {
@@ -4567,6 +4607,7 @@ export const updatedMaterialOrdersById = createAsyncThunk(
       updateBy,
       updateDate,
       returnPickIDs,
+      neededOnID,
     } = data;
 
     try {
@@ -4599,6 +4640,7 @@ export const updatedMaterialOrdersById = createAsyncThunk(
         updateBy,
         updateDate,
         returnPickIDs,
+        neededOnID,
       });
       return response.data;
     } catch (error) {
@@ -5253,12 +5295,54 @@ export async function uploadFileServer(formData: any) {
     throw error;
   }
 }
+export async function uploadFileServerReference(formData: any) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/files/upload/reference/company`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Не удалось загрузить файл', error);
+    throw error;
+  }
+}
 
 // Функция для просмотра файла
-export async function getFileFromServer(companyID: string, fileId: string) {
+// export async function getFileFromServer(
+//   companyID: string,
+//   fileId: string,
+//   prop?: string
+// ) {
+//   try {
+//     const response = await axios.get(
+//       `${API_URL}/files/getById/company/${companyID}/file/${fileId}/prop/${prop}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem('token')}`,
+//         },
+//         responseType: 'blob', // Важно указать, что ответ должен быть в виде blob
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error('Не удалось получить файл', error);
+//     throw error;
+//   }
+// }
+export async function getFileFromServer(
+  companyID: string,
+  fileId: string,
+  prop?: string
+): Promise<Uint8Array> {
   try {
     const response = await axios.get(
-      `${API_URL}/files/getById/company/${companyID}/file/${fileId}`,
+      `${API_URL}/files/getById/company/${companyID}/file/${fileId}/prop/${prop}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -5266,22 +5350,72 @@ export async function getFileFromServer(companyID: string, fileId: string) {
         responseType: 'blob', // Важно указать, что ответ должен быть в виде blob
       }
     );
-    return response.data;
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result instanceof ArrayBuffer) {
+          resolve(new Uint8Array(reader.result));
+        } else {
+          reject(new Error('Failed to read blob as ArrayBuffer'));
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(response.data);
+    });
   } catch (error) {
     console.error('Не удалось получить файл', error);
     throw error;
   }
 }
-
 // Функция для удаления файла
 export const deleteFile = createAsyncThunk(
   'common/deleteFile',
-  async (id: string, { rejectWithValue }) => {
+  async (data: any, { rejectWithValue }) => {
     try {
-      const response = await $authHost.delete(`/file/${id}`);
+      const response = await $authHost.delete(
+        `files/companyID/${data.companyID}/file/${data.id}`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue('Не удалось удалить файл');
+    }
+  }
+);
+export const deleteFileUploads = createAsyncThunk(
+  'common/deleteFile/uploads',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const response = await $authHost.delete(
+        `files/uploads/companyID/${data.companyID}/file/${data.id}/type/${data?.type}/itemID/${data?.itemID}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось удалить файл');
+    }
+  }
+);
+
+export const updateFilePrintAsAttachment = createAsyncThunk(
+  'common/updateFilePrintAsAttachment',
+  async (
+    data: {
+      fileId: string;
+      printAsAttachment: boolean;
+      companyID: string;
+      type?: string;
+      itemID?: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await $authHost.patch(
+        `files/uploads/companyID/${data.companyID}/file/${data.fileId}`,
+        { printAsAttachment: data.printAsAttachment }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue('Не удалось обновить свойство printAsAttachment');
     }
   }
 );
@@ -5305,7 +5439,7 @@ export const updateOrderByID = createAsyncThunk(
   async (data: any, thunkAPI) => {
     try {
       const response = await $authHost.put(
-        `orders/${data._id || data.id}/companyID/${data.companyID}/`,
+        `ordersNew/companyID/${data.companyID}/order/${data._id || data.id}`,
 
         data
       );
@@ -5320,7 +5454,7 @@ export const getFilteredOrders = createAsyncThunk(
   'common/getFilteredOrders',
   async (params: any, { rejectWithValue }) => {
     const url = new URL(
-      `orders/getFilteredOrders/companyID/${params.companyID}`,
+      `ordersNew/getFilteredOrders/companyID/${params.companyID}`,
 
       API_URL
     );
@@ -5895,15 +6029,17 @@ export const getFilteredBookingItems = createAsyncThunk(
       API_URL
     );
     const searchParams = new URLSearchParams();
-
+    if (params.WOReferenceID)
+      searchParams.append('WOReferenceID', params.WOReferenceID);
+    if (params.neededOnID) searchParams.append('neededOnID', params.neededOnID);
     if (params.workshop) searchParams.append('workshop', params.workshop);
     if (params.isReturned) searchParams.append('isReturned', params.isReturned);
     if (params.isCancelled)
       searchParams.append('isCancelled', params.isCancelled);
     if (params.startDate) searchParams.append('startDate', params.startDate);
     if (params.endDate) searchParams.append('endDate', params.endDate);
-    if (params.projectWO)
-      searchParams.append('projectWO', params.projectWO.join(','));
+    if (params.projectID)
+      searchParams.append('projectID', params.projectID.join(','));
     if (params.label) searchParams.append('label', params.label);
 
     if (params.partNumber) searchParams.append('partNumber', params.partNumber);

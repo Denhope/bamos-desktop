@@ -125,7 +125,7 @@ const CancelReceivingForm: FC<CancelReceivingFormType> = ({
               selectedSingleReceiving?.receivingNumber || initialForm
             }
             width={'sm'}
-            label={'RECEIVING No'}
+            label={t('RECEIVING No')}
           />
 
           <ContextMenuPNSearchSelect

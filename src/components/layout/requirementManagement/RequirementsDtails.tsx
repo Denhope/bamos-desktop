@@ -340,7 +340,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="projectState"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
@@ -348,8 +348,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
-                  closed: { text: t('CLOSED'), status: 'Default' },
-                  canceled: { text: t('CANCELLED'), status: 'Error' },
+                  closed: { text: t('CLOSE'), status: 'Default' },
+                  canceled: { text: t('CANCEL'), status: 'Error' },
                   onOrder: { text: t('ISSUED'), status: 'Processing' },
                 }}
               />
@@ -359,7 +359,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="projectState"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
@@ -376,7 +376,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                 showSearch
                 rules={[{ required: true }]}
                 name="projectState"
-                label={t('REQUIREMENT STATE')}
+                label={t('REQUIREMENT STATUS')}
                 width="sm"
                 // initialValue={planned}
                 valueEnum={{
@@ -384,8 +384,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
                   planned: { text: t('PLANNED'), status: 'Default' },
                   open: { text: t('NEW'), status: 'Error' },
-                  closed: { text: t('CLOSED'), status: 'Default' },
-                  canceled: { text: t('CANCELLED'), status: 'Error' },
+                  closed: { text: t('CLOSE'), status: 'Default' },
+                  canceled: { text: t('CANCEL'), status: 'Error' },
                   onOrder: { text: t('ISSUED'), status: 'Processing' },
                 }}
               />
@@ -405,7 +405,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   selectedSingleProject?.projectWO || initialFormProject
                 }
                 width={'lg'}
-                label={`${t(`PROJECT LINK`)}`}
+                label={`${t(`PROJECT`)}`}
               ></ContextMenuProjectSearchSelect>
 
               {
@@ -536,7 +536,7 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
                   name="partGroup"
                   label={`${t('PART GROUP')}`}
                   width="sm"
-                  tooltip={`${t('SELECT SPESIAL GROUP')}`}
+                  tooltip={`${t('SELECT SPECIAL GROUP')}`}
                   options={[
                     { value: 'CONS', label: t('CONS') },
                     { value: 'TOOL', label: t('TOOL') },
@@ -592,12 +592,8 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
   //   }
   // }, [isEditingView]);
   return (
-    <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-4">
-      <Col
-        xs={5}
-        sm={6}
-        className="h-[75vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 "
-      >
+    <div className="  flex gap-4 justify-between">
+      <div className=" w-3/12 h-[75vh] bg-white  py-3 rounded-md brequierement-gray-400 ">
         <Space direction="vertical">
           <Space
             className={`cursor-pointer transform transition px-3 ${
@@ -787,16 +783,12 @@ const RequirementsDtails: FC<RequirementsDtailsType> = ({
             </>
           )}
         </Space>
-      </Col>
+      </div>
 
-      <Col
-        className="h-[82vh] px-4  rounded-md brequierement-gray-400"
-        xs={15}
-        sm={17}
-      >
+      <div className=" w-9/12 h-[82vh]   rounded-md brequierement-gray-400">
         <TabContent tabs={tabs}></TabContent>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 

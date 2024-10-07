@@ -7,21 +7,23 @@ import {
   ProFormDigit,
   ProColumns,
 } from '@ant-design/pro-components';
-
-import { Form, DatePicker, Space } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form, DatePicker, Space, Upload, Modal, message, Button } from 'antd';
 import FilesSelector from '@/components/shared/FilesSelector';
 import EditableTable from '@/components/shared/Table/EditableTable';
 import FileUploader, { AcceptedFileTypes } from '@/components/shared/Upload';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { handleFileSelect } from '@/services/utilites';
+import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import {
   uploadFileServer,
   updateStoreByID,
   updateManyMaterialItems,
   updatedMaterialItemsById,
+  deleteFile,
 } from '@/utils/api/thunks';
+import { COMPANY_ID } from '@/utils/api/http';
 type OriginalStoreEntryType = {
   currentPart: any;
   scroll?: any;
@@ -196,6 +198,87 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
       ],
     },
   ];
+
+  const handleDelete = (file: any) => {
+    Modal.confirm({
+      title: 'Вы уверены, что хотите удалить этот файл?',
+      onOk: async () => {
+        try {
+          const response = await dispatch(
+            deleteFile({ id: file.id, companyID: COMPANY_ID })
+          );
+          if (response.meta.requestStatus === 'fulfilled') {
+            // Удаляем файл из массива files
+            const updatedFiles = currentPart.FILES.filter(
+              (f: { id: any }) => f.id !== file.id
+            );
+            const updatedItem = {
+              ...currentPart,
+              files: updatedFiles,
+            };
+            // await updateOrderItem(updatedItem).unwrap();
+            // orderItem && onSubmit(updatedItem);
+            const result = await dispatch(
+              updatedMaterialItemsById({
+                companyID: COMPANY_ID,
+                _id: currentPart?.id || currentPart?._id,
+                FILES: updatedFiles,
+              })
+            );
+            if (result.meta.requestStatus === 'fulfilled' && onUpdatePart) {
+              onUpdatePart(result.payload);
+            }
+          } else {
+            throw new Error('Не удалось удалить файл');
+          }
+        } catch (error) {
+          message.error('ERROR DELETE');
+        }
+      },
+    });
+  };
+
+  const handleUpload = async (file: File) => {
+    if (!currentPart) {
+      console.error(
+        'Невозможно загрузить файл: Ордер не существует или не имеет id'
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await uploadFileServer(formData);
+
+      if (response) {
+        const updatedFiles = currentPart.FILES
+          ? [...currentPart.FILES, response]
+          : [response];
+        const currentCompanyID = localStorage.getItem('companyID') || '';
+        const result = await dispatch(
+          updatedMaterialItemsById({
+            companyID: currentCompanyID || '',
+            _id: currentPart?.id || currentPart?._id,
+            FILES: updatedFiles,
+          })
+        );
+        if (result.meta.requestStatus === 'fulfilled' && onUpdatePart) {
+          onUpdatePart(result.payload);
+        }
+      }
+    } catch (error) {
+      message.error('Ошибка при загрузке файла');
+
+      throw error;
+    }
+  };
+  const handleDownload = (file: any) => {
+    // Здесь должен быть код для скачивания файла
+
+    handleFileOpen(file);
+  };
   return (
     <div>
       <ProForm
@@ -230,7 +313,7 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           <ProFormText
             disabled
             name="partGroup"
-            label={`${t('PART SPESIAL GROUP')}`}
+            label={`${t('PART SPECIAL GROUP')}`}
             width="sm"
           ></ProFormText>
           <ProFormText
@@ -330,40 +413,31 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           </div>
         </ProForm.Item>
         <ProFormGroup>
-          <Space size={'large'} className=" flex justify-between py-5 ">
-            <FileUploader
-              onUpload={uploadFileServer}
-              acceptedFileTypes={[AcceptedFileTypes.JPG, AcceptedFileTypes.PDF]}
-              onSuccess={async function (response: any): Promise<void> {
-                if (response) {
-                  const updatedFiles = currentPart.FILES
-                    ? [...currentPart.FILES, response]
-                    : [response];
-                  const currentCompanyID =
-                    localStorage.getItem('companyID') || '';
-                  const result = await dispatch(
-                    updatedMaterialItemsById({
-                      companyID: currentCompanyID || '',
-                      _id: currentPart?.id || currentPart?._id,
-                      FILES: updatedFiles,
-                    })
-                  );
-                  if (
-                    result.meta.requestStatus === 'fulfilled' &&
-                    onUpdatePart
-                  ) {
-                    onUpdatePart(result.payload);
-                  }
-                }
-              }}
-            />
-
-            <FilesSelector
-              isWide
-              files={currentPart.FILES || []}
-              onFileSelect={handleFileSelect}
-            />
-          </Space>
+          <ProForm.Item label={t('UPLOAD')}>
+            <div className="overflow-y-auto max-h-64">
+              <Upload
+                name="FILES"
+                fileList={currentPart.FILES || []}
+                // listType="picture"
+                className="upload-list-inline cursor-pointer"
+                beforeUpload={handleUpload}
+                // accept="image/*"
+                onPreview={handleDownload}
+                onRemove={handleDelete}
+                multiple
+                onDownload={function (file: any): void {
+                  handleFileSelect({
+                    id: file?.id,
+                    name: file?.name,
+                  });
+                }}
+              >
+                <Button icon={<UploadOutlined />}>
+                  {t('CLICK TO UPLOAD')}
+                </Button>
+              </Upload>
+            </div>
+          </ProForm.Item>
         </ProFormGroup>
       </ProForm>
     </div>

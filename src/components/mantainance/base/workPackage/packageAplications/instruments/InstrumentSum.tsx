@@ -1,18 +1,18 @@
-import { ProColumns } from "@ant-design/pro-components";
-import { MenuProps } from "antd";
-import { useColumnSearchProps } from "@/components/shared/Table/columnSearch";
-import React, { FC, useEffect, useState } from "react";
-import { exportToExcel } from "@/services/utilites";
-import { IMatData } from "@/types/TypesData";
-import { DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
-import { useAppDispatch } from "@/hooks/useTypedSelector";
-import { AplicationResponce } from "@/store/reducers/WPGenerationSlise";
+import { ProColumns } from '@ant-design/pro-components';
+import { MenuProps } from 'antd';
+import { useColumnSearchProps } from '@/components/shared/Table/columnSearch';
+import React, { FC, useEffect, useState } from 'react';
+import { exportToExcel } from '@/services/utilites';
+import { IMatData } from '@/types/TypesData';
+import { DownloadOutlined, PrinterOutlined } from '@ant-design/icons';
+import { useAppDispatch } from '@/hooks/useTypedSelector';
+import { AplicationResponce } from '@/store/reducers/WPGenerationSlise';
 import {
   findInstrumentsByTaskNumbers,
   findMaterialsByTaskNumbers,
-} from "@/utils/api/thunks";
-import EditableTable from "@/components/shared/Table/EditableTable";
-import { useTranslation } from "react-i18next";
+} from '@/utils/api/thunks';
+import EditableTable from '@/components/shared/Table/EditableTable';
+import { useTranslation } from 'react-i18next';
 
 type FilteredTasksListPropsType = {
   data: any;
@@ -41,7 +41,7 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
   const { t } = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
-      const companyID = localStorage.getItem("companyID");
+      const companyID = localStorage.getItem('companyID');
 
       if (companyID) {
         const result = await dispatch(
@@ -49,7 +49,7 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
             taskDTO: data.tasks || data || [],
           })
         );
-        if (result.meta.requestStatus === "fulfilled") {
+        if (result.meta.requestStatus === 'fulfilled') {
           // console.log(result.payload);
 
           setInstrumentItems(result.payload.uniqueInstruments);
@@ -60,10 +60,10 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
   }, [dispatch]);
   const initialColumns: ProColumns<IMatData>[] = [
     {
-      title: "Index",
-      dataIndex: "id",
-      valueType: "index",
-      width: "5%",
+      title: 'Index',
+      dataIndex: 'id',
+      valueType: 'index',
+      width: '5%',
 
       editable: (text, record, index) => {
         return false;
@@ -71,45 +71,45 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
       // sorter: (a, b) => (a.id || 0) - (b.id || 0),
     },
 
-    { title: `${t("PN")}`, dataIndex: "PN", key: "PN", responsive: ["sm"] },
+    { title: `${t('PN')}`, dataIndex: 'PN', key: 'PN', responsive: ['sm'] },
     {
-      title: "Код",
-      dataIndex: "code",
-      key: "code",
+      title: 'Код',
+      dataIndex: 'code',
+      key: 'code',
 
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
 
     {
-      title: `${t("DESCRIPTION")}`,
-      dataIndex: "nameOfInstrument",
-      key: "nameOfInstrument",
-      responsive: ["sm"],
-      tip: "Text Show",
+      title: `${t('DESCRIPTION')}`,
+      dataIndex: 'nameOfInstrument',
+      key: 'nameOfInstrument',
+      responsive: ['sm'],
+      tooltip: 'Text Show',
       ellipsis: true,
     },
     {
-      title: `${t("ALTERNATIVE")}`,
-      dataIndex: "alternative",
-      key: "alternative",
-      responsive: ["sm"],
+      title: `${t('ALTERNATIVE')}`,
+      dataIndex: 'alternative',
+      key: 'alternative',
+      responsive: ['sm'],
     },
     {
-      title: `${t("QUANTITY")}`,
-      dataIndex: "amout",
-      key: "amout",
+      title: `${t('QUANTITY')}`,
+      dataIndex: 'amout',
+      key: 'amout',
       // sorter: (a, b) => a.amout - b.amout,
-      responsive: ["sm"],
+      responsive: ['sm'],
     },
   ];
 
-  type MenuItem = Required<MenuProps>["items"][number];
+  type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
     key?: React.Key | null,
     icon?: React.ReactNode,
     children?: any[],
-    type?: "group"
+    type?: 'group'
   ): MenuItem {
     return {
       key,
@@ -120,25 +120,25 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
     } as MenuItem;
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      label: `${t("Report")}`,
-      key: "print",
+      label: `${t('Report')}`,
+      key: 'print',
       icon: null,
       children: [
-        getItem("Print", "sub4.1", null, [
-          getItem("Selected Items", "sub4.1.1", <PrinterOutlined />),
+        getItem('Print', 'sub4.1', null, [
+          getItem('Selected Items', 'sub4.1.1', <PrinterOutlined />),
           getItem(
             <div
             // onClick={() => setOpenAddAppForm(true)}
             >
               <PrinterOutlined /> All Items
             </div>,
-            "9ssxs"
+            '9ssxs'
           ),
         ]),
 
-        getItem("Export to Exel", "sub5", "", [
+        getItem('Export to Exel', 'sub5', '', [
           getItem(
             <div
               onClick={() =>
@@ -155,7 +155,7 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
             >
               <DownloadOutlined /> Selected Items
             </div>,
-            "5.1"
+            '5.1'
           ),
           getItem(
             <div
@@ -172,7 +172,7 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
             >
               <PrinterOutlined /> All Items
             </div>,
-            "5.2"
+            '5.2'
           ),
         ]),
         // ]),
@@ -197,7 +197,7 @@ const InstrumentSum: FC<FilteredTasksListPropsType> = ({
         onSelectedRowKeysChange={handleSelectedRowKeysChange}
         onVisibleColumnsChange={handleVisibleColumnsChange}
         externalReload={function (): Promise<void> {
-          throw new Error("Function not implemented.");
+          throw new Error('Function not implemented.');
         }}
       ></EditableTable>
       {/* )} */}

@@ -12,7 +12,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { t } from 'i18next';
 import React, { FC, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 import { getFilteredOrders, updateOrderByID } from '@/utils/api/thunks';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
@@ -132,7 +132,7 @@ const AddVendorsForm: FC<AddVendorsFormPropsType> = ({
                   companyID: currentCompanyID || '',
                   updateByID: USER_ID,
                   updateBySing: localStorage.getItem('singNumber'),
-                  updateByName: localStorage.getItem('name'),
+                  updateByName: FULL_NAME,
                   updateDate: new Date(),
 
                   parts: (currenOrder.parts || []).map((part: any) => ({
@@ -168,7 +168,7 @@ const AddVendorsForm: FC<AddVendorsFormPropsType> = ({
                   companyID: currentCompanyID || '',
                   updateByID: USER_ID,
                   updateBySing: localStorage.getItem('singNumber'),
-                  updateByName: localStorage.getItem('name'),
+                  updateByName: FULL_NAME,
                   updateDate: new Date(),
                   vendors: [selectedSingleVendor],
                 })

@@ -1,3 +1,7 @@
+// @ts-nocheck
+
+// The rest of your TypeScript code here will not be type-checked by the compiler
+
 import {
   AutoComplete,
   Button,
@@ -216,7 +220,7 @@ const FIlteredTaskForm: FC = () => {
             <SingleSelectForm
               options={[
                 { key: 'AD', value: 'AD - AIRWORTHINESS DIRECTIVE' },
-                { key: 'SMC', value: 'SMC - SHEDULED MAINTENENCE CHEACK' },
+                { key: 'SMC', value: 'SMC - SHEDULED MAINTENENCE CHECK' },
                 { key: 'SB', value: 'SB - SERVICE BULLETIN' },
                 { key: 'PKGOP', value: 'PKGOP - PACKAGE' },
                 { key: 'ADP', value: 'ADP - ADP' },

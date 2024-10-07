@@ -335,7 +335,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           tooltip="ENTER TYPE"
           options={[
             { value: 'PROJECT', label: `${t(`PROJECT`)}` },
-            { value: 'AC', label: 'AIRCRAFT' },
+            { value: 'AC', label: `${t(`AIRCRAFT`)}` },
             { value: 'SHOP', label: `${t(`SHOP/STORE`)}` },
           ]}
           initialValue="PROJECT"
@@ -386,7 +386,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
               label={`${t('TASK TYPE')}`}
               options={[
                 { value: 'MAIN_TASK', label: `${t(`MAIN TASK`)}` },
-                { value: 'NRC', label: 'NRC' },
+                // { value: 'NRC', label: 'NRC' },
               ]}
               initialValue="MAIN_TASK"
             />
@@ -445,7 +445,7 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
 
       <ProFormDateRangePicker
         name="createDate"
-        label={`${t(' DATE')}`}
+        label={`${t('DATE')}`}
         width="lg"
         tooltip="CREATE DATE"
         fieldProps={{
@@ -463,8 +463,8 @@ const PickSlipFiltered: FC<PickSlipFilterFormType> = ({
           tooltip="SELECT STATUS "
           options={[
             { value: 'open', label: t('NEW') },
-            { value: 'closed', label: t('CLOSED') },
-            { value: 'cancelled', label: t('CANCELLED') },
+            { value: 'closed', label: t('CLOSE') },
+            { value: 'cancelled', label: t('CANCEL') },
             { value: 'partyCancelled', label: t('PARTY_CANCELLED') },
             { value: 'deleted', label: t('DELETED') },
             { value: 'issued', label: t('ISSUED') },

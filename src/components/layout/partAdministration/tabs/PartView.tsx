@@ -29,10 +29,10 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
     string,
     {
       text: string;
-      status: 'default' | 'SUCCESS' | 'processing' | 'error' | 'warning';
+      status: 'default' | 'success' | 'processing' | 'error' | 'warning';
     }
   > = {
-    ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
+    ACTIVE: { text: t('ACTIVE'), status: 'success' },
     NO_ACTIVE: { text: t('NO ACTIVE'), status: 'error' },
   };
   const [isEditing, setIsEditing] = useState(true);
@@ -90,11 +90,11 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
 
   return (
     <div>
-      <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-5">
+      <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-4">
         <Col
           xs={2}
           sm={4}
-          className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[61vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
           <Space direction="vertical">
             <Space
@@ -146,7 +146,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
         <Col
           xs={2}
           sm={13}
-          className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[61vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
         >
           <ProForm
             onFinish={async (values) => {
@@ -187,7 +187,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                         userID: USER_ID || '',
                         createDate: new Date(),
                         PART_NUMBER: result.payload?.PART_NUMBER,
-                        voucherModel: 'MODIFIED',
+                        voucherModel: 'PART_NUMBER_CHANGE',
                         GROUP: result.payload?.GROUP,
                         TYPE: result.payload?.TYPE,
                         CONDITION: result.payload?.CONDITION,
@@ -215,11 +215,11 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                     createUserID: USER_ID || '',
                     createUserSing: localStorage.getItem('singNumber') || '',
                     STATUS: formAdd.getFieldValue('partStatus'),
-                    PART_NUMBER: String(values.partNumber)?.toLowerCase(),
-                    DESCRIPTION: String(values.description)?.toLowerCase(),
+                    PART_NUMBER: String(values.partNumber)?.toUpperCase(),
+                    DESCRIPTION: String(values.description)?.toUpperCase(),
                     ADD_DESCRIPTION: String(
                       values.addDescription
-                    )?.toLowerCase(),
+                    )?.toUpperCase(),
                     TYPE: values.partType,
                     GROUP: values.partGroup,
                     ACTYPE: values.acType,
@@ -227,13 +227,13 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                     RESOURCE_TYPE: values.resourceType,
                     DEFAULT_REPAIRE: formAdd
                       .getFieldValue('defaultRepare')
-                      ?.toLowerCase(),
+                      ?.toUpperCase(),
                     DEFAULT_SUPPLIER: formAdd
                       .getFieldValue('defaultSupplier')
-                      ?.toLowerCase(),
+                      ?.toUpperCase(),
                     MANAFACTURER: formAdd.getFieldValue('manafacturer'),
-                    UNIT_OF_MEASURE: String(values?.unit)?.toLowerCase(),
-                    ADD_UNIT_OF_MEASURE: String(values?.unit)?.toLowerCase(),
+                    UNIT_OF_MEASURE: String(values?.unit)?.toUpperCase(),
+                    ADD_UNIT_OF_MEASURE: String(values?.unit)?.toUpperCase(),
                   })
                 );
                 if (resultPost.meta.requestStatus === 'fulfilled') {
@@ -340,7 +340,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
               name="partGroup"
               label={`${t('PART GROUP')}`}
               width="lg"
-              tooltip={`${t('SELECT SPESIAL GROUP')}`}
+              tooltip={`${t('SELECT SPECIAL GROUP')}`}
               options={[
                 { value: 'CONS', label: t('CONS') },
                 { value: 'TOOL', label: t('TOOL') },
@@ -349,57 +349,56 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                 { value: 'GSE', label: t('GSE') },
               ]}
             />
-            <ProFormGroup>
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                label={t('UNIT')}
-                name="unit"
-                width="sm"
-                valueEnum={{
-                  EA: `EA/${t('EACH').toUpperCase()}`,
-                  M: `M/${t('Meters').toUpperCase()}`,
-                  ML: `ML/${t('Milliliters').toUpperCase()}`,
-                  SI: `SI/${t('Sq Inch').toUpperCase()}`,
-                  CM: `CM/${t('Centimeters').toUpperCase()}`,
-                  GM: `GM/${t('Grams').toUpperCase()}`,
-                  YD: `YD/${t('Yards').toUpperCase()}`,
-                  FT: `FT/${t('Feet').toUpperCase()}`,
-                  SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
-                  IN: `IN/${t('Inch').toUpperCase()}`,
-                  SH: `SH/${t('Sheet').toUpperCase()}`,
-                  SM: `SM/${t('Sq Meters').toUpperCase()}`,
-                  RL: `RL/${t('Roll').toUpperCase()}`,
-                  KT: `KT/${t('Kit').toUpperCase()}`,
-                  LI: `LI/${t('Liters').toUpperCase()}`,
-                  KG: `KG/${t('Kilograms').toUpperCase()}`,
-                  JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
-                }}
-              ></ProFormSelect>
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                label={t('ADD UNIT')}
-                name="addUnit"
-                width="sm"
-                valueEnum={{
-                  шт: `${t('шт').toUpperCase()}`,
-                  м: `${t('м').toUpperCase()}`,
-                  мл: `${t('мл').toUpperCase()}`,
-                  дюйм2: `${t('дюйм2').toUpperCase()}`,
-                  см: `${t('см').toUpperCase()}`,
-                  г: `${t('г').toUpperCase()}`,
-                  ярд: `${t('ярд').toUpperCase()}`,
-                  фут: `${t('фут').toUpperCase()}`,
-                  см2: `${t('см2').toUpperCase()}`,
-                  дюйм: `${t('дюйм').toUpperCase()}`,
-                  м2: `${t('м2').toUpperCase()}`,
-                  рул: `${t('рул').toUpperCase()}`,
-                  л: `${t('л').toUpperCase()}`,
-                  кг: `${t('кг').toUpperCase()}`,
-                }}
-              ></ProFormSelect>
-            </ProFormGroup>
+
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              label={t('UNIT')}
+              name="unit"
+              width="lg"
+              valueEnum={{
+                EA: `EA/${t('EACH').toUpperCase()}`,
+                M: `M/${t('Meters').toUpperCase()}`,
+                ML: `ML/${t('Milliliters').toUpperCase()}`,
+                SI: `SI/${t('Sq Inch').toUpperCase()}`,
+                CM: `CM/${t('Centimeters').toUpperCase()}`,
+                GM: `GM/${t('Grams').toUpperCase()}`,
+                YD: `YD/${t('Yards').toUpperCase()}`,
+                FT: `FT/${t('Feet').toUpperCase()}`,
+                SC: `SC/${t('Sq Centimeters').toUpperCase()}`,
+                IN: `IN/${t('Inch').toUpperCase()}`,
+                SH: `SH/${t('Sheet').toUpperCase()}`,
+                SM: `SM/${t('Sq Meters').toUpperCase()}`,
+                RL: `RL/${t('Roll').toUpperCase()}`,
+                KT: `KT/${t('Kit').toUpperCase()}`,
+                LI: `LI/${t('Liters').toUpperCase()}`,
+                KG: `KG/${t('Kilograms').toUpperCase()}`,
+                JR: `JR/${t('Jar/Bottle').toUpperCase()}`,
+              }}
+            ></ProFormSelect>
+            <ProFormSelect
+              showSearch
+              rules={[{ required: true }]}
+              label={t('ADD UNIT')}
+              name="addUnit"
+              width="lg"
+              valueEnum={{
+                шт: `${t('шт').toUpperCase()}`,
+                м: `${t('м').toUpperCase()}`,
+                мл: `${t('мл').toUpperCase()}`,
+                дюйм2: `${t('дюйм2').toUpperCase()}`,
+                см: `${t('см').toUpperCase()}`,
+                г: `${t('г').toUpperCase()}`,
+                ярд: `${t('ярд').toUpperCase()}`,
+                фут: `${t('фут').toUpperCase()}`,
+                см2: `${t('см2').toUpperCase()}`,
+                дюйм: `${t('дюйм').toUpperCase()}`,
+                м2: `${t('м2').toUpperCase()}`,
+                рул: `${t('рул').toUpperCase()}`,
+                л: `${t('л').toUpperCase()}`,
+                кг: `${t('кг').toUpperCase()}`,
+              }}
+            ></ProFormSelect>
 
             {/* <ProFormSelect
               showSearch
@@ -410,7 +409,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
               tooltip={t('CONDITION')}
               valueEnum={{
                 '/NEW': t('NEW'),
-                '/INSPECTED': t('INSPECTED'),
+                '/INSPECTION': t('INSPECTION'),
                 '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
                 '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
                 '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),
@@ -420,24 +419,24 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
               // rules={[{ required: true }]}
               label={t('AC TYPE')}
               name="acType"
-              width="md"
+              width="lg"
             ></ProFormText>
             <ProFormText
               // rules={[{ required: true }]}
               label={t('COUNTRY OF ORIGIN')}
               name="country"
-              width="md"
+              width="lg"
             ></ProFormText>
             <ProFormText
               // rules={[{ required: true }]}
               label={t('RESOURCE TYPE')}
               name="resourceType"
-              width="md"
+              width="lg"
             ></ProFormText>
           </ProForm>
         </Col>
         <Col
-          className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+          className="h-[61vh]  bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
           xs={2}
           sm={6}
         >
@@ -468,7 +467,7 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                       rules={[{ required: true }]}
                       name="partStatus"
                       label={`${t('PART STATUS')}`}
-                      width="sm"
+                      width="lg"
                       tooltip={`${t('SELECT PART STATUS')}`}
                       options={[
                         { value: 'ACTIVE', label: t('ACTIVE') },
@@ -485,19 +484,19 @@ const PartView: FC<PartFormType> = ({ part, onEditPartDetailsEdit }) => {
                     // rules={[{ required: true }]}
                     label={t('DEFAULT SUPPLIER')}
                     name="defaultSupplier"
-                    width="sm"
+                    width="lg"
                   ></ProFormText>
                   <ProFormText
                     // rules={[{ required: true }]}
                     label={t('DEFAULT REPAIRE')}
                     name="defaultRepare"
-                    width="sm"
+                    width="lg"
                   ></ProFormText>
                   <ProFormText
                     // rules={[{ required: true }]}
                     label={t('MANAFACTURER')}
                     name="manafacturer"
-                    width="sm"
+                    width="lg"
                   ></ProFormText>
                   <Divider className="py-2 my-2"></Divider>
                   <div className="p-1 my-1 bg-neutral-100">

@@ -144,7 +144,7 @@ const ForecastFilteredForm: FC = () => {
           tooltip="ENTER TYPE "
           options={[
             { value: 'PROJECT', label: `${t(`PROJECT`)}` },
-            { value: 'AC', label: 'AIRCRAFT' },
+            { value: 'AC', label: `${t(`AIRCRAFT`)}` },
             { value: 'SHOP', label: `${t(`SHOP/STORE`)}` },
           ]}
           initialValue="PROJECT"
@@ -194,7 +194,7 @@ const ForecastFilteredForm: FC = () => {
         options={[
           { value: 'planned', label: t('PLANNED') },
           { value: 'open', label: t('NEW') },
-          { value: 'closed', label: t('CLOSED') },
+          { value: 'closed', label: t('CLOSE') },
           { value: 'canceled', label: t('CANCELED') },
           { value: 'onOrder', label: t('ISSUED') },
           { value: 'transfer', label: t('TRANSFER') },
@@ -205,7 +205,7 @@ const ForecastFilteredForm: FC = () => {
         name="partGroup"
         label={`${t('PART GROUP')}`}
         width="lg"
-        tooltip={`${t('SELECT SPESIAL GROUP')}`}
+        tooltip={`${t('SELECT SPECIAL GROUP')}`}
         options={[
           { value: 'CONS', label: t('CONS') },
           { value: 'TOOL', label: t('TOOL') },

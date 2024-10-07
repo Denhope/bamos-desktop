@@ -82,7 +82,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             // onFilterTransferParts(selectedFeatchStore);
           }
         }}
-        className="bg-white px-4 py-3 rounded-md border-gray-400"
+        // className="bg-white px-4 py-3 rounded-md border-gray-400"
         size="small"
         layout="horizontal"
         // labelCol={{ span: 8 }}
@@ -90,7 +90,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
         <ProFormText
           name="order"
           label={t('ORDER No')}
-          width="sm"
+          width="lg"
           tooltip={t('ORDER No')}
           fieldProps={{
             // onDoubleClick: () => setOpenPickViewer(true),
@@ -107,13 +107,13 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           }}
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
-          width={'sm'}
+          width={'lg'}
         ></ContextMenuPNSearchSelect>
 
         <ProFormText
           name="serialNumber"
           label={t('SERIAL No')}
-          width="sm"
+          width="lg"
           tooltip={t('SERIAL No')}
           fieldProps={{
             // onDoubleClick: () => setOpenPickViewer(true),
@@ -125,7 +125,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           showSearch
           name="orderType"
           label={t('ORDER TYPE')}
-          width="sm"
+          width="lg"
           initialValue={['PURCHASE_ORDER']}
           tooltip={t('ORDER TYPE')}
           valueEnum={{
@@ -148,7 +148,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             // POOL_REQUEST_ORDER: t('POOL REQUEST ORDER'),
             // POOL_REQUEST_EXCHANGE_ORDER: t('POOL REQUEST EXCHANGE ORDER'),
             REPAIR_ORDER: t('REPAIR ORDER'),
-            CUSTOMER_REPAIR_ORDER: t('CUSTOMER REPAIR ORDER'),
+            // CUSTOMER_REPAIR_ORDER: t('CUSTOMER REPAIR ORDER'),
             // CONSIGNMENT_STOCK_INCOMING_ORDER: t(
             //   'CONSIGNMENT STOCK INCOMING ORDER'
             // ),
@@ -156,14 +156,14 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
             //   'CONSIGNMENT STOCK PURCHASE ORDER'
             // ),
             WARRANTY_ORDER: t('WARRANTY ORDER'),
-            EXCHANGE_ORDER: t('EXCHANGE ORDER'),
+            // EXCHANGE_ORDER: t('EXCHANGE ORDER'),
             // EXCHANGE_IN_ADVANCE_ORDER: t('EXCHANGE IN ADVANCE ORDER'),
             TRANSFER_ORDER: t('TRANSFER ORDER'),
           }}
         />
 
         <ContextMenuVendorsSearchSelect
-          width="sm"
+          width="lg"
           rules={[{ required: false }]}
           name={'vendorName'}
           onSelectedVendor={function (record: any, rowIndex?: any): void {
@@ -188,9 +188,9 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
           showSearch
           mode="multiple"
           name="orderState"
-          label={t('ORDER STATE')}
-          width="sm"
-          tooltip={t('ORDER STATE')}
+          label={t('ORDER STATUS')}
+          width="lg"
+          tooltip={t('ORDER STATUS')}
           // initialValue={['PARTLY_RECEIVED', 'OPEN']}
           valueEnum={{
             PARTLY_RECEIVED: {
@@ -202,7 +202,7 @@ const GoodsReceivingSrarchForm: FC<GoodsReceivingSrarchFormType> = ({
               status: 'SUCCESS',
             },
             // ARRIVED: { text: t('ARRIVED'), status: 'Default' },
-            CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
+            CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
             // MISSING: { text: t('MISSING'), status: 'Error' },
             OPEN: { text: t('OPEN'), status: 'Processing' },
             // OPEN_AND_TRANSFER: {

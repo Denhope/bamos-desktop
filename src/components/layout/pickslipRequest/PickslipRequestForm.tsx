@@ -9,6 +9,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
+import { Dayjs } from 'dayjs';
 import { Button, DatePickerProps, Form, Modal, Space, message } from 'antd';
 import PickSlipViwer from '@/components/layout/APN/PickSlipViwer';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
@@ -19,7 +20,7 @@ import {
   getFilteredPickSlip,
   getFilteredProjectTasks,
 } from '@/utils/api/thunks';
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 import ContextMenuProjectSearchSelect from '@/components/shared/form/ContextMenuProjectSearchSelect';
 import { IAdditionalTaskMTBCreate } from '@/models/IAdditionalTaskMTB';
 import { IProjectTaskAll } from '@/models/IProjectTask';
@@ -62,12 +63,16 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
   const { t } = useTranslation();
   const [selectedStartDate, setSelectedStartDate] = useState<any>();
   const [selectedEndDate, setSelectedEndDate] = useState<any>();
-  const onChange = (
-    value: DatePickerProps['value'] | RangePickerProps['value'],
-    dateString: [string, string] | string
-  ) => {
-    setSelectedEndDate(dateString[1]);
-    setSelectedStartDate(dateString[0]);
+  const onChange = (date: Dayjs | null, dateString: string | string[]) => {
+    if (Array.isArray(dateString)) {
+      // Handle range selection
+      setSelectedStartDate(dateString[0]);
+      setSelectedEndDate(dateString[1]);
+    } else {
+      // Handle single date selection
+      setSelectedStartDate(dateString);
+      setSelectedEndDate(dateString); // If you only want to handle single dates, you can set both to the same value
+    }
   };
   const formRef = useRef<FormInstance>(null);
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -94,7 +99,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
         { name: 'plannedDate', value: pickData?.plannedDate },
         {
           name: 'storeman',
-          value: pickData?.storeMan || localStorage.getItem('name'),
+          value: pickData?.storeMan || FULL_NAME,
         },
         { name: 'task', value: pickData.projectTaskWO },
         // Добавьте здесь другие поля, которые вы хотите обновить
@@ -152,9 +157,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
     setinitialFormNeed('');
     setinitialFormGet('');
     form.setFields([{ name: 'materialAplicationNumber', value: 'TEMP' }]);
-    form.setFields([
-      { name: 'mechSing', value: localStorage.getItem('name') || '' },
-    ]);
+    form.setFields([{ name: 'mechSing', value: FULL_NAME }]);
     form.setFields([{ name: 'status', value: 'draft' }]);
   };
   const handleLoadClick = async (materialAplicationNumber: any) => {
@@ -375,8 +378,8 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             options={[
               { value: 'open', label: t('NEW') },
               { value: 'OPEN', label: t('NEW') },
-              { value: 'closed', label: t('CLOSED') },
-              { value: 'cancelled', label: t('CANCELLED') },
+              { value: 'closed', label: t('CLOSE') },
+              { value: 'cancelled', label: t('CANCEL') },
               { value: 'partyCancelled', label: t('PARTY_CANCELLED') },
               { value: 'deleted', label: t('DELETED') },
               { value: 'issued', label: t('ISSUED') },
@@ -438,7 +441,7 @@ const PickslipRequestForm: FC<PickSlipFilterFormType> = ({
             name={'projectNumber'}
             initialForm={selectedSingleProject?.projectWO || initialFormProject}
             width={'sm'}
-            label={`${t(`PROJECT LINK`)}`}
+            label={`${t(`PROJECT`)}`}
           ></ContextMenuProjectSearchSelect>{' '}
           <ProFormText
             disabled={!isCreating}

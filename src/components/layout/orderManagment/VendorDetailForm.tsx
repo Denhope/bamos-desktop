@@ -28,7 +28,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import PartsForecast from '../APN/PartsForecast';
 import RequirementItemsQuatation from './RequirementItemsQuatation';
 import { v4 as originalUuidv4 } from 'uuid'; // Импортируйте библиотеку uuid
-import { USER_ID } from '@/utils/api/http';
+import { FULL_NAME, USER_ID } from '@/utils/api/http';
 import FileUploader, { AcceptedFileTypes } from '@/components/shared/Upload';
 import FilesSelector from '@/components/shared/FilesSelector';
 import { handleFileSelect } from '@/services/utilites';
@@ -303,7 +303,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               companyID: currentCompanyID || '',
               updateByID: USER_ID,
               updateBySing: localStorage.getItem('singNumber'),
-              updateByName: localStorage.getItem('name'),
+              updateByName: FULL_NAME,
               updateDate: new Date(),
               parts: updatedParts,
             })
@@ -353,7 +353,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
               companyID: currentCompanyID || '',
               updateByID: USER_ID,
               updateBySing: localStorage.getItem('singNumber'),
-              updateByName: localStorage.getItem('name'),
+              updateByName: FULL_NAME,
               updateDate: new Date(),
               parts: updatedParts,
             })
@@ -489,7 +489,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
           width="sm"
           valueEnum={{
             '/NEW': t('NEW'),
-            '/INSPECTED': t('INSPECTED'),
+            '/INSPECTION': t('INSPECTION'),
             '/REPAIRED': t('REPAIRED / ТЕКУЩИЙ РЕМОНТ'),
             '/SERVICABLE': t('SERVICABLE / ИСПРАВНО'),
             '/UNSERVICABLE': t('UNSERVICABLE / НЕИСПРАВНО'),
@@ -553,7 +553,7 @@ const VendorDetailForm: FC<AddDetailFormType> = ({
                       companyID: currentCompanyID || '',
                       updateByID: USER_ID,
                       updateBySing: localStorage.getItem('singNumber'),
-                      updateByName: localStorage.getItem('name'),
+                      updateByName: FULL_NAME,
                       updateDate: new Date(),
                       parts: updatedParts,
                     })

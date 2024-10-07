@@ -1,175 +1,167 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { TimePicker } from 'antd';
 import EditableTable from '@/components/shared/Table/EditableTable';
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IBookingItem } from '@/models/IBooking';
+import { transformToPartBooking } from '@/services/utilites';
+import { ColDef } from 'ag-grid-community';
+import PartContainer from '@/components/woAdministration/PartContainer';
 type StoreViewType = {
   scroll: number;
   data: any[];
+  isLoading: boolean;
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
 };
-const StoreView: FC<StoreViewType> = ({ data, scroll, onSingleRowClick }) => {
+const StoreView: FC<StoreViewType> = ({
+  data,
+  scroll,
+  onSingleRowClick,
+  isLoading,
+}) => {
   const { t } = useTranslation();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const initialColumns: ProColumns<any>[] = [
+
+  const transformedPartNumbers = useMemo(() => {
+    return transformToPartBooking(data || []);
+  }, [data]);
+  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
+
+  interface ExtendedColDef extends ColDef {
+    cellDataType: CellDataType;
+  }
+  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
-      title: `${t('DATE')}`,
-      dataIndex: 'createDate',
-
-      key: 'createDate',
-      //tip: 'ITEM EXPIRY DATE',
-      ellipsis: true,
-      valueType: 'date',
-
-      formItemProps: {
-        name: 'createDate',
-      },
-      sorter: (a, b) => {
-        if (a.createDate && b.createDate) {
-          const aFinishDate = new Date(a.createDate);
-          const bFinishDate = new Date(b.createDate);
-          return aFinishDate.getTime() - bFinishDate.getTime();
-        } else {
-          return 0; // default value
-        }
-      },
-      renderFormItem: () => {
-        return <TimePicker />;
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('BOOKING')}`,
-      dataIndex: 'voucherModel',
-      key: 'voucherModel',
-      // tip: 'LOCAL_ID',
-      ellipsis: true,
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('PART No')}`,
-      dataIndex: 'PART_NUMBER',
-      key: 'PART_NUMBER',
-      ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
-      // ellipsis: true,
-
-      formItemProps: {
-        name: 'PART_NUMBER',
-      },
-    },
-    {
-      title: `${t('B/SERIAL')}`,
-      dataIndex: 'SERIAL_NUMBER',
-      key: 'SERIAL_NUMBER',
-      ellipsis: true,
-      render: (text: any, record: any) =>
-        record.SERIAL_NUMBER || record.SUPPLIER_BATCH_NUMBER,
-    },
-    {
-      title: `${t('STATION')}`,
-      dataIndex: 'station',
-      key: 'station',
-      //tip: 'CONDITION',
-      ellipsis: true,
-
-      formItemProps: {
-        name: 'station',
-      },
-      render: (text: any, record: any) => {
-        return (
-          <div onClick={() => {}}>
-            {record?.station || record?.WAREHOUSE_RECEIVED_AT}
-          </div>
-        );
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('STORE')}`,
-      dataIndex: 'STOCK',
-      key: 'STOCK',
-      // tip: 'ITEM STORE',
-      ellipsis: true,
-
-      formItemProps: {
-        name: 'STOCK',
-      },
-      render: (text: any, record: any) => {
-        return <div onClick={() => {}}>{record.STOCK}</div>;
-      },
-
-      // responsive: ['sm'],
-    },
-    {
-      title: `${t('LOCATION')}`,
-      dataIndex: 'SHELF_NUMBER',
-      key: 'SHELF_NUMBER',
-      //tip: 'ITEM LOCATION',
-      ellipsis: true,
-
-      formItemProps: {
-        name: 'SHELF_NUMBER',
+      field: 'createDate',
+      editable: false,
+      cellDataType: 'date',
+      headerName: `${t('CREATE DATE')}`,
+      width: 150,
+      valueFormatter: (params: any) => {
+        if (!params.value) return ''; // Проверка отсутствия значения
+        const date = new Date(params.value);
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
       },
     },
 
     {
-      title: `${t('QTY')}`,
-      dataIndex: 'QUANTITY',
-      key: 'QUANTITY',
-      width: '5%',
-      responsive: ['sm'],
-      search: false,
-
-      // sorter: (a, b) => a.unit.length - b.unit.length,
+      headerName: `${t('BOOKING')}`,
+      field: 'voucherModel',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'LOCAL_ID',
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'text',
+      width: 100,
+    },
+    {
+      headerName: `${t('PART No')}`,
+      field: 'PART_NUMBER',
+      editable: false,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SUPPLIER_BATCH_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('BATCH')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SERIAL_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('SERIAL')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'STOCK',
+      editable: false,
+      filter: false,
+      headerName: `${t('STORE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SHELF_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('LOCATION')}`,
+      cellDataType: 'text',
     },
 
     {
-      title: `${t('DESCRIPTION')}`,
-      dataIndex: 'NAME_OF_MATERIAL',
-      key: 'NAME_OF_MATERIAL',
-      // tip: 'ITEM STORE',
-      ellipsis: true,
-
-      formItemProps: {
-        name: 'NAME_OF_MATERIAL',
-      },
-
-      // responsive: ['sm'],
+      field: 'CONDITION',
+      editable: false,
+      filter: false,
+      headerName: `${t('CONDITION')}`,
+      cellDataType: 'text',
     },
-  ];
+    {
+      field: 'NAME_OF_MATERIAL',
+      headerName: `${t('DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'ORDER_NUMBER',
+      headerName: `${t('ORDER No')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'QUANTITY',
+      editable: false,
+      filter: false,
+      headerName: `${t('QTY')}`,
+      cellDataType: 'number',
+    },
+    {
+      field: 'UNIT_OF_MEASURE',
+      editable: false,
+      filter: false,
+      headerName: `${t('UNIT OF MEASURE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'CREATE_BY',
+      editable: false,
+      filter: false,
+      headerName: `${t('CREATE BY')}`,
+      cellDataType: 'text',
+    },
+  ]);
   const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
   return (
     <div>
-      <EditableTable
-        data={data}
-        isNoneRowSelection
-        showSearchInput
-        initialColumns={initialColumns}
-        isLoading={false}
-        menuItems={undefined}
-        recordCreatorProps={false}
-        onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        // onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        onRowClick={function (record: any, rowIndex?: any): void {
-          onSingleRowClick &&
-            onSingleRowClick((prevSelectedItems: (string | undefined)[]) =>
-              prevSelectedItems && prevSelectedItems.includes(record._id)
-                ? []
-                : [record]
-            );
+      <PartContainer
+        isLoading={isLoading}
+        isFilesVisiable={true}
+        isVisible={true}
+        pagination={true}
+        isAddVisiable={true}
+        isButtonVisiable={false}
+        isEditable={true}
+        height={'68vh'}
+        columnDefs={columnDefs}
+        partNumbers={[]}
+        isChekboxColumn={true}
+        onUpdateData={(data: any[]): void => {}}
+        rowData={transformedPartNumbers}
+        onCheckItems={setSelectedRowKeys}
+        //
+        onRowSelect={(data: any): void => {
+          onSingleRowClick && onSingleRowClick(data);
         }}
-        onSave={function (rowKey: any, data: any, row: any): void {}}
-        yScroll={scroll}
-        externalReload={function () {
-          throw new Error('Function not implemented.');
-        }}
-      ></EditableTable>
+      />
     </div>
   );
 };

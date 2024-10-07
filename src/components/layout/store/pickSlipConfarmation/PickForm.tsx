@@ -13,6 +13,7 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getFilteredPickSlip } from '@/utils/api/thunks';
+import { FULL_NAME } from '@/utils/api/http';
 type PickSlipFilterFormType = {
   onFilterPickSlip: (record: any) => void;
   pickSlipNumber?: string;
@@ -49,7 +50,7 @@ const PickForm: FC<PickSlipFilterFormType> = ({
         { name: 'bookingDate', value: pickData?.closedDate || new Date() },
         {
           name: 'storeman',
-          value: pickData?.storeMan || localStorage.getItem('name'),
+          value: pickData?.storeMan || FULL_NAME,
         },
         // Добавьте здесь другие поля, которые вы хотите обновить
       ]);
@@ -121,8 +122,8 @@ const PickForm: FC<PickSlipFilterFormType> = ({
             options={[
               { value: 'open', label: t('NEW') },
               { value: 'OPEN', label: t('NEW') },
-              { value: 'closed', label: t('CLOSED') },
-              { value: 'cancelled', label: t('CANCELLED') },
+              { value: 'closed', label: t('CLOSE') },
+              { value: 'cancelled', label: t('CANCEL') },
               { value: 'partyCancelled', label: t('PARTY_CANCELLED') },
               { value: 'deleted', label: t('DELETED') },
               { value: 'issued', label: t('ISSUED') },

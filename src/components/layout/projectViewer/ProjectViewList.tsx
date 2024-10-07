@@ -30,7 +30,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       title: `${t('PROJECT No')}`,
       dataIndex: 'projectWO',
       key: 'projectWO',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       // width: '13%',
 
@@ -111,7 +111,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t('PLANED START DATE')}`,
+      title: `${t('PLANNED START DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
@@ -135,7 +135,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t('PLANED FINISH DATE')}`,
+      title: `${t('PLANNED FINISH DATE')}`,
       editable: (text, record, index) => {
         return false;
       },
@@ -159,7 +159,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t(' DATE IN')}`,
+      title: `${t('DATE IN')}`,
       editable: (text, record, index) => {
         return false;
       },
@@ -183,7 +183,7 @@ const ProjectViewList: FC<showProjectListType> = ({
       },
     },
     {
-      title: `${t(' DATE OUT')}`,
+      title: `${t('DATE OUT')}`,
       editable: (text, record, index) => {
         return false;
       },

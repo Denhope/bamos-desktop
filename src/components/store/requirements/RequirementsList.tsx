@@ -93,8 +93,8 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
         //onPurchasing: { text: t('PURCHASING'), status: 'Processing' },
         onCheack: { text: t('CHECK'), status: 'Warning' },
         open: { text: t('NEW'), status: 'Error' },
-        closed: { text: t('CLOSED'), status: 'Default' },
-        canceled: { text: t('CANCELLED'), status: 'Error' },
+        closed: { text: t('CLOSE'), status: 'Default' },
+        canceled: { text: t('CANCEL'), status: 'Error' },
         onOrder: { text: t('ISSUED'), status: 'Processing' },
       },
 
@@ -139,7 +139,7 @@ const RequirementsList: FC<RequirementsListPropsType> = ({
       dataIndex: 'PN',
       key: 'PN',
       ellipsis: true,
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       width: '10%',
       formItemProps: {

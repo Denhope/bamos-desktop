@@ -27,18 +27,14 @@ const OrderManagment: FC = () => {
     }
   }, [orders]);
   const items: MenuItem[] = [
-    getItem(
-      <>{t('ORDER MANAGMENT')} (BAN:1201)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('ORDER MANAGMENT')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>
       <Sider
         className="h-[85vh] overflow-hidden"
         theme="light"
-        width={400}
+        width={350}
         collapsible
         // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}

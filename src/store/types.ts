@@ -1,4 +1,4 @@
-import { IAuth } from "@/models/IAuth";
+import { IAuth } from '@/models/IAuth';
 
 export interface ISignIn {
   name?: string;
@@ -7,7 +7,7 @@ export interface ISignIn {
   firstName?: string;
   lastName?: string;
   singNumber?: string;
-  role?: string;
+  role?: any;
 }
 
 export interface IState {

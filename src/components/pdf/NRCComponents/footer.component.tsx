@@ -29,9 +29,9 @@ const FooterPdfView: FC = () => {
           </PdfSmall>
         </View>
         <View>
-          <PdfSmall textAlign="left">
+          {/* <PdfSmall textAlign="left">
             produced by kovalchukd@avia407.by
-          </PdfSmall>
+          </PdfSmall> */}
         </View>
       </View>
     </PdfFooterView>

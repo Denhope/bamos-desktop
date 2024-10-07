@@ -78,11 +78,10 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
   }, [project]);
 
   return (
-    <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }} className="gap-6">
-      <Col
-        xs={2}
-        sm={3}
-        className="h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
+    <div className="  flex gap-4 justify-between">
+      <div
+        // sm={4}
+        className="w-3/12 h-[60vh] bg-white px-4 py-3 rounded-md border-gray-400  "
       >
         <Space direction="vertical">
           <Space
@@ -139,12 +138,8 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             <>{t('EDIT')}</>
           </Space>
         </Space>
-      </Col>
-      <Col
-        xs={2}
-        sm={20}
-        className="h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  "
-      >
+      </div>
+      <div className="w-9/12 h-[60vh]  bg-white px-4 py-3 rounded-md border-gray-400  ">
         <ProForm
           onReset={() => {
             setinitialForm('');
@@ -293,17 +288,17 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             disabled={isCreating || !isEditing}
             rules={[{ required: true }]}
             name="projectState"
-            label={t('PROJECT STATE')}
+            label={t('PROJECT STATUS')}
             width="sm"
             initialValue={['DRAFT']}
             valueEnum={{
               DRAFT: { text: t('DRAFT'), status: 'DRAFT' },
               OPEN: { text: t('OPEN'), status: 'Processing' },
-              inProgress: { text: t('PROGRESS'), status: 'PROGRESS' },
+              inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
               PLANNED: { text: t('PLANNED'), status: 'Waiting' },
               COMPLETED: { text: t('COMPLETED'), status: 'Default' },
-              CLOSED: { text: t('CLOSED'), status: 'SUCCESS' },
-              CANCELLED: { text: t('CANCELLED'), status: 'Error' },
+              CLOSED: { text: t('CLOSE'), status: 'SUCCESS' },
+              CANCELLED: { text: t('CANCEL'), status: 'Error' },
             }}
           />
           {(project?.projectType === 'PURCHASE_PROJECT' ||
@@ -313,7 +308,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             <ProFormText
               rules={[{ required: true }]}
               name="projectName"
-              label={t('PROJECT SHOT NAME')}
+              label={t('PROJECT SHORT NAME')}
               width="sm"
             ></ProFormText>
           )}
@@ -329,7 +324,7 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
 
           <ProFormGroup>
             <ProFormDatePicker
-              label={t('PLANNED START DATE')}
+              label={t('PLANNED FINISH DATE')}
               name="planedStartDate"
               width="sm"
             ></ProFormDatePicker>
@@ -456,8 +451,8 @@ const ProjectDetails: FC<ProjectDetailsFormType> = ({
             </>
           )}
         </ProForm>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 

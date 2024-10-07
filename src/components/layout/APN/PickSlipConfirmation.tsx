@@ -1,12 +1,4 @@
-import {
-  FormInstance,
-  ProCard,
-  ProColumns,
-  ProForm,
-  ProFormDatePicker,
-  ProFormGroup,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { FormInstance, ProColumns, ProForm } from '@ant-design/pro-components';
 import {
   Button,
   Col,
@@ -22,12 +14,7 @@ import { v4 as originalUuidv4 } from 'uuid';
 import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  TransactionOutlined,
-  EditOutlined,
-  PrinterOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
+import { PrinterOutlined, SaveOutlined } from '@ant-design/icons';
 import {
   createBookingItem,
   createPickSlip,
@@ -39,7 +26,7 @@ import {
 import PickForm from '../store/pickSlipConfarmation/PickForm';
 
 import EditableSearchTable from '@/components/shared/Table/EditableSearchTable';
-import EditableTable from '@/components/shared/Table/EditableTable';
+
 import EditableTableForStore from '@/components/shared/Table/EditableTableForStore';
 import { setUpdatedMaterialOrder } from '@/store/reducers/StoreLogisticSlice';
 import GeneretedPickSlip from '@/components/pdf/GeneretedPickSlip';
@@ -48,10 +35,11 @@ import { UserResponce } from '@/models/IUser';
 import GeneretedCompleteSlipPdf from '@/components/pdf/GeneretedCompleteSlip';
 import GeneretedCompleteLabels from '@/components/pdf/GeneretedCompleteLabels';
 import GeneretedWorkLabels from '@/components/pdf/GeneretedWorkLabels';
-import FilesSelector from '@/components/shared/FilesSelector';
+
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
-import { USER_ID } from '@/utils/api/http';
+import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import FileModalList from '@/components/shared/FileModalList';
+import { useUpdateRequirementMutation } from '@/features/requirementAdministration/requirementApi';
 
 const PickSlipConfirmation: FC = () => {
   const { t } = useTranslation();
@@ -91,7 +79,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'STOCK',
       key: 'STOCK',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       // width: '20%',
     },
@@ -118,7 +106,7 @@ const PickSlipConfirmation: FC = () => {
       title: `${t('EXPIRES')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       width: '8%',
       search: false,
@@ -201,7 +189,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '20%',
     },
@@ -217,8 +205,8 @@ const PickSlipConfirmation: FC = () => {
 
     {
       title: `${t('OWNER')}`,
-      dataIndex: 'OWNER',
-      key: 'OWNER',
+      dataIndex: 'OWNER_SHORT_NAME',
+      key: 'OWNER_SHORT_NAME',
       responsive: ['sm'],
       search: false,
       // sorter: (a, b) => a.unit.length - b.unit.length,
@@ -306,7 +294,7 @@ const PickSlipConfirmation: FC = () => {
       title: `${t('EXPIRES')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       width: '6%',
       valueType: 'date',
@@ -335,7 +323,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       render: (text: any, record: any) => {
         return <a>{record.foRealese ? record.foRealese.LOCAL_ID : text}</a>;
@@ -415,7 +403,7 @@ const PickSlipConfirmation: FC = () => {
       dataIndex: 'description',
       key: 'description',
       // responsive: ['sm'],
-      tip: 'Text Show',
+      tooltip: 'Text Show',
       ellipsis: true, //
       width: '13%',
       editable: (text, record, index) => {
@@ -445,7 +433,13 @@ const PickSlipConfirmation: FC = () => {
         return false;
       },
       render: (text: any, record: any) => {
-        return <div>{record.foRealese ? record.foRealese.OWNER : text}</div>;
+        return (
+          <div>
+            {record.foRealese
+              ? record.foRealese.OWNER_SHORT_NAME
+              : record.foRealese?.OWNER}
+          </div>
+        );
       },
     },
     {
@@ -573,6 +567,7 @@ const PickSlipConfirmation: FC = () => {
   //     return acc.concat(item?.onBlock);
   //   }, []) || []
   // );
+  const [updateRequirement] = useUpdateRequirementMutation();
   const [updateValue, setUpdateValue] = useState<any>();
   const [intermediateData, setIntermediateData] = useState<any | null>(null);
   const handleButtonClick = () => {
@@ -590,20 +585,19 @@ const PickSlipConfirmation: FC = () => {
   return (
     <div className="h-[82vh] overflow-hidden flex flex-col justify-between gap-2">
       <div className="h-[60%]">
-        <Row gutter={{ xs: 8, sm: 11, md: 24, lg: 32 }}>
+        <Row gutter={{ xs: 8, sm: 11, md: 18 }}>
           <Col xs={2} sm={6}>
             <PickForm
               updateValue={updateValue}
               onFilterPickSlip={setCurrenPick}
             ></PickForm>
-          </Col>{' '}
+          </Col>
           <Col xs={32} sm={18}>
             <EditableSearchTable
               showDefaultToolbarContent={false}
               initialParams={
                 currentPick && {
                   STOCK: currentPick?.getFrom,
-                  // isAllExpDate: true,
                   PART_NUMBER: selectedPart?.PN
                     ? selectedPart?.PN
                     : currentPick?.materials[0].PN,
@@ -753,27 +747,6 @@ const PickSlipConfirmation: FC = () => {
                   ...currentPick,
                   materials: updatetOrderMaterials,
                 };
-                // Обновляем промежуточные данные прямо здесь
-                // const newData = updatetOrderMaterials?.map((item) => {
-                //   return {
-                //     ...item,
-                //     QUANTITY: item.QUANTITY_BOOK,
-                //     onBlockQuantity: Number(item.QUANTITY_BOOK),
-                //     unit: item.unit,
-                //     required: item.required,
-                //     description: item.description,
-                //     onBlock: item.foRealese
-                //       ? [
-                //           Object.assign({}, item.foRealese, {
-                //             QUANTITY: Number(item.QUANTITY_BOOK),
-                //             LOCATION_TO: currentPick?.neededOn,
-                //             STATUS: 'completed',
-                //           }),
-                //         ]
-                //       : [],
-                //     status: 'completed',
-                //   };
-                // });
 
                 setIntermediateData(newData);
                 setOpenCompleteWorkPrint(true);
@@ -796,7 +769,8 @@ const PickSlipConfirmation: FC = () => {
               currentPick?.status === 'new' ||
               currentPick?.status === 'cancelled' ||
               currentPick?.status === 'partyCancelled' ||
-              !currentPick
+              !currentPick ||
+              (updatetOrderMaterials && !updatetOrderMaterials.length)
             }
             onClick={async () => {
               Modal.confirm({
@@ -847,6 +821,7 @@ const PickSlipConfirmation: FC = () => {
                     );
                     if (result.meta.requestStatus === 'fulfilled') {
                       setCurrenPick(result.payload);
+                      console.log(result.payload);
                       setUpdateValue(new Date());
                       const index = filteredMaterialOrders.findIndex(
                         (itemR: any) => itemR._id === result.payload._id
@@ -970,16 +945,20 @@ const PickSlipConfirmation: FC = () => {
                       recipient: selectedСonsigneeUser?.name,
                       recipientID: selectedСonsigneeUser?._id,
                       taskNumber: currentPick.taskNumber,
-                      registrationNumber: currentPick.registrationNumber,
-                      planeType: currentPick.planeType,
-                      projectWO: currentPick.projectWO,
-                      projectTaskWO: currentPick.projectTaskWO,
+                      registrationNumber:
+                        currentPick?.projectID?.acRegistrationNumber,
+                      planeType: currentPick?.projectID?.acType,
+                      projectWO: currentPick?.projectID?.projectWO,
+                      projectTaskWO: currentPick?.projectTaskId?.projectTaskWO,
                       materialAplicationNumber:
                         currentPick.materialAplicationNumber,
                       additionalTaskID: currentPick.additionalTaskID,
                       store: currentPick.getFrom,
-                      workshop: currentPick.neededOn,
+                      workshop: currentPick?.neededOnID?.title,
                       companyID: currentCompanyID,
+                      projectTaskID: currentPick?.projectTaskId,
+                      projectID: currentPick.projectID,
+                      neededOnID: currentPick.neededOnID,
                     })
                   );
                   // добавитьUpdateUser;
@@ -1023,9 +1002,10 @@ const PickSlipConfirmation: FC = () => {
 
                                 UNIT_OF_MEASURE: resultItem.UNIT_OF_MEASURE,
 
-                                SUPPLIES_CODE: resultItem?.SUPPLIES_CODE || '',
+                                SUPPLIES_CODE:
+                                  resultItem?.SUPPLIES_CODE || 'N/A',
                                 SUPPLIES_LOCATION:
-                                  resultItem?.SUPPLIES_LOCATION || '',
+                                  resultItem?.SUPPLIES_LOCATION || 'N/A',
                                 SUPPLIER_NAME: resultItem?.SUPPLIER_NAME,
                                 SUPPLIER_SHORT_NAME:
                                   resultItem?.SUPPLIER_SHORT_NAME,
@@ -1045,28 +1025,39 @@ const PickSlipConfirmation: FC = () => {
                                   resultItem?.PRODUCT_EXPIRATION_DATE,
 
                                 APPROVED_CERT: resultItem?.APPROVED_CERT,
-                                AWB_REFERENCE: resultItem?.AWB_REFERENCE || '',
-                                AWB_TYPE: resultItem?.AWB_TYPE || '',
-                                AWB_NUMBER: resultItem?.AWB_NUMBER || '',
-                                AWB_DATE: resultItem?.AWB_DATE || '',
-                                RECEIVING_NUMBER: resultItem?.RECEIVING_NUMBER,
+                                AWB_REFERENCE:
+                                  resultItem?.AWB_REFERENCE || 'N/A',
+                                AWB_TYPE: resultItem?.AWB_TYPE || 'N/A',
+                                AWB_NUMBER: resultItem?.AWB_NUMBER || 'N/A',
+                                AWB_DATE: resultItem?.AWB_DATE || 'N/A',
+                                RECEIVING_NUMBER:
+                                  resultItem?.RECEIVING_NUMBER || 'N/A',
                                 RECEIVING_ITEM_NUMBER:
-                                  resultItem.RECEIVING_ITEM_NUMBER,
+                                  resultItem.RECEIVING_ITEM_NUMBER || 'N/A',
                                 CERTIFICATE_NUMBER:
                                   resultItem?.CERTIFICATE_NUMBER,
-                                CERTIFICATE_TYPE: resultItem?.CERTIFICATE_TYPE,
-                                REVISION: resultItem?.REVISION,
+                                CERTIFICATE_TYPE:
+                                  resultItem?.CERTIFICATE_TYPE || 'N/A',
+                                REVISION: resultItem?.REVISION || 'N/A',
                                 IS_CUSTOMER_GOODS:
                                   resultItem?.IS_CUSTOMER_GOODS,
                                 LOCAL_ID: resultItem?.LOCAL_ID,
                                 registrationNumber:
-                                  result.payload?.registrationNumber,
+                                  result.payload?.registrationNumber || 'N/A',
                                 planeType: result.payload?.registrationNumber,
                                 projectWO: result.payload?.projectWO,
                                 workshop: result.payload?.workshop,
                                 projectTaskWO: result.payload?.projectTaskWO,
                                 additionalTaskID:
                                   result.payload?.additionalTaskID,
+                                pickDate: result.payload?.createDate,
+                                pickSlipNumber:
+                                  result.payload?.materialAplicationNumber,
+                                partID: result.payload?.partID,
+                                RECEIVING_ID: result.payload?.RECEIVING_ID,
+                                ORDER_ITEM_ID: result.payload?.ORDER_ITEM_ID,
+                                RECEIVING_ITEMS_ID:
+                                  result.payload?.RECEIVING_ITEMS_ID,
                               },
                             })
                           );
@@ -1083,19 +1074,25 @@ const PickSlipConfirmation: FC = () => {
                         })
                       );
                     });
-                    updatetOrderMaterials.map((item: any) => {
-                      dispatch(
-                        updateRequirementByID({
-                          id: item.requirementID?._id,
-                          // requestQuantity: -item.QUANTITY,
-                          issuedQuantity: item.QUANTITY,
-                          updateUserID: USER_ID || '',
-                          updateDate: new Date(),
-                          companyID: localStorage.getItem('companyID') || '',
-                          projectID: result.payload.projectId,
-                          // status: 'closed',
-                        })
-                      );
+                    updatetOrderMaterials.map(async (item: any) => {
+                      await updateRequirement({
+                        id: item.requirementID?._id,
+                        forBookedQuantity: item?.onOrderQuantity,
+                        projectID: result.payload.projectId,
+                        _id: item.requirementID?._id,
+                      }).unwrap();
+                      // dispatch(
+                      //   updateRequirementByID({
+                      //     id: item.requirementID?._id,
+                      //     // requestQuantity: -item.QUANTITY,
+                      //     issuedQuantity: item.QUANTITY,
+                      //     updateUserID: USER_ID || '',
+                      //     updateDate: new Date(),
+                      //     companyID: localStorage.getItem('companyID') || '',
+                      //     projectID: result.payload.projectId,
+                      //     // status: 'closed',
+                      //   })
+                      // );
                     });
 
                     const result1 = await dispatch(

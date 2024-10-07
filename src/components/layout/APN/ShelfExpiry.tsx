@@ -73,7 +73,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('LOCAL_ID')}`,
       dataIndex: 'LOCAL_ID',
       key: 'LOCAL_ID',
-      // tip: 'LOCAL_ID',
+      // tooltip: 'LOCAL_ID',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -88,7 +88,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('PN')}`,
       dataIndex: 'PART_NUMBER',
       key: 'PART_NUMBER',
-      //tip: 'ITEM PART_NUMBER',
+      //tooltip: 'ITEM PART_NUMBER',
       // ellipsis: true,
       width: '12%',
       formItemProps: {
@@ -131,7 +131,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('DESCRIPTION')}`,
       dataIndex: 'NAME_OF_MATERIAL',
       key: 'NAME_OF_MATERIAL',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
 
       formItemProps: {
@@ -144,7 +144,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('STORE')}`,
       dataIndex: 'STOCK',
       key: 'STOCK',
-      // tip: 'ITEM STORE',
+      // tooltip: 'ITEM STORE',
       ellipsis: true,
       width: '4%',
       formItemProps: {
@@ -170,7 +170,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('CONDITION')}`,
       dataIndex: 'CONDITION',
       key: 'CONDITION',
-      //tip: 'CONDITION',
+      //tooltip: 'CONDITION',
       ellipsis: true,
       width: '10%',
       formItemProps: {
@@ -197,7 +197,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('LOCATION')}`,
       dataIndex: 'SHELF_NUMBER',
       key: 'SHELF_NUMBER',
-      //tip: 'ITEM LOCATION',
+      //tooltip: 'ITEM LOCATION',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -219,7 +219,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('RESEIVING')}`,
       dataIndex: 'ORDER_NUMBER',
       key: 'ORDER_NUMBER',
-      //tip: 'ITEM ORDER_NUMBER',
+      //tooltip: 'ITEM ORDER_NUMBER',
       ellipsis: true,
       width: '7%',
       formItemProps: {
@@ -232,7 +232,7 @@ const ShelfExpiry: FC = () => {
       title: `${t('EXPIRY DATE')}`,
       dataIndex: 'PRODUCT_EXPIRATION_DATE',
       key: 'PRODUCT_EXPIRATION_DATE',
-      //tip: 'ITEM EXPIRY DATE',
+      //tooltip: 'ITEM EXPIRY DATE',
       ellipsis: true,
       valueType: 'date',
       width: '9%',
