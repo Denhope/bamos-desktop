@@ -1,48 +1,33 @@
-name: Build
-
-on:
-  push:
-    branches: [develop]
-    paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/build.yml"
-
-jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [windows-latest]
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-        env:
-          NODE_OPTIONS: --max-old-space-size=8192
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: release_on_${{ matrix.os }}
-          path: release/
-          retention-days: 5
+{
+  appId: 'BAMOS-TEST',
+  asar: true,
+  directories: {
+    output: 'release/${version}',
+  },
+  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
+  files: ['dist-electron', 'dist'],
+  mac: {
+    artifactName: '${productName}_${version}.${ext}',
+    target: ['dmg', 'zip'],
+  },
+  win: {
+    target: [
+      {
+        target: 'nsis',
+        arch: ['x64'],
+      },
+    ],
+    artifactName: '${productName}_${version}.${ext}',
+  },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false,
+  },
+  publish: {
+    provider: 'generic',
+    channel: 'latest',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.49/',
+  },
+}
