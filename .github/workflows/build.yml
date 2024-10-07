@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
       - name: Checkout Code
@@ -38,8 +38,7 @@ jobs:
           npm install --legacy-peer-deps --no-audit --no-fund --force
 
       - name: Build Release Files
-        run: |
-          npx --no-install vite build
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI: false
