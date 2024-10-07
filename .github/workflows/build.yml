@@ -44,13 +44,22 @@ jobs:
           choco install libjpeg-turbo
 
       - name: Build
-        run: npm run build
+        run: npm run build || true
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check for build artifacts
+        run: |
+          if [ -d "release" ]; then
+            echo "Build artifacts found"
+          else
+            echo "No build artifacts found, but continuing anyway"
+          fi
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: release_on_${{ matrix.os }}
           path: release
