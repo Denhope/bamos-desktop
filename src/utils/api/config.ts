@@ -8,9 +8,9 @@ export interface Config {
 const config: Config = {
   apiUrls: [
     'http://192.168.74.14',
-    'http://82.209.232.250'
+    'http://82.209.232.250:4000'
   ],
-  currentApiUrl: 'http://82.209.232.250'
+  currentApiUrl: 'http://82.209.232.250:4000'
 };
 
 export const apiChangeSubject = new Subject<string>();

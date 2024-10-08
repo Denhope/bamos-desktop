@@ -1,26 +1,4 @@
-Skip to content
-Navigation Menu
-Denhope
-/
-bamos-desktop
 
-Type / to search
-Code
-Issues
-Pull requests
-3
-Actions
-Projects
-Security
-4
-Insights
-Settings
-Build
-fix:fix #34
-Jobs
-Run details
-Workflow file for this run
-.github/workflows/build.yml at 8add525
 name: Build
 
 on:
