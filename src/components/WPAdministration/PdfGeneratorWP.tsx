@@ -115,11 +115,21 @@ const PdfGeneratorWP: React.FC<{
     return await mainDoc.save();
   };
 
-
   const generatePdf = async () => {
     // Добавляем определение formattedDate
-  const currentDate = new Date();
-  const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}.${(currentDate.getMonth() + 1).toString().padStart(2, '0')}.${currentDate.getFullYear()} ${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}`;
+    const currentDate = new Date();
+    const formattedDate = `${currentDate
+      .getDate()
+      .toString()
+      .padStart(2, '0')}.${(currentDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${currentDate.getFullYear()} ${currentDate
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${currentDate
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}`;
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     setLoading(true);
@@ -161,6 +171,12 @@ const PdfGeneratorWP: React.FC<{
       }
 
       return truncated + '...';
+    };
+
+    const truncateValue = (value: string, maxLength: number) => {
+      return value.length > maxLength
+        ? value.slice(0, maxLength) + '...'
+        : value;
     };
 
     for (const task of transformedTasks) {
@@ -228,7 +244,11 @@ const PdfGeneratorWP: React.FC<{
                   size: 18,
                 });
               }
-              if (task.projectItemType !== 'NRC' && task.projectItemType !== 'HARD_ACCESS' && task.projectItemType !== 'NRC_ADD') {
+              if (
+                task.projectItemType !== 'NRC' &&
+                task.projectItemType !== 'HARD_ACCESS' &&
+                task.projectItemType !== 'NRC_ADD'
+              ) {
                 page.drawText('TASK CARD', {
                   x: x + 15,
                   y: y - 25,
@@ -286,21 +306,21 @@ const PdfGeneratorWP: React.FC<{
                   size: smallFontSize,
                 });
 
-                if ( task.projectItemType == 'NRC') {
+                if (task.projectItemType == 'NRC') {
                   // Рисуем две вертикальные линии для разделения поля title
                   const lineX1 = x + 100; // Первая линия
                   const lineX2 = x + 200; // Вторая линия
-          
+
                   page.drawLine({
-                    start: { x: lineX1, y: y-36.2 },
-                    end: { x: lineX1, y: y-72 },
+                    start: { x: lineX1, y: y - 36.2 },
+                    end: { x: lineX1, y: y - 72 },
                     thickness: 1,
                     color: rgb(0, 0, 0),
                   });
-          
+
                   page.drawLine({
-                    start: { x: lineX2, y: y-36.2  },
-                    end: { x: lineX2, y: y-72 },
+                    start: { x: lineX2, y: y - 36.2 },
+                    end: { x: lineX2, y: y - 72 },
                     thickness: 1,
                     color: rgb(0, 0, 0),
                   });
@@ -339,26 +359,26 @@ const PdfGeneratorWP: React.FC<{
                   12
                 );
                 const acTypeMSN =
-                task?.ACMSN !== undefined
-                  ? String(task.ACMSN).toUpperCase()
-                  : 'N/A';
-              const truncatedacTypeMSN = truncateText(
-                acTypeMSN,
-                80,
-                robotoFont,
-                12
-              );
+                  task?.ACMSN !== undefined
+                    ? String(task.ACMSN).toUpperCase()
+                    : 'N/A';
+                const truncatedacTypeMSN = truncateText(
+                  acTypeMSN,
+                  80,
+                  robotoFont,
+                  12
+                );
 
-              const accustomerCode =
-                task?.customerCode !== undefined
-                  ? String(task.customerCode).toUpperCase()
-                  : 'N/A';
-                  const truncatedCode = truncateText(
-                    accustomerCode,
-                    80,
-                    robotoFont,
-                    12
-                  ); 
+                const accustomerCode =
+                  task?.customerCode !== undefined
+                    ? String(task.customerCode).toUpperCase()
+                    : 'N/A';
+                const truncatedCode = truncateText(
+                  accustomerCode,
+                  80,
+                  robotoFont,
+                  12
+                );
 
                 // Смещение влево на 20 единиц
                 page.drawText(truncatedAcTypeText, {
@@ -409,8 +429,6 @@ const PdfGeneratorWP: React.FC<{
                   size: smallFontSize,
                 });
               }
-              
-            
             } else if (cell === 'QR Code') {
               page.drawImage(qrCodeImage, {
                 x: x + 20, // Adjusted x position for QR code
@@ -490,7 +508,7 @@ const PdfGeneratorWP: React.FC<{
               }
             }
             // Draw border around the cell
-            
+
             page.drawRectangle({
               x,
               y: y - 72, // Adjusted height for the QR code cell
@@ -532,9 +550,9 @@ const PdfGeneratorWP: React.FC<{
           value: task.station !== undefined ? task.station : 'MSQ',
         },
         {
-            label: '',
-            label1: 'ATA ',
-            value: task.ata !== undefined ? task.ata : 'N/A',
+          label: '',
+          label1: 'ATA ',
+          value: task.ata !== undefined ? task.ata : 'N/A',
         },
         {
           label: 'Zone',
@@ -577,35 +595,34 @@ const PdfGeneratorWP: React.FC<{
         {
           label: 'A/C Type',
           label1: 'Тип ВС',
-          value: task.acType !== undefined ? String(task.acType) : 'N/A',
+          value: truncateValue(
+            task.acType !== undefined ? String(task.acType) : 'N/A',
+            20
+          ), // Ограничение в 20 символов
         },
-        // {
-        //   label: 'WP Card Seq',
-        //   label1: 'Номер в пакете',
-        //   value:
-        //     task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
-        // },
-        // {
-        //   label: '',
-        //   label1: '',
-        //   value: '',
-        // },
         {
           label: 'Work Pack',
           label1: 'Пакет Работ',
-          value: task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
+          value: truncateValue(
+            task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
+            20
+          ), // Ограничение в 20 символов
         },
         {
           label: 'Customer WO',
           label1: 'Заявка Заказчика',
-          value:
+          value: truncateValue(
             task.custumerWO !== undefined ? String(task.custumerWO) : 'N/A',
+            28
+          ), // Ограничение в 20 символов
         },
         {
           label: 'Card No',
           label1: 'Карта №',
-          value:
+          value: truncateValue(
             task.cardNumber !== undefined ? String(task.cardNumber) : 'N/A',
+            20
+          ), // Ограничение в 20 символов
         },
       ];
       const cellData3 = [
@@ -751,9 +768,10 @@ const PdfGeneratorWP: React.FC<{
             fontSize
           );
           const cellX =
-            50 + cellWidthsNRC2.slice(0, i).reduce((sum, width) => sum + width, 0);
+            50 +
+            cellWidthsNRC2.slice(0, i).reduce((sum, width) => sum + width, 0);
           const cellWidth1 = cellWidthsNRC2[i];
-  
+
           // Draw the cell border
           page.drawRectangle({
             x: cellX,
@@ -763,7 +781,7 @@ const PdfGeneratorWP: React.FC<{
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
-  
+
           // Draw the label
           page.drawText(cell.label, {
             x: cellX + 5,
@@ -771,14 +789,14 @@ const PdfGeneratorWP: React.FC<{
             font: robotoFont,
             size: smallFontSize,
           });
-  
+
           page.drawText(cell.label1, {
             x: cellX + 5,
             y: y - 23,
             font: robotoFont,
             size: smallFontSize,
           });
-  
+
           // Draw the value
           page.drawText(truncatedValue, {
             x: cellX + horizontalPadding[i],
@@ -788,8 +806,8 @@ const PdfGeneratorWP: React.FC<{
           });
         }
         y -= cellHeight;
-  
-        y -= 0; 
+
+        y -= 0;
         const cellWidthsNRC3 = [100, 200, 100, 100];
         for (let i = 0; i < cellData5.length; i++) {
           const cell = cellDataNRC3[i];
@@ -801,9 +819,10 @@ const PdfGeneratorWP: React.FC<{
             fontSize
           );
           const cellX =
-            50 + cellWidthsNRC3.slice(0, i).reduce((sum, width) => sum + width, 0);
+            50 +
+            cellWidthsNRC3.slice(0, i).reduce((sum, width) => sum + width, 0);
           const cellWidth1 = cellWidthsNRC3[i];
-  
+
           // Draw the cell border
           page.drawRectangle({
             x: cellX,
@@ -813,7 +832,7 @@ const PdfGeneratorWP: React.FC<{
             borderColor: rgb(0, 0, 0),
             borderWidth: 1,
           });
-  
+
           // Draw the label
           page.drawText(cell.label, {
             x: cellX + 5,
@@ -821,14 +840,14 @@ const PdfGeneratorWP: React.FC<{
             font: robotoFont,
             size: smallFontSize,
           });
-  
+
           page.drawText(cell.label1, {
             x: cellX + 5,
             y: y - 23,
             font: robotoFont,
             size: smallFontSize,
           });
-  
+
           // Draw the value
           page.drawText(truncatedValue, {
             x: cellX + horizontalPadding[i],
@@ -838,245 +857,245 @@ const PdfGeneratorWP: React.FC<{
           });
         }
         y -= cellHeight;
-  
+
         y -= 5; // / Space between the previous content and the new cells// / Space between the previous content and the new cells
       }
       if (task.projectItemType !== 'NRC') {
-      for (let i = 0; i < cellData.length; i++) {
-        const cell = cellData[i];
-        const cellX =
-          50 + cellWidths.slice(0, i).reduce((sum, width) => sum + width, 0);
-        const cellWidth1 = cellWidths[i];
+        for (let i = 0; i < cellData.length; i++) {
+          const cell = cellData[i];
+          const cellX =
+            50 + cellWidths.slice(0, i).reduce((sum, width) => sum + width, 0);
+          const cellWidth1 = cellWidths[i];
 
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeight,
-          width: cellWidth1,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidth1,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
 
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 18,
-          font: robotoFont,
-          size: smallFontSize,
-        });
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 18,
+            font: robotoFont,
+            size: smallFontSize,
+          });
 
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 23,
-          font: robotoFont,
-          size: smallFontSize,
-        });
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 23,
+            font: robotoFont,
+            size: smallFontSize,
+          });
 
-        // Draw the value
-        page.drawText(cell.value, {
-          x: cellX + 50,
-          y: y - 20,
-          font: robotoFont,
-          size: fontSize,
-        });
+          // Draw the value
+          page.drawText(cell.value, {
+            x: cellX + 50,
+            y: y - 20,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+
+        for (let i = 0; i < cellData3.length; i++) {
+          const cell = cellData3[i];
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 300 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted = cell.label === 'Reference' ? 300 : 100; // Adjust width for the "Cust. ID Code" cell
+
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidthAdjusted,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 17,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 22,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          const truncatedValue = truncateText(
+            cell.value,
+            cellWidthAdjusted - 40, // Use the adjusted width for truncation
+            robotoFont,
+            fontSize
+          );
+
+          page.drawText(truncatedValue, {
+            x: cellX + 45,
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+
+        y -= 0; // Space between the first and second tables
+
+        for (let i = 0; i < cellData4.length; i++) {
+          const cell = cellData4[i];
+          const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 300 : 0); // Adjust x position for the cells after the first one
+          const cellWidthAdjusted = cell.label === 'Access' ? 300 : 100; // Adjust width for the "Cust. ID Code" cell
+
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidthAdjusted,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 18,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 23,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          // Draw the value
+          const truncatedValue = truncateText(
+            cell.value,
+            cellWidthAdjusted - 40, // Use the adjusted width for truncation
+            robotoFont,
+            fontSize
+          );
+
+          page.drawText(truncatedValue, {
+            x: cellX + 45,
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+
+        y -= 0; // / Space between the previous content and the new cells
+        const cellWidths5 = [100, 200, 100, 100];
+
+        const horizontalPadding = [45, 20, 25, 45];
+
+        for (let i = 0; i < cellData5.length; i++) {
+          const cell = cellData5[i];
+          const truncatedValue = truncateText(
+            cell.value,
+            cellWidths5[i] - 20, // Use the adjusted width for truncation
+            robotoFont,
+            fontSize
+          );
+          const cellX =
+            50 + cellWidths5.slice(0, i).reduce((sum, width) => sum + width, 0);
+          const cellWidth1 = cellWidths5[i];
+
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidth1,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 18,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 23,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          // Draw the value
+          page.drawText(truncatedValue, {
+            x: cellX + horizontalPadding[i],
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+
+        y -= 0; // / Space between the previous content and the new cells
+
+        for (let i = 0; i < cellData6.length; i++) {
+          const cell = cellData6[i];
+          const cellX = 50 + i * cellWidth;
+
+          // Draw the cell border
+          page.drawRectangle({
+            x: cellX,
+            y: y - cellHeight,
+            width: cellWidth,
+            height: cellHeight,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+          });
+
+          // Draw the label
+          page.drawText(cell.label, {
+            x: cellX + 5,
+            y: y - 18,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+
+          page.drawText(cell.label1, {
+            x: cellX + 5,
+            y: y - 23,
+            font: robotoFont,
+            size: smallFontSize,
+          });
+          // Draw the value
+          const truncatedValue = truncateText(
+            cell.value,
+            cellWidth - 40,
+            robotoFont,
+            12
+          );
+          page.drawText(truncatedValue, {
+            x: cellX + 45,
+            y: y - 15,
+            font: robotoFont,
+            size: fontSize,
+          });
+        }
+        y -= cellHeight;
+        y -= 5;
       }
-      y -= cellHeight;
-
-      for (let i = 0; i < cellData3.length; i++) {
-        const cell = cellData3[i];
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 300 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted = cell.label === 'Reference' ? 300 : 100; // Adjust width for the "Cust. ID Code" cell
-
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeight,
-          width: cellWidthAdjusted,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 17,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 22,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        const truncatedValue = truncateText(
-          cell.value,
-          cellWidthAdjusted - 40, // Use the adjusted width for truncation
-          robotoFont,
-          fontSize
-        );
-
-        page.drawText(truncatedValue, {
-          x: cellX + 45,
-          y: y - 15,
-          font: robotoFont,
-          size: fontSize,
-        });
-      }
-      y -= cellHeight;
-
-      y -= 0; // Space between the first and second tables
-
-      for (let i = 0; i < cellData4.length; i++) {
-        const cell = cellData4[i];
-        const cellX = 50 + (i > 0 ? 100 : 0) + (i > 1 ? 300 : 0); // Adjust x position for the cells after the first one
-        const cellWidthAdjusted = cell.label === 'Access' ? 300 : 100; // Adjust width for the "Cust. ID Code" cell
-
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeight,
-          width: cellWidthAdjusted,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 18,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 23,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        // Draw the value
-        const truncatedValue = truncateText(
-          cell.value,
-          cellWidthAdjusted - 40, // Use the adjusted width for truncation
-          robotoFont,
-          fontSize
-        );
-
-        page.drawText(truncatedValue, {
-          x: cellX + 45,
-          y: y - 15,
-          font: robotoFont,
-          size: fontSize,
-        });
-      }
-      y -= cellHeight;
-
-      y -= 0; // / Space between the previous content and the new cells
-      const cellWidths5 = [100, 200, 100, 100];
-
-      const horizontalPadding = [45, 20, 25, 45];
-
-      for (let i = 0; i < cellData5.length; i++) {
-        const cell = cellData5[i];
-        const truncatedValue = truncateText(
-          cell.value,
-          cellWidths5[i] - 20, // Use the adjusted width for truncation
-          robotoFont,
-          fontSize
-        );
-        const cellX =
-          50 + cellWidths5.slice(0, i).reduce((sum, width) => sum + width, 0);
-        const cellWidth1 = cellWidths5[i];
-
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeight,
-          width: cellWidth1,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 18,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 23,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        // Draw the value
-        page.drawText(truncatedValue, {
-          x: cellX + horizontalPadding[i],
-          y: y - 15,
-          font: robotoFont,
-          size: fontSize,
-        });
-      }
-      y -= cellHeight;
-
-      y -= 0; // / Space between the previous content and the new cells
-
-      for (let i = 0; i < cellData6.length; i++) {
-        const cell = cellData6[i];
-        const cellX = 50 + i * cellWidth;
-
-        // Draw the cell border
-        page.drawRectangle({
-          x: cellX,
-          y: y - cellHeight,
-          width: cellWidth,
-          height: cellHeight,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 1,
-        });
-
-        // Draw the label
-        page.drawText(cell.label, {
-          x: cellX + 5,
-          y: y - 18,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-
-        page.drawText(cell.label1, {
-          x: cellX + 5,
-          y: y - 23,
-          font: robotoFont,
-          size: smallFontSize,
-        });
-        // Draw the value
-        const truncatedValue = truncateText(
-          cell.value,
-          cellWidth - 40,
-          robotoFont,
-          12
-        );
-        page.drawText(truncatedValue, {
-          x: cellX + 45,
-          y: y - 15,
-          font: robotoFont,
-          size: fontSize,
-        });
-      }
-      y -= cellHeight;
-      y -= 5;
-    }
       for (let i = 0; i < cellData7.length; i++) {
         const cell = cellData7[i];
 
