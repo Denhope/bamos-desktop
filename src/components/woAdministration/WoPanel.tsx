@@ -1,5 +1,4 @@
-// ts-nocheck
-
+// @ts-nocheck
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
@@ -12,6 +11,7 @@ import {
   Divider,
   notification,
   FloatButton,
+  Tag,
 } from 'antd';
 import {
   PlusSquareOutlined,
@@ -38,7 +38,7 @@ import {
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
 
-import TaskList from '../shared/Table/TaskList';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 import { useAddMultiActionMutation } from '@/features/projectItemWO/actionsApi';
 
 import PdfGenerator from './PdfGenerator';
@@ -51,18 +51,49 @@ import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 import TaskMultiCloseModal from './TaskMultiCloseModal';
 import { IStep } from '@/models/IStep';
 import { useGetUsersQuery } from '@/features/userAdministration/userApi';
+import { useGetSkillsQuery } from '@/features/userAdministration/skillApi';
+import { useGetFilteredZonesQuery } from '@/features/zoneAdministration/zonesApi';
+
+// Путь может отличаться
 
 interface AdminPanelProps {
   projectSearchValues: any;
 }
+
+const colors = [
+  'magenta',
+  'red',
+  'volcano',
+  'orange',
+  'gold',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
+];
+
+const useColorMap = () => {
+  return useMemo(() => {
+    const colorMap: Record<string, string> = {};
+    let colorIndex = 0;
+
+    return (code: string) => {
+      if (!colorMap[code]) {
+        colorMap[code] = colors[colorIndex % colors.length];
+        colorIndex++;
+      }
+      return colorMap[code];
+    };
+  }, []);
+};
 
 const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const { t } = useTranslation();
   const [editingProject, setEditingProject] = useState<IProjectItemWO | null>(
     null
   );
-
-  const editingProjectRef = useRef(editingProject);
   const [editingProjectNRC, setEditingProjectNRC] = useState<any | null>(null);
   const {
     currentTime,
@@ -91,41 +122,15 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     refetch,
   } = useGetProjectItemsWOQuery(
     {
-      status: projectTasksFormValues?.status,
-      startDate: projectTasksFormValues?.startDate,
-      finishDate: projectTasksFormValues?.endDate,
-      projectID: projectTasksFormValues?.projectID,
-      vendorID: projectTasksFormValues?.vendorID,
-      partNumberID: projectTasksFormValues?.partNumberID,
+      ...projectSearchValues,
+      time: projectSearchValues?.time,
       taskWO: projectTasksFormValues?.projectTaskWO,
-      planeId: projectTasksFormValues?.planeId,
-      restrictionID: projectTasksFormValues?.restrictionID,
-      phasesID: projectTasksFormValues?.phasesID,
-      useID: projectTasksFormValues?.useID,
-      skillCodeID: projectTasksFormValues?.skillCodeID,
-      accessID: projectTasksFormValues?.accessID,
-      zonesID: projectTasksFormValues?.zonesID,
-      projectItemType: projectTasksFormValues?.projectItemType,
-      WOReferenceID: projectTasksFormValues?.WOReferenceID,
-      time: projectTasksFormValues?.time,
-      defectCodeID: projectTasksFormValues?.defectCodeID,
-      ata: projectTasksFormValues?.ata,
     },
     {
       skip: !triggerQuery,
-      refetchOnMountOrArgChange: true,
+      refetchOnMountOrArgChange: false,
     }
   );
-  // const { data: quantity, refetch } = useGetStorePartStockQTYQuery(
-  //   {
-  //     partNumberID: '',
-  //     storeID: selectedStoreID,
-  //     includeAlternates: true,
-  //   },
-  //   {
-  //     skip: !selectedStoreID,
-  //   }
-  // );
 
   let storesIDString = '';
   if (Array.isArray(editingProject?.projectID?.storesID)) {
@@ -134,7 +139,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   const [addMultiAction] = useAddMultiActionMutation({});
   const [addTask] = useAddProjectTaskMutation();
   const [updateTask] = useUpdateProjectTaskMutation();
-
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const { data: stores } = useGetStoresQuery(
     {
       ids: storesIDString,
@@ -162,9 +167,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       return acc;
     }, {} as Record<string, string>) || {};
 
-  // const transformedRequirements = useMemo(() => {
-  //   return transformToIRequirement(requirements || []);
-  // }, [requirements]);
   const [isTreeView, setIsTreeView] = useState(false);
   const transformedTasks = useMemo(() => {
     return transformToIProjectTask(projectTasks || []);
@@ -175,59 +177,100 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       const hasSearchParams = Object.values(projectSearchValues).some(
         (value) => value !== undefined && value !== ''
       );
-      if (hasSearchParams) {
-        setTriggerQuery(true);
-      }
+      setTriggerQuery(hasSearchParams);
     }
   }, [projectSearchValues]);
-  useEffect(() => {
-    projectTasks && refetch();
 
-    // console.log(editingProject);
-    console.log('editingProjectRef.current');
-    setEditingProject(editingProject);
-
-    // console.log(currentTime);
-  }, [currentTime, editingProject]); //
-  const handleEdit = (project: IProjectItemWO) => {
-    setEditingProject(project);
-    // setEditingProjectNRC(null);
+  const handleRefetch = async () => {
+    if (triggerQuery) {
+      try {
+        await refetch();
+      } catch (error) {
+        console.error('Refetch error:', error);
+      }
+    }
   };
-  // const handleStoreChange = (value: string) => {
-  //   setSelectedStoreID(value);
-  // };
+
+  useEffect(() => {
+    if (currentTime) {
+      handleRefetch();
+    }
+  }, [currentTime]);
+
+  const handleEdit = (project: IProjectItemWO) => {
+    if (project.id !== editingProject?.id) {
+      setEditingProject(project);
+    }
+  };
+
   const handleSubmit = async (task: any) => {
     try {
       if (editingProject && editingProject?.id) {
-        updateTask(task).unwrap();
-        // refetch();
-        setEditingProject(task);
-        // await updateRequirement(task).unwrap();
+        const updatedTask = await updateTask(task).unwrap();
+        const refreshedData = await refetch().unwrap();
+
+        setEditingProject(null);
+        setSelectedRowId(null);
+
+        // Находим обновленную версию задачи в свежих данных
+        const updatedProject = refreshedData.find(
+          (item: any) => item.id === updatedTask.id
+        );
+
+        if (updatedProject) {
+          setTimeout(() => {
+            setEditingProject(updatedProject);
+            setSelectedRowId(updatedProject.id);
+          }, 100);
+        }
+
         notification.success({
-          message: t('TASK SUCCESSFULLY UPDATED'),
-          description: t('The task has been successfully updated.'),
+          message: t('TASK UPDATED'),
+          description: t('The task details have been successfully updated'),
         });
       } else if (!editingProject?.id) {
-        await addTask({ project: { ...task, isNRC: true } }).unwrap();
-        // console.log(task);
-        refetch();
+        const newTask = await addTask({
+          project: { ...task, isNRC: true },
+        }).unwrap();
+
+        const refreshedData = await refetch().unwrap();
+
+        setEditingProject(null);
+        setSelectedRowId(null);
+
+        // Находим новую задачу в обновленных данных
+        const updatedProject = refreshedData.find(
+          (item: any) => item.id === newTask.id
+        );
+
+        if (updatedProject) {
+          setTimeout(() => {
+            setEditingProject(updatedProject);
+            setSelectedRowId(updatedProject.id);
+          }, 100);
+        }
+
         notification.success({
-          message: t('TASK SUCCESSFULLY ADDED'),
-          description: t('The task has been successfully added.'),
+          message: t('NEW NRC ADDED'),
+          description: t('A new NRC task has been successfully created'),
         });
       }
-      // setEditingProject(null);
-      // setEditingProject(task);
     } catch (error) {
       notification.error({
-        message: t('FAILED TO ADD TASK'),
-        description: 'There was an error adding the task.',
+        message: t('ACTION FAILED'),
+        description: t(
+          'Failed to complete the action. Please try again or contact support if the problem persists'
+        ),
       });
     }
   };
+
   const handleCreate = () => {
-    setEditingProjectNRC(editingProject);
+    const currentProject = editingProject;
+
     setEditingProject(null);
+    setEditingProjectNRC(currentProject);
+
     const {
       id,
       _id,
@@ -237,12 +280,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       removeInslallItemsIds,
       acTypeId,
       zonesID,
-
       ...projectWithoutIds
-    } = editingProjectNRC;
-    setEditingProject({
+    } = currentProject;
+
+    const newProject = {
       ...projectWithoutIds,
-      projectTaskReferenceID: editingProjectNRC?.id,
+      projectTaskReferenceID: currentProject?.id,
       restrictionID: [],
       skillCodeID: [],
       taskDescription: '',
@@ -256,14 +299,27 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       createUserID: '',
       createDate: new Date(),
       status: 'open',
-      projectID: editingProjectNRC?.projectID._id,
+      projectID: currentProject?.projectID._id,
       projectItemType: 'NRC',
       partTaskID: null,
-      projectItemReferenceID: editingProjectNRC?.projectItemID,
-      taskDescriptionCustumer: editingProjectNRC?.taskDescriptionCustumer,
+      projectItemReferenceID: currentProject?.projectItemID,
+      taskDescriptionCustumer: currentProject?.taskDescriptionCustumer,
       taskId,
       acTypeId,
       zonesID: null,
+    };
+
+    setEditingProject(newProject);
+
+    notification.info({
+      message: t('CREATING NEW NRC'),
+      description: t(
+        'Starting to create a new NRC task based on task {{taskNumber}}',
+        {
+          taskNumber: currentProject?.taskNumber || currentProject?.taskWO,
+        }
+      ),
+      icon: <PlusSquareOutlined style={{ color: '#108ee9' }} />,
     });
   };
 
@@ -283,21 +339,100 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     });
   };
 
-  interface ColumnDef {
-    field: keyof IProjectItemWO;
-    headerName: string;
-    resizable?: boolean;
-    filter?: boolean;
-    hide?: boolean;
-    valueGetter?: any;
-    valueFormatter?: any;
-  }
+  const getDefectCodeColor = useColorMap();
+  const getTaskCodeColor = useColorMap();
+
+  const renderTags = (value: string, getColor: (code: string) => string) => {
+    const codes = value ? value.split(',') : [];
+    return (
+      <div>
+        {codes.map((code: string, index: number) => {
+          const trimmedCode = code.trim();
+          return (
+            <Tag
+              key={index}
+              color={getColor(trimmedCode)}
+              style={{ margin: '2px' }}
+            >
+              {trimmedCode}
+            </Tag>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const { data: skills } = useGetSkillsQuery({});
+
+  const skillMap = useMemo(() => {
+    return (skills || []).reduce((acc, skill) => {
+      acc[skill.id] = skill.code;
+      return acc;
+    }, {} as Record<string, string>);
+  }, [skills]);
+
+  const getSkillColor = useColorMap();
+
+  const renderSkillTags = (skillIds: string[]) => {
+    return (
+      <div>
+        {skillIds.map((id) => {
+          const skillName = skillMap[id] || 'Unknown Skill';
+          return (
+            <Tag
+              key={id}
+              color={getSkillColor(skillName)}
+              style={{ margin: '2px' }}
+            >
+              {skillName}
+            </Tag>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const { data: zones } = useGetFilteredZonesQuery({});
+
+  const zoneMap = useMemo(() => {
+    return (
+      zones?.reduce((acc: Record<string, string>, zone: any) => {
+        const id = zone?.id || zone?._id;
+        const label = zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
+        if (id && label) {
+          acc[id] = label;
+        }
+        return acc;
+      }, {}) || {}
+    );
+  }, [zones]);
+
+  const getZoneColor = useColorMap();
+
+  const renderZoneTags = (zoneIds: string[]) => {
+    return (
+      <div>
+        {zoneIds.map((id) => {
+          const zoneName = zoneMap[id] || 'Unknown Zone';
+          return (
+            <Tag
+              key={id}
+              // color={getZoneColor(zoneName)}
+              style={{ margin: '2px' }}
+            >
+              {zoneName}
+            </Tag>
+          );
+        })}
+      </div>
+    );
+  };
+
   const columnDefs: any[] = [
     {
       field: 'status',
-      headerName: `${t('Status')}`,
+      headerName: `${t('TASK STATUS')}`,
       cellDataType: 'text',
-      // width: 150,
       filter: true,
       valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
         params.data.status,
@@ -307,14 +442,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        // color: '#ffffff', // Text color
       }),
     },
     {
       field: 'projectItemType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
-      // width: 130,
       valueGetter: (params: {
         data: { projectItemType: keyof ValueEnumTypeTask };
       }) => params.data.projectItemType,
@@ -324,78 +457,94 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        // color: '#ffffff', // Text color
       }),
-      // hide: true,
+    },
+    {
+      field: 'isCriticalTask',
+      headerName: t('CRITICAL TASK'),
+      cellDataType: 'boolean',
+      cellRenderer: (params: { value: boolean }) => {
+        return (
+          <Tag color={params.value ? 'red' : 'green'}>
+            {params.value ? t('YES') : t('NO')}
+          </Tag>
+        );
+      },
+      valueGetter: (params: any) => {
+        return params.data.isCriticalTask;
+      },
+      filter: 'agЁSetColumnFilter',
+      filterParams: {
+        values: [true, false],
+        valueFormatter: (params: any) => (params.value ? t('YES') : t('NO')),
+      },
     },
     {
       field: 'taskWO',
       headerName: `${t('TRACE No')}`,
       filter: true,
-      // width: 130,
-      // hide: true,
+    },
+    {
+      field: 'taskWONumber',
+      headerName: `${t('SEQUENCE')}`,
+      filter: true,
+      // minWidth: 120,
+      // flex: 1,
+    },
+    {
+      field: 'defectCodeID',
+      headerName: `${t('DEFECT CODE')}`,
+      filter: true,
+      cellRenderer: (params: any) =>
+        renderTags(params.value, getDefectCodeColor),
     },
     {
       field: 'taskNumber',
       headerName: `${t('TASK NUMBER')}`,
       filter: true,
-      // hide: true,
     },
     {
       field: 'taskDescription',
       headerName: `${t('DESCRIPTION')}`,
       filter: true,
-      // width: 300,
-      // hide: true,
     },
-    // {
-    //   field: 'PART_NUMBER',
-    //   headerName: `${t('PART No')}`,
-    //   filter: true,
-    //   // hide: true,
-    // },
-    // {
-    //   field: 'qty',
-    //   headerName: `${t('QUANTITY')}`,
-    //   filter: true,
-    //   // hide: true,
-    // },
     {
       field: 'projectName',
       headerName: `${t('WP TITLE')}`,
       filter: true,
-      // width: 300,
-      // hide: true,
     },
-
-    // {
-    //   field: 'PART_NUMBER',
-    //   headerName: `${t('PART No')}`,
-    //   filter: true,
-    // },
-    // { field: 'qty', headerName: `${t('QUANTITY')}`, filter: true },
     { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
     { field: 'amtoss', headerName: `${t('REFERENCE')}`, filter: true },
-    // { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
-    // { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
-    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
-    // { field: 'SKILL_CODE1', headerName: `${t('SKILL CODE')}`, filter: true },
-    // { field: 'TASK_CODE', headerName: `${t('TASK CODE')}`, filter: true },
-    // {
-    //   field: 'SUB TASK_CODE',
-    //   headerName: `${t('SUB TASK_CODE')}`,
-    //   filter: true,
-    // },
-
+    { field: 'ACCESS_NOTE', headerName: `${t('ACCESS NOTE')}`, filter: true },
     { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
+    {
+      field: 'skillCodeID',
+      headerName: `${t('SKILLS')}`,
+      filter: true,
+      cellRenderer: (params: any) => renderSkillTags(params.value || []),
+    },
+    {
+      field: 'TASK_CODE',
+      headerName: `${t('TASK CODE')}`,
+      filter: true,
+      cellRenderer: (params: any) => renderTags(params.value, getTaskCodeColor),
+    },
+    { field: 'ata', headerName: `${t('ATA')}`, filter: true },
+    { field: 'mainWorkTime', headerName: `${t('PLANED TIME')}`, filter: true },
+    {
+      field: 'SUB TASK_CODE',
+      headerName: `${t('SUB TASK CODE')}`,
+      filter: true,
+    },
+    { field: 'createBy', headerName: `${t('CREATED BY')}`, filter: true },
 
     {
       field: 'createDate',
-      headerName: `${t('CREATE DATE')}`,
+      headerName: `${t('CREATED DATE')}`,
       filter: true,
       width: 150,
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -404,11 +553,24 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         });
       },
     },
+    {
+      field: 'zonesID',
+      headerName: t('ZONES'),
+      filter: true,
+      cellRenderer: (params: any) => renderZoneTags(params.value || []),
+      filterParams: {
+        valueGetter: (params: any) => {
+          return params.data.zonesID
+            .map((id: string) => zoneMap[id])
+            .join(', ');
+        },
+      },
+    },
   ];
-  type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
 
   const valueEnum: ValueEnumType = {
     inspect: t('INSPECTION'),
+    diRequired: t('DI REQUIRED'),
     onQuatation: t('QUATATION'),
     open: t('OPEN'),
     closed: t('CLOSE'),
@@ -425,10 +587,10 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     issued: '',
     test: t('TEST'),
     progress: t('IN PROGRESS'),
-
     nextAction: t('NEXT ACTION'),
     needInspection: t('NEED INSPECTION'),
   };
+
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
     CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
@@ -438,7 +600,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     CMJC: t('CMJC'),
     FC: t('FC'),
     HARD_ACCESS: t('HARD_ACCESS'),
-    // RC_ADD: t('RC_ADD'),
   };
 
   const handleAddAction = async (
@@ -462,49 +623,83 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       });
       return false;
     }
-    {
-      actionType == 'reOpen' &&
-        Modal.confirm({
-          title: t(
-            `ARE YOU SURE YOU WANT TO REOPEN TASKS? ALL ACTIONS WILL BE DELETED!`
-          ),
-          onOk: async () => {
-            try {
-              await addMultiAction({ actionType, ids });
-              refetch();
-              notification.success({
-                message: t('SUCCESS'),
-                description: t('ACTIONS COMPLETED'),
-              });
-            } catch (error) {
-              notification.error({
-                message: t('ERROR'),
-                description: t('ACTIONS ERROR'),
-              });
+
+    if (actionType === 'reOpen') {
+      Modal.confirm({
+        title: t(
+          `ARE YOU SURE YOU WANT TO REOPEN TASKS? ALL ACTIONS WILL BE DELETED!`
+        ),
+        onOk: async () => {
+          try {
+            const currentEditingProject = { ...editingProject };
+            await addMultiAction({ actionType, ids });
+            const refreshedData = await refetch().unwrap();
+
+            setEditingProject(null);
+            setSelectedRowId(null);
+
+            const updatedProject = refreshedData.find(
+              (task: any) => task.id === currentEditingProject.id
+            );
+
+            if (updatedProject) {
+              setTimeout(() => {
+                setEditingProject(updatedProject);
+                setSelectedRowId(updatedProject.id);
+              }, 100);
             }
-          },
-        });
+
+            notification.success({
+              message: t('TASK REOPENED'),
+              description: t(
+                'The task has been successfully reopened and all actions were deleted'
+              ),
+            });
+          } catch (error) {
+            notification.error({
+              message: t('ERROR'),
+              description: t('ACTIONS ERROR'),
+            });
+          }
+        },
+      });
     }
-    {
-      actionType == 'open' &&
-        Modal.confirm({
-          title: t(`ARE YOU SURE YOU WANT TO EDIT TASK?`),
-          onOk: async () => {
-            try {
-              await addMultiAction({ actionType, ids });
-              refetch();
-              notification.success({
-                message: t('SUCCESS'),
-                description: t('ACTIONS COMPLETED'),
-              });
-            } catch (error) {
-              notification.error({
-                message: t('ERROR'),
-                description: t('ACTIONS ERROR'),
-              });
+
+    if (actionType === 'open') {
+      Modal.confirm({
+        title: t(`ARE YOU SURE YOU WANT TO EDIT TASK?`),
+        onOk: async () => {
+          try {
+            const currentEditingProject = { ...editingProject };
+            await addMultiAction({ actionType, ids });
+            const refreshedData = await refetch().unwrap();
+
+            setEditingProject(null);
+            setSelectedRowId(null);
+
+            const updatedProject = refreshedData.find(
+              (task: any) => task.id === currentEditingProject.id
+            );
+
+            if (updatedProject) {
+              setTimeout(() => {
+                setEditingProject(updatedProject);
+                setSelectedRowId(updatedProject.id);
+              }, 100);
             }
-          },
-        });
+
+            notification.success({
+              message: t('TASK UNLOCKED'),
+              description: t('The task is now available for editing'),
+            });
+          } catch (error) {
+            notification.error({
+              message: t('ERROR'),
+              description: t('ACTIONS ERROR'),
+            });
+          }
+        },
+      });
     }
   };
 
@@ -531,22 +726,50 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
     }
 
     try {
+      const currentEditingProject = { ...editingProject };
+
       for (const action of actions) {
-        console.log(action);
         await addMultiAction({
-          actionType: action.type,
+          actionType: action?.type,
           ids,
+          createDate: action?.createDate,
           userPerformDurations: action.userPerformDurations,
           userInspectDurations: action.userInspectDurations,
         });
       }
-      refetch();
-      notification.success({
-        message: t('SUCCESS'),
-        description: t('ACTIONS COMPLETED'),
-      });
-      setCurrentTime(Date.now());
-      // setEditingProject(null);
+
+      const refreshedData = await refetch().unwrap();
+
+      setEditingProject(null);
+      setSelectedRowId(null);
+
+      const updatedProject = refreshedData.find(
+        (task: any) => task.id === currentEditingProject.id
+      );
+
+      if (updatedProject) {
+        setTimeout(() => {
+          setEditingProject(updatedProject);
+          setSelectedRowId(updatedProject.id);
+        }, 100);
+      }
+
+      if (editingProject?.isCriticalTask) {
+        notification.success({
+          message: t('CRITICAL TASK CLOSED'),
+          description: t(
+            'The critical task has been successfully closed with all required inspections'
+          ),
+        });
+      } else {
+        notification.success({
+          message: t('TASK CLOSED'),
+          description: t(
+            'The task has been successfully closed with all performed actions'
+          ),
+        });
+      }
+      // setCurrentTime(Date.now());
     } catch (error) {
       notification.error({
         message: t('ERROR'),
@@ -562,17 +785,15 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
   };
 
   const [visibleActionAdd, setVisibleActionAdd] = useState(false);
+
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       <Space>
         <Col
-          className=" bg-white px-4 py-3  rounded-md brequierement-gray-400 "
+          className="bg-white px-4 py-3 w-full rounded-md brequierement-gray-400"
           sm={24}
         >
-          <WODiscription
-            // onRequirementSearch={setRequirement}
-            project={editingProject}
-          ></WODiscription>
+          <WODiscription project={editingProject} key={editingProject?.id} />
         </Col>
       </Space>
       <Space className="">
@@ -593,7 +814,6 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             </Button>
           </PermissionGuard>
         </Col>
-
         <Col>
           <PermissionGuard
             requiredPermissions={[Permission.PROJECT_TASK_ACTIONS]}
@@ -601,17 +821,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             <Button
               onClick={() => {
                 setVisibleActionAdd(true);
-                // handleAddActionALL('closed', selectedKeys, [
-                //   'closed',
-                //   'inProgress',
-                //   'performed',
-                //   'open',
-                // ]);
               }}
               disabled={
                 !selectedKeys.length ||
                 selectedKeys.length > 1 ||
                 editingProject?.status == 'closed' ||
+                editingProject?.status == 'diRequired' ||
                 editingProject?.status == 'cancelled'
               }
               size="small"
@@ -621,7 +836,29 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             </Button>
           </PermissionGuard>
         </Col>
-
+        <Col>
+          <PermissionGuard
+            requiredPermissions={[Permission.CLOSE_CRITICAL_TASK]}
+          >
+            <Button
+              danger
+              onClick={() => {
+                setVisibleActionAdd(true);
+              }}
+              disabled={
+                !selectedKeys.length ||
+                !editingProject?.isCriticalTask ||
+                editingProject?.status !== 'diRequired' ||
+                editingProject?.status == 'closed' ||
+                editingProject?.status == 'cancelled'
+              }
+              size="small"
+              icon={<CheckCircleFilled />}
+            >
+              {t('CLOSE CR TASK')}
+            </Button>
+          </PermissionGuard>
+        </Col>
         <Col>
           <PermissionGuard requiredPermissions={[Permission.REOPEN_TASK]}>
             <Button
@@ -643,6 +880,11 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         <Col>
           <PermissionGuard requiredPermissions={[Permission.REOPEN_TASK]}>
             <Button
+              disabled={
+                !selectedKeys.length ||
+                selectedKeys.length > 1 ||
+                editingProject?.status !== 'closed'
+              }
               danger
               onClick={() => {
                 handleAddAction('reOpen', selectedKeys, ['']);
@@ -654,15 +896,36 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
             </Button>
           </PermissionGuard>
         </Col>
-        <Col style={{ textAlign: 'right' }}></Col>
         <Col>
           <PermissionGuard requiredPermissions={[Permission.PRINT_TASK_CARD]}>
             <PdfGenerator
+              key={`pdf-${selectedKeys.join('-')}-${
+                editingProject?.id
+              }-${Date.now()}`}
               wo={editingProject}
               disabled={!selectedKeys.length}
               ids={selectedKeys}
               htmlTemplate={''}
               data={[]}
+              buttonText="PRINT"
+              isAddTextVisible={false}
+            />
+          </PermissionGuard>
+        </Col>
+        <Col>
+          <PermissionGuard requiredPermissions={[Permission.PRINT_AS_ORIGINAL]}>
+            <PdfGenerator
+              key={`pdf-${selectedKeys.join('-')}-${
+                editingProject?.id
+              }-${Date.now()}`}
+              wo={editingProject}
+              disabled={!selectedKeys.length}
+              ids={selectedKeys}
+              htmlTemplate={''}
+              data={[]}
+              isOriginal={true}
+              isAddTextVisible={false}
+              buttonText="PRINT AS ORIGINAL"
             />
           </PermissionGuard>
         </Col>
@@ -690,22 +953,33 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
                 }}
               />
             ) : (
-              <TaskList
-                isFilesVisiable={true}
-                isLoading={isLoading}
-                pagination={true}
-                isChekboxColumn={true}
-                columnDefs={columnDefs}
+              <UniversalAgGrid
+                isLoading={isLoading || isFetching}
+                selectedRowId={selectedRowId}
+                isChekboxColumn
+                gridId="woTaskList"
                 rowData={transformedTasks || []}
-                onRowSelect={function (rowData: any | null): void {
-                  handleEdit(rowData);
-                  console.log(rowData);
+                columnDefs={columnDefs}
+                onRowSelect={(selectedRows) => {
+                  if (selectedRows.length > 0) {
+                    handleEdit(selectedRows[0]);
+                    setSelectedRowId(selectedRows[0]._id || selectedRows[0].id);
+                  } else {
+                    // Если оменили выделение
+                    setEditingProject(null);
+                    setSelectedRowId(null);
+                  }
                 }}
-                height={'64vh'}
-                onCheckItems={function (selectedKeys: React.Key[]): void {
+                onCheckItems={(selectedKeys) => {
                   setSelectedKeys(selectedKeys);
+                  // Если сняли все выделения
+                  if (selectedKeys.length === 0) {
+                    setEditingProject(null);
+                    setSelectedRowId(null);
+                  }
                 }}
-                gridKey={'woTaskList'}
+                height="64vh"
+                className="h-full"
               />
             )}
           </div>
@@ -723,6 +997,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
         </Split>
         {editingProject && (
           <TaskMultiCloseModal
+            onlyWithOrganizationAuthorization={true}
             key={editingProject._id}
             currentTask={editingProject}
             visible={visibleActionAdd}
@@ -731,9 +1006,12 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
               setVisibleActionAdd(false);
             }}
             onSave={(data) => {
-              // console.log(data);
-
-              handleAddActionALL(data, selectedKeys, ['closed']);
+              console.log(data);
+              if (editingProject?.isCriticalTask) {
+                handleAddActionALL(data, selectedKeys, ['closed']);
+              } else {
+                handleAddActionALL(data, selectedKeys, ['closed']);
+              }
             }}
           />
         )}

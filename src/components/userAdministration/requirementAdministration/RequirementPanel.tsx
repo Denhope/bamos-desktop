@@ -1,22 +1,15 @@
 // @ts-nocheck
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Button,
-  Col,
-  Modal,
-  message,
-  Space,
-  Spin,
-  Switch,
-  notification,
-} from 'antd';
+import { Button, Col, Modal, Space, Switch, notification } from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
-
 import { useTranslation } from 'react-i18next';
+import { Split } from '@geoffcox/react-splitter';
+import { ColDef, ColumnResizedEvent, GridReadyEvent } from 'ag-grid-community';
+import { useDispatch, useSelector } from 'react-redux';
+
 import RequirementForm from './RequirementForm';
 import RequirementTree from './RequirementTree';
-import RequarementsList from '@/components/woAdministration/requirements/RequarementsList';
 import AutoCompleteEditor from '@/components/shared/Table/ag-grid/AutoCompleteEditor';
 import {
   useGetFilteredRequirementsQuery,
@@ -27,19 +20,19 @@ import {
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import { IRequirement } from '@/models/IRequirement';
 import RequirementsDiscription from './RequirementsDiscription';
-import { Split } from '@geoffcox/react-splitter';
-import { ColDef, ColumnResizedEvent, GridReadyEvent } from 'ag-grid-community';
 import {
   ValueEnumType,
+  ValueEnumTypeTask,
   getStatusColor,
+  getTaskTypeColor,
   transformToIRequirement,
 } from '@/services/utilites';
 import CircleRenderer from './CircleRenderer';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { setColumnWidthReq } from '@/store/reducers/columnWidthrReqlice';
-//@ts-nocheck
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+
 interface AdminPanelProps {
   requirementsSearchValues?: any;
 }
@@ -50,6 +43,11 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   const [editingRequirement, setEditingRequirement] =
     useState<IRequirement | null>(null);
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [isTreeView, setIsTreeView] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+
   const {
     data: requirements,
     isLoading,
@@ -80,19 +78,19 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   const [addRequirement] = useAddRequirementMutation();
   const [updateRequirement] = useUpdateRequirementMutation();
   const [deleteRequirement] = useDeleteRequirementMutation({});
-  const [isTreeView, setIsTreeView] = useState(false);
   const { data: partNumbers } = useGetPartNumbersQuery({});
-  const { t } = useTranslation();
+  const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
+
   useEffect(() => {
     setEditingRequirement(null);
     setSelectedKeys([]);
   }, [requirementsSearchValues]);
+
   const handleCreate = () => {
     setEditingRequirement(null);
     setIsCreating(true);
   };
-  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-  const columnWidths = useSelector((state: RootState) => state.columnWidthrReq);
+
   const handleEdit = (requirement: IRequirement) => {
     setEditingRequirement(requirement);
   };
@@ -103,7 +101,6 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       onOk: async () => {
         try {
           await deleteRequirement(selectedKeys).unwrap();
-
           notification.success({
             message: t('SUCCESSFULLY DELETED'),
             description: t('REQUIREMENT SUCCESSFULLY DELETED'),
@@ -133,16 +130,25 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
           description: t('REQUIREMENT SUCCESSFULLY ADDED'),
         });
       }
-      // setEditingRequirement(null);
     } catch (error) {
-      message.error(t('ERROR SAVING REQUIREMENT'));
+      notification.error({
+        message: t('ERROR'),
+        description: t('ERROR SAVING REQUIREMENT'),
+      });
     }
   };
-  type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
 
-  interface ExtendedColDef extends ColDef {
-    cellDataType: CellDataType; // Обязательное свойство
-  }
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('TC'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    NRC_ADD: t('ADHOC (ADHOC TASK)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
+    FC: t('FC'),
+    HARD_ACCESS: t('HARD_ACCESS'),
+  };
+
   const valueEnum: ValueEnumType = {
     onShort: t('ON SHORT'),
     onQuatation: t('QUATATION'),
@@ -156,7 +162,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     complete: t('COMPLETE'),
     partlyClosed: t('PARTLY CLOSED'),
   };
-  const dispatch = useDispatch();
+
   const columnRequirements = useMemo(
     () => [
       {
@@ -224,7 +230,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
         },
         cellStyle: (params: { value: keyof ValueEnumType }) => ({
           backgroundColor: getStatusColor(params.value),
-          color: '#ffffff', // Text color
+          // color: '#ffffff', // Text color
         }),
       },
       {
@@ -232,6 +238,36 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
         headerName: `${t('TRACE No')}`,
         cellDataType: 'number',
         width: columnWidths['TRACE No'],
+      },
+      {
+        field: 'taskNumber',
+        headerName: `${t('TASK No')}`,
+        cellDataType: 'text',
+        width: columnWidths['TASK No'],
+      },
+      {
+        field: 'taskType',
+        headerName: `${t('TASK TYPE')}`,
+        cellDataType: 'text',
+        valueGetter: (params: {
+          data: { taskType: keyof ValueEnumTypeTask };
+        }) => params.data.taskType,
+        valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+          const status = params.value;
+          return valueEnumTask[status] || '';
+        },
+        cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
+          backgroundColor: getTaskTypeColor(params.value),
+          //// color: '#ffffff', // Text color
+        }),
+        width: columnWidths['TASK TYPE'],
+      },
+
+      {
+        field: 'taskDescription',
+        headerName: `${t('TASK DESCRIPTION')}`,
+        cellDataType: 'text',
+        width: columnWidths['TASK No'],
       },
       {
         field: 'WONumber',
@@ -307,6 +343,22 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
         },
       },
       {
+        field: 'createDate',
+        editable: false,
+        cellDataType: 'date',
+        headerName: `${t('CREATE DATE')}`,
+
+        valueFormatter: (params: any) => {
+          if (!params.value) return ''; // Проверка отсутствия значения
+          const date = new Date(params.value);
+          return date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+        },
+      },
+      {
         field: 'requestQuantity',
         width: columnWidths['PART No'],
         editable: false,
@@ -320,6 +372,14 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
         cellDataType: 'number',
         headerName: `${t('BOOKED QTY')}`,
       },
+      {
+        field: 'canceledQuantity',
+        // width: columnWidths['PART No'],
+        editable: false,
+        cellDataType: 'number',
+        headerName: `${t('CANCELED QTY')}`,
+      },
+
       {
         field: 'reservationQTY',
         width: columnWidths['PART No'],
@@ -371,7 +431,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
       requirementsSearchValues && transformToIRequirement(requirements || [])
     );
   }, [requirementsSearchValues, requirements]);
-
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const saveColumnState = useCallback(
     (event: ColumnResizedEvent) => {
       if (event.columns) {
@@ -391,7 +451,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
   const restoreColumnState = useCallback(
     (event: GridReadyEvent) => {
       Object.keys(columnWidths).forEach((field) => {
-        const column = event.columnApi.getColumn(field, 'clientSide');
+        const column = event.columnApi.getColumn(field);
         if (column) {
           column.setActualWidth(columnWidths[field]);
         }
@@ -399,6 +459,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
     },
     [columnWidths]
   );
+
   return (
     <>
       <Space>
@@ -406,9 +467,7 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
           className="bg-white px-4 py-3 w-full rounded-md brequierement-gray-400"
           sm={24}
         >
-          <RequirementsDiscription
-            requirement={editingRequirement}
-          ></RequirementsDiscription>
+          <RequirementsDiscription requirement={editingRequirement} />
         </Col>
       </Space>
       <Space className="">
@@ -431,21 +490,11 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
               disabled={!selectedKeys.length}
               size="small"
               icon={<MinusSquareOutlined />}
-              onClick={() => {
-                // console.log(selectedKeys);
-                handleDelete(selectedKeys);
-              }}
+              onClick={() => handleDelete(selectedKeys)}
             >
               {t('DELETE REQUIREMENT')}
             </Button>
           </PermissionGuard>
-        </Col>
-        <Col style={{ textAlign: 'right' }}>
-          {editingRequirement && (
-            <Button disabled size="small" icon={<MinusSquareOutlined />}>
-              {t('COPY REQUIREMENT')}
-            </Button>
-          )}
         </Col>
         <Col>
           <Switch
@@ -467,26 +516,30 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
                 requirements={requirements || []}
               />
             ) : (
-              <RequarementsList
-                isVisible={true}
-                loading={isLoading}
-                pagination={true}
-                isEditable={false}
-                height={'64vh'}
-                isAddVisiable={true}
-                isChekboxColumn={true}
-                isButtonVisiable={false}
-                fetchData={transformedRequirements}
+              <UniversalAgGrid
+                // selectedRowId={
+                //   editingRequirement?._id || editingRequirement?.id
+                // }
+                selectedRowId={selectedRowId}
+                // rowSelection="single"
+                gridId="requirementPanel"
+                rowData={transformedRequirements}
                 columnDefs={columnRequirements}
-                partNumbers={partNumbers || []}
-                onRowSelect={(rowData: any) => handleEdit(rowData)}
-                onDelete={function (reqID: string): void {}}
-                onSave={function (rowData: IRequirement): void {}}
-                onUpdateData={function (data: any[]): void {}}
-                onCheckItems={function (selectedKeys: React.Key[]): void {
-                  setSelectedKeys(selectedKeys);
+                onRowSelect={(selectedRows) => {
+                  if (selectedRows.length > 0) {
+                    handleEdit(selectedRows[0]);
+                    setSelectedRowId(selectedRows[0]._id || selectedRows[0].id);
+                  }
                 }}
-                onColumnResized={saveColumnState}
+                onCellValueChanged={(params) => {
+                  console.log('Cell value changed:', params);
+                  // Здесь можно добавить логику обновления данных
+                }}
+                height="64vh"
+                pagination={true}
+                isLoading={isLoading}
+                isChekboxColumn={true}
+                onCheckItems={(selectedIds) => setSelectedKeys(selectedIds)}
                 onGridReady={restoreColumnState}
               />
             )}
@@ -495,7 +548,6 @@ const RequirementPanel: React.FC<AdminPanelProps> = ({
             <RequirementForm
               requierement={editingRequirement || undefined}
               onSubmit={handleSubmit}
-              // onDelete={handleDelete}
             />
           </div>
         </Split>

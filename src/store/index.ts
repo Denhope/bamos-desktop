@@ -50,6 +50,7 @@ import { supportRequestApi } from './slices/supportRequestApi';
 import { fileUploadApi } from '@/features/restrictionAdministration/fileUploadApi';
 import { reportsApi } from '@/features/reports/reportsApi';
 import { actionApi } from '@/features/projectItemWO/actionsApi';
+import { customerCodeApi } from '@/features/customerCodeAdministration/customerCodeApi';
 
 const persistConfig = {
   key: 'root',
@@ -62,7 +63,8 @@ const persistConfig = {
     'columns',
     'tabs',
     'menuItems',
-    'cardPosition','columnState'
+    'cardPosition',
+    'columnState',
   ], // Добавьте эту строку, чтобы указать, какие части состояния нужно сохранять
 };
 
@@ -120,7 +122,8 @@ const store = configureStore({
       supportRequestApi.middleware,
       fileUploadApi.middleware,
       reportsApi.middleware,
-      actionApi.middleware
+      actionApi.middleware,
+      customerCodeApi.middleware
     ),
 });
 

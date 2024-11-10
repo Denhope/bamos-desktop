@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from 'antd';
 import Handlebars from 'handlebars';
+import { SaveOutlined } from '@ant-design/icons';
 import {
   PDFDocument,
   PDFFont,
@@ -9,6 +10,8 @@ import {
   StandardFonts,
   degrees,
   PDFPage,
+  PDFName, // Добавляем импорт
+  PDFString,
 } from 'pdf-lib';
 import QRCode from 'qrcode';
 import { getFileFromServer, uploadFileServer } from '@/utils/api/thunks';
@@ -31,9 +34,26 @@ const PdfGenerator: React.FC<{
   ids?: any;
   disabled?: any;
   wo?: any;
-}> = ({ htmlTemplate, data, ids, disabled, wo }) => {
+  isAddTextVisible?: boolean;
+  isOriginal?: boolean;
+  buttonText?: string;
+}> = ({
+  htmlTemplate,
+  data,
+  ids,
+  disabled,
+  wo,
+  isOriginal = false,
+  buttonText,
+  isAddTextVisible = false,
+}) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false); // Состояние загрузки
+  const [isViewLoading, setIsViewLoading] = useState(false);
+  const [isSaveLoading, setIsSaveLoading] = useState(false);
+  const [shouldFetchData, setShouldFetchData] = useState(false);
+  const [isPdfRequested, setIsPdfRequested] = useState(false);
+  const [pdfAction, setPdfAction] = useState<'view' | 'save' | null>(null);
 
   const {
     data: projectTasks,
@@ -45,13 +65,18 @@ const PdfGenerator: React.FC<{
       ids: ids,
     },
     {
-      skip: !ids.length,
+      skip: !shouldFetchData || !ids.length, // Добавляем shouldFetchData в условие пропуска
       refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
     }
   );
-
   const transformedTasks = useMemo(() => {
-    return projectTasks || [];
+    return (
+      projectTasks?.map((task) => ({
+        ...task,
+        // Можно добавить дополнительные трансформации данных здесь
+      })) || []
+    );
   }, [projectTasks]);
   // console.log(projectTasks);
   const addPageNumber = async (
@@ -95,11 +120,39 @@ const PdfGenerator: React.FC<{
     return await mainDoc.save();
   };
 
-  const generatePdf = async () => {
+  const generatePdf = () => {
+    setIsViewLoading(true);
+    setShouldFetchData(true);
+    setIsPdfRequested(true);
+    setPdfAction('view');
+  };
+
+  const generateAndSavePdf = () => {
+    setIsSaveLoading(true);
+    setShouldFetchData(true);
+    setIsPdfRequested(true);
+    setPdfAction('save');
+  };
+
+  const createPdfDocument = async () => {
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     setLoading(true);
+    // Добавляем метаданные в PDF
+    const firstTask = transformedTasks[0];
+    const fileName = `${firstTask?.taskNumber || 'unknown'}`;
+    // Устанавливаем метаданные
+    const info = pdfDoc.getInfoDict();
+    info.set(PDFName.of('FileName'), PDFString.of(fileName));
+    info.set(PDFName.of('Title'), PDFString.of(fileName));
 
+    pdfDoc.setTitle(fileName);
+
+    pdfDoc.setAuthor('BAMOS');
+    pdfDoc.setSubject(`Work Order Task: ${firstTask?.taskNumber}`);
+    pdfDoc.setKeywords(['task', 'work order', 'BAMOS']);
+    pdfDoc.setProducer('BAMOS PDF Generator');
+    pdfDoc.setCreator('BAMOS System');
     // Загрузка шрифтов и изображений
     const fontBytes = await fetch(robotoFontt).then((res) => res.arrayBuffer());
     const robotoFont = await pdfDoc.embedFont(fontBytes);
@@ -180,34 +233,34 @@ const PdfGenerator: React.FC<{
 
             const truncatedTaskNumberText = truncateText(
               taskCardNumberText,
-              117,
+              170,
               robotoFont,
               12
             );
 
             if (cell === 'title') {
               page.drawText(truncatedTaskNumberText, {
-                x: x + 140,
+                x: x + 105,
                 y: y - 25,
                 font: robotoFontB,
-                size: 18,
+                size: 14,
               });
               // HARD_ACCESS
 
               if (task.projectItemType == 'NRC_ADD') {
                 page.drawText('ADHOC TASK', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
               if (task.projectItemType == 'HARD_ACCESS') {
                 page.drawText('HARD ACCESS', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
               if (
@@ -216,18 +269,18 @@ const PdfGenerator: React.FC<{
                 task.projectItemType !== 'NRC_ADD'
               ) {
                 page.drawText('TASK CARD', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
               if (task.projectItemType == 'NRC') {
                 page.drawText('NRC', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
 
@@ -299,17 +352,17 @@ const PdfGenerator: React.FC<{
                     : 'N/A';
                 const truncatedTaskNumberText = truncateText(
                   taskNumberText,
-                  260,
+                  290,
                   robotoFont,
-                  12
+                  10
                 );
 
                 // Смещение влево на 20 единиц
                 page.drawText(truncatedTaskNumberText, {
-                  x: x + 25, // Изменено с x + 85 на x + 65
+                  x: x + 5, // Изменено с x + 85 на x + 65
                   y: y - 55,
                   font: robotoFont,
-                  size: 12,
+                  size: 10,
                 });
               }
 
@@ -341,7 +394,7 @@ const PdfGenerator: React.FC<{
                     : 'N/A';
                 const truncatedCode = truncateText(
                   accustomerCode,
-                  80,
+                  85,
                   robotoFont,
                   12
                 );
@@ -360,8 +413,8 @@ const PdfGenerator: React.FC<{
                   font: robotoFont,
                   size: 12,
                 });
-                page.drawText(accustomerCode, {
-                  x: x + 225, // Изменено с x + 85 на x + 65
+                page.drawText(truncatedCode, {
+                  x: x + 205, // Изменено с x + 85 на x + 65
                   y: y - 55,
                   font: robotoFont,
                   size: 12,
@@ -509,26 +562,36 @@ const PdfGenerator: React.FC<{
 
       let { page, width, height, y } = addPage();
 
+      const checkValue = (value: any): string => {
+        if (
+          value === undefined ||
+          value === null ||
+          String(value).trim() === ''
+        ) {
+          return 'N/A';
+        }
+        return String(value);
+      };
       const cellDataNRC2 = [
         {
           label: 'Station',
           label1: 'Произв. база',
-          value: task.station !== undefined ? task.station : 'MSQ',
+          value: checkValue(task.station, 'MSQ'),
         },
         {
           label: '',
           label1: 'ATA ',
-          value: task.ata !== undefined ? task.ata : 'N/A',
+          value: checkValue(task.ata),
         },
         {
           label: 'Zone',
           label1: 'Зона',
-          value: task.zones !== undefined ? String(task.zones) : 'N/A',
+          value: checkValue(task.zones),
         },
         {
           label: 'AC Area',
           label1: 'Область',
-          value: task.taskArea !== undefined ? task.taskArea : 'N/A',
+          value: checkValue(task.taskArea),
         },
       ];
 
@@ -536,24 +599,22 @@ const PdfGenerator: React.FC<{
         {
           label: 'Work Pack',
           label1: 'Пакет Работ',
-          value: task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
+          value: checkValue(task.WPNumber),
         },
         {
           label: 'Customer WO',
           label1: 'Заявка Заказчика',
-          value:
-            task.custumerWO !== undefined ? String(task.custumerWO) : 'N/A',
+          value: checkValue(task.custumerWO),
         },
         {
           label: 'Internal WO',
           label1: 'Заказ-Наряд',
-          value: task.WONumber !== undefined ? String(task.WONumber) : 'N/A',
+          value: checkValue(task.WONumber),
         },
         {
           label: 'WP Card Seq',
           label1: 'Номер в пакете',
-          value:
-            task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
+          value: checkValue(task.taskWONumber),
         },
       ];
 
@@ -561,128 +622,116 @@ const PdfGenerator: React.FC<{
         {
           label: 'A/C Type',
           label1: 'Тип ВС',
-          value: truncateValue(
-            task.acType !== undefined ? String(task.acType) : 'N/A',
-            20
-          ), // Ограничение в 20 символов
+          value: truncateValue(checkValue(task.acType), 20),
+          value1: '',
         },
         {
           label: 'Work Pack',
           label1: 'Пакет Работ',
-          value: truncateValue(
-            task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
-            20
-          ), // Ограничение в 20 символов
+          value1: '',
+          value: truncateValue(checkValue(task.WPNumber), 20),
         },
         {
           label: 'Customer WO',
           label1: 'Заявка Заказчика',
-          value: truncateValue(
-            task.custumerWO !== undefined ? String(task.custumerWO) : 'N/A',
-            28
-          ), // Ограничение в 20 символов
+          value: '',
+          value1: truncateValue(checkValue(task.custumerWO), 38),
         },
         {
           label: 'Card No',
           label1: 'Карта №',
-          value: truncateValue(
-            task.cardNumber !== undefined ? String(task.cardNumber) : 'N/A',
-            20
-          ), // Ограничение в 20 символов
+          value1: '',
+          value: truncateValue(checkValue(task.cardNumber), 20),
         },
       ];
+
       const cellData3 = [
         {
           label: 'MSN',
           label1: 'Заводской номер',
-          value: task.ACMSN !== undefined ? String(task.ACMSN) : 'N/A',
+          value: checkValue(task.ACMSN),
         },
         {
           label: 'Reference',
           label1: 'Ссылка на ЭТД',
-          value: task.amtoss !== undefined ? task.amtoss : 'N/A',
+          value: checkValue(task.amtoss),
         },
         {
           label: 'Raised Date',
           label1: 'Дата Создания',
-          value: task.createDate !== undefined ? task.createDate : 'N/A',
+          value: checkValue(task.createDate),
         },
       ];
+
       const cellData4 = [
         {
           label: 'Customer',
           label1: 'Заказчик',
-          value: task.customerCode !== undefined ? task.customerCode : 'N/A',
+          value: checkValue(task.customerCode),
         },
         {
           label: 'Access',
           label1: 'Доступ',
-          value:
-            task.access !== undefined || task.access !== ''
-              ? task.access
-              : 'N/A',
+          value: checkValue(task.access),
         },
         {
           label: 'Raised By',
           label1: 'Подготовлено',
-          value: task.createBySing !== undefined ? task.createBySing : 'N/A',
+          value: checkValue(task.createBySing),
         },
       ];
+
       const cellData5 = [
         {
           label: 'Cust. ID Code',
           label1: 'Код Заказчика',
-          value:
-            task.customerCodeID !== undefined ? task.customerCodeID : 'N/A',
+          value: checkValue(task.customerCodeID),
         },
         {
           label: 'Zone',
           label1: 'Зона',
-          value: task.zones !== undefined ? String(task.zones) : 'N/A',
+          value: checkValue(task.zones),
         },
         {
           label: 'AC Area',
           label1: 'Область',
-          value: task.taskArea !== undefined ? task.taskArea : 'N/A',
+          value: checkValue(task.taskArea),
         },
         {
           label: 'Internal WO',
           label1: 'Заказ-Наряд',
-          value: task.WONumber !== undefined ? String(task.WONumber) : 'N/A',
+          value: checkValue(task.WONumber),
         },
       ];
+
       const cellData6 = [
         {
           label: 'Station',
           label1: 'Произв. база',
-          value: task.station !== undefined ? task.station : 'MSQ',
+          value: checkValue(task.station, 'MSQ'),
         },
         {
           label: 'Inspection',
           label1: 'Тип Инспекции',
-          value: task.taskCode !== undefined ? task.taskCode : 'N/A',
+          value: checkValue(task.taskCode),
         },
-
         {
           label: 'Skill',
           label1: 'Специализация',
-          value: task.skills !== undefined ? task.skills : 'N/A',
+          value: checkValue(task.skills),
         },
         {
           label: 'Mhrs',
           label1: 'Трудозатраты',
-          value:
-            task.mainWorkTime !== undefined ? String(task.mainWorkTime) : 'N/A',
+          value: checkValue(task.mainWorkTime),
         },
         {
           label: 'WP Card Seq',
           label1: 'Номер в пакете',
-          value:
-            task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
+          value: checkValue(task.taskWONumber),
         },
       ];
 
-      //////
       const cellData7 = [
         {
           label: 'Related documents and references',
@@ -753,10 +802,10 @@ const PdfGenerator: React.FC<{
         const cellWidthsNRC3 = [100, 200, 100, 100];
         for (let i = 0; i < cellData5.length; i++) {
           const cell = cellDataNRC3[i];
-          const horizontalPadding = [45, 45, 45, 45];
+          const horizontalPadding = [45, 10, 45, 45];
           const truncatedValue = truncateText(
             cell.value,
-            cellWidthsNRC3[i] - 20, // Use the adjusted width for truncation
+            cellWidthsNRC3[i] - 10, // Use the adjusted width for truncation
             robotoFont,
             fontSize
           );
@@ -793,7 +842,7 @@ const PdfGenerator: React.FC<{
           // Draw the value
           page.drawText(truncatedValue, {
             x: cellX + horizontalPadding[i],
-            y: y - 15,
+            y: y - 10,
             font: robotoFont,
             size: fontSize,
           });
@@ -838,6 +887,13 @@ const PdfGenerator: React.FC<{
           page.drawText(cell.value, {
             x: cellX + 50,
             y: y - 20,
+            font: robotoFont,
+            size: fontSize,
+          });
+
+          page.drawText(cell.value1, {
+            x: cellX + 5,
+            y: y - 10,
             font: robotoFont,
             size: fontSize,
           });
@@ -1083,7 +1139,11 @@ const PdfGenerator: React.FC<{
       y -= cellHeightSmall;
       const referenceTable = [
         ['Type', 'Reference', 'Description'],
-        ...(task.refTask ? [['TC', task.refTask, 'PARENT TASK']] : []), // Добавляем refTask, если он существует
+        ...(task.refTask ? [['TC', task.refTask, 'PARENT TASK']] : []),
+        ...(task.externalNumber
+          ? [['EXT', task.externalNumber, 'EXTERNAL NUMBER']]
+          : []),
+        // Добавляем refTask, если он существует
         ...(task.reference
           ? task.reference
               .filter((part: any) => part.printAsAttachment) // Фильтруем только файлы с printAsAttachment === true
@@ -1101,6 +1161,9 @@ const PdfGenerator: React.FC<{
                     break;
                   case 'AMM':
                     typeAbbreviation = 'AMM';
+                    break;
+                  case 'EXT':
+                    typeAbbreviation = 'EXT';
                     break;
                   default:
                     typeAbbreviation = 'F';
@@ -1143,7 +1206,7 @@ const PdfGenerator: React.FC<{
       const cellData8 = [
         {
           label: 'Materials',
-          label1: 'Расходные материалы',
+          label1: 'Расходные матриалы',
           value: '',
         },
       ];
@@ -1879,7 +1942,7 @@ const PdfGenerator: React.FC<{
             const truncatedCell = truncateText(
               cell,
               robotoFont,
-              fontSize,
+              7,
               componentColumnWidths[i] - 10
             ); // Adjust for padding
             if (truncatedCell !== undefined) {
@@ -1887,7 +1950,7 @@ const PdfGenerator: React.FC<{
                 x: x + 5,
                 y: y - 10,
                 font: robotoFont,
-                size: fontSize,
+                size: 7,
               });
             }
             // Draw border around the cell
@@ -1910,7 +1973,8 @@ const PdfGenerator: React.FC<{
 
       if (
         task.projectItemType !== 'NRC' &&
-        task.projectItemType !== 'NRC_ADD'
+        task.projectItemType !== 'NRC_ADD' &&
+        task.projectItemType !== 'HARD_ACCESS'
       ) {
         for (let i = 0; i < task.steps?.length; i++) {
           const step = task.steps[i];
@@ -2101,7 +2165,11 @@ const PdfGenerator: React.FC<{
           y -= 5;
         }
       }
-      if (task.projectItemType == 'NRC' || task.projectItemType == 'NRC_ADD') {
+      if (
+        task.projectItemType == 'NRC' ||
+        task.projectItemType == 'NRC_ADD' ||
+        task.projectItemType == 'HARD_ACCESS'
+      ) {
         for (let i = 0; i < task.steps?.length; i++) {
           const step = task.steps[i];
           const cellData12 = {
@@ -2373,6 +2441,31 @@ const PdfGenerator: React.FC<{
                 );
               }
 
+              if (action.type === 'diClosed') {
+                page.drawText(
+                  `Inspection-step ${step.stepNumber}-${index + 1}`,
+                  {
+                    x: cellX + 5,
+                    y: actionY + actionDescriptionHeight + 40,
+                    font: robotoFont,
+                    size: fontSize,
+                  }
+                );
+                page.drawText(
+                  `${action?.createUserID?.firstNameEnglish} ${
+                    action?.createUserID?.lastNameEnglish
+                  } ${new Date(action?.createDate).toLocaleDateString(
+                    'ru-RU'
+                  )}`,
+                  {
+                    x: cellX + 390,
+                    y: actionY + actionDescriptionHeight + 40,
+                    font: robotoFont,
+                    size: 6,
+                  }
+                );
+              }
+
               // Draw the description of the action
               page.drawRectangle({
                 x: cellX,
@@ -2447,6 +2540,43 @@ const PdfGenerator: React.FC<{
                   }
                 );
               } else if (action.type === 'inspect') {
+                page.drawRectangle({
+                  x: rectangleX2 + 20,
+                  y: actionY,
+                  width: rectangleWidth - 20,
+                  height: rectangleHeight,
+                  borderColor: rgb(0, 0, 0),
+                  borderWidth: 1,
+                });
+
+                page.drawText('Performed', {
+                  x: rectangleX2 + 5 + 20,
+                  y: actionY + 8,
+                  font: robotoFont,
+                  size: 6,
+                });
+                page.drawText('Выполнил', {
+                  x: rectangleX2 + 5 + 20,
+                  y: actionY + 2,
+                  font: robotoFont,
+                  size: 6,
+                });
+                page.drawText(
+                  `${
+                    action?.userDurations[0]?.userID
+                      ?.organizationAuthorization ||
+                    action?.userDurations[0]?.userID?.singNumber
+                  } (${action?.userDurations[0]?.userID?.firstNameEnglish} ${
+                    action?.userDurations[0]?.userID?.lastNameEnglish
+                  }) `,
+                  {
+                    x: rectangleX2 + 5 + 20,
+                    y: actionY + 23,
+                    font: robotoFont,
+                    size: 5,
+                  }
+                );
+              } else if (action.type === 'diClosed') {
                 page.drawRectangle({
                   x: rectangleX2 + 20,
                   y: actionY,
@@ -2959,19 +3089,21 @@ const PdfGenerator: React.FC<{
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
+
+            timeZone: 'UTC',
           })
         : '';
 
       console.log(closeAction);
-      const diCloseUser = `${
-        diCloseAction?.userDurations[0].userID?.organizationAuthorization ||
-        diCloseAction?.userDurations[0].userID?.singNumber
-      } (${diCloseAction?.userDurations[0].userID?.firstNameEnglish} ${
-        diCloseAction?.userDurations[0].userID?.lastNameEnglish
-      }) `;
+      const diCloseUser = diCloseAction?.userDurations[0].userID
+        ? `${
+            diCloseAction?.userDurations[0].userID?.organizationAuthorization ??
+            diCloseAction?.userDurations[0].userID?.singNumber ??
+            ''
+          } (${
+            diCloseAction?.userDurations[0].userID?.firstNameEnglish ?? ''
+          } ${diCloseAction?.userDurations[0].userID?.lastNameEnglish ?? ''}) `
+        : '';
       const cellDataNotCritical = [
         {
           label: 'Form',
@@ -2984,7 +3116,10 @@ const PdfGenerator: React.FC<{
           label41: 'Дата Изм.',
           label5: 'Approval №',
           label6: 'Одобрение №',
-          value5: '285-21-057',
+          value5:
+            wo?.projectID?.WOReferenceID?.certificateId !== undefined
+              ? String(wo?.projectID?.WOReferenceID?.certificateId?.code)
+              : 'N/A',
           label7: 'Unitary Enterprise «407 Technics»',
           label8: 'Унитарное предприятие «407 Техникс»',
           value8: '23/11/2022',
@@ -3011,8 +3146,8 @@ const PdfGenerator: React.FC<{
           value10: closedDate || '',
         },
         {
-          label: 'Closing Sing/Stamp',
-          label1: 'Закрыто Печать/Штамп',
+          label: 'Closing Sign/Stamp',
+          label1: 'Закрыто Подпись/Штамп',
           value: '',
           value2: '',
           label2: '',
@@ -3042,7 +3177,10 @@ const PdfGenerator: React.FC<{
           label41: 'Дата Изм.',
           label5: 'Approval №',
           label6: 'Одобрение №',
-          value5: '285-21-057',
+          value5:
+            wo?.projectID?.WOReferenceID?.certificateId !== undefined
+              ? String(wo?.projectID?.WOReferenceID?.certificateId?.code)
+              : 'N/A',
           label7: 'Unitary Enterprise «407 Technics»',
           label8: 'Унитарное предприятие «407 Техникс»',
           value8: '23.11.2022',
@@ -3068,8 +3206,8 @@ const PdfGenerator: React.FC<{
           value10: closedDate || '',
         },
         {
-          label: 'Closing Sing/Stamp',
-          label1: 'Закрыто Печать/Штамп',
+          label: 'Closing Sign/Stamp',
+          label1: 'Закрыто Подпись/Штамп',
           value: '',
           value2: '',
           label2: '',
@@ -3337,22 +3475,18 @@ const PdfGenerator: React.FC<{
 
       taskPages.forEach((page, index) => {
         const pageNumber = pages.length && pages.length + index + 1;
-
-        addAdditionalPageText(page, robotoFont);
-        addAdditionalPageNumber(page, pageNumber, blockTotalPages);
-        // // }
+        if (isAddTextVisible) {
+          addAdditionalPageText(page, robotoFont);
+          addAdditionalPageNumber(page, pageNumber, blockTotalPages);
+        }
       });
     }
 
     // Создание и открытие финального PDF-документа
-    const finalPdfBytes = await pdfDoc.save();
-    const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
-    const fileURL = URL.createObjectURL(blob);
-    window.open(fileURL, '_blank');
-    URL.revokeObjectURL(fileURL);
-
-    console.log('PDF успешно создан');
-    setLoading(false);
+    const finalPdfBytes = await pdfDoc.save({
+      updateMetadata: true, // Убедимся, что метаданные обновлены
+    });
+    return finalPdfBytes;
   };
 
   const addMainPageNumber = async (
@@ -3408,8 +3542,9 @@ const PdfGenerator: React.FC<{
       .toString()
       .padStart(2, '0')}`;
 
-    // Добавление текста на дополнительные страницы
-    page.drawText(`COPY print by ${SING} ${formattedDate}`, {
+    const documentType = isOriginal ? 'ORIGINAL' : 'COPY';
+
+    page.drawText(`${documentType} print by ${SING} ${formattedDate}`, {
       x: 50,
       y: 15, // Размещение внизу страницы
       size: 8,
@@ -3446,16 +3581,70 @@ const PdfGenerator: React.FC<{
       }
     );
   };
+  useEffect(() => {
+    if (isPdfRequested && !isLoading && projectTasks) {
+      const generatePdfDocument = async () => {
+        try {
+          const pdfBytes = await createPdfDocument();
+          const firstTask = transformedTasks[0];
+          const fileName = `TASK-${firstTask?.taskNumber || 'unknown'}.pdf`;
 
+          // Создаем Blob с именем файла
+          const blob = new Blob([pdfBytes], {
+            type: 'application/pdf',
+          });
+
+          if (pdfAction === 'view') {
+            try {
+              const fileName = `TASK-${firstTask?.taskNumber || 'unknown'}.pdf`;
+              await window.electronAPI.openPdf(pdfBytes, fileName);
+            } catch (error) {
+              console.error('Error opening PDF:', error);
+            }
+          } else if (pdfAction === 'save') {
+            // Оставляем как есть, так как работает корректно
+            const fileURL = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = fileURL;
+            link.download = `${fileName}.pdf`;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(fileURL);
+          }
+        } catch (error) {
+          console.error('Error generating PDF:', error);
+        } finally {
+          setIsViewLoading(false);
+          setIsSaveLoading(false);
+          setIsPdfRequested(false);
+          setPdfAction(null);
+          setShouldFetchData(false);
+        }
+      };
+
+      generatePdfDocument();
+    }
+  }, [isPdfRequested, isLoading, projectTasks]);
   return (
-    <div>
+    <div className="flex gap-2">
       <Button
-        loading={loading}
-        disabled={disabled || loading}
+        loading={isViewLoading}
+        disabled={disabled || isViewLoading || isSaveLoading}
         size="small"
         onClick={generatePdf}
       >
-        {`${t('PRINT WORKORDER')}`}
+        {t(buttonText || 'View')}
+      </Button>
+      <Button
+        icon={<SaveOutlined />}
+        loading={isSaveLoading}
+        disabled={disabled || isViewLoading || isSaveLoading}
+        size="small"
+        onClick={generateAndSavePdf}
+      >
+        {/* {t('Download')} */}
       </Button>
     </div>
   );

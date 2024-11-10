@@ -305,7 +305,7 @@ const StepEditModal: React.FC<{
               {task.projectItemType !== 'NRC' && (
                 <ProFormSelect
                   disabled
-                  rules={[{ required: true }]}
+                  // rules={[{ required: true }]}
                   showSearch
                   name="zonesID"
                   mode={'multiple'}
@@ -392,8 +392,8 @@ const StepEditModal: React.FC<{
                     showTime: {
                       defaultValue: dayjs('00:00', 'HH:mm'),
                       format: 'HH:mm',
-                      disabledHours: disabledDateTime().disabledHours,
-                      disabledMinutes: disabledDateTime().disabledMinutes,
+                      // disabledHours: disabledDateTime().disabledHours,
+                      // disabledMinutes: disabledDateTime().disabledMinutes,
                     },
                     defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
                     disabledDate,
@@ -407,6 +407,7 @@ const StepEditModal: React.FC<{
                   users={users}
                   initialTaskAllocations={step.userDurations || []}
                   onTaskAllocationsChange={setUserDurations}
+                  onlyWithOrganizationAuthorization={true}
                 />
               </div>
             </ProFormGroup>

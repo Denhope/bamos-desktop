@@ -1249,5 +1249,7 @@
   "REGISTRATION": "РЕГИСТРАЦИЯ",
   "A/C TYPES": "ТИПЫ САМОЛЁТОВ",
   "CHECK TASKS IN DATABASE": "СПИСОК РАБОТ",
-  "HARD_ACCESS": "ТРУДОЕМКИЙ ДОСТУП"
+  "HARD_ACCESS": "ТРУДОЕМКИЙ ДОСТУП",
+  "TASK DESCRIPTION": "ОПИСАНИЕ РАБОТЫ",
+  "SAVE FORM DATA FOR NEXT CREATION": "СОХРАНИТЬ ДАННЫЕ"
 }

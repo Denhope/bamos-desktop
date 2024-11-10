@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { ProCard } from '@ant-design/pro-components';
 import { Empty, Layout, Space, Tabs } from 'antd';
 import Title from 'antd/es/typography/Title';
@@ -10,6 +11,7 @@ import StockDetails from './StockDetails';
 import StockDetailsNew from './StockDetailsNew';
 
 interface Stock {
+  isReserved?: any;
   restrictionID: string;
   item: string;
   STORE_ID: string;
@@ -20,68 +22,52 @@ interface Stock {
 }
 
 interface StockGridProps {
-  partNumber: IPartNumber;
-  storeID?: string;
   isLoading: boolean;
   transformedStokPartNumbers: any[];
+  partNumber: IPartNumber;
+  total?: number;
 }
 
 const StockGridNew: React.FC<StockGridProps> = ({
   partNumber,
-  storeID,
   transformedStokPartNumbers,
   isLoading,
+  total,
 }) => {
   const { t } = useTranslation();
 
-  // Получение данных из API
-  // const {
-  //   data: parts,
-  //   isLoading: partsQueryLoading,
-  //   isFetching: partsLoadingF,
-  //   refetch,
-  // } = useGetStorePartsQuery(
-  //   {
-  //     partNumberID: partNumber?._id,
-  //   },
-  //   {
-  //     skip: !partNumber?._id,
-  //   }
-  // );
-
   // Преобразование и группировка данных
   const groupedData = useMemo(() => {
-    const transformed = transformedStokPartNumbers;
-    return transformed
-      .filter((item) => item?.restrictionID === 'standart')
-      .reduce((acc: Record<string, Stock[]>, item) => {
+    return transformedStokPartNumbers.reduce(
+      (acc: Record<string, Stock[]>, item) => {
+        if (item.isReserved || item.restrictionID !== 'standart') return acc;
+
         const stock = item.STOCK || 'UNKNOWN';
         if (!acc[stock]) {
           acc[stock] = [];
         }
         acc[stock].push(item);
         return acc;
-      }, {});
+      },
+      {}
+    );
   }, [transformedStokPartNumbers]);
 
   const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
   const [selectedKeyName, setSelectedKeyName] = useState<string | undefined>(
     ''
   );
+
   // Список складов
   const stocks = Object.keys(groupedData);
 
-  // Вычисление общего количества товаров на всех складах
-  const totalQuantity = useMemo(() => {
-    return stocks.reduce((sum, stock) => {
-      return (
-        sum +
-        groupedData[stock].reduce((stockSum, item) => {
-          return stockSum + (item.QUANTITY || 0);
-        }, 0)
-      );
-    }, 0);
-  }, [stocks, groupedData]);
+  // Подсчет количества для каждого склада
+  const getStockQuantity = (stockItems: Stock[]) => {
+    return stockItems.reduce(
+      (sum, item) => sum + (Number(item.QUANTITY) || 0),
+      0
+    );
+  };
 
   return (
     <div
@@ -99,9 +85,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
             {stocks.length ? (
               stocks.map((stock, index) => {
                 const stockItems = groupedData[stock];
-                const stockQuantity = stockItems
-                  .filter((item) => item?.restrictionID === 'standart')
-                  .reduce((sum, item) => sum + (item.QUANTITY || 0), 0);
+                const stockQuantity = getStockQuantity(stockItems);
                 const stockOwner = stockItems[0]?.OWNER || '';
                 const STORE_ID = stockItems[0]?.STORE_ID || '';
                 const STORE_Name = stockItems[0]?.STOCK || '';
@@ -161,10 +145,6 @@ const StockGridNew: React.FC<StockGridProps> = ({
                   alignItems: 'center',
                   transition: 'transform .2s',
                 }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = 'scale(1.02)')
-                }
-                onMouseOut={(e) => (e.currentTarget.style.transform = '')}
               >
                 <div
                   style={{
@@ -184,13 +164,11 @@ const StockGridNew: React.FC<StockGridProps> = ({
           </div>
           <div className={`flex flex-col text-sm ml-auto font-bold`}>
             <div className="ml-auto pr-24">
-              {t('TOTAL STOCK QTY:  ')}
+              {t('TOTAL STOCK QTY: ')}
               <span
-                className={`highlight ${
-                  totalQuantity ? 'bg-green-500' : 'bg-red-500'
-                }`}
+                className={`highlight ${total ? 'bg-green-500' : 'bg-red-500'}`}
               >
-                {totalQuantity || 0}
+                {total || 0}
               </span>
             </div>
           </div>
@@ -204,7 +182,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
           </div>
         </div>
       ) : (
-        <Empty></Empty>
+        <Empty />
       )}
 
       <Tabs
@@ -221,6 +199,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
                   transformedStokPartNumbers.filter(
                     (item) =>
                       item?.STOCK === selectedKeyName &&
+                      !item.isReserved &&
                       item?.restrictionID === 'standart'
                   ) || []
                 }

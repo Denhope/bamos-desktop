@@ -22,6 +22,7 @@ export interface IStep {
   skillID?: string[];
   userGroupID?: string[];
   taskStatus?: any;
+  stepIndex?: number;
 }
 
 type ActionType = 'pfmd' | 'inspect' | 'doubleInspect' | 'closed';
@@ -43,4 +44,5 @@ export interface Action {
   companyID?: string;
   projectItemID?: any;
   userDurations: any[] | [];
+  taskID?: string;
 }

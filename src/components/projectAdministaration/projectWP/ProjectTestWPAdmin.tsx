@@ -11,6 +11,7 @@ import {
   Spin,
   Switch,
   notification,
+  Tag,
 } from 'antd';
 import {
   ProjectOutlined,
@@ -40,7 +41,7 @@ import {
 // import projectItemsAdministrationForm from './projectItemsAdministrationForm';
 // import projectItemsAdministrationTree from './projectItemsAdministrationTree';
 import { Split } from '@geoffcox/react-splitter';
-import PartContainer from '@/components/woAdministration/PartContainer';
+
 import { FileOutlined } from '@ant-design/icons';
 import {
   ValueEnumType,
@@ -50,6 +51,7 @@ import {
   transformToIProjectItem,
 } from '@/services/utilites';
 import CircleTaskRenderer from './CircleTaskRenderer';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 interface AdminPanelRProps {
   projectID: string;
   project: any;
@@ -76,13 +78,14 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     CMJC: t('CMJC'),
     FC: t('FC)'),
     NRC_ADD: t('ADHOC'),
-    HARD_ACCESS: { text: t('HARD_ACCESS') },
+    HARD_ACCESS: t('HARD ACCESS'),
   };
 
   // if (projectID) {
   const {
     data: projectItems,
     isLoading: loading,
+    isFetching: isFetching,
     refetch: refetchProjectItems,
   } = useGetProjectItemsQuery({
     projectID,
@@ -398,6 +401,27 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
     },
     {
+      field: 'isCriticalTask',
+      headerName: t('CRITICAL TASK'),
+      cellDataType: 'boolean',
+      width: 120,
+      cellRenderer: (params: { value: boolean }) => {
+        return (
+          <Tag color={params.value ? 'red' : 'green'}>
+            {params.value ? t('YES') : t('NO')}
+          </Tag>
+        );
+      },
+      valueGetter: (params: any) => {
+        return params.data.isCriticalTask;
+      },
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        values: [true, false],
+        valueFormatter: (params: any) => (params.value ? t('YES') : t('NO')),
+      },
+    },
+    {
       field: 'taskWO',
       headerName: `${t('TRACE No')}`,
       filter: true,
@@ -410,6 +434,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
         return null; // Возвращаем null, если массив пуст или не существует
       },
     },
+
     {
       field: 'taskNumber',
       headerName: `${t('TASK No')}`,
@@ -436,7 +461,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
       // hide: true,
     },
@@ -560,12 +585,9 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
         </Col>
       </Space>
 
-      <div className="  flex gap-4 justify-between">
+      <div className="flex gap-4 justify-between">
         <Split initialPrimarySize="40%">
-          <div
-            // sm={12}
-            className="h-[50vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 "
-          >
+          <div className="h-[50vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3">
             {isTreeView ? (
               <ProjectWPAdministrationTree
                 projectItems={projectItems || []}
@@ -575,32 +597,33 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
                 }}
               />
             ) : (
-              <PartContainer
-                isVisible
-                pagination={true}
-                onCheckItems={setSelectedKeys}
-                isChekboxColumn={true}
-                isButtonVisiable={false}
-                isAddVisiable={true}
-                isLoading={loading}
-                columnDefs={columnItems}
-                partNumbers={[]}
+              <UniversalAgGrid
+                isChekboxColumn
+                gridId="projectItemsGrid"
                 rowData={transformedItems || []}
-                onUpdateData={function (data: any[]): void {}}
-                height={'53vh'}
-                onRowSelect={handleEdit}
-              ></PartContainer>
+                columnDefs={columnItems}
+                height="58vh"
+                onRowSelect={(selectedRows) => {
+                  if (selectedRows.length > 0) {
+                    handleEdit(selectedRows[0]);
+                    // setSelectedKeys(selectedRows.map((row) => row.id));
+                  }
+                }}
+                isLoading={loading || isFetching}
+                pagination={true}
+                onCheckItems={(selectedKeys) => {
+                  setSelectedKeys(selectedKeys);
+                }}
+                isMultiSelect={true}
+                isCheckboxSelection={true}
+              />
             )}
           </div>
-          <div
-            className="h-[55vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
-            // sm={11}
-          >
+          <div className="h-[58vh] bg-white px-4 py-3 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             <ProjectWPAdministrationForm
               project={project}
               reqCode={editingReqCode || undefined}
               onSubmit={handleSubmit}
-              // onDelete={handleDelete}
             />
           </div>
         </Split>

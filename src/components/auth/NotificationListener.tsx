@@ -39,11 +39,11 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({
       .get<Notification[]>(`/settings/notifications/${userId}`)
       .then((res) => {
         const formattedNotifications = res.data.map((notification) => ({
-          ...notification.notificationId,
-          _id: notification._id,
-          isRead: notification.isRead,
+          ...notification?.notificationId,
+          _id: notification?._id,
+          isRead: notification?.isRead,
           timestamp: new Date(
-            notification.notificationId.timestamp
+            notification?.notificationId?.timestamp
           ).toISOString(), // Преобразуем дату в ISO строку
         }));
         setNotifications(formattedNotifications); // Убедитесь, что res.data всегда массив

@@ -45,7 +45,7 @@ const VendorFilteredForm: FC<
     [onSubmit]
   );
   return (
-    <div className="p-3 bg-slate-100">
+    <div className="p-3">
       <ProForm
         size="small"
         onFinish={handleSubmit}
@@ -74,7 +74,7 @@ const VendorFilteredForm: FC<
           mode="multiple"
           name="status"
           label={t('STATUS')}
-          width="sm"
+          width="lg"
           // initialValue={['ACTIVE']}
           valueEnum={statusOptions}
         />

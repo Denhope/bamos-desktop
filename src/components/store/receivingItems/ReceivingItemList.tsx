@@ -570,7 +570,7 @@ const ReceivingItemList: FC<ReceivingItemList> = ({
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
     },
   ]);

@@ -382,7 +382,7 @@ ipcMain.handle('open-win', (_, arg) => {
 
 ipcMain.handle('open-directory-dialog', async () => {
   const result = await dialog.showOpenDialog({
-    properties: ['openDirectory']
+    properties: ['openDirectory'],
   });
   return result;
 });
@@ -393,11 +393,39 @@ ipcMain.handle('save-file', async (_, filePath: string, data: Uint8Array) => {
 
 ipcMain.handle('open-path', async (_, path) => {
   try {
-    await shell.openPath(path)
+    await shell.openPath(path);
   } catch (error) {
-    console.error('Ошибка при открытии пути:', error)
-    throw error
+    console.error('Ошибка при открытии пути:', error);
+    throw error;
   }
+});
+
+// Добавьте новый обработчик для открытия PDF
+ipcMain.handle('open-pdf', async (_, pdfData: Uint8Array, fileName: string) => {
+  const pdfWindow = new BrowserWindow({
+    width: 1024,
+    height: 800,
+    webPreferences: {
+      plugins: true,
+      webSecurity: false,
+    },
+  });
+
+  // Используем переданное имя файла
+  const tempPath = join(app.getPath('temp'), fileName);
+  await fs.writeFile(tempPath, Buffer.from(pdfData));
+
+  // Загружаем PDF
+  pdfWindow.loadURL(`file://${tempPath}`);
+
+  // Очистка при закрытии
+  pdfWindow.on('closed', async () => {
+    try {
+      await fs.unlink(tempPath);
+    } catch (error) {
+      console.error('Error removing temp file:', error);
+    }
+  });
 });
 
 // ipcMain.handle('check-update', () => {

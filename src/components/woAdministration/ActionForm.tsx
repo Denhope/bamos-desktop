@@ -31,8 +31,6 @@ import UserTaskAllocationInspector from './UserTaskAllocationInspector';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-dayjs.extend(utc);
-
 interface ActionFormProps {
   visible: boolean;
   onCancel: () => void;
@@ -80,9 +78,13 @@ const ActionForm: React.FC<ActionFormProps> = ({
   const [activeTabKey, setActiveTabKey] = useState('1');
   // taskStatus: step.projectTaskID.status, console.log(step);
   const handleFinish = (values: any) => {
-    const performedDate = dayjs(values.performedDate).utc().startOf('minute');
+    const performedDate = dayjs(values.performedDate)
+      // .utc() // Преобразование в UTC
+      .startOf('minute');
 
-    const inspectedDate = dayjs(values.inspectedDate).utc().startOf('minute');
+    const inspectedDate = dayjs(values.inspectedDate)
+      // .utc() // Преобразование в UTC
+      .startOf('minute');
 
     const now = dayjs().utc().startOf('minute');
 
@@ -114,7 +116,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
       id: currentAction ? currentAction._id : null,
       headline: values?.headline,
       description: values.description,
-      createDate: performedDate.toISOString(),
+      createDate: performedDate, // Сохранение в формате ISO 8601
       createUserID: USER_ID,
       type: 'pfmd',
       userDurations,
@@ -124,7 +126,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
       id: currentAction ? currentAction._id : null,
       headline: values?.headline,
       description: 'INSPECTED',
-      createDate: inspectedDate.toISOString(),
+      createDate: inspectedDate, // Сохранение в формате ISO 8601
       createUserID: USER_ID,
       type: 'inspect',
       userDurations: userDurationInspector,
@@ -138,6 +140,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
           : null,
       status: values.status,
     });
+    console.log(newAction.createDate.toISOString());
   };
 
   const showDeleteConfirm = () => {
@@ -174,14 +177,25 @@ const ActionForm: React.FC<ActionFormProps> = ({
     if (visible) {
       const currentDateTime = dayjs().utc().startOf('minute'); // Текущее время UTC без секунд
 
-      form.setFieldsValue({
-        performedDate: currentAction?.createDate
-          ? dayjs(currentAction.createDate).utc()
-          : currentDateTime,
-        inspectedDate: currentAction?.inspectedDate
-          ? dayjs(currentAction.inspectDate).utc()
-          : currentDateTime,
-      });
+      if (task && task.projectItemType == 'RC') {
+        form.setFieldsValue({
+          performedDate: currentAction?.createDate
+            ? dayjs(currentAction.createDate).utc()
+            : currentDateTime,
+          inspectedDate: currentAction?.inspectedDate
+            ? dayjs(currentAction.inspectDate).utc()
+            : currentDateTime,
+        });
+      } else {
+        form.setFieldsValue({
+          performedDate: currentAction?.createDate
+            ? dayjs(currentAction.createDate)
+            : currentDateTime,
+          inspectedDate: currentAction?.inspectedDate
+            ? dayjs(currentAction.inspectDate)
+            : currentDateTime,
+        });
+      }
       // setPerformUserDurations(currentAction?.userDurations || []);
       // setInspectUserDurations(currentAction?.userDurations || []);
     }
@@ -317,14 +331,14 @@ const ActionForm: React.FC<ActionFormProps> = ({
                     ]}
                     fieldProps={{
                       format: 'YYYY-MM-DD HH:mm', // формат без секунд
-                      showTime: {
-                        defaultValue: dayjs('00:00', 'HH:mm'),
-                        format: 'HH:mm',
-                        disabledHours: disabledDateTime().disabledHours,
-                        disabledMinutes: disabledDateTime().disabledMinutes,
-                      },
-                      defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
-                      disabledDate,
+                      // showTime: {
+                      //   defaultValue: dayjs('00:00', 'HH:mm'),
+                      //   format: 'HH:mm',
+                      //   disabledHours: disabledDateTime().disabledHours,
+                      //   disabledMinutes: disabledDateTime().disabledMinutes,
+                      // },
+                      // defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
+                      // disabledDate,
                     }}
                   />
                   {/* <Form.Item
@@ -347,6 +361,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
                     users={users}
                     initialTaskAllocations={userDurations}
                     onTaskAllocationsChange={setUserDurations}
+                    onlyWithOrganizationAuthorization={true}
                   />
                   {/* <UserDurationList
                   users={users}
@@ -377,8 +392,8 @@ const ActionForm: React.FC<ActionFormProps> = ({
                           showTime: {
                             defaultValue: dayjs('00:00', 'HH:mm'),
                             format: 'HH:mm',
-                            disabledHours: disabledDateTime().disabledHours,
-                            disabledMinutes: disabledDateTime().disabledMinutes,
+                            // disabledHours: disabledDateTime().disabledHours,
+                            // disabledMinutes: disabledDateTime().disabledMinutes,
                           },
                           defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
                           disabledDate,

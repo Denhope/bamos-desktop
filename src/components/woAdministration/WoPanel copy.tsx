@@ -321,7 +321,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        // color: '#ffffff', // Text color
+        //// color: '#ffffff', // Text color
       }),
     },
     {
@@ -338,7 +338,7 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        // color: '#ffffff', // Text color
+        //// color: '#ffffff', // Text color
       }),
       // hide: true,
     },

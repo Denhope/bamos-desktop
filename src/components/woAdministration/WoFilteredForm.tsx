@@ -10,7 +10,7 @@ import { useGetFilteredZonesQuery } from '@/features/zoneAdministration/zonesApi
 import { DatePickerProps, Form, FormInstance, message } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetAccessCodesQuery } from '@/features/accessAdministration/accessApi';
 import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
@@ -112,12 +112,16 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       acc[mpdCode.id] = mpdCode.accessNbr;
       return acc;
     }, {} as Record<string, string>) || {};
-  const zonesValueEnum: Record<string, string> =
-    zones?.reduce((acc: any, zone: any) => {
-      acc[zone?.id || zone?._id] =
-        zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
+  const zonesValueEnum = useMemo(() => {
+    return zones?.reduce((acc: Record<string, string>, zone: any) => {
+      const id = zone?.id || zone?._id;
+      const label = zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
+      if (id && label) {
+        acc[id] = label;
+      }
       return acc;
-    }, {} as Record<string, string>) || {};
+    }, {}) || {};
+  }, [zones]);
   const projectsValueEnum: Record<string, string> =
     projects?.reduce((acc, reqType: any) => {
       acc[reqType?._id] = `№:${reqType?.projectWO} / ${reqType.projectName}`;
@@ -223,6 +227,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="lg"
         valueEnum={{
           closed: { text: t('CLOSE'), status: 'SUCCESS' },
+          diRequired: { text: t('DI REQUIRED'), status: 'Processing' },
           inspect: { text: t('INSPECTION'), status: 'inspect' },
           nextAction: { text: t('NEXT ACTION'), status: 'PROGRESS' },
           inProgress: { text: t('IN PROGRESS'), status: 'PROGRESS' },
@@ -304,13 +309,18 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         // onChange={(value: any) => setReqTypeID(value)}
       /> */}
       <ProFormSelect
-        mode={'multiple'}
+        mode="multiple"
         showSearch
         name="zonesID"
         label={t('ZONES')}
         width="lg"
         valueEnum={zonesValueEnum}
-        // onChange={(value: any) => setReqTypeID(value)}
+        loading={loading}
+        fieldProps={{
+          optionFilterProp: 'children',
+          filterOption: (input, option) =>
+            (option?.label ?? '').toLowerCase().includes(input.toLowerCase()),
+        }}
       />
       <ProFormSelect
         mode={'multiple'}

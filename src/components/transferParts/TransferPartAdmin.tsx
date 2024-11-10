@@ -121,7 +121,11 @@ const TransferPartAdmin: FC<TransferPartAdminProps> = ({
   // Обработчик завершения заполнения формы в левой таблице
   const handleLeftTableFinish = async (values: any) => {
     // Передача данных вверх через пропс onDataUpdate
-    onSubmit(values);
+    onSubmit({
+      ...values,
+      showZeroQuantity,
+      _t: Date.now(), // Добавляем значение чекбокса в передаваемые данные
+    });
   };
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -136,10 +140,14 @@ const TransferPartAdmin: FC<TransferPartAdminProps> = ({
       labelFormItemRef.current.focus();
     }
   }, [labelFormItemRef.current]);
+
+  // Добавляем состояние для чекбокса
+  const [showZeroQuantity, setShowZeroQuantity] = useState(false);
+
   return (
     <div className="flex flex-col gap-5 overflow-hidden">
       <div className="flex flex-col bg-gray-100">
-        <Split initialPrimarySize="35%" splitterSize="20px">
+        <Split initialPrimarySize="40%" splitterSize="20px">
           <div className="h-[22vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 flex flex-col overflow-y-auto">
             <ProForm
               // initialFocus="label"
@@ -190,23 +198,33 @@ const TransferPartAdmin: FC<TransferPartAdminProps> = ({
                   name="label"
                   fieldProps={{
                     onKeyPress: handleKeyPress,
-                    ref: labelFormItemRef,
+                    // ref: labelFormItemRef,
                   }}
                   label={`${t('LABEL')}`}
                   width="sm"
                 />
               </ProFormGroup>
-              <ProFormSelect
-                showSearch
-                width={'lg'}
-                name="partNumberID"
-                label={`${t(`PART No`)}`}
-                options={Object.entries(partValueEnum).map(([key, part]) => ({
-                  label: part.PART_NUMBER,
-                  value: key,
-                  data: part,
-                }))}
-              />
+              <ProFormGroup>
+                <ProFormSelect
+                  showSearch
+                  width={'lg'}
+                  name="partNumberID"
+                  label={`${t(`PART No`)}`}
+                  options={Object.entries(partValueEnum).map(([key, part]) => ({
+                    label: part.PART_NUMBER,
+                    value: key,
+                    data: part,
+                  }))}
+                />
+                <ProFormCheckbox
+                  name="showZeroQuantity"
+                  fieldProps={{
+                    onChange: (e) => setShowZeroQuantity(e.target.checked),
+                  }}
+                >
+                  {t('ZERO QUANTITY')}
+                </ProFormCheckbox>
+              </ProFormGroup>
             </ProForm>
           </div>
           <div className="h-[22vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">

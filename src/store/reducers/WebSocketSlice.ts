@@ -1,4 +1,3 @@
-
 //@ts-nocheck
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
@@ -21,13 +20,13 @@ interface SocketState {
 }
 
 const initialState: SocketState = {
-    socket: null,
-    isConnected: false,
-    subscriptions: [],
-    retryCount: 0,
-    maxRetryCount: 5,
-    emit: undefined,
-    connected: undefined
+  socket: null,
+  isConnected: false,
+  subscriptions: [],
+  retryCount: 0,
+  maxRetryCount: 5,
+  emit: undefined,
+  connected: undefined,
 };
 
 export const connectSocket = createAsyncThunk<Socket, string>(
@@ -62,17 +61,20 @@ export const connectSocket = createAsyncThunk<Socket, string>(
   }
 );
 
-export const subscribeToEventType = createAsyncThunk<void, { userId: string; eventType: string }>(
-  'socket/subscribe',
-  async ({ userId, eventType }, { dispatch, getState }) => {
-    const state = getState() as { socket: SocketState };
-    if (state.socket?.connected) {
-      state.socket.emit('subscribe', userId, eventType);
-    }
+export const subscribeToEventType = createAsyncThunk<
+  void,
+  { userId: string; eventType: string }
+>('socket/subscribe', async ({ userId, eventType }, { dispatch, getState }) => {
+  const state = getState() as { socket: SocketState };
+  if (state.socket?.connected) {
+    state.socket.emit('subscribe', userId, eventType);
   }
-);
+});
 
-export const unsubscribeFromEventType = createAsyncThunk<void, { userId: string; eventType: string }>(
+export const unsubscribeFromEventType = createAsyncThunk<
+  void,
+  { userId: string; eventType: string }
+>(
   'socket/unsubscribe',
   async ({ userId, eventType }, { dispatch, getState }) => {
     const state = getState() as { socket: SocketState };
@@ -88,7 +90,6 @@ export const disconnectSocket = createAsyncThunk(
     const state = getState() as { socket: SocketState };
     if (state.socket.socket) {
       state.socket.socket.disconnect();
-      
     }
   }
 );
@@ -101,7 +102,9 @@ const socketSlice = createSlice({
       state.subscriptions.push(action.payload);
     },
     removeSubscription(state, action) {
-      state.subscriptions = state.subscriptions.filter(sub => sub.eventType !== action.payload);
+      state.subscriptions = state.subscriptions.filter(
+        (sub) => sub.eventType !== action.payload
+      );
     },
     setConnected(state, action) {
       state.isConnected = action.payload;
@@ -135,7 +138,9 @@ const socketSlice = createSlice({
       })
       .addCase(unsubscribeFromEventType.fulfilled, (state, action) => {
         const { eventType } = action.meta.arg;
-        state.subscriptions = state.subscriptions.filter(sub => sub.eventType !== eventType);
+        state.subscriptions = state.subscriptions.filter(
+          (sub) => sub.eventType !== eventType
+        );
       })
       .addCase(disconnectSocket.fulfilled, (state) => {
         state.socket = null;
@@ -144,5 +149,11 @@ const socketSlice = createSlice({
   },
 });
 
-export const { addSubscription, removeSubscription, setConnected, incrementRetryCount, resetRetryCount } = socketSlice.actions;
+export const {
+  addSubscription,
+  removeSubscription,
+  setConnected,
+  incrementRetryCount,
+  resetRetryCount,
+} = socketSlice.actions;
 export default socketSlice.reducer;

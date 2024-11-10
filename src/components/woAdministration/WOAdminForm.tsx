@@ -19,6 +19,9 @@ import {
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
+  ProFormCheckbox,
+  ProFormDatePicker,
+  ProFormInstance,
 } from '@ant-design/pro-components';
 import {
   Tabs,
@@ -88,7 +91,7 @@ import dayjs from 'dayjs';
 import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 import UserTaskAllocation from './UserTaskAllocation';
 import BulkRequirementCreator from './requirements/BulkRequirementCreator';
-dayjs.extend(utc);
+// dayjs.extend(utc);
 interface UserFormProps {
   order?: any;
   orderItem?: any | {};
@@ -211,13 +214,13 @@ const WOAdminForm: FC<UserFormProps> = ({
         },
         cellStyle: (params: { value: keyof ValueEnumType }) => ({
           backgroundColor: getStatusColor(params.value),
-          color: '#ffffff', // Text color
+          // color: '#ffffff', // Text color
         }),
       },
       {
         headerName: `${t('PART No')}`,
         field: 'PART_NUMBER',
-        editable: true,
+        editable: false,
         cellEditor: AutoCompleteEditor,
         cellEditorParams: {
           options: partNumbers,
@@ -256,7 +259,6 @@ const WOAdminForm: FC<UserFormProps> = ({
         width: columnWidths['WP'],
       },
 
-      
       {
         field: 'UNIT_OF_MEASURE',
         editable: false,
@@ -278,7 +280,7 @@ const WOAdminForm: FC<UserFormProps> = ({
       //   editable: false,
       //   width: columnWidths['PART No'],
       // },
- 
+
       {
         field: 'plannedDate',
         editable: false,
@@ -317,6 +319,13 @@ const WOAdminForm: FC<UserFormProps> = ({
         headerName: `${t('LINK QTY')}`,
       },
       {
+        field: 'canceledQuantity',
+        // width: columnWidths['PART No'],
+        editable: false,
+        cellDataType: 'number',
+        headerName: `${t('CANCELED QTY')}`,
+      },
+      {
         field: 'availableQTY',
         width: columnWidths['STOCK QTYo'],
 
@@ -330,6 +339,7 @@ const WOAdminForm: FC<UserFormProps> = ({
         cellDataType: 'number',
         headerName: `${t('AVAIL ALL STORES QTY')}`,
       },
+
       {
         field: 'restrictedAllStoreQTY',
         width: columnWidths['RESRICTED ALL STORES QTY'],
@@ -423,17 +433,17 @@ const WOAdminForm: FC<UserFormProps> = ({
         projectId,
         projectItemID,
         projectTaskID,
-      }).unwrap()
+      }).unwrap();
       // await refetch();
-     
+
       setCurrentTime(Date.now()); // Передаем данные о новом шаге в addBooking
       notification.success({
         message: t('STEP SUCCESSFULLY ADDED'),
         description: t('The step has been successfully added.'),
-      })
+      });
       await addBooking({
         booking: { voucherModel: 'ADD_STEP', data: step },
-      })
+      });
       // setIsModalVisible(false); // Если у вас есть функция для закрытия модального окна после добавления шага
     } catch (error) {
       notification.error({
@@ -569,6 +579,8 @@ const WOAdminForm: FC<UserFormProps> = ({
         SQUARE: order?.SQUARE,
         WORKPIECE_WEIGHT: order?.WORKPIECE_WEIGHT,
         WORKPIECE_MATERIAL_TYPE: order?.WORKPIECE_MATERIAL_TYPE,
+        isCriticalTask: order?.isCriticalTask,
+        taskWONumber: order?.taskWONumber,
       });
       if (!order.id) {
       }
@@ -770,7 +782,7 @@ const WOAdminForm: FC<UserFormProps> = ({
 
   const handleDeleteUpload = (key: any) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить этот файл?',
+      title: 'Are you sure you want to delete this file?',
       onOk: async () => {
         try {
           const response = await dispatch(
@@ -781,6 +793,18 @@ const WOAdminForm: FC<UserFormProps> = ({
               itemID: order && order.id,
             })
           );
+          if (order?.id) {
+            setCurrentTime(Date.now());
+            // const updatedTask = await refetch().unwrap();
+            // // Находим обновленный таск
+            // const refreshedTask = updatedTask.find(
+            //   (task: any) => task.id === order.id
+            // );
+            // if (refreshedTask) {
+            //   // Обновляем форму с новыми данными
+            //   formRef?.current?.setFieldsValue(refreshedTask);
+            // }
+          }
           notification.success({
             message: t('SUCCESS DELETE'),
             description: t('File delete successfully'),
@@ -828,6 +852,9 @@ const WOAdminForm: FC<UserFormProps> = ({
         ...projectTasksFormValues,
         // time: new Date(),
       });
+      // setCurrentTime(Date.now());
+
+      setCurrentTime(Date.now());
       notification.success({
         message: t('SUCCESS UPLOAD'),
         description: t('File uploaded successfully'),
@@ -865,10 +892,11 @@ const WOAdminForm: FC<UserFormProps> = ({
       },
     };
   };
-
+  const formRef = useRef<ProFormInstance>();
   return (
     <PermissionGuard requiredPermissions={[Permission.EDIT_PROJECT_TASK]}>
       <ProForm
+        formRef={formRef}
         // onFinish={(values) => {
         //   const performedDate = dayjs(values.performedDate)
         //     .utc()
@@ -894,9 +922,7 @@ const WOAdminForm: FC<UserFormProps> = ({
         //   performedDate: new Date(),
         // }}
         onFinish={(values) => {
-          const performedDate = dayjs(values.inspectedDate)
-            .utc()
-            .startOf('minute');
+          const performedDate = dayjs(values.inspectedDate).startOf('minute');
 
           if (order && order.projectItemType == 'NRC' && !order?.id) {
             // if (
@@ -930,6 +956,8 @@ const WOAdminForm: FC<UserFormProps> = ({
             // taskId: order.taskId._id,
             _id: order.id,
             planeId: order.planeId,
+            criticalTask: values.criticalTask,
+            taskWONumber: values.taskWONumber,
           });
         }} // }}
         disabled={order && order?.status === 'closed'}
@@ -964,7 +992,7 @@ const WOAdminForm: FC<UserFormProps> = ({
         >
           <Tabs.TabPane tab={tabTitles['1']} key="1">
             {order && order.projectItemType !== 'NRC' && (
-              <div className=" h-[57vh] flex flex-col overflow-auto">
+              <div className=" h-[56vh] flex flex-col overflow-auto">
                 <ProFormGroup>
                   <ProFormGroup>
                     <ProFormGroup direction="horizontal">
@@ -978,27 +1006,62 @@ const WOAdminForm: FC<UserFormProps> = ({
                         onChange={(value: any) => setACTypeID(value)}
                       /> */}
                       <ProFormSelect
-                        showSearch
                         rules={[{ required: true }]}
                         name="status"
-                        label={t('STATUS')}
+                        label={t('NRC STATUS')}
                         width="sm"
-                        // initialValue={'draft'}
-                        options={[
-                          // { value: 'planned', label: t('PLANNED') },
-                          { value: 'open', label: t('OPEN') },
-                          { value: 'inProgress', label: t('IN PROGRESS') },
-                          { value: 'performed', label: t('PERFORMED') },
-                          {
-                            value: 'needInspection',
-                            label: t('NEED INSPECTION'),
+                        initialValue={'closed'}
+                        valueEnum={{
+                          closed: { text: t('CLOSE'), status: 'SUCCESS' },
+                          diRequired: {
+                            text: t('DI REQUIRED'),
+                            disabled: true,
                           },
-                          { value: 'nextAction', label: t('NEXT ACTION') },
-                          { value: 'inspect', label: t('INSPECTION') },
-                          { value: 'closed', label: t('CLOSE') },
-                          { value: 'cancelled', label: t('CANCEL') },
-                          // { value: 'transfer', label: t('TRANSFER') },
-                        ]}
+                          inspect: {
+                            text: t('INSPECTION'),
+                            status: 'inspect',
+                            disabled: true,
+                          },
+                          nextAction: {
+                            text: t('NEXT ACTION'),
+                            status: 'PROGRESS',
+                            disabled: true,
+                          },
+                          inProgress: {
+                            text: t('IN PROGRESS'),
+                            status: 'PROGRESS',
+                            disabled: true,
+                          },
+                          test: {
+                            text: t('TEST'),
+                            status: 'Processing',
+                            disabled: true,
+                          },
+                          open: {
+                            text: t('OPEN'),
+                            status: 'Processing',
+                            disabled: true,
+                          },
+                          cancelled: { text: t('CANCEL'), status: 'Error' },
+                        }}
+                        fieldProps={{
+                          optionItemRender: (item: any) => (
+                            <span
+                              style={{
+                                color:
+                                  item.data?.status === 'SUCCESS'
+                                    ? '#52c41a'
+                                    : item.data?.status === 'Error'
+                                    ? '#ff4d4f'
+                                    : item.data?.disabled
+                                    ? '#d9d9d9'
+                                    : 'inherit',
+                              }}
+                            >
+                              {item.label}
+                            </span>
+                          ),
+                        }}
                       />
                     </ProFormGroup>
 
@@ -1269,6 +1332,20 @@ const WOAdminForm: FC<UserFormProps> = ({
                             width={'xl'}
                             name="taskNumber"
                             label={t('TASK NUMBER')}
+                            rules={[
+                              {
+                                required: true,
+                              },
+                            ]}
+                          />
+                          <ProFormDatePicker
+                            rules={[{ required: true }]}
+                            width={'sm'}
+                            name="createDate"
+                            label={t('RAISED DATE')}
+                            fieldProps={{
+                              format: 'YYYY-MM-DD ',
+                            }}
                           />
                           <ProFormText
                             width={'lg'}
@@ -1279,6 +1356,16 @@ const WOAdminForm: FC<UserFormProps> = ({
                                 required: true,
                               },
                             ]}
+                          />
+                          <ProFormCheckbox
+                            name="isCriticalTask"
+                            label={t('CRITICAL TASK')}
+                          />
+                          <ProFormText
+                            // disabled={!order?.projectTaskReferenceID}
+                            width={'sm'}
+                            name="taskWONumber"
+                            label={t('SEQ NUMBER')}
                           />
                           {/* <ProFormText
                             disabled
@@ -1422,7 +1509,7 @@ const WOAdminForm: FC<UserFormProps> = ({
             )}
 
             {order && order.projectItemType == 'NRC' && (
-              <div className=" h-[57vh] flex flex-col overflow-auto">
+              <div className=" h-[56vh] flex flex-col overflow-auto">
                 <ProFormGroup labelLayout="inline" direction="horizontal">
                   <ProFormText
                     disabled
@@ -1459,6 +1546,16 @@ const WOAdminForm: FC<UserFormProps> = ({
                     }}
                     onChange={(value: string) => setTaskType(value)}
                   />
+                  <ProFormCheckbox
+                    name="isCriticalTask"
+                    label={t('CRITICAL TASK')}
+                  />
+                  <ProFormText
+                    name="taskWONumber"
+                    // disabled={!order?.projectTaskReferenceID}
+                    width={'sm'}
+                    label={t('SEQ NUMBER')}
+                  />
                 </ProFormGroup>
                 <ProFormGroup labelLayout="inline" direction="horizontal">
                   <ProFormTextArea
@@ -1466,8 +1563,8 @@ const WOAdminForm: FC<UserFormProps> = ({
                     // disabled={!order?.projectTaskReferenceID}
                     width={'md'}
                     fieldProps={{ style: { resize: 'none' }, rows: 1 }}
-                    name="referenceTask"
-                    label={t('NRC REFERENCE')}
+                    name="refTask"
+                    label={t('REFERENCE')}
                     // rules={[
                     //   {
                     //     required: true,
@@ -1475,7 +1572,6 @@ const WOAdminForm: FC<UserFormProps> = ({
                     // ]}
                   />
                   <ProFormSelect
-                    // disabled
                     rules={[{ required: true }]}
                     name="status"
                     label={t('NRC STATUS')}
@@ -1483,25 +1579,54 @@ const WOAdminForm: FC<UserFormProps> = ({
                     initialValue={'closed'}
                     valueEnum={{
                       closed: { text: t('CLOSE'), status: 'SUCCESS' },
-                      inspect: { text: t('INSPECTION'), status: 'inspect' },
+                      diRequired: {
+                        text: t('DI REQUIRED'),
+                        disabled: true,
+                      },
+                      inspect: {
+                        text: t('INSPECTION'),
+                        status: 'inspect',
+                        disabled: true,
+                      },
                       nextAction: {
                         text: t('NEXT ACTION'),
                         status: 'PROGRESS',
+                        disabled: true,
                       },
                       inProgress: {
                         text: t('IN PROGRESS'),
                         status: 'PROGRESS',
+                        disabled: true,
                       },
-                      test: { text: t('TEST'), status: 'Processing' },
-                      open: { text: t('OPEN'), status: 'Processing' },
+                      test: {
+                        text: t('TEST'),
+                        status: 'Processing',
+                        disabled: true,
+                      },
+                      open: {
+                        text: t('OPEN'),
+                        status: 'Processing',
+                        disabled: true,
+                      },
                       cancelled: { text: t('CANCEL'), status: 'Error' },
-                      // draft: { text: t('DRAFT'), status: 'DRAFT' },
-
-                      // needInspection: { text: t('NEED INSPECTION'), status: 'PROGRESS' },
-
-                      // PLANNED: { text: t('PLANNED'), status: 'Waiting' },
-                      // completed: { text: t('COMPLETED'), status: 'Default' },
-                      // performed: { text: t('PERFORMED'), status: 'Default' },
+                    }}
+                    fieldProps={{
+                      optionItemRender: (item: any) => (
+                        <span
+                          style={{
+                            color:
+                              item.data?.status === 'SUCCESS'
+                                ? '#52c41a'
+                                : item.data?.status === 'Error'
+                                ? '#ff4d4f'
+                                : item.data?.disabled
+                                ? '#d9d9d9'
+                                : 'inherit',
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      ),
                     }}
                   />
                 </ProFormGroup>
@@ -1584,8 +1709,8 @@ const WOAdminForm: FC<UserFormProps> = ({
                           showTime: {
                             defaultValue: dayjs('00:00', 'HH:mm'),
                             format: 'HH:mm',
-                            disabledHours: disabledDateTime().disabledHours,
-                            disabledMinutes: disabledDateTime().disabledMinutes,
+                            // disabledHours: disabledDateTime().disabledHours,
+                            // disabledMinutes: disabledDateTime().disabledMinutes,
                           },
                           defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
                           disabledDate,
@@ -1595,6 +1720,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                     {order && !order.id && (
                       <div className="disabled">
                         <UserTaskAllocation
+                          onlyWithOrganizationAuthorization={true}
                           isTime={true}
                           isSingle={true}
                           users={users}
@@ -1610,7 +1736,8 @@ const WOAdminForm: FC<UserFormProps> = ({
           </Tabs.TabPane>
           <Tabs.TabPane tab={tabTitles['3']} key="3">
             {(order?.id && projectItemID) ||
-            (order?.id && order?.projectItemReferenceID) ? (
+            (order?.id && order?.projectItemReferenceID) ||
+            (order?.id && order?.projectItemType === 'NRC') ? (
               <div className=" h-[60vh] flex flex-col overflow-auto pb-3">
                 <StepContainer
                   task={order}
@@ -1640,10 +1767,10 @@ const WOAdminForm: FC<UserFormProps> = ({
                     />
                   </Tabs.TabPane>
                   <Tabs.TabPane tab={t('REQUIREMENTS LIST')} key="list">
-                    <RequarementsList  
-                      isIssueVisibale={true} isButtonVisiable={false} isEditable={false}
-                      onColumnResized={saveColumnState}
-                      onGridReady={restoreColumnState}
+                    <RequarementsList
+                      partNumbers={partNumbers || []}
+                      isIssueVisibale={true}
+                      isButtonVisiable={false}
                       order={order}
                       isAddVisiable={
                         order && order.status === 'closed' ? true : true
@@ -1651,72 +1778,64 @@ const WOAdminForm: FC<UserFormProps> = ({
                       isChekboxColumn={true}
                       fetchData={transformedRequirements}
                       columnDefs={columnRequirements}
-                      partNumbers={partNumbers || []}
                       taskId={order?.id}
                       onUpdateData={function (data: any[]): void {}}
-                      height={'50Vh'}
-                      onRowSelect={function (rowData: IRequirement | null): void {}}
-                      onCheckItems={function (selectedKeys: any[]): void {
-                        handleCheckItems(selectedKeys);
-                      }}
-                      onDelete={function (reqID: string): void {
-                        throw new Error('Function not implemented.');
-                      }}
-                      onSave={function (rowData: IRequirement): void {
-                        throw new Error('Function not implemented.');
-                      }}
+                      height={'53Vh'}
+                      onRowSelect={function (
+                        rowData: IRequirement | null
+                      ): void {}}
                     />
                   </Tabs.TabPane>
                   <Tabs.TabPane tab={tabTitles['2']} key="2">
-            <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-              {order && !order?.projectItemReferenceID ? (
-                <PartContainer
-                  isButtonColumn={false}
-                  isButtonVisiable={false}
-                  isAddVisiable={true}
-                  height={'58vh'}
-                  columnDefs={columnDefs}
-                  partNumbers={partNumbers || []}
-                  onUpdateData={(data: any[]): void => {}}
-                  rowData={
-                    order?.partTaskID &&
-                    transformToIPartNumber(
-                      partsTask || [], // Передаем массив `order.partTaskID`
-                      ['TOOL', 'GSE'] // Ваши группы инструментов
-                    )
-                  }
-                  isLoading={isLoading}
-                />
-              ) : (
-                <Empty></Empty>
-              )}
-            </div>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab={tabTitles['4']} key="4">
-            <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
-              {order && !order?.projectItemReferenceID ? (
-                <PartContainer
-                  isButtonColumn={false}
-                  isButtonVisiable={true}
-                  isLoading={isLoading}
-                  isAddVisiable={true}
-                  height={'58vh'}
-                  columnDefs={columnDefs}
-                  partNumbers={partNumbers || []}
-                  onUpdateData={(data: any[]): void => {}}
-                  rowData={
-                    order?.partTaskID &&
-                    transformToIPartNumber(
-                      partsTask || [],
-                      ['ROT', 'CONS', 'CHEM'] // Ваши группы инструментов
-                    )
-                  }
-                />
-              ) : (
-                <Empty></Empty>
-              )}
-            </div>
-          </Tabs.TabPane>
+                    <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
+                      {order && !order?.projectItemReferenceID ? (
+                        <PartContainer
+                          isButtonColumn={false}
+                          isButtonVisiable={false}
+                          isAddVisiable={true}
+                          height={'53vh'}
+                          columnDefs={columnDefs}
+                          partNumbers={partNumbers || []}
+                          onUpdateData={(data: any[]): void => {}}
+                          rowData={
+                            order?.partTaskID &&
+                            transformToIPartNumber(
+                              partsTask || [], // Передаем массив `order.partTaskID`
+                              ['TOOL', 'GSE'] // Ваши группы инструментов
+                            )
+                          }
+                          isLoading={isLoading}
+                        />
+                      ) : (
+                        <Empty></Empty>
+                      )}
+                    </div>
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab={tabTitles['4']} key="4">
+                    <div className=" h-[62vh] flex flex-col overflow-auto pb-3">
+                      {order && !order?.projectItemReferenceID ? (
+                        <PartContainer
+                          isButtonColumn={false}
+                          isButtonVisiable={true}
+                          isLoading={isLoading}
+                          isAddVisiable={true}
+                          height={'53vh'}
+                          columnDefs={columnDefs}
+                          partNumbers={partNumbers || []}
+                          onUpdateData={(data: any[]): void => {}}
+                          rowData={
+                            order?.partTaskID &&
+                            transformToIPartNumber(
+                              partsTask || [],
+                              ['ROT', 'CONS', 'CHEM'] // Ваши группы инструментов
+                            )
+                          }
+                        />
+                      ) : (
+                        <Empty></Empty>
+                      )}
+                    </div>
+                  </Tabs.TabPane>
                 </Tabs>
               </PermissionGuard>
             ) : (
@@ -1732,6 +1851,8 @@ const WOAdminForm: FC<UserFormProps> = ({
                 // style={{ width: '100%', height: '60vh' }}
                 >
                   <FileListE
+                    height="51vh"
+                    key={`${order?.id}-${order?.reference?.length}-${currentTime}`}
                     isEfectivityField={true}
                     isTaskNumberField={false}
                     handleDelete={handleDeleteUpload}

@@ -158,7 +158,7 @@ const StepCard: React.FC<Props> = ({
                 <Tag color="#778D45">{step.createUserID?.name}</Tag>
               </Space>
               <Space className="font-bold" style={{ fontSize: '12px' }}>
-                {moment(step.createDate).format('YYYY-MM-DD HH:mm')}
+                {moment(step.createDate).utc().format('YYYY-MM-DD HH:mm')}
               </Space>
             </Space>
           </div>

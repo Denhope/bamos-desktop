@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
-import TabContent from "@/components/shared/Table/TabContent";
-import { useTypedSelector } from "@/hooks/useTypedSelector";
-import WOCloseForm from "./NRCCloseForm";
-import WODICloseForm from "./NRCDICloseForm";
-import Times from "./NRCTimes";
+import TabContent from '@/components/shared/Table/TabContent';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import WOCloseForm from './NRCCloseForm';
+import WODICloseForm from './NRCDICloseForm';
+import Times from './NRCTimes';
 
 type CloseProps = { task: any | null };
 const CloseContent: FC<CloseProps> = ({ task }) => {
@@ -26,7 +26,7 @@ const CloseContent: FC<CloseProps> = ({ task }) => {
                         currentProjectAdditionalTask.actions.length - 1
                       ]?.performedName
                     ) ||
-                    currentProjectAdditionalTask.status === "closed" ||
+                    currentProjectAdditionalTask.status === 'closed' ||
                     !(
                       currentProjectAdditionalTask?.actions &&
                       currentProjectAdditionalTask.actions[
@@ -40,7 +40,7 @@ const CloseContent: FC<CloseProps> = ({ task }) => {
                   projectAdditionalTasks={projectAdditionalTasks}
                 />
               ),
-              title: "Times",
+              title: 'Times',
             },
             {
               content: (
@@ -48,7 +48,7 @@ const CloseContent: FC<CloseProps> = ({ task }) => {
                   disabled={
                     !currentProjectAdditionalTask?.optional?.finalAction
                       ?.timeUsed ||
-                    currentProjectAdditionalTask.status === "closed" ||
+                    currentProjectAdditionalTask.status === 'closed' ||
                     !(
                       currentProjectAdditionalTask?.actions &&
                       currentProjectAdditionalTask.actions[
@@ -62,7 +62,7 @@ const CloseContent: FC<CloseProps> = ({ task }) => {
                   projectAdditionalTasks={projectAdditionalTasks}
                 />
               ),
-              title: "Close",
+              title: 'Close',
             },
             {
               content: (
@@ -70,7 +70,7 @@ const CloseContent: FC<CloseProps> = ({ task }) => {
                   disabled={
                     !currentProjectAdditionalTask?.optional?.finalAction
                       ?.timeUsed ||
-                    currentProjectAdditionalTask.status === "closed" ||
+                    currentProjectAdditionalTask.status === 'closed' ||
                     !(
                       currentProjectAdditionalTask?.actions &&
                       currentProjectAdditionalTask.actions[
@@ -85,7 +85,7 @@ const CloseContent: FC<CloseProps> = ({ task }) => {
                   projectAdditionalTasks={projectAdditionalTasks}
                 />
               ),
-              title: "DI Close",
+              title: 'DI Close',
             },
           ]}
         />

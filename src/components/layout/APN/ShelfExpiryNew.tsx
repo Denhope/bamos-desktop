@@ -14,12 +14,19 @@ import {
   message,
 } from 'antd';
 const { Option } = Select;
-
+import { v4 as uuidv4 } from 'uuid';
 import Sider from 'antd/es/layout/Sider';
 import PartContainer from '@/components/woAdministration/PartContainer';
 import { Content } from 'antd/es/layout/layout';
 import RequirementItems from '@/components/store/RequirementItems';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useId,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { RouteNames } from '@/router';
 import {
@@ -49,11 +56,34 @@ import { useGetLocationsQuery } from '@/features/storeAdministration/LocationApi
 import { ColDef, ColumnResizedEvent, GridReadyEvent } from 'ag-grid-community';
 import ReportPrintQR from '@/components/shared/ReportPrintQR';
 import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
-import PartsTable from '@/components/shared/Table/PartsTable';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 import { RootState } from '@/store';
 import { setColumnWidthEzpiry } from '@/store/reducers/columnWidthsExpirySlice';
 import { useSelector, useDispatch } from 'react-redux';
 import PDFExport from '@/components/reports/ReportBase';
+
+import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
+import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
+
+interface IPartData {
+  id: string;
+  RECEIVED_DATE: string;
+  LOCAL_ID: string;
+  PART_NUMBER: string;
+  NAME_OF_MATERIAL: string;
+  GROUP: string;
+  TYPE: string;
+  QUANTITY: number;
+  UNIT_OF_MEASURE: string;
+  STOCK: string;
+  LOCATION: string;
+  SUPPLIER_BATCH_NUMBER: string;
+  SERIAL_NUMBER: string;
+  CONDITION: string;
+  PRODUCT_EXPIRATION_DATE: string;
+  OWNER: string;
+  RECEIVING_NUMBER: string;
+}
 
 const ShelfExpiryNew: FC = () => {
   const [reportData, setReportData] = useState<any>(false);
@@ -173,7 +203,7 @@ const ShelfExpiryNew: FC = () => {
         width: columnWidthsExpiry['STOCK'],
       },
       {
-        field: 'LOCATION',
+        field: '',
         editable: false,
         filter: false,
         headerName: `${t('LOCATION')}`,
@@ -245,13 +275,15 @@ const ShelfExpiryNew: FC = () => {
   const [rowKeys, setselectedRowKeys] = useState<any[]>([]);
 
   useState<any>(null);
-  const [selectedMaterials, setSelectedMaterials] = useState<any>([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<IPartData[]>([]);
   // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const [partsToPrint, setPartsToPrint] = useState<any>([]);
   const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
     setselectedRowKeys(newSelectedRowKeys);
   };
+  const componentId = useId();
+  const sessionId = useMemo(() => uuidv4(), []);
   const [selectedSerchValues, setSelectedSerchValues] = useState<any>(null);
   const {
     data: parts,
@@ -261,27 +293,71 @@ const ShelfExpiryNew: FC = () => {
   } = useGetStorePartsQuery(
     selectedSerchValues
       ? {
-          locationID: selectedSerchValues.locationID,
-          stationID: selectedSerchValues.stationID,
-          storeID: selectedSerchValues.storeID,
-          localID: selectedSerchValues.label,
-          partNumberID: selectedSerchValues.partNumberID,
-          SERIAL_NUMBER: selectedSerchValues.serialNumber,
-          startExpityDate:
-            selectedSerchValues?.dateIn && selectedSerchValues?.dateIn[0],
-          endExpityDate: selectedSerchValues?.dateIn
-            ? selectedSerchValues?.dateIn[1]
-            : selectedSerchValues?.datePickerValue,
-          GROUP: selectedSerchValues.GROUP,
-          TYPE: selectedSerchValues.TYPE,
-          toolTypeID: selectedSerchValues.toolTypeID,
-          toolCodeID: selectedSerchValues.toolCodeID,
+          ...(selectedSerchValues.locationID && {
+            locationID: selectedSerchValues.locationID,
+          }),
+          ...(selectedSerchValues.stationID && {
+            stationID: selectedSerchValues.stationID,
+          }),
+          ...(selectedSerchValues.storeID && {
+            storeID: selectedSerchValues.storeID,
+          }),
+          ...(selectedSerchValues.label && {
+            localID: selectedSerchValues.label,
+          }),
+          ...(selectedSerchValues.partNumberID && {
+            partNumberID: selectedSerchValues.partNumberID,
+          }),
+          ...(selectedSerchValues.serialNumber && {
+            SERIAL_NUMBER: selectedSerchValues.serialNumber,
+          }),
+
+          ...(selectedSerchValues.dateIn && {
+            startExpityDate: new Date(
+              selectedSerchValues.dateIn[0]
+            ).toISOString(),
+            endExpityDate: new Date(
+              selectedSerchValues.dateIn[1]
+            ).toISOString(),
+          }),
+
+          ...(!selectedSerchValues.dateIn &&
+            selectedSerchValues.datePickerValue && {
+              endExpityDate: new Date(
+                selectedSerchValues.datePickerValue
+              ).toISOString(),
+            }),
+
+          ...(selectedSerchValues.GROUP && {
+            GROUP: selectedSerchValues.GROUP,
+          }),
+          ...(selectedSerchValues.TYPE && { TYPE: selectedSerchValues.TYPE }),
+          ...(selectedSerchValues.toolTypeID && {
+            toolTypeID: selectedSerchValues.toolTypeID,
+          }),
+          ...(selectedSerchValues.toolCodeID && {
+            toolCodeID: selectedSerchValues.toolCodeID,
+          }),
+          componentId, // Добавляем идентификатор компонента
+          sessionId, //
         }
       : {},
     {
       skip: !selectedSerchValues,
+      refetchOnMountOrArgChange: true,
     }
   );
+
+  useEffect(() => {
+    if (selectedSerchValues) {
+      console.log('Search params:', selectedSerchValues);
+    }
+  }, [selectedSerchValues]);
+
+  const handleFilterSubmit = (data: any) => {
+    console.log('Filter form submitted with values:', data);
+    setSelectedSerchValues(data);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -382,8 +458,8 @@ const ShelfExpiryNew: FC = () => {
   const restoreColumnState = useCallback(
     (event: GridReadyEvent) => {
       Object.keys(columnWidthsExpiry).forEach((field) => {
-        const колонка = event.api.getColumnDef(field);
-        if (колонка) {
+        const column = event.api.getColumnDef(field);
+        if (column) {
           event.api.setColumnWidth(field, columnWidthsExpiry[field]);
         }
       });
@@ -392,9 +468,122 @@ const ShelfExpiryNew: FC = () => {
   );
 
   const transformedPartNumbers = useMemo(() => {
-    return transformToIStockPartNumber(parts || []);
+    if (!parts || !Array.isArray(parts)) {
+      return [];
+    }
+
+    return parts
+      .map((part) => {
+        if (!part) return null;
+
+        try {
+          // Создаем копию объекта part
+          const transformedPart = { ...part };
+
+          // Преобразуем даты из строки в объект Date
+          if (transformedPart.RECEIVED_DATE) {
+            const receivedDate = new Date(transformedPart.RECEIVED_DATE);
+            transformedPart.RECEIVED_DATE = !isNaN(receivedDate.getTime())
+              ? receivedDate
+              : null;
+          }
+
+          if (transformedPart.PRODUCT_EXPIRATION_DATE) {
+            const expiryDate = new Date(
+              transformedPart.PRODUCT_EXPIRATION_DATE
+            );
+            transformedPart.PRODUCT_EXPIRATION_DATE = !isNaN(
+              expiryDate.getTime()
+            )
+              ? expiryDate
+              : null;
+          }
+
+          return {
+            ...transformedPart,
+            id: transformedPart._id || transformedPart.id,
+            STOCK:
+              transformedPart?.storeID?.storeShortName ||
+              transformedPart?.STOCK,
+            LOCATION:
+              transformedPart?.locationID?.locationName ||
+              transformedPart?.LOCATION,
+            OWNER:
+              transformedPart?.locationID?.ownerID?.title ||
+              transformedPart?.OWNER,
+          };
+        } catch (error) {
+          console.error('Error transforming part:', error, part);
+          return null;
+        }
+      })
+      .filter(Boolean);
   }, [parts]);
   const [reportDataLoading, setReportDataLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('rowKeys:', rowKeys);
+    console.log('selectedMaterials:', selectedMaterials);
+  }, [rowKeys, selectedMaterials]);
+
+  // Добавляем запросы для получения списков
+  const { data: stores } = useGetStoresQuery({});
+  const { data: partNumbers } = useGetPartNumbersQuery({});
+
+  // Создаем enum для stores
+  const storeCodesValueEnum = stores
+    ? stores.reduce((acc, store) => {
+        if (store.id && store.storeShortName) {
+          acc[store.id] = String(store.storeShortName).toUpperCase();
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    : {};
+
+  // Создаем enum для part numbers
+  const partValueEnum = partNumbers
+    ? partNumbers.reduce((acc, part) => {
+        if (part._id) {
+          acc[part._id] = part;
+        }
+        return acc;
+      }, {} as Record<string, any>)
+    : {};
+
+  // Форматируем значения фильтров для отчета
+  const getFormattedFilterValues = (values: any) => {
+    if (!values) return null;
+
+    return {
+      Store: values.storeID ? storeCodesValueEnum[values.storeID] : '-',
+      Location: values.locationID
+        ? loctionsCodesValueEnum[values.locationID]
+        : '-',
+      'Part Number': values.partNumberID
+        ? partValueEnum[values.partNumberID]?.PART_NUMBER
+        : '-',
+      'Serial Number': values.serialNumber || '-',
+      Label: values.label || '-',
+      Group: values.GROUP
+        ? Array.isArray(values.GROUP)
+          ? values.GROUP.join(', ')
+          : values.GROUP
+        : '-',
+      Type: values.TYPE
+        ? Array.isArray(values.TYPE)
+          ? values.TYPE.join(', ')
+          : values.TYPE
+        : '-',
+      'Date Range': values.dateIn
+        ? `${new Date(values.dateIn[0]).toLocaleDateString()} - ${new Date(
+            values.dateIn[1]
+          ).toLocaleDateString()}`
+        : values.datePickerValue
+        ? new Date(values.datePickerValue).toLocaleDateString()
+        : '-',
+    };
+  };
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -416,11 +605,7 @@ const ShelfExpiryNew: FC = () => {
               display: !collapsed ? 'block' : 'none',
             }}
           >
-            <ShelfExpiryFilterForm
-              onSubmit={function (data: any): void {
-                setSelectedSerchValues(data);
-              }}
-            />
+            <ShelfExpiryFilterForm onSubmit={handleFilterSubmit} />
           </div>
         </div>
       </Sider>
@@ -564,73 +749,161 @@ const ShelfExpiryNew: FC = () => {
                 <Col>
                   <PDFExport
                     title={t('SHELF EXPIRY REPORT')}
-                    filename={`shelf_expiry_report_${new Date().toISOString().split('T')[0]}`}
-                    // headerInfo={{
-                    //   "Store": selectedSerchValues?.storeID 
-                    //     ? loctionsCodesValueEnum[selectedSerchValues.storeID] || selectedSerchValues.storeID 
-                    //     : '-',
-                    //   "Location": selectedSerchValues?.locationID 
-                    //     ? loctionsCodesValueEnum[selectedSerchValues.locationID] || selectedSerchValues.locationID 
-                    //     : '-',
-                    //   "Date Range": selectedSerchValues?.dateIn 
-                    //     ? `${new Date(selectedSerchValues.dateIn[0]).toLocaleDateString()} - ${new Date(selectedSerchValues.dateIn[1]).toLocaleDateString()}`
-                    //     : selectedSerchValues?.datePickerValue 
-                    //       ? new Date(selectedSerchValues.datePickerValue).toLocaleDateString()
-                    //       : '-'
-                    // }}
+                    filename={`shelf_expiry_report_${
+                      new Date().toISOString().split('T')[0]
+                    }`}
                     statistics={{
-                      "Total Items": parts?.length || 0,
-                      "Selected Items": rowKeys.length
+                      'Total Items': parts?.length || 0,
+                      'Selected Items': rowKeys.length,
+                      'Expired Items':
+                        parts?.filter(
+                          (part) =>
+                            new Date(part.PRODUCT_EXPIRATION_DATE) < new Date()
+                        ).length || 0,
                     }}
                     columnDefs={columnDefs}
-                    data={transformedPartNumbers?.map(part => ({
-                      ...part,
-                      RECEIVED_DATE: part.RECEIVED_DATE 
-                        ? new Date(part.RECEIVED_DATE).toLocaleDateString('ru-RU', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })
-                        : '',
-                      PRODUCT_EXPIRATION_DATE: part.PRODUCT_EXPIRATION_DATE
-                        ? new Date(part.PRODUCT_EXPIRATION_DATE).toLocaleDateString('ru-RU', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          })
-                        : '',
-                    })) || []}
+                    data={
+                      transformedPartNumbers?.map((part) => {
+                        // Функция для безопасного форматирования даты
+                        const formatDate = (
+                          date: Date | null | undefined,
+                          includeTime = false
+                        ) => {
+                          if (
+                            !date ||
+                            !(date instanceof Date) ||
+                            isNaN(date.getTime())
+                          ) {
+                            return '-';
+                          }
+
+                          try {
+                            if (includeTime) {
+                              return date.toLocaleString('ru-RU', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              });
+                            }
+                            return date.toLocaleDateString('ru-RU', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                            });
+                          } catch (error) {
+                            console.error('Date formatting error:', error);
+                            return '-';
+                          }
+                        };
+
+                        return {
+                          ...part,
+                          // Форматируем даты с проверкой на валидность
+                          RECEIVED_DATE: formatDate(part.RECEIVED_DATE, true),
+                          PRODUCT_EXPIRATION_DATE: formatDate(
+                            part.PRODUCT_EXPIRATION_DATE
+                          ),
+                          // Остальные поля без изменений
+                          LOCAL_ID: part.LOCAL_ID || '-',
+                          PART_NUMBER: part.PART_NUMBER || '-',
+                          NAME_OF_MATERIAL: part.NAME_OF_MATERIAL || '-',
+                          GROUP: part.GROUP || '-',
+                          TYPE: part.TYPE || '-',
+                          QUANTITY: part.QUANTITY || 0,
+                          UNIT_OF_MEASURE: part.UNIT_OF_MEASURE || '-',
+                          STOCK: part.STOCK || '-',
+                          LOCATION: part.LOCATION || '-',
+                          SUPPLIER_BATCH_NUMBER:
+                            part.SUPPLIER_BATCH_NUMBER || '-',
+                          SERIAL_NUMBER: part.SERIAL_NUMBER || '-',
+                          CONDITION: part.CONDITION || '-',
+                          OWNER: part.OWNER || '-',
+                          RECEIVING_NUMBER: part.RECEIVING_NUMBER || '-',
+                        };
+                      }) || []
+                    }
                     orientation="landscape"
                     disabled={!selectedSerchValues}
                     loading={reportDataLoading}
+                    filterValues={getFormattedFilterValues(selectedSerchValues)}
+                    pdfColumnWidths={{
+                      RECEIVED_DATE: 22,
+                      LOCAL_ID: 10,
+                      PART_NUMBER: 18,
+                      NAME_OF_MATERIAL: 10,
+                      GROUP: 5,
+                      TYPE: 5,
+                      QUANTITY: 8,
+                      UNIT_OF_MEASURE: 10,
+                      STOCK: 10,
+                      LOCATION: 10,
+                      SUPPLIER_BATCH_NUMBER: 15,
+                      SERIAL_NUMBER: 15,
+                      CONDITION: 10,
+                      PRODUCT_EXPIRATION_DATE: 18,
+                      OWNER: 12,
+                      // RECEIVING_NUMBER: 12,
+                    }}
+                    excelColumnWidths={{
+                      RECEIVED_DATE: 15,
+                      LOCAL_ID: 8,
+                      PART_NUMBER: 15,
+                      NAME_OF_MATERIAL: 35,
+                      GROUP: 8,
+                      TYPE: 8,
+                      QUANTITY: 6,
+                      UNIT_OF_MEASURE: 8,
+                      STOCK: 8,
+                      LOCATION: 8,
+                      SUPPLIER_BATCH_NUMBER: 12,
+                      SERIAL_NUMBER: 12,
+                      CONDITION: 8,
+                      PRODUCT_EXPIRATION_DATE: 12,
+                      OWNER: 10,
+                    }}
+                    rightAlignedColumns={['QUANTITY', 'UNIT_OF_MEASURE']}
                   />
                 </Col>
               </div>
             </Row>
             <div style={containerStyle}>
-              <div style={gridStyle} className={'ag-theme-alpine'}>
-                <PartsTable
+              <div style={gridStyle} className="ag-theme-alpine">
+                <UniversalAgGrid
+                  gridId="shelfExpiry"
+                  isChekboxColumn
                   isLoading={partsQueryLoading || partsLoadingF}
-                  isFilesVisiable={true}
-                  isVisible={true}
-                  pagination={true}
-                  isAddVisiable={true}
-                  isButtonVisiable={false}
-                  height={'77vh'}
                   rowData={transformedPartNumbers}
                   columnDefs={columnDefs}
-                  onAddRow={function (): void {}}
-                  onDelete={function (id: string): void {}}
-                  onSave={function (data: any): void {}}
-                  onCellValueChanged={function (params: any): void {}} // onAddRow={onAddRow}
-                  onRowSelect={setSelectedMaterials}
-                  onCheckItems={setselectedRowKeys}
-                  partNumbers={[]}
-                  isChekboxColumn={true}
+                  height="77vh"
+                  rowSelection="multiple"
+                  // suppressRowClickSelection={true}
+                  pagination={true}
+                  onRowSelect={(selectedData) => {
+                    console.log('Selected Data:', selectedData);
+                    setSelectedMaterials(selectedData);
+                    const selectedIds = selectedData.map(
+                      (row) => row.id || row._id
+                    );
+                    setselectedRowKeys(selectedIds);
+                  }}
                   onColumnResized={saveColumnState}
-                  onGridReady={restoreColumnState}
+                  onGridReady={(params: GridReadyEvent) => {
+                    restoreColumnState(params);
+                    if (selectedSerchValues) {
+                      refetch();
+                    }
+                  }}
+                  defaultColDef={{
+                    sortable: true,
+                    filter: true,
+                    resizable: true,
+                    floatingFilter: true,
+                  }}
+                  enableRangeSelection
+                  animateRows
+                  suppressCellFocus
                 />
               </div>
             </div>

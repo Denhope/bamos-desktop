@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Tooltip } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { checkApiConnection } from '@/utils/api/http';
 import { apiChangeSubject } from '@/utils/api/config';
 
 const ConnectionIndicator: React.FC = () => {
   const { isConnected, socket } = useTypedSelector((state) => state.socket);
-  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
+  const [connectionStatus, setConnectionStatus] = useState<
+    'checking' | 'connected' | 'disconnected'
+  >('checking');
 
   const checkConnection = async () => {
     setConnectionStatus('checking');
-    const apiConnected = await checkApiConnection();
+    const apiConnected = await checkApiConnection(60000);
     if (apiConnected && socket && socket.connected) {
       setConnectionStatus('connected');
     } else {
@@ -21,7 +27,7 @@ const ConnectionIndicator: React.FC = () => {
 
   useEffect(() => {
     checkConnection();
-    const intervalId = setInterval(checkConnection, 5000);
+    const intervalId = setInterval(checkConnection, 60000);
 
     const subscription = apiChangeSubject.subscribe(() => {
       checkConnection();
@@ -41,7 +47,7 @@ const ConnectionIndicator: React.FC = () => {
         socket.off('error', checkConnection);
       }
     };
-  }, [socket]);
+  }, [socket, isConnected]);
 
   const getTooltipTitle = () => {
     switch (connectionStatus) {
@@ -59,17 +65,17 @@ const ConnectionIndicator: React.FC = () => {
       case 'checking':
         return <LoadingOutlined style={{ color: 'blue', fontSize: '20px' }} />;
       case 'connected':
-        return <CheckCircleOutlined style={{ color: 'green', fontSize: '20px' }} />;
+        return (
+          <CheckCircleOutlined style={{ color: 'green', fontSize: '20px' }} />
+        );
       case 'disconnected':
-        return <CloseCircleOutlined style={{ color: 'red', fontSize: '20px' }} />;
+        return (
+          <CloseCircleOutlined style={{ color: 'red', fontSize: '20px' }} />
+        );
     }
   };
 
-  return (
-    <Tooltip title={getTooltipTitle()}>
-      {getIcon()}
-    </Tooltip>
-  );
+  return <Tooltip title={getTooltipTitle()}>{getIcon()}</Tooltip>;
 };
 
 export default ConnectionIndicator;

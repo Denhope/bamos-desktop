@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import xml2js from 'xml2js';
 import JsBarcode from 'jsbarcode';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import { SING } from '@/utils/api/http';
 import { useLazyGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import robotoFont from '../../fonts/Roboto-Regular.ttf'; // Путь к вашему шрифту Roboto
+import robotoFont from '../../fonts/Roboto-Regular.ttf';
 
 interface ReportGeneratorProps {
   xmlTemplate: string;
@@ -26,29 +26,188 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
   ids,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [trigger, { data: parts, isLoading: partsLoading }] =
-    useLazyGetStorePartsQuery();
+  const [trigger] = useLazyGetStorePartsQuery();
   const { t } = useTranslation();
+  const [fontCache, setFontCache] = useState<ArrayBuffer | null>(null);
 
-  const generateBarcode = (data: any) => {
+  // Кэширование шрифта при монтировании компонента
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadFont = async () => {
+      try {
+        const response = await fetch(robotoFont);
+        const fontBuffer = await response.arrayBuffer();
+        if (isMounted) {
+          setFontCache(fontBuffer);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки шрифта:', error);
+      }
+    };
+
+    loadFont();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const generateBarcode = useCallback((data: any) => {
     const canvas = document.createElement('canvas');
-    JsBarcode(canvas, data, {
-      format: 'CODE128',
-      displayValue: false,
-      width: 1,
-      height: 15,
-      margin: 0,
-    });
-    return canvas.toDataURL();
-  };
+    try {
+      JsBarcode(canvas, data, {
+        format: 'CODE128',
+        displayValue: false,
+        width: 1,
+        height: 15,
+        margin: 0,
+      });
+      return canvas.toDataURL();
+    } catch (error) {
+      console.error('Ошибка генерации штрих-кода:', error);
+      return '';
+    } finally {
+      // Очистка canvas
+      const ctx = canvas.getContext('2d');
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }, []);
+
+  const formatDate = useCallback((date?: string) => {
+    return date ? moment(date).format('DD.MM.YYYY') : 'N/A';
+  }, []);
+
+  const drawText = useCallback(
+    (page: any, text: string, y: number, options = {}) => {
+      const PAGE_WIDTH = 174;
+      const RIGHT_MARGIN = 15;
+      const LEFT_MARGIN = 5;
+      const LABEL_WIDTH = 70;
+      const MAX_VALUE_WIDTH =
+        PAGE_WIDTH - LABEL_WIDTH - RIGHT_MARGIN - LEFT_MARGIN;
+
+      // Обработка описания
+      if (text.startsWith(`${t('DESCRIPTION')}: `)) {
+        const descriptionPrefix = `${t('DESCRIPTION')}: `;
+        const description = text.substring(descriptionPrefix.length);
+
+        const maxLength = 16;
+
+        if (description.length > maxLength) {
+          // Первая строка описания
+          page.drawText(
+            `${descriptionPrefix}${description.substring(0, maxLength)}`,
+            {
+              x: LEFT_MARGIN,
+              y,
+              size: 9,
+              color: rgb(0, 0, 0),
+              ...options,
+            }
+          );
+
+          // Вторая строка описания
+          page.drawText(description.substring(maxLength), {
+            x: LEFT_MARGIN,
+            y: y - 10,
+            size: 9,
+            color: rgb(0, 0, 0),
+            ...options,
+          });
+
+          return true;
+        }
+      }
+
+      // Для остальных полей разделяем метку и значение
+      if (text.includes(': ')) {
+        const [label, value] = text.split(': ');
+
+        // Рисуем метку слева
+        page.drawText(`${label}:`, {
+          x: LEFT_MARGIN,
+          y,
+          size: 9,
+          color: rgb(0, 0, 0),
+          ...options,
+        });
+
+        // Специальная обработка для длинного партийного номера
+        if (label === t('PART No') && value.length > 15) {
+          const midPoint = Math.floor(value.length / 2);
+          let splitIndex = value.lastIndexOf('_', midPoint);
+
+          // Ищем другие возможные разделители, если '_' не найден
+          if (splitIndex === -1) splitIndex = value.lastIndexOf('/', midPoint);
+          if (splitIndex === -1) splitIndex = value.lastIndexOf(' ', midPoint);
+          if (splitIndex === -1) splitIndex = value.lastIndexOf('-', midPoint);
+
+          // Если разделители не найдены, разбиваем по длине
+          if (splitIndex === -1 || splitIndex < 5) {
+            // Проверяем, чтобы первая часть была не слишком короткой
+            splitIndex = midPoint;
+          }
+
+          // Первая строка номера
+          page.drawText(value.substring(0, splitIndex).trim(), {
+            x: LABEL_WIDTH,
+            y,
+            size: 9,
+            color: rgb(0, 0, 0),
+            ...options,
+          });
+
+          // Вторая строка номера с отступом
+          page.drawText(value.substring(splitIndex).trim(), {
+            x: LABEL_WIDTH,
+            y: y - 10,
+            size: 9,
+            color: rgb(0, 0, 0),
+            ...options,
+          });
+
+          return true;
+        }
+
+        // Обычное отображение значения
+        page.drawText(value, {
+          x: LABEL_WIDTH,
+          y,
+          size: 9,
+          color: rgb(0, 0, 0),
+          ...options,
+        });
+
+        return false;
+      }
+
+      // Для текста без разделителя
+      page.drawText(text, {
+        x: LEFT_MARGIN,
+        y,
+        size: 9,
+        color: rgb(0, 0, 0),
+        ...options,
+      });
+
+      return false;
+    },
+    [t]
+  );
 
   const generatePdfFile = async () => {
+    if (!fontCache) {
+      console.error('Шрифт не загружен');
+      return;
+    }
+
     setLoading(true);
+    let pdfDoc = null;
+    let fileURL = null;
 
     try {
       console.log('Начало генерации PDF');
-      console.log('xmlTemplate:', xmlTemplate);
-
       const jsonTemplate = await xml2js.parseStringPromise(xmlTemplate);
 
       const filledTemplate = JSON.parse(
@@ -57,7 +216,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           if (typeof value === 'string') {
             return value.replace(
               /\${data\[(\d+)\]\.(\w+)}/g,
-              (_, index, prop) => (data[index] && data[index][prop]) || ''
+              (_, index, prop) => data[index]?.[prop] || ''
             );
           }
           return value;
@@ -67,19 +226,15 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
       const result = await trigger({ ids });
       const usedData = data.length > 0 ? data : result.data;
 
-      const pdfDoc = await PDFDocument.create();
+      pdfDoc = await PDFDocument.create();
       pdfDoc.registerFontkit(fontkit);
-
-      // Загрузка шрифта Roboto
-      const fontBytes = await fetch(robotoFont).then((res) =>
-        res.arrayBuffer()
-      );
-      const font = await pdfDoc.embedFont(fontBytes);
+      const font = await pdfDoc.embedFont(fontCache);
 
       for (const product of usedData) {
         const page = pdfDoc.addPage([174, 280]);
-        const { width, height } = page.getSize();
+        const { height } = page.getSize();
 
+        // Генерация и добавление штрих-кода
         const barcodeImage = await pdfDoc.embedPng(
           generateBarcode(product?.LOCAL_ID || product?.locationID?.LOCAL_ID)
         );
@@ -90,208 +245,139 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
           height: 15,
         });
 
-        page.drawText(
-          product.COMPANY_ID?.title || product?.storeItemID?.COMPANY_ID?.title,
-          {
-            x: 70,
-            y: height - 15,
-            size: 14,
-            font,
-            color: rgb(0, 0, 0),
-          }
+        // Заголовок компании
+        drawText(
+          page,
+          product?.COMPANY_ID?.title || product?.storeItemID?.COMPANY_ID?.title,
+          height - 15,
+          { size: 14, x: 70 }
         );
 
-        page.drawText(
+        // Локальный ID
+        drawText(
+          page,
           `L: ${
             product.LOCAL_ID || product?.storeItemID?.locationID?.LOCAL_ID
           }`,
-          {
-            x: 5,
-            y: height - 30,
-            size: 8,
-            font,
-            color: rgb(0, 0, 0),
-          }
+          height - 30,
+          { size: 8 }
         );
 
-        page.drawText(
-          `${
-            product?.locationID?.restrictionID === 'standart' ||
-            product?.storeItemID?.locationID?.restrictionID === 'standart' ||
-            product?.storeItemID?.locationID?.locationType === 'reservation'
-              ? `${t('SERVICABLE TAG')}`
-              : `${t('UNSERVICEABLE TAG')}`
-          }`,
-          {
-            x: 5,
-            y: height - 45,
-            size: 13,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
+        // Определение типа тега
+        const tagType =
+          product?.locationID?.description === 'LOCATION_FOR_PARTS_TO_SCRAP'
+            ? t('SCRAPED TAG')
+            : product?.locationID?.restrictionID === 'standart' ||
+              product?.storeItemID?.locationID?.restrictionID === 'standart' ||
+              product?.storeItemID?.locationID?.locationType === 'reservation'
+            ? t('SERVICABLE TAG')
+            : t('UNSERVICEABLE TAG');
 
-        page.drawText(
-          `${t('PART No')}: ${
-            product?.PART_NUMBER || product?.storeItemID?.PART_NUMBER
-          }`,
-          {
-            x: 5,
-            y: height - 60,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
+        drawText(page, tagType, height - 45, { size: 13 });
 
-        page.drawText(
-          `${t('BATCH No')}: ${
-            product?.SUPPLIER_BATCH_NUMBER ||
-            product?.storeItemID?.SUPPLIER_BATCH_NUMBER ||
-            'N/A'
-          }`,
-          {
-            x: 5,
-            y: height - 75,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
+        // Детали продукта
+        const details = [
+          [
+            `${t('PART No')}: ${
+              product?.PART_NUMBER || product?.storeItemID?.PART_NUMBER
+            }`,
+            60,
+          ],
+          [
+            `${t('BATCH No')}: ${
+              product?.SUPPLIER_BATCH_NUMBER ||
+              product?.storeItemID?.SUPPLIER_BATCH_NUMBER ||
+              'N/A'
+            }`,
+            75,
+          ],
+          [
+            `${t('MC/QTY')}: ${
+              product?.GROUP || product?.storeItemID?.GROUP
+            } / ${product?.QUANTITY || product?.bookedQty}/${
+              product.UNIT_OF_MEASURE || product?.storeItemID?.UNIT_OF_MEASURE
+            }`,
+            90,
+          ],
+          [
+            `${t('CONDITION')}: ${
+              product?.CONDITION || product?.storeItemID?.CONDITION || 'N/A'
+            }`,
+            105,
+          ],
+          [
+            `${t('EXP.DATE')}: ${formatDate(
+              product.PRODUCT_EXPIRATION_DATE ||
+                product?.storeItemID?.PRODUCT_EXPIRATION_DATE
+            )}`,
+            120,
+          ],
+          [
+            `${t('DESCRIPTION')}: ${String(
+              product?.NAME_OF_MATERIAL ||
+                product?.storeItemID?.NAME_OF_MATERIAL
+            ).toUpperCase()}`,
+            135,
+          ],
+          [
+            `${t('CERT No')}: ${
+              product?.APPROVED_CERT ||
+              product?.storeItemID?.APPROVED_CERT ||
+              'N/A'
+            }`,
+            150,
+          ], // Уменьшаем отступ
+          [
+            `${t('ORDER No')}: ${
+              product?.ORDER_NUMBER ||
+              product?.storeItemID?.ORDER_NUMBER ||
+              'N/A'
+            }`,
+            165,
+          ], // Уменьшаем отступ
+          [
+            `${t('REC.DATE')}: ${formatDate(
+              product.RECEIVED_DATE || product?.storeItemID?.RECEIVED_DATE
+            )}`,
+            175, // Уменьшаем отступ
+          ],
+        ];
 
-        page.drawText(
-          `${t('MC/QTY')}: ${product?.GROUP || product?.storeItemID?.GROUP} / ${
-            product?.QUANTITY || product?.bookedQty
-          }/${
-            product.UNIT_OF_MEASURE || product?.storeItemID?.UNIT_OF_MEASURE
-          }`,
-          {
-            x: 5,
-            y: height - 90,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
+        let additionalOffset = 0;
 
-        page.drawText(
-          `${t('CONDITION')}: ${
-            product?.CONDITION || product?.storeItemID?.CONDITION || 'N/A'
-          }`,
-          {
-            x: 5,
-            y: height - 105,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
+        details.forEach(([text, y]) => {
+          const isDescriptionSplit = drawText(
+            page,
+            text,
+            height - y - additionalOffset
+          );
+          if (isDescriptionSplit) {
+            additionalOffset += 10; // Уменьшаем дополнительный отступ после описания
           }
-        );
+        });
 
-        page.drawText(
-          `${t('EXP.DATE')}: ${
-            product.PRODUCT_EXPIRATION_DATE ||
-            (product?.storeItemID?.PRODUCT_EXPIRATION_DATE &&
-              moment(
-                product.PRODUCT_EXPIRATION_DATE ||
-                  product?.storeItemID?.PRODUCT_EXPIRATION_DATE
-              ).format('Do. MMM. YYYY')) ||
-            'N/A'
-          }`,
-          {
-            x: 5,
-            y: height - 120,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
-
-        page.drawText(
-          `${t('DESCRIPTION')}: ${String(
-            product?.NAME_OF_MATERIAL || product?.storeItemID?.NAME_OF_MATERIAL
-          ).toUpperCase()}`,
-          {
-            x: 5,
-            y: height - 135,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
-
-        page.drawText(
-          `${t('CERT No')}: ${
-            product?.APPROVED_CERT ||
-            product?.storeItemID?.APPROVED_CERT ||
-            'N/A'
-          }`,
-          {
-            x: 5,
-            y: height - 150,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
-
-        page.drawText(
-          `${t('ORDER No')}: ${
-            product?.ORDER_NUMBER || product?.storeItemID?.ORDER_NUMBER || 'N/A'
-          }`,
-          {
-            x: 5,
-            y: height - 165,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
-
-        page.drawText(
-          `${t('REC.DATE')}: ${
-            product.RECEIVED_DATE || product?.storeItemID?.RECEIVED_DATE
-              ? moment(
-                  product.RECEIVED_DATE || product?.storeItemID?.RECEIVED_DATE
-                )
-                  .locale('en')
-                  .format('DD.MM.YYYY')
-              : 'N/A'
-          }`,
-          {
-            x: 5,
-            y: height - 180,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
-        );
-
+        // Обновляем позиции остальных элементов
         page.drawRectangle({
           x: 5,
-          y: height - 248,
+          y: height - (215 + additionalOffset), // Уменьшаем отступ
           width: 165,
           height: 30,
           borderWidth: 1,
           borderColor: rgb(0, 0, 0),
         });
 
-        page.drawText(`${t('MATERIAL INCOMING INSPECTION')}`, {
-          x: 7,
-          y: height - 230,
-          size: 10,
-          font,
-          color: rgb(0, 0, 0),
-        });
+        drawText(
+          page,
+          t('MATERIAL INCOMING INSPECTION'),
+          height - (197 + additionalOffset), // Уменьшаем отступ
+          {
+            x: 7,
+          }
+        );
+        drawText(page, SING, height - (212 + additionalOffset), { x: 7 }); // Уменьшаем отступ
 
-        page.drawText(SING, {
-          x: 7,
-          y: height - 245,
-          size: 10,
-          font,
-          color: rgb(0, 0, 0),
-        });
-
-        page.drawText(
+        drawText(
+          page,
           `${String(
             product?.storeID?.storeShortName ||
               product?.storeItemID?.storeID?.storeShortName
@@ -300,32 +386,22 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
             product?.storeItemID?.locationID?.locationName ||
             'N/A'
           }`,
-          {
-            x: 5,
-            y: height - 265,
-            size: 10,
-            font,
-            color: rgb(0, 0, 0),
-          }
+          height - (232 + additionalOffset) // Уменьшаем отступ
         );
 
-        page.drawText(
+        drawText(
+          page,
           `${t('PRINT BY')} ${SING} ${new Date().toLocaleString('ru-RU')}`,
-          {
-            x: 5,
-            y: height - 277,
-            size: 6,
-            font,
-            color: rgb(0, 0, 0),
-          }
+          height - (244 + additionalOffset), // Уменьшаем отступ
+          { size: 6 }
         );
       }
 
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(blob);
-      const newWindow = window.open(fileURL, '_blank');
+      fileURL = URL.createObjectURL(blob);
 
+      const newWindow = window.open(fileURL, '_blank');
       if (
         !newWindow ||
         newWindow.closed ||
@@ -336,11 +412,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         newWindow.focus();
       }
 
-      URL.revokeObjectURL(fileURL);
       console.log('PDF успешно создан');
     } catch (error) {
       console.error('Ошибка при генерации PDF:', error);
     } finally {
+      if (fileURL) {
+        URL.revokeObjectURL(fileURL);
+      }
       setLoading(false);
     }
   };
@@ -351,7 +429,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
         icon={<PrinterOutlined />}
         size="small"
         onClick={generatePdfFile}
-        disabled={loading || isDisabled}
+        disabled={loading || isDisabled || !fontCache}
       >
         {loading ? 'Processing' : ` ${t('PRINT LABEL')}`}
       </Button>

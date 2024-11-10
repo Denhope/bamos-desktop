@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { ProCard, ProColumns } from '@ant-design/pro-components';
 import { Empty, TimePicker } from 'antd';
 
@@ -5,20 +6,22 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { transformToIStockPartNumber } from '@/services/utilites';
 
-import PartContainer from '@/components/woAdministration/PartContainer';
-
 import { ColDef } from 'ag-grid-community';
 import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
-type StockDetailsType = {
-  partNumberID?: any;
-  isAlternatives?: boolean;
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+
+interface StockDetailsNewProps {
   isLoading: boolean;
-  isDescription?: boolean;
-  storeID?: string;
+  transformedStokPartNumbers: any[];
+  isDescription: boolean;
   height: string;
-  transformedStokPartNumbers: any;
-};
-const StockDetailsNew: FC<StockDetailsType> = ({
+  isAlternatives?: boolean;
+  partNumberID?: string;
+  total?: number;
+  showInaccessibleOnly?: boolean;
+}
+
+const StockDetailsNew: FC<StockDetailsNewProps> = ({
   partNumberID,
   isAlternatives,
   storeID,
@@ -26,34 +29,16 @@ const StockDetailsNew: FC<StockDetailsType> = ({
   isLoading,
   isDescription = false,
   transformedStokPartNumbers,
+  total,
+  showInaccessibleOnly = false,
 }) => {
   const { t } = useTranslation();
 
   const [data, setData] = useState<any>([]);
 
-  // const {
-  //   data: parts,
-  //   isLoading: partsQueryLoading,
-  //   isFetching: partsLoadingF,
-  //   refetch,
-  // } = useGetStorePartsQuery(
-  //   {
-  //     partNumberID: partNumberID,
-  //     storeID: storeID,
-  //   },
-
-  //   {
-  //     skip: !partNumberID,
-  //   }
-  // );
-  // const transformedStokPartNumbers = useMemo(() => {
-  //   return transformToIStockPartNumber(parts || []);
-  // }, [parts]);
-
   useEffect(() => {
+    console.log('Setting data:', transformedStokPartNumbers);
     setData(transformedStokPartNumbers);
-
-    // navigate(storedKey);
   }, [transformedStokPartNumbers]);
 
   type CellDataType = 'text' | 'number' | 'date' | 'boolean' | 'Object';
@@ -61,7 +46,8 @@ const StockDetailsNew: FC<StockDetailsType> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType;
   }
-  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
+
+  const [columnDefs] = useState<ExtendedColDef[]>([
     {
       headerName: `${t('LOCAL_ID')}`,
       field: 'LOCAL_ID',
@@ -118,13 +104,6 @@ const StockDetailsNew: FC<StockDetailsType> = ({
       cellDataType: 'text',
     },
     {
-      field: 'SERIAL_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('BATCH/SERIAL')}`,
-      cellDataType: 'text',
-    },
-    {
       field: 'CONDITION',
       editable: false,
       filter: false,
@@ -132,139 +111,84 @@ const StockDetailsNew: FC<StockDetailsType> = ({
       cellDataType: 'text',
     },
     {
-      field: 'PRODUCT_EXPIRATION_DATE',
-      editable: false,
-      filter: false,
-      headerName: `${t('EXPIRY DATE')}`,
-      cellDataType: 'date',
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-
-    {
-      field: 'reservedQTY',
-      editable: false,
-      filter: false,
-      headerName: `${t('RESERVED QTY')}`,
-      cellDataType: 'number',
-    },
-
-    {
       field: 'OWNER',
       editable: false,
       filter: false,
       headerName: `${t('OWNER')}`,
       cellDataType: 'text',
     },
-    {
-      field: 'RECEIVING_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('RECEIVING')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'RECEIVED_DATE',
-      editable: false,
-      filter: false,
-      headerName: `${t('RECEIVED DATE')}`,
-      cellDataType: 'date',
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
-    },
-    {
-      field: 'DOC_NUMBER',
-      editable: false,
-      filter: false,
-      headerName: `${t('DOC_NUMBER')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'DOC_TYPE',
-      editable: false,
-      filter: false,
-      headerName: `${t('DOC_TYPE')}`,
-      cellDataType: 'text',
-    },
+    ...(showInaccessibleOnly
+      ? [
+          {
+            field: 'restrictionID',
+            headerName: `${t('RESTRICTION')}`,
+            cellDataType: 'text',
+          },
+          {
+            field: 'locationType',
+            headerName: `${t('LOCATION TYPE')}`,
+            cellDataType: 'text',
+          },
+        ]
+      : []),
   ]);
-  // Вычисление значений на основании restrictionID
+
+  // Вычисление значений для индикаторов
   const sumInaccessible = useMemo(() => {
-    return transformedStokPartNumbers.reduce(
-      (sum: any, part: { restrictionID: string; QUANTITY: any }) => {
-        return part.restrictionID === 'inaccessible'
-          ? sum + part.QUANTITY
-          : sum;
-      },
-      0
-    );
-  }, [transformedStokPartNumbers]);
+    return data.reduce((sum: number, part: any) => {
+      return part.restrictionID === 'inaccessible'
+        ? sum + (Number(part.QUANTITY) || 0)
+        : sum;
+    }, 0);
+  }, [data]);
 
   const sumRestricted = useMemo(() => {
-    return transformedStokPartNumbers.reduce(
-      (sum: any, part: { restrictionID: string; QUANTITY: any }) => {
-        return part.restrictionID === 'restricted' ? sum + part.QUANTITY : sum;
-      },
-      0
-    );
-  }, [transformedStokPartNumbers]);
+    return data.reduce((sum: number, part: any) => {
+      return part.restrictionID === 'restricted' || part.isReserved
+        ? sum + (Number(part.QUANTITY) || 0)
+        : sum;
+    }, 0);
+  }, [data]);
 
   const sumStandard = useMemo(() => {
-    return transformedStokPartNumbers.reduce(
-      (sum: any, part: { restrictionID: string; QUANTITY: any }) => {
-        return part.restrictionID === 'standart' ? sum + part.QUANTITY : sum;
-      },
-      0
-    );
-  }, [transformedStokPartNumbers]);
+    return data.reduce((sum: number, part: any) => {
+      return (!part.restrictionID || part.restrictionID === 'standart') &&
+        !part.isReserved
+        ? sum + (Number(part.QUANTITY) || 0)
+        : sum;
+    }, 0);
+  }, [data]);
 
   return (
     <div className="py-2 flex flex-col w-[99%] justify-between">
-      <div>
-        {partNumberID ? (
-          <PartContainer
-            isFilesVisiable={true}
-            isVisible={false}
-            pagination={false}
-            isAddVisiable={true}
-            isButtonVisiable={false}
-            isEditable={true}
+      <div className="flex-grow">
+        {partNumberID && data.length > 0 ? (
+          <UniversalAgGrid
             height={height}
             columnDefs={columnDefs}
-            partNumbers={[]}
-            onUpdateData={(data: any[]): void => {}}
-            rowData={transformedStokPartNumbers}
+            rowData={data}
             isLoading={isLoading}
+            gridOptions={{
+              suppressRowClickSelection: true,
+              rowSelection: 'single',
+              enableRangeSelection: true,
+              copyHeadersToClipboard: true,
+              enableCellTextSelection: true,
+            }}
           />
         ) : (
-          <Empty />
+          <Empty description={t('No data')} />
         )}
       </div>
 
       {isDescription && (
-        <div className="flex mt-auto ">
+        <div className="flex mt-4">
           <ProCard title={`${t('INACCESSIBLE')}`}>
             <ProCard
               size="small"
               type="inner"
-              style={{
-                backgroundColor: 'red',
-                color: 'black',
-              }}
-              className="flex justify-end items-end font-bold  py-0 my-0"
+              style={{ backgroundColor: 'red', color: 'black' }}
+              className="flex justify-end items-end font-bold py-0 my-0"
             >
               {sumInaccessible}
             </ProCard>
@@ -276,7 +200,7 @@ const StockDetailsNew: FC<StockDetailsType> = ({
               style={{ backgroundColor: '#FFDB58', color: 'black' }}
               className="flex justify-end items-end font-bold py-0 my-0"
             >
-              <div className="py-0 my-0">{sumRestricted}</div>
+              {sumRestricted}
             </ProCard>
           </ProCard>
           <ProCard title={`${t('STANDARD')}`}>

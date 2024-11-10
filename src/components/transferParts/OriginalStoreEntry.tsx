@@ -8,6 +8,8 @@ import {
   ProFormDigit,
   ProColumns,
   ProDescriptions,
+  ProFormSelect,
+  ProFormCheckbox,
 } from '@ant-design/pro-components';
 import { UploadOutlined } from '@ant-design/icons';
 import {
@@ -23,9 +25,9 @@ import {
   Divider,
   notification,
 } from 'antd';
-
+import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import {
@@ -40,6 +42,7 @@ import {
 } from '@/features/storeAdministration/PartsApi';
 import { Split } from '@geoffcox/react-splitter';
 import { useAddBookingMutation } from '@/features/bookings/bookingApi';
+import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 type OriginalStoreEntryType = {
   currentPart: any;
   scroll?: any;
@@ -63,24 +66,51 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
     setDataPart(data);
   };
   console.log(currentPart);
+
+  // Создаем уникальные идентификаторы
+  const componentId = useId();
+  const sessionId = useMemo(() => uuidv4(), []);
   const {
     data: parts,
     isLoading: partsQueryLoading,
     isFetching: partsLoadingF,
     refetch,
   } = useGetStorePartsQuery(
-    currentPart?._id ? { ids: currentPart?._id || currentPart?.id } : {}, // This will prevent the query from running if reqCode is null or does not have an id
+    currentPart?._id || currentPart?.id
+      ? {
+          ids: currentPart?._id || currentPart?.id,
+          includeZeroQuantity: true,
+          componentId, // Добавляем идентификатор компонента
+          sessionId, // Добавляем идентификатор сессии
+        }
+      : {},
     {
-      skip: !currentPart?._id,
-
-      // Skip the query if reqCode is null or does not have an id
+      // skip: !currentPart?._id || !currentPart?.id,
+      // Добавляем уникальные теги для этого компонента
+      queryArgs: {
+        tags: ['transferPartsStore'],
+      },
+      // Отключаем автоматическое обновление кэша
+      refetchOnMountOrArgChange: true,
+      // Используем отдельный кэш для этого компонента
+      serializeQueryArgs: {
+        endpointName: 'getStoreParts_transferParts',
+      },
     }
   );
+  const { data: partNumbers, isError } = useGetPartNumbersQuery({});
+
+  const partValueEnum: Record<string, any> =
+    partNumbers?.reduce((acc, partNumber) => {
+      acc[partNumber._id] = partNumber;
+      return acc;
+    }, {}) || {};
+
   const dispatch = useAppDispatch();
 
   const handleDelete = (file: any) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить этот файл?',
+      title: 'Are you sure you want to delete this file?',
       onOk: async () => {
         try {
           const response = await dispatch(
@@ -196,10 +226,9 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           partsIds: [currentPart?.id || currentPart?._id],
           SUPPLIER_BATCH_NUMBER: values?.SUPPLIER_BATCH_NUMBER,
           SERIAL_NUMBER: values?.SERIAL_NUMBER,
-          PRODUCT_EXPIRATION_DATE:
-            parts && parts[0]?.GROUP !== 'TOOL'
-              ? values?.PRODUCT_EXPIRATION_DATE
-              : parts && parts[0]?.PRODUCT_EXPIRATION_DATE,
+          PRODUCT_EXPIRATION_DATE: parts
+            ? values?.PRODUCT_EXPIRATION_DATE
+            : parts && parts[0]?.PRODUCT_EXPIRATION_DATE,
           nextDueMOS:
             parts && parts[0]?.GROUP === 'TOOL'
               ? values?.PRODUCT_EXPIRATION_DATE
@@ -207,7 +236,10 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           intervalMOS: values?.intervalMOS,
           UNIT_LIMIT: values?.UNIT_LIMIT,
           estimatedDueDate: values?.estimatedDueDate,
-          RECEIVED_DATE: values?.RECEIVED_DATE,
+          RECEIVED_DATE: new Date(values?.RECEIVED_DATE),
+          QUANTITY: values?.QUANTITY,
+          partID: values?.partNumberID,
+          isReserved: values?.isReserved,
         }).unwrap();
 
         // refetch().unwrap();
@@ -235,6 +267,19 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
     }
   };
 
+  useEffect(() => {
+    if (currentPart?.partID) {
+      form.setFieldsValue({
+        partNumberID: currentPart.partID,
+        isReserved: currentPart.isReserved || false,
+      });
+    } else {
+      form.setFieldsValue({
+        partNumberID: undefined,
+      });
+    }
+  }, [currentPart, form]);
+
   return (
     <div>
       <ProForm
@@ -246,18 +291,27 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
           handleSubmit(values);
           form.resetFields();
         }}
+        initialValues={{
+          partNumberID: currentPart?.partID,
+          isReserved: currentPart?.isReserved || false,
+        }}
       >
         <Split horizontal initialPrimarySize="30%">
           <div className="overflow-auto">
             <ProDescriptions
-              column={5}
+              column={4}
               size="default"
               className="bg-white px-4 py-3 rounded-md  align-middle"
             >
               <ProDescriptions.Item label={t('PART No')} valueType="text">
                 {parts && (parts[0]?._id || parts[0]?.id) && (
                   <Tag>
-                    {String(parts && parts[0]?.PART_NUMBER).toUpperCase()}
+                    {String(
+                      (parts &&
+                        parts[0]?.partID?.PART_NUMBER &&
+                        parts[0]?.partID?.PART_NUMBER) ||
+                        parts[0]?.PART_NUMBER
+                    ).toUpperCase()}
                   </Tag>
                 )}
               </ProDescriptions.Item>
@@ -369,19 +423,65 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
               <ProDescriptions.Item valueType="text" label={t('UNIT LIMIT')}>
                 {String(parts && parts[0]?.UNIT_LIMIT).toUpperCase() || 'N/A'}
               </ProDescriptions.Item>
+              <ProDescriptions.Item label={t('RESERVED')} valueType="text">
+                {parts && (parts[0]?._id || parts[0]?.id) && (
+                  <Tag color={parts[0]?.isReserved ? 'green' : 'red'}>
+                    {String(
+                      parts[0]?.isReserved ? t('YES') : t('NO')
+                    ).toUpperCase()}
+                  </Tag>
+                )}
+              </ProDescriptions.Item>
             </ProDescriptions>
           </div>
           <div className="overflow-auto h-[37vh] py-5">
             <ProForm.Item>
-              <Space>
-                <ProFormText label={t('UNIT_LIMIT')} name="UNIT_LIMIT" />
-                <ProFormText label={t('INTERVAL')} name="intervalMOS" />
+              <Space className="flex flex-wrap">
+                {/* <ProFormText label={t('UNIT_LIMIT')} name="UNIT_LIMIT" />
+                <ProFormText label={t('INTERVAL')} name="intervalMOS" /> */}
                 <ProFormText label={t('SERIAL NUMBER')} name="SERIAL_NUMBER" />
                 <ProFormText label={t('BATCH')} name="SUPPLIER_BATCH_NUMBER" />
+
                 <ProFormDatePicker
                   width={'md'}
                   label={t('RECEIVED DATE')}
                   name="RECEIVED_DATE"
+                />
+                <ProFormDigit
+                  label={t('QUANTITY')}
+                  name="QUANTITY"
+                  fieldProps={{
+                    style: {
+                      borderColor: 'red',
+                      boxShadow: '0 0 0 2px rgba(255, 0, 0, 0.2)',
+                    },
+                  }}
+                />
+                <ProFormSelect
+                  showSearch
+                  width={'sm'}
+                  name="partNumberID"
+                  label={t('PART No')}
+                  options={Object.entries(partValueEnum).map(([key, part]) => ({
+                    label: part.PART_NUMBER,
+                    value: key,
+                    data: part,
+                  }))}
+                  fieldProps={{
+                    style: {
+                      borderColor: 'red',
+                      boxShadow: '0 0 0 2px rgba(255, 0, 0, 0.2)',
+                    },
+                  }}
+                />
+                <ProFormCheckbox
+                  name="isReserved"
+                  label={t('RESERVED')}
+                  fieldProps={{
+                    style: {
+                      marginLeft: '8px',
+                    },
+                  }}
                 />
               </Space>
             </ProForm.Item>

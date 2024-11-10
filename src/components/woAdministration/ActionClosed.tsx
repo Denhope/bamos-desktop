@@ -86,22 +86,24 @@ const ActionForm: React.FC<ActionFormProps> = ({
   const [activeTabKey, setActiveTabKey] = useState('1');
   // taskStatus: step.projectTaskID.status, console.log(step);
   const handleFinish = (values: any) => {
-    const performedDate = dayjs(performedAction?.createDate)
-      .utc()
-      .startOf('minute');
+    const performedDate = dayjs(performedAction?.performedDate)
+      //.utc()
+      .startOf('minute'); // Преобразование в UTC
 
-    const inspectedDate = dayjs(values.inspectedDate).utc().startOf('minute');
+    console.log(performedDate);
+    const inspectedDate = dayjs(values.inspectedDate).startOf('minute'); // Преобразование в UTC
+    const now = dayjs().utc().startOf('minute'); // Текущее время в UTC
 
-    const now = dayjs().utc().startOf('minute');
+    // Проверка, что performedDate не в будущем
+    if (performedDate.isAfter(now)) {
+      notification.error({
+        message: t('DATE ERROR'),
+        description: t('Performed date cannot be in the future.'),
+      });
+      return;
+    }
 
-    // if (performedDate.isAfter(now)) {
-    //   notification.error({
-    //     message: t('DATE ERROR'),
-    //     description: t('Performed date cannot be in the future.'),
-    //   });
-    //   return;
-    // }
-
+    // Проверка, что inspectedDate не в будущем
     if (inspectedDate.isAfter(now)) {
       notification.error({
         message: t('DATE ERROR'),
@@ -110,6 +112,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
       return;
     }
 
+    // Проверка, что inspectedDate не раньше performedDate
     // if (inspectedDate.isBefore(performedDate)) {
     //   notification.error({
     //     message: t('DATE ERROR'),
@@ -118,21 +121,11 @@ const ActionForm: React.FC<ActionFormProps> = ({
     //   return;
     // }
 
-    // const newAction: Action = {
-    //   id: currentAction ? currentAction._id : null,
-    //   headline: values?.headline,
-    //   description: values.description,
-    //   createDate: performedDate.toISOString(),
-    //   createUserID: USER_ID,
-    //   type: 'pfmd',
-    //   userDurations,
-    // };
-
     const newActionInspected: any = {
       id: currentAction ? currentAction._id : null,
       headline: values?.headline,
       description: values.description,
-      createDate: inspectedDate.toISOString(),
+      createDate: inspectedDate.toISOString(), // Сохранение в формате ISO 8601
       createUserID: USER_ID,
       type: 'closed',
       userDurations: userDurations,
@@ -140,9 +133,6 @@ const ActionForm: React.FC<ActionFormProps> = ({
 
     onSave({
       closedAction: newActionInspected,
-      // userDurationInspector && userDurationInspector.length > 0
-      //   ? newActionInspected
-      //   : null,
       status: values.status,
     });
   };
@@ -181,14 +171,34 @@ const ActionForm: React.FC<ActionFormProps> = ({
     if (visible) {
       const currentDateTime = dayjs().utc().startOf('minute'); // Текущее время UTC без секунд
 
-      form.setFieldsValue({
-        performedDate: performedAction?.createDate
-          ? dayjs(performedAction.createDate).utc()
-          : currentDateTime,
-        inspectedDate: currentAction?.inspectedDate
-          ? dayjs(currentAction.inspectDate).utc()
-          : currentDateTime,
-      });
+      // form.setFieldsValue({
+      //   performedDate: performedAction?.createDate
+      //     ? dayjs(performedAction.createDate).utc()
+      //     : currentDateTime,
+      //   inspectedDate: currentAction?.createDate
+      //     ? dayjs(currentAction.createDate).utc()
+      //     : currentDateTime,
+      // });
+      if (task && task.projectItemType == 'RC') {
+        form.setFieldsValue({
+          performedDate: currentAction?.createDate
+            ? dayjs(currentAction.createDate).utc()
+            : currentDateTime,
+          inspectedDate: currentAction?.inspectedDate
+            ? dayjs(currentAction.inspectDate).utc()
+            : currentDateTime,
+        });
+      } else {
+        form.setFieldsValue({
+          performedDate: currentAction?.createDate
+            ? dayjs(currentAction.createDate)
+            : currentDateTime,
+          inspectedDate: currentAction?.createDate
+            ? dayjs(currentAction.createDate)
+            : currentDateTime,
+        });
+      }
+
       // setPerformUserDurations(currentAction?.userDurations || []);
       // setInspectUserDurations(currentAction?.userDurations || []);
     }
@@ -358,6 +368,7 @@ const ActionForm: React.FC<ActionFormProps> = ({
                       users={users}
                       initialTaskAllocations={performedAction?.userDurations}
                       onTaskAllocationsChange={setUserPerfDurations}
+                      onlyWithOrganizationAuthorization={true}
                     />
                     {/* <UserDurationList
                   users={users}
@@ -385,8 +396,8 @@ const ActionForm: React.FC<ActionFormProps> = ({
                       showTime: {
                         defaultValue: dayjs('00:00', 'HH:mm'),
                         format: 'HH:mm',
-                        disabledHours: disabledDateTime().disabledHours,
-                        disabledMinutes: disabledDateTime().disabledMinutes,
+                        // disabledHours: disabledDateTime().disabledHours,
+                        // disabledMinutes: disabledDateTime().disabledMinutes,
                       },
                       defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
                       disabledDate,

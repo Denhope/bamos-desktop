@@ -202,14 +202,15 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
             ([key]) => key !== 'receiverType'
           );
 
-          if (selectedSinglePN?.PART_NUMBER || hasValue) {
+          if (selectedSinglePN?._id || hasValue) {
+            console.log('selectedSinglePN', selectedSinglePN);
             // Ваша логика для отправки формы здесь
             const result = dispatch(
               getFilteredBookingItems({
                 companyID: currentCompanyID,
                 orderNumber: form.getFieldValue('order'),
                 registrationNumber: form.getFieldValue('registrationNumber'),
-                partNumber: selectedSinglePN?.PART_NUMBER,
+                // partNumber: selectedSinglePN?.PART_NUMBER,
                 partType: form.getFieldValue('partType'),
                 partGroup: form.getFieldValue('partGroup'),
                 serialNumber: form.getFieldValue('serialNumber'),
@@ -222,6 +223,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
                 neededOnID: form.getFieldValue('neededOnID'),
                 WOReferenceID: form.getFieldValue('WOReferenceID'),
                 projectID: form.getFieldValue('projectID'),
+                partID: selectedSinglePN?._id,
               })
             );
             if ((await result).meta.requestStatus === 'fulfilled') {
@@ -264,10 +266,11 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
           rules={[{ required: false }]}
           onSelectedPN={function (PN: any): void {
             setSecectedSinglePN(PN);
+            console.log(PN);
           }}
           name={'partNumber'}
           initialFormPN={selectedSinglePN?.PART_NUMBER || initialForm}
-          width={'sm'}
+          width={'lg'}
           label={t('PART No')}
         ></ContextMenuPNSearchSelect>
         <ProFormText

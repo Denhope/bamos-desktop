@@ -14,16 +14,37 @@ export const acApi = createApi({
     getPlanes: builder.query<
       any[],
       {
-        code?: string;
+        costumerCodeID?: string;
         status?: any;
         acTypeID?: string;
         taskNumber?: string;
+        planeNumber?: string;
+        serialNumber?: string;
         taskType?: string;
+        _time?: number;
       }
     >({
-      query: ({ code, acTypeID, taskNumber, taskType }) => ({
+      query: ({
+        costumerCodeID,
+        status,
+        acTypeID,
+        taskNumber,
+        taskType,
+        planeNumber,
+        serialNumber,
+        _time,
+      }) => ({
         url: `planes/administration/getFilteredAC/company/${COMPANY_ID}`,
-        params: { code, status, acTypeID, taskNumber, taskType },
+        params: {
+          costumerCodeID,
+          // status,
+          acTypeID,
+          taskNumber,
+          taskType,
+          planeNumber,
+          serialNumber,
+          _time,
+        },
       }),
       providesTags: ['ACTypes'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {

@@ -5,10 +5,14 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 
 import { IStore, IStorePartItem } from '@/models/IUser';
 
+export const TAGS = {
+  StoreParts: 'StoreParts',
+} as const;
+
 export const storePartsApi = createApi({
   reducerPath: 'storePartsReducer',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['StoreItem'], // Add tag types for caching
+  tagTypes: [TAGS.StoreParts],
   endpoints: (builder) => ({
     getStorePartStockQTY: builder.query<
       IStorePartItem[],
@@ -49,7 +53,7 @@ export const storePartsApi = createApi({
           includeAlternates,
         },
       }),
-      providesTags: ['StoreItem'],
+      providesTags: ['StoreParts'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -72,6 +76,7 @@ export const storePartsApi = createApi({
         partNumberID?: string;
         localID?: any;
         ids?: any[];
+        includeZeroQuantity?: boolean;
         SERIAL_NUMBER?: any;
         startDate?: any;
         endDate?: any;
@@ -106,113 +111,40 @@ export const storePartsApi = createApi({
         AWB_TYPE?: any;
         AWB_NUMBER?: any;
         IS_CUSTOMER_GOODS?: any;
-        includeAlternates?: boolean;
         ifStockCulc?: boolean;
+        includeAlternates?: boolean;
+        componentId?: string;
+        sessionId?: string;
+        tabId?: string;
       }
     >({
-      query: ({
-        status,
-        ownerID,
-        stationID,
-        partNumberID,
-        locationID,
-        storeID,
-        localID,
-        ids,
-        SERIAL_NUMBER,
-        startDate,
-        endDate,
-        startExpityDate,
-        endExpityDate,
-        SUPPLIER_BATCH_NUMBER,
-        PRODUCT_EXPIRATION_DATE,
-        RECEIVING_NUMBER,
-        QUANTITY,
-        OWNER_SHORT_NAME,
-        OWNER_LONG_NAME,
-        UNIT_OF_MEASURE,
-        TYPE,
-        GROUP,
-        TOOL_TYPE_CODE,
-        TOOL_GROUP_CODE,
-        toolCodeID,
-        toolTypeID,
-        NAME_OF_MATERIAL,
-        PART_NUMBER,
-        UNIT_LIMIT,
-        PLACE_ON,
-        intervalMOS,
-        estimatedDueDate,
-        nextDueMOS,
-        REMARKS,
-        SUPPLIES_ID,
-        AWB_REFERENCE,
-        AWB_TYPE,
-        AWB_NUMBER,
-        IS_CUSTOMER_GOODS,
-        includeAlternates,
-        ifStockCulc,
-      }) => ({
+      query: (params) => ({
         url: `/materialStore/getFilteredItems/company/${COMPANY_ID}`,
         params: {
-          status,
-          ownerID,
-          stationID,
-          locationID,
-          storeID,
-          localID,
-          partNumberID,
-          ids,
-          SERIAL_NUMBER,
-          startDate,
-          endDate,
-          startExpityDate,
-          endExpityDate,
-          SUPPLIER_BATCH_NUMBER,
-          PRODUCT_EXPIRATION_DATE,
-          RECEIVING_NUMBER,
-          QUANTITY,
-          OWNER_SHORT_NAME,
-          OWNER_LONG_NAME,
-          UNIT_OF_MEASURE,
-          TYPE,
-          GROUP,
-          TOOL_TYPE_CODE,
-          TOOL_GROUP_CODE,
-          toolCodeID,
-          toolTypeID,
-          NAME_OF_MATERIAL,
-          PART_NUMBER,
-          UNIT_LIMIT,
-          PLACE_ON,
-          intervalMOS,
-          estimatedDueDate,
-          nextDueMOS,
-          REMARKS,
-          SUPPLIES_ID,
-          AWB_REFERENCE,
-          AWB_TYPE,
-          AWB_NUMBER,
-          IS_CUSTOMER_GOODS,
-          includeAlternates,
-          ifStockCulc,
+          ...params,
+          _t: Date.now(),
+          componentId: undefined,
+          sessionId: undefined,
+          tabId: undefined,
         },
       }),
-      providesTags: ['StoreItem'],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
+      keepUnusedDataFor: 0,
 
-          // dispatch(setstoresGroups(data));
-        } catch (error) {
-          console.error('Ошибка при выполнении запроса:', error);
-        }
+      serializeQueryArgs: ({ endpointName, queryArgs }) => {
+        return `${endpointName}-${queryArgs.componentId}-${queryArgs.sessionId}`;
       },
-      // Provide the 'Users' tag after fetching
+
+      merge: undefined,
+      forceRefetch: ({ currentArg, previousArg }) => {
+        return currentArg?.tabId !== previousArg?.tabId;
+      },
+      providesTags: (result, error, arg) => [
+        { type: TAGS.StoreParts, id: `${arg.tabId}-${arg.partNumberID}` },
+      ],
     }),
     getStore: builder.query<IStore, string>({
       query: (id) => `storesNew/company/${COMPANY_ID}/store/${id}`,
-      providesTags: ['StoreItem'], // Provide the 'Users' tag after fetching
+      providesTags: ['StoreParts'], // Provide the 'Users' tag after fetching
     }),
     addStore: builder.mutation<
       IStore,
@@ -228,7 +160,7 @@ export const storePartsApi = createApi({
           companyID: COMPANY_ID,
         },
       }),
-      invalidatesTags: ['StoreItem'], // Invalidate the 'Users' tag after mutation
+      invalidatesTags: ['StoreParts'], // Invalidate the 'Users' tag after mutation
     }),
     updateStoreParts: builder.mutation<
       any,
@@ -270,6 +202,7 @@ export const storePartsApi = createApi({
         AWB_NUMBER?: any;
         IS_CUSTOMER_GOODS?: any;
         RECEIVED_DATE?: any;
+        partID?: string;
       }
     >({
       query: ({
@@ -307,6 +240,7 @@ export const storePartsApi = createApi({
         AWB_NUMBER,
         IS_CUSTOMER_GOODS,
         RECEIVED_DATE,
+        partID,
       }) => ({
         url: `materialStore/updateItemByIds/company/${COMPANY_ID}`,
         method: 'PUT',
@@ -347,9 +281,10 @@ export const storePartsApi = createApi({
           AWB_NUMBER,
           IS_CUSTOMER_GOODS,
           RECEIVED_DATE,
+          partID,
         },
       }),
-      invalidatesTags: ['StoreItem'],
+      invalidatesTags: ['StoreParts'],
     }),
     deleteStoreItem: builder.mutation<{ success: boolean; id: string }, string>(
       {
@@ -357,9 +292,41 @@ export const storePartsApi = createApi({
           url: `storesNew/company/${COMPANY_ID}/store/${id}`,
           method: 'DELETE',
         }),
-        invalidatesTags: ['StoreItem'], // Invalidate the 'Users' tag after mutation
+        invalidatesTags: ['StoreParts'], // Invalidate the 'Users' tag after mutation
       }
     ),
+    getParts: builder.query<any, void>({
+      query: () => '/parts',
+    }),
+    addBulkMaterialStore: builder.mutation<void, any[]>({
+      query: (data) => ({
+        url: 'materialStore/bulk-upload',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    transferStoreParts: builder.mutation<
+      any,
+      {
+        partsIds: string[];
+        fromLocationID: string;
+        fromStoreID: string;
+        toLocationID: string;
+        toStoreID: string;
+        transferType: 'transfer' | 'locationChange';
+        quantity: number;
+        isPartialTransfer?: boolean;
+        userID?: string;
+        note?: string;
+      }
+    >({
+      query: (body) => ({
+        url: '/store-parts/transfer',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['StoreParts'],
+    }),
   }),
 });
 
@@ -369,4 +336,6 @@ export const {
   useAddStoreMutation,
   useUpdateStorePartsMutation,
   useLazyGetStorePartsQuery,
+  useAddBulkMaterialStoreMutation,
+  useTransferStorePartsMutation,
 } = storePartsApi;

@@ -68,7 +68,7 @@ const ActionTemplateTextTree: FC<UserTreeProps> = ({
   const renderTreeNodes = (data: TreeDataNode[]) => {
     return data.map((item, index) => (
       <TreeNode
-        title={item.title}
+        title={String(item.title)?.toUpperCase()}
         key={item.key}
         className={index === selectedIndex ? 'ant-tree-node-selected' : ''}
       />

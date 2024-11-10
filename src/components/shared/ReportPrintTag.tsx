@@ -307,38 +307,40 @@ const ReportPrintTag: React.FC<ReportGeneratorProps> = ({
           borderWidth: 1,
         });
 
-        page.drawText(
-          `${t('OPEN')}: (${String(
-            product?.removeUserId?.organizationAuthorization ||
-              product?.removeUserId?.singNumber
-          ).toUpperCase()}) ${String(
-            product?.removeUserId?.firstNameEnglish
-          ).toUpperCase()} ${String(
-            product?.removeUserId?.lastNameEnglish
-          ).toUpperCase()}`,
-          {
-            x: 7,
-            y: height - 240,
-            font,
-            size: 8,
-            color: rgb(0, 0, 0),
-            bold: true,
-          }
-        );
+        // Форматируем данные пользователя с проверкой на существование
+        const userInfo = product?.removeUserId
+          ? `(${String(
+              product.removeUserId.organizationAuthorization ||
+                product.removeUserId.singNumber ||
+                '-'
+            ).toUpperCase()}) ${String(
+              product.removeUserId.firstNameEnglish || ''
+            ).toUpperCase()} ${String(
+              product.removeUserId.lastNameEnglish || ''
+            ).toUpperCase()}`
+          : '-';
 
-        page.drawText(
-          `${t('DATE')}: ${
-            product.createDate &&
-            moment(product?.createDate).format('Do. MMM. YYYY')
-          }`,
-          {
-            x: 7,
-            y: height - 258,
-            font,
-            size: 8,
-            color: rgb(0, 0, 0),
-          }
-        );
+        page.drawText(`${t('OPEN')}: ${userInfo}`, {
+          x: 7,
+          y: height - 240,
+          font,
+          size: 8,
+          color: rgb(0, 0, 0),
+          bold: true,
+        });
+
+        // Форматируем дату с проверкой
+        const formattedDate = product?.createDate
+          ? moment(product.createDate).format('Do. MMM. YYYY')
+          : '-';
+
+        page.drawText(`${t('DATE')}: ${formattedDate}`, {
+          x: 7,
+          y: height - 258,
+          font,
+          size: 8,
+          color: rgb(0, 0, 0),
+        });
 
         page.drawText(
           `Printed by ${SING} ${new Date().toLocaleString('ru-RU')}`,

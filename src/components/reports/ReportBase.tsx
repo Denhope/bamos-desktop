@@ -4,19 +4,36 @@ import 'jspdf-autotable';
 import { Button, Space } from 'antd';
 import { PrinterOutlined, DownloadOutlined } from '@ant-design/icons';
 import { handleOpenReport } from '@/services/utilites';
+import { utils, writeFile } from 'xlsx';
+import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+
+// Определяем тип для jsPDF с autoTable
+interface jsPDFWithAutoTable extends jsPDF {
+  autoTable: (options: any) => jsPDF;
+  lastAutoTable: {
+    finalY: number;
+  };
+}
+
+interface ColumnWidth {
+  [key: string]: number;
+}
 
 interface PDFExportProps {
   title: string;
   filename: string;
-  headerInfo?: { [key: string]: string };
-  statistics?: { [key: string]: number | string };
+  headerInfo?: Record<string, string>;
+  statistics: Record<string, number>;
   columnDefs: any[];
   data: any[];
   orientation?: 'portrait' | 'landscape';
   disabled?: boolean;
   loading?: boolean;
-  buttonText?: string;
-  isOpen?: boolean; // Новый проп для контроля открытия/сохранения
+  filterValues?: any;
+  pdfColumnWidths?: ColumnWidth;
+  excelColumnWidths?: ColumnWidth;
+  rightAlignedColumns?: string[];
 }
 
 const PDFExport: React.FC<PDFExportProps> = ({
@@ -26,147 +43,301 @@ const PDFExport: React.FC<PDFExportProps> = ({
   statistics,
   columnDefs,
   data,
-  orientation = 'landscape',
-  disabled = false,
-  loading = false,
-  buttonText,
-  isOpen,
+  orientation = 'portrait',
+  disabled,
+  loading,
+  filterValues,
+  pdfColumnWidths,
+  excelColumnWidths,
+  rightAlignedColumns = ['QUANTITY', 'UNIT_OF_MEASURE'],
 }) => {
-  const generatePDF = async (open: boolean) => {
-    const doc = new jsPDF({
-      orientation: orientation,
-      unit: 'mm',
-      format: 'a4'
-    }) as any;
+  const { t } = useTranslation();
 
+  // Функция для обрезки текста с многоточием
+  const truncateText = (text: string, maxLength: number) => {
+    if (!text) return '';
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + '...'
+      : text;
+  };
+
+  // Функция для форматирования значения ячейки
+  const formatCellValue = (value: any, field: string) => {
+    if (!value || value === '-') return '-';
+
+    // Обработка дат
+    if (field === 'RECEIVED_DATE' || field === 'PRODUCT_EXPIRATION_DATE') {
+      // Если значение уже отформатировано
+      if (typeof value === 'string' && (value.includes('.') || value === '-')) {
+        return value;
+      }
+
+      try {
+        const date = new Date(value);
+        if (isNaN(date.getTime())) return '-';
+
+        if (field === 'RECEIVED_DATE') {
+          return date.toLocaleString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+        }
+        return date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+      } catch (error) {
+        console.error('Date formatting error:', error);
+        return '-';
+      }
+    }
+
+    // Обработка длинных текстов
+    if (typeof value === 'string' && value.length > 30) {
+      return truncateText(value, 30);
+    }
+
+    return value.toString() || '-';
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF(orientation) as jsPDFWithAutoTable;
     const pageWidth = doc.internal.pageSize.width;
-    const pageHeight = doc.internal.pageSize.height;
+    const margin = 10;
 
-    // Функция для добавления нижнего колонтитула
-    // Функция для добавления нижнего колонтитула
-const addFooter = () => {
-    const now = new Date();
-    const date = now.toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-    const time = now.toLocaleTimeString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-    const dateTimeString = `${date} ${time}`;
-    
-    doc.setFontSize(8);
-    doc.setTextColor(100);
-    doc.text(`Report generated: ${dateTimeString}`, 14, pageHeight - 10);
-  };
+    // Устанавливаем шрифт для поддержки кириллицы
+    doc.setFont('helvetica');
 
-    // Title
+    // Заголовок отчета
     doc.setFontSize(18);
+    doc.setTextColor(41, 128, 185);
     doc.text(title, pageWidth / 2, 15, { align: 'center' });
+    doc.setTextColor(0);
 
-    let yPos = 25;
+    let currentY = 30;
 
-    // Header Info
-    if (headerInfo) {
+    // Информация о фильтрах
+    if (filterValues) {
       doc.setFontSize(12);
-      Object.entries(headerInfo).forEach(([key, value]) => {
-        doc.text(`${key}: ${value}`, 14, yPos);
-        yPos += 7;
-      });
-    }
+      doc.text(t('Filter Parameters'), margin, currentY);
+      currentY += 5;
 
-    // Statistics
-    if (statistics) {
-      yPos += 5;
-      doc.setFontSize(14);
-      doc.text('Statistics', 14, yPos);
-      yPos += 5;
       doc.autoTable({
-        startY: yPos,
-        head: [['Metric', 'Value']],
-        body: Object.entries(statistics),
+        startY: currentY,
+        head: [[t('Parameter'), t('Value')]],
+        body: Object.entries(filterValues).map(([key, value]) => {
+          let displayValue = value;
+          if (Array.isArray(value)) {
+            displayValue = value.join(', ');
+          } else if (value instanceof Date) {
+            displayValue = format(value, 'dd.MM.yyyy');
+          }
+          return [t(key), displayValue || '-'];
+        }),
         theme: 'grid',
-        headStyles: { fillColor: [200, 200, 200], textColor: [0, 0, 0] },
-        styles: { cellPadding: 2, fontSize: 10 },
-        columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 30 } },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          fontSize: 10,
+          fontStyle: 'bold',
+          halign: 'center',
+        },
+        bodyStyles: {
+          fontSize: 9,
+          cellPadding: 2,
+        },
+        margin,
+        styles: {
+          font: 'helvetica',
+          overflow: 'linebreak',
+          cellWidth: 'wrap',
+        },
       });
-      yPos = doc.lastAutoTable.finalY + 10;
+
+      currentY = doc.lastAutoTable.finalY + 10;
     }
 
-    // Main Data Table
-    doc.setFontSize(14);
-    doc.text('Details', 14, yPos);
+    // Статистика
+    doc.setFontSize(12);
+    doc.text(t('Statistics'), margin, currentY);
+    currentY += 5;
+
     doc.autoTable({
-      startY: yPos + 5,
-      head: [columnDefs.map(col => col.headerName)],
-      body: data.map(item => columnDefs.map(col => {
-        if (col.valueGetter) {
-          return col.valueGetter({ data: item });
-        }
-        if (typeof col.field === 'string') {
-          return col.field.split('.').reduce((obj:any, key:any) => obj?.[key], item) || '-';
-        }
-        return item[col.field] || '-';
-      })),
+      startY: currentY,
+      head: [[t('Metric'), t('Value')]],
+      body: Object.entries(statistics).map(([key, value]) => [t(key), value]),
       theme: 'grid',
-      headStyles: { fillColor: [200, 200, 200], textColor: [0, 0, 0] },
-      styles: { cellPadding: 2, fontSize: 8 },
-      columnStyles: columnDefs.reduce((styles, col, index) => {
-        styles[index] = { cellWidth: col.width / 4 || 'auto' };
-        return styles;
-      }, {}),
-      didDrawPage: addFooter,
+      headStyles: {
+        fillColor: [41, 128, 185],
+        fontSize: 10,
+        fontStyle: 'bold',
+        halign: 'center',
+      },
+      bodyStyles: {
+        fontSize: 9,
+        cellPadding: 2,
+      },
+      margin,
+      styles: {
+        font: 'helvetica',
+        overflow: 'linebreak',
+        cellWidth: 'wrap',
+      },
     });
 
-    if (open) {
-      const pdfData = doc.output('arraybuffer');
-      await handleOpenReport(pdfData);
-    } else {
-      doc.save(`${filename}.pdf`);
-    }
+    currentY = doc.lastAutoTable.finalY + 10;
+
+    // Основные данные
+    doc.autoTable({
+      startY: currentY,
+      head: [columnDefs.map((col) => t(col.headerName))],
+      body: data.map((row) =>
+        columnDefs.map((col) => {
+          const value = row[col.field];
+          let formattedValue;
+
+          if (col.valueFormatter) {
+            formattedValue = col.valueFormatter({ value });
+          } else {
+            formattedValue = formatCellValue(value, col.field);
+          }
+
+          return formattedValue || '';
+        })
+      ),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [41, 128, 185],
+        fontSize: 7,
+        fontStyle: 'bold',
+        halign: 'center',
+        cellPadding: 1,
+      },
+      bodyStyles: {
+        fontSize: 6.5,
+        cellPadding: 1,
+      },
+      margin: 8,
+      styles: {
+        font: 'helvetica',
+        overflow: 'linebreak',
+        cellWidth: 'wrap',
+        minCellHeight: 7,
+        halign: 'left',
+        valign: 'middle',
+      },
+      columnStyles: columnDefs.reduce((acc, col) => {
+        acc[col.field] = {
+          cellWidth: pdfColumnWidths?.[col.field] || 'auto',
+          halign: rightAlignedColumns?.includes(col.field) ? 'right' : 'left',
+          cellPadding: 1,
+          overflow: 'linebreak',
+        };
+        return acc;
+      }, {}),
+    });
+
+    doc.save(`${filename}.pdf`);
   };
 
-  if (isOpen === undefined) {
-    // Если isOpen не определен, показываем обе кнопки
-    return (
-      <Space>
-        <Button 
-          size='small'
-          icon={<PrinterOutlined />}
-          onClick={() => generatePDF(true)}
-          disabled={disabled}
-          loading={loading}
-        >
-          {buttonText || 'Print PDF'}
-        </Button>
-        <Button 
-          size='small'
-          icon={<DownloadOutlined />}
-          onClick={() => generatePDF(false)}
-          disabled={disabled}
-          loading={loading}
-        >
-          Export PDF
-        </Button>
-      </Space>
-    );
-  }
+  const exportToExcel = () => {
+    const wb = utils.book_new();
 
-  // Если isOpen определен, показываем одну кнопку
+    // Настройка стилей для Excel
+    const headerStyle = {
+      font: { bold: true, color: { rgb: 'FFFFFF' } },
+      fill: { fgColor: { rgb: '2980B9' } },
+      alignment: { horizontal: 'center' },
+    };
+
+    // Лист с информацией о фильтрах
+    if (filterValues) {
+      const filterSheet = [
+        [t('Filter Parameters')],
+        [t('Parameter'), t('Value')],
+        ...Object.entries(filterValues).map(([key, value]) => {
+          let displayValue = value;
+          if (Array.isArray(value)) {
+            displayValue = value.join(', ');
+          } else if (value instanceof Date) {
+            displayValue = format(value, 'dd.MM.yyyy');
+          }
+          return [t(key), displayValue || '-'];
+        }),
+      ];
+      const wsFilters = utils.aoa_to_sheet(filterSheet);
+      utils.book_append_sheet(wb, wsFilters, 'Filters');
+    }
+
+    // Лист со статистикой
+    const statsSheet = [
+      [t('Statistics')],
+      [t('Metric'), t('Value')],
+      ...Object.entries(statistics).map(([key, value]) => [t(key), value]),
+    ];
+    const wsStats = utils.aoa_to_sheet(statsSheet);
+    utils.book_append_sheet(wb, wsStats, 'Statistics');
+
+    // Лист с основными данными
+    const headers = columnDefs.map((col) => t(col.headerName));
+    const dataSheet = [
+      headers,
+      ...data.map((row) =>
+        columnDefs.map((col) => {
+          const value = row[col.field];
+          if (col.valueFormatter) {
+            return col.valueFormatter({ value });
+          }
+          return value?.toString() || '';
+        })
+      ),
+    ];
+    const wsData = utils.aoa_to_sheet(dataSheet);
+
+    // Применяем стили к заголовкам
+    const range = utils.decode_range(wsData['!ref'] || 'A1');
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const address = utils.encode_cell({ r: 0, c: C });
+      if (!wsData[address]) continue;
+      wsData[address].s = headerStyle;
+    }
+
+    utils.book_append_sheet(wb, wsData, 'Data');
+
+    // Применяем пользовательские ширины колонок если они есть
+    if (excelColumnWidths) {
+      wsData['!cols'] = columnDefs.map((col) => ({
+        width: excelColumnWidths[col.field] || 12,
+        wch: excelColumnWidths[col.field] || 12,
+      }));
+    }
+
+    writeFile(wb, `${filename}.xlsx`);
+  };
+
   return (
-    <Button 
-      size='small'
-      icon={isOpen ? <PrinterOutlined /> : <DownloadOutlined />}
-      onClick={() => generatePDF(isOpen)}
-      disabled={disabled}
-      loading={loading}
-    >
-      {buttonText || (isOpen ? 'Print PDF' : 'Export PDF')}
-    </Button>
+    <Space>
+      <Button
+        icon={<DownloadOutlined />}
+        onClick={exportToPDF}
+        disabled={disabled || loading}
+        size="small"
+      >
+        {t('Export to PDF')}
+      </Button>
+      <Button
+        className="bg-green-600"
+        icon={<DownloadOutlined />}
+        onClick={exportToExcel}
+        disabled={disabled || loading}
+        size="small"
+      >
+        {t('Export to Excel')}
+      </Button>
+    </Space>
   );
 };
 

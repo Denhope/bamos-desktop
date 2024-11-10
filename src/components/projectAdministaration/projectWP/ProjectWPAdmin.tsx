@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useMemo, useState } from 'react';
 import {
   Button,
@@ -9,6 +11,7 @@ import {
   Spin,
   Switch,
   notification,
+  Tag,
 } from 'antd';
 import {
   ProjectOutlined,
@@ -64,8 +67,9 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
     NRC: t('NRC (DEFECT)'),
     MJC: t('MJC'),
     CMJC: t('CMJC'),
-    FC: t('FC)'),
+    FC: t('FC'),
     NRC_ADD: t('ADHOC'),
+    HARD_ACCESS: t('HARD ACCESS'),
   };
 
   // if (projectID) {
@@ -85,7 +89,10 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
   const [updateProjectItem] = useUpdateProjectItemsMutation();
   const [deleteProjectItem] = useDeleteProjectItemMutation();
   const transformedItems = useMemo(() => {
-    return transformToIProjectItem(projectItems || []);
+    return transformToIProjectItem(projectItems || []).map((item) => ({
+      ...item,
+      isCriticalTask: item.isCriticalTask || false,
+    }));
   }, [projectItems]);
   const handleCreate = () => {
     setEditingReqCode(null);
@@ -218,6 +225,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             projectID: projectID,
             planeID: project?.planeId?._id,
             taskType: 'FC',
+            isCriticalTask: 'FC',
           }).unwrap();
           message.success(t('УСПЕШНО ДОБАВЛЕНО'));
         } else if (project && project.projectType == 'baseMaintanance') {
@@ -226,6 +234,7 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
             projectID: projectID,
             planeID: project?.planeId?._id,
             taskType: 'RC',
+            isCriticalTask: 'RC',
           }).unwrap();
           message.success(t('УСПЕШНО ДОБАВЛЕНО'));
 
@@ -302,10 +311,11 @@ const ProjectWPAdmin: React.FC<AdminPanelRProps> = ({ projectID, project }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
       // hide: true,
     },
+
     {
       field: 'createDate',
       editable: false,

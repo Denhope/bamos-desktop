@@ -8,6 +8,8 @@ import {
   MenuItemConstructorOptions,
   MenuItem,
   autoUpdater,
+  session,
+  protocol,
 } from 'electron';
 import { release } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -292,22 +294,35 @@ const menu = Menu.buildFromTemplate(template);
 
 // Устаавливаем меню приложения
 Menu.setApplicationMenu(menu);
+
+// В начале приложения регистрируем безопасный протокол
+app.whenReady().then(() => {
+  // Регистрируем протокол
+  protocol.registerFileProtocol('safe-file', (request, callback) => {
+    const url = request.url.replace('safe-file://', '');
+    try {
+      return callback(decodeURIComponent(url));
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  // Создаем окно
+  createWindow();
+});
+
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
     webPreferences: {
-      preload: preload,
+      preload,
       nodeIntegration: false,
       contextIsolation: true,
       plugins: true,
-
-      // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
-      // nodeIntegration: true,
-
-      // Consider using contextBridge.exposeInMainWorld
-      // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
-      // contextIsolation: false,
+      // Добавляем разрешение на загрузку локальных ресурсов
+      webSecurity: false, // Внимание: использовать только в режиме разработки!
+      allowRunningInsecureContent: true, // Внимание: использовать только в режиме разработки!
     },
   });
 
@@ -334,8 +349,6 @@ async function createWindow() {
   // Apply electron-updater
   update(win);
 }
-
-app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   win = null;
@@ -381,7 +394,7 @@ ipcMain.handle('open-win', (_, arg) => {
 
 ipcMain.handle('open-directory-dialog', async () => {
   const result = await dialog.showOpenDialog({
-    properties: ['openDirectory']
+    properties: ['openDirectory'],
   });
   return result;
 });
@@ -392,11 +405,46 @@ ipcMain.handle('save-file', async (_, filePath: string, data: Uint8Array) => {
 
 ipcMain.handle('open-path', async (_, path) => {
   try {
-    await shell.openPath(path)
+    await shell.openPath(path);
   } catch (error) {
-    console.error('Ошибка при открытии пути:', error)
-    throw error
+    console.error('Ошибка при открытии пути:', error);
+    throw error;
   }
+});
+
+// Добавьте новый обработчик для открытия PDF
+ipcMain.handle('open-pdf', async (_, pdfData: Uint8Array, fileName: string) => {
+  const pdfWindow = new BrowserWindow({
+    width: 1024,
+    height: 800,
+    webPreferences: {
+      plugins: true,
+      webSecurity: true,
+      contextIsolation: true,
+    },
+  });
+
+  const tempPath = join(app.getPath('temp'), fileName);
+  await fs.writeFile(tempPath, Buffer.from(pdfData));
+
+  await pdfWindow.loadURL(`safe-file://${tempPath}`);
+
+  // Добавляем обработку ошибок
+  pdfWindow.webContents.on(
+    'did-fail-load',
+    (_, errorCode, errorDescription) => {
+      console.error('Failed to load PDF:', errorCode, errorDescription);
+      dialog.showErrorBox('Error', `Failed to load PDF: ${errorDescription}`);
+    }
+  );
+
+  pdfWindow.on('closed', async () => {
+    try {
+      await fs.unlink(tempPath);
+    } catch (error) {
+      console.error('Error removing temp file:', error);
+    }
+  });
 });
 
 // ipcMain.handle('check-update', () => {

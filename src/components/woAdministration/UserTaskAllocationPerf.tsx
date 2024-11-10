@@ -21,6 +21,7 @@ interface UserTaskAllocationProps {
   task?: any;
   initialTaskAllocations?: TaskAllocation[];
   onTaskAllocationsChange?: (taskAllocations: TaskAllocation[]) => void;
+  onlyWithOrganizationAuthorization?: boolean;
 }
 
 const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
@@ -28,6 +29,7 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
   task,
   initialTaskAllocations = [],
   onTaskAllocationsChange = () => {},
+  onlyWithOrganizationAuthorization = true,
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -74,6 +76,11 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
       handleTaskAllocationChange(currentValues);
     }
   }, [task, form]);
+
+  // Фильтрация пользователей
+  const filteredUsers = onlyWithOrganizationAuthorization
+    ? users.filter((user) => user.organizationAuthorization)
+    : users;
 
   return (
     <Form
@@ -161,8 +168,8 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         return false;
                       }}
                     >
-                      {users?.map((user) => (
-                        <Option key={user?.id} value={user?.id}>
+                      {filteredUsers?.map((user) => (
+                        <Option key={user.id} value={user.id}>
                           {String(
                             user?.organizationAuthorization || user?.singNumber
                           )?.toUpperCase()}

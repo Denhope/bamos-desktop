@@ -49,6 +49,7 @@ interface Props {
   step: IStep;
   selectedStepItems: string[];
   task?: any;
+  stepIndex?: number;
   handleStepClick: (
     event: React.MouseEvent<HTMLDivElement>,
     step: IStep
@@ -58,6 +59,7 @@ interface Props {
 
 const StepCard: React.FC<Props> = ({
   step,
+  stepIndex,
   selectedStepItems,
   handleStepClick,
   handleStepSelect,
@@ -84,12 +86,12 @@ const StepCard: React.FC<Props> = ({
     try {
       const response = await refetchEditStatus().unwrap();
       if (response && response.isEditing && response.editingUser !== USER_ID) {
-        notification.warning({
-          message: t('STEP EDITING'),
-          description: t(
-            'This step is currently being edited by another user.'
-          ),
-        });
+        // notification.warning({
+        //   message: t('STEP EDITING'),
+        //   description: t(
+        //     'This step is currently being edited by another user.'
+        //   ),
+        // });
       } else {
         setCurrentAction(action);
         setVisibleActionEdit(true);
@@ -119,6 +121,7 @@ const StepCard: React.FC<Props> = ({
             response.editingUser
           }`,
         });
+        setVisibleActionAdd(true);
       } else {
         stepId && (await setStepEditStatus({ stepId, isEditing: true }));
         setVisibleActionAdd(true);
@@ -137,12 +140,12 @@ const StepCard: React.FC<Props> = ({
     try {
       const response = await refetchEditStatus().unwrap();
       if (response && response.isEditing && response.editingUser !== USER_ID) {
-        notification.warning({
-          message: t('STEP EDITING'),
-          description: `${t('Step is being edited by')} ${
-            response.editingUser
-          }`,
-        });
+        // notification.warning({
+        //   message: t('STEP EDITING'),
+        //   description: `${t('Step is being edited by')} ${
+        //     response.editingUser
+        //   }`,
+        // });
       } else {
         stepId && (await setStepEditStatus({ stepId, isEditing: true }));
         setVisibleActionChange(true);
@@ -295,6 +298,7 @@ const StepCard: React.FC<Props> = ({
       }
 
       try {
+        console.log(data.performAction);
         await addAction({
           action: data.performAction,
           stepId: step?.id || '',
@@ -689,7 +693,7 @@ const StepCard: React.FC<Props> = ({
 
   const handleNewActionSave = (data: any) => {
     handleActionSave(data);
-    // console.log(newAction);
+    console.log(data);
     // setVisibleActionAdd(false);
     // setCurrentAction(null);
     // refetch(); // Оставляем только этот запрос
@@ -698,7 +702,7 @@ const StepCard: React.FC<Props> = ({
   };
   const handleNewActionSaveChange = (data: any) => {
     handleActionSaveChance(data);
-    // console.log(newAction);
+    console.log(data);
     // setVisibleActionAdd(false);
     // setCurrentAction(null);
     // refetch(); // Оставляем только этот запрос
@@ -786,6 +790,7 @@ const StepCard: React.FC<Props> = ({
             response.editingUser
           }`,
         });
+        setVisibleActionAdd(true);
       } else {
         setVisibleStepEdit(true);
         stepId && (await setStepEditStatus({ stepId, isEditing: true }));
@@ -919,13 +924,14 @@ const StepCard: React.FC<Props> = ({
                 handleStepSelect(step.id || '', e.target.checked)
               }
             />
+            {console.log(step.stepIndex)}
             <Space
               className="cursor-pointer"
               onClick={handleStepEditClick}
               style={{ width: '100%' }}
             >
               <div className="font-bold" style={{ fontSize: '14px' }}>
-                {`${t('STEP')} ${step.stepNumber}`}
+                {`${t('STEP')} ${stepIndex}`}
               </div>
               <Space className="ml-auto font-bold" style={{ fontSize: '12px' }}>
                 <div>{t('added by')}</div>
@@ -939,7 +945,7 @@ const StepCard: React.FC<Props> = ({
                 </Tag>
               </Space>
               <Space className="font-bold" style={{ fontSize: '12px' }}>
-                {moment(step.createDate).format('YYYY-MM-DD HH:mm')}
+                {moment(step.createDate).utc().format('YYYY-MM-DD HH:mm')}
               </Space>
             </Space>
 
@@ -1073,6 +1079,23 @@ const StepCard: React.FC<Props> = ({
       )}
 
       {currentAction && currentAction.type == 'closed' && (
+        <>
+          <>{console.log(currentAction)}</>
+          <ActionClosed
+            task={task}
+            step={step}
+            key={currentAction._id}
+            visible={visibleActionEdit}
+            onCancel={handleActionEditCancel}
+            onSave={handleActionEditClosedSave}
+            currentAction={currentAction}
+            onDelete={handleActionDelete}
+            templates={templates || []}
+            users={users || []}
+          />
+        </>
+      )}
+      {currentAction && currentAction.type == 'diClosed' && (
         <>
           <>{console.log(currentAction)}</>
           <ActionClosed

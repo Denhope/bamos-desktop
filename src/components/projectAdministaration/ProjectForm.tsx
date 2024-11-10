@@ -1,15 +1,16 @@
 // @ts-nocheck
 
-import React, { FC, useEffect, useState } from 'react';
-import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
-import { Button, Empty, Modal, Tabs, Upload, message, Col, Space } from 'antd';
-import { UploadOutlined, ProjectOutlined } from '@ant-design/icons';
+import React, { FC, useEffect, useReducer, useMemo } from 'react';
+import {
+  ProForm,
+  ProFormText,
+  ProFormGroup,
+  ProFormCheckbox,
+} from '@ant-design/pro-form';
+import { Button, Empty, Modal, Tabs, Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
-import {
-  useAddProjectItemWOMutation,
-  useAddProjectPanelsMutation,
-} from '@/features/projectItemWO/projectItemWOApi';
 import {
   ProFormDatePicker,
   ProFormSelect,
@@ -17,19 +18,51 @@ import {
 } from '@ant-design/pro-components';
 import { IProject } from '@/models/IProject';
 import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
-import ProjectWPAdmin from './projectWP/ProjectWPAdmin';
-import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
+import ProjectTestWPAdmin from './projectWP/ProjectTestWPAdmin';
 import { handleFileOpen, handleFileSelect } from '@/services/utilites';
 import { COMPANY_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
-import ProjectTestWPAdmin from './projectWP/ProjectTestWPAdmin';
-import FileListE from '../userAdministration/taskAdministration/FileList.tsx';
+
+// Определение типа состояния
+interface FormState {
+  selectedAcTypeID: string;
+  activeTabKey: string;
+  showSubmitButton: boolean;
+  reqTypeID: string;
+}
+
+// Определение ействий
+type FormAction =
+  | { type: 'SET_AC_TYPE_ID'; payload: string }
+  | { type: 'SET_ACTIVE_TAB'; payload: string }
+  | { type: 'SET_SHOW_SUBMIT'; payload: boolean }
+  | { type: 'SET_REQ_TYPE_ID'; payload: string };
+
+// Редуктор
+function formReducer(state: FormState, action: FormAction): FormState {
+  switch (action.type) {
+    case 'SET_AC_TYPE_ID':
+      return { ...state, selectedAcTypeID: action.payload };
+    case 'SET_ACTIVE_TAB':
+      return {
+        ...state,
+        activeTabKey: action.payload,
+        showSubmitButton: action.payload === '1',
+      };
+    case 'SET_SHOW_SUBMIT':
+      return { ...state, showSubmitButton: action.payload };
+    case 'SET_REQ_TYPE_ID':
+      return { ...state, reqTypeID: action.payload };
+    default:
+      return state;
+  }
+}
+
 interface UserFormProps {
   project?: IProject;
   onSubmit: (project: IProject) => void;
@@ -53,36 +86,48 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const { data: projectTypes, isLoading } = useGetProjectTypesQuery({});
   const { data: planes } = useGetPlanesQuery({});
 
-  // Инициализация состояния для хранения выбранного acTypeID
-  const [selectedAcTypeID, setSelectedAcTypeID] = useState<string>('');
+  // Инициализация состояния с использованием useReducer
+  const [state, dispatch] = useReducer(formReducer, {
+    selectedAcTypeID: '',
+    activeTabKey: '1',
+    showSubmitButton: true,
+    reqTypeID: '',
+  });
+
   const { data: stores } = useGetStoresQuery({});
   const { data: companies } = useGetCompaniesQuery({});
-  const [addPanels] = useAddProjectPanelsMutation({});
   const {
     data: wp,
     isLoading: isLoadingWP,
     isFetching,
   } = useGetfilteredWOQuery({});
   // Формирование объекта planesValueEnum
-  const planesValueEnum: Record<string, { text: string; value: string }> =
-    planes?.reduce((acc, reqType) => {
-      // Check if reqType.acTypeID exists and has at least one element
-      if (reqType.acTypeID && reqType.acTypeID.length > 0) {
-        acc[reqType.id] = { text: reqType.regNbr, value: reqType.acTypeID[0] };
-      } else {
-        // If reqType.acTypeID is undefined or empty, set value to an empty string or handle it as appropriate for your use case
-        acc[reqType.id] = { text: reqType.regNbr, value: '' };
-      }
-      return acc;
-    }, {}) || {};
+  const planesValueEnum = useMemo(
+    () =>
+      planes?.reduce((acc, reqType) => {
+        if (reqType.acTypeID && reqType.acTypeID.length > 0) {
+          acc[reqType.id] = {
+            text: reqType.regNbr,
+            value: reqType.acTypeID[0],
+          };
+        } else {
+          acc[reqType.id] = { text: reqType.regNbr, value: '' };
+        }
+        return acc;
+      }, {}) || {},
+    [planes]
+  );
 
-  const storeCodesValueEnum: Record<string, string> =
-    stores?.reduce((acc, mpdCode) => {
-      if (mpdCode.id && mpdCode.storeShortName) {
-        acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
-      }
-      return acc;
-    }, {} as Record<string, string>) || {};
+  const storeCodesValueEnum = useMemo(
+    () =>
+      stores?.reduce((acc, mpdCode) => {
+        if (mpdCode.id && mpdCode.storeShortName) {
+          acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
+        }
+        return acc;
+      }, {} as Record<string, string>) || {},
+    [stores]
+  );
 
   // const projectTypesValueEnum: Record<string, string> =
   //   projectTypes?.reduce((acc, reqType) => {
@@ -90,11 +135,14 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   //     return acc;
   //   }, {}) || {};
 
-  const companiesCodesValueEnum: Record<string, string> =
-    companies?.reduce<Record<string, string>>((acc, mpdCode) => {
-      acc[mpdCode.id] = mpdCode.companyName;
-      return acc;
-    }, {}) || {};
+  const companiesCodesValueEnum = useMemo(
+    () =>
+      companies?.reduce<Record<string, string>>((acc, mpdCode) => {
+        acc[mpdCode.id] = mpdCode.companyName;
+        return acc;
+      }, {}) || {},
+    [companies]
+  );
   useEffect(() => {
     if (project) {
       form.resetFields();
@@ -106,9 +154,9 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   }, [project, form]);
 
   const handleUpload = async (file: File) => {
-    if (!project || !project?._id) {
-      console.error(
-        'Невозможно загрузить файл: компания не существует или не имеет id'
+    if (!project?._id) {
+      message.error(
+        'Невозможно загрузить файл: проект не существует или не имеет id'
       );
       return;
     }
@@ -119,21 +167,20 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       const response = await uploadFileServer(formData);
 
       if (response) {
-        const updatedproject: IProject = {
-          ...project,
-          FILES: response,
-        };
         const updatedOrderItem = {
           ...project,
           FILES: [...(project?.FILES || []), response],
         };
-        updatedOrderItem && project && onSubmit(updatedOrderItem);
+        onSubmit(updatedOrderItem);
       } else {
-        message.error('Ошибка при загрузке файла: неверный ответ сервера');
+        throw new Error('Неверный ответ сервера');
       }
     } catch (error) {
-      message.error('Ошибка при загрузке файла');
-      throw error;
+      message.error(
+        `Ошибка при загрузке файла: ${
+          error instanceof Error ? error.message : 'Неизвестная ошибка'
+        }`
+      );
     }
   };
   const SubmitButton = () => (
@@ -141,38 +188,33 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       {project ? t('UPDATE') : t('CREATE')}
     </Button>
   );
-  const [activeTabKey, setActiveTabKey] = useState('1'); // Default to the first tab
-  const [showSubmitButton, setShowSubmitButton] = useState(true);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    setShowSubmitButton(activeTabKey === '1');
-  }, [activeTabKey]);
-  const [reqTypeID, setReqTypeID] = useState<any>('');
-  const handleDelete = (file: any) => {
+  interface File {
+    id: string;
+    name: string;
+  }
+
+  const handleDelete = (file: File) => {
     Modal.confirm({
       title: 'Вы уверены, что хотите удалить этот файл?',
       onOk: async () => {
         try {
-          const response = await dispatch(
+          const appDispatch = useAppDispatch();
+          const response = await appDispatch(
             deleteFile({ id: file.id, companyID: COMPANY_ID })
           );
           if (response.meta.requestStatus === 'fulfilled') {
-            // Удаляем файл из массива files
             const updatedFiles =
-              project &&
-              project?.FILES &&
-              project?.FILES.filter((f) => f.id !== file.id);
+              project?.FILES?.filter((f) => f.id !== file.id) || [];
             const updatedOrderItem = {
               ...project,
               FILES: updatedFiles,
             };
-            // await updateProjectItem(updatedOrderItem).unwrap();
             project && onSubmit(updatedOrderItem);
           } else {
             throw new Error('Не удалось удалить файл');
           }
         } catch (error) {
-          message.error('ERROR');
+          message.error('Ошибка при удалении файла');
         }
       },
     });
@@ -183,13 +225,16 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     handleFileOpen(file);
   };
 
-  const wpValueEnum: Record<string, string> =
-    wp?.reduce((acc, wp) => {
-      if (wp._id && wp?.WOName) {
-        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
-      }
-      return acc;
-    }, {} as Record<string, string>) || {};
+  const wpValueEnum = useMemo(
+    () =>
+      wp?.reduce((acc, wp) => {
+        if (wp._id && wp?.WOName) {
+          acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+        }
+        return acc;
+      }, {} as Record<string, string>) || {},
+    [wp]
+  );
   return (
     <ProForm
       size="small"
@@ -197,7 +242,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       onFinish={handleSubmit}
       submitter={{
         render: (_, dom) => {
-          if (showSubmitButton) {
+          if (state.showSubmitButton) {
             return [<SubmitButton key="submit" />, dom.reverse()[1]];
           }
           return null;
@@ -208,7 +253,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     >
       <Tabs
         onChange={(key) => {
-          setActiveTabKey(key);
+          dispatch({ type: 'SET_ACTIVE_TAB', payload: key });
         }}
         defaultActiveKey="1"
         type="card"
@@ -318,13 +363,17 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   label={t('PLANNED START DATE')}
                   name="planedStartDate"
                   width="sm"
-                ></ProFormDatePicker>
+                />
                 <ProFormDatePicker
-                  // disabled
                   label={t('START DATE')}
                   name="startDate"
                   width="sm"
-                ></ProFormDatePicker>
+                />
+                <ProFormDatePicker
+                  label={t('CREATION DATE')}
+                  name="createDate"
+                  width="sm"
+                />
               </ProFormGroup>
               <ProFormGroup>
                 <ProFormDatePicker

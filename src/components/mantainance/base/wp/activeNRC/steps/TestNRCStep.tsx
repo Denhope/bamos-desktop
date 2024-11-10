@@ -612,7 +612,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                         <Space className="font-bold">
                           {' '}
                           on{' '}
-                          {moment(item.createDate).format('YYYY-MM-DD HH:mm')}
+                          {moment(item.createDate)
+                            .utc()
+                            .format('YYYY-MM-DD HH:mm')}
                         </Space>
                       </Space>
                       <Space>
@@ -1088,9 +1090,9 @@ const TestNRCStep: FC<INRCSTEPPrors> = ({
                     <Space className="font-bold">
                       {' '}
                       on{' '}
-                      {moment(currentTask?.finalAction?.closingDate).format(
-                        'YYYY-MM-DD HH:mm'
-                      )}
+                      {moment(currentTask?.finalAction?.closingDate)
+                        .utc()
+                        .format('YYYY-MM-DD HH:mm')}
                     </Space>
                   </Space>
                 </div>

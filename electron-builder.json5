@@ -1,18 +1,12 @@
 {
-  appId: 'BAMOS-TEST',
+  appId: 'com.bamos.app',
+  productName: 'Bamos',
   asar: true,
   directories: {
     output: 'release/${version}',
   },
-  files: [
-    'dist-electron',
-    'dist',
-    'node_modules/**/*'
-  ],
-  asarUnpack: [
-    'node_modules/pdfmake/build/vfs_fonts.js',
-    
-  ],
+  files: ['dist-electron', 'dist', 'node_modules/**/*'],
+  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
     target: ['dmg', 'zip'],
@@ -35,14 +29,28 @@
   publish: {
     provider: 'generic',
     channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.0.49/',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.1.43/',
   },
   npmRebuild: true,
-  "extraResources": [
+  extraResources: [
     {
-      "from": "node_modules/canvas/build/Release/",
-      "to": "canvas/build/Release/",
-      "filter": ["*.node"]
-    }
-  ]
+      from: 'node_modules/canvas/build/Release/',
+      to: 'canvas/build/Release/',
+      filter: ['*.node'],
+    },
+  ],
+  /// linux
+  linux: {
+    target: ['AppImage', 'deb'],
+    category: 'Office',
+    icon: 'build/icons',
+    desktop: {
+      Name: 'Bamos',
+      Comment: 'Plane System',
+      Categories: 'Office;',
+      Type: 'Application',
+      Terminal: false,
+      Icon: 'bamos',
+    },
+  },
 }

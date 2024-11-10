@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetFormValues, setFormValues } from '@/store/reducers/formSlice';
 
 export type TaskFilteredFormValues = {
+  isCriticalTask: boolean | undefined;
+  cardNumber: any;
   taskNumber?: string;
   AMM?: string;
   taskType?: string[];
@@ -101,7 +103,7 @@ const AdminTaskFilteredForm: FC<
     dispatch(resetFormValues({ formKey }));
   };
   return (
-    <div className="p-3 m-1 rounded-md bg-slate-100">
+    <div className="p-3 m-1 rounded-md ">
       <ProForm
         onValuesChange={(changedValues, allValues) => {
           dispatch(setFormValues({ formKey, values: allValues }));

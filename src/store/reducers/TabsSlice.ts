@@ -2,11 +2,12 @@
 import { RouteNames } from '@/router';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface TabData {
+export interface TabData {
   key: string;
-  title: any;
-  contentKey: string; // Изменено на contentKey
+  title: string;
+  contentKey: string;
   closable: boolean;
+  pickSlipNumber?: number;
 }
 
 interface TabsState {

@@ -84,9 +84,9 @@ const ActionChangeForm: React.FC<ActionFormProps> = ({
   const [activeTabKey, setActiveTabKey] = useState('1');
   // taskStatus: step.projectTaskID.status, console.log(step);
   const handleFinish = (values: any) => {
-    const removalDate = dayjs(values.removalDate).utc().startOf('minute');
+    const removalDate = dayjs(values.removalDate).startOf('minute');
 
-    const installDate = dayjs(values.installDate).utc().startOf('minute');
+    const installDate = dayjs(values.installDate).startOf('minute');
 
     const now = dayjs().utc().startOf('minute');
 
@@ -121,7 +121,7 @@ const ActionChangeForm: React.FC<ActionFormProps> = ({
       installDate: installDate.toISOString(),
       createUserID: USER_ID,
       installUserID: USER_ID,
-      createDate: new Date(),
+      createDate: new Date().toISOString(),
       type: 'install',
       certificateNumber: values?.certificateNumber,
       serialOnNumber: values?.serialOnNumber,
@@ -138,7 +138,7 @@ const ActionChangeForm: React.FC<ActionFormProps> = ({
       removalDate: removalDate.toISOString(),
       createUserID: USER_ID,
       type: 'remove',
-      createDate: new Date(),
+      createDate: new Date().toISOString(),
       position: values.position,
       reasonToRemoval: values.reasonToRemoval,
       serialNumberOf: values?.serialNumberOf,
@@ -553,8 +553,8 @@ const ActionChangeForm: React.FC<ActionFormProps> = ({
                       showTime: {
                         defaultValue: dayjs('00:00', 'HH:mm'),
                         format: 'HH:mm',
-                        disabledHours: disabledDateTime().disabledHours,
-                        disabledMinutes: disabledDateTime().disabledMinutes,
+                        // disabledHours: disabledDateTime().disabledHours,
+                        // disabledMinutes: disabledDateTime().disabledMinutes,
                       },
                       defaultValue: dayjs().utc().startOf('minute'), // Текущее время UTC без секунд
                       disabledDate,

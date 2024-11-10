@@ -7,11 +7,17 @@ export interface Config {
 
 const config: Config = {
   apiUrls: [
+    'http://localhost:3001',
     'http://192.168.74.14',
-    'http://82.209.232.250:4000'
+    'http://82.209.232.250:4000',
   ],
-  currentApiUrl: 'http://82.209.232.250:4000'
+  currentApiUrl: 'http://82.209.232.250:4000',
 };
+
+// const config: Config = {
+//   apiUrls: ['http://192.168.74.14', 'http://localhost:80'],
+//   currentApiUrl: 'http://localhost:80',
+// };
 
 export const apiChangeSubject = new Subject<string>();
 

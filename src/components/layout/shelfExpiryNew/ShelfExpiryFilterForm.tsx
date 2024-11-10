@@ -30,15 +30,29 @@ import {
   useGetToolsTypeQuery,
 } from '@/features/storeAdministration/ToolTypeApi';
 const { Option } = Select;
-type ShelfExpiryFilterFormType = {
-  onSubmit: (data: any) => void;
-};
+
+interface FilterFormValues {
+  locationID?: string;
+  stationID?: string;
+  storeID?: string;
+  label?: string;
+  partNumberID?: string;
+  serialNumber?: string;
+  dateIn?: [Date, Date];
+  datePickerValue?: Date;
+  GROUP?: string;
+  TYPE?: string;
+  toolTypeID?: string;
+  toolCodeID?: string;
+}
 
 const { RangePicker } = DatePicker;
 
 // Функция для преобразования числа в формат часы:минуты
 
-const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
+const ShelfExpiryFilterForm: FC<{
+  onSubmit: (values: FilterFormValues) => void;
+}> = ({ onSubmit }) => {
   const { t } = useTranslation(); ///////////////////
   /////////////////////////////
   const { data: stores } = useGetStoresQuery({});
@@ -184,6 +198,20 @@ const ShelfExpiryFilterForm: FC<ShelfExpiryFilterFormType> = ({ onSubmit }) => {
   const [selectedToolTypeCode, setSelectedToolTypeCode] = useState<
     string | null
   >(null);
+
+  const handleSubmit = (values: FilterFormValues) => {
+    // Проверяем и форматируем значения перед отправкой
+    const formattedValues = {
+      ...values,
+      // Форматируем даты если они есть
+      dateIn: values.dateIn?.map((date) => date.toISOString()),
+      datePickerValue: values.datePickerValue?.toISOString(),
+    };
+
+    console.log('Submitting filter values:', formattedValues);
+    onSubmit(formattedValues);
+  };
+
   return (
     <>
       <ProForm

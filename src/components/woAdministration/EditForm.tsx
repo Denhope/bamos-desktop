@@ -394,8 +394,8 @@ const EditForm: React.FC<EditFormProps> = ({
                     showTime: {
                       defaultValue: dayjs('00:00', 'HH:mm'),
                       format: 'HH:mm',
-                      disabledHours: disabledDateTime().disabledHours,
-                      disabledMinutes: disabledDateTime().disabledMinutes,
+                      // disabledHours: disabledDateTime().disabledHours,
+                      // disabledMinutes: disabledDateTime().disabledMinutes,
                     },
                     defaultValue: dayjs().utc().startOf('minute'),
                     disabledDate,
@@ -468,8 +468,8 @@ const EditForm: React.FC<EditFormProps> = ({
                     showTime: {
                       defaultValue: dayjs('00:00', 'HH:mm'),
                       format: 'HH:mm',
-                      disabledHours: disabledDateTime().disabledHours,
-                      disabledMinutes: disabledDateTime().disabledMinutes,
+                      // disabledHours: disabledDateTime().disabledHours,
+                      // disabledMinutes: disabledDateTime().disabledMinutes,
                     },
                     defaultValue: dayjs().utc().startOf('minute'),
                     disabledDate,

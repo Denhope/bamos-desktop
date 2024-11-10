@@ -1,9 +1,6 @@
-// ts-nocheck
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
+// @ts-nocheck
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ColDef } from 'ag-grid-community';
-import PartsTable from '@/components/shared/Table/PartsTable';
 import { IPartNumber } from '@/models/IUser';
 import { useTranslation } from 'react-i18next';
 import { notification } from 'antd';
@@ -11,72 +8,90 @@ import {
   useAddRequirementMutation,
   useUpdateRequirementMutation,
 } from '@/features/requirementAdministration/requirementApi';
-import { useGetGroupUsersQuery } from '@/features/userAdministration/userApi';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 
-type ExampleComponentProps = {
+type IssuedListProps = {
   columnDefs: ColDef[];
-  partNumbers: IPartNumber[] | [];
+  partNumbers: IPartNumber[];
   taskId?: string;
-  fetchData?: any[] | [];
+  fetchData?: any[];
   onUpdateData: (data: any[]) => void;
   isTool?: string;
-  isAddVisiable?: boolean;
-  isButtonVisiable?: boolean;
+  isAddVisible?: boolean;
+  isButtonVisible?: boolean;
   isVisible?: boolean;
   isButtonColumn?: boolean;
-  isChekboxColumn?: boolean;
+  isCheckboxColumn?: boolean;
   height: string;
   isEditable?: boolean;
   pagination?: boolean;
   order?: any;
-  isIssueVisibale?: boolean;
+  isIssueVisible?: boolean;
 };
 
-const IssuedList: React.FC<ExampleComponentProps> = ({
+const IssuedList: React.FC<IssuedListProps> = ({
   columnDefs,
   partNumbers,
-  taskId,
   fetchData,
   onUpdateData,
-  isAddVisiable,
-  isButtonVisiable = true,
-  isVisible = false,
-  isButtonColumn,
+  isCheckboxColumn,
   height,
-  isEditable,
   pagination,
   order,
 }) => {
-  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
   const { t } = useTranslation();
 
   const [rowData, setRowData] = useState<any[]>([]);
   const [addRequirement] = useAddRequirementMutation();
   const [updateRequirement] = useUpdateRequirementMutation();
 
-  useEffect(() => {
+  const calculateToBookedQuantity = useCallback((row) => {
+    const amount = row.amount ?? row.amout ?? 0;
+    const requestQuantity = row.requestQuantity ?? row.requestedQuantity ?? 0;
+    const bookedQuantity = row.bookedQuantity || 0;
+    const canceledQuantity = row.canceledQuantity || 0;
+
+    // Добавляем canceledQuantity к доступному количеству
+    return Math.max(
+      0,
+      amount - requestQuantity - bookedQuantity + canceledQuantity
+    );
+  }, []);
+
+  const memoizedRowData = useMemo(() => {
     if (fetchData && fetchData.length > 0) {
-      setRowData(fetchData);
-      onUpdateData(fetchData);
+      return fetchData.map((row) => ({
+        ...row,
+        toBookedQuantity: calculateToBookedQuantity(row),
+      }));
     }
-  }, [fetchData, onUpdateData]);
+    return [];
+  }, [fetchData, calculateToBookedQuantity]);
+
+  useEffect(() => {
+    if (memoizedRowData.length > 0) {
+      console.log('Setting row data:', memoizedRowData);
+      setRowData(memoizedRowData);
+      onUpdateData(memoizedRowData);
+    }
+  }, [memoizedRowData, onUpdateData]);
 
   const handleSubmit = useCallback(
     async (taskPart: any) => {
       try {
-        if (!taskPart.partId || !taskPart.amout) {
+        if (!taskPart.partId) {
           notification.error({
             message: t('ERROR'),
-            description: t(
-              'All fields must be filled and quantity must be greater than zero.'
-            ),
+            description: t('Part ID is missing.'),
           });
           return;
         }
 
+        const toBookedQuantity =
+          taskPart.toBookedQuantity ?? calculateToBookedQuantity(taskPart);
+
         const reqData = {
-          status: taskPart.createUserID ? 'open' : 'open', // Проверить логику, какой статус у новой записи
+          status: taskPart.createUserID ? 'open' : 'open',
           plannedDate: taskPart?.plannedDate,
           projectID: order.projectID,
           projectTaskID: order.id,
@@ -85,73 +100,111 @@ const IssuedList: React.FC<ExampleComponentProps> = ({
           partNumberID: taskPart.partId,
           partNumber: taskPart.PART_NUMBER,
           description: taskPart.DESCRIPTION,
-          amout: taskPart.amout,
+          amount: taskPart.amount ?? taskPart.amout,
+          bookedQuantity: taskPart.bookedQuantity,
+          requestQuantity:
+            taskPart.requestQuantity ??
+            taskPart.requestedQuantity + toBookedQuantity,
         };
 
-        if (taskPart.createUserID) {
-          await updateRequirement({
-            ...reqData,
-            _id: taskPart._id,
-            id: taskPart._id,
-          }).unwrap();
+        if (taskPart) {
+          // await updateRequirement({
+          //   ...reqData,
+          //   _id: taskPart._id,
+          //   id: taskPart._id,
+          // }).unwrap();
+          console.log(reqData);
           notification.success({
-            message: t('STEP SUCCESSFULLY UPDATED'),
-            description: t('The step has been successfully updated.'),
+            message: t('REQUIREMENT SUCCESSFULLY UPDATED'),
+            description: t('The requirement has been successfully updated.'),
           });
         } else {
-          await addRequirement({
-            requirement: reqData,
-          }).unwrap();
+          console.log(reqData);
+          // await addRequirement({
+          //   requirement: reqData,
+          // }).unwrap();
           notification.success({
-            message: t('PART SUCCESSFULLY ADDED'),
-            description: t('The part has been successfully added.'),
+            message: t('REQUIREMENT SUCCESSFULLY ADDED'),
+            description: t('The requirement has been successfully added.'),
           });
         }
       } catch (error) {
         notification.error({
           message: t('ERROR'),
-          description: t('Error saving part.'),
+          description: t('Error saving requirement.'),
         });
       }
     },
-    [t, addRequirement, updateRequirement, order]
+    [t, addRequirement, updateRequirement, order, calculateToBookedQuantity]
   );
 
   const onCellValueChanged = useCallback(
     (params: any) => {
-      const updatedRow = params;
-      console.log(params);
-      const updatedData = rowData.map((row) =>
-        row._id === updatedRow._id ? updatedRow : row
-      );
-      setRowData(updatedData);
-      onUpdateData(updatedData);
+      const { data, colDef, newValue } = params;
+      if (colDef.field === 'toBookedQuantity') {
+        const maxValue = calculateToBookedQuantity(data);
+        const validatedValue = Math.min(
+          Math.max(0, Number(newValue)),
+          maxValue
+        );
+        const updatedRow = { ...data, toBookedQuantity: validatedValue };
+        const updatedData = rowData.map((row) =>
+          row._id === updatedRow._id ? updatedRow : row
+        );
+        console.log('Updating row data:', updatedData);
+        setRowData(updatedData);
+        onUpdateData(updatedData);
+      }
     },
-    [rowData, onUpdateData]
+    [rowData, onUpdateData, calculateToBookedQuantity]
   );
 
-  const { data: usersGroups } = useGetGroupUsersQuery({});
+  const updatedColumnDefs = useMemo(
+    () =>
+      columnDefs.map((col) => {
+        if (col.field === 'toBookedQuantity') {
+          return {
+            ...col,
+            editable: true,
+            cellStyle: () => ({ backgroundColor: '#FFCCCB' }),
+            valueParser: (params: any) => {
+              const value = Number(params.newValue);
+              const maxValue = calculateToBookedQuantity(params.data);
+              return isNaN(value)
+                ? undefined
+                : Math.min(Math.max(0, value), maxValue);
+            },
+            valueFormatter: (params: any) => {
+              console.log('toBookedQuantity value:', params.value);
+              return params.value !== undefined ? params.value : '';
+            },
+            valueGetter: (params: any) => {
+              const value =
+                params.data.toBookedQuantity ??
+                calculateToBookedQuantity(params.data);
+              console.log('toBookedQuantity valueGetter:', value);
+              return value;
+            },
+          };
+        }
+        return col;
+      }),
+    [columnDefs, calculateToBookedQuantity]
+  );
 
   return (
-    <div style={containerStyle} className="flex flex-col gap-5">
-      <div style={gridStyle} className={'ag-theme-alpine'}>
-        <PartsTable
-          isVisible={isVisible}
-          isButtonColumn={isButtonColumn}
+    <div style={{ width: '100%', height }} className="flex flex-col gap-5">
+      <div style={{ height, width: '100%' }} className="ag-theme-alpine">
+        <UniversalAgGrid
+          gridId="issuedList"
+          isVisible={true}
           pagination={pagination}
-          isEditable={isEditable}
-          isAddVisiable={isAddVisiable}
-          isButtonVisiable={isButtonVisiable}
+          isCheckboxColumn={isCheckboxColumn}
           height={height}
           rowData={rowData}
-          columnDefs={columnDefs}
-          partNumbers={partNumbers}
+          columnDefs={updatedColumnDefs}
           onCellValueChanged={onCellValueChanged}
-          onAddRow={() => {}}
-          onDelete={(id: string) => {}}
-          onSave={(data: any) => {}}
-          onRowSelect={(rowData: any) => {}}
-          onCheckItems={(selectedKeys: React.Key[]) => {}}
+          onSave={handleSubmit}
         />
       </div>
     </div>

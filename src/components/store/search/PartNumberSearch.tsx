@@ -119,7 +119,7 @@ const PartNumberSearch: FC<MaterialItemStoreSearchNewProps> = ({
   const companyID = localStorage.getItem('companyID');
   const [shouldRequest, setShouldRequest] = useState(false);
   return (
-    <div className="flex my-0 mx-auto  h-[78vh] flex-col relative overflow-hidden">
+    <div className="flex my-0 mx-auto  h-[62vh] flex-col relative overflow-hidden">
       <ProTable
         // form={form}
         tableAlertRender={false}

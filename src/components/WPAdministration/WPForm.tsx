@@ -1,7 +1,96 @@
+// //ts-nocheck
+
+// import React, { FC, useState, useEffect, useMemo } from 'react';
+// import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
+// import {
+//   Button,
+//   Empty,
+//   Modal,
+//   Tabs,
+//   Upload,
+//   message,
+//   Col,
+//   Space,
+//   notification,
+//   Tag,
+// } from 'antd';
+// import {
+//   UploadOutlined,
+//   ProjectOutlined,
+//   FileOutlined,
+//   MinusSquareOutlined,
+// } from '@ant-design/icons';
+// import { useTranslation } from 'react-i18next';
+// import { deleteFile, uploadFileServer } from '@/utils/api/thunks';
+// import {
+//   useAddProjectItemWOMutation,
+//   useAddProjectPanelsMutation,
+//   useAppendProjectTaskMutation,
+//   useGetProjectItemsWOQuery,
+//   useGetProjectTaskForCardQuery,
+//   useReloadProjectTaskMutation,
+// } from '@/features/projectItemWO/projectItemWOApi';
+// import {
+//   ProFormDatePicker,
+//   ProFormDigit,
+//   ProFormSelect,
+//   ProFormTextArea,
+// } from '@ant-design/pro-components';
+// import { IProject } from '@/models/IProject';
+// import { useGetProjectTypesQuery } from '../projectTypeAdministration/projectTypeApi';
+
+// import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
+// import {
+//   ValueEnumType,
+//   ValueEnumTypeTask,
+//   getStatusColor,
+//   getTaskTypeColor,
+//   handleFileOpen,
+//   handleFileOpenTask,
+//   handleFileSelect,
+//   transformToIProjectTask,
+// } from '@/services/utilites';
+// import { COMPANY_ID, USER_ID } from '@/utils/api/http';
+// import { useAppDispatch } from '@/hooks/useTypedSelector';
+
+// import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
+// // import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
+// import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+// import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
+// import ActionsComponent from './ActionsComponent';
+// import { useGetProjectItemsQuery } from '@/features/projectItemAdministration/projectItemApi';
+// import PdfGeneratorWP from './PdfGeneratorWP';
+// import {
+//   useDeleteProjectTaskMutation,
+//   useGetProjectTasksQuery,
+//   useUpdateProjectTaskMutation,
+// } from '@/features/projectTaskAdministration/projectsTaskApi';
+// import { useGetCERTSTypeQuery } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
+// import { useAddMultiRequirementMutation } from '@/features/requirementAdministration/requirementApi';
+// import Documents from './Documents';
+// import { AgGridReact } from 'ag-grid-react';
+// import 'ag-grid-community/styles/ag-grid.css';
+// import 'ag-grid-community/styles/ag-theme-alpine.css';
+// import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+
+// interface UserFormProps {
+//   project?: IProject;
+//   onSubmit: (project: IProject) => void;
+//   onDelete?: (projectId: string) => void;
+// }
+
+// interface ActionHistory {
+//   [key: string]: {
+//     user?: any;
+//     date: string;
+//   };
+// }
+
 //@ts-nocheck
 
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { ProForm, ProFormText, ProFormGroup } from '@ant-design/pro-form';
+import PDFExport from '../shared/PDFExport';
 import {
   Button,
   Empty,
@@ -12,6 +101,8 @@ import {
   Col,
   Space,
   notification,
+  Tag,
+  Select,
 } from 'antd';
 import {
   UploadOutlined,
@@ -53,7 +144,6 @@ import { COMPANY_ID, USER_ID } from '@/utils/api/http';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
-// import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
 import ActionsComponent from './ActionsComponent';
@@ -62,11 +152,15 @@ import PdfGeneratorWP from './PdfGeneratorWP';
 import {
   useDeleteProjectTaskMutation,
   useGetProjectTasksQuery,
+  useUpdateProjectTaskMutation,
 } from '@/features/projectTaskAdministration/projectsTaskApi';
-import TaskList from '../shared/Table/TaskList';
 import { useGetCERTSTypeQuery } from '@/features/requirementsTypeAdministration/certificatesTypeApi';
 import { useAddMultiRequirementMutation } from '@/features/requirementAdministration/requirementApi';
 import Documents from './Documents';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 
 interface UserFormProps {
   project?: IProject;
@@ -103,16 +197,32 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   const {
     data: projectTasks,
     refetch: refetchTasks,
-    isFetching: isFetch,
+    isLoading: isTasksLoading,
+    isFetching: isTasksFetching,
   } = useGetProjectItemsWOQuery(
     {
       WOReferenceID: project?._id,
     },
     {
-      skip: !project,
+      skip: !project?._id,
     }
   );
-  const ids = projectTasks?.map((item) => item?.id);
+
+  const ids = useMemo(
+    () => projectTasks?.map((item) => item?.id) || [],
+    [projectTasks]
+  );
+
+  const [isDataReady, setIsDataReady] = useState(false);
+
+  useEffect(() => {
+    if (project?._id && projectTasks && !isTasksLoading && !isTasksFetching) {
+      setIsDataReady(true);
+    } else {
+      setIsDataReady(false);
+    }
+  }, [project?._id, projectTasks, isTasksLoading, isTasksFetching]);
+
   const handleSubmit = async (projectType: any) => {
     const newUser: any = project
       ? { ...project, ...projectType, documents: documents }
@@ -150,73 +260,15 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     MJC: t('MJC'),
     CMJC: t('CMJC'),
     FC: t('FC'),
+    HARD_ACCESS: t('HARD ACCESS'),
   };
-  const columnDefs: any[] = [
-    {
-      field: 'status',
-      headerName: `${t('Status')}`,
-      cellDataType: 'text',
-      width: 100,
-      filter: true,
-      valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
-        params.data.status,
-      valueFormatter: (params: { value: keyof ValueEnumType }) => {
-        const status = params.value;
-        return valueEnum[status] || '';
-      },
-      cellStyle: (params: { value: keyof ValueEnumType }) => ({
-        backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
-      }),
-    },
-    {
-      field: 'taskCardNumber',
-      headerName: `${t('CARD No')}`,
-      filter: true,
-      width: 100,
-      // hide: true,
-      valueGetter: (params: any) => {
-        const reference = params.data.reference; // Предполагаем, что reference находится в params.data
-        if (!reference || reference.length === 0) return ''; // Проверка на наличие reference
-
-        const taskCardNumber =
-          reference.find((ref) => ref.referenceType === 'TASK_CARD')
-            ?.taskCardNumber ?? '';
-        return taskCardNumber;
-      },
-    },
-
-    {
-      field: 'taskWO',
-      headerName: `${t('TRACE No')}`,
-      filter: true,
-      width: 100,
-    },
-    {
-      field: 'taskNumber',
-      headerName: `${t('TASK NUMBER')}`,
-      filter: true,
-      width: 150,
-    },
-    {
-      field: 'taskDescription',
-      headerName: `${t('DESCRIPTION')}`,
-      filter: true,
-      // hide: true,
-    },
-    {
-      field: 'projectName',
-      width: 100,
-      headerName: `${t('WP TITLE')}`,
-      filter: true,
-      // hide: true,
-    },
-
+  const columnDefs = [
+    { field: 'taskNumber', headerName: t('TASK NUMBER') },
+    { field: 'taskDescription', headerName: t('DESCRIPTION') },
     {
       field: 'projectItemType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
-      width: 100,
       valueGetter: (params: {
         data: { projectItemType: keyof ValueEnumTypeTask };
       }) => params.data.projectItemType,
@@ -226,47 +278,63 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        color: '#ffffff', // Text color
       }),
-      // hide: true,
     },
     {
-      field: 'createDate',
-      headerName: `${t('CREATE DATE')}`,
+      field: 'projectName',
+      headerName: `${t('WP TITLE')}`,
       filter: true,
-      width: 100,
-      valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
-        const date = new Date(params.value);
-        return date.toLocaleDateString('ru-RU', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-      },
     },
     {
-      field: 'reference',
-      headerName: `${t('DOC')}`,
-      width: 140,
-      cellRenderer: (params: any) => {
-        const files = params.value; // Предполагаем, что params.value содержит массив объектов файлов
-        if (!files || files.length === 0) return null; // Проверка на наличие файлов
-
-        // Предполагаем, что вы хотите взять первый файл из массива
-        const file = files[0];
-
+      field: 'taskWO',
+      headerName: `${t('TRACE No')}`,
+      filter: true,
+    },
+    {
+      field: 'taskWONumber',
+      headerName: `${t('SEQ No')}`,
+      filter: true,
+    },
+    {
+      field: 'checkStatus',
+      headerName: t('STATUS'),
+      cellRenderer: (params) => {
+        const statusColors = {
+          draft: '#f0f0f0',
+          checked: '#e6f7ff',
+          onEdit: '#fff7e6',
+          success: '#f6ffed',
+        };
         return (
           <div
-            className="cursor-pointer hover:text-blue-500"
-            onClick={() => {
-              handleFileOpenTask(file.fileId, 'uploads', file.filename);
+            style={{
+              backgroundColor: statusColors[params.value] || statusColors.draft,
+              padding: '5px',
+              borderRadius: '4px',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <FileOutlined />
+            <Select
+              value={params.value || 'draft'}
+              style={{ width: '100%' }}
+              onChange={(value) =>
+                handleCheckListStatusChange(params.data.id, value)
+              }
+            >
+              <Select.Option value="draft">{t('DRAFT')}</Select.Option>
+              <Select.Option value="checked">{t('CHECKED')}</Select.Option>
+              <Select.Option value="onEdit">{t('ON EDIT')}</Select.Option>
+              <Select.Option value="success">{t('SUCCESS')}</Select.Option>
+            </Select>
           </div>
         );
       },
+      flex: 1,
+      minWidth: 150,
     },
   ];
   const [createWO] = useAddProjectItemWOMutation({});
@@ -279,19 +347,26 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     generateAccess: { user: '', date: '' },
   });
   const generateWP = async (
-    ids: any[],
     actionKey: string,
     user?: string,
     userName?: string,
     date?: string
   ) => {
+    if (!isDataReady) {
+      notification.warning({
+        message: t('NOT READY'),
+        description: t('Please wait for the data to load completely.'),
+      });
+      return;
+    }
+
     console.log('generateWP function called');
     setTriggerQuery(true);
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO CREATE TASKS?'),
       onOk: async () => {
         try {
-          if (ids && ids.length > 0) {
+          if (ids.length > 0) {
             await createWO({
               isSingleWO: true,
               isMultiWO: false,
@@ -301,11 +376,12 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
               message: t('SUCCESSFULLY ADDED'),
               description: t('Items has been successfully added.'),
             });
-          } else
+          } else {
             notification.error({
               message: t('FAILED '),
-              description: 'There was an error adding tasks.',
+              description: 'There are no tasks to add.',
             });
+          }
 
           handleSubmit({
             actionHistory: {
@@ -360,7 +436,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       },
     });
 
-    // Здесь вы можете добавить логику для create Requirements
+    // Здесь вы может добавить логику для create Requirements
   };
 
   const linkRequirements = () => {
@@ -374,12 +450,19 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   };
 
   const generateAccessWO = (
-    ids: any[],
     actionKey: string,
     user?: string,
     userName?: string,
     date?: string
   ) => {
+    if (!isDataReady) {
+      notification.warning({
+        message: t('NOT READY'),
+        description: t('Please wait for the data to load completely.'),
+      });
+      return;
+    }
+
     console.log('generateAccess function called');
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO ADD ACCESS'),
@@ -396,8 +479,8 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
             },
           });
           notification.success({
-            message: t('ACCESS SUCCESSFULLY DELETED'),
-            description: t('The step has been successfully deleted.'),
+            message: t('ACCESS SUCCESSFULLY ADDED'),
+            description: t('The access has been successfully added.'),
           });
           Modal.destroyAll();
         } catch (error) {
@@ -411,12 +494,19 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   };
 
   const generateTaskCardWo = (
-    ids: any[],
     actionKey: string,
     user?: string,
     userName?: string,
     date?: string
   ) => {
+    if (!isDataReady) {
+      notification.warning({
+        message: t('NOT READY'),
+        description: t('Please wait for the data to load completely.'),
+      });
+      return;
+    }
+
     handleSubmit({
       actionHistory: {
         ...actionHistory,
@@ -514,7 +604,6 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
   };
 
   const handleActionClick = (actionKey: string) => {
-    const ids = projectItems?.map((item) => item.id);
     const user = USER_ID;
     const userName = localStorage.getItem('name');
     const date = new Date().toLocaleString();
@@ -530,7 +619,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
 
     switch (actionKey) {
       case 'generateWP':
-        generateWP(ids, actionKey, user, userName, date);
+        generateWP(actionKey, user, userName, date);
         break;
       case 'createRequirements':
         createRequirements(actionKey, user, userName, date);
@@ -542,16 +631,17 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         cancelLink();
         break;
       case 'generateAccess':
-        generateAccessWO(ids, actionKey, user, userName, date);
+        generateAccessWO(actionKey, user, userName, date);
         break;
       case 'generateTaskCard':
-        generateTaskCardWo(ids, actionKey, user, userName, date);
+        generateTaskCardWo(actionKey, user, userName, date);
         break;
       case 'rebuildWO':
         regenerateTasks(actionKey, user, userName, date);
         break;
       case 'appendTOWO':
         addTowo(actionKey, user, userName, date);
+        break;
       default:
         console.log('Unknown action key:', actionKey);
     }
@@ -745,7 +835,27 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
     });
   };
 
-  // Добавляем состояние для документов
+  const [updateProjectTask] = useUpdateProjectTaskMutation();
+
+  const handleCheckListStatusChange = async (
+    taskId: string,
+    newStatus: 'draft' | 'checked' | 'onEdit' | 'success'
+  ) => {
+    try {
+      await updateProjectTask({ id: taskId, checkStatus: newStatus }).unwrap();
+      notification.success({
+        message: t('STATUS UPDATED'),
+        description: t('Task check status has been successfully updated.'),
+      });
+
+      refetchTasks();
+    } catch (error) {
+      notification.error({
+        message: t('FAILED TO UPDATE STATUS'),
+        description: t('There was an error updating the task check status.'),
+      });
+    }
+  };
 
   return (
     <ProForm
@@ -762,7 +872,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
       }}
       initialValues={project}
       layout="horizontal"
-      key={project?._id} // Добавляем key для пересоздания компонента
+      key={project?._id}
     >
       <Tabs
         onChange={(key) => {
@@ -804,8 +914,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   lineMaintanance: {
                     text: t('LINE MAINTENANCE'),
                   },
-                  repairPart: { text: t('REPAIR COMPONENT') },
-                  repairAC: { text: t('REPAIR AC') },
+                  repairPart: { text: t('REPAIR AC') },
                   partCange: { text: t('COMPONENT CHANGE') },
                   addWork: { text: t('ADD WORK') },
                   enginiring: { text: t('ENGINEERING SERVICES') },
@@ -876,6 +985,11 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   width={'xl'}
                   name="customerWO"
                   label={t('CUSTOMER WO No')}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                 />
                 <ProFormSelect
                   showSearch
@@ -887,6 +1001,11 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 />
                 <ProFormSelect
                   showSearch
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                   name="planeId"
                   label={t('PROJECT A/C')}
                   width="sm"
@@ -948,6 +1067,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
         <Tabs.TabPane tab={t('ACTIONS')} key="3">
           <ActionsComponent
             selectedKeys={ids}
+            WOReferenceID={project?._id}
             wo={project}
             onActionClick={handleActionClick}
             actionHistory={(project && project?.actionHistory) || []}
@@ -956,7 +1076,7 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('TASKS')} key="4">
-          <div className="h-[60vh] bg-white px-4  rounded-md border-gray-400 gap-2 flex flex-col">
+          <div className="h-[60vh] bg-white px-4 rounded-md border-gray-400 gap-2 flex flex-col">
             <Col style={{ textAlign: 'right' }}>
               <Button
                 disabled={
@@ -971,28 +1091,63 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                 {t('DELETE TASK')}
               </Button>
             </Col>
-            <TaskList
-              wo={project}
-              isFilesVisiable={false}
-              isLoading={isLoading || isFetching}
-              pagination={false}
-              isChekboxColumn={true}
-              columnDefs={columnDefs}
+            <UniversalAgGrid
+              isLoading={isFetching || isLoading}
+              gridId="taskList"
+              isChekboxColumn
               rowData={transformedTasks || []}
-              onRowSelect={function (rowData: any | null): void {
-                console.log(rowData);
+              columnDefs={columnDefs}
+              onRowSelect={(selectedRows) => {
+                console.log(selectedRows[0]);
               }}
-              height={'55vh'}
-              onCheckItems={function (selectedKeys: React.Key[]): void {
+              onCheckItems={(selectedKeys) => {
                 setSelectedKeys(selectedKeys);
               }}
+              height="56vh"
+              className="h-full"
             />
           </div>
         </Tabs.TabPane>
-        <Tabs.TabPane tab={t('CHECK LIST')} key="5"></Tabs.TabPane>
-        <Tabs.TabPane tab={t('REPORTS')} key="6"></Tabs.TabPane>
+        <Tabs.TabPane tab={t('CHECK LIST')} key="5">
+          <div className="h-[60vh] flex flex-col">
+            <div className="mb-0">
+              {/* <PDFExport
+                title={t('CHECK LIST TASK REPORT')}
+                filename={`check_list_task_report_wo_${
+                  project?.WONumber || 'unknown'
+                }_${new Date().toISOString().split('T')[0]}`}
+                statistics={{
+                  WO: project?.WONumber || '',
+                  Description: project?.WOName || '',
+                  'AC Registration': project?.planeId?.regNbr || '',
+                  'Total Tasks': transformedTasks?.length || 0,
+                  'Checked Tasks':
+                    transformedTasks?.filter(
+                      (item) => item.checkStatus === 'checked'
+                    ).length || 0,
+                }}
+                columnDefs={columnDefs}
+                data={transformedTasks || []}
+                orientation="landscape"
+              /> */}
+            </div>
+            <div className="flex-grow">
+              <UniversalAgGrid
+                isChekboxColumn
+                isLoading={isFetching || isLoading}
+                gridId="checkList"
+                rowData={transformedTasks || []}
+                columnDefs={columnDefs}
+                height="calc(59vh)"
+                className="h-full"
+              />
+            </div>
+          </div>
+        </Tabs.TabPane>
       </Tabs>
     </ProForm>
   );
 };
+
 export default WPForm;
+// export default WPForm;

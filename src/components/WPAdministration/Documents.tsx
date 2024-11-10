@@ -1,7 +1,11 @@
 // @ts-nocheck
 
 import React, { FC, useState, useEffect } from 'react';
-import { ProForm, ProFormText } from '@ant-design/pro-components';
+import {
+  ProForm,
+  ProFormText,
+  ProFormSelect,
+} from '@ant-design/pro-components';
 import { Button, Divider } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
@@ -27,6 +31,16 @@ const defaultDocuments: Document[] = [
   { id: 4, name: 'TC', revision: '', revisionDate: '', description: '' },
   { id: 5, name: 'IPC', revision: '', revisionDate: '', description: '' },
   { id: 6, name: 'NDTM', revision: '', revisionDate: '', description: '' },
+];
+
+const documentTypes = [
+  { value: 'MPD', label: 'MPD' },
+  { value: 'AMM', label: 'AMM' },
+  { value: 'SRM', label: 'SRM' },
+  { value: 'TC', label: 'TC' },
+  { value: 'IPC', label: 'IPC' },
+  { value: 'NDTM', label: 'NDTM' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 const Documents: FC<DocumentsProps> = ({
@@ -74,74 +88,98 @@ const Documents: FC<DocumentsProps> = ({
     });
   };
 
+  const isDisabled = wo?.status === 'CLOSED' || wo?.status === 'COMPLETED';
+
   return (
-    <div>
+    <div className="documents-container">
       {documentsData &&
-        documentsData.length &&
+        documentsData.length > 0 &&
         documentsData.map((doc, index) => (
           <div key={doc.id}>
             {index > 0 && <Divider style={{ margin: '16px 0' }} />}
             <ProForm.Group
-              disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
+              disabled={isDisabled}
               size="small"
+              className="document-group"
             >
-              <ProFormText
-                disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
-                width="xs"
+              <ProFormSelect
                 name={`name-${doc.id}`}
                 label={t('TYPE')}
                 initialValue={doc.name}
-                onChange={(e) => handleChange(doc.id, 'name', e.target.value)}
+                options={documentTypes}
+                onChange={(value) => handleChange(doc.id, 'name', value)}
+                className="document-input"
               />
               <ProFormText
-                disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
-                width="sm"
                 name={`revision-${doc.id}`}
                 label={t('REVISION')}
                 initialValue={doc.revision}
                 onChange={(e) =>
                   handleChange(doc.id, 'revision', e.target.value)
                 }
+                className="document-input"
               />
               <ProFormText
-                disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
                 name={`revisionDate-${doc.id}`}
                 label={t('DATE')}
                 initialValue={doc.revisionDate}
                 onChange={(e) =>
                   handleChange(doc.id, 'revisionDate', e.target.value)
                 }
+                className="document-input"
               />
               <ProForm.Item>
                 <Button
-                  disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
                   type="default"
                   danger
                   icon={<MinusOutlined />}
                   onClick={() => handleRemoveDocument(doc.id)}
+                  disabled={isDisabled}
                 />
               </ProForm.Item>
             </ProForm.Group>
           </div>
         ))}
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginTop: 16,
-          marginBottom: 16,
-        }}
-      >
+      <div className="add-document-button">
         <Button
-          disabled={wo?.status == 'CLOSED' || wo?.status == 'COMPLETED'}
           type="default"
           onClick={handleAddDocument}
           icon={<PlusOutlined />}
+          disabled={isDisabled}
         >
           {t('ADD DOC')}
         </Button>
       </div>
+
+      <style jsx>{`
+        .documents-container {
+          width: 100%;
+        }
+        .document-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 16px;
+        }
+        .document-input {
+          flex: 1;
+          min-width: 200px;
+        }
+        .add-document-button {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 16px;
+          margin-bottom: 16px;
+        }
+        @media (max-width: 768px) {
+          .document-group {
+            flex-direction: column;
+          }
+          .document-input {
+            width: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 };

@@ -66,6 +66,7 @@ export const projectItemApi = createApi({
         vendorID?: string;
         planeID?: string;
         taskType?: string;
+        isCriticalTask?: boolean;
       }
     >({
       query: ({ projectItem, projectID, vendorID, planeID, taskType }) => ({

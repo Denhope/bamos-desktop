@@ -25,6 +25,7 @@ export const actionApi = createApi({
         status?: string;
         componentAction?: any;
         isComponentChangeAction?: boolean;
+        taskID?: string;
       }
     >({
       query: ({
@@ -36,6 +37,7 @@ export const actionApi = createApi({
         status,
         isComponentChangeAction,
         componentAction,
+        taskID,
       }) => ({
         url: `projectTaskStepsActions/company/${COMPANY_ID}`,
         method: 'POST',
@@ -51,6 +53,7 @@ export const actionApi = createApi({
           status,
           isComponentChangeAction,
           componentAction,
+          taskID,
         },
       }),
       invalidatesTags: ['Actions'],
@@ -62,6 +65,7 @@ export const actionApi = createApi({
         actionType: string;
         userInspectDurations?: any;
         userPerformDurations?: any;
+        createDate?: any;
       }
     >({
       query: ({
@@ -69,11 +73,13 @@ export const actionApi = createApi({
         ids,
         userInspectDurations,
         userPerformDurations,
+        createDate,
       }) => ({
         url: `projectTaskStepsActions/multi-actions/company/${COMPANY_ID}`,
         method: 'POST',
         body: {
           actionType,
+          createDate,
           createUserID: USER_ID,
           companyID: COMPANY_ID,
           ids,
@@ -93,11 +99,16 @@ export const actionApi = createApi({
     }),
     getFilteredActions: builder.query<
       Action[],
-      { projectStepId: string; status?: string , workOrderID?:string}
+      {
+        projectStepId: string;
+        status?: string;
+        workOrderID?: string;
+        taskID?: string;
+      }
     >({
-      query: ({ projectStepId, status, workOrderID }) => ({
+      query: ({ projectStepId, status, workOrderID, taskID }) => ({
         url: `projectTaskStepsActions/projectTaskStepAction/company/${COMPANY_ID}`,
-        params: { status, projectStepId,workOrderID },
+        params: { status, projectStepId, workOrderID, taskID },
       }),
       providesTags: (result, error, { projectStepId }) => [
         { type: 'Actions', projectStepId },

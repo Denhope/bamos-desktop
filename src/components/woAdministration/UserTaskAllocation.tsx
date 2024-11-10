@@ -23,6 +23,8 @@ interface UserTaskAllocationProps {
   onTaskAllocationsChange?: (taskAllocations: TaskAllocation[]) => void;
   isSingle?: boolean;
   isTime?: boolean;
+  isNoDuration?: boolean;
+  onlyWithOrganizationAuthorization?: boolean;
 }
 
 const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
@@ -32,6 +34,8 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
   onTaskAllocationsChange = () => {},
   isSingle,
   isTime,
+  isNoDuration,
+  onlyWithOrganizationAuthorization = false,
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -77,6 +81,11 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
       handleTaskAllocationChange(currentValues);
     }
   }, [task, form]);
+
+  // Фильтрация пользователей
+  const filteredUsers = onlyWithOrganizationAuthorization
+    ? users.filter((user) => user.organizationAuthorization)
+    : users;
 
   return (
     <Form
@@ -172,7 +181,7 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         return false;
                       }}
                     >
-                      {users?.map((user) => (
+                      {filteredUsers?.map((user) => (
                         <Option key={user.id} value={user.id}>
                           {String(
                             user?.organizationAuthorization || user?.singNumber
@@ -223,7 +232,7 @@ const UserTaskAllocation: React.FC<UserTaskAllocationProps> = ({
                         return false;
                       }}
                     >
-                      {users?.map((user) => (
+                      {filteredUsers?.map((user) => (
                         <Option key={user.id} value={user.id}>
                           {`${user.firstNameEnglish?.toUpperCase()} ${user.lastNameEnglish?.toUpperCase()}`}
                         </Option>

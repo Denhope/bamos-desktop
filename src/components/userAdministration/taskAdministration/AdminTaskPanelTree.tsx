@@ -105,7 +105,7 @@ const AdminTaskPanelTree: FC<UserTreeProps> = ({
             onTaskSelect(task);
           }
         }}
-        height={640}
+        height={560}
         onCheckItems={onCheckItems}
         searchQuery={searchQuery}
       />

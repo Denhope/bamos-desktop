@@ -393,7 +393,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           }}
         />
       </ProForm.Group>
-      <ProFormSelect
+      {/* <ProFormSelect
         // mode={'multiple'}
         showSearch
         name="reqTypesID"
@@ -411,10 +411,10 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
         width="sm"
         valueEnum={requirementCodesValueEnum || []}
         disabled={!reqTypeID} // Disable the select if acTypeID is not set
-      />
+      /> */}
 
       <ProFormSelect
-        initialValue={['open', 'issued', 'onShort', 'onQuatation']}
+        initialValue={['open', 'issued', 'onShort']}
         mode="multiple"
         name="requestStatus"
         label={`${t('REQUIREMENT STATUS')}`}
@@ -431,7 +431,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           // { value: 'transfer', label: t('TRANSFER') },
         ]}
       />
-      {/* <ProFormSelect
+      <ProFormSelect
         mode="multiple"
         name="partGroup"
         label={`${t('PART  GROUP')}`}
@@ -455,7 +455,7 @@ const RequirementsFilteredForm: FC<RequirementsFilteredFormType> = ({
           { value: 'ROTABLE', label: t('ROTABLE') },
           { value: 'CONSUMABLE', label: t('CONSUMABLE') },
         ]}
-      /> */}
+      />
       <ProFormDateRangePicker
         name="plannedDate"
         label={`${t('PLANNED DATE')}`}

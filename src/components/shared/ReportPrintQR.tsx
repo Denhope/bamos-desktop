@@ -90,47 +90,60 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
 
       const qrCodes = await Promise.all(
         parts.map(async (product: any) => {
-          const qrDataURL = await generateQRCodeDataURL(
-            String(product.LOCAL_ID)
-          );
-          return qrDataURL ? { qrCode: qrDataURL, data: product } : null;
+          const localIdWithZeros = String(product.LOCAL_ID).padStart(6, '0');
+          const qrDataURL = await generateQRCodeDataURL(localIdWithZeros);
+          return qrDataURL
+            ? { qrCode: qrDataURL, data: localIdWithZeros }
+            : null;
         })
       );
 
       const qrCodesFiltered = qrCodes.filter((qrCode) => qrCode !== null);
 
       let currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
+      let currentX = 5;
       let currentY = pageSize.height - qrCodeSize - 5;
+      const maxX = pageSize.width - qrCodeSize - 5;
 
       for (const qrCode of qrCodesFiltered) {
         if (!qrCode) continue;
 
-        if (currentY < qrCodeSize + 5) {
+        if (currentX > maxX) {
+          currentX = 5;
+          currentY -= qrCodeSize + fontSize + 2;
+        }
+
+        if (currentY < qrCodeSize + fontSize + 2) {
           currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
+          currentX = 5;
           currentY = pageSize.height - qrCodeSize - 5;
         }
 
         const qrImage = await pdfDoc.embedPng(qrCode.qrCode);
         currentPage.drawImage(qrImage, {
-          x: 5,
+          x: currentX,
           y: currentY,
           width: qrCodeSize,
           height: qrCodeSize,
         });
 
-        currentPage.drawText(String(qrCode.data.LOCAL_ID), {
-          x: 15,
-          y: currentY - 5,
+        currentPage.drawText(qrCode.data, {
+          x: currentX + (qrCodeSize - fontSize * 3) / 2,
+          y: currentY - fontSize + 1,
           size: fontSize,
           color: rgb(0, 0, 0),
         });
 
-        currentY -= qrCodeSize + 7; // Adjust the spacing as needed
+        currentPage.drawRectangle({
+          x: currentX - 2,
+          y: currentY - fontSize - 2,
+          width: qrCodeSize + 4,
+          height: qrCodeSize + fontSize + 2,
+          borderColor: rgb(0.5, 0.5, 0.5),
+          borderWidth: 0.5,
+        });
 
-        if (pageBreakAfter || currentY < qrCodeSize + 5) {
-          currentPage = pdfDoc.addPage([pageSize.width, pageSize.height]);
-          currentY = pageSize.height - qrCodeSize - 5;
-        }
+        currentX += qrCodeSize + 5;
       }
 
       const pdfBytes = await pdfDoc.save();
@@ -242,14 +255,14 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({
                 setPageSize({ ...pageSize, height: value as number }),
             }}
           />
-          <ProFormCheckbox
+          {/* <ProFormCheckbox
             name="pageBreakAfter"
             label={`${t('PAGE BREAK AFTER')}`}
             initialValue={defaultPageBreakAfter}
             fieldProps={{
               onChange: (e) => setPageBreakAfter(e.target.checked),
             }}
-          />
+          /> */}
         </ProForm>
       </Modal>
     </div>

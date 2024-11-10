@@ -47,15 +47,15 @@ export const bookingApi = createApi({
     }),
     addBooking: builder.mutation<
       any,
-      { booking: Partial<any>; acTypeId?: string }
+      { booking: Partial<any>; acTypeId?: string; userID?: string }
     >({
-      query: ({ booking, acTypeId }) => ({
+      query: ({ booking, acTypeId, userID }) => ({
         url: `bookingItems/companyID/${COMPANY_ID}`,
         method: 'POST',
         body: {
           data: {
             ...booking,
-            createUserID: USER_ID,
+            createUserID: userID || USER_ID,
             createDate: new Date(),
             companyID: COMPANY_ID,
             acTypeID: acTypeId,

@@ -22,6 +22,7 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-components';
 import { useGetCompaniesQuery } from '@/features/companyAdministration/companyApi';
+import { useGetCustomerCodesQuery } from '@/features/customerCodeAdministration/customerCodeApi';
 
 interface UserFormProps {
   task?: ITask;
@@ -44,7 +45,10 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
     if (task) {
       form.resetFields();
       form.setFieldsValue(task);
-      setACTypeID(task.acTypeId);
+      setACTypeID(task.acTypeId[0]?._id);
+      form.setFieldsValue({ acTypeId: task.acTypeId[0]?._id });
+      form.setFieldsValue({ cuctumerCodeID: task.cuctumerCodeID?._id });
+      form.setFieldsValue({ companyID: task.companyID?._id });
     } else {
       form.resetFields();
       setACTypeID(undefined);
@@ -97,10 +101,16 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       acc[mpdCode.id] = mpdCode.companyName;
       return acc;
     }, {}) || {};
-  const customerOptions = [
-    { id: '66a7c334af08e2143903684a', name: 'LCV' },
-    { id: '66a9eec7af08e2143903688b', name: 'THY' },
-  ];
+  // Получаем данные о кодах клиентов
+  const { data: customerCodes, isLoading: isCustomerCodesLoading } =
+    useGetCustomerCodesQuery({});
+  // Преобразуем полученные данные в формат, подходящий для ProFormSelect
+  const customerOptions =
+    customerCodes?.map((code) => ({
+      value: code.id,
+      label: code?.prefix, // Используем customerName, если оно есть, иначе используем code
+    })) || [];
+
   return (
     <ProForm
       size="small"
@@ -114,14 +124,19 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       <Tabs defaultActiveKey="1" type="card">
         <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div
-            className=" h-[62vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
+            className=" h-[58vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto "
             // sm={19}
           >
             <ProFormGroup direction="vertical">
               <ProFormGroup>
                 <ProFormText
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                   name="regNbr"
-                  label={t('AIRCRAFT REGISTRATION No')}
+                  label={t('AIRCRAFT ADMINISTRATION No')}
                   width="sm"
                 ></ProFormText>
                 <ProFormText
@@ -132,6 +147,11 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               </ProFormGroup>
               <ProFormSelect
                 showSearch
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
                 name="mpdDocumentationId"
                 label={t('FLEET CODE')}
                 width="lg"
@@ -141,6 +161,11 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               <ProFormGroup>
                 <ProFormSelect
                   showSearch
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                   name="acTypeId"
                   label={t('AIRCRAFT TYPE')}
                   width="lg"
@@ -155,6 +180,11 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   onChange={(value: any) => setACTypeID(value)}
                 />
                 <ProFormText
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                   name="model"
                   label={t('MODEL')}
                   width="sm"
@@ -185,11 +215,21 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                 />
                 <ProFormGroup>
                   <ProFormText
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                     name="engineType"
                     label={t('ENGINE TYPE')}
                     width="sm"
                   ></ProFormText>
                   <ProFormText
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                     name="apuType"
                     label={t('APU TYPE')}
                     width="sm"
@@ -214,10 +254,13 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                     name="cuctumerCodeID"
                     label={t('CUSTOMER CODE ID')}
                     width="sm"
-                    options={customerOptions.map((option) => ({
-                      value: option.id,
-                      label: option.name,
-                    }))}
+                    options={customerOptions}
+                    loading={isCustomerCodesLoading}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                   />
                 </ProFormGroup>
 

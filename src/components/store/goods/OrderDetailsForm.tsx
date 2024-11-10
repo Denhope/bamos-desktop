@@ -10,7 +10,9 @@ import {
 import ContextMenuVendorsSearchSelect from '@/components/shared/form/ContextMenuVendorsSearchSelect';
 
 import { FormInstance, RadioChangeEvent, message } from 'antd';
-import { Button, Space } from 'antd';
+import { Button, Space, Upload } from 'antd';
+import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
+import * as XLSX from 'xlsx';
 
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder } from '@/models/IOrder';
@@ -24,7 +26,8 @@ import { getFilteredOrders, postNewReceiving } from '@/utils/api/thunks';
 
 import ContextMenuReceivingsSearchSelect from '@/components/shared/form/ContextMenuReceivingsSearchSelect';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
-
+import { useAddBulkMaterialStoreMutation } from '@/features/storeAdministration/PartsApi'; // Предполагается, что у вас есть такая утилита
+import { parseExcelDate } from '@/utils/dateUtils';
 type OrderDetailsFormType = {
   order: IOrder | null;
   onReceivingType: (data: any) => void;
@@ -103,7 +106,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
     setSecectedSingleReceiving({});
   };
   const formRef = useRef<FormInstance>(null);
-  const [selectedType, setSelectedType] = useState('ORDER');
+  const [selectedType, setSelectedType] = useState('UN_ORDER');
   const handleTypeChange = (e: RadioChangeEvent) => {
     setSelectedType(e.target.value);
     onOrdersSearch?.(null);
@@ -132,9 +135,79 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
   };
   const [initialForm, setinitialForm] = useState<any>('');
 
+  const [addBulkMaterialStore] = useAddBulkMaterialStoreMutation();
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleExcelUpload = (file: File) => {
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      const convertedData = jsonData.map((item: any) => {
+        const quantity = parseFloat(item.Qty);
+        return {
+          COMPANY_ID: localStorage.getItem('companyID') || '',
+          ORDER_NUMBER: item['Works Order'],
+          PART_NUMBER: item['Part Number'],
+          NAME_OF_MATERIAL: item['Description'],
+          GROUP: item['Stock Group'],
+          QUANTITY: quantity > 0 ? quantity : undefined,
+          LOCAL_ID: parseFloat(item['Batch Number']),
+          SERIAL_NUMBER: item['Serial No'],
+          CONDITION: item['Condition Release Type'],
+          APPROVED_CERT: item['Approved Cert'],
+          UNIT_OF_MEASURE: item['Unit Of Measure'],
+          RECEIVED_DATE: parseExcelDate(item['Goods Received Date']),
+          PRODUCT_EXPIRATION_DATE: parseExcelDate(item['Shelf Life Date']),
+          WAREHOUSE_RECEIVED_AT: item['Warehouse Code'],
+          Unit_Local_Value: parseFloat(item['Unit Price In Local']),
+          Unit_Currency_Value: parseFloat(item['Unit Price In Currency']),
+          Total_Local_Value: parseFloat(item['Total Cost In Local']),
+          BATCH: item['Batch Notes']
+            ? item['Batch Notes'].split(':')[1]
+            : undefined,
+          AWB_REFERENCE: item['AWB Reference'],
+          CURRENCY: item['Currency Code'],
+          TYPE:
+            item['Part Type'] === 'C'
+              ? 'CONSUMABLE'
+              : item['Part Type'] === 'R'
+              ? 'ROTABLE'
+              : item['Part Type'],
+          OWNER: item['Batch / Unit Owner'],
+          SUPPLIER_BATCH_NUMBER: item['Suppliers Batch number'],
+          STOCK: item['Warehouse Code'],
+          SHELF_NUMBER: item['Bin Location'],
+        };
+      });
+
+      addBulkMaterialStore(convertedData)
+        .unwrap()
+        .then(() => {
+          message.success(t('EXCEL DATA SUCCESSFULLY UPLOADED'));
+        })
+        .catch((error) => {
+          message.error(t('ERROR UPLOADING EXCEL DATA'));
+          console.error('Error uploading Excel data:', error);
+        })
+        .finally(() => {
+          setIsUploading(false);
+        });
+    };
+    reader.readAsArrayBuffer(file);
+    return false; // Prevent default upload behavior
+  };
+
   return (
     <div className="flex flex-col">
       <ProForm
+        size="small"
         onFinish={async (values) => {
           const result = dispatch(
             postNewReceiving({
@@ -165,7 +238,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             message.error('Error');
           }
         }}
-        initialValues={{ type: 'ORDER' }}
+        initialValues={{ type: 'UN_ORDER' }}
         formRef={formRef}
         submitter={{
           submitButtonProps: {
@@ -178,7 +251,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             <PermissionGuard
               requiredPermissions={[Permission.PICKSLIP_CONFIRMATION_ACTIONS]}
             >
-              <div>
+              <div className="flex gap-1">
                 {isCreating
                   ? [
                       ...dom,
@@ -203,7 +276,6 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
           selectedSingleReceiving({ receivingNumber: '' });
         }}
         form={form}
-        size="small"
         layout="horizontal"
         className="bg-white px-4 py-3 rounded-md border-gray-400"
       >
@@ -313,7 +385,7 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
                 СФ: t('СЧЕТ ФАКТУРА'),
                 ДТ: t('ДЕКЛАРАЦИЯ НА ТОВАРЫ'),
                 Инв: t('ИНВОЙС'),
-                АПП: t('АКТ ПРИЕМО-ПЕРЕДАЧИ'),
+                АПП: t('АКТ ПРИ��МО-ПЕРЕДАЧИ'),
               }}
               width="sm"
               tooltip={t('DOC TYPE')}
@@ -365,6 +437,21 @@ const OrderDetailsForm: FC<OrderDetailsFormType> = ({
             label={`${t('SHIP TO')}`}
             initialValue={'MSQ'}
           ></ProFormText>
+        </ProFormGroup>
+        <ProFormGroup>
+          <Upload
+            accept=".xlsx,.xls"
+            beforeUpload={handleExcelUpload}
+            showUploadList={false}
+          >
+            <Button
+              size="small"
+              icon={isUploading ? <LoadingOutlined /> : <UploadOutlined />}
+              disabled={isUploading}
+            >
+              {isUploading ? t('UPLOADING...') : t('UPLOAD EXCEL')}
+            </Button>
+          </Upload>
         </ProFormGroup>
       </ProForm>
     </div>

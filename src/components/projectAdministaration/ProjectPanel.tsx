@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useState } from 'react';
 import {
   Button,
@@ -30,6 +32,7 @@ import { Split } from '@geoffcox/react-splitter';
 import PartList from '../woAdministration/PartList';
 import PartContainer from '../woAdministration/PartContainer';
 import { ValueEnumType, getStatusColor } from '@/services/utilites';
+import UniversalAgGrid from '../shared/UniversalAgGrid';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -141,58 +144,58 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     PARTLY_RECEIVED: t('PARTLY RECEIVED'),
     DRAFT: t('DRAFT'),
   };
-  const columnItems = [
+  const columnDefs = [
     {
       field: 'projectWO',
-      headerName: `${t('PROJECT No')}`,
-      cellDataType: 'text',
+      headerName: t('PROJECT No'),
     },
     {
       field: 'projectName',
-      headerName: `${t('WO NAME')}`,
-      cellDataType: 'text',
+      headerName: t('WO NAME'),
     },
     {
       field: 'projectType',
-      headerName: `${t('WO TYPE')}`,
-      cellDataType: 'text',
+      headerName: t('WO TYPE'),
       valueFormatter: (params: any) => params?.value?.toUpperCase(),
     },
     {
       field: 'WONumber',
-      headerName: `${t('WP No')}`,
-      cellDataType: 'text',
-      // valueFormatter: (params: any) => params.value.toUpperCase(),
+      headerName: t('WP No'),
     },
     {
       field: 'customerWO',
-      headerName: `${t('CUSTOMER WO No')}`,
-      cellDataType: 'text',
+      headerName: t('CUSTOMER WO No'),
     },
     {
       field: 'status',
-      headerName: `${t('Status')}`,
-      cellDataType: 'text',
-      width: 150,
-      filter: true,
-      valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
-        params.data.status,
-      valueFormatter: (params: { value: keyof ValueEnumType }) => {
+      headerName: t('Status'),
+      cellRenderer: (params: any) => {
         const status = params.value;
-        return valueEnum[status] || '';
+        return (
+          <div
+            style={{
+              backgroundColor: getStatusColor(status),
+              // padding: '2px 5px',
+              // borderRadius: '3px',
+              // color: '#fff',
+              textAlign: 'center',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {valueEnum[status] || ''}
+          </div>
+        );
       },
-      cellStyle: (params: { value: keyof ValueEnumType }) => ({
-        backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
-      }),
     },
     {
       field: 'createDate',
-      editable: false,
-      cellDataType: 'date',
-      headerName: `${t('CREATE DATE')}`,
+      headerName: t('CREATE DATE'),
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -203,11 +206,9 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'planedStartDate',
-      editable: false,
-      cellDataType: 'date',
-      headerName: `${t('PLANNED START DATE')}`,
+      headerName: t('PLANNED START DATE'),
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -218,11 +219,9 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'planedFinishDate',
-      editable: false,
-      cellDataType: 'date',
-      headerName: `${t('PLANNED FINISH DATE')}`,
+      headerName: t('PLANNED FINISH DATE'),
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -233,11 +232,9 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'startDate',
-      editable: false,
-      cellDataType: 'date',
-      headerName: `${t('START DATE')}`,
+      headerName: t('START DATE'),
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -248,17 +245,22 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'finishDate',
-      editable: false,
-      cellDataType: 'date',
-      headerName: `${t('FINISH DATE')}`,
+      headerName: t('FINISH DATE'),
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
         });
+      },
+    },
+    {
+      field: 'createUser.name',
+      headerName: t('CREATE USER'),
+      valueGetter: (params: any) => {
+        return params.data.createUserID?.name || '';
       },
     },
   ];
@@ -308,9 +310,9 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
         </Col>
       </Space>
 
-      <div className="  flex gap-4 justify-between">
+      <div className="flex gap-4 justify-between">
         <Split initialPrimarySize="25%" splitterSize="20px">
-          <div className=" h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3 ">
+          <div className="h-[70vh] bg-white px-4 py-3 rounded-md border-gray-400 p-3">
             {isTreeView ? (
               <ProjectTree
                 isLoading={isFetching || isLoading}
@@ -321,19 +323,15 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 }}
               />
             ) : (
-              <PartContainer
-                isVisible
-                pagination={true}
-                isButtonVisiable={false}
-                isAddVisiable={true}
-                isLoading={isFetching || isLoading}
-                columnDefs={columnItems}
-                partNumbers={[]}
+              <UniversalAgGrid
+                gridId="projectDetails"
                 rowData={projects || []}
-                onUpdateData={function (data: any[]): void {}}
-                height={'65vh'}
+                columnDefs={columnDefs}
+                height="65vh"
                 onRowSelect={handleEdit}
-              ></PartContainer>
+                isLoading={isFetching || isLoading}
+                pagination={true}
+              />
             )}
           </div>
           <div className="h-[70vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">

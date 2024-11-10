@@ -1,5 +1,4 @@
-//@ts-nocheck
-
+//ts-nocheck
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button,
@@ -14,26 +13,16 @@ import {
   notification,
 } from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
-
 import { useTranslation } from 'react-i18next';
-
-import {} from '@/features/vendorAdministration/vendorApi';
 import { TaskFilteredFormValues } from './AdminTaskFilterdForm';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
-import {
-  useAddTaskMutation,
-  useGetTasksQuery,
-  useDeleteTaskMutation,
-  useUpdateTaskMutation,
-  useAddMultiTaskItemsMutation,
-} from '@/features/tasksAdministration/tasksApi';
+
 import AdminTaskPanelTree from './AdminTaskPanelTree';
 import AdminTaskPanelForm from './AdminTaskPanelForm';
 import { ITask, ITaskResponce } from '@/models/ITask';
 import { Split } from '@geoffcox/react-splitter';
 import FileUploader from '@/components/shared/FileUploader';
-import MyTable from '@/components/shared/Table/MyTable';
-import TaskList from '@/components/shared/Table/TaskList';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 import {
   getTaskTypeColor,
   transformToITask,
@@ -42,6 +31,13 @@ import {
 import { useGetPartNumbersQuery } from '@/features/partAdministration/partApi';
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
+import {
+  useAddMultiTaskItemsMutation,
+  useAddTaskMutation,
+  useDeleteTaskMutation,
+  useGetTasksQuery,
+  useUpdateTaskMutation,
+} from '@/features/tasksAdministration/tasksApi';
 
 interface AdminPanelProps {
   values: TaskFilteredFormValues;
@@ -49,11 +45,6 @@ interface AdminPanelProps {
 }
 
 const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
-  const { setTasksFormValues, tasksFormValues } = useGlobalState();
-  // const { tasks, isLoading } = useTypedSelector(
-  //   (state) => state.tasksAdministration
-  // );
-
   const [editingvendor, setEditingvendor] = useState<ITask | null>(null);
   const [selectedItems, setSelectedItems] = useState<React.Key[] | []>([]);
   const {
@@ -63,21 +54,17 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     isFetching: isFetchungQuery,
   } = useGetTasksQuery(
     {
-      acTypeID: tasksFormValues?.acTypeId,
-      time: tasksFormValues?.time,
-      amtoss: tasksFormValues?.AMM,
-      taskNumber: tasksFormValues?.taskNumber,
-      cardNumber: tasksFormValues?.cardNumber,
-      mpdDocumentationId: tasksFormValues?.mpdDocumentationId,
-      taskType: tasksFormValues?.taskType,
-      isCriticalTask: tasksFormValues?.isCriticalTask,
+      acTypeID: values?.acTypeId,
+      time: values?.time,
+      amtoss: values?.AMM,
+      taskNumber: values?.taskNumber,
+      cardNumber: values?.cardNumber?.toString(),
+      mpdDocumentationId: values?.mpdDocumentationId,
+      taskType: values?.taskType?.toString(),
+      isCriticalTask: values?.isCriticalTask,
     },
-    { skip: !tasksFormValues }
+    { skip: !values }
   );
-
-  // useEffect(() => {
-  //   setEditingvendor(null);
-  // }, [tasksFormValues, tasksQuery]);
 
   const [addTask] = useAddTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
@@ -97,8 +84,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       title: t('ARE YOU SURE, YOU WANT TO DELETE THIS TASK?'),
       onOk: async () => {
         try {
-          await deleteTask(items).unwrap();
-
+          await deleteTask(items.toString()).unwrap();
           notification.success({
             message: t('SUCCESS'),
             description: t('TASK SUCCESSFULLY DELETED'),
@@ -124,7 +110,6 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     SMC: t('SMC'),
     SB: t('SB'),
     HARD_ACCESS: t('HARD_ACCESS'),
-    // PART_PRODUCE: t('FC'),
   };
   const handleSubmit = async (task: ITask) => {
     try {
@@ -141,7 +126,6 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
           description: t('TASK SUCCESSFULLY ADDED'),
         });
       }
-      // setEditingvendor(null);
     } catch (error) {
       notification.error({
         message: t('ERROR'),
@@ -149,43 +133,23 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       });
     }
   };
-  //
 
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       <Spin />
-  //     </div>
-  //   );
-  // }
-  interface ColumnDef {
-    field: keyof ITask;
-    headerName: string;
-    resizable?: boolean;
-    filter?: boolean;
-    hide?: boolean;
-    valueGetter?: any;
-    valueFormatter?: any;
-  }
   const columnDefs: any[] = [
     {
       field: 'cardNumber',
       headerName: `${t('CARD No')}`,
       filter: true,
       width: 100,
-      // hide: true,
     },
     {
       field: 'taskNumber',
       headerName: `${t('TASK No')}`,
       filter: true,
-      // hide: true,
     },
     {
       field: 'taskType',
       headerName: `${t('TASK TYPE')}`,
       filter: true,
-
       valueGetter: (params: { data: { taskType: keyof ValueEnumTypeTask } }) =>
         params.data.taskType,
       valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
@@ -194,18 +158,9 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        // color: '#ffffff', // Text color
       }),
-      // hide: true,
-
-      // hide: true,
     },
     { field: 'description', headerName: `${t('DESCRIPTION')}`, filter: true },
-    // {
-    //   field: 'PART_NUMBER',
-    //   headerName: `${t('PART No')}`,
-    //   filter: true,
-    // },
     {
       field: 'rev',
       headerName: `${t('REVISION')}`,
@@ -223,7 +178,6 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       headerName: `${t('SUB TASK_CODE')}`,
       filter: true,
     },
-
     { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
     {
       field: 'RESTRICTION_1',
@@ -245,32 +199,12 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       headerName: `${t('MHS')}`,
       filter: true,
     },
-    // {
-    //   field: 'IDENTIFICATOR',
-    //   headerName: `${t('IDENTIFICATOR')}`,
-    //   filter: true,
-    // },
-
-    // { field: 'closedByID', headerName: 'Closed By ID' },
-
-    // {
-    //   field: 'status',
-    //   headerName: `${t('STATUS')}`,
-    //   filter: true,
-    //   valueFormatter: (params: any) => {
-    //     if (!params.value) return '';
-    //     return params.value.toUpperCase();
-    //   },
-    // },
-    // { field: 'projectTaskWO', headerName: 'Project Task WO' },
-
-    // { field: 'companyID', headerName: 'Company ID' },
     {
       field: 'createDate',
       headerName: `${t('CREATE DATE')}`,
       filter: true,
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -279,11 +213,8 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         });
       },
     },
-
-    // { field: 'updateDate', headerName: 'Update Date' },
-
-    // Добавьте дополнительные поля по мере необходимости
   ];
+
   const handleAddMultiItems = async (data: any) => {
     try {
       {
@@ -291,7 +222,6 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
           taskNumberDTO: data,
         }).unwrap();
         message.success(t('УСПЕШНО ДОБАВЛЕНО'));
-        // setEditingvendor(null);
       }
     } catch (error) {
       message.error(t('ОШИБКА СОХРАНЕНИЯ'));
@@ -302,6 +232,13 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     return transformToITask(tasksQuery || []);
   }, [tasksQuery]);
   const { data: partNumbers } = useGetPartNumbersQuery({});
+
+  useEffect(() => {
+    if (values) {
+      console.log('Refetching with values:', values);
+      refetchTasks();
+    }
+  }, [values, refetchTasks]);
 
   return (
     <>
@@ -319,7 +256,6 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         </Col>
         <PermissionGuard requiredPermissions={[Permission.TASK_ACTIONS]}>
           <FileUploader
-            // isDisabled
             onFileProcessed={function (data: any[]): void {
               handleAddMultiItems(data);
             }}
@@ -327,12 +263,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
               'taskNumber',
               'taskDescription',
               'taskType',
-              // 'mainWorkTime',
               'amtoss',
-              // 'qtyOneMachine',
-              // 'qtyTenMachine',
-              // 'machineWorkTimeHours',
-              // 'machineWorkTimeDays',
             ]}
           ></FileUploader>
         </PermissionGuard>
@@ -360,9 +291,9 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         </Col>
       </Space>
 
-      <div className="  flex gap-4 justify-between">
+      <div className="flex justify-between">
         <Split initialPrimarySize="35%" splitterSize="20px">
-          <div className=" h-[74vh] bg-white px-4 rounded-md border-gray-400 p-3 ">
+          <div className="h-[72vh] bg-white px-4 rounded-md border-gray-400 p-3">
             {isTreeView ? (
               <>
                 {tasksQuery && tasksQuery.length ? (
@@ -379,28 +310,28 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
                 )}
               </>
             ) : (
-              <TaskList
+              <UniversalAgGrid
+                gridId="taskList"
                 pagination={true}
                 isChekboxColumn={true}
                 columnDefs={columnDefs}
                 rowData={transformedTasks || []}
                 onRowSelect={function (rowData: any | null): void {
-                  handleEdit(rowData);
+                  handleEdit(rowData[0]);
                 }}
-                height={'69vh'}
+                height={'65vh'}
                 onCheckItems={(items: React.Key[]): void => {
                   setSelectedItems(items);
                 }}
-                isLoading={isLoading}
+                isLoading={isLoading || isFetchungQuery}
               />
             )}
           </div>
-          <div className=" h-[73vh] bg-white px-4 rounded-md brequierement-gray-400 p-3   overflow-y-auto ">
+          <div className="h-[70vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">
             {
               <AdminTaskPanelForm
                 task={editingvendor || undefined}
                 onSubmit={handleSubmit}
-                // onDelete={handleDelete}
               />
             }
           </div>

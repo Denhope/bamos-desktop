@@ -9,9 +9,8 @@ import { RouteNames } from '@/router';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { COMPANY_ID } from '@/utils/api/http';
-import ConnectionIndicator from '../shared/ConnectionIndicator';
+import ConnectionIndicator from '@/components/shared/ConnectionIndicator';
 import ApiSwitcher from './ApiSwitcher';
-
 
 const Main: FC = () => {
   const { isAuth } = useTypedSelector((state) => state.auth);
@@ -29,7 +28,7 @@ const Main: FC = () => {
   };
 
   useEffect(() => {
-    if (isAuth&& COMPANY_ID) {
+    if (isAuth && COMPANY_ID) {
       console.log('User is authenticated, rendering BaseLayout');
     } else {
       console.log('User is not authenticated, rendering auth routes');
@@ -40,12 +39,12 @@ const Main: FC = () => {
     <div className="h-screen overflow-hidden">
       {!isAuth ? (
         <Layout className="h-full overflow-hidden">
-          <Header className="flex justify-between my-0 px-0 bg-red-200">
+          <Header className="flex justify-between my-0 px-0 bg-gray-200">
             <Space
               onClick={() => navigate(RouteNames.HOME)}
               className="text-xl cursor-pointer px-3 uppercase text-gray-500"
             >
-              BAMOS TEST
+              BAMOS
             </Space>
           </Header>
           <Layout className="flex-1 overflow-hidden">
@@ -76,7 +75,7 @@ const Main: FC = () => {
             </div>
             <div className="absolute right-5">
               <ConnectionIndicator />
-                <ApiSwitcher />
+              <ApiSwitcher />
             </div>
           </Footer>
         </Layout>

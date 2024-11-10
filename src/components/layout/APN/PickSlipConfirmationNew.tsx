@@ -1,12 +1,30 @@
+//@ts-nocheck
+
 import { PrinterOutlined, SaveOutlined } from '@ant-design/icons';
 import { Split } from '@geoffcox/react-splitter';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useId,
+  useState,
+} from 'react';
 import PickslipRequestFilterForm from '../pickSlipConfirmationNew/PickslipRequestFilterForm';
-import PartContainer from '@/components/woAdministration/PartContainer';
 import { useTranslation } from 'react-i18next';
 import { ColDef } from 'ag-grid-community';
 import { $authHost, API_URL } from '@/utils/api/http';
 import {
+  UploadOutlined,
+  ProjectOutlined,
+  FileOutlined,
+  MinusSquareOutlined,
+  CheckCircleOutlined,
+  ThunderboltOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+import {
+  handleFileOpenTask,
   handleOpenReport,
   transformToIStockPartNumber,
   transformToPickSlipItemBooked,
@@ -16,6 +34,8 @@ import { useGetStorePartsQuery } from '@/features/storeAdministration/PartsApi';
 import {
   useGetPickSlipsQuery,
   useUpdatePickSlipMutation,
+  useSaveAndCompletePickSlipMutation,
+  useFastBookPickSlipMutation,
 } from '@/features/pickSlipAdministration/pickSlipApi';
 import {
   useAddPickSlipItemMutation,
@@ -35,23 +55,37 @@ import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
 import { useAddBookingMutation } from '@/features/bookings/bookingApi';
 import { generateReport } from '@/utils/api/thunks';
 import { useGetFilteredRequirementsQuery } from '@/features/requirementAdministration/requirementApi';
-import { v4 as uuidv4 } from 'uuid';
-import PDFExport from '@/components/reports/ReportBase';
-type CellDataType = 'text' | 'number' | 'date' | 'boolean' | 'Object';
 
+import PDFExport from '@/components/reports/ReportBase';
+import PickSlipGenerator from './PickSlipGenerator';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+type CellDataType = 'text' | 'number' | 'date' | 'boolean' | 'Object';
+import { v4 as uuidv4 } from 'uuid';
 interface ExtendedColDef extends ColDef {
-  cellDataType: CellDataType;
+  cellDataType: any;
 }
 
 const PickSlipConfirmationNew: FC = () => {
   const { t } = useTranslation();
-  const [pickSlipSearchValues, setpickSlipSearchValues] = useState<any>();
+  const { panes, activeKey } = useTypedSelector((state) => state.tabs);
+  const currentPane = panes.find((pane) => pane.key === activeKey);
+  const pickSlipNumber = currentPane?.pickSlipNumber;
+
+  console.log('Current pane:', currentPane);
+  console.log('Pick slip number from pane:', pickSlipNumber);
+
+  const [pickSlipSearchValues, setpickSlipSearchValues] = useState<any>({
+    pickSlipNumberNew: pickSlipNumber,
+  });
   const [currentPickSlipItem, setCurrentPickSlipItem] = useState<any>(null);
   const [selectedRowData, setSelectedRowData] = useState<any>(null);
   const [rowDataForSecondContainer, setRowDataForSecondContainer] = useState<
     any[]
   >([]);
-
+  const tabId = useMemo(() => currentPane?.key || uuidv4(), [currentPane?.key]);
+  const componentId = useId();
+  const sessionId = useMemo(() => uuidv4(), []);
   const {
     data: pickSlips,
     isLoading,
@@ -59,9 +93,10 @@ const PickSlipConfirmationNew: FC = () => {
   } = useGetPickSlipsQuery(
     {
       pickSlipNumberNew: pickSlipSearchValues?.pickSlipNumberNew || '',
+      tabId,
     },
     {
-      skip: !pickSlipSearchValues,
+      skip: !pickSlipSearchValues?.pickSlipNumberNew,
     }
   );
   const [addBooking] = useAddBookingMutation({});
@@ -76,7 +111,7 @@ const PickSlipConfirmationNew: FC = () => {
       }
     );
 
-  // Обновление других частей приложения после вызова refetchRequirements
+  // Обовление других частей приложения после вызова refetchRequirements
   // useEffect(() => {
   //   // Логика обновления других частей приложения
   // }, [requirements]); // Обновление при изменении requirements
@@ -100,16 +135,29 @@ const PickSlipConfirmationNew: FC = () => {
       storeID: pickSlips && pickSlips[0]?.getFromID?._id,
       includeAlternates: true,
       ifStockCulc: true,
+      componentId,
+      sessionId,
+      tabId,
     },
     {
-      skip: !currentPickSlipItem?.requestedPartNumberID,
+      skip: !currentPickSlipItem?.requestedPartNumberID || !currentPickSlipItem,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+      refetchOnFocus: true,
     }
   );
 
   const { data: pickSlipItems, refetch: refetchItems } =
     useGetPickSlipItemsQuery(
-      { pickSlipID: pickSlips && pickSlips[0]?.id },
-      { skip: !pickSlips }
+      {
+        pickSlipID: pickSlips && pickSlips[0]?.id,
+        tabId, // Добавляем tabId в параметры запроса
+      },
+      {
+        skip: !pickSlips,
+        // Добавляем уникальный ключ кэширования для каждой вкладки
+        queryKey: [`pickSlipItems-${tabId}`],
+      }
     );
 
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
@@ -118,6 +166,7 @@ const PickSlipConfirmationNew: FC = () => {
       field: 'LOCAL_ID',
       editable: false,
       cellDataType: 'text',
+      width: 100,
     },
     {
       headerName: `${t('PART No')}`,
@@ -134,11 +183,13 @@ const PickSlipConfirmationNew: FC = () => {
       field: 'GROUP',
       headerName: `${t('GROUP')}`,
       cellDataType: 'text',
+      width: 100,
     },
     {
       field: 'TYPE',
       headerName: `${t('TYPE')}`,
       cellDataType: 'text',
+      width: 100,
     },
     {
       field: 'QUANTITY',
@@ -146,13 +197,15 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('QTY')}`,
       cellDataType: 'number',
+      width: 100,
     },
     {
       field: 'UNIT_OF_MEASURE',
       editable: false,
       filter: false,
-      headerName: `${t('UNIT OF MEASURE')}`,
+      headerName: `${t('UOM')}`,
       cellDataType: 'text',
+      width: 100,
     },
     {
       field: 'STOCK',
@@ -160,6 +213,7 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('STORE')}`,
       cellDataType: 'text',
+      width: 100,
     },
     {
       field: 'LOCATION',
@@ -167,12 +221,20 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('LOCATION')}`,
       cellDataType: 'text',
+      width: 100,
     },
     {
       field: 'SERIAL_NUMBER',
       editable: false,
       filter: false,
-      headerName: `${t('BATCH/SERIAL')}`,
+      headerName: `${t('SERIAL NUMBER')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SUPPLIER_BATCH_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('BATCH No')}`,
       cellDataType: 'text',
     },
     {
@@ -197,6 +259,7 @@ const PickSlipConfirmationNew: FC = () => {
           day: '2-digit',
         });
       },
+      width: 150,
     },
 
     {
@@ -205,6 +268,7 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('RESERVED QTY')}`,
       cellDataType: 'number',
+      width: 100,
     },
 
     {
@@ -236,6 +300,7 @@ const PickSlipConfirmationNew: FC = () => {
           day: '2-digit',
         });
       },
+      width: 150,
     },
     {
       field: 'DOC_NUMBER',
@@ -243,6 +308,7 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('DOC_NUMBER')}`,
       cellDataType: 'text',
+      width: 100,
     },
     {
       field: 'DOC_TYPE',
@@ -250,6 +316,29 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('DOC_TYPE')}`,
       cellDataType: 'text',
+      width: 100,
+    },
+    {
+      field: 'FILES',
+      headerName: `${t('DOC')}`,
+      // minWidth: 140,
+      // flex: 1,
+      cellRenderer: (params: any) => {
+        const files = params.value;
+        if (!files || files.length === 0) return null;
+        const file = files[0];
+        return (
+          <div
+            className="cursor-pointer hover:text-blue-500"
+            onClick={() => {
+              handleFileOpenTask(file.fileId, 'uploads', file.filename);
+            }}
+          >
+            <FileOutlined />
+          </div>
+        );
+      },
+      cellDataType: undefined,
     },
   ]);
 
@@ -266,6 +355,7 @@ const PickSlipConfirmationNew: FC = () => {
       field: 'LOCAL_ID',
       editable: false,
       cellDataType: 'text',
+      width: 80,
     },
     {
       field: 'STORE',
@@ -273,6 +363,7 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('STORE')}`,
       cellDataType: 'text',
+      width: 80,
     },
     {
       field: 'LOCATION',
@@ -280,6 +371,7 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('LOCATION FROM')}`,
       cellDataType: 'text',
+      width: 150,
     },
     {
       headerName: `${t('PART No')}`,
@@ -300,6 +392,7 @@ const PickSlipConfirmationNew: FC = () => {
       filter: false,
       headerName: `${t('BATCH/SERIAL')}`,
       cellDataType: 'text',
+      width: 150,
     },
     // {
     //   field: 'CONDITION',
@@ -323,34 +416,117 @@ const PickSlipConfirmationNew: FC = () => {
           day: '2-digit',
         });
       },
+      width: 130,
     },
     {
       field: 'requestedQty',
       headerName: `${t('REQUESTED QTY')}`,
       cellDataType: 'number',
+      width: 130,
     },
     {
       field: 'availableQty',
       headerName: `${t('AVAILABLE QTY')}`,
       cellDataType: 'number',
+      width: 130,
     },
+    // В определении колонки bookedQty
     {
       field: 'bookedQty',
       headerName: `${t('BOOKED QTY')}`,
       cellDataType: 'number',
       editable: true,
+      width: 130,
+      cellStyle: (params) => {
+        const value = Number(params.value);
+        const isInvalid =
+          isNaN(value) ||
+          value <= 0 ||
+          value > params.data.requestedQty ||
+          !params.data.partNumberIDBooked;
+
+        return isInvalid ? { backgroundColor: '#FFCCCB' } : null;
+      },
+      valueParser: (params) => {
+        const value = Number(params.newValue);
+        return isNaN(value) || value < 0 ? 0 : value;
+      },
+      valueSetter: (params) => {
+        const newValue = Number(params.newValue);
+        const relatedRows = rowDataForSecondContainer.filter(
+          (row) =>
+            row.PART_NUMBER_REQUEST === params.data.PART_NUMBER_REQUEST &&
+            row.id !== params.data.id
+        );
+
+        const totalBookedQty = relatedRows.reduce(
+          (sum, row) => sum + (row.bookedQty || 0),
+          0
+        );
+
+        const newTotalBookedQty = totalBookedQty + newValue;
+
+        if (newTotalBookedQty > params.data.requestedQty) {
+          notification.warning({
+            message: t('WARNING'),
+            description: t(
+              'Total booked quantity cannot exceed requested quantity'
+            ),
+          });
+          return false;
+        }
+
+        // Обновляем значение
+        params.data.bookedQty = newValue;
+
+        // Немедленно обновляем ячейку
+        params.api.refreshCells({
+          force: true,
+          rowNodes: [params.node],
+          columns: ['bookedQty'],
+        });
+
+        // Обновляем весь ряд для перерасчета зависимых значений
+        setTimeout(() => {
+          params.api.redrawRows({ rowNodes: [params.node] });
+        }, 0);
+
+        return true;
+      },
+      onCellValueChanged: (params) => {
+        // Дополнительное обновление после изменения значения
+        params.api.refreshCells({
+          force: true,
+          rowNodes: [params.node],
+          columns: ['bookedQty'],
+        });
+      },
+    },
+    {
+      field: 'partNumberIDBooked',
+      headerName: `${t('BOOKED PART ID')}`,
+      cellDataType: 'text',
+      hide: true,
+      cellStyle: (params) => {
+        if (!params.value) {
+          return { backgroundColor: '#FFCCCB' };
+        }
+        return null;
+      },
     },
     {
       field: 'canceledQty',
       headerName: `${t('CANCELLED QTY')}`,
       cellDataType: 'number',
+      width: 130,
     },
     {
       field: 'UNIT_OF_MEASURE',
       editable: false,
       filter: false,
-      headerName: `${t('UNIT OF MEASURE')}`,
+      headerName: `${t('UOM')}`,
       cellDataType: 'text',
+      width: 80,
     },
 
     {
@@ -363,29 +539,33 @@ const PickSlipConfirmationNew: FC = () => {
   ]);
 
   const transformedPartNumbers = useMemo(() => {
+    // Если нет currentPickSlipItem, возвращаем пусто массив
+    if (!currentPickSlipItem) {
+      return [];
+    }
+
+    // Если нет parts или он пусой, возвращаем пустой массив
+    if (!parts || parts.length === 0) {
+      return [];
+    }
+
     // Получаем текущую дату
     const currentDate = new Date();
 
     // Фильтруем части по дате и restrictionID
-    const filteredParts = (parts || []).filter((part) => {
-      // Преобразуем дату истечения срока годности в объект Date
+    const filteredParts = parts.filter((part) => {
       const expirationDate = new Date(part?.PRODUCT_EXPIRATION_DATE);
-
-      // Проверяем, что дата не прошла и restrictionID не равно "standart"
-
       if (part?.PRODUCT_EXPIRATION_DATE) {
         return (
           expirationDate >= currentDate &&
-          part?.locationID?.restrictionID == 'standart'
+          part?.locationID?.restrictionID === 'standart'
         );
-      } else {
-        return part?.locationID?.restrictionID == 'standart';
       }
+      return part?.locationID?.restrictionID === 'standart';
     });
 
-    // Применяем функцию transformToIStockPartNumber к отфильтрованным частям
     return transformToIStockPartNumber(filteredParts);
-  }, [parts]);
+  }, [parts, currentPickSlipItem, pickSlips]);
 
   const transformedRequirements = useMemo(() => {
     // console.log(transformToPickSlipItemBooked(pickSlipItems));
@@ -396,24 +576,20 @@ const PickSlipConfirmationNew: FC = () => {
     );
   }, [pickSlips && pickSlips[0], pickSlipItems]);
 
-  const handleRowSelect = useCallback((row: any) => {
-    // if (
-    //   row
-    //   // currentPickSlipItem
-    //   // &&
-    //   // row?.state === 'progress' ||
-    //   // row?.state === 'open' ||
-    //   // row?.status === 'progress' ||
-    //   // row?.status === 'open'
-    // ) {
-    // }   setCurrentPickSlipItem(row);
-    setCurrentPickSlipItem(row);
-    console.log(row);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+
+  const handleRowSelect = useCallback((rows: any[]) => {
+    setSelectedRows(rows);
+    console.log('selectedRows', rows);
+    if (rows.length === 1) {
+      setCurrentPickSlipItem(rows[0]);
+    } else {
+      setCurrentPickSlipItem(null);
+    }
   }, []);
 
   const handleRowSelectStoreParts = useCallback(
     (row: any) => {
-      // console.log(row);
       if (
         currentPickSlipItem &&
         (currentPickSlipItem?.state === 'progress' ||
@@ -421,39 +597,104 @@ const PickSlipConfirmationNew: FC = () => {
           currentPickSlipItem?.status === 'progress' ||
           currentPickSlipItem?.status === 'open')
       ) {
-        const updatedData = rowDataForSecondContainer.map((rowOld) =>
-          rowOld.id === currentPickSlipItem.id
-            ? {
-                ...rowOld,
-                partNumberIDBooked: row.partID,
-                PART_NUMBER_BOOKED: row.PART_NUMBER,
-                DESCRIPTION: row.NAME_OF_MATERIAL,
-                SERIAL_NUMBER: row?.SERIAL_NUMBER || row?.SUPPLIER_BATCH_NUMBER,
-                PRODUCT_EXPIRATION_DATE: row.SERIAL_NUMBER,
-                UNIT_OF_MEASURE: row.UNIT_OF_MEASURE,
-                LOCAL_ID: row?.LOCAL_ID,
-                OWNER: row?.OWNER,
-                STORE: row?.storeID?.storeShortName,
-                LOCATION: row?.locationID?.locationName,
-                availableQty: row?.QUANTITY,
-                storeItemID: row?._id,
-                files: row?.FILES,
-              }
-            : rowOld
-        );
-        console.log(updatedData);
-        setRowDataForSecondContainer(updatedData); // Убедитесь, что этот вызов не закомментирован
+        const updatedData = rowDataForSecondContainer.map((rowOld) => {
+          if (rowOld.id === currentPickSlipItem.id) {
+            const relatedRows = rowDataForSecondContainer.filter(
+              (r) =>
+                r.PART_NUMBER_REQUEST === rowOld.PART_NUMBER_REQUEST &&
+                r.id !== rowOld.id
+            );
+
+            const totalBookedQty = relatedRows.reduce(
+              (sum, r) => sum + (r.bookedQty || 0),
+              0
+            );
+
+            if (totalBookedQty >= rowOld.requestedQty) {
+              notification.warning({
+                message: t('WARNING'),
+                description: t(
+                  'Total booked quantity cannot exceed requested quantity'
+                ),
+              });
+              return rowOld;
+            }
+
+            const remainingRequestedQty = Math.max(
+              rowOld.requestedQty - totalBookedQty,
+              0
+            );
+
+            let bookedQty = Math.min(remainingRequestedQty, row.QUANTITY);
+            console.log(row);
+            return {
+              ...rowOld,
+              partNumberIDBooked: row.partID,
+              PART_NUMBER_BOOKED: row.PART_NUMBER,
+              DESCRIPTION: row.NAME_OF_MATERIAL,
+              SERIAL_NUMBER: row?.SERIAL_NUMBER || row?.SUPPLIER_BATCH_NUMBER,
+              PRODUCT_EXPIRATION_DATE: row.PRODUCT_EXPIRATION_DATE,
+              UNIT_OF_MEASURE: row.UNIT_OF_MEASURE,
+              LOCAL_ID: row?.LOCAL_ID,
+              OWNER: row?.OWNER,
+              STORE: row?.storeID?.storeShortName,
+              LOCATION: row?.locationID?.locationName,
+              availableQty: row?.QUANTITY,
+              storeItemID: row?._id || row?.id,
+              files: row?.FILES,
+              bookedQty: bookedQty,
+            };
+          }
+          return rowOld;
+        });
+        console.log('updatedData:', updatedData);
+        setRowDataForSecondContainer(updatedData);
+        setIssuedRowData(updatedData);
+
+        // Добавляем обновление стилей через AG Grid API
+        const gridApi = document.querySelector('#bookedPartContainer')?.['api'];
+        if (gridApi) {
+          // Находим измененную строку
+          const updatedRow = updatedData.find(
+            (row) => row.id === currentPickSlipItem.id
+          );
+          if (updatedRow) {
+            // Находим node для этой строки
+            const rowNode = gridApi.getRowNode(updatedRow.id);
+            if (rowNode) {
+              // Обновляем ячейки
+              gridApi.refreshCells({
+                force: true,
+                rowNodes: [rowNode],
+                columns: ['bookedQty', 'partNumberIDBooked'],
+              });
+              // Перерисовываем строку полностью
+              gridApi.redrawRows({
+                rowNodes: [rowNode],
+              });
+            }
+          }
+        }
       }
     },
     [currentPickSlipItem, rowDataForSecondContainer]
-  ); // Добавьте зависимости
+  );
 
   useEffect(() => {
     if (transformedRequirements && transformedRequirements.length > 0) {
       setRowDataForSecondContainer(transformedRequirements);
-      // onUpdateData(fetchData);
+      setIssuedRowData(transformedRequirements); // Добавляем инициализацию issuedData
     }
   }, [transformedRequirements]);
+
+  // Эффект для сброса данных, если поиск не дал результатов
+  useEffect(() => {
+    if (pickSlipSearchValues && (!pickSlips || pickSlips.length === 0)) {
+      setRowDataForSecondContainer([]);
+      setCurrentPickSlipItem(null);
+    }
+  }, [pickSlips, pickSlipSearchValues]);
+
   const fetchPickSlipItemData = async (id: string) => {
     try {
       const response = await $authHost.get(
@@ -466,6 +707,8 @@ const PickSlipConfirmationNew: FC = () => {
     }
   };
   const [issuedData, setIssuedRowData] = useState<any[]>([]);
+  const [saveAndCompletePickSlip] = useSaveAndCompletePickSlipMutation();
+
   const handleSubmitINProgress = async () => {
     Modal.confirm({
       title: t('Confirm Save'),
@@ -569,7 +812,7 @@ const PickSlipConfirmationNew: FC = () => {
                     projectTaskWO: item?.projectTaskWO,
                     projectWO: item?.projectWO,
                   },
-                }).unwrap();
+                });
                 // pickSlipRefetch();
                 // refetchItems();
                 // notification.info({
@@ -587,7 +830,7 @@ const PickSlipConfirmationNew: FC = () => {
                   storeItemID: item?.storeItemID,
                   requirementID: item?.requirementID,
                   partNumberID: item?.partNumberID,
-                  requestedQty: item?.requestQuantity,
+                  requestedQty: item?.requestedQty,
                   requestedPartNumberID: item?.requestedPartNumberID,
                   partNumberIDBooked: item?.partNumberIDBooked,
                   pickSlipItemID: item?.pickSlipItemID,
@@ -602,7 +845,7 @@ const PickSlipConfirmationNew: FC = () => {
 
               // .unwrap();
             }
-            // После установки item.pickSlipItemID вызываем addBookingsPickslip
+            // После устаноки item.pickSlipItemID вызываем addBookingsPickslip
           }
           pickSlipRefetch();
           refetchItems();
@@ -657,15 +900,15 @@ const PickSlipConfirmationNew: FC = () => {
             pickSlip: {
               state: 'complete',
               id:
-                (pickSlips && pickSlips[0]?._id) ||
-                (pickSlips && pickSlips[0]?.id),
+                (pickSlips && pickSlips[0] && pickSlips[0]?.id) ||
+                (pickSlips && pickSlips[0] && pickSlips[0]?._id),
             },
-          }).unwrap();
+          });
 
           pickSlipRefetch();
           refetchItems();
           // setCurrentPickSlipItem(null)
-          refetch().unwrap();
+          refetch();
           notification.info({
             message: t('PARTS COMPLETED'),
             description: t('Parts COMPLETED'),
@@ -734,7 +977,7 @@ const PickSlipConfirmationNew: FC = () => {
                 (pickSlips && pickSlips[0]?._id) ||
                 (pickSlips && pickSlips[0]?.id),
             },
-          }).unwrap();
+          });
           try {
             for (const item of issuedData) {
               const addBookingResponse = await addBooking({
@@ -756,7 +999,7 @@ const PickSlipConfirmationNew: FC = () => {
           pickSlipRefetch();
           refetchItems();
           refetch();
-          refetchRequirements().unwrap();
+          refetchRequirements();
 
           notification.info({
             message: t('CLOSE PICKSLIP'),
@@ -789,7 +1032,7 @@ const PickSlipConfirmationNew: FC = () => {
         };
 
         try {
-          // Вызываем функцию для генерации отчета
+          // ызываем функцию для генерации отчета
           setReportDataLoading(true);
           const reportDataQ = await generateReport(
             companyID,
@@ -816,21 +1059,270 @@ const PickSlipConfirmationNew: FC = () => {
   }, [pickSlips && pickSlips[0]?.id, reportData]);
   const handleCopyTableData = () => {
     if (pickSlips && pickSlips[0]) {
-      // setIssuedRowData(selectedRow);
-      const { pickSlipItemID, ...rest } = currentPickSlipItem; // Убираем pickSlipItemID
+      // Находим все существующие записи с таким же PART_NUMBER_REQUEST
+      const existingBookings = rowDataForSecondContainer.filter(
+        (row) =>
+          row.PART_NUMBER_REQUEST === currentPickSlipItem.PART_NUMBER_REQUEST
+      );
+
+      // Считаем сумму всех bookedQty для этого PART_NUMBER_REQUEST
+      const totalBookedQty = existingBookings.reduce(
+        (sum, row) => sum + (row.bookedQty || 0),
+        0
+      );
+
+      // Проверяем, не превышает ли общее количество requestedQty
+      if (totalBookedQty >= currentPickSlipItem.requestedQty) {
+        notification.warning({
+          message: t('WARNING'),
+          description: t(
+            'Cannot copy: Total booked quantity already equals requested quantity'
+          ),
+        });
+        return;
+      }
+
+      // Вычисляем оставшееся количество для бронирования
+      const remainingQty = Math.max(
+        currentPickSlipItem.requestedQty - totalBookedQty,
+        0
+      );
+
+      // Создаем копию с новым bookedQty
       const copyPickSlipItem = {
         ...currentPickSlipItem,
         id: uuidv4(),
         isCopy: true,
+        bookedQty: remainingQty,
       };
+
       setRowDataForSecondContainer([
         ...rowDataForSecondContainer,
         copyPickSlipItem,
       ]);
     }
   };
+
+  // Эффект для обновления pickSlipSearchValues при изменении pickSlipNumber
+  useEffect(() => {
+    console.log('pickSlipNumber changed:', pickSlipNumber);
+    if (pickSlipNumber) {
+      setpickSlipSearchValues((prev) => {
+        const newValues = {
+          ...prev,
+          pickSlipNumberNew: pickSlipNumber,
+        };
+        console.log('Updating pickSlipSearchValues:', newValues);
+        return newValues;
+      });
+    }
+  }, [pickSlipNumber]);
+
+  // Эффект для выполнения запроса при изменении pickSlipSearchValues
+  useEffect(() => {
+    console.log('pickSlipSearchValues changed:', pickSlipSearchValues);
+    if (pickSlipSearchValues.pickSlipNumberNew) {
+      console.log('Refetching pick slip data...');
+      pickSlipRefetch();
+    }
+  }, [pickSlipSearchValues.pickSlipNumberNew, pickSlipRefetch]);
+  const handleSaveAndComplete = async () => {
+    try {
+      Modal.confirm({
+        title: t('Confirm Save and Complete'),
+        content: t(
+          'Are you sure you want to save and complete this pick slip?'
+        ),
+        okText: t('Yes'),
+        cancelText: t('No'),
+        onOk: async () => {
+          // notification.info({
+          //   message: t('ОБРАБОТКА'),
+          //   description: t('Сохрание и завершение пикслипа...'),
+          //   duration: 2,
+          //   key: 'saveAndCompleteNotification',
+          // });
+
+          try {
+            await saveAndCompletePickSlip({
+              pickSlipId: pickSlips[0]?.id,
+              issuedData: issuedData,
+            });
+
+            notification.success({
+              message: t('SUCCESS'),
+              description: t('Pick slip saved and completed successfully'),
+            });
+
+            // Обновляем данные
+            await Promise.all([
+              pickSlipRefetch(),
+              refetchItems(),
+              refetch(),
+              // refetchRequirements(),
+            ]);
+
+            // notification.close('saveAndCompleteNotification');
+          } catch (error) {
+            console.error('Ошибка при сохранении и завершении:', error);
+            // notification.error({
+            //   message: t('ОШИБКА'),
+            //   description: t('Не удалось сохранить и завершить пикслип'),
+            // });
+          }
+        },
+      });
+    } catch (error) {
+      console.error('Ошибка в сохранении и завершении:', error);
+      notification.error({
+        message: t('ОШИБКА'),
+        description: t('Не удалось сохранить и завершить пикслип'),
+      });
+    }
+  };
+
+  const [fastBookPickSlip] = useFastBookPickSlipMutation();
+
+  const handleFastBook = async () => {
+    if (
+      !pickSlipSearchValues.storeManID ||
+      !pickSlipSearchValues.userID ||
+      !pickSlipSearchValues.bookingDate
+    ) {
+      notification.error({
+        message: t('ERROR'),
+        description: t(
+          'Please fill in MECH, BOOKING DATE, and STOREMAN fields'
+        ),
+      });
+      return;
+    }
+
+    const hasInactiveRows = issuedData.some(
+      (item) =>
+        item.status === 'inactive' ||
+        item.bookedQty === 0 ||
+        item.bookedQty === null ||
+        item.partNumberIDBooked === null
+    );
+
+    if (hasInactiveRows) {
+      notification.error({
+        message: t('ERROR'),
+        description: t('Cannot fast book with inactive or empty rows'),
+      });
+      return;
+    }
+
+    try {
+      Modal.confirm({
+        title: t('Confirm Book'),
+        content: t('Are you sure you want to book this pick slip?'),
+        okText: t('Yes'),
+        cancelText: t('No'),
+        onOk: async () => {
+          try {
+            await fastBookPickSlip({
+              pickSlipId: pickSlips[0]?.id,
+              issuedData: issuedData,
+              storeManID: pickSlipSearchValues.storeManID,
+              userID: pickSlipSearchValues.userID,
+              bookingDate: pickSlipSearchValues.bookingDate,
+            }).unwrap();
+            notification.success({
+              message: t('SUCCESS'),
+              description: t('Pick slip booked successfully'),
+            });
+            // Обновляем данные
+            await Promise.all([
+              pickSlipRefetch(),
+              refetchItems(),
+              refetch(),
+              // refetchRequirements(),
+            ]);
+          } catch (error) {
+            notification.error({
+              message: t('ERROR'),
+              description: t('Failed to fast book pick slip'),
+            });
+            console.error('Error in book:', error);
+          }
+        },
+      });
+    } catch (error) {
+      console.error('Error in fast book:', error);
+      notification.error({
+        message: t('ERROR'),
+        description: t('Failed to fast book pick slip'),
+      });
+    }
+  };
+
+  const handleCellValueChanged = (params) => {
+    if (params.colDef.field === 'bookedQty') {
+      const updatedData = rowDataForSecondContainer.map((row) =>
+        row.id === params.data.id
+          ? { ...row, [params.colDef.field]: params.newValue }
+          : row
+      );
+      setRowDataForSecondContainer(updatedData);
+      setIssuedRowData(updatedData);
+      // Принудительно обновляем стиль ячейки
+      params.api.refreshCells({
+        force: true,
+        columns: ['bookedQty'],
+        rowNodes: [params.node],
+      });
+    } else {
+      const updatedData = rowDataForSecondContainer.map((row) =>
+        row.id === params.data.id
+          ? { ...row, [params.colDef.field]: params.newValue }
+          : row
+      );
+      setRowDataForSecondContainer(updatedData);
+      setIssuedRowData(updatedData);
+    }
+  };
+
+  const handleDeleteSelectedRows = () => {
+    if (!selectedRows || selectedRows.length === 0) {
+      notification.warning({
+        message: t('WARNING'),
+        description: t('Please select rows to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('Confirm Delete'),
+      content: t('Are you sure you want to delete the selected rows?'),
+      okText: t('Yes'),
+      cancelText: t('No'),
+      onOk: () => {
+        // Фильтруем данные, исключая выбранные строки
+        const updatedData = rowDataForSecondContainer.filter(
+          (row) =>
+            !selectedRows.some(
+              (selectedRow) =>
+                (selectedRow.id || selectedRow._id) === (row.id || row._id)
+            )
+        );
+
+        setRowDataForSecondContainer(updatedData);
+        setIssuedRowData(updatedData);
+        setSelectedRows([]);
+        setCurrentPickSlipItem(null);
+
+        notification.success({
+          message: t('SUCCESS'),
+          description: t('Selected rows have been deleted'),
+        });
+      },
+    });
+  };
+
   return (
-    <div className="h-[82vh]    overflow-hidden flex flex-col justify-between ">
+    <div className="h-[82vh] overflow-hidden flex flex-col justify-between ">
       <Split initialPrimarySize="48%" horizontal splitterSize="20px">
         <div className="flex flex-col ">
           <Split initialPrimarySize="40%" splitterSize="20px">
@@ -839,10 +1331,15 @@ const PickSlipConfirmationNew: FC = () => {
                 <PickslipRequestFilterForm
                   pickSlip={pickSlips && pickSlips[0]}
                   onpickSlipSearchValues={function (values: any): void {
+                    console.log('PickslipRequestFilterForm values:', values);
                     setpickSlipSearchValues(values);
-                    console.log(values);
+                    if (!pickSlips || pickSlips.length === 0) {
+                      setRowDataForSecondContainer([]);
+                      setCurrentPickSlipItem(null);
+                    }
                   }}
-                ></PickslipRequestFilterForm>
+                  initialValues={{ pickSlipNumberNew: pickSlipNumber }}
+                />
               </div>
               <Space>
                 <Button
@@ -853,8 +1350,6 @@ const PickSlipConfirmationNew: FC = () => {
                     (pickSlips && pickSlips[0]?.state == 'progress') ||
                     (pickSlips && pickSlips[0]?.state == 'canceled') ||
                     (pickSlips && pickSlips[0]?.state == 'partlyCanceled')
-                    // ||
-                    // (pickSlips && pickSlips[0]?.state == 'complete')
                   }
                   onClick={handleCopyTableData}
                   size="small"
@@ -862,165 +1357,151 @@ const PickSlipConfirmationNew: FC = () => {
                 >
                   {t('COPY TABLE DATA and TAKE')}
                 </Button>
+                <Button
+                  disabled={
+                    !pickSlips ||
+                    (pickSlips && pickSlips[0]?.state == 'closed') ||
+                    (pickSlips && pickSlips[0]?.state == 'complete') ||
+                    (pickSlips && pickSlips[0]?.state == 'canceled') ||
+                    (pickSlips && pickSlips[0]?.state == 'partlyCanceled')
+                  }
+                  onClick={handleDeleteSelectedRows}
+                  size="small"
+                  icon={<DeleteOutlined />}
+                  danger
+                >
+                  {t('DELETE')}
+                </Button>
               </Space>
             </div>
 
             <div className="flex flex-col rounded-md p-3 h-[40vh] bg-white overflow-y-auto  ">
-              <PartContainer
-                isChekboxColumn={true}
-                isFilesVisiable={true}
+              <UniversalAgGrid
+                gridId="partContainer"
+                isChekboxColumn={false}
                 isVisible={true}
                 pagination={false}
-                isAddVisiable={true}
-                isButtonVisiable={false}
-                isEditable={true}
+                rowSelection="single"
                 height={'38vh'}
                 columnDefs={columnDefs}
-                partNumbers={[]}
-                onRowSelect={handleRowSelectStoreParts}
-                onUpdateData={(data: any[]): void => {}}
                 rowData={transformedPartNumbers}
-                isLoading={isLoading}
+                onRowSelect={(data: any[]) => {
+                  handleRowSelectStoreParts(data[0]);
+                  console.log('selectedRowCount:', data);
+                }}
+                isLoading={isLoading || partsLoadingF}
               />
             </div>
           </Split>
         </div>
         <div className="flex flex-col gap-3 justify-between">
-          <BookedPartContainer
-            isFilesVisiable={true}
-            isChekboxColumn={false}
-            isVisible={false}
+          <UniversalAgGrid
+            gridId="bookedPartContainer"
+            isChekboxColumn={true}
+            isVisible={true}
             pagination={false}
-            isAddVisiable={true}
-            isButtonVisiable={false}
-            isEditable={true}
+            rowSelection="multiple"
             height={'35vh'}
             columnDefs={columnBookedDefs}
-            partNumbers={[]}
+            rowData={rowDataForSecondContainer}
             onRowSelect={handleRowSelect}
-            onUpdateData={(data: any[]): void => {
-              setIssuedRowData(data);
-              console.log(data);
+            onCellValueChanged={handleCellValueChanged}
+            isLoading={isLoading}
+            onCheckItems={(selectedIds) => {
+              if (selectedIds.length === 0) {
+                setCurrentPickSlipItem(null);
+                setSelectedRows([]);
+              } else {
+                // Фильтруем строки, которые были выбраны
+                const selectedRowsData = rowDataForSecondContainer.filter(
+                  (row) => selectedIds.includes(row.id || row._id)
+                );
+                setSelectedRows(selectedRowsData);
+              }
             }}
-            fetchData={rowDataForSecondContainer}
           />
           <div className="flex justify-between">
             <Space align="center">
-              <Button
+              {/* <Button
                 disabled={
                   !pickSlips ||
                   (pickSlips && pickSlips[0]?.state == 'closed') ||
                   (pickSlips && pickSlips[0]?.state == 'complete') ||
                   (pickSlips && pickSlips[0]?.state == 'canceled') ||
                   (pickSlips && pickSlips[0]?.state == 'partlyCanceled')
-                  // ||
-                  // (pickSlips && pickSlips[0]?.state == 'complete')
                 }
-                icon={<PrinterOutlined />}
-                onClick={() => {
-                  handleSubmitINProgress();
-                }}
+                icon={<SaveOutlined />}
+                onClick={handleSubmitINProgress}
                 size="small"
               >
-                {' '}
                 {t('SAVE')}
-              </Button>
-              {/* <Button
-                disabled={
-                  !pickSlips || (pickSlips && pickSlips[0]?.state == 'open')
-                }
-                icon={<PrinterOutlined />}
-                onClick={() => {
-                  if (pickSlips && pickSlips[0]?.state) {
-                  } else if (pickSlips && pickSlips[0]?.state) {
-                    // setOpenCompletePrint(true);
-                  } else {
-                    setOpenPickSlip(true);
-                  }
-                }}
-                size="small"
-              >
-                {' '}
-                {t('PRINT')}
               </Button> */}
-              {/* <Col>
-                <Button
-                  loading={reportDataLoading}
-                  icon={<PrinterOutlined />}
-                  size="small"
-                  onClick={() => fetchAndHandleReport('PICKSLIP_REPORT')}
-                  disabled={!(pickSlips && pickSlips[0]?.id)}
-                >
-                  {`${t('PRINT PICKSLIP')}`}
-                </Button>
-              </Col> */}
-
-<Col>
-<>{console.log(pickSlips&&pickSlips[0]||'')}</>
-<>{console.log(pickSlipSearchValues)}</>
-  <PDFExport
-    title={t('PICKSLIP REPORT')}
-    filename={`pickslip_report_${pickSlips && pickSlips[0]?.pickSlipNumberNew}`}
-    headerInfo={{
-      "Pick Slip Number": pickSlips && pickSlips[0]?.pickSlipNumberNew || '-',
-      "Store": pickSlips && pickSlips[0]?.getFromID?.storeShortName || '-',
-      "WO": pickSlips && pickSlips[0]?.projectID?.WOReferenceID?.WONumber || '-',
-      "WP": pickSlips && pickSlips[0]?.projectID?.projectName || '-',
-      'Trace No':pickSlips && pickSlips[0]?.projectTaskID?.taskWO || '-',
-      'Task No':pickSlips && pickSlips[0]?.projectTaskID?.taskNumber || '-',
-      'Task type':pickSlips && pickSlips[0]?.projectTaskID?.projectItemType || '-',
-
-      "Booking Date": pickSlipSearchValues?.bookingDate
-      ? new Date(pickSlipSearchValues.bookingDate).toLocaleDateString('ru-RU')
-      : '-',
-      "Mech": pickSlipSearchValues?.storeManName || '-',
-      "Storeman": pickSlipSearchValues?.userName || '-',
-    }}
-    statistics={{
-      "Total Items": rowDataForSecondContainer.length,
-      // "Total Quantity": rowDataForSecondContainer.reduce((sum, item) => sum + (item.bookedQty || 0), 0),
-    }}
-    columnDefs={[
-      { headerName: t('PART No'), field: 'PART_NUMBER_BOOKED' },
-      { headerName: t('DESCRIPTION'), field: 'DESCRIPTION' },
-      { headerName: t('SERIAL/BATCH'), field: 'SERIAL_NUMBER' },
-      // { headerName: t('REQUESTED QTY'), field: 'requestedQty' },
-      { headerName: t('BOOKED QTY'), field: 'bookedQty' },
-      { headerName: t('UOM'), field: 'UNIT_OF_MEASURE' },
-      { headerName: t('STOCK'), field: 'STOCK' },
-      { headerName: t('LOCATION'), field: 'LOCATION' },
-      { headerName: t('BATCH/SERIAL'), field: 'SERIAL_NUMBER' },
-      { headerName: t('DOC NUMBER'), field: 'DOC_NUMBER' },
-      { headerName: t('DOC TYPE'), field: 'DOC_TYPE' },
-      
-    ]}
-    data={rowDataForSecondContainer}
-    orientation="landscape"
-    disabled={!(pickSlips && pickSlips[0]?.id)}
-    loading={reportDataLoading}
-  />
-</Col>
-              <Button
+              {/* <Button
                 disabled={
                   !pickSlips ||
                   (pickSlips && pickSlips[0]?.state !== 'progress')
                 }
-                onClick={async () => {
-                  handleSubmitComplete();
-                }}
+                icon={<CheckCircleOutlined />}
+                onClick={handleSubmitComplete}
                 size="small"
               >
-                {' '}
-                {t('TO COMPLETE')}
-              </Button>
+                {t('COMPLETE')}
+              </Button> */}
               <Button
                 disabled={
                   !pickSlips ||
-                  (pickSlips && pickSlips[0]?.state !== 'complete')
+                  !['issued', 'progress'].includes(pickSlips[0]?.state) ||
+                  issuedData.length === 0 ||
+                  issuedData.some(
+                    (item) =>
+                      item.status === 'inactive' ||
+                      item.bookedQty < 0 ||
+                      !item.bookedQty ||
+                      !item.partNumberIDBooked
+                  )
                 }
-                onClick={async () => {
-                  handleClose();
+                icon={<SaveOutlined />}
+                onClick={handleSaveAndComplete}
+                size="small"
+              >
+                {t('SAVE & COMPLETE')}
+              </Button>
+              <PickSlipGenerator
+                data={{
+                  pickSlips: pickSlips && pickSlips[0],
+                  pickSlipSearchValues: pickSlipSearchValues,
+                  rowDataForSecondContainer: rowDataForSecondContainer,
                 }}
+                disabled={
+                  !pickSlips ||
+                  (pickSlips && pickSlips[0]?.bookedItems?.length) ||
+                  (pickSlips && pickSlips[0]?.state == 'open')
+                }
+              />
+              <Button
+                danger
+                disabled={
+                  !pickSlips ||
+                  !['issued', 'progress', 'complete', 'completed'].includes(
+                    pickSlips[0]?.state
+                  ) ||
+                  !pickSlipSearchValues.storeManID ||
+                  !pickSlipSearchValues.userID ||
+                  !pickSlipSearchValues.bookingDate ||
+                  issuedData.length === 0 ||
+                  issuedData.some(
+                    (item) =>
+                      item.status === 'inactive' ||
+                      item.bookedQty === 0 ||
+                      !item.bookedQty
+                    // !item.partNumberIDBooked
+                  )
+                }
+                onClick={
+                  pickSlips && pickSlips[0]?.state == 'complete'
+                    ? handleClose
+                    : handleFastBook
+                }
                 size="small"
                 icon={<SaveOutlined />}
               >
@@ -1037,20 +1518,11 @@ const PickSlipConfirmationNew: FC = () => {
                   (pickSlips && pickSlips[0]?.bookedItems?.length) ||
                   (pickSlips && pickSlips[0]?.state == 'open')
                 }
-              ></ReportPrintLabel>
+              />
             </Space>
           </div>
         </div>
       </Split>
-      {/* <Modal
-        title={t('PICKSLIP PRINT')}
-        open={openPickSlip}
-        width={'60%'}
-        onCancel={() => setOpenPickSlip(false)}
-        footer={null}
-      >
-        <GeneretedWorkLabels currentPick={issuedData} />
-      </Modal> */}
     </div>
   );
 };

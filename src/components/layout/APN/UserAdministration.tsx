@@ -33,9 +33,7 @@ import AdminACTypesPanel from '@/components/userAdministration/acTypesAdministra
 import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
 import { ACTypesFilteredFormValues } from '@/components/userAdministration/acTypesAdministration/ASTypesFilteredForm';
 
-import AdminTaskPanel from '@/components/userAdministration/taskAdministration/AdminTaskPanel';
-import AdminTaskFilterdForm from '@/components/userAdministration/taskAdministration/AdminTaskFilterdForm';
-import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
+import TaskAdministration from '@/modules/TaskAdministration/TaskAdministration';
 
 import ACAdministrationPanel from '@/components/userAdministration/ACAdministration/ACAdministrationPanel';
 // import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
@@ -49,6 +47,7 @@ import CertificatesTypesPanel from '@/components/userAdministration/certificates
 import OrderTextPanel from '@/components/userAdministration/orderTextAdministaration/OrderTextPanel';
 import ActionTemplateTextPanel from '@/components/views/actionTemplateAministaration/ActionTemplateTextPanel';
 import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
+import CusttomerCodesPanel from '@/components/userAdministration/customerCodes/CusttomerCodesPanel';
 
 const UserAdministration: FC = () => {
   type MenuItem = Required<MenuProps>['items'][number];
@@ -89,6 +88,11 @@ const UserAdministration: FC = () => {
         <AppstoreAddOutlined />
       ),
       getItem(
+        <>{t('CUSTOMER CODES TYPES')}</>,
+        RouteNames.CUSTOMER_CODES,
+        <ProjectOutlined />
+      ),
+      getItem(
         <>{t('ORDER TEXT TYPES')}</>,
         RouteNames.ORDER_TEXT_CODES,
         <ProjectOutlined />
@@ -102,11 +106,10 @@ const UserAdministration: FC = () => {
 
     getItem(<>{t('COMPANIES')}</>, RouteNames.COMPANIES, <GroupOutlined />),
     getItem(<>{t('VENDORS')}</>, RouteNames.VENDORS, <HomeOutlined />),
-    getItem(<>{t('AIRCRAFT')}</>, '4567', <AimOutlined />, [
-      getItem(<>{t('A/C TYPES')}</>, RouteNames.AC_TYPES, <ForkOutlined />),
-      getItem(<>{t('REGISTRATION')}</>, RouteNames.AC, <EditOutlined />),
-    ]),
-    getItem(<>{t('TASKS')}</>, RouteNames.AC_TASKS, <GroupOutlined />),
+    // getItem(<>{t('AIRCRAFT')}</>, '4567', <AimOutlined />, [
+    //   getItem(<>{t('A/C TYPES')}</>, RouteNames.AC_TYPES, <ForkOutlined />),
+    //   getItem(<>{t('REGISTRATION')}</>, RouteNames.AC, <EditOutlined />),
+    // ]),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const [panes, setPanes] = useState<TabData[]>([]);
@@ -262,6 +265,18 @@ const UserAdministration: FC = () => {
       }
       setActiveKey(tab.key);
     }
+    if (key === RouteNames.CUSTOMER_CODES) {
+      const tab = {
+        key,
+        title: `${t('CUSTOMER CODES TYPES')}`,
+        content: <div>{<CusttomerCodesPanel values={[]} />}</div>,
+        closable: true,
+      };
+      if (!panes.find((pane) => pane.key === tab.key)) {
+        setPanes((prevPanes) => [...prevPanes, tab]);
+      }
+      setActiveKey(tab.key);
+    }
 
     if (key === RouteNames.PROJECTS_CODES) {
       const tab = {
@@ -328,23 +343,19 @@ const UserAdministration: FC = () => {
       }
       setActiveKey(tab.key);
     }
-    if (key === RouteNames.AC_TASKS) {
-      const tab = {
-        key,
-        title: `${t('AC TASKS')}`,
-        content: (
-          <div>
-            <AdminTaskPanel values={tasksFormValues} />
-          </div>
-        ),
-        closable: true,
-      };
+    // if (key === RouteNames.AC_TASKS) {
+    //   const tab = {
+    //     key,
+    //     title: `${t('AC TASKS')}`,
+    //     content: <TaskAdministration isFilterCollapsed={collapsed} />,
+    //     closable: true,
+    //   };
 
-      if (!panes.find((pane) => pane.key === tab.key)) {
-        setPanes((prevPanes) => [...prevPanes, tab]);
-      }
-      setActiveKey(tab.key);
-    }
+    //   if (!panes.find((pane) => pane.key === tab.key)) {
+    //     setPanes((prevPanes) => [...prevPanes, tab]);
+    //   }
+    //   setActiveKey(tab.key);
+    // }
 
     if (key === RouteNames.USER_PERMISSIONS) {
       const tab = {
@@ -423,11 +434,9 @@ const UserAdministration: FC = () => {
         width={460}
         collapsible
         collapsed={collapsed}
-        onCollapse={(value: boolean | ((prevState: boolean) => boolean)) =>
-          setCollapsed(value)
-        }
+        onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="h-[82vh] overflow-auto flex flex-col ">
+        <div className="h-[82vh] overflow-auto flex flex-col">
           <Menu
             theme="light"
             mode="inline"
@@ -436,19 +445,9 @@ const UserAdministration: FC = () => {
           />
           {activeKey === RouteNames.VENDORS && !collapsed && (
             <VendorFilteredForm
-              onSubmit={function (values: VendorFilteredFormValues): void {
+              onSubmit={(values: VendorFilteredFormValues): void => {
                 setVendorFormValues(values);
               }}
-            />
-          )}
-          {activeKey === RouteNames.AC_TASKS && !collapsed && (
-            <AdminTaskFilterdForm
-              onSubmit={function (values: any): void {
-                setTasksFormValues(values);
-                console.log(values);
-                // refetchTasks();
-              }}
-              formKey={'adminTaskForm'}
             />
           )}
         </div>

@@ -8,8 +8,11 @@ import PartContainer from '@/components/woAdministration/PartContainer';
 import {
   transformToIPartNumber,
   transformToPartBooking,
+  ValueEnumTypeTask,
+  getTaskTypeColor,
 } from '@/services/utilites';
 import { ColDef } from 'ag-grid-community';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 type ListOfBookingType = {
   scroll: number;
   data: any[];
@@ -37,7 +40,16 @@ const ListOfBooking: FC<ListOfBookingType> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType;
   }
-
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('TC'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    NRC_ADD: t('ADHOC (ADHOC TASK)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
+    FC: t('FC'),
+    HARD_ACCESS: t('HARD_ACCESS'),
+  };
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
       field: 'createDate',
@@ -63,7 +75,6 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       field: 'voucherModel',
       editable: false,
       cellDataType: 'text',
-      width: 140,
     },
     {
       field: 'LOCAL_ID',
@@ -83,7 +94,6 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       filter: false,
       headerName: `${t('BATCH')}`,
       cellDataType: 'text',
-      width: 140,
     },
     {
       field: 'SERIAL_NUMBER',
@@ -91,34 +101,97 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       filter: false,
       headerName: `${t('SERIAL')}`,
       cellDataType: 'text',
-      width: 140,
     },
+    {
+      field: 'STOCK',
+      editable: false,
+      filter: false,
+      headerName: `${t('STORE')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SHELF_NUMBER',
+      editable: false,
+      filter: false,
+      headerName: `${t('LOCATION')}`,
+      cellDataType: 'text',
+    },
+
     {
       field: 'CONDITION',
       editable: false,
       filter: false,
       headerName: `${t('CONDITION')}`,
       cellDataType: 'text',
-      width: 140,
     },
     {
       field: 'NAME_OF_MATERIAL',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
     },
-    // {
-    //   field: 'registrationNumber',
-    //   headerName: `${t('A/C')}`,
-    //   cellDataType: 'text',
-    // },
+    {
+      field: 'ORDER_NUMBER',
+      headerName: `${t('ORDER No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'PICK_SLIP_NUMBER',
+      headerName: `${t('PICKSLIP No')}`,
+      cellDataType: 'text',
+      width: 100,
+    },
+    {
+      field: 'registrationNumber',
+      headerName: `${t('AC REG')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectWO',
+      headerName: `${t('PROJECT No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'woName',
+      headerName: `${t('WP NAME')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectTaskWO',
+      headerName: `${t('TRACE No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskNumber',
+      headerName: `${t('TASK No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskDescription',
+      headerName: `${t('TASK DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'TASK_TYPE',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      valueGetter: (params: { data: { TASK_TYPE: keyof ValueEnumTypeTask } }) =>
+        params.data.TASK_TYPE,
+      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+        const status = params.value;
+        return valueEnumTask[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
+        backgroundColor: getTaskTypeColor(params.value),
+      }),
+      cellDataType: 'text',
+    },
 
     {
       field: 'QUANTITY',
       editable: false,
       filter: false,
       headerName: `${t('QTY')}`,
-      cellDataType: 'text',
-      width: 100,
+      cellDataType: 'number',
     },
     {
       field: 'UNIT_OF_MEASURE',
@@ -137,44 +210,19 @@ const ListOfBooking: FC<ListOfBookingType> = ({
   ]);
   return (
     <div>
-      {/* <EditableTable
-        data={data}
-        isNoneRowSelection
-        showSearchInput
-        initialColumns={initialColumns}
-        isLoading={false}
-        menuItems={undefined}
-        recordCreatorProps={false}
-        onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        // onSelectedRowKeysChange={handleSelectedRowKeysChange}
-        onRowClick={function (record: any, rowIndex?: any): void {
-          onSingleRowClick && onSingleRowClick(record);
-        }}
-        onSave={function (rowKey: any, data: any, row: any): void {}}
-        yScroll={scroll}
-        externalReload={function () {
-          throw new Error('Function not implemented.');
-        }}
-      ></EditableTable> */}
-
-      <PartContainer
+      <UniversalAgGrid
         isLoading={isLoading}
-        isFilesVisiable={true}
         isVisible={true}
         pagination={true}
-        isAddVisiable={true}
-        isButtonVisiable={false}
-        isEditable={true}
         height={'68vh'}
         columnDefs={columnDefs}
-        partNumbers={[]}
         isChekboxColumn={true}
-        onUpdateData={(data: any[]): void => {}}
         rowData={transformedPartNumbers}
         onCheckItems={setSelectedRowKeys}
         onRowSelect={(data: any): void => {
-          onSingleRowClick && onSingleRowClick(data);
+          onSingleRowClick && onSingleRowClick(data[0]);
         }}
+        gridId={'bookingList'}
       />
     </div>
   );

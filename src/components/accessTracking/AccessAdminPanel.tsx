@@ -2,6 +2,7 @@
 import PermissionGuard, { Permission } from '../auth/PermissionGuard';
 import { Split } from '@geoffcox/react-splitter';
 import {
+  useDeleteProjectPanelsMutation,
   useGetProjectGroupPanelsQuery,
   useGetProjectItemsWOQuery,
   useGetProjectPanelsQuery,
@@ -19,6 +20,7 @@ import {
   message,
   Tabs,
   notification,
+  Tag,
 } from 'antd';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 // import data from '../../data/reports/label.xml';
@@ -26,7 +28,9 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 // Читаем содержимое файла label.xml
 import {
   ValueEnumType,
+  ValueEnumTypeTask,
   getStatusColor,
+  getTaskTypeColor,
   transformedAccessToTable,
 } from '@/services/utilites';
 import AccessDiscription from './AccessDiscription';
@@ -65,6 +69,9 @@ import PartContainer from '../woAdministration/PartContainer';
 import ReportPrintTag from '../shared/ReportPrintTag';
 import PdfGeneratorPanel from '../woAdministration/PdfGeneratorPanel';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
+import UniversalAgGrid from '../shared/UniversalAgGrid';
+import TaskMultiCloseModal from '../woAdministration/TaskMultiCloseModal';
+import { useGetUsersQuery } from '@/features/userAdministration/userApi';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -79,6 +86,12 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   const [addAccessBooking] = useAddBookingMutation({});
   const [isTreeView, setIsTreeView] = useState(false);
   const [triggerQueryBook, setTriggerQueryBook] = useState(false);
+  const [isTaskMultiCloseModalVisible, setIsTaskMultiCloseModalVisible] =
+    useState(false);
+  const [selectedAccessKeys, setSelectedAccessKeys] = useState<string[]>([]);
+  const [currentAction, setCurrentAction] = useState<
+    'open' | 'close' | 'inspect'
+  >('open');
 
   // Проверяем, есть ли accessProjectID и устанавливаем триггер для запроса
   useEffect(() => {
@@ -161,36 +174,17 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
         { skip: !triggerQuery }
       );
 
-  // useEffect(() => {
-  //   if (accesses) {
-  //     refetch();
-  //   }
-  // }, [accesses, refetch, projectSearchValues]);
   const { data: accessesData } = useGetAccessCodesQuery(
     { acTypeID: accesses && accesses?.length && accesses[0]?.acTypeID },
     { skip: accesses && !accesses[0]?.acTypeID }
   );
+  const [deleteProjectPanels] = useDeleteProjectPanelsMutation({});
   const transformedAccess = useMemo(() => {
     return transformedAccessToIAssess(bookings || []);
   }, [bookings]);
   const transformedTaleAccess = useMemo(() => {
     return transformedAccessToTable(accesses || []);
   }, [accesses]);
-  // const [xmlTemplate, setXmlTemplate] = useState<string>('');
-
-  // useEffect(() => {
-  //   const fetchXmlTemplate = async () => {
-  //     try {
-  //       const response = await fetch('../data/reports/label.xml'); // Путь к вашему файлу label.xml
-  //       const xmlTemplate = await response.text();
-  //       setXmlTemplate(xmlTemplate);
-  //     } catch (error) {
-  //       console.error('Ошибка загрузки файла label.xml:', error);
-  //     }
-  //   };
-
-  //   fetchXmlTemplate();
-  // }, []);
 
   useEffect(() => {
     // Check if projectSearchValues is defined and not null
@@ -204,13 +198,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       }
     }
   }, [projectSearchValues]);
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       <Spin />
-  //     </div>
-  //   );
-  // }
+
   const handleEdit = (project: any) => {
     setEditingproject(project);
   };
@@ -224,6 +212,8 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       onOk: async () => {
         try {
           // await deleteRequirement(companyId).unwrap();
+          await deleteProjectPanels({ accessIds: selectedKeys }).unwrap();
+
           notification.success({
             message: t('SUCCESS DELETING'),
             description: t('ACCESS SUCCESSFULLY DELETED'),
@@ -237,114 +227,136 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       },
     });
   };
-  const handleUpdateOpen = async (selectedKeys: any[]) => {
-    Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO OPEN SELECTED ACCESS?'),
-      onOk: async () => {
-        try {
-          const updateResponse = await updateAccess({
-            accessIds: selectedKeys,
+  const handleUpdateOpen = (selectedKeys: string[]) => {
+    setSelectedAccessKeys(selectedKeys);
+    setCurrentAction('open');
+    setIsTaskMultiCloseModalVisible(true);
+  };
+
+  const handleUpdateClosed = (selectedKeys: string[]) => {
+    setSelectedAccessKeys(selectedKeys);
+    setCurrentAction('close');
+    setIsTaskMultiCloseModalVisible(true);
+  };
+
+  const handleUpdateInspected = (selectedKeys: string[]) => {
+    setSelectedAccessKeys(selectedKeys);
+    setCurrentAction('inspect');
+    setIsTaskMultiCloseModalVisible(true);
+  };
+
+  const handleTaskMultiCloseModalSave = async (data: any) => {
+    console.log('Данные, полученные от TaskMultiCloseModal:', data);
+
+    try {
+      const actionData = data[0];
+      const userPerformDuration = actionData.userPerformDurations[0];
+      const userId = userPerformDuration.userID;
+      const date = actionData.createDate;
+
+      let updateResponse;
+      let bookingStatus;
+      let bookingModel;
+
+      switch (currentAction) {
+        case 'open':
+          updateResponse = await updateAccess({
+            accessIds: selectedAccessKeys,
             status: 'open',
-            removeUserId: USER_ID,
+            removeUserId: userId,
+            date: date,
           });
-
-          console.log('Update Access Response:', updateResponse);
-
-          const addBookingResponse = await addAccessBooking({
-            booking: {
-              voucherModel: 'OPEN_ACCESS',
-              accessProjectID: selectedKeys,
-              accessProjectStatus: 'OPEN',
-              projectID: projectSearchValues.projectID,
-            },
-            acTypeId: projectSearchValues.acTypeId,
-          }).unwrap();
-
-          console.log('Add Booking Response:', addBookingResponse);
-          notification.success({
-            message: t('SUCCESS OPEN'),
-            description: t('ACCESS SUCCESSFULLY OPEN'),
-          });
-
-          // refetch();
-        } catch (error) {
-          console.error('Error updating access or adding booking:', error);
-          notification.success({
-            message: t('ERROR OPEN'),
-            description: t('ACCESS OPEN ERROR'),
-          });
-        }
-      },
-    });
-  };
-  const handleUpdateClosed = async (selectedKeys: any[]) => {
-    Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO CLOSED SELECTED ACCESS?'),
-      onOk: async () => {
-        try {
-          await updateAccess({
-            accessIds: selectedKeys,
+          bookingStatus = 'OPEN';
+          bookingModel = 'OPEN_ACCESS';
+          break;
+        case 'close':
+          updateResponse = await updateAccess({
+            accessIds: selectedAccessKeys,
             status: 'closed',
-            installUserId: USER_ID,
+            installUserId: userId,
+            date: date,
           });
-          const addBookingResponse = await addAccessBooking({
-            booking: {
-              voucherModel: 'CLOSE_ACCESS',
-              accessProjectID: selectedKeys,
-              accessProjectStatus: 'CLOSED',
-              projectID: projectSearchValues.projectID,
-            },
-            acTypeId: projectSearchValues.acTypeId,
-          }).unwrap();
-          console.log('Add Booking Response:', addBookingResponse);
-          notification.success({
-            message: t('SUCCESS CLOSE'),
-            description: t('ACCESS SUCCESSFULLY CLOSED'),
-          });
-          // refetch();
-        } catch (error) {
-          notification.success({
-            message: t('ERROR CLOSED'),
-            description: t('ACCESS CLOSED ERROR'),
-          });
-        }
-      },
-    });
-  };
-  const handleUpdateInspected = async (selectedKeys: any[]) => {
-    Modal.confirm({
-      title: t('ARE YOU SURE, YOU WANT TO INSPECT SELECTED ACCESS?'),
-      onOk: async () => {
-        try {
-          await updateAccess({
-            accessIds: selectedKeys,
+          bookingStatus = 'CLOSED';
+          bookingModel = 'CLOSE_ACCESS';
+          break;
+        case 'inspect':
+          updateResponse = await updateAccess({
+            accessIds: selectedAccessKeys,
             status: 'inspected',
-            inspectedUserID: USER_ID,
-          }).unwrap();
-          const addBookingResponse = await addAccessBooking({
-            booking: {
-              voucherModel: 'INSPECT_ACCESS',
-              accessProjectID: selectedKeys,
-              accessProjectStatus: 'INSPECTION',
-              projectID: projectSearchValues.projectID,
-            },
-            acTypeId: projectSearchValues.acTypeId,
-          }).unwrap();
-          console.log('Add Booking Response:', addBookingResponse);
-          notification.success({
-            message: t('SUCCESS INSPECT'),
-            description: t('ACCESS SUCCESSFULLY INSPECT'),
+            inspectedUserID: userId,
+            date: date,
           });
-          // refetch();
-        } catch (error) {
-          notification.success({
-            message: t('ERROR INSPECT'),
-            description: t('ACCESS INSPECT ERROR'),
-          });
-        }
-      },
-    });
+          bookingStatus = 'INSPECTION';
+          bookingModel = 'INSPECT_ACCESS';
+          break;
+      }
+
+      console.log('Ответ на обновление доступа:', updateResponse);
+
+      const addBookingResponse = await addAccessBooking({
+        booking: {
+          voucherModel: bookingModel,
+          accessProjectID: selectedAccessKeys,
+          accessProjectStatus: bookingStatus,
+          projectID: projectSearchValues.projectID,
+        },
+        acTypeId: projectSearchValues.acTypeId,
+        userID: userId,
+      }).unwrap();
+
+      console.log('Ответ на добавление бронирования:', addBookingResponse);
+
+      notification.success({
+        message: t(`SUCCESS ${currentAction.toUpperCase()}`),
+        description: t(`ACCESS SUCCESSFULLY ${currentAction.toUpperCase()}ED`),
+      });
+
+      // refetch();
+    } catch (error) {
+      console.error(
+        `Ошибка при ${currentAction} доступа или добавлении бронирования:`,
+        error
+      );
+      notification.error({
+        message: t(`ERROR ${currentAction.toUpperCase()}`),
+        description: t(`ACCESS ${currentAction.toUpperCase()} ERROR`),
+      });
+    } finally {
+      setIsTaskMultiCloseModalVisible(false);
+    }
   };
+
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('TC'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    NRC_ADD: t('ADHOC (ADHOC TASK)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
+    FC: t('FC'),
+    HARD_ACCESS: t('HARD_ACCESS'),
+  };
+
+  const renderTaskTypeTags = (taskTypes: string[]) => {
+    return (
+      <div>
+        {taskTypes.map((type) => {
+          const taskName =
+            valueEnumTask[type as keyof ValueEnumTypeTask] || type;
+          return (
+            <Tag
+              key={type}
+              color={getTaskTypeColor(type as keyof ValueEnumTypeTask)}
+              style={{ margin: '2px' }}
+            >
+              {taskName}
+            </Tag>
+          );
+        })}
+      </div>
+    );
+  };
+  const { data: users } = useGetUsersQuery({});
 
   type CellDataType = 'text' | 'number' | 'date' | 'boolean';
 
@@ -433,7 +445,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
+        //// color: '#ffffff', // Text color
       }),
     },
     {
@@ -449,7 +461,30 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       field: 'accessDescription',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
-      width: 250,
+
+      filter: true,
+    },
+    {
+      field: 'taskTypes',
+      headerName: `${t('TASK TYPE')}`,
+      cellDataType: 'text',
+      filter: true,
+      cellRenderer: (params: any) => renderTaskTypeTags(params.value || []),
+      filterParams: {
+        valueGetter: (params: any) => {
+          return params.data.taskTypes
+            .map(
+              (type: string) =>
+                valueEnumTask[type as keyof ValueEnumTypeTask] || type
+            )
+            .join(', ');
+        },
+      },
+    },
+    {
+      field: 'taskNumbers',
+      headerName: `${t('TASK NUMBER')}`,
+      cellDataType: 'text',
       filter: true,
     },
     {
@@ -457,28 +492,24 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       headerName: `${t('ZONE')}`,
       cellDataType: 'text',
       filter: true,
-      width: 100,
     },
     {
       field: 'subZoneNbr',
       filter: true,
       headerName: `${t('SUB ZONE')}`,
       cellDataType: 'text',
-      width: 100,
     },
     {
       field: 'areaNbr',
       filter: true,
       headerName: `${t('AREA')}`,
       cellDataType: 'text',
-      width: 100,
     },
     {
       field: 'areaDescription',
       filter: true,
       headerName: `${t('AREA DESCRIPTION')}`,
       cellDataType: 'text',
-      width: 250,
     },
   ];
 
@@ -511,7 +542,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             disabled={!selectedKeys.length}
             size="small"
             icon={<MinusSquareOutlined />}
-            onClick={() => handleDelete(editingproject.id || '')}
+            onClick={() => handleDelete(selectedKeys.join(',') || '')}
           >
             {t('DELETE ACCESS')}
           </Button>
@@ -538,7 +569,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
               disabled={!selectedKeys.length}
               size="small"
               icon={<CheckCircleFilled />}
-              onClick={() => handleUpdateClosed(selectedKeys)}
+              onClick={() => handleUpdateInspected(selectedKeys)}
             >
               {t('CLOSE ACCESS')}
             </Button>
@@ -552,7 +583,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
               disabled={!selectedKeys.length}
               size="small"
               icon={<CheckCircleFilled />}
-              onClick={() => handleUpdateInspected(selectedKeys)}
+              onClick={() => handleUpdateClosed(selectedKeys)}
             >
               {t('INSPECT CLOSE ACCESS')}
             </Button>
@@ -625,24 +656,19 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
               />
             ) : (
               projectSearchValues?.isOnlyPanels && (
-                <PartContainer
-                  isFilesVisiable={false}
+                <UniversalAgGrid
+                  gridId="acceses"
                   isVisible={true}
                   pagination={true}
-                  isAddVisiable={true}
-                  isButtonVisiable={false}
-                  isEditable={false}
                   height={'65vh'}
                   columnDefs={columnDefsAccets}
-                  partNumbers={[]}
                   isChekboxColumn={true}
-                  onUpdateData={(data: any[]): void => {}}
                   rowData={transformedTaleAccess}
-                  isLoading={isLoading}
+                  isLoading={isLoading || isFetching}
                   onCheckItems={(selectedKeys) => {
                     setSelectedKeys(selectedKeys);
                   }}
-                  onRowSelect={handleEdit}
+                  onRowSelect={(rowData) => handleEdit(rowData[0])}
                 />
               )
             )}
@@ -690,20 +716,13 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                 <Tabs.TabPane tab={t('BOOKING')} key="5">
                   <div className="py-5">
                     {editingproject ? (
-                      <PartContainer
-                        isFilesVisiable={false}
-                        isVisible={false}
-                        pagination={false}
-                        isAddVisiable={true}
-                        isButtonVisiable={false}
-                        isEditable={false}
+                      <UniversalAgGrid
                         height={'56vh'}
                         columnDefs={columnDefs}
-                        partNumbers={[]}
                         isChekboxColumn={false}
-                        onUpdateData={(data: any[]): void => {}}
                         rowData={transformedAccess}
                         isLoading={false}
+                        gridId={'accessBooking'}
                       />
                     ) : (
                       <Empty></Empty>
@@ -722,6 +741,17 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           </div>
         </Split>
       </div>
+      {isTaskMultiCloseModalVisible && (
+        <TaskMultiCloseModal
+          onlyWithOrganizationAuthorization={true}
+          currentAction={{ projectItemType: 'ACCESS' }}
+          currentTask={{ projectItemType: 'ACCESS' }}
+          visible={isTaskMultiCloseModalVisible}
+          users={users || []}
+          onCancel={() => setIsTaskMultiCloseModalVisible(false)}
+          onSave={handleTaskMultiCloseModalSave}
+        />
+      )}
     </div>
   );
 };

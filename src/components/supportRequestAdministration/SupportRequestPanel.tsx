@@ -1,26 +1,45 @@
+//@ts-nocheck
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Modal, message, Spin, Tooltip } from 'antd';
+import { Modal, message, Spin, Tooltip, Form, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { AgGridReact } from 'ag-grid-react';
-import { ColDef, ValueSetterParams, GridReadyEvent } from 'ag-grid-community';
-import { ProForm, ProFormText, ProFormSelect, ProFormTextArea } from '@ant-design/pro-components';
-import { useGetSupportRequestsQuery, useUpdateSupportRequestMutation } from '@/store/slices/supportRequestApi';
-import { SubscriptionType, getSubscriptionTypes, getStatusColor } from '@/services/utilites';
+import { ColDef, ValueSetterParams } from 'ag-grid-community';
+import dayjs from 'dayjs';
 
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
+import {
+  ProForm,
+  ProFormText,
+  ProFormSelect,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
+import {
+  useGetSupportRequestsQuery,
+  useUpdateSupportRequestMutation,
+} from '@/store/slices/supportRequestApi';
+import {
+  SubscriptionType,
+  getSubscriptionTypes,
+  getStatusColor,
+} from '@/services/utilites';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 
 interface SupportRequestPanelProps {
   supportRequestSearchValues: any;
 }
 
-const SupportRequestPanel: React.FC<SupportRequestPanelProps> = ({ supportRequestSearchValues }) => {
+const SupportRequestPanel: React.FC<SupportRequestPanelProps> = ({
+  supportRequestSearchValues,
+}) => {
   const { t } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
-  const [gridHeight, setGridHeight] = useState('400px');
+  const [gridHeight, setGridHeight] = useState('72vh');
+  const [form] = Form.useForm();
 
-  const { data: supportRequests, isFetching, refetch } = useGetSupportRequestsQuery({
+  const {
+    data: supportRequests,
+    isFetching,
+    refetch,
+  } = useGetSupportRequestsQuery({
     ...supportRequestSearchValues,
     requestType: supportRequestSearchValues?.requestType?.join(',') || '',
     dateRange: supportRequestSearchValues?.dateRange?.join(',') || '',
@@ -30,7 +49,8 @@ const SupportRequestPanel: React.FC<SupportRequestPanelProps> = ({ supportReques
   useEffect(() => {
     const updateGridHeight = () => {
       const windowHeight = window.innerHeight;
-      const topOffset = document.getElementById('supportRequestGrid')?.offsetTop || 0;
+      const topOffset =
+        document.getElementById('supportRequestGrid')?.offsetTop || 0;
       const newHeight = windowHeight - topOffset - 20;
       setGridHeight(`${newHeight}px`);
     };
@@ -45,85 +65,157 @@ const SupportRequestPanel: React.FC<SupportRequestPanelProps> = ({ supportReques
     refetch();
   }, [supportRequestSearchValues, refetch]);
 
-  const handleStatusChange = useCallback(async (params: ValueSetterParams) => {
-    const { data, newValue } = params;
-    try {
-      await updateSupportRequest({ id: data._id, status: newValue }).unwrap();
-      message.success(t('Status updated successfully'));
-      return true;
-    } catch (error) {
-      message.error(t('Failed to update status'));
-      return false;
-    }
-  }, [updateSupportRequest, t]);
-
-  const columnDefs = useMemo<ColDef[]>(() => [
-    { field: 'title', headerName: t('Title'), flex: 2 },
-    {
-      field: 'status',
-      headerName: t('Status'),
-      editable: true,
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ['open', 'inProgress', 'closed'],
-      },
-      valueSetter: (params) => {
-        handleStatusChange(params);
+  const handleStatusChange = useCallback(
+    async (params: ValueSetterParams) => {
+      const { data, newValue } = params;
+      try {
+        await updateSupportRequest({ id: data._id, status: newValue }).unwrap();
+        message.success(t('Status updated successfully'));
         return true;
-      },
-      cellStyle: (params: any) => ({
-        backgroundColor: getStatusColor(params.value),
-        color: '#ffffff',
-      }),
-      cellRenderer: (params: any) => params.value.toUpperCase(),
-      flex: 1,
+      } catch (error) {
+        message.error(t('Failed to update status'));
+        return false;
+      }
     },
-    { field: 'priority', headerName: t('Priority'), flex: 1 },
-    { 
-      field: 'requestType', 
-      headerName: t('Request Type'),
-      valueFormatter: (params: any) => {
-        const types = getSubscriptionTypes(t);
-        const requestType = types.find(type => type.value === params.value);
-        return requestType ? requestType.label : params.value;
+    [updateSupportRequest, t]
+  );
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return 'red';
+      case 'medium':
+        return 'orange';
+      case 'low':
+        return 'green';
+      default:
+        return 'default';
+    }
+  };
+
+  const getRequestTypeColor = (requestType: string) => {
+    switch (requestType) {
+      case 'SUBSCRIPTION_BASIC':
+        return 'blue';
+      case 'SUBSCRIPTION_STANDARD':
+        return 'cyan';
+      case 'SUBSCRIPTION_PREMIUM':
+        return 'purple';
+      case 'SUBSCRIPTION_ENTERPRISE':
+        return 'magenta';
+      default:
+        return 'default';
+    }
+  };
+
+  const columnDefs = useMemo<ColDef[]>(
+    () => [
+      { field: 'title', headerName: t('TITLE') },
+      {
+        field: 'status',
+        headerName: t('STATUS'),
+        editable: true,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: ['open', 'inProgress', 'closed'],
+        },
+        valueSetter: (params) => {
+          handleStatusChange(params);
+          return true;
+        },
+        cellStyle: (params: any) => ({
+          backgroundColor: getStatusColor(params.value),
+        }),
+        cellRenderer: (params: any) => params.value.toUpperCase(),
+        // flex: 1,
       },
-      flex: 1,
-    },
-    {
-      field: 'description',
-      headerName: t('Description'),
-      cellRenderer: (params: any) => {
-        return <Tooltip title={params.value}>
-          <div className="truncate">{params.value}</div>
-        </Tooltip>
+
+      {
+        field: 'priority',
+        headerName: t('PRIORITY'),
+        cellRenderer: (params: any) => {
+          return (
+            <Tag color={getPriorityColor(params.value)}>
+              {params.value.toUpperCase()}
+            </Tag>
+          );
+        },
       },
-      flex: 2,
-    },
-    { field: 'createDate', headerName: t('Created Date'), flex: 1 },
-    { field: 'createdBy', headerName: t('Created By'), valueGetter: (params: any) => params.data.createUserID?.name || '', flex: 1 },
-    {
-      headerName: t('Actions'),
-      cellRenderer: (params: any) => {
-        return <button 
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-          onClick={() => showModal(params.data)}
-        >
-          {t('Edit')}
-        </button>
+      {
+        field: 'requestType',
+        headerName: t('REQUEST TYPE'),
+        cellRenderer: (params: any) => {
+          const types = getSubscriptionTypes(t);
+          const requestType = types.find((type) => type.value === params.value);
+          const label = requestType ? requestType.label : params.value;
+          return <Tag color={getRequestTypeColor(params.value)}>{label}</Tag>;
+        },
       },
-      flex: 1,
-    },
-  ], [t, handleStatusChange]);
+      {
+        field: 'description',
+        headerName: t('DESCRIPTION'),
+        cellRenderer: (params: any) => {
+          return (
+            <Tooltip title={params.value}>
+              <div className="truncate">{params.value}</div>
+            </Tooltip>
+          );
+        },
+        // flex: 2,
+      },
+
+      {
+        field: 'createDate',
+        headerName: t('CREATE DATE'),
+        cellRenderer: (params: any) => {
+          const date = params.data.createDate;
+          if (!date) return '';
+
+          const formattedDate = dayjs(date).format('DD.MM.YYYY HH:mm');
+          return <div style={{ padding: '4px' }}>{formattedDate}</div>;
+        },
+      },
+      {
+        field: 'createdBy',
+        headerName: t('CREATED BY'),
+        valueGetter: (params: any) => {
+          return params.data.createUserID?.name || '';
+        },
+      },
+
+      {
+        headerName: t('Actions'),
+        cellRenderer: (params: any) => {
+          return (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+              onClick={() => showModal(params.data)}
+            >
+              {t('Edit')}
+            </button>
+          );
+        },
+        // flex: 1,
+      },
+    ],
+    [t, handleStatusChange]
+  );
 
   const showModal = (record: any) => {
-    setSelectedRequest(record);
+    setSelectedRequest({ ...record });
+    form.setFieldsValue({ ...record });
     setIsModalVisible(true);
   };
 
   const handleOk = async (values: any) => {
     try {
-      await updateSupportRequest({ id: selectedRequest.id, ...values }).unwrap();
+      await updateSupportRequest({
+        id: selectedRequest?._id || selectedRequest?.id,
+        ...values,
+      }).unwrap();
       setIsModalVisible(false);
+      setSelectedRequest(null);
+      form.resetFields();
       message.success(t('Support request updated successfully'));
       refetch();
     } catch (error) {
@@ -133,45 +225,44 @@ const SupportRequestPanel: React.FC<SupportRequestPanelProps> = ({ supportReques
 
   const handleCancel = () => {
     setIsModalVisible(false);
-  };
-
-  const onGridReady = (params: GridReadyEvent) => {
-    params.api.sizeColumnsToFit();
+    setSelectedRequest(null);
+    form.resetFields();
   };
 
   return (
     <>
-      <div id="supportRequestGrid" className="ag-theme-alpine" style={{ height: gridHeight, width: '100%' }}>
+      <div
+        id="supportRequestGrid"
+        className="ag-theme-alpine"
+        style={{ height: gridHeight, width: '100%' }}
+      >
         {isFetching ? (
           <div className="flex justify-center items-center h-full">
             <Spin size="large" />
           </div>
         ) : (
-          <AgGridReact
+          <UniversalAgGrid
+            gridId="supportRequestGrid"
             rowData={supportRequests}
             columnDefs={columnDefs}
-            defaultColDef={{ 
-              sortable: true, 
-              filter: true,
-              resizable: true,
-              flex: 1
-            }}
-            pagination={true}
-            paginationPageSize={10}
-            onGridReady={onGridReady}
-            onGridSizeChanged={(params) => params.api.sizeColumnsToFit()}
+            // pagination={true}
+            height="82vh"
+            className="h-full"
+            isLoading={isFetching}
+            onRowDoubleClicked={(params) => showModal(params.data)}
           />
         )}
       </div>
       <Modal
         title={t('Edit Support Request')}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
       >
         <ProForm
-          initialValues={selectedRequest}
+          form={form}
           onFinish={handleOk}
+          initialValues={selectedRequest}
         >
           <ProFormText
             name="title"

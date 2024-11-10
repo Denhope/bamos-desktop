@@ -11,12 +11,18 @@ import {
   Space,
   Tabs,
   Divider,
+  Button,
+  Modal,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { RouteNames } from '@/router';
 
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import {
+  ShoppingCartOutlined,
+  SearchOutlined,
+  FileSearchOutlined,
+} from '@ant-design/icons';
 
 import TabPane, { TabPaneProps } from 'antd/es/tabs/TabPane';
 
@@ -59,7 +65,7 @@ const { Sider, Content } = Layout;
 const StockInformationNew: FC = () => {
   const [form] = Form.useForm();
   const [isReset, setIsReset] = useState(false);
-  const [activeKey, setActiveKey] = useState<string>(''); // Используйте строку вместо массива
+  const [activeKey, setActiveKey] = useState<string>('');
   const [data, setData] = useState<any>(null);
   const { t } = useTranslation();
   const [dataPN, setDataPN] = useState<any>([]);
@@ -123,8 +129,6 @@ const StockInformationNew: FC = () => {
       'sub1',
       <ShoppingCartOutlined />
     ),
-    // ]
-    // ),
   ];
   const dispatch = useAppDispatch();
 
@@ -200,7 +204,6 @@ const StockInformationNew: FC = () => {
     group: form.getFieldValue('GROUP'),
     type: form.getFieldValue('TYPE'),
   });
-  // const [updatetOrderMaterials, setUpdatedOrderMaterials] = useState(null);
   const partValueEnum: Record<string, any> =
     partNumbers?.reduce((acc, partNumber) => {
       if (partNumber._id) {
@@ -242,7 +245,6 @@ const StockInformationNew: FC = () => {
       headerName: `${t('ALT. UNIT OF MEASURE')}`,
       cellDataType: 'text',
     },
-
     {
       headerName: `${t('APPROVED BY')}`,
       field: 'APPROVED',
@@ -260,6 +262,40 @@ const StockInformationNew: FC = () => {
       },
     },
   ]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [openPartNumberSearchModal, setOpenPartNumberSearchModal] =
+    useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+    // Здесь можно добавить логику для расширенного поиска
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleSearchButton = () => {
+    if (selectedPN) {
+      // Вызываем поиск заново
+      setSelectedPN(null);
+      setTimeout(() => {
+        setSelectedPN(selectedPN);
+      }, 0);
+    }
+  };
+
+  const handleSelectFromModal = (record: any) => {
+    setOpenPartNumberSearchModal(false);
+    setSelectedPN(record);
+    // Устанавливаем выбранный партномер в селект
+    form.setFieldsValue({ partNumberID: record._id });
+  };
+
   return (
     <Layout>
       <Sider
@@ -270,20 +306,13 @@ const StockInformationNew: FC = () => {
           marginBottom: 0,
         }}
         width={350}
-        // trigger
         collapsible
         collapsed={collapsed}
         onCollapse={(value: boolean | ((prevState: boolean) => boolean)) =>
           setCollapsed(value)
         }
       >
-        <Menu
-          theme="light"
-          className="pt-5"
-          // defaultSelectedKeys={['/']}
-          mode="inline"
-          items={items}
-        />
+        <Menu theme="light" className="pt-5" mode="inline" items={items} />
         {!collapsed && (
           <div className="flex flex-col">
             <ProForm
@@ -292,7 +321,6 @@ const StockInformationNew: FC = () => {
                 setSelectedPN(null);
                 setIsReset(true);
               }}
-              //</Sider>}}ЪЪ
               className="p-5"
               style={{
                 display: !collapsed ? 'block' : 'none',
@@ -314,27 +342,11 @@ const StockInformationNew: FC = () => {
                   }}
                   options={[
                     { label: `${t('INCLUDE ALTERNATIVE')}`, value: 'true' },
-                    // { label: 'Load all Exp. Dates', value: 'allDate' },
                   ].map((option) => ({
                     ...option,
-                    style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+                    style: { display: 'flex', flexWrap: 'wrap' },
                   }))}
                 />
-                {/* <ProFormCheckbox.Group
-                  className="my-0 py-0"
-                  //initialValue={['false']}
-                  labelAlign="left"
-                  name="isAllDAte"
-                  fieldProps={{
-                    onChange: (value) => setIsAllDAte(value),
-                  }}
-                  options={[{ label: `${t('ALL DATES')}`, value: 'true' }].map(
-                    (option) => ({
-                      ...option,
-                      style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
-                    })
-                  )}
-                /> */}
               </Space>
 
               <ProFormCheckbox.Group
@@ -351,26 +363,38 @@ const StockInformationNew: FC = () => {
                   { label: `${t('CHEM')}`, value: 'CHEM' },
                 ].map((option) => ({
                   ...option,
-                  style: { display: 'flex', flexWrap: 'wrap' }, // Добавьте эту строку
+                  style: { display: 'flex', flexWrap: 'wrap' },
                 }))}
               />
-              <ProFormSelect
-                showSearch
-                rules={[{ required: true }]}
-                width={'lg'}
-                name="partNumberID"
-                label={`${t(`PART No`)}`}
-                // value={partNumber}
-                onChange={(value, data: any) => {
-                  setSelectedPN(data.data);
-                  console.log(data.data);
-                }}
-                options={Object.entries(partValueEnum).map(([key, part]) => ({
-                  label: part.PART_NUMBER,
-                  value: key,
-                  data: part,
-                }))}
-              />
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <ProFormSelect
+                  showSearch
+                  rules={[{ required: true }]}
+                  width="lg"
+                  name="partNumberID"
+                  label={`${t(`PART No`)}`}
+                  onChange={(value, data: any) => {
+                    setSelectedPN(data.data);
+                    console.log(data.data);
+                  }}
+                  options={Object.entries(partValueEnum).map(([key, part]) => ({
+                    label: part.PART_NUMBER,
+                    value: key,
+                    data: part,
+                  }))}
+                />
+                <Space>
+                  <Button type="primary" onClick={handleSearchButton}>
+                    {t('Search')}
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<FileSearchOutlined />}
+                    onClick={() => setOpenPartNumberSearchModal(true)}
+                    title={t('Part Number Search')}
+                  />
+                </Space>
+              </Space>
             </ProForm>
             <div className="h-[69vh] px-5 overflow-hidden flex flex-col justify-between">
               <Divider></Divider>
@@ -382,7 +406,7 @@ const StockInformationNew: FC = () => {
                   isAddVisiable={true}
                   isButtonVisiable={false}
                   isEditable={true}
-                  height={'34vh'}
+                  height={'38vh'}
                   columnDefs={columnDefs}
                   partNumbers={[]}
                   onUpdateData={(data: any[]): void => {}}
@@ -392,36 +416,6 @@ const StockInformationNew: FC = () => {
                 <Empty />
               )}
             </div>
-            {/* <ModalForm
-              // title={`Search on Store`}
-              width={'70vw'}
-              // placement={'bottom'}
-              open={openStoreFindModal}
-              // submitter={false}
-              onOpenChange={setOpenStoreFind}
-              onFinish={async function (
-                record: any,
-                rowIndex?: any
-              ): Promise<void> {
-                setOpenStoreFind(false);
-                handleSelect(selectedSinglePN);
-                setInitialPN(selectedSinglePN?.PART_NUMBER || '');
-              }}
-            >
-              <PartNumberSearch
-                initialParams={{ partNumber: '' }}
-                scroll={45}
-                onRowClick={function (record: any, rowIndex?: any): void {
-                  setOpenStoreFind(false);
-                  handleSelect(record);
-                  setInitialPN(record.PART_NUMBER);
-                }}
-                isLoading={false}
-                onRowSingleClick={function (record: any, rowIndex?: any): void {
-                  setSecectedSinglePN(record);
-                }}
-              />
-            </ModalForm> */}
           </div>
         )}
       </Sider>
@@ -433,6 +427,49 @@ const StockInformationNew: FC = () => {
           ></StockInfoNew>
         </div>
       </Content>
+      <Modal
+        title={t('Advanced Search')}
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        {/* Здесь можно добавить компоненты для расширенного поиска */}
+        <p>{t('Advanced search options will be here')}</p>
+      </Modal>
+      <ModalForm
+        title={t('Part Number Search')}
+        width={'70vw'}
+        open={openPartNumberSearchModal}
+        onOpenChange={setOpenPartNumberSearchModal}
+        onFinish={async (values) => {
+          setOpenPartNumberSearchModal(false);
+        }}
+        modalProps={{
+          bodyStyle: {
+            padding: 0, // Убираем отступы в теле модального окна
+          },
+        }}
+      >
+        <div
+          style={{
+            height: 'calc(65vh)', // Устанавливаем фиксированную высоту
+            overflow: 'auto', // Добавляем прокруткуы
+            padding: '24px', // Добавляем отступы внутри прокручиваемой области
+          }}
+        >
+          <PartNumberSearch
+            initialParams={{ partNumber: '' }}
+            scroll={30}
+            onRowClick={(record) => {
+              handleSelectFromModal(record);
+            }}
+            isLoading={false}
+            onRowSingleClick={(record) => {
+              setSecectedSinglePN(record);
+            }}
+          />
+        </div>
+      </ModalForm>
     </Layout>
   );
 };

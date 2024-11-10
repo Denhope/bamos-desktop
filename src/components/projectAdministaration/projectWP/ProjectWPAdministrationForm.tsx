@@ -14,6 +14,7 @@ import {
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
+  ProFormCheckbox,
 } from '@ant-design/pro-components';
 import {
   Upload,
@@ -143,7 +144,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
 
   const handleDelete = (file: any) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить этот файл?',
+      title: 'Вы уверены, что хотит�� удалить этот файл?',
       onOk: async () => {
         try {
           const response = await dispatch(
@@ -539,20 +540,16 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                         name="notes"
                         label={t('REMARKS')}
                       />
-                      {/* <ProFormSelect
+                      <ProFormCheckbox
+                        name="isCriticalTask"
+                        // label={t('IS CRITICAL TASK')}
                         disabled={
                           project.status == 'CLOSED' ||
                           project.status == 'COMPLETED'
                         }
-                        showSearch
-                        name="status"
-                        label={t('STATUS')}
-                        width="sm"
-                        valueEnum={{
-                          ACTIVE: { text: t('ACTIVE'), status: 'SUCCESS' },
-                          INACTIVE: { text: t('INACTIVE'), status: 'Error' },
-                        }}
-                      /> */}
+                      >
+                        {t('IS CRITICAL TASK')}
+                      </ProFormCheckbox>
                     </>
                   </ProFormGroup>
                 </ProFormGroup>

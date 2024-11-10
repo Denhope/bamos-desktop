@@ -40,6 +40,8 @@ import {
   useAddProjectPanelsMutation,
   useAppendProjectTaskMutation,
 } from '@/features/projectItemWO/projectItemWOApi';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -188,7 +190,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
     },
     {
@@ -242,7 +244,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       cellDataType: 'date',
       headerName: `${t('START DATE')}`,
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return ''; // ��роверка отсутствия значения
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -363,19 +365,22 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
                 }}
               />
             ) : (
-              <PartContainer
-                isVisible
-                isButtonVisiable={false}
-                isAddVisiable={true}
+              <UniversalAgGrid
                 isLoading={isFetching || isLoading}
-                columnDefs={columnItems}
-                partNumbers={[]}
-                pagination={true}
+                gridId="wpList"
+                isChekboxColumn
                 rowData={projects || []}
-                onUpdateData={function (data: any[]): void {}}
-                height={'65vh'}
-                onRowSelect={handleEdit}
-              ></PartContainer>
+                columnDefs={columnItems}
+                onRowSelect={(selectedRows) => {
+                  if (selectedRows.length > 0) {
+                    handleEdit(selectedRows[0]);
+                  }
+                }}
+                onCheckItems={(selectedKeys) => {
+                  setSelectedKeys(selectedKeys);
+                }}
+                height="65vh"
+              />
             )}
           </div>
           <div className="h-[70vh] bg-white px-4 rounded-md brequierement-gray-400 p-3 overflow-y-auto">

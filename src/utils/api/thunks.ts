@@ -18,29 +18,48 @@ import { IPurchaseMaterial } from '@/types/TypesData';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { $authHost, API_URL } from './http';
+
+// Кэ для отчетов
+const reportCache = new Map();
+
 export const generateReport = async (
-  companyID: any,
+  companyID: string,
   queryParams: any,
-  token: any
+  token: string,
+  signal?: AbortSignal
 ) => {
-  const url = `${API_URL}/reports/generate-report/companyID/${companyID}/`;
+  const cacheKey = JSON.stringify({ companyID, queryParams });
+
+  if (reportCache.has(cacheKey)) {
+    return reportCache.get(cacheKey);
+  }
 
   try {
-    const response = await $authHost.get(url, {
-      params: queryParams,
-      // headers,
-      responseType: 'blob',
-    });
-    const contentType = response.headers['content-type'];
+    const response = await $authHost.post(
+      `/reports/company/${companyID}/generate`,
+      queryParams,
+      {
+        signal,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 30000,
+      }
+    );
 
-    if (contentType !== 'application/pdf') {
-      throw new Error(`Неверный тип содержимого: ${contentType}`);
+    reportCache.set(cacheKey, response.data);
+
+    if (reportCache.size > 50) {
+      const firstKey = reportCache.keys().next().value;
+      reportCache.delete(firstKey);
     }
 
-    console.log('Отчет успешно сгенерирован:', response.data); // После проверки типа содержимого
     return response.data;
-  } catch (error) {
-    console.error('Ошибка при загрузке отчета:', error);
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.log('Report generation aborted');
+      return null;
+    }
     throw error;
   }
 };
@@ -4479,7 +4498,7 @@ export const getFilteredUnserviseStockItems = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return rejectWithValue('Не удалось загрузить MaterialOrders');
+      return rejectWithValue('Не далось загрузить MaterialOrders');
     }
   }
 );
@@ -5386,8 +5405,11 @@ export const deleteFileUploads = createAsyncThunk(
   'common/deleteFile/uploads',
   async (data: any, { rejectWithValue }) => {
     try {
+      console.log(data);
       const response = await $authHost.delete(
-        `files/uploads/companyID/${data.companyID}/file/${data.id}/type/${data?.type}/itemID/${data?.itemID}`
+        `files/uploads/companyID/${data.companyID}/file/${
+          data.id || data._id
+        }/type/${data?.type}/itemID/${data?.itemID}`
       );
       return response.data;
     } catch (error) {
@@ -6023,6 +6045,7 @@ export const getLocationDetails = createAsyncThunk(
 export const getFilteredBookingItems = createAsyncThunk(
   'common/getFilteredBookingItems',
   async (params: any, { rejectWithValue }) => {
+    console.log(params);
     const url = new URL(
       `bookingItems/getFilteredBookingItem/companyID/${params.companyID}`,
 
@@ -6068,6 +6091,7 @@ export const getFilteredBookingItems = createAsyncThunk(
     if (params.voucherModel)
       searchParams.append('voucherModel', params.voucherModel.join(','));
     if (params.receivedBy) searchParams.append('receivedBy', params.receivedBy);
+    if (params.partID) searchParams.append('partID', params.partID);
     url.search = searchParams.toString();
 
     try {

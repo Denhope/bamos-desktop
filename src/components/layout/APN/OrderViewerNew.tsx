@@ -76,7 +76,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
       },
       cellStyle: (params: { value: keyof ValueEnumType }) => ({
         backgroundColor: getStatusColor(params.value),
-        color: '#ffffff', // Text color
+        // color: '#ffffff', // Text color
       }),
     },
 
@@ -276,11 +276,7 @@ const OrderViewer: FC<ReceivingTracking> = ({ onSingleRowClick }) => {
   type MenuItem = Required<MenuProps>['items'][number];
   const [collapsed, setCollapsed] = useState(false);
   const items: MenuItem[] = [
-    getItem(
-      <>{t('ORDER ITEM VIEWER')} (BAN:121)</>,
-      'sub1',
-      <ApartmentOutlined />
-    ),
+    getItem(<>{t('ORDER ITEM VIEWER')}</>, 'sub1', <ApartmentOutlined />),
   ];
   return (
     <Layout>

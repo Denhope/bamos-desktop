@@ -5,7 +5,12 @@ import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PartContainer from '@/components/woAdministration/PartContainer';
 import { ColDef } from 'ag-grid-community';
-import { transformToPartBooking } from '@/services/utilites';
+import {
+  getTaskTypeColor,
+  transformToPartBooking,
+  ValueEnumTypeTask,
+} from '@/services/utilites';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 type TechnicalViewType = {
   scroll: number;
   data: any[];
@@ -173,6 +178,17 @@ const TechnicalView: FC<TechnicalViewType> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType;
   }
+
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('TC'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    NRC_ADD: t('ADHOC (ADHOC TASK)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
+    FC: t('FC'),
+    HARD_ACCESS: t('HARD_ACCESS'),
+  };
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
       field: 'createDate',
@@ -198,6 +214,12 @@ const TechnicalView: FC<TechnicalViewType> = ({
       field: 'voucherModel',
       editable: false,
       cellDataType: 'text',
+    },
+    {
+      field: 'LOCAL_ID',
+      headerName: `${t('LABEL')}`,
+      cellDataType: 'text',
+      width: 100,
     },
     {
       headerName: `${t('PART No')}`,
@@ -233,6 +255,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
       headerName: `${t('LOCATION')}`,
       cellDataType: 'text',
     },
+
     {
       field: 'CONDITION',
       editable: false,
@@ -245,12 +268,64 @@ const TechnicalView: FC<TechnicalViewType> = ({
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
     },
-
     {
-      field: 'LOCAL_ID',
-      headerName: `${t('LABEL')}`,
+      field: 'ORDER_NUMBER',
+      headerName: `${t('ORDER No')}`,
       cellDataType: 'text',
     },
+    {
+      field: 'PICK_SLIP_NUMBER',
+      headerName: `${t('PICKSLIP No')}`,
+      cellDataType: 'text',
+      width: 100,
+    },
+    {
+      field: 'registrationNumber',
+      headerName: `${t('AC REG')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectWO',
+      headerName: `${t('PROJECT No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'woName',
+      headerName: `${t('WP NAME')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectTaskWO',
+      headerName: `${t('TRACE No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskNumber',
+      headerName: `${t('TASK No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskDescription',
+      headerName: `${t('TASK DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'TASK_TYPE',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      valueGetter: (params: { data: { TASK_TYPE: keyof ValueEnumTypeTask } }) =>
+        params.data.TASK_TYPE,
+      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+        const status = params.value;
+        return valueEnumTask[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
+        backgroundColor: getTaskTypeColor(params.value),
+      }),
+      cellDataType: 'text',
+    },
+
     {
       field: 'QUANTITY',
       editable: false,
@@ -263,22 +338,6 @@ const TechnicalView: FC<TechnicalViewType> = ({
       editable: false,
       filter: false,
       headerName: `${t('UNIT OF MEASURE')}`,
-      cellDataType: 'text',
-    },
-
-    // {
-    //   field: 'projectWO',
-    //   headerName: `${t('WO No')}`,
-    //   cellDataType: 'text',
-    // },
-    {
-      field: 'projectWO',
-      headerName: `${t('PROJECT No')}`,
-      cellDataType: 'text',
-    },
-    {
-      field: 'projectTaskWO',
-      headerName: `${t('TRACE No')}`,
       cellDataType: 'text',
     },
     {
@@ -298,25 +357,19 @@ const TechnicalView: FC<TechnicalViewType> = ({
   }, [data]);
   return (
     <div>
-      <PartContainer
+      <UniversalAgGrid
         isLoading={isLoading}
-        isFilesVisiable={true}
         isVisible={true}
         pagination={true}
-        isAddVisiable={true}
-        isButtonVisiable={false}
-        isEditable={true}
         height={'68vh'}
         columnDefs={columnDefs}
-        partNumbers={[]}
         isChekboxColumn={true}
-        onUpdateData={(data: any[]): void => {}}
         rowData={transformedPartNumbers}
         onCheckItems={setSelectedRowKeys}
-        //
         onRowSelect={(data: any): void => {
-          onSingleRowClick && onSingleRowClick(data);
+          onSingleRowClick && onSingleRowClick(data[0]);
         }}
+        gridId={'technicalView'}
       />
     </div>
   );

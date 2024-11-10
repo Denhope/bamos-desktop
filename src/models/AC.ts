@@ -3,6 +3,7 @@ import { ITask } from './ITask';
 import { IPartNumber } from './IUser';
 
 export interface IACType {
+  _id: Key | null | undefined;
   id: string;
   code: string;
   name: string;
@@ -30,6 +31,7 @@ export interface IMaintenanceType {
 }
 
 export interface IRequirementType {
+  prefix(prefix: any): unknown;
   id: string;
   code: string;
   title: string;
@@ -101,6 +103,7 @@ export interface IProjectItem {
   planeID?: string;
 }
 export interface IProjectItemWO {
+  isCriticalTask?: any;
   taskNumber: string;
   taskDescription: string;
   title: any;

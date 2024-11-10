@@ -6,7 +6,7 @@ import { IOrder } from '@/models/IOrder';
 import TabContent from '@/components/shared/Table/TabContent';
 import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal, Space, message } from 'antd';
+import { Button, Divider, Modal, Space, message } from 'antd';
 import Receiving from './Receiving';
 import { IReceiving } from '@/models/IReceiving';
 import {
@@ -28,14 +28,14 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
   const [partsToPrint, setPartsToPrint] = useState<any>(null);
   const [openPart, setOpenPart] = useState<any>(null);
   const [selectedPart, setSelectedPart] = useState<any>();
-  const [selectedOrderType, setSelectedOrderType] = useState<any>('ORDER');
+  const [selectedOrderType, setSelectedOrderType] = useState<any>('UN_ORDER');
   const { t } = useTranslation();
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(order);
   const [selecteReceiving, setSelectedreceiving] = useState<IReceiving | null>(
     null
   );
   const [receivingType, setReceivingType] = useState<'ORDER' | 'UN_ORDER'>(
-    'ORDER'
+    'UN_ORDER'
   );
 
   const handleSelectedPart = (record: any, rowIndex?: any) => {
@@ -239,7 +239,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
 
   return (
     <div className=" bg-white px-4 py-3 rounded-md border-gray-400 overflow-hidden h-[82vh] flex flex-col justify-between gap-2">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col">
         <OrderDetailsForm
           order={selectedOrder}
           onOrdersSearch={(record) => {
@@ -253,9 +253,10 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
             setSelectedOrderType(data);
           }}
         />
+        <Divider className="my-0 py-0"></Divider>
         <TabContent tabs={tabs}></TabContent>
       </div>
-      <Modal
+      {/* <Modal
         title={t('PRINT LABEL')}
         open={labelsOpenPrint}
         width={'30%'}
@@ -266,7 +267,7 @@ const BookingPartSide: FC<BookingPartSideType> = ({ order, onUpdateOrder }) => {
         footer={null}
       >
         <GeneretedTransferPdf key={Date.now()} parts={partsToPrint} />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

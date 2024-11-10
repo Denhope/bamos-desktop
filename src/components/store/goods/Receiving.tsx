@@ -6,16 +6,13 @@ import {
   ProFormGroup,
   ProFormSelect,
   ProFormText,
-  ProFormTextArea,
 } from '@ant-design/pro-components';
-
-import { Button, Form, Modal, Upload, message, notification } from 'antd';
+import { Divider, Form, Modal, message, notification } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
-
 import UploadLink, { AcceptedFileTypes } from '@/components/shared/UploadLink';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { IOrder } from '@/models/IOrder';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   postNewReceivingItem,
@@ -23,24 +20,18 @@ import {
   updateManyMaterialItems,
   createBookingItem,
   uploadFileServer,
-  updateOrderByID,
-  deleteFile,
 } from '@/utils/api/thunks';
-
-import { COMPANY_ID, USER_ID } from '@/utils/api/http';
+import { USER_ID } from '@/utils/api/http';
 import ContextMenuPNSearchSelect from '@/components/shared/form/ContextMenuPNSearchSelect';
-import ContextMenuStoreSearchSelect from '@/components/shared/form/ContextMenuStoreSearchSelect';
-import ContextMenuLocationSearchSelect from '@/components/shared/form/ContextMenuLocationSearchSelect';
 import { useUpdateOrderItemMutation } from '@/features/orderItemsAdministration/orderItemApi';
 import { IOrderItem } from '@/models/IRequirement';
 import { useUpdateOrderMutation } from '@/features/orderNewAdministration/ordersNewApi';
-import { handleFileSelect } from '@/services/utilites';
 import { useGetLocationsQuery } from '@/features/storeAdministration/LocationApi';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import { Split } from '@geoffcox/react-splitter';
-// import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
-// import ReportGenerator from '@/components/shared/GeneratedLabel';
-// import ReportPrintQR from '@/components/shared/ReportPrintQR';
+import ReportPrintLabel from '@/components/shared/ReportPrintLabel';
+import ReportPrintQR from '@/components/shared/ReportPrintQR';
+
 type ReceivingType = {
   currentPart?: any;
   currenOrder?: IOrder | null;
@@ -49,6 +40,7 @@ type ReceivingType = {
   onUpdateOrder: (data: any) => void;
   onReceivingPart?: (data: any) => void;
 };
+
 const Receiving: FC<ReceivingType> = ({
   currentPart,
   currenOrder,
@@ -56,37 +48,28 @@ const Receiving: FC<ReceivingType> = ({
   onUpdateOrder,
   onReceivingPart,
 }) => {
-  const [isPrintQRChecked, setIsPrintQRChecked] = useState(false); // Состояние для галки "Печать QR"
-  const [printData, setPrintData] = useState(null); // Данные для печати
-  const [selectedSinglePN, setSecectedSinglePN] = useState<any>();
-  const [selectedSinglePNID, setSecectedSinglePNID] = useState<string | null>(
+  const [printData, setPrintData] = useState(null);
+  const [selectedSinglePN, setSelectedSinglePN] = useState<any>();
+  const [selectedSinglePNID, setSelectedSinglePNID] = useState<string | null>(
     null
   );
   const [labelsOpenPrint, setOpenLabelsPrint] = useState<any>();
-
   const [addedMaterialItem, setAddedMaterialItem] = useState<any>(null);
-
-  const [isUpload, setisUpload] = useState<boolean>(false);
+  const [isUpload, setIsUpload] = useState<boolean>(false);
   const [form] = Form.useForm();
   const { t } = useTranslation();
-  const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
-  const [isChangeQRPrintChecked, setIsChangeQRPrintChecked] = useState(true);
-
-  const dispatch = useAppDispatch();
   const [isCustomerGoods, setIsCustomerGoods] = useState(false);
   const [selectedLocationName, setSelectedLocationName] = useState<any>(null);
-
-  useState<any>(null);
   const [selectedOwnerID, setSelectedOwnerID] = useState<string | undefined>(
     undefined
   );
-
-  useEffect(() => {
-    if (isUpload) {
-      setisUpload(isUpload);
-    }
-  }, [isUpload]);
-
+  const dispatch = useAppDispatch();
+  const [isChangeLocationChecked, setIsChangeLocationChecked] = useState(true);
+  const [isChangeQRPrintChecked, setIsChangeQRPrintChecked] = useState(true);
+  const [isResetForm, setIsResetForm] = useState<boolean>(false);
+  const [initialForm, setinitialForm] = useState<any>('');
+  const [updateOrderItem] = useUpdateOrderItemMutation();
+  const [updateOrder] = useUpdateOrderMutation();
   const { data: stores } = useGetStoresQuery({});
   const [selectedStoreID, setSelectedStoreID] = useState<string | undefined>(
     undefined
@@ -114,8 +97,7 @@ const Receiving: FC<ReceivingType> = ({
 
   useEffect(() => {
     if (currentPart) {
-      setSecectedSinglePN(currentPart?.partID);
-      // setSecectedSinglePN(currentPart);
+      setSelectedSinglePN(currentPart?.partID);
       setinitialForm(currentPart?.partID?.PART_NUMBER);
       form.setFields([
         {
@@ -127,7 +109,6 @@ const Receiving: FC<ReceivingType> = ({
           value: currentPart?.partID?.DESCRIPTION,
         },
         { name: 'serialNumber', value: currentPart?.serialNumber },
-        // { name: 'qty', value: currentPart.amout },
         { name: 'partGroup', value: currentPart?.partID?.GROUP },
         {
           name: 'partType',
@@ -137,7 +118,6 @@ const Receiving: FC<ReceivingType> = ({
           name: 'backorder',
           value: currentPart?.backorderQty,
         },
-
         {
           name: 'unit',
           value: currentPart?.unit || currentPart?.partID?.UNIT_OF_MEASURE,
@@ -157,11 +137,6 @@ const Receiving: FC<ReceivingType> = ({
       ]);
     }
   }, [currentPart]);
-
-  const [isResetForm, setIsResetForm] = useState<boolean>(false);
-  const [initialForm, setinitialForm] = useState<any>('');
-  const [updateOrderItem] = useUpdateOrderItemMutation();
-  const [updateOrder] = useUpdateOrderMutation();
 
   const storeCodesValueEnum: Record<string, string> =
     stores?.reduce((acc, mpdCode) => {
@@ -198,7 +173,7 @@ const Receiving: FC<ReceivingType> = ({
         setIsResetForm(true);
         setSelectedStoreID(undefined);
         setSelectedLocationID(undefined);
-        setSecectedSinglePNID(null);
+        setSelectedSinglePNID(null);
         setSelectedOwnerID(undefined);
         setSelectedStoreName(undefined);
         setSelectedLocationName(null);
@@ -286,8 +261,6 @@ const Receiving: FC<ReceivingType> = ({
             });
             setPrintData((await result).payload.id);
 
-            // Устанавливаем галку "Печать QR" в true
-
             const resultUp = await dispatch(
               postNewReceivingItem({
                 ...(await result).payload,
@@ -305,10 +278,8 @@ const Receiving: FC<ReceivingType> = ({
               })
             );
             if (resultUp.meta.requestStatus === 'fulfilled') {
-              setisUpload(true);
-              // setIsPrintQRChecked(true);
+              setIsUpload(true);
 
-              // Устанавливаем данные для
               dispatch(
                 createBookingItem({
                   companyID: currentCompanyID,
@@ -385,7 +356,6 @@ const Receiving: FC<ReceivingType> = ({
               );
 
               if (currentPart && currenOrder?.orderItemsID) {
-                // Обновляем части заказа
                 const updatedParts = await Promise.all(
                   currenOrder.orderItemsID.map(async (part: IOrderItem) => {
                     if (part._id === currentPart._id) {
@@ -426,19 +396,16 @@ const Receiving: FC<ReceivingType> = ({
                         PRICE: resultUp.payload.PRICE,
                       }).unwrap();
                     }
-                    return part; // Если часть не была обновлена, вернуть ее без изменений
+                    return part;
                   })
                 );
 
-                // Сохраняем состояния всех заказов в массив
                 const orderStates = updatedParts.map((part) =>
                   part ? part.state : null
                 );
 
-                // Выводим состояния всех заказов в консоль
                 console.log('Состояния всех заказов:', orderStates);
 
-                // Определяем новое состояние заказа на основе состояний всех частей
                 let stateNew;
                 if (orderStates.some((state) => state === 'PARTLY_RECEIVED')) {
                   stateNew = 'PARTLY_RECEIVED';
@@ -458,7 +425,6 @@ const Receiving: FC<ReceivingType> = ({
                   stateNew = 'PARTLY_CANCELLED';
                 }
 
-                // Проверяем, что stateNew определен и не равен null или undefined
                 if (stateNew !== null && stateNew !== undefined) {
                   try {
                     const updateResult = await updateOrder({
@@ -467,12 +433,8 @@ const Receiving: FC<ReceivingType> = ({
                       _id: currenOrder._id || currenOrder.id || '',
                     });
                     onUpdateOrder(updateResult);
-
-                    // Вызываем функцию onUpdateOrder с результатом обновления заказа
-                    // updateResult && onUpdateOrder(updateResult);
                   } catch (error) {
                     console.error('Ошибка при обновлении заказа:', error);
-                    // Здесь можно добавить обработку ошибок, если это необходимо
                   }
                 } else {
                   console.log(
@@ -498,8 +460,8 @@ const Receiving: FC<ReceivingType> = ({
         footer={null}
       ></Modal>
       <div className="flex flex-col">
-        <Split initialPrimarySize="65%" splitterSize="20px">
-          <div className="h-[49vh] overflow-y-auto">
+        <Split initialPrimarySize="75%" splitterSize="20px">
+          <div className="h-[46vh] overflow-y-auto">
             <ProFormGroup direction="vertical">
               <ProFormGroup>
                 <ProFormDigit
@@ -576,8 +538,8 @@ const Receiving: FC<ReceivingType> = ({
                     rules={[{ required: true }]}
                     onSelectedPN={function (PN: any): void {
                       console.log(PN);
-                      setSecectedSinglePN(PN);
-                      setSecectedSinglePNID(PN?._id || PN?.id);
+                      setSelectedSinglePN(PN);
+                      setSelectedSinglePNID(PN?._id || PN?.id);
                       form.setFields([
                         {
                           name: 'description',
@@ -641,23 +603,33 @@ const Receiving: FC<ReceivingType> = ({
                   label={`${t('CERTIFICATE TYPE')}`}
                   width="lg"
                   options={[
-                    { value: 'B1', label: t('BCAA SRC FORM 2.2.2 V2') },
-                    { value: 'B2', label: t('BCAA FORM (CONTRACTED AMO)') },
-                    { value: 'C1', label: t('CERTIFICATE OF CONFORMANCE') },
+                    { value: 'B1', label: t('BCAA SRC FORM 2.2.2 V2 (B-1)') },
+                    {
+                      value: 'B2',
+                      label: t('BCAA FORM (CONTRACTED AMO) (B-2)'),
+                    },
+                    {
+                      value: 'C1',
+                      label: t('CERTIFICATE OF CONFORMANCE (C-1)'),
+                    },
                     {
                       value: 'CAAC',
-                      label: t('CHINA AUTHORIZED RELEASE CERTIFICATE'),
+                      label: t('CHINA AUTHORIZED RELEASE CERTIFICATE (CAAC)'),
                     },
-                    { value: 'E1', label: t('EASA-145 APPROVAL') },
-                    { value: 'F100', label: t('ANAC BRAZIL FORM F-100-01') },
-                    { value: 'JAA', label: t(' JAA FORM ONE') },
-                    { value: 'T1', label: t('TCCA FORM ONE CANADA') },
-                    { value: 'UK1', label: t('CAA UK FORM 1') },
+                    { value: 'E1', label: t('EASA-145 APPROVAL (E-1)') },
+                    { value: 'F1', label: t('FAA FORM 8130-3 APPROVAL (F-1)') },
+                    {
+                      value: 'F100',
+                      label: t('ANAC BRAZIL FORM F-100-01 (F-100)'),
+                    },
+                    { value: 'JAA', label: t(' JAA FORM ONE (JAA-1)') },
+                    { value: 'T1', label: t('TCCA FORM ONE CANADA (T-1)') },
+                    { value: 'UK1', label: t('CAA UK FORM 1 (UK-1)') },
                     {
                       value: 'Ф-1',
-                      label: t('ТАЛОН ГОДНОСТИ КОМПОНЕНТА ФАВТ'),
+                      label: t('ТАЛОН ГОДНОСТИ КОМПОНЕНТА ФАВТ (Ф-1)'),
                     },
-                    { value: 'Ф-2', label: t('СЕРТИФИКАТ') },
+                    { value: 'Ф-2', label: t('СЕРТИФИКАТ Ф-2') },
                   ]}
                 />
                 <ProFormText
@@ -751,14 +723,14 @@ const Receiving: FC<ReceivingType> = ({
             direction="vertical"
           >
             <ProFormText
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
               name="addPartNumber"
               label={t('1C/PART No')}
               width="lg"
               tooltip={t('PART No')}
             ></ProFormText>
             <ProFormText
-              rules={[{ required: true, message: 'Required' }]}
+              // rules={[{ required: true, message: 'Required' }]}
               name="addDescription"
               label={t('1C/DESCRIPTION')}
               width="lg"
@@ -766,14 +738,14 @@ const Receiving: FC<ReceivingType> = ({
             ></ProFormText>
             <ProFormDigit
               name="addQty"
-              rules={[{ required: true }]}
+              // rules={[{ required: true }]}
               label={t('1C/QUANTITY')}
               width="sm"
               tooltip={t('QTY')}
             ></ProFormDigit>
             <ProFormSelect
               showSearch
-              rules={[{ required: true, message: 'Required' }]}
+              // rules={[{ required: true, message: 'Required' }]}
               label={t('ADD UNIT')}
               name="addUnit"
               width="lg"
@@ -804,6 +776,7 @@ const Receiving: FC<ReceivingType> = ({
             >
               {t('CUSTOMER GOODS')}
             </ProFormCheckbox>
+            <Divider></Divider>
 
             <ProFormGroup>
               <ProForm.Item label={t('UPLOAD')}>
@@ -814,7 +787,7 @@ const Receiving: FC<ReceivingType> = ({
                       onUpload={uploadFileServer}
                       onSuccess={async function (response: any): Promise<void> {
                         if (response) {
-                          setisUpload(false);
+                          setIsUpload(false);
                           const updatedFiles = addedMaterialItem.FILES
                             ? [...addedMaterialItem.FILES, response]
                             : [response];
@@ -839,13 +812,13 @@ const Receiving: FC<ReceivingType> = ({
                 </div>
               </ProForm.Item>
               <ProFormGroup>
-                {/* <ReportPrintLabel
+                <ReportPrintLabel
                   xmlTemplate={''}
                   data={[]}
                   ids={[printData]}
                   isDisabled={!printData}
-                ></ReportPrintLabel> */}
-                {/* <ReportPrintQR
+                ></ReportPrintLabel>
+                <ReportPrintQR
                   openSettingsModal
                   pageBreakAfter={false}
                   // qrCodeSize={32}
@@ -853,7 +826,7 @@ const Receiving: FC<ReceivingType> = ({
                   isDisabled={!printData}
                   data={[printData]}
                   ids={[printData]}
-                ></ReportPrintQR> */}
+                ></ReportPrintQR>
               </ProFormGroup>
             </ProFormGroup>
           </ProFormGroup>

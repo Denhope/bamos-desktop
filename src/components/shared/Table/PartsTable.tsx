@@ -51,6 +51,7 @@ type PartsTableProps = {
   onColumnResized?: (event: any) => void;
   onGridReady?: (event: any) => void;
   rowSelection?: 'multiple' | 'single';
+  onColumnMoved?: (event: any) => void;
 };
 
 const PartsTable: React.FC<PartsTableProps> = ({
@@ -79,6 +80,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
   onColumnResized,
   onGridReady,
   rowSelection = 'multiple',
+  onColumnMoved,
 }) => {
   const { t, i18n } = useTranslation();
   const gridRef = useRef<AgGridReact>(null);
@@ -473,6 +475,7 @@ const PartsTable: React.FC<PartsTableProps> = ({
             rowData={rowData}
             editType={'fullRow'}
             onCellValueChanged={handleCellValueChanged}
+            onColumnMoved={onColumnMoved}
           />
         )}
       </div>

@@ -8,7 +8,37 @@ import {
   ToolOutlined,
   UserOutlined,
   ExclamationCircleOutlined,
-  ShoppingCartOutlined,QuestionCircleOutlined
+  ShoppingCartOutlined,
+  QuestionCircleOutlined,
+  FileOutlined,
+  EyeOutlined,
+  OrderedListOutlined,
+  AppstoreOutlined,
+  DatabaseOutlined,
+  SwapOutlined,
+  SearchOutlined,
+  ShopOutlined,
+  SafetyOutlined,
+  CustomerServiceOutlined,
+  BarChartOutlined,
+  CloseCircleOutlined,
+  CheckOutlined,
+  InboxOutlined,
+  RocketOutlined,
+  ThunderboltOutlined,
+  FileProtectOutlined,
+  FilePdfOutlined,
+  ScheduleOutlined,
+  ShoppingOutlined,
+  ImportOutlined,
+  BuildOutlined,
+  AlertOutlined,
+  BoxPlotOutlined,
+  HddOutlined,
+  FileTextOutlined,
+  CheckCircleOutlined,
+  SafetyCertificateOutlined,
+  SecurityScanOutlined,
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -46,6 +76,9 @@ import ConnectionIndicator from '../shared/ConnectionIndicator';
 import SupportRequestButton from '../SupportRequestButton';
 import SupportRequestAdministration from '../supportRequestAdministration/SupportRequestAdministration';
 import ApiSwitcher from './ApiSwitcher';
+import TaskAdministration from '@/modules/TaskAdministration/TaskAdministration';
+import AircraftTypes from '@/modules/AircraftTypes';
+import AircraftRegistration from '@/modules/AircraftRegistration';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -53,247 +86,224 @@ const BaseLayout: React.FC = () => {
   const { t } = useTranslation();
 
   const { user } = useTypedSelector((state) => state.auth);
-  const APN = [
-    //{
-    //  APNNBR: '1',
-    //  descriptions: 'Work Order Information',
-    //  route: RouteNames.WORKORDER_INFORMATION,
-    //},
 
+  // Добавляем обработчик для Enter
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && selectedSingleAPN) {
+      setSecectedAPN(selectedSingleAPN);
+      setIsModalOpen(false);
+      setValue('');
+    }
+  };
+
+  const APN = [
+    // 1xx - Администрирование системы
     {
       APNNBR: '01',
-      descriptions: `${t(`ADMINISTRATION`)}`,
+      moduleNumber: '100',
+      descriptions: `${t('ADMINISTRATION')}`,
       route: RouteNames.USER_ADMINISTRATION,
-    },
-    {
-      APNNBR: '02',
-      descriptions: `${t(`PART ADMINISTRATION`)}`,
-      route: RouteNames.PART_ADMINISTRATIONS_NEW,
-    },
-    {
-      APNNBR: '03',
-      descriptions: `${t(`WP ADMINISTRATION`)}`,
-      route: RouteNames.WP_ADMINISTRATION,
-    },
-
-    {
-      APNNBR: '04',
-      descriptions: `${t(`PROJECT ADMINISTRATION`)}`,
-      route: RouteNames.PROJECT_ADMINISTRATION,
-    },
-
-    {
-      APNNBR: '05',
-      descriptions: `${t(`WORKORDER ADMINISTRATION`)}`,
-      route: RouteNames.WORKORDER_ADMINISTRATION,
-    },
-    {
-      APNNBR: '06',
-
-      descriptions: `${t(`PICKSLIP ADMINISTRATION`)}`,
-      route: RouteNames.PICKSLIP_ADMINISTRATION,
-    },
-    // {
-    //   APNNBR: '58',
-    //   descriptions: `${t(`VIEW WORKPACKAGE`)}`,
-    //   route: RouteNames.BASE,
-    // },
-    // {
-    //   APNNBR: '59',
-    //   descriptions: `${t(`PART ADMINISTRATION`)}`,
-    //   route: RouteNames.PART_ADMINISTRATIONS,
-    // },
-
-    // {
-    //   APNNBR: '101',
-    //   descriptions: `${t(`PROJECT VIEWER`)}`,
-    //   route: RouteNames.PROJECT_VIEWER,
-    // },
-    // {
-    //   APNNBR: '1001',
-    //   descriptions: `${t(`MAINTENANCE MANAGMENT`)}`,
-    //   route: RouteNames.MTXT,
-    // },
-    // {
-    //   APNNBR: '1002',
-    //   descriptions: `${t(`WORK PACKAGE CREATE`)}`,
-    //   route: RouteNames.WORKPACKGEN,
-    // },
-    {
-      APNNBR: '07',
-      descriptions: `${t(`RECEIVING VIEWER`)}`,
-      route: RouteNames.RESERVING_TRACK,
-    },
-
-    // {
-    //   APNNBR: '1201',
-    //   descriptions: `${t(`ORDER CREATOR`)}`,
-    //   route: RouteNames.ORDER_CREATOR,
-    // },
-    // {
-    //   APNNBR: '1200',
-    //   descriptions: `${t(`ORDER VIEWER`)}`,
-    //   route: RouteNames.ORDER_VIEWER,
-    // },
-    {
-      APNNBR: '08',
-      descriptions: `${t(`ORDER VIEWER`)}`,
-      route: RouteNames.ORDER_VIEWER_NEW,
-    },
-    // {
-    //   APNNBR: '1201',
-    //   descriptions: `${t(`ORDER MANAGMENT`)}`,
-    //   route: RouteNames.ORDER_MANAGMENT,
-    // },
-    {
-      APNNBR: '09',
-      descriptions: `${t(`ORDER ADMINISTRATION`)}`,
-      route: RouteNames.ORDERS_ADMINISTRATION,
-    },
-    // {
-    //   APNNBR: '1203',
-    //   descriptions: `${t(`REQUIREMENT MANAGMENT`)}`,
-    //   route: RouteNames.REQUIREMENT_MANAGMENT,
-    // },
-    {
-      APNNBR: '10',
-      descriptions: `${t(`REQUIREMENT ADMINISTRATION`)}`,
-      route: RouteNames.REQUIREMENT_ADMINISTRATION,
-    },
-
-    {
-      APNNBR: '11',
-
-      descriptions: `${t(`GOODS RECEIVING`)}`,
-      route: RouteNames.GOODS_RESERVING_NEW,
-    },
-    {
-      APNNBR: '12',
-
-      descriptions: `${t(`PARTS TRACKING`)}`,
-      route: RouteNames.PARTS_TRACKING,
-    },
-    // {
-    //   APNNBR: '204',
-
-    //   descriptions: `${t(`PARTS CONSUMPTION FORECAST`)}`,
-    //   route: RouteNames.PARTS_FORECAST,
-    // },
-    // {
-    //   APNNBR: '205',
-
-    //   descriptions: `${t(`REQUIREMENT VIEWER`)}`,
-    //   route: RouteNames.REQUIREMENT_VIEWER,
-    // },
-
-    // {
-    //   APNNBR: '205',
-
-    //   descriptions: `${t(`REQUIREMENT VIEWER`)}`,
-    //   route: RouteNames.REQUIREMENT_VIEWER_VIEWER,
-    // },
-    {
-      APNNBR: '14',
-
-      descriptions: `${t(`STORES ADMINISTRATION`)}`,
-      route: RouteNames.STORES_ADMINISTRATIONS,
-    },
-    {
-      APNNBR: '15',
-
-      descriptions: `${t(`STOCK INFORMATION`)}`,
-      route: RouteNames.STOCK_NFORMATIONS,
-    },
-
-    {
-      APNNBR: '16',
-
-      descriptions: `${t(`PARTS TRANSFER`)}`,
-      route: RouteNames.PARTS_TRANSFER,
-    },
-    // {
-    //   APNNBR: '225',
-
-    //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
-    //   route: RouteNames.PICKSLIP_REQUEST,
-    // },
-    // {
-    //   APNNBR: '225',
-
-    //   descriptions: `${t(`PICKSLIP REQUEST`)}`,
-    //   route: RouteNames.PICKSLIP_REQUEST_NEW,
-    // },
-    // {
-    //   APNNBR: '230',
-
-    //   descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
-    //   route: RouteNames.PICKSLIP_CONFIRMATIONS,
-    // },
-    {
-      APNNBR: '17',
-
-      descriptions: `${t(`PICKSLIP CONFIRMATION`)}`,
-      route: RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
-    },
-    {
-      APNNBR: '18',
-
-      descriptions: `${t(`CANCEL PICKSLIP`)}`,
-      route: RouteNames.PICKSLIP_CANCEL,
-    },
-    // {
-    //   APNNBR: '334',
-
-    //   descriptions: `${t(`SCRAP MATERIAL`)}`,
-    //   route: RouteNames.SCRAP_MATERIAL,
-    // },
-    {
-      APNNBR: '19',
-
-      descriptions: `${t(`CANCEL RECEIVING`)}`,
-      route: RouteNames.CANCEL_RESERVING,
-    },
-    {
-      APNNBR: '20',
-
-      descriptions: `${t(`SHELF EXPIRY`)}`,
-      route: RouteNames.SHELF_LIFE,
+      group: 'system',
     },
     {
       APNNBR: '21',
-      descriptions: `${t(`ACCESS TRACKING`)}`,
+      moduleNumber: '101',
+      descriptions: `${t('ACCESS TRACKING')}`,
       route: RouteNames.ACCESS_TRACKING,
+      group: 'system',
     },
-    // {
-    //   APNNBR: '375',
 
-    //   descriptions: `${t(`PICKSLIP VIEWER`)}`,
-    //   route: RouteNames.PICKSLIP_VIEWER,
-    // },
+    // 2xx - Управление воздушными судами
+    {
+      APNNBR: '27',
+      moduleNumber: '200',
+      descriptions: `${t('A/C REGISTRATION')}`,
+      route: RouteNames.AC,
+      group: 'aircraft',
+    },
+    {
+      APNNBR: '28',
+      moduleNumber: '201',
+      descriptions: `${t('A/C TYPES')}`,
+      route: RouteNames.AC_TYPES,
+      group: 'aircraft',
+    },
+    {
+      APNNBR: '26',
+      moduleNumber: '202',
+      descriptions: `${t('TASK ADMINISTRATION')}`,
+      route: RouteNames.AC_TASKS,
+      group: 'aircraft',
+    },
 
-    // {
-    //   APNNBR: '1418',
-    //   descriptions: `${t(`WORKORDER`)}`,
-    //   route: RouteNames.WORKORDER,
-    // },
+    // 3xx - Управление деталями и складом
+    {
+      APNNBR: '02',
+      moduleNumber: '300',
+      descriptions: `${t('PART ADMINISTRATION')}`,
+      route: RouteNames.PART_ADMINISTRATIONS_NEW,
+      group: 'parts',
+    },
+    {
+      APNNBR: '14',
+      moduleNumber: '301',
+      descriptions: `${t('STORES ADMINISTRATION')}`,
+      route: RouteNames.STORES_ADMINISTRATIONS,
+      group: 'parts',
+    },
+    {
+      APNNBR: '15',
+      moduleNumber: '302',
+      descriptions: `${t('STOCK INFORMATION')}`,
+      route: RouteNames.STOCK_NFORMATIONS,
+      group: 'parts',
+    },
+    {
+      APNNBR: '16',
+      moduleNumber: '303',
+      descriptions: `${t('PARTS TRANSFER')}`,
+      route: RouteNames.PARTS_TRANSFER,
+      group: 'parts',
+    },
+    {
+      APNNBR: '12',
+      moduleNumber: '304',
+      descriptions: `${t('PARTS TRACKING')}`,
+      route: RouteNames.PARTS_TRACKING,
+      group: 'parts',
+    },
+    {
+      APNNBR: '20',
+      moduleNumber: '305',
+      descriptions: `${t('SHELF EXPIRY')}`,
+      route: RouteNames.SHELF_LIFE,
+      group: 'parts',
+    },
+
+    // 4xx - Управление заказами
+    {
+      APNNBR: '08',
+      moduleNumber: '400',
+      descriptions: `${t('ORDER VIEWER')}`,
+      route: RouteNames.ORDER_VIEWER_NEW,
+      group: 'orders',
+    },
+    {
+      APNNBR: '09',
+      moduleNumber: '401',
+      descriptions: `${t('ORDER ADMINISTRATION')}`,
+      route: RouteNames.ORDERS_ADMINISTRATION,
+      group: 'orders',
+    },
+    {
+      APNNBR: '10',
+      moduleNumber: '402',
+      descriptions: `${t('REQUIREMENT ADMINISTRATION')}`,
+      route: RouteNames.REQUIREMENT_ADMINISTRATION,
+      group: 'orders',
+    },
+
+    // 5xx - Управление накладными
+    {
+      APNNBR: '06',
+      moduleNumber: '500',
+      descriptions: `${t('PICKSLIP ADMINISTRATION')}`,
+      route: RouteNames.PICKSLIP_ADMINISTRATION,
+      group: 'pickslip',
+    },
+    {
+      APNNBR: '17',
+      moduleNumber: '501',
+      descriptions: `${t('PICKSLIP CONFIRMATION')}`,
+      route: RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
+      group: 'pickslip',
+    },
+    {
+      APNNBR: '18',
+      moduleNumber: '502',
+      descriptions: `${t('CANCEL PICKSLIP')}`,
+      route: RouteNames.PICKSLIP_CANCEL,
+      group: 'pickslip',
+    },
+    {
+      APNNBR: '25',
+      moduleNumber: '503',
+      descriptions: `${t('PICKSLIP VIEWER')}`,
+      route: RouteNames.KFC_VIEWER,
+      group: 'pickslip',
+    },
+
+    // 6xx - Приемка товаров
+    {
+      APNNBR: '07',
+      moduleNumber: '600',
+      descriptions: `${t('RECEIVING VIEWER')}`,
+      route: RouteNames.RESERVING_TRACK,
+      group: 'receiving',
+    },
+    {
+      APNNBR: '11',
+      moduleNumber: '601',
+      descriptions: `${t('GOODS RECEIVING')}`,
+      route: RouteNames.GOODS_RESERVING_NEW,
+      group: 'receiving',
+    },
+    {
+      APNNBR: '19',
+      moduleNumber: '602',
+      descriptions: `${t('CANCEL RECEIVING')}`,
+      route: RouteNames.CANCEL_RESERVING,
+      group: 'receiving',
+    },
+
+    // 7xx - Управление проектами и работами
+    {
+      APNNBR: '03',
+      moduleNumber: '700',
+      descriptions: `${t('WP ADMINISTRATION')}`,
+      route: RouteNames.WP_ADMINISTRATION,
+      group: 'projects',
+    },
+    {
+      APNNBR: '04',
+      moduleNumber: '701',
+      descriptions: `${t('PROJECT ADMINISTRATION')}`,
+      route: RouteNames.PROJECT_ADMINISTRATION,
+      group: 'projects',
+    },
+    {
+      APNNBR: '05',
+      moduleNumber: '702',
+      descriptions: `${t('WORKORDER ADMINISTRATION')}`,
+      route: RouteNames.WORKORDER_ADMINISTRATION,
+      group: 'projects',
+    },
+
+    // 8xx - Утилиты и отчеты
     {
       APNNBR: '22',
-      descriptions: `${t(`SUPPORT REQUEST ADMINISTRATION`)}`,
+      moduleNumber: '800',
+      descriptions: `${t('SUPPORT REQUEST ADMINISTRATION')}`,
       route: RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+      group: 'utils',
     },
-      {
-    APNNBR: '23',
-    descriptions: `${t(`PDF SLICER`)}`,
-    route: RouteNames.PDF_SLICER,
-  },
-  {
-    APNNBR: '24',
-    descriptions: `${t(`REPORTS`)}`,
-    route: RouteNames.REPORTS,
-  },
+    {
+      APNNBR: '23',
+      moduleNumber: '801',
+      descriptions: `${t('PDF SLICER')}`,
+      route: RouteNames.PDF_SLICER,
+      group: 'utils',
+    },
+    {
+      APNNBR: '24',
+      moduleNumber: '802',
+      descriptions: `${t('REPORTS')}`,
+      route: RouteNames.REPORTS,
+      group: 'utils',
+    },
   ];
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTopKeys, setSelectedTopKeys] = useState<string[]>([]);
   const [openSettings, setOpenSettings] = useState(false);
   const { allMaterialAplicationsCount } = useTypedSelector(
@@ -303,43 +313,181 @@ const BaseLayout: React.FC = () => {
   }
 
   const itemsHorisontal: MenuItem[] = [
-    getItem(<>{t('Engineering')}</>, '03'),
-    getItem(<>{t('Planing')}</>, '04', null, [
+    // 100 - Инженерный блок
+    getItem(<>{t('Engineering')}</>, '100', <RocketOutlined />, [
+      getItem(t('Aircraft Management'), '110', <ThunderboltOutlined />, [
+        getItem(t('A/C Registration'), RouteNames.AC, <RocketOutlined />),
+        getItem(t('A/C Types'), RouteNames.AC_TYPES, <RocketOutlined />),
+        getItem(
+          t('Task Administration'),
+          RouteNames.AC_TASKS,
+          <ThunderboltOutlined />
+        ),
+      ]),
+      getItem(t('Technical Documentation'), '120', <FileProtectOutlined />, [
+        getItem(
+          t('WP Administration'),
+          RouteNames.WP_ADMINISTRATION,
+          <FileProtectOutlined />
+        ),
+        getItem(t('PDF Slicer'), RouteNames.PDF_SLICER, <FilePdfOutlined />),
+      ]),
+    ]),
+
+    // 200 - Планирование
+    getItem(<>{t('Planning')}</>, '200', <ScheduleOutlined />, [
       getItem(
         t('Work Package Generation'),
         RouteNames.WORKPACKGEN,
-        <ProjectOutlined />
+        <OrderedListOutlined />
       ),
       getItem(
-        t('PLANNING FORECAST'),
+        t('Planning Forecast'),
         RouteNames.PLANNINGFORECAST,
-        <ProjectOutlined />
+        <ScheduleOutlined />
       ),
+      getItem(t('Project Management'), '210', <ProjectOutlined />, [
+        getItem(
+          t('Project Administration'),
+          RouteNames.PROJECT_ADMINISTRATION,
+          <ProjectOutlined />
+        ),
+        getItem(
+          t('Workorder Administration'),
+          RouteNames.WORKORDER_ADMINISTRATION,
+          <ProjectOutlined />
+        ),
+      ]),
     ]),
-    getItem(<>{t('Purchasing/Components')}</>, '05'),
-    getItem(<>{t('Maintenance')}</>, RouteNames.MTXT, null, [
-      getItem(
-        <>{t('Base Maintenance')}</>,
-        RouteNames.BASE,
-        <ProjectOutlined />
-      ),
 
+    // 300 - Закупки и компоненты
+    getItem(<>{t('Purchasing/Components')}</>, '300', null, [
+      getItem(t('Orders'), '310', null, [
+        getItem(
+          t('Order Viewer'),
+          RouteNames.ORDER_VIEWER_NEW,
+          <EyeOutlined />
+        ),
+        getItem(
+          t('Order Administration'),
+          RouteNames.ORDERS_ADMINISTRATION,
+          <ShoppingCartOutlined />
+        ),
+        getItem(
+          t('Requirement Administration'),
+          RouteNames.REQUIREMENT_ADMINISTRATION,
+          <OrderedListOutlined />
+        ),
+      ]),
+    ]),
+
+    // 400 - Техническое обслуживание
+    getItem(<>{t('Maintenance')}</>, '400', null, [
+      getItem(t('Base Maintenance'), RouteNames.BASE, <ToolOutlined />),
       getItem(
         t('Maintenance Management (MTX)'),
         RouteNames.MTXT,
         <ExclamationCircleOutlined />
       ),
     ]),
-    getItem(<>{t('Stores & Logistics')}</>, RouteNames.STORE, null, [
-      getItem(
-        <>{t('Materials')}</>,
-        RouteNames.STORE,
-        <ShoppingCartOutlined />
-      ),
-      getItem(<>{t('TOOL')}</>, RouteNames.TOOLING, <ToolOutlined />),
-      getItem(<>{t('SHELF LIFE COMPONENTS')}</>, '--', <FieldTimeOutlined />),
+
+    // 500 - Склад и логистика
+    getItem(<>{t('Stores & Logistics')}</>, '500', <HddOutlined />, [
+      getItem(t('Inventory'), '510', <BoxPlotOutlined />, [
+        getItem(
+          t('Parts Administration'),
+          RouteNames.PART_ADMINISTRATIONS_NEW,
+          <BoxPlotOutlined />
+        ),
+        getItem(
+          t('Stock Information'),
+          RouteNames.STOCK_NFORMATIONS,
+          <DatabaseOutlined />
+        ),
+        getItem(
+          t('Parts Transfer'),
+          RouteNames.PARTS_TRANSFER,
+          <SwapOutlined />
+        ),
+        getItem(
+          t('Parts Tracking'),
+          RouteNames.PARTS_TRACKING,
+          <SearchOutlined />
+        ),
+      ]),
+      getItem(t('Warehouse Operations'), '520', <HddOutlined />, [
+        getItem(
+          t('Stores Administration'),
+          RouteNames.STORES_ADMINISTRATIONS,
+          <HddOutlined />
+        ),
+        getItem(t('Shelf Life'), RouteNames.SHELF_LIFE, <FieldTimeOutlined />),
+      ]),
+      getItem(t('Receiving'), '530', <InboxOutlined />, [
+        getItem(
+          t('Receiving Viewer'),
+          RouteNames.RESERVING_TRACK,
+          <EyeOutlined />
+        ),
+        getItem(
+          t('Goods Receiving'),
+          RouteNames.GOODS_RESERVING_NEW,
+          <InboxOutlined />
+        ),
+        getItem(
+          t('Cancel Receiving'),
+          RouteNames.CANCEL_RESERVING,
+          <CloseCircleOutlined />
+        ),
+      ]),
+      getItem(t('Pickslip'), '540', <FileTextOutlined />, [
+        getItem(
+          t('Pickslip Administration'),
+          RouteNames.PICKSLIP_ADMINISTRATION,
+          <FileTextOutlined />
+        ),
+        getItem(
+          t('Pickslip Confirmation'),
+          RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
+          <CheckCircleOutlined />
+        ),
+        getItem(
+          t('Cancel Pickslip'),
+          RouteNames.PICKSLIP_CANCEL,
+          <CloseCircleOutlined />
+        ),
+        getItem(t('Pickslip Viewer'), RouteNames.KFC_VIEWER, <EyeOutlined />),
+      ]),
     ]),
-    //getItem('Engineering', RouteNames.MTXT, <DesktopOutlined />, []),
+
+    // 600 - Администрирование и утилиты
+    getItem(
+      <>{t('Administration & Utils')}</>,
+      '600',
+      <SecurityScanOutlined />,
+      [
+        getItem(t('System'), '610', <SafetyCertificateOutlined />, [
+          getItem(
+            t('User Administration'),
+            RouteNames.USER_ADMINISTRATION,
+            <UserOutlined />
+          ),
+          getItem(
+            t('Access Tracking'),
+            RouteNames.ACCESS_TRACKING,
+            <SafetyCertificateOutlined />
+          ),
+        ]),
+        getItem(t('Support'), '620', <CustomerServiceOutlined />, [
+          getItem(
+            t('Support Request Administration'),
+            RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+            <CustomerServiceOutlined />
+          ),
+          getItem(t('Reports'), RouteNames.REPORTS, <BarChartOutlined />),
+        ]),
+      ]
+    ),
   ];
 
   const { isAuth } = useTypedSelector((state) => state.auth);
@@ -360,7 +508,6 @@ const BaseLayout: React.FC = () => {
     'sub21',
   ];
   const { Option } = Select;
-  // Redirect to login if not authenticated
 
   useEffect(() => {
     const storedSelectedTopKeys = localStorage.getItem('selectedTopKeys');
@@ -386,20 +533,17 @@ const BaseLayout: React.FC = () => {
   const [selectedSingleAPN, setSecectedSingleAPN] = useState(null);
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Check for Ctrl + B or Ctrl + Р (Russian 'B' key)
       if (
         (event.ctrlKey || event.metaKey) &&
         (event.key === 'b' || event.key === 'и')
       ) {
-        event.preventDefault(); // Prevent the default action if needed
+        event.preventDefault();
         setIsModalOpen(true);
       }
     };
 
-    // Add the event listener
     window.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup function to remove the event listener
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -407,7 +551,12 @@ const BaseLayout: React.FC = () => {
 
   const handleChange = (value: any) => {
     const selectedItem = APN.find((apn) => apn.APNNBR === value);
-    setSecectedAPN(selectedItem);
+    console.log('Selected APN:', selectedItem);
+    if (selectedItem) {
+      setSecectedAPN(selectedItem);
+      console.log('Navigating to:', selectedItem.route);
+      navigate(selectedItem.route);
+    }
   };
 
   const [clickCount, setClickCount] = useState(0);
@@ -440,20 +589,6 @@ const BaseLayout: React.FC = () => {
       navigate(RouteNames.LOGIN);
     }
   }, [isAuth, navigate, location.pathname]);
-
-  // const onRowClick = (
-  //   record: any,
-  //   rowIndex?: any,
-  //   event: React.MouseEvent<HTMLTableRowElement>
-  // ) => {
-  //   if (event.ctrlKey) {
-  //     // Send an IPC event to open the link in a new Electron window
-  //     ipcRenderer.send('open-link-in-window', record.route);
-  //   } else {
-  //     setSelectedAPN(record);
-  //     setIsModalOpen(false);
-  //   }
-  // };
 
   const filteredAPN = filterAPNByRole(APN, user.role);
   return (
@@ -490,7 +625,6 @@ const BaseLayout: React.FC = () => {
                   selectedKeys={selectedTopKeys}
                 />
                 <Badge
-                  // count={1}
                   count={
                     (localStorage.getItem('role') === 'storeMen' &&
                       allMaterialAplicationsCount &&
@@ -517,8 +651,7 @@ const BaseLayout: React.FC = () => {
         <Header
           className="flex justify-between my-0 "
           style={{
-            // background: 'rgba(255, 255, 255, 0.2)',
-            background: 'rgba(255, 0, 0, 0.2)',
+            background: 'rgba(220, 220, 220, 0.4)',
           }}
         >
           <div
@@ -526,7 +659,7 @@ const BaseLayout: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             <a className="text-xl  px-3 uppercase cursor-pointer text-gray-500">
-              BAMOS TEST
+              BAMOS
             </a>
             <ProFormItem
               label
@@ -543,8 +676,9 @@ const BaseLayout: React.FC = () => {
                   open={isFocused}
                   onSearch={handleSearch}
                   onSelect={handleSelect}
-                  onFocus={handleFocus} // Добавляем обработчик события onFocus
-                  onBlur={handleBlur} // Добавляем обработчик события onBlur
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  onKeyDown={handleKeyDown}
                   value={value}
                   filterOption={(input, option) => {
                     if (option && option.children) {
@@ -557,7 +691,7 @@ const BaseLayout: React.FC = () => {
                 >
                   {filteredAPN.map((apn) => (
                     <Option key={apn.APNNBR} value={apn.APNNBR}>
-                      {apn.descriptions}
+                      {apn.moduleNumber} - {apn.descriptions}
                     </Option>
                   ))}
                 </Select>
@@ -573,7 +707,6 @@ const BaseLayout: React.FC = () => {
                   size={5}
                 >
                   <Badge
-                    // count={1}
                     count={
                       (localStorage.getItem('role') === 'storeMen' &&
                         allMaterialAplicationsCount &&
@@ -600,18 +733,15 @@ const BaseLayout: React.FC = () => {
       )}
 
       <Layout>
-        <Content
-          style={
-            {
-              // background: 'rgba(255, 255, 255, 0.2)',
-              // background: 'rgba(255, 255, 255, 0.8)',
-            }
-          }
-        >
+        <Content style={{}}>
           <Routes>
             <Route
-              element={<Home apnRoute={selectedAPN} />}
               path={RouteNames.HOME}
+              element={<Home apnRoute={selectedAPN} />}
+            />
+            <Route
+              path={RouteNames.AC_TASKS}
+              element={<TaskAdministration isFilterCollapsed={false} />}
             />
             <Route
               element={<SupportRequestAdministration />}
@@ -621,7 +751,7 @@ const BaseLayout: React.FC = () => {
               element={
                 <Result
                   style={{ height: '65vh' }}
-                  className="flex  flex-col items-center justify-center"
+                  className="flex flex-col items-center justify-center"
                   status="404"
                   title="404"
                   subTitle="Sorry, the page you visited does not exist."
@@ -629,6 +759,8 @@ const BaseLayout: React.FC = () => {
               }
               path={'*'}
             />
+            <Route path={RouteNames.AC_TYPES} element={<AircraftTypes />} />
+            <Route path={RouteNames.AC} element={<AircraftRegistration />} />
           </Routes>
         </Content>
         <ModalForm
@@ -669,7 +801,7 @@ const BaseLayout: React.FC = () => {
           width: '100%',
         }}
       >
-        <div className="flex-1 text-left">
+        <div className="flex-1 text-center">
           {t('©2024 Created by Kavalchuk D.')}
         </div>
         <div className="flex items-center gap-4">

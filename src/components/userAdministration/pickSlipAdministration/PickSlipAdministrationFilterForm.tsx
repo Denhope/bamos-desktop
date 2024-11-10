@@ -169,7 +169,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
       companyID: currentCompanyID || '',
       isAlternatine: isAltertative,
       includeAlternative: isAltertative,
-      projectID: selectedProjectId,
+      projectID: selectedProjectId ? selectedProjectId : '',
       neededOnID: form.getFieldValue('neededOnID'),
       storeFromID: form.getFieldValue('storeFromID'),
       WOReferenceID: form.getFieldValue('WOReferenceID'),
@@ -393,6 +393,7 @@ const PickSlipAdministrationFilterForm: FC<RequirementsFilteredFormType> = ({
           { value: 'closed', label: t('CLOSE') },
           { value: 'partlyCanceled', label: t('PARTLY CANCELLED') },
           { value: 'canceled', label: t('CANCELED') },
+          { value: 'tofix', label: t('ATTENTION') },
           // { value: 'transfer', label: t('TRANSFER') },
         ]}
       />

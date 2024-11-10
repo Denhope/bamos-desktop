@@ -9,6 +9,7 @@ import {
 } from '@ant-design/pro-components';
 
 export type VendorFilteredFormValues = {
+  acTypeId: string | undefined;
   CODE: string;
   NAME: string;
   status: string[];

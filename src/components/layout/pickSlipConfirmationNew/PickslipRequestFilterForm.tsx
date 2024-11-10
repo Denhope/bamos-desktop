@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, FormInstance } from 'antd';
+import { Form, FormInstance, Button, message } from 'antd';
 import {
   ProForm,
   ProFormDatePicker,
@@ -16,9 +16,11 @@ import {
   useGetUsersQuery,
 } from '@/features/userAdministration/userApi';
 import { debounce } from 'lodash';
+import { USER_ID } from '@/utils/api/http';
+import dayjs from 'dayjs';
 
 type PickslipRequestFilterFormType = {
-  onpickSlipSearchValues: (values: any) => void;
+  onpickSlipSearchValues: any;
   pickSlip?: any;
 };
 
@@ -38,66 +40,92 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
     { projectId },
     { skip: !projectId }
   );
-  const usersCodesValueEnum: Record<string, string> =
-    users?.reduce<Record<string, string>>((acc, user) => {
-      acc[user.id] = `${user.firstNameEnglish?.toUpperCase()} ${user.lastNameEnglish?.toUpperCase()}`;
-      return acc;
-    }, {}) || {};
-
   const { data: stores } = useGetStoresQuery({});
-  const storeCodesValueEnum: Record<string, string> =
-    stores?.reduce((acc, mpdCode) => {
-      if (mpdCode.id && mpdCode.storeShortName) {
-        acc[mpdCode.id] = `${String(mpdCode.storeShortName).toUpperCase()}`;
+
+  // Преобразование данных для селектов
+  const usersCodesValueEnum =
+    users?.reduce((acc, user) => {
+      acc[user.id] = `${
+        user?.singNumber
+      }-${user.firstNameEnglish?.toUpperCase()} ${user.lastNameEnglish?.toUpperCase()}`;
+      return acc;
+    }, {} as Record<string, string>) || {};
+
+  const storeCodesValueEnum =
+    stores?.reduce((acc, store) => {
+      if (store.id && store.storeShortName) {
+        acc[store.id] = store.storeShortName.toUpperCase();
       }
       return acc;
     }, {} as Record<string, string>) || {};
-  const neededCodesValueEnum: Record<string, string> =
-    usersGroups?.reduce<Record<string, string>>((acc, usersGroup) => {
-      acc[usersGroup.id] = usersGroup.title;
+
+  const neededCodesValueEnum =
+    usersGroups?.reduce((acc, group) => {
+      acc[group.id] = group.title;
       return acc;
-    }, {}) || {};
-  const projectTasksCodesValueEnum: Record<string, string> = (
-    projectTasks ?? []
-  ).reduce<Record<string, string>>((acc, projectTask) => {
-    const taskCode =
-      projectTask.taskWO ||
-      projectTask.taskWo ||
-      projectTask.projectTaskWO ||
-      '';
-    acc[projectTask?.id] = taskCode;
-    return acc;
-  }, {});
-  const projectsValueEnum: Record<string, string> = (projects ?? []).reduce<
-    Record<string, string>
-  >((acc, project) => {
-    acc[project._id] = `${project.projectWO} - ${project.projectName}`;
-    return acc;
-  }, {});
+    }, {} as Record<string, string>) || {};
+
+  const projectTasksCodesValueEnum = (projectTasks ?? []).reduce(
+    (acc, task) => {
+      const taskCode = task.taskWO || task.taskWo || task.projectTaskWO || '';
+      acc[task?.id] = taskCode;
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+
+  const projectsValueEnum: Record<string, string> = (projects ?? []).reduce(
+    (acc, project) => {
+      if (project._id) {
+        acc[project._id] = `${project.projectWO} - ${project.projectName}`;
+      }
+      return acc;
+    },
+    {} as Record<string, string>
+  );
 
   const debouncedSearch = useCallback(
-    debounce((values: any) => {
+    debounce(async (values: any) => {
       const storeManName = usersCodesValueEnum[values.storeManID] || '';
       const userName = usersCodesValueEnum[values.userID] || '';
 
-      onpickSlipSearchValues({
+      const searchValues = {
         pickSlipNumberNew: values.pickSlipNumberNew,
         storeManID: values.storeManID,
         userID: values.userID,
         storeManName: storeManName,
         userName: userName,
         bookingDate: values.bookingDate,
-      });
+      };
+
+      const hasSearchCriteria = Object.entries(searchValues).some(
+        ([key, value]) =>
+          key !== 'pickSlipNumberNew' && value !== undefined && value !== ''
+      );
+
+      if (hasSearchCriteria) {
+        await onpickSlipSearchValues(searchValues);
+      }
     }, 300),
-    [usersCodesValueEnum, onpickSlipSearchValues]
+    [usersCodesValueEnum, onpickSlipSearchValues, t]
   );
 
   const handleValuesChange = (changedValues: any, allValues: any) => {
-    debouncedSearch(allValues);
+    if (!('pickSlipNumberNew' in changedValues)) {
+      debouncedSearch(allValues);
+    }
+  };
+
+  const handlePickSlipNumberBlur = () => {
+    const values = form.getFieldsValue();
+    if (values.pickSlipNumberNew) {
+      debouncedSearch(values);
+    }
   };
 
   useEffect(() => {
     if (pickSlip) {
+      form.resetFields();
       form.setFieldsValue({
         ...pickSlip,
         projectTaskID: pickSlip.projectTaskID?.taskWO,
@@ -105,12 +133,23 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         neededOnID: pickSlip?.neededOnID?._id,
         getFromID: pickSlip?.getFromID?._id,
         type: pickSlip?.type,
+        storeManID: pickSlip.storeManID || USER_ID,
+        userID: pickSlip.userID || pickSlip.createUserID._id,
+        bookingDate: pickSlip.bookingDate
+          ? dayjs(pickSlip.bookingDate)
+          : dayjs(),
       });
+      setSelectedProjectId(pickSlip.projectID?._id);
     } else {
       form.resetFields();
+      form.setFieldsValue({
+        storeManID: USER_ID,
+        bookingDate: dayjs(),
+      });
+      message.info(t('No results found'));
       setSelectedProjectId(undefined);
     }
-  }, [pickSlip, form]);
+  }, [pickSlip, form, t]);
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -126,8 +165,8 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         size="small"
         className="bg-white px-4 py-3 rounded-md border-gray-400"
         form={form}
-        onValuesChange={handleValuesChange}
         submitter={false}
+        onValuesChange={handleValuesChange}
       >
         <ProFormGroup size={'small'}>
           <ProFormText
@@ -137,6 +176,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
             tooltip="PICKSLIP No"
             fieldProps={{
               onKeyPress: handleKeyPress,
+              onBlur: handlePickSlipNumberBlur,
               autoFocus: true,
             }}
           />
@@ -168,9 +208,7 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
             label={`${t(`PROJECT`)}`}
             width="sm"
             valueEnum={projectsValueEnum}
-            onChange={async (value: any) => {
-              setSelectedProjectId(value);
-            }}
+            onChange={(value: any) => setSelectedProjectId(value)}
           />
           <ProFormSelect
             showSearch
@@ -204,27 +242,44 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         <ProFormGroup>
           <ProFormSelect
             showSearch
-            disabled={pickSlip && pickSlip.state !== 'complete'}
+            // disabled={
+            //   pickSlip &&
+            //   (pickSlip.state == 'closed' || pickSlip.state == 'canceled')
+            // }
             name="storeManID"
             label={t('STOREMAN')}
             width="sm"
             valueEnum={usersCodesValueEnum || []}
+            initialValue={USER_ID}
           />
           <ProFormSelect
             showSearch
             name="userID"
             label={t('MECH')}
-            width="sm"
+            width="md"
             valueEnum={usersCodesValueEnum || []}
-            disabled={pickSlip && pickSlip.state !== 'complete'}
+            disabled={
+              pickSlip &&
+              (pickSlip.state == 'closed' || pickSlip.state == 'canceled')
+            }
           />
         </ProFormGroup>
         <ProFormDatePicker
           width={'md'}
-          disabled={pickSlip && pickSlip.state !== 'complete'}
+          disabled={
+            pickSlip &&
+            (pickSlip.state == 'closed' || pickSlip.state == 'canceled')
+          }
           name="bookingDate"
           label={`${t('BOOKING DATE')}`}
+          initialValue={dayjs()}
         />
+        <Button
+          type="primary"
+          onClick={() => debouncedSearch(form.getFieldsValue())}
+        >
+          {t('Search')}
+        </Button>
       </ProForm>
     </div>
   );

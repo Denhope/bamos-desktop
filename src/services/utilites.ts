@@ -773,7 +773,7 @@ export async function handleFileOpenTask(
       // Не забываем очищать URL после открытия файла
       window.URL.revokeObjectURL(fileURL);
     } else {
-      // Если файл нельзя открыть внутри браузера, предлагаем сохранить его
+      // Ели файл нельзя открыть внутри браузера, предлагаем сохранить его
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(new Blob([fileData]));
       link.download = fileID;
@@ -847,7 +847,7 @@ function getMimeType(fileName: string): string {
   }
 }
 
-// Функция для проверки, можно ли файл открыть внутри браузера
+// Функция для проверки, можно л файл откыть внутри браузера
 function isInlineViewable(mimeType: string): boolean {
   // Список MIME-типов, которые можно открывать внутри браузера
   const inlineViewableMimeTypes = [
@@ -879,7 +879,7 @@ export const transformToIPartNumber = (
       id: item._id,
       status: '',
       _id: item._id,
-      partId: item.partNumberID?._id,
+      partId: item.partNumberID?._id || item.partNumberID?.id,
       PART_NUMBER: item.partNumberID?.PART_NUMBER,
       DESCRIPTION:
         item.partNumberID?.DESCRIPTION || item.partNumberID?.NAME_OF_MATERIAL,
@@ -919,9 +919,9 @@ export const transformToIAltPartNumber = (data: any[]): any[] => {
   const result = data?.map((item) => ({
     id: item._id,
     _id: item._id,
-    partId: item?.altPartNumberID?._id,
+    partId: item?.altPartNumberID?._id || item?.altPartNumberID?.id,
     altPartNumberID: item?.altPartNumberID,
-    partNumberID: item?.partNumberID?._id,
+    partNumberID: item?.partNumberID?._id || item?.partNumberID?.id,
     ALTERNATIVE: item?.altPartNumberID?.PART_NUMBER,
     ALTERNATIVE_REMARKS: item.ALTERNATIVE_REMARKS,
     ALTERNATIVE_DESCRIPTION: item?.altPartNumberID?.DESCRIPTION,
@@ -949,31 +949,134 @@ export const transformToIAltPartNumber = (data: any[]): any[] => {
   return result;
 };
 
-export const transformToIStockPartNumber = (data: any[]): any[] => {
-  // console.log('Input data to transformToIPartNumber:', data); // Вывод входных данных
+export const transformToIStockPartNumber = (data: any) => {
+  if (!data) {
+    console.warn('No data provided to transformToIStockPartNumber');
+    return [];
+  }
 
-  const result = data.map((item) => ({
-    ...item,
-    STOCK: item?.storeID?.storeShortName,
-    STORE_ID: item?.storeID?._id,
-    LOCATION: item?.locationID?.locationName,
+  if (Array.isArray(data)) {
+    const transformed = data
+      .map((item) => {
+        try {
+          console.log('Processing item:', item);
 
-    files: item?.FILES || item?.files,
-    OWNER: item?.locationID?.ownerID?.title,
-    restrictionID: item?.locationID?.restrictionID,
-    locationType: item?.locationID?.locationType,
-    SUPPLIER_BATCH_NUMBER: item?.SUPPLIER_BATCH_NUMBER,
-    PRODUCT_EXPIRATION_DATE: item?.PRODUCT_EXPIRATION_DATE || item?.nextDueMOS,
-    SERIAL_NUMBER: item?.SERIAL_NUMBER,
-    RECEIVING_NUMBER: item?.RECEIVING_ID?.receivingNumber,
-    DOC_NUMBER: item?.RECEIVING_ID?.awbNumber || item?.DOC_NUMBER,
-    DOC_TYPE: item?.RECEIVING_ID?.awbType || item?.DOC_TYPE,
-    DOC_DATE: item?.RECEIVING_ID?.awbDate || item?.DOC_DATE,
-    RECEIVING_DATE: item?.RECEIVING_ID?.receivingDate || item?.RECEIVING_DATE,
-  }));
+          // Определяем restrictionID
+          const restrictionID =
+            item.restrictionID ||
+            item.locationID?.restrictionID ||
+            (item.LOCATION === 'SCRAP' ? 'inaccessible' : 'standart');
 
-  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
-  return result;
+          // Определяем locationType
+          const locationType =
+            item.locationType ||
+            (item.LOCATION === 'SCRAP' ? 'unserviceable' : 'standart');
+
+          // Определяем количество
+          const quantity = Number(item.quantity) || Number(item.QUANTITY) || 0;
+
+          const transformed = {
+            id: item.id || item._id,
+            RECEIVED_DATE: item.RECEIVED_DATE,
+            LOCAL_ID: item.LOCAL_ID,
+            PART_NUMBER: item.PART_NUMBER,
+            NAME_OF_MATERIAL: item.NAME_OF_MATERIAL,
+            GROUP: item.GROUP,
+            TYPE: item.TYPE,
+            QUANTITY: quantity,
+            UNIT_OF_MEASURE: item.UNIT_OF_MEASURE,
+            STOCK: item.storeID?.storeShortName || '',
+            LOCATION: item.locationID?.locationName || item.LOCATION || '',
+            SUPPLIER_BATCH_NUMBER: item.SUPPLIER_BATCH_NUMBER,
+            SERIAL_NUMBER: item.SERIAL_NUMBER,
+            CONDITION: item.CONDITION,
+            PRODUCT_EXPIRATION_DATE: item.PRODUCT_EXPIRATION_DATE,
+            OWNER: item.OWNER || item.locationID?.ownerID?.title,
+            RECEIVING_NUMBER: item.RECEIVING_NUMBER,
+            locationType: locationType,
+            restrictionID: restrictionID,
+            isReserved: Boolean(item.isReserved),
+            reservedQTY: Number(item.reservedQTY || 0),
+            DOC_NUMBER: item.DOC_NUMBER,
+            DOC_TYPE: item.DOC_TYPE,
+            storeID: item.storeID || '',
+            STORE_ID: item.storeID?._id || '',
+            locationID: item.locationID,
+            files: item.files || item.FILES,
+            // Добавляем все возможные поля из locationID
+            locationName: item.locationID?.locationName,
+            locationOwner: item.locationID?.ownerID?.title,
+            locationRestriction: item.locationID?.restrictionID,
+            locationDescription: item.locationID?.description,
+            partID: item.partID?._id || item.partID?.id,
+          };
+
+          console.log('Transformed item:', transformed);
+          return transformed;
+        } catch (error) {
+          console.error('Error transforming item:', error, item);
+          return null;
+        }
+      })
+      .filter(Boolean);
+
+    console.log('Final transformed array:', transformed);
+    return transformed;
+  }
+
+  // Если передан один объект, обрабатываем его так же, как элемент массива
+  try {
+    const item = data;
+    const restrictionID =
+      item.restrictionID ||
+      item.locationID?.restrictionID ||
+      (item.LOCATION === 'SCRAP' ? 'inaccessible' : 'standart');
+
+    const locationType =
+      item.locationType ||
+      (item.LOCATION === 'SCRAP' ? 'unserviceable' : 'standart');
+
+    const quantity = Number(item.quantity) || Number(item.QUANTITY) || 0;
+
+    return [
+      {
+        id: item.id || item._id,
+        RECEIVED_DATE: item.RECEIVED_DATE,
+        LOCAL_ID: item.LOCAL_ID,
+        PART_NUMBER: item.PART_NUMBER,
+        NAME_OF_MATERIAL: item.NAME_OF_MATERIAL,
+        GROUP: item.GROUP,
+        TYPE: item.TYPE,
+        QUANTITY: quantity,
+        UNIT_OF_MEASURE: item.UNIT_OF_MEASURE,
+        STOCK: item.storeID?.storeShortName || '',
+        LOCATION: item.locationID?.locationName || item.LOCATION || '',
+        SUPPLIER_BATCH_NUMBER: item.SUPPLIER_BATCH_NUMBER,
+        SERIAL_NUMBER: item.SERIAL_NUMBER,
+        CONDITION: item.CONDITION,
+        PRODUCT_EXPIRATION_DATE: item.PRODUCT_EXPIRATION_DATE,
+        OWNER: item.OWNER || item.locationID?.ownerID?.title,
+        RECEIVING_NUMBER: item.RECEIVING_NUMBER,
+        locationType: locationType,
+        restrictionID: restrictionID,
+        isReserved: Boolean(item.isReserved),
+        reservedQTY: Number(item.reservedQTY || 0),
+        DOC_NUMBER: item.DOC_NUMBER,
+        DOC_TYPE: item.DOC_TYPE,
+        storeID: item.storeID?._id || '',
+        STORE_ID: item.storeID?._id || '',
+        locationID: item.locationID,
+        files: item.files || item.FILES,
+        locationName: item.locationID?.locationName,
+        locationOwner: item.locationID?.ownerID?.title,
+        locationRestriction: item.locationID?.restrictionID,
+        locationDescription: item.locationID?.description,
+      },
+    ];
+  } catch (error) {
+    console.error('Error in transformToIStockPartNumber:', error, data);
+    return [];
+  }
 };
 
 export const transformedAccessToIAssess = (data: any[]): any[] => {
@@ -988,18 +1091,23 @@ export const transformedAccessToIAssess = (data: any[]): any[] => {
   // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
+
 export const transformedAccessToTable = (data: any[]): any[] => {
-  // console.log('Input data to Access:', data); // Вывод входных данных
+  const result = data.map((item) => {
+    const uniqueTaskTypes = Array.from(
+      new Set(item?.projectTaskIds?.map((task) => task.projectItemType))
+    );
+    return {
+      ...item,
+      ...item?.areaCodeID,
+      status: item.status,
+      _id: item?.id || item?._id,
+      id: item?.id || item?._id,
+      taskNumbers: item?.projectTaskIds?.map((task) => task.taskNumber),
+      taskTypes: uniqueTaskTypes,
+    };
+  });
 
-  const result = data.map((item) => ({
-    ...item,
-    ...item?.areaCodeID,
-    status: item.status,
-    _id: item?.id || item?._id,
-    id: item?.id || item?._id,
-  }));
-
-  // console.log('Output data from transformToIPartNumber:', result); // Вывод результата
   return result;
 };
 
@@ -1008,7 +1116,9 @@ export const transformToIRequirement = (data: any[]): any[] => {
   const result = data?.map((item) => ({
     ...item,
     QUANTITY: item.quantity,
-
+    taskNumber: item?.projectTaskID?.taskNumber,
+    taskDescription: item?.projectTaskID?.taskDescription,
+    taskType: item?.projectTaskID?.projectItemType,
     availableAllStoreQTY: item?.availableAllStoreQTY,
     restrictedAllStoreQTY: item?.restrictedAllStoreQTY,
     requestQuantity: item?.requestQuantity,
@@ -1063,6 +1173,8 @@ export const transformToIPickSlip = (data: any[]): any[] => {
     // projectTaskID: item?.projectTaskID?._id,
     projectWO: item?.projectID?.projectWO,
     projectTaskWO: item.projectTaskID?.taskWO,
+    taskNumber: item.projectTaskID?.taskNumber,
+    projectTaskType: item.projectTaskID?.projectItemType,
     companyID: item?.companyID,
     createDate: item?.createDate,
     createUserID: item?.createUserID,
@@ -1077,6 +1189,8 @@ export const transformToIPickSlip = (data: any[]): any[] => {
 };
 export interface ValueEnumType {
   onQuatation: string;
+  tofix?: string;
+  diRequired?: string;
   partlyCanceled?: string;
   open?: string;
   closed: string;
@@ -1141,6 +1255,7 @@ export interface ValueEnumTypeTask {
   PART_PRODUCE?: string;
   SMC?: string;
   HARD_ACCESS?: string;
+  SB?: string;
 }
 export interface ValueEnumTypeOrder {
   PURCHASE_ORDER: string;
@@ -1237,11 +1352,15 @@ export const getTaskTypeColor = (
 };
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
+    case 'tofix':
+      return 'rgba(255, 99, 71, 0.6)'; // Gold with less transparency
     case 'draft':
       return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'DRAFT':
       return 'rgba(211, 211, 211, 0.6)'; // Light Gray with less transparency
     case 'onShort':
+      return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
+    case 'diRequired':
       return 'rgba(255, 160, 122, 0.6)'; // Light Salmon with less transparency
     case 'inspect':
       return 'rgb(255, 182, 46)'; // Light Salmon with less transparency
@@ -1459,20 +1578,26 @@ export const transformToPartBooking = (data: any[]): any[] => {
     ...item,
     ...item.MATERIAL_STORE_ID,
     QUANTITY:
+      item.QUANTITY ||
       parseInt(
         `${item.qyantityMode === 'minus' ? '-' : ''}${
           item.MATERIAL_STORE_ID?.QUANTITY ||
           item?.MATERIAL_STORE_ID?.ADD_QUANTITY
         }`,
         10
-      ) || item.QUANTITY,
+      ),
     SERIAL_NUMBER:
       item?.MATERIAL_STORE_ID?.SERIAL_NUMBER || item?.SERIAL_NUMBER,
     SHELF_NUMBER:
       item.MATERIAL_STORE_ID?.locationID?.locationName || item?.SHELF_NUMBER,
     files: item.MATERIAL_STORE_ID?.FILES,
     CREATE_BY: item?.createUserID?.name || item?.userID?.name,
-
+    PICK_SLIP_NUMBER: item?.pickSlipID?.pickSlipNumberNew,
+    WO_NUMBER: item?.projectID?.WOReferenceID?.WONumber,
+    TASK_TYPE: item?.projectTaskID?.projectItemType,
+    woName: item?.projectID?.projectName,
+    taskNumber: item?.projectTaskID?.taskNumber,
+    taskDescription: item?.projectTaskID?.taskDescription,
     // index: item?.index,
     // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,
     // DESCRIPTION: item.MATERIAL_STORE_ID?.NAME_OF_MATERIAL,
@@ -1606,6 +1731,7 @@ export const transformToIProjectTask = (data: any[]): any[] => {
     files: item?.FILES || item?.files || [],
     taskDescription: item?.taskDescription,
     amtoss: item?.taskId?.amtoss || item?.refTask,
+    createBy: item?.createUserID?.name,
 
     // taskNumber: item?.taskNumber,
     // description: item?.taskDescription,
@@ -1663,9 +1789,12 @@ export const rolePermissions: Record<Role, string[]> = {
     '21',
     '22',
     '23',
-    '24'
+    '24',
+    '25',
+    '26', // Task Administration
+    '27', // Aircraft Types
+    '28', // Aircraft Registration
   ],
-  technican: ['02', '05', '06', '08', '10', '12', '15', '21','22'],
   engineer: [
     '01',
     '02',
@@ -1681,7 +1810,13 @@ export const rolePermissions: Record<Role, string[]> = {
     '16',
     '20',
     '21',
-    '22'
+    '22',
+    '23',
+    '24',
+    '25',
+    '26', // Task Administration
+    '27', // Aircraft Types
+    '28', // Aircraft Registration
   ],
   planning: [
     '01',
@@ -1701,7 +1836,12 @@ export const rolePermissions: Record<Role, string[]> = {
     '20',
     '21',
     '22',
-    '23'
+    '23',
+    '24',
+    '25',
+    '26', // Task Administration
+    '27', // Aircraft Types
+    '28', // Aircraft Registration
   ],
   logistic: [
     '01',
@@ -1725,7 +1865,10 @@ export const rolePermissions: Record<Role, string[]> = {
     '19',
     '20',
     '21',
-    '22'
+    '22',
+    '24',
+    '25',
+    '26',
   ],
   storeMan: [
     '01',
@@ -1745,7 +1888,10 @@ export const rolePermissions: Record<Role, string[]> = {
     '18',
     '19',
     '20',
-    '22'
+    '22',
+    '24',
+    '25',
+    '26',
   ],
   director: [
     '01',
@@ -1769,8 +1915,15 @@ export const rolePermissions: Record<Role, string[]> = {
     '19',
     '20',
     '21',
-    '22'
+    '22',
+    '23',
+    '24',
+    '25',
+    '26',
+    '27', // Aircraft Types
+    '28', // Aircraft Registration
   ],
+  technican: ['02', '05', '06', '08', '10', '12', '15', '21', '22', '25', '26'],
 };
 
 export const filterAPNByRole = (apnList: any[], userRole: Role) => {
@@ -1856,7 +2009,10 @@ export const getSubscriptionTypes = (t) => [
   { value: SubscriptionType.NewPickslip, label: t('New Pickslip') },
   { value: SubscriptionType.PickSlipUpdate, label: t('PickSlip Update') },
   { value: SubscriptionType.NewRequirement, label: t('New Requirement') },
-  { value: SubscriptionType.TechnicalRequest, label: t('New Technical Request') },
+  {
+    value: SubscriptionType.TechnicalRequest,
+    label: t('New Technical Request'),
+  },
   { value: SubscriptionType.NewPartNumber, label: t('New Part Number') },
   { value: SubscriptionType.AddAlternative, label: t('Add Alternative') },
   { value: SubscriptionType.PickslipError, label: t('Pickslip Error') },

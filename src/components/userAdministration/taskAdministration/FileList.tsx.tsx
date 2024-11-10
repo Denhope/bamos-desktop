@@ -26,7 +26,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { handleFileOpenTask } from '@/services/utilites';
 import { useTranslation } from 'react-i18next';
-import PartsTable from '@/components/shared/Table/PartsTable';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 import { useAppDispatch } from '@/hooks/useTypedSelector';
 // import { useGetPlanesQuery } from '@/features/ACAdministration/acApi';
 import { ProFormSelect } from '@ant-design/pro-components';
@@ -51,7 +51,7 @@ export interface FileData {
   efectivityACID?: any;
   type: string; // Добавлено поле type
   printAsAttachment?: boolean; // Добавлено поле для отметки печати как вложения
-  isDefaultFile?: boolean; // Добавлено поле для определения, является ли файл дефолтным
+  isDefaultFile?: boolean;
 }
 
 interface NewFileData extends FileData {
@@ -68,7 +68,9 @@ interface FileListEProps {
   isTaskNumberField: boolean;
   isEfectivityField?: boolean;
   isCuctomerCode?: boolean;
-  isDefaultFileDisable?: boolean; // Добавлен параметр для отключения редактирования дефолтных файлов
+  isDefaultFileDisable?: boolean;
+  // Добавлен параметр для отключения редактирования дефолтных файлов
+  height?: string;
 }
 
 const FileListE: React.FC<FileListEProps> = ({
@@ -79,7 +81,8 @@ const FileListE: React.FC<FileListEProps> = ({
   isTaskNumberField,
   isCuctomerCode,
   isEfectivityField = false,
-  isDefaultFileDisable = true, // По умолчанию false
+  isDefaultFileDisable = true,
+  height = '44vh', // По умолчанию false
 }) => {
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [files, setFiles] = useState<FileData[]>(initialFiles);
@@ -274,7 +277,7 @@ const FileListE: React.FC<FileListEProps> = ({
     );
   };
   return (
-    <div>
+    <div className="flex flex-col mb-3">
       <Space>
         <Button
           className="mb-3"
@@ -293,31 +296,26 @@ const FileListE: React.FC<FileListEProps> = ({
         </Button>
       </Space>
 
-      <PartsTable
-        rowSelection="single"
-        isFilesVisiable={false}
-        isChekboxColumn={true}
-        isVisible={true}
-        isButtonColumn={false}
-        pagination={true}
-        isEditable={false}
-        isAddVisiable={true}
-        isButtonVisiable={false}
-        height={'38vh'}
+      <UniversalAgGrid
+        isChekboxColumn
+        gridId="fileListGrid"
         rowData={files || []}
         columnDefs={columnDefs}
-        partNumbers={[]}
-        onAddRow={function (): void {}}
-        onDelete={function (id: string): void {}}
-        onSave={function (data: any): void {}}
-        onCellValueChanged={function (params: any): void {}}
-        onRowSelect={function (rowData: any): void {
-          setEditinFile && setEditinFile(rowData);
+        height={height} // Используем проп height
+        onRowSelect={(rowData: any) => {
+          setEditinFile && setEditinFile(rowData[0]);
         }}
-        onCheckItems={function (keys: any): void {
-          setSelectedKeys(keys);
-          onSelectedKeys && onSelectedKeys(keys);
+        // onSelectionChanged={(selectedRows) => {
+        //   // const keys = selectedRows.map((row) => row._id);
+        //   setSelectedKeys(selectedRows);
+        //   onSelectedKeys && onSelectedKeys(selectedRows);
+        // }}
+        onCheckItems={(selectedKeys) => {
+          setSelectedKeys(selectedKeys);
         }}
+        isMultiSelect={false}
+        isCheckboxSelection={true}
+        pagination={true}
       />
       <Modal
         title={`${t('Add New File')}`}

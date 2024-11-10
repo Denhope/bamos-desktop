@@ -1,4 +1,4 @@
-// @ts-nocheck
+// ts-nocheck
 
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -52,17 +52,159 @@ import { useAppDispatch } from '@/hooks/useTypedSelector';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 import { useGetActionsTemplatesQuery } from '@/features/templatesAdministration/actionsTemplatesApi';
 import { useGetTasksQuery } from '@/features/tasksAdministration/tasksApi';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import {
+  DatePicker,
+  Radio,
+  Checkbox,
+  Spin,
+  Card,
+  Row,
+  Col,
+  Statistic,
+} from 'antd';
+const { RangePicker } = DatePicker;
 
+import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import { useGetFilteredActionsQuery } from '@/features/projectItemWO/actionsApi';
+
+// Инициализируем плагины
+dayjs.extend(weekOfYear);
+dayjs.extend(isoWeek);
+
+// После импортов, до начала компонента
 interface UserFormProps {
   task?: ITask;
   onSubmit: (task: ITask) => void;
   onDelete?: (taskId: string) => void;
 }
-type CellDataType = 'text' | 'number' | 'date' | 'boolean'; // Определите возможные типы данных
+
+type CellDataType = 'text' | 'number' | 'date' | 'boolean';
 
 interface ExtendedColDef extends ColDef {
-  cellDataType: CellDataType; // Обязательное свойство
+  cellDataType: CellDataType;
 }
+
+interface TaskStats {
+  date: string;
+  completed: number;
+  inProgress: number;
+  manhours: number;
+  avgTaskTime: number;
+  totalTaskTime: number;
+}
+
+interface Stats {
+  totalCompleted: number;
+  totalInProgress: number;
+  totalManhours: number;
+  avgTaskTime: number;
+  totalTaskTime: number;
+}
+
+interface ChartDataItem {
+  date: string;
+  completed: number;
+  totalTaskTime: number;
+  avgTimePerTask: number;
+}
+
+interface TaskTimeStats {
+  totalTime: number;
+  avgTimePerAction: number;
+  totalActions: number;
+  uniqueTasksCount: number;
+  timeBySkill: Record<string, number>;
+  actionsCountBySkill: Record<string, number>;
+  avgTimeBySkill: Record<string, number>;
+  completed: number;
+}
+
+interface StatsData {
+  totalCompleted: number;
+  totalTaskTime: number;
+}
+
+// Константы для моковых данных (если они нужны)
+const taskStats: TaskStats[] = [
+  {
+    date: '2024-01',
+    completed: 5,
+    inProgress: 3,
+    manhours: 24,
+    avgTaskTime: 8,
+    totalTaskTime: 24,
+  },
+  {
+    date: '2024-02',
+    completed: 8,
+    inProgress: 4,
+    manhours: 32,
+    avgTaskTime: 8,
+    totalTaskTime: 32,
+  },
+];
+
+const stats: Stats = {
+  totalCompleted: 13,
+  totalInProgress: 7,
+  totalManhours: 56,
+  avgTaskTime: 8,
+  totalTaskTime: 56,
+};
+
+// Создаем общую функцию для расчета статистики
+const calculateTaskStats = (actions: any[]) => {
+  if (!actions || actions.length === 0) {
+    return {
+      totalTime: 0,
+      avgTimePerTask: 0,
+      totalActions: 0,
+      uniqueTasksCount: 0,
+      completed: 0,
+    };
+  }
+
+  const uniqueTaskIds = new Set<string>();
+  let totalTime = 0;
+  let completed = 0;
+
+  actions.forEach((action) => {
+    const duration = action.userDurations?.[0]?.duration || 0;
+    if (duration > 0) {
+      totalTime += duration;
+      uniqueTaskIds.add(action.projectTaskID);
+    }
+    if (action.type === 'closed') {
+      completed++;
+    }
+  });
+
+  const uniqueTasksCount = uniqueTaskIds.size;
+  const avgTimePerTask =
+    uniqueTasksCount > 0 ? totalTime / uniqueTasksCount : 0;
+
+  return {
+    totalTime: Number(totalTime.toFixed(2)),
+    avgTimePerTask: Number(avgTimePerTask.toFixed(2)),
+    totalActions: actions.length,
+    uniqueTasksCount,
+    completed,
+  };
+};
+
+// Начало компонента
 const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   const [form] = ProForm.useForm();
   const { t } = useTranslation();
@@ -104,7 +246,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
     if (task) {
       form.resetFields();
       form.setFieldsValue(task);
-      setACTypeID(task.acTypeId || ''); // Используйте пустую строку в качестве значения по умолчанию, если task.acTypeId равно undefined
+      setACTypeID(task.acTypeId || ''); // Используйте пустую строку в качестве значения по уолчанию, если task.acTypeId равно undefined
       task?.taskType && setTaskType(task?.taskType);
       form.setFieldsValue({
         partNumberID: task?.partNumberID?._id,
@@ -165,10 +307,10 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       return acc;
     }, {}) || {};
   const hardValueEnum: Record<string, string> =
-    tasksQueryHard?.reduce((acc, reqType) => {
+    tasksQueryHard?.reduce((acc: Record<string, string>, reqType: any) => {
       acc[reqType.id || reqType?._id] = `${reqType.taskNumber}`;
       return acc;
-    }, {}) || {};
+    }, {} as Record<string, string>) || {};
 
   const { data: acTypes, isLoading: acTypesLoading } = useGetACTypesQuery({});
   const { data: accessesData } = useGetAccessCodesQuery(
@@ -244,7 +386,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
         message: t('STEP SUCCESSFULLY ADDED'),
         description: t('The step has been successfully added.'),
       });
-      // setIsModalVisible(false); // Если у вас есть функция для закрытия модального окна после добавления шага
+      // setIsModalVisible(false); // Если у вас есть функция для закрыия модального окна после добавления ага
     } catch (error) {
       notification.error({
         message: t('FAILED TO ADD STEP'),
@@ -285,20 +427,24 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
 
     const formData = new FormData();
 
-    formData.append('isDefaultFile', true);
+    formData.append('isDefaultFile', 'true');
     formData.append('file', data?.file);
-    formData.append('referenceType', data?.referenceType);
-    formData.append('taskNumber', data?.taskNumber);
-    data?.customerCodeID &&
-      formData.append('customerCodeID', data?.customerCodeID);
+    formData.append('referenceType', data?.referenceType || '');
+    formData.append('taskNumber', data?.taskNumber || '');
+    if (data?.customerCodeID) {
+      formData.append('customerCodeID', data.customerCodeID);
+    }
     formData.append('onSavedReference', 'true');
     formData.append('taskNumberID', task.id);
     formData.append('fileName', data.file.name);
-    formData.append('companyID', COMPANY_ID);
+    if (COMPANY_ID) {
+      formData.append('companyID', COMPANY_ID);
+    }
     formData.append('createDate', new Date().toISOString());
     formData.append('createUserID', USER_ID || '');
-    data?.efectivityACID &&
-      formData.append('efectivityACID', data?.efectivityACID);
+    if (data?.efectivityACID) {
+      formData.append('efectivityACID', data.efectivityACID);
+    }
 
     try {
       const response = await uploadFileServerReference(formData);
@@ -386,6 +532,293 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
   // const onGridReady = useCallback((params: any) => {
   //   // Загрузите данные для таблицы здесь
   // }, []);
+
+  const [periodType, setPeriodType] = useState<'day' | 'week' | 'month'>(
+    'week'
+  );
+  const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs]>([
+    dayjs().subtract(1, 'year').startOf('month'),
+    dayjs().endOf('month'),
+  ]);
+  const [showCompleted, setShowCompleted] = useState(true);
+  const [showTaskTimes, setShowTaskTimes] = useState(true);
+
+  // Добавляем новый хук для получения действий по taskID
+  const { data: taskActions } = useGetFilteredActionsQuery(
+    {
+      taskID: task?.id || task?._id,
+      projectStepId: '',
+    } as any,
+    {
+      skip: !task?.id,
+    }
+  );
+
+  // Обновляем функцию getChartData
+  const getChartData = useMemo(() => {
+    if (!taskActions) return [];
+
+    const filteredActions = taskActions.filter((action) => {
+      const actionDate = dayjs(action.createDate);
+      return (
+        actionDate.isAfter(dateRange[0]) && actionDate.isBefore(dateRange[1])
+      );
+    });
+
+    const groupedData = filteredActions.reduce(
+      (acc: Record<string, any>, action) => {
+        const date = dayjs(action.createDate);
+        const key = (() => {
+          switch (periodType) {
+            case 'day':
+              return date.format('YYYY-MM-DD');
+            case 'week':
+              return `${date.year()}-W${String(date.isoWeek()).padStart(
+                2,
+                '0'
+              )}`;
+            case 'month':
+              return date.format('YYYY-MM');
+            default:
+              return date.format('YYYY-MM-DD');
+          }
+        })();
+
+        if (!acc[key]) {
+          acc[key] = {
+            date: key,
+            actions: [],
+          };
+        }
+
+        acc[key].actions.push(action);
+        return acc;
+      },
+      {}
+    );
+
+    // Преобразуем данные для графика
+    return Object.entries(groupedData)
+      .map(([date, data]: [string, any]) => {
+        const stats = calculateTaskStats(data.actions);
+
+        return {
+          date,
+          completed: stats.completed,
+          totalTaskTime: stats.totalTime,
+          avgTimePerTask: stats.avgTimePerTask,
+        };
+      })
+      .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
+  }, [taskActions, periodType, dateRange]);
+
+  // Обновляем компонент графика
+  <LineChart
+    data={getChartData}
+    margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
+  >
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis
+      dataKey="date"
+      fontSize={10}
+      tickFormatter={(value) => {
+        switch (periodType) {
+          case 'day':
+            return dayjs(value).format('DD.MM');
+          case 'week':
+            const [year, week] = value.split('-W');
+            return `W${week}`;
+          case 'month':
+            return dayjs(value).format('MM.YY');
+          default:
+            return value;
+        }
+      }}
+    />
+    <YAxis
+      fontSize={10}
+      width={30}
+      yAxisId="left"
+      orientation="left"
+      domain={[0, 'auto']}
+    />
+    <YAxis
+      fontSize={10}
+      width={30}
+      yAxisId="right"
+      orientation="right"
+      domain={[0, 'auto']}
+    />
+    <Tooltip
+      formatter={(value: any, name: string) => {
+        const formatters: Record<string, string> = {
+          completed: t('Completed'),
+          totalTaskTime: t('Total Time'),
+          avgTimePerTask: t('Avg Time per Task'),
+        };
+
+        const formattedValue =
+          typeof value === 'number'
+            ? name.includes('Time')
+              ? `${value.toFixed(1)}h`
+              : value
+            : value;
+
+        return [formattedValue, formatters[name] || name];
+      }}
+    />
+    <Legend wrapperStyle={{ fontSize: '10px' }} />
+    {showCompleted && (
+      <Line
+        yAxisId="left"
+        type="monotone"
+        dataKey="completed"
+        stroke="#52c41a"
+        name={t('Completed')}
+        dot={{ r: 2 }}
+      />
+    )}
+    {showTaskTimes && (
+      <>
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="avgTimePerTask"
+          stroke="#722ed1"
+          name={t('Avg Time per Task')}
+          dot={{ r: 2 }}
+        />
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="totalTaskTime"
+          stroke="#eb2f96"
+          name={t('Total Time')}
+          dot={{ r: 2 }}
+        />
+      </>
+    )}
+  </LineChart>;
+
+  // Обновляем общую статистику
+  const taskTimeStats = useMemo(() => {
+    if (!taskActions) {
+      return {
+        totalTime: 0,
+        avgTimePerAction: 0,
+        totalActions: 0,
+        uniqueTasksCount: 0,
+        timeBySkill: {},
+        actionsCountBySkill: {},
+        avgTimeBySkill: {},
+        completed: 0,
+      };
+    }
+
+    const stats = calculateTaskStats(taskActions);
+    const timeBySkill: Record<string, number> = {};
+    const actionsCountBySkill: Record<string, number> = {};
+
+    taskActions.forEach((action) => {
+      const duration = action.userDurations?.[0]?.duration || 0;
+      if (duration > 0) {
+        const skill = action.userDurations?.[0]?.userID?.skillID?.code;
+        if (skill) {
+          timeBySkill[skill] = (timeBySkill[skill] || 0) + duration;
+          actionsCountBySkill[skill] = (actionsCountBySkill[skill] || 0) + 1;
+        }
+      }
+    });
+
+    const avgTimeBySkill = Object.entries(timeBySkill).reduce(
+      (acc, [skill, time]) => {
+        acc[skill] =
+          stats.uniqueTasksCount > 0
+            ? Number((time / stats.uniqueTasksCount).toFixed(2))
+            : 0;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    return {
+      totalTime: stats.totalTime,
+      avgTimePerAction: stats.avgTimePerTask,
+      totalActions: stats.totalActions,
+      uniqueTasksCount: stats.uniqueTasksCount,
+      timeBySkill,
+      actionsCountBySkill,
+      avgTimeBySkill,
+      completed: stats.completed,
+    };
+  }, [taskActions]);
+
+  // Обновляем компонент статистики
+  const renderTaskTimeStats = () => (
+    <Row gutter={[4, 4]} className="mt-1">
+      <Col span={4}>
+        <Card size="small" bodyStyle={{ padding: '4px' }}>
+          <Statistic
+            title={<span className="text-[10px]">{t('Total Task Time')}</span>}
+            value={taskTimeStats.totalTime}
+            precision={1}
+            valueStyle={{ color: '#1890ff', fontSize: '14px' }}
+            suffix="h"
+          />
+        </Card>
+      </Col>
+      <Col span={4}>
+        <Card size="small" bodyStyle={{ padding: '4px' }}>
+          <Statistic
+            title={
+              <span className="text-[10px]">{t('Avg Time per Task')}</span>
+            }
+            value={taskTimeStats.avgTimePerAction}
+            precision={1}
+            valueStyle={{ color: '#52c41a', fontSize: '14px' }}
+            suffix="h"
+          />
+        </Card>
+      </Col>
+      <Col span={4}>
+        <Card size="small" bodyStyle={{ padding: '4px' }}>
+          <Statistic
+            title={<span className="text-[10px]">{t('Tasks/Actions')}</span>}
+            value={`${taskTimeStats.uniqueTasksCount}/${taskTimeStats.totalActions}`}
+            valueStyle={{ color: '#faad14', fontSize: '14px' }}
+          />
+        </Card>
+      </Col>
+      {Object.entries(taskTimeStats.avgTimeBySkill).map(([skill, avgTime]) => (
+        <Col span={4} key={skill}>
+          <Card size="small" bodyStyle={{ padding: '4px' }}>
+            <Statistic
+              title={
+                <span className="text-[10px]">{`${t('Avg')} ${skill}`}</span>
+              }
+              value={avgTime}
+              precision={1}
+              valueStyle={{ color: '#722ed1', fontSize: '14px' }}
+              suffix="h"
+            />
+            <div className="text-[8px] text-gray-500">
+              {`${t('Actions')}: ${
+                taskTimeStats.actionsCountBySkill[skill] || 0
+              }`}
+            </div>
+          </Card>
+        </Col>
+      ))}
+    </Row>
+  );
+
+  const handleDateRangeChange = (
+    dates: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null
+  ) => {
+    if (dates && dates[0] && dates[1]) {
+      setDateRange([dates[0], dates[1]]);
+    }
+  };
 
   return (
     <ProForm
@@ -488,6 +921,16 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                       rules={[
                         {
                           required: true,
+                        },
+                      ]}
+                    />
+                    <ProFormText
+                      width={'lg'}
+                      name="title"
+                      label={t('TASK TITE')}
+                      rules={[
+                        {
+                          required: false,
                         },
                       ]}
                     />
@@ -690,6 +1133,16 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                         width={'xl'}
                         name="taskNumber"
                         label={t('TASK NUMBER')}
+                      />
+                      <ProFormText
+                        width={'lg'}
+                        name="title"
+                        label={t('TASK TITE')}
+                        rules={[
+                          {
+                            required: false,
+                          },
+                        ]}
                       />
                       <ProFormText
                         width={'xs'}
@@ -952,6 +1405,7 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
               // style={{ width: '100%', height: '60vh' }}
               >
                 <FileListE
+                  height={'60vh'}
                   isDefaultFileDisable={false}
                   isCuctomerCode={true}
                   isEfectivityField={true}
@@ -967,6 +1421,216 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
             ) : (
               <Empty />
             )}
+          </div>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={t('STATISTICS')} key="statistics">
+          <div className="flex flex-col gap-2 p-2 h-full">
+            {/* Верхние карточки со статистикой */}
+            <Row gutter={[4, 4]}>
+              <Col span={4}>
+                <Card size="small" bodyStyle={{ padding: '4px' }}>
+                  <Statistic
+                    title={
+                      <span className="text-[10px]">{t('Completed')}</span>
+                    }
+                    value={taskTimeStats.completed || 0}
+                    valueStyle={{ color: '#52c41a', fontSize: '14px' }}
+                  />
+                </Card>
+              </Col>
+              <Col span={4}>
+                <Card size="small" bodyStyle={{ padding: '4px' }}>
+                  <Statistic
+                    title={
+                      <span className="text-[10px]">{t('Total Time')}</span>
+                    }
+                    value={taskTimeStats.totalTime}
+                    precision={1}
+                    valueStyle={{ color: '#eb2f96', fontSize: '14px' }}
+                    suffix="h"
+                  />
+                </Card>
+              </Col>
+              <Col span={4}>
+                <Card size="small" bodyStyle={{ padding: '4px' }}>
+                  <Statistic
+                    title={
+                      <span className="text-[10px]">
+                        {t('Avg Time per Task')}
+                      </span>
+                    }
+                    value={taskTimeStats.avgTimePerAction}
+                    precision={1}
+                    valueStyle={{ color: '#722ed1', fontSize: '14px' }}
+                    suffix="h"
+                  />
+                </Card>
+              </Col>
+              {Object.entries(taskTimeStats.avgTimeBySkill).map(
+                ([skill, avgTime]) => (
+                  <Col span={4} key={skill}>
+                    <Card size="small" bodyStyle={{ padding: '4px' }}>
+                      <Statistic
+                        title={
+                          <span className="text-[10px]">{`${t(
+                            'Avg'
+                          )} ${skill}`}</span>
+                        }
+                        value={avgTime}
+                        precision={1}
+                        valueStyle={{ color: '#722ed1', fontSize: '14px' }}
+                        suffix="h"
+                      />
+                      <div className="text-[8px] text-gray-500">
+                        {`${t('Actions')}: ${
+                          taskTimeStats.actionsCountBySkill[skill] || 0
+                        }`}
+                      </div>
+                    </Card>
+                  </Col>
+                )
+              )}
+            </Row>
+
+            {/* Контролы графика */}
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex gap-4">
+                <Checkbox
+                  checked={showCompleted}
+                  onChange={(e) => setShowCompleted(e.target.checked)}
+                >
+                  {t('Show Completed')}
+                </Checkbox>
+                <Checkbox
+                  checked={showTaskTimes}
+                  onChange={(e) => setShowTaskTimes(e.target.checked)}
+                >
+                  {t('Show Task Times')}
+                </Checkbox>
+              </div>
+              <div className="flex items-center gap-4">
+                <Radio.Group
+                  value={periodType}
+                  onChange={(e) => setPeriodType(e.target.value)}
+                  size="small"
+                >
+                  <Radio.Button value="day">{t('Daily')}</Radio.Button>
+                  <Radio.Button value="week">{t('Weekly')}</Radio.Button>
+                  <Radio.Button value="month">{t('Monthly')}</Radio.Button>
+                </Radio.Group>
+                <RangePicker
+                  size="small"
+                  onChange={handleDateRangeChange}
+                  picker={
+                    periodType === 'month'
+                      ? 'month'
+                      : periodType === 'week'
+                      ? 'week'
+                      : 'date'
+                  }
+                  value={dateRange}
+                  format={
+                    periodType === 'month'
+                      ? 'YYYY-MM'
+                      : periodType === 'week'
+                      ? 'YYYY-[W]ww'
+                      : 'YYYY-MM-DD'
+                  }
+                />
+              </div>
+            </div>
+
+            {/* График */}
+            <div style={{ height: '40vh', width: '100%' }}>
+              <ResponsiveContainer>
+                <LineChart
+                  data={getChartData}
+                  margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="date"
+                    fontSize={10}
+                    tickFormatter={(value) => {
+                      switch (periodType) {
+                        case 'day':
+                          return dayjs(value).format('DD.MM');
+                        case 'week':
+                          const [year, week] = value.split('-W');
+                          return `W${week}`;
+                        case 'month':
+                          return dayjs(value).format('MM.YY');
+                        default:
+                          return value;
+                      }
+                    }}
+                  />
+                  <YAxis
+                    fontSize={10}
+                    width={30}
+                    yAxisId="left"
+                    orientation="left"
+                    domain={[0, 'auto']}
+                  />
+                  <YAxis
+                    fontSize={10}
+                    width={30}
+                    yAxisId="right"
+                    orientation="right"
+                    domain={[0, 'auto']}
+                  />
+                  <Tooltip
+                    formatter={(value: any, name: string) => {
+                      const formatters: Record<string, string> = {
+                        completed: t('Completed'),
+                        totalTaskTime: t('Total Time'),
+                        avgTimePerTask: t('Avg Time per Task'),
+                      };
+
+                      const formattedValue =
+                        typeof value === 'number'
+                          ? name.includes('Time')
+                            ? `${value.toFixed(1)}h`
+                            : value
+                          : value;
+
+                      return [formattedValue, formatters[name] || name];
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '10px' }} />
+                  {showCompleted && (
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="completed"
+                      stroke="#52c41a"
+                      name={t('Completed')}
+                      dot={{ r: 2 }}
+                    />
+                  )}
+                  {showTaskTimes && (
+                    <>
+                      <Line
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="avgTimePerTask"
+                        stroke="#722ed1"
+                        name={t('Avg Time per Task')}
+                        dot={{ r: 2 }}
+                      />
+                      <Line
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="totalTaskTime"
+                        stroke="#eb2f96"
+                        name={t('Total Time')}
+                        dot={{ r: 2 }}
+                      />
+                    </>
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </Tabs.TabPane>
       </Tabs>

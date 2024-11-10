@@ -25,7 +25,10 @@ import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 
 // Реализация хука useLocalStorage
-function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, (value: T) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -38,7 +41,8 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => voi
 
   const setValue = (value: T) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
@@ -55,7 +59,10 @@ interface RequirementFormProps {
   onDelete?: (requirementId: string) => void;
 }
 
-const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) => {
+const RequirementForm: FC<RequirementFormProps> = ({
+  requierement,
+  onSubmit,
+}) => {
   const [reqTypeID, setReqTypeID] = useState<any>('');
   const [form] = ProForm.useForm();
   const [projectId, setSelectedProjectId] = useState<any>();
@@ -63,7 +70,10 @@ const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) =
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
   const [WOID, setWOID] = useState<any>(null);
   const [persistForm, setPersistForm] = useState(false);
-  const [persistedFormData, setPersistedFormData] = useLocalStorage<any>('persistedRequirementFormData', {});
+  const [persistedFormData, setPersistedFormData] = useLocalStorage<any>(
+    'persistedRequirementFormData',
+    {}
+  );
 
   const { t } = useTranslation();
 
@@ -194,6 +204,9 @@ const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) =
     }, {}) || {};
   return (
     <ProForm
+      disabled={
+        requierement?.status == 'closed' || requierement?.status == 'canceled'
+      }
       onReset={() => {
         form.resetFields();
         setSelectedProjectId(null);
@@ -209,7 +222,6 @@ const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) =
       initialValues={requierement}
       layout="horizontal"
     >
-     
       <Tabs defaultActiveKey="1" type="card">
         <Tabs.TabPane tab={t('INFORMATION')} key="1">
           <div className=" h-[57vh] flex flex-col overflow-auto">
@@ -218,20 +230,34 @@ const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) =
                 showSearch
                 rules={[{ required: true }]}
                 name="status"
-                label={t('REQUIREMENT STATUS')}
+                label={t('STATUS')}
                 width="sm"
                 initialValue={'draft'}
                 options={
                   requierement
                     ? [
-                        { value: 'draft', label: t('DRAFT') },
-                        { value: 'open', label: t('OPEN') },
+                        { value: 'draft', label: t('DRAFT'), disabled: true }, // Отключаем отдельные опции
+                        { value: 'open', label: t('OPEN'), disabled: true },
                         { value: 'issued', label: t('ISSUED') },
+                        {
+                          value: 'complete',
+                          label: t('COMPLETE'),
+                          disabled: true,
+                        },
                         { value: 'onQuatation', label: t('QUATATION') },
                         { value: 'onShort', label: t('ON SHORT') },
-                        { value: 'closed', label: t('CLOSE') },
-                        { value: 'partlyClosed', label: t('PARTLY CLOSED') },
-                        { value: 'canceled', label: t('CANCELED') },
+                        { value: 'closed', label: t('CLOSE'), disabled: true },
+                        {
+                          value: 'partlyCanceled',
+                          label: t('PARTLY CANCELLED'),
+                          disabled: true,
+                        },
+                        {
+                          value: 'canceled',
+                          label: t('CANCELED'),
+                          disabled: true,
+                        },
+                        { value: 'tofix', label: t('ATTENTION') },
                       ]
                     : [
                         { value: 'draft', label: t('DRAFT') },
@@ -239,12 +265,12 @@ const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) =
                       ]
                 }
               />
-               <Checkbox
-        checked={persistForm}
-        onChange={(e) => setPersistForm(e.target.checked)}
-      >
-        {t('SAVE FORM DATA FOR NEXT CREATION')}
-      </Checkbox>
+              <Checkbox
+                checked={persistForm}
+                onChange={(e) => setPersistForm(e.target.checked)}
+              >
+                {t('SAVE FORM DATA FOR NEXT CREATION')}
+              </Checkbox>
 
               {/* <ProFormSelect
                 showSearch
@@ -461,6 +487,3 @@ const RequirementForm: FC<RequirementFormProps> = ({ requierement, onSubmit }) =
 };
 
 export default RequirementForm;
-
-
-

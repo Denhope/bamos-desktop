@@ -1,4 +1,4 @@
-//@ts-nocheck
+//ts-nocheck
 import React, { FC, useEffect, useState } from 'react';
 import { Button, Layout, Skeleton, Tabs, Modal, Checkbox } from 'antd';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
@@ -32,20 +32,36 @@ import {
   ScheduleOutlined,
   BarcodeOutlined,
   BarChartOutlined,
+  SafetyCertificateOutlined,
+  SecurityScanOutlined,
+  AuditOutlined,
+  RocketOutlined,
+  ThunderboltOutlined,
+  FileProtectOutlined,
+  BuildOutlined,
+  SearchOutlined,
+  FileTextOutlined,
+  FileDoneOutlined,
+  FileExclamationOutlined,
+  ShoppingOutlined,
+  BoxPlotOutlined,
+  HddOutlined,
+  DatabaseOutlined,
+  FilePdfOutlined,
+  CustomerServiceOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { getItem } from '@/services/utilites';
 import { ipcRenderer } from 'electron';
 import { Content, Footer } from 'antd/es/layout/layout';
 import { Row, Col, Menu } from 'antd';
 import WPGeneration from './planning/WPGeneration/WPGeneration';
-import MaintenanceBase from './maintenance/base/MaintenanceBase';
+
 import UserAdministration from './APN/UserAdministration';
-import MaterialsStore from './store/StoresMaterials';
+
 import ProjectAdministration from './APN/ProjectAdministration';
 import WOAdministration from './APN/WOAdmonistration';
-import RequirementViewerNew from './APN/RequirementViewerNew';
-import PickslipRequestNew from './APN/PickslipRequestNew';
-import OrderViewer from './APN/OrderViewerNew';
+
 import OrderViewerNew from './APN/OrderViewerNew';
 import StockInformationNew from './APN/StockInformationNew';
 import WorkOrder from './APN/WorkOrder';
@@ -54,19 +70,11 @@ import OrderAdministration from './APN/OrderAdministration';
 import PartsTracking from './APN/PartsTracking';
 import PartsTransferNew from './APN/PartsTransferNew';
 import PickSlipConfirmationNew from './APN/PickSlipConfirmationNew';
-import PickSlipConfirmation from './APN/PickSlipConfirmation';
-import PickSlipViwer from './APN/PickSlipViwer';
-import PartAdministration from './APN/PartAdministration';
-import MaintenanceMTX from './maintenance/mtx/MaintenanceMTX';
-import ProjectViewer from './APN/ProjectViewer';
-import PartsForecast from './APN/PartsForecast';
+
 import PickSlipAdministration from './APN/PickSlipAdministration';
-import RequirementManagement from './APN/RequirementManagement';
+
 import AccessTracking from './APN/AccessTracking';
-import StoreManagment from './APN/StoreManagment';
-import ScrapMaterial from './APN/ScrapMaterial';
-import ProjectManagment from './APN/ProjectManagment';
-import OrderCreator from './APN/OrderCreator';
+
 import { useDispatch } from 'react-redux';
 import StoreAdministration from './APN/StoreAdministration';
 import { addTab, removeTab, setActiveKey } from '@/store/reducers/TabsSlice';
@@ -76,7 +84,7 @@ import ShelfExpiryNew from './APN/ShelfExpiryNew';
 import RequirementAdministration from './APN/RequirementAdministration';
 import WPAdministration from './APN/WPAdministration';
 import ReceivingTracking from './APN/ReceivingTracking';
-import PickSlipCancel from './APN/PickSlipCancel';
+
 import CancelReceiving from './APN/CancelReceiving';
 
 import { setCardPosition } from '@/store/reducers/cardPositionReducer';
@@ -86,6 +94,10 @@ import PickSlipStatus from '../pickSlipStatus/PickSlipStatus';
 import SupportRequestAdministration from '../supportRequestAdministration/SupportRequestAdministration';
 import PdfSlicerAdministration from '../pdfSlicer/PdfSlicerAdministration';
 import ReportModule from '../reports/ReportModule';
+import TaskAdministration from '@/modules/TaskAdministration';
+import AircraftTypes from '@/modules/AircraftTypes';
+import AircraftRegistration from '@/modules/AircraftRegistration';
+import PickSlipCancel from './APN/PickSlipCancel';
 
 type HomePropsType = { apnRoute: any | null };
 const Home: FC<HomePropsType> = ({ apnRoute }) => {
@@ -130,7 +142,7 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
     if (key == RouteNames.KFC_VIEWER) {
       tab = {
         key,
-        title: `${t(`KFC_VIEWER`)}`,
+        title: `${t(`PICKSLIP VIEWER`)}`,
         contentKey: key, // Изменено на contentKey
         closable: true,
       };
@@ -337,6 +349,38 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         closable: true,
       };
     }
+    if (key == RouteNames.AC_TASKS) {
+      tab = {
+        key,
+        title: `${t('TASK ADMINISTRATION')}`,
+        contentKey: key,
+        closable: true,
+      };
+    }
+    if (key === RouteNames.AC_TYPES) {
+      tab = {
+        key,
+        title: `${t('AIRCRAFT TYPES')}`,
+        contentKey: key,
+        closable: true,
+      };
+    }
+    if (key === RouteNames.AC) {
+      tab = {
+        key,
+        title: `${t('AIRCRAFT ADMINISTRATION')}`,
+        contentKey: key,
+        closable: true,
+      };
+    }
+    if (key === RouteNames.AC_TASKS) {
+      tab = {
+        key,
+        title: `${t('TASK ADMINISTRATION')}`,
+        contentKey: key,
+        closable: true,
+      };
+    }
     // ... (остальные условия)
 
     if (tab) {
@@ -358,17 +402,28 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
       getItem(
         t('ADMINISTRATION'),
         RouteNames.USER_ADMINISTRATION,
-        <UserOutlined />
+        <SecurityScanOutlined />
       ),
       getItem(
-        t('KFC VIEWER'),
-        RouteNames.KFC_VIEWER,
-        <HomeOutlined />
+        t('ACCESS TRACKING'),
+        RouteNames.ACCESS_TRACKING,
+        <SafetyCertificateOutlined />
       ),
+
+      // Авиация
+      getItem(t('AIRCRAFT ADMINISTRATION'), RouteNames.AC, <RocketOutlined />),
+      getItem(t('AIRCRAFT TYPES'), RouteNames.AC_TYPES, <RocketOutlined />),
+      getItem(
+        t('TASK ADMINISTRATION'),
+        RouteNames.AC_TASKS,
+        <ThunderboltOutlined />
+      ),
+
+      // Техническая документация
       getItem(
         t('WP ADMINISTRATION'),
         RouteNames.WP_ADMINISTRATION,
-        <HomeOutlined />
+        <FileProtectOutlined />
       ),
       getItem(
         t('PROJECT ADMINISTRATION'),
@@ -376,31 +431,61 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         <ProjectOutlined />
       ),
       getItem(
+        t('WORKORDER ADMINISTRATION'),
+        RouteNames.WORKORDER_ADMINISTRATION,
+        <ScheduleOutlined />
+      ),
+
+      // Склад
+      getItem(
         t('PART ADMINISTRATION'),
         RouteNames.PART_ADMINISTRATIONS_NEW,
-        <ShoppingCartOutlined />
+        <BoxPlotOutlined />
       ),
       getItem(
         t('STOCK INFORMATION'),
         RouteNames.STOCK_NFORMATIONS,
-        <StockOutlined />
+        <DatabaseOutlined />
       ),
       getItem(
         t('STORES ADMINISTRATION'),
         RouteNames.STORES_ADMINISTRATIONS,
-        <ShopOutlined />
+        <HddOutlined />
+      ),
+      getItem(
+        t('PARTS TRACKING'),
+        RouteNames.PARTS_TRACKING,
+        <SearchOutlined />
+      ),
+      getItem(t('PARTS TRANSFER'), RouteNames.PARTS_TRANSFER, <SwapOutlined />),
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ClockCircleOutlined />
       ),
 
+      // Приемка
       getItem(
         t('GOODS RECEIVING'),
         RouteNames.GOODS_RESERVING_NEW,
         <InboxOutlined />
       ),
-      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
       getItem(
-        t('PARTS TRANSFER'),
-        RouteNames.PARTS_TRANSFER,
-        <TransactionOutlined />
+        t('RECEIVING VIEWER'),
+        RouteNames.RESERVING_TRACK,
+        <EyeOutlined />
+      ),
+      getItem(
+        t('CANCEL RECEIVING'),
+        RouteNames.CANCEL_RESERVING,
+        <CloseCircleOutlined />
+      ),
+
+      // Накладные
+      getItem(
+        t('PICKSLIP ADMINISTRATION'),
+        RouteNames.PICKSLIP_ADMINISTRATION,
+        <FileTextOutlined />
       ),
       getItem(
         t('PICKSLIP CONFIRMATION'),
@@ -412,65 +497,29 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         RouteNames.PICKSLIP_CANCEL,
         <CloseCircleOutlined />
       ),
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <EyeOutlined />),
 
-      getItem(
-        t('CANCEL RECEIVING'),
-        RouteNames.CANCEL_RESERVING,
-        <StopOutlined />
-      ),
-      getItem(
-        t('RECEIVING VIEWER'),
-        RouteNames.RESERVING_TRACK,
-        <EyeOutlined />
-      ),
-
-      getItem(
-        t('SHELF EXPIRY'),
-        RouteNames.SHELF_LIFE,
-        <ClockCircleOutlined />
-      ),
-      getItem(
-        t('REQUIREMENT ADMINISTRATION'),
-        RouteNames.REQUIREMENT_ADMINISTRATION,
-        <ToolOutlined />
-      ),
+      // Заказы
       getItem(
         t('ORDER ADMINISTRATION'),
         RouteNames.ORDERS_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('ORDER VIEWER'), RouteNames.ORDER_VIEWER_NEW, <EyeOutlined />),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
         <OrderedListOutlined />
       ),
-      getItem(
-        t('ORDER VIEWER'),
-        RouteNames.ORDER_VIEWER_NEW,
-        <FileSearchOutlined />
-      ),
 
+      // Утилиты
+      getItem(t('PDF SLICER'), RouteNames.PDF_SLICER, <FilePdfOutlined />),
+      getItem(t('REPORTS'), RouteNames.REPORTS, <BarChartOutlined />),
       getItem(
-        t('WORKORDER ADMINISTRATION'),
-        RouteNames.WORKORDER_ADMINISTRATION,
-        <ScheduleOutlined />
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+        <CustomerServiceOutlined />
       ),
-      getItem(
-        t('PICKSLIP ADMINISTRATION'),
-        RouteNames.PICKSLIP_ADMINISTRATION,
-        <BarcodeOutlined />
-      ),
-      getItem(
-        t('ACCESS TRACKING'),
-        RouteNames.ACCESS_TRACKING,
-        <ShoppingCartOutlined />
-      ),
-      getItem(
-        t('PEF SLICER'),
-        RouteNames.PDF_SLICER,
-        <ShoppingCartOutlined />
-      ),
-      getItem(
-        t('REPORTS'),
-        RouteNames.REPORTS,
-        <BarChartOutlined />
-      ),
-    
     ],
     technican: [
       getItem(
@@ -496,6 +545,17 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
       getItem(
         t('REQUIREMENT ADMINISTRATION'),
         RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <HomeOutlined />),
+      getItem(
+        t('TASK ADMINISTRATION'),
+        RouteNames.AC_TASKS,
         <ShoppingCartOutlined />
       ),
     ],
@@ -556,6 +616,27 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         RouteNames.REQUIREMENT_ADMINISTRATION,
         <ShoppingCartOutlined />
       ),
+      getItem(
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <HomeOutlined />),
+      getItem(
+        t('TASK ADMINISTRATION'),
+        RouteNames.AC_TASKS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('AIRCRAFT TYPES'),
+        RouteNames.AC_TYPES,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('AIRCRAFT ADMINISTRATION'),
+        RouteNames.AC,
+        <ShoppingCartOutlined />
+      ),
     ],
     planning: [
       getItem(
@@ -589,11 +670,7 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         RouteNames.ACCESS_TRACKING,
         <ShoppingCartOutlined />
       ),
-      getItem(
-        t('REQUIREMENT ADMINISTRATION'),
-        RouteNames.REQUIREMENT_ADMINISTRATION,
-        <ShoppingCartOutlined />
-      ),
+
       getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
       getItem(
         t('PICKSLIP ADMINISTRATION'),
@@ -620,14 +697,61 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         RouteNames.REQUIREMENT_ADMINISTRATION,
         <ShoppingCartOutlined />
       ),
+      getItem(t('PDF SLICER'), RouteNames.PDF_SLICER, <ShoppingCartOutlined />),
       getItem(
-        t('PDF SLICER'),
-        RouteNames.PDF_SLICER,
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
         <ShoppingCartOutlined />
       ),
-    
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <HomeOutlined />),
+      getItem(
+        t('TASK ADMINISTRATION'),
+        RouteNames.AC_TASKS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('AIRCRAFT TYPES'),
+        RouteNames.AC_TYPES,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('AIRCRAFT ADMINISTRATION'),
+        RouteNames.AC,
+        <ShoppingCartOutlined />
+      ),
     ],
     logistic: [
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STORES ADMINISTRATION'),
+        RouteNames.STORES_ADMINISTRATIONS,
+        <HomeOutlined />
+      ),
+      getItem(
+        t('PART ADMINISTRATION'),
+        RouteNames.PART_ADMINISTRATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('RECEIVING VIEWER'),
+        RouteNames.RESERVING_TRACK,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('GOODS RECEIVING'),
+        RouteNames.GOODS_RESERVING_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PARTS TRANSFER'),
+        RouteNames.PARTS_TRANSFER,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
       getItem(
         t('PICKSLIP CONFIRMATION'),
         RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
@@ -636,6 +760,44 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
       getItem(
         t('CANCEL PICKSLIP'),
         RouteNames.PICKSLIP_CANCEL,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('CANCEL RECEIVING'),
+        RouteNames.CANCEL_RESERVING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER ADMINISTRATION'),
+        RouteNames.ORDERS_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER VIEWER'),
+        RouteNames.ORDER_VIEWER_NEW,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <HomeOutlined />),
+      getItem(
+        t('TASK ADMINISTRATION'),
+        RouteNames.AC_TASKS,
         <ShoppingCartOutlined />
       ),
     ],
@@ -708,16 +870,111 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
         RouteNames.SHELF_LIFE,
         <ShoppingCartOutlined />
       ),
+      getItem(
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <HomeOutlined />),
+      getItem(
+        t('TASK ADMINISTRATION'),
+        RouteNames.AC_TASKS,
+        <ShoppingCartOutlined />
+      ),
     ],
     director: [
+      getItem(
+        t('WORKORDER ADMINISTRATION'),
+        RouteNames.WORKORDER_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('STOCK INFORMATION'),
+        RouteNames.STOCK_NFORMATIONS,
+        <ShoppingCartOutlined />
+      ),
       getItem(
         t('STORES ADMINISTRATION'),
         RouteNames.STORES_ADMINISTRATIONS,
         <HomeOutlined />
       ),
       getItem(
-        t('STOCK INFORMATION'),
-        RouteNames.STOCK_NFORMATIONS,
+        t('PART ADMINISTRATION'),
+        RouteNames.PART_ADMINISTRATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('RECEIVING VIEWER'),
+        RouteNames.RESERVING_TRACK,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('GOODS RECEIVING'),
+        RouteNames.GOODS_RESERVING_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('PARTS TRANSFER'),
+        RouteNames.PARTS_TRANSFER,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PARTS TRACKING'), RouteNames.PARTS_TRACKING, <SwapOutlined />),
+      getItem(
+        t('PICKSLIP CONFIRMATION'),
+        RouteNames.PICKSLIP_CONFIRMATIONS_NEW,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('CANCEL PICKSLIP'),
+        RouteNames.PICKSLIP_CANCEL,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('CANCEL RECEIVING'),
+        RouteNames.CANCEL_RESERVING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('REQUIREMENT ADMINISTRATION'),
+        RouteNames.REQUIREMENT_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER ADMINISTRATION'),
+        RouteNames.ORDERS_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ORDER VIEWER'),
+        RouteNames.ORDER_VIEWER_NEW,
+        <ShoppingCartOutlined />
+      ),
+
+      getItem(
+        t('SHELF EXPIRY'),
+        RouteNames.SHELF_LIFE,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('SUPPORT REQUEST'),
+        RouteNames.SUPPORT_REQUEST_ADMINISTRATION,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('ACCESS TRACKING'),
+        RouteNames.ACCESS_TRACKING,
+        <ShoppingCartOutlined />
+      ),
+      getItem(t('PICKSLIP VIEWER'), RouteNames.KFC_VIEWER, <HomeOutlined />),
+      getItem(
+        t('AIRCRAFT TYPES'),
+        RouteNames.AC_TYPES,
+        <ShoppingCartOutlined />
+      ),
+      getItem(
+        t('AIRCRAFT ADMINISTRATION'),
+        RouteNames.AC,
         <ShoppingCartOutlined />
       ),
     ],
@@ -776,7 +1033,7 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
     visibleMenuItems.includes(item.key)
   );
 
-  const onDragStop = (e:any, data:any) => {
+  const onDragStop = (e: any, data: any) => {
     dispatch(setCardPosition({ x: data.x, y: data.y }));
   };
 
@@ -884,12 +1141,7 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
             <WOAdministration />
           </div>
         );
-        case RouteNames.KFC_VIEWER:
-          return (
-            <div className="h-[82vh] overflow-hidden">
-              <PickSlipStatus />
-            </div>
-          );
+
       case RouteNames.WP_ADMINISTRATION:
         return (
           <div className="h-[82vh] overflow-hidden">
@@ -945,10 +1197,10 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
             <PickSlipConfirmationNew />
           </div>
         );
-      case RouteNames.PICKSLIP_VIEWER:
+      case RouteNames.KFC_VIEWER:
         return (
           <div className="h-[82vh] overflow-hidden">
-            <PickSlipViwer />
+            <PickSlipStatus />
           </div>
         );
       case RouteNames.SHELF_LIFE:
@@ -997,7 +1249,9 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
       case RouteNames.PICKSLIP_CANCEL:
         return (
           <div className="h-[82vh] overflow-hidden">
-            <PickSlipCancel />
+            <PickSlipCancel
+              onFinishCancel={function (updatedItems: any[]): void {}}
+            />
           </div>
         );
       case RouteNames.PARTS_TRANSFER:
@@ -1019,25 +1273,49 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
             <AccessTracking />
           </div>
         );
-        case RouteNames.SUPPORT_REQUEST_ADMINISTRATION:
-          return (
-            <div className="h-[82vh] overflow-hidden">
-          < SupportRequestAdministration />
-            </div>
-          );
+      case RouteNames.SUPPORT_REQUEST_ADMINISTRATION:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <SupportRequestAdministration />
+          </div>
+        );
 
-          case RouteNames.PDF_SLICER:
-            return (
-              <div className="h-[82vh] overflow-hidden">
-            < PdfSlicerAdministration />
-              </div>
-            );
-        case RouteNames.REPORTS:
-          return (
-            <div className="h-[82vh] overflow-hidden">
-              <ReportModule />
-            </div>
-          );
+      case RouteNames.PDF_SLICER:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <PdfSlicerAdministration />
+          </div>
+        );
+      case RouteNames.REPORTS:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <ReportModule />
+          </div>
+        );
+      case RouteNames.AC_TASKS:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <TaskAdministration isFilterCollapsed={false} />
+          </div>
+        );
+      case RouteNames.AC_TYPES:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <AircraftTypes />
+          </div>
+        );
+      case RouteNames.AC:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <AircraftRegistration />
+          </div>
+        );
+      case RouteNames.AC_TASKS:
+        return (
+          <div className="h-[82vh] overflow-hidden">
+            <TaskAdministration isFilterCollapsed={false} />
+          </div>
+        );
 
       // ... (остальные условия)
       default:
@@ -1090,7 +1368,7 @@ const Home: FC<HomePropsType> = ({ apnRoute }) => {
             type="editable-card"
             onEdit={onEdit}
           >
-            {panes.map((pane:any) => (
+            {panes.map((pane: any) => (
               <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                 {getContentByKey(pane.contentKey)}
               </TabPane>

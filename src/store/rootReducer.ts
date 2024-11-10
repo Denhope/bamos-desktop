@@ -87,6 +87,9 @@ import { stockApi } from '@/features/stockAdministration/stockApi';
 import { supportRequestApi } from './slices/supportRequestApi';
 import { fileUploadApi } from '@/features/restrictionAdministration/fileUploadApi';
 import { actionApi } from '@/features/projectItemWO/actionsApi';
+import { customerCodeApi } from '@/features/customerCodeAdministration/customerCodeApi';
+
+import columnStateReducer from './reducers/columnStateSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -159,7 +162,7 @@ const rootReducer = combineReducers({
   [fileUploadApi.reducerPath]: fileUploadApi.reducer,
   [reportsApi.reducerPath]: reportsApi.reducer,
   [actionApi.reducerPath]: actionApi.reducer,
-
+  [customerCodeApi.reducerPath]: customerCodeApi.reducer,
   // [actionsTemplatesApi.reducerPath]: actionsTemplatesApi.reducer,
 
   vendor: vendorReducer,
@@ -175,7 +178,7 @@ const rootReducer = combineReducers({
   tabs: tabsReducer,
   menuItems: menuItemsReducer,
   cardPosition: cardPositionReducer,
-
+  columnState: columnStateReducer,
 });
 
 export default rootReducer;

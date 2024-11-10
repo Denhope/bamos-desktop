@@ -328,12 +328,12 @@ const PdfGeneratorPanel: React.FC<{
             `${part?.removeUserId?.firstNameEnglish?.toUpperCase() || ''} ${
               part?.removeUserId?.lastNameEnglish?.toUpperCase() || ''
             }\n    ${part?.removeUserId?.organizationAuthorization || ''}`,
-            `${part?.installUserId?.firstNameEnglish?.toUpperCase() || ''} ${
-              part?.installUserId?.lastNameEnglish?.toUpperCase() || ''
-            } \n  ${part?.installUserId?.organizationAuthorization || ''}`,
             `${part?.inspectedUserID?.firstNameEnglish?.toUpperCase() || ''} ${
               part?.inspectedUserID?.lastNameEnglish?.toUpperCase() || ''
             }\n   ${part?.inspectedUserID?.organizationAuthorization || ''}`,
+            `${part?.installUserId?.firstNameEnglish?.toUpperCase() || ''} ${
+              part?.installUserId?.lastNameEnglish?.toUpperCase() || ''
+            } \n  ${part?.installUserId?.organizationAuthorization || ''}`,
           ])
         : [
             // ['', '', '', '', ''],

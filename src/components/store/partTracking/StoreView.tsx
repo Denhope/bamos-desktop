@@ -4,9 +4,14 @@ import EditableTable from '@/components/shared/Table/EditableTable';
 import React, { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IBookingItem } from '@/models/IBooking';
-import { transformToPartBooking } from '@/services/utilites';
+import {
+  getTaskTypeColor,
+  transformToPartBooking,
+  ValueEnumTypeTask,
+} from '@/services/utilites';
 import { ColDef } from 'ag-grid-community';
 import PartContainer from '@/components/woAdministration/PartContainer';
+import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
 type StoreViewType = {
   scroll: number;
   data: any[];
@@ -30,6 +35,18 @@ const StoreView: FC<StoreViewType> = ({
   interface ExtendedColDef extends ColDef {
     cellDataType: CellDataType;
   }
+
+  const valueEnumTask: ValueEnumTypeTask = {
+    RC: t('TC'),
+    CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
+    NRC: t('NRC (DEFECT)'),
+    NRC_ADD: t('ADHOC (ADHOC TASK)'),
+    MJC: t('MJC'),
+    CMJC: t('CMJC'),
+    FC: t('FC'),
+    HARD_ACCESS: t('HARD_ACCESS'),
+  };
+
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
       field: 'createDate',
@@ -114,6 +131,58 @@ const StoreView: FC<StoreViewType> = ({
       headerName: `${t('ORDER No')}`,
       cellDataType: 'text',
     },
+    {
+      field: 'PICK_SLIP_NUMBER',
+      headerName: `${t('PICKSLIP No')}`,
+      cellDataType: 'text',
+      width: 100,
+    },
+    {
+      field: 'registrationNumber',
+      headerName: `${t('AC REG')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectWO',
+      headerName: `${t('PROJECT No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'projectTaskWO',
+      headerName: `${t('TRACE No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'woName',
+      headerName: `${t('WP NAME')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskNumber',
+      headerName: `${t('TASK No')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'taskDescription',
+      headerName: `${t('TASK DESCRIPTION')}`,
+      cellDataType: 'text',
+    },
+
+    {
+      field: 'TASK_TYPE',
+      headerName: `${t('TASK TYPE')}`,
+      filter: true,
+      valueGetter: (params: { data: { TASK_TYPE: keyof ValueEnumTypeTask } }) =>
+        params.data.TASK_TYPE,
+      valueFormatter: (params: { value: keyof ValueEnumTypeTask }) => {
+        const status = params.value;
+        return valueEnumTask[status] || '';
+      },
+      cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
+        backgroundColor: getTaskTypeColor(params.value),
+      }),
+      cellDataType: 'text',
+    },
 
     {
       field: 'QUANTITY',
@@ -142,25 +211,19 @@ const StoreView: FC<StoreViewType> = ({
   };
   return (
     <div>
-      <PartContainer
+      <UniversalAgGrid
         isLoading={isLoading}
-        isFilesVisiable={true}
         isVisible={true}
         pagination={true}
-        isAddVisiable={true}
-        isButtonVisiable={false}
-        isEditable={true}
         height={'68vh'}
         columnDefs={columnDefs}
-        partNumbers={[]}
         isChekboxColumn={true}
-        onUpdateData={(data: any[]): void => {}}
         rowData={transformedPartNumbers}
         onCheckItems={setSelectedRowKeys}
-        //
         onRowSelect={(data: any): void => {
-          onSingleRowClick && onSingleRowClick(data);
+          onSingleRowClick && onSingleRowClick(data[0]);
         }}
+        gridId={'storeView'}
       />
     </div>
   );

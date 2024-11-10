@@ -1,4 +1,4 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '@/app/baseQueryWithReauth';
 
 import { COMPANY_ID, USER_ID } from '@/utils/api/http';
@@ -397,6 +397,23 @@ export const projectItemWOApi = createApi({
         }
       },
     }),
+    deleteProjectPanels: builder.mutation<
+      any,
+      {
+        accessIds: string[];
+      }
+    >({
+      query: ({ accessIds }) => ({
+        url: `projectsAccess/company/${COMPANY_ID}/deleteByIDs`,
+        method: 'DELETE',
+        body: {
+          accessIds,
+          deleteUserID: USER_ID,
+          deleteDate: new Date(),
+        },
+      }),
+      invalidatesTags: ['ProjectItemWO'],
+    }),
     updateProjectPanels: builder.mutation<
       any,
       {
@@ -405,6 +422,7 @@ export const projectItemWOApi = createApi({
         installUserId?: any;
         removeUserId?: any;
         inspectedUserID?: any;
+        date?: Date;
       }
     >({
       query: ({
@@ -413,6 +431,7 @@ export const projectItemWOApi = createApi({
         installUserId,
         removeUserId,
         inspectedUserID,
+        date,
       }) => ({
         url: `projectsAccess/company/${COMPANY_ID}/updateByID`,
         method: 'PUT',
@@ -423,7 +442,7 @@ export const projectItemWOApi = createApi({
           inspectedUserID,
           removeUserId,
           updateUserID: USER_ID,
-          updateDate: new Date(),
+          updateDate: date,
         },
       }),
       invalidatesTags: ['ProjectItemWO'],
@@ -462,16 +481,8 @@ export const projectItemWOApi = createApi({
         },
       }),
       providesTags: ['ProjectItemWO'],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
 
-          // dispatch(setprojectItems(data));
-        } catch (error) {
-          console.error('Ошибка при выполнении запроса:', error);
-        }
-      },
-      keepUnusedDataFor: 5,
+      keepUnusedDataFor: 0,
     }),
   }),
 });
@@ -488,4 +499,5 @@ export const {
   useGetProjectTaskForCardQuery,
   useReloadProjectTaskMutation,
   useAppendProjectTaskMutation,
+  useDeleteProjectPanelsMutation,
 } = projectItemWOApi;

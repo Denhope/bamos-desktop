@@ -1,3 +1,8 @@
+// import React, { Suspense } from 'react';
+// import { createBrowserRouter } from 'react-router-dom';
+// import type { FC } from 'react';
+
+// // Существующий enum с маршрутами
 export enum RouteNames {
   PART_ADMINISTRATIONS = '/materialManagment/parts/partAdministrations',
   PART_ADMINISTRATIONS_NEW = '/materialManagment/parts/partAdministrations/new',
@@ -30,7 +35,7 @@ export enum RouteNames {
   PROJECT_VIEWER = 'project/projectViewer',
   ORDER_VIEWER = 'order/orderViewer',
   ORDER_VIEWER_NEW = 'order/orderViewerNew',
-  PDF_SLICER= 'pdf/slicer',
+  PDF_SLICER = 'pdf/slicer',
   PROJECT_ADMINISTRATION = '/project/administration',
   WP_ADMINISTRATION = '/worckPackage/administration',
   PROJECTS_CODES = '/user/administration/projects/codes',
@@ -45,11 +50,12 @@ export enum RouteNames {
   USER_GROUPS = '/user/administration/groups',
   VENDORS = '/user/administration/vendors',
   AC_TYPES = '/user/administration/acTypes',
-  AC_TASKS = '/user/administration/acTasks',
+  AC_TASKS = '/tasks',
   AC = '/user/administration/ac',
   COMPANIES = '/user/administration/companies',
   REQUIREMENTS_CODES = '/user/administration/requirements/codes',
   CERTIFICATES_CODES = '/user/administration/certificate/codes',
+  CUSTOMER_CODES = '/user/administration/customer/codes',
   ORDER_TEXT_CODES = '/user/administration/order/codes',
   ACTION_TEXT_CODES = '/user/administration/actions/codes',
   USER = '/user',
@@ -129,8 +135,89 @@ export enum RouteNames {
   APLICATIONS = '/aplications',
   SKILLS_ACCOUNTS = 'SKILLS_ACCOUNTS',
   PICKSLIP_CONFIRMATIONS_NEW = 'PICKSLIP_CONFIRMATIONS_NEW',
-  SUPPORT_REQUEST_ADMINISTRATION = "/support",
+  SUPPORT_REQUEST_ADMINISTRATION = '/support',
 
   // CHEACK_MATERIAL_TASKS = '/materials',wwwwwwwwwwwwwwwww
   REPORTS = '/reports',
 }
+
+// // Enum для форм в отдельных окнах
+// export enum FormRoutes {
+//   STEP_FORM = '/electron-forms/step-form',
+//   PICKSLIP_FORM = '/electron-forms/pickslip-form',
+//   WORKORDER_FORM = '/electron-forms/workorder-form',
+// }
+
+// export type AllRoutes = RouteNames | FormRoutes;
+
+// // Интерфейс для опций окна
+// export interface WindowOptions {
+//   route: FormRoutes;
+//   title: string;
+//   width?: number;
+//   height?: number;
+//   modal?: boolean;
+//   data?: any;
+// }
+
+// // Типы для компонентов форм
+// interface FormComponentsType {
+//   [FormRoutes.STEP_FORM]: React.LazyExoticComponent<FC<any>>;
+//   [FormRoutes.PICKSLIP_FORM]: React.LazyExoticComponent<FC<any>>;
+//   [FormRoutes.WORKORDER_FORM]: React.LazyExoticComponent<FC<any>>;
+// }
+
+// // // Компоненты форм с ленивой загрузкой
+// // export const FormComponents: FormComponentsType = {
+// //   [FormRoutes.STEP_FORM]: React.lazy(
+// //     () => import('@/components/woAdministration/StepForm')
+// //   ),
+// //   // [FormRoutes.PICKSLIP_FORM]: React.lazy(
+// //   //   () => import('@/components/pickslip/PickslipForm')
+// //   // ),
+// //   // [FormRoutes.WORKORDER_FORM]: React.lazy(
+// //   //   () => import('@/components/workorder/WorkorderForm')
+// //   // ),
+// // } as const;
+
+// // Хелпер для проверки типа маршрута
+// export function isFormRoute(route: string): route is FormRoutes {
+//   return Object.values(FormRoutes).includes(route as FormRoutes);
+// }
+
+// // Хелпер для получения компонента формы
+// export function getFormComponent(route: FormRoutes) {
+//   // return FormComponents[route];
+// }
+
+// // Создаем функцию для инициализации роутера
+// export function createAppRouter(App: React.ComponentType) {
+//   return createBrowserRouter([
+//     {
+//       path: '/*',
+//       element: React.createElement(App),
+//     },
+//     ...Object.values(FormRoutes).map((route) => ({
+//       path: route,
+//       element: React.createElement(
+//         Suspense,
+//         { fallback: React.createElement('div', null, 'Loading...') }
+//         // React.createElement(getFormComponent(route as FormRoutes))
+//       ),
+//     })),
+//   ]);
+// }
+
+// // Типы для Electron API
+// declare global {
+//   // interface Window {
+//   //   electronAPI: {
+//   //     openWindow: (options: WindowOptions) => Promise<number>;
+//   //     closeCurrentWindow: () => Promise<void>;
+//   //     submitWindowForm: (data: any) => Promise<void>;
+//   //     onWindowSubmit: (callback: (event: any, data: any) => void) => () => void;
+//   //     onWindowClose: (callback: () => void) => () => void;
+//   //     onWindowData: (callback: (event: any, data: any) => void) => () => void;
+//   //   };
+//   // }
+// }

@@ -31,11 +31,21 @@ const PdfGeneratorWP: React.FC<{
   data?: any;
   ids?: any;
   disabled?: any;
+  isAddTextVisible?: boolean;
   onClick: (key: string) => void;
-}> = ({ htmlTemplate, data, ids, disabled, wo, onClick }) => {
+}> = ({
+  htmlTemplate,
+  data,
+  ids,
+  disabled,
+  wo,
+  onClick,
+  isAddTextVisible = false,
+}) => {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false); // Состояние загрузки
-  console.log(wo);
+  const [loading, setLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+
   const {
     data: projectTasks,
     isLoading,
@@ -43,33 +53,23 @@ const PdfGeneratorWP: React.FC<{
     refetch,
   } = useGetProjectTaskForCardQuery(
     {
-      ids: ids,
+      // ids: ids,
+      WOReferenceID: wo?._id,
     },
     {
-      skip: !ids?.length,
+      skip: !wo?._id,
       refetchOnMountOrArgChange: true,
     }
   );
-  const truncateText = (
-    text: any,
-    maxWidth: number,
-    font: PDFFont,
-    fontSize: number
-  ) => {
-    let truncated = text;
-    let width = font.widthOfTextAtSize(truncated, fontSize);
 
-    if (width <= maxWidth) {
-      return truncated;
+  useEffect(() => {
+    if (ids?.length && projectTasks && !isLoading && !isFetching) {
+      setIsReady(true);
+    } else {
+      setIsReady(false);
     }
+  }, [ids, projectTasks, isLoading, isFetching]);
 
-    while (width > maxWidth && truncated.length > 0) {
-      truncated = truncated.slice(0, -1);
-      width = font.widthOfTextAtSize(truncated + '...', fontSize);
-    }
-
-    return truncated + '...';
-  };
   const transformedTasks = useMemo(() => {
     return projectTasks || [];
   }, [projectTasks]);
@@ -214,34 +214,34 @@ const PdfGeneratorWP: React.FC<{
 
             const truncatedTaskNumberText = truncateText(
               taskCardNumberText,
-              117,
+              170,
               robotoFont,
               12
             );
 
             if (cell === 'title') {
               page.drawText(truncatedTaskNumberText, {
-                x: x + 140,
+                x: x + 105,
                 y: y - 25,
                 font: robotoFontB,
-                size: 18,
+                size: 14,
               });
               // HARD_ACCESS
 
               if (task.projectItemType == 'NRC_ADD') {
                 page.drawText('ADHOC TASK', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
               if (task.projectItemType == 'HARD_ACCESS') {
                 page.drawText('HARD ACCESS', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
               if (
@@ -250,18 +250,18 @@ const PdfGeneratorWP: React.FC<{
                 task.projectItemType !== 'NRC_ADD'
               ) {
                 page.drawText('TASK CARD', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
               if (task.projectItemType == 'NRC') {
                 page.drawText('NRC', {
-                  x: x + 15,
+                  x: x + 10,
                   y: y - 25,
                   font: robotoFontB,
-                  size: 18,
+                  size: 14,
                 });
               }
 
@@ -333,17 +333,17 @@ const PdfGeneratorWP: React.FC<{
                     : 'N/A';
                 const truncatedTaskNumberText = truncateText(
                   taskNumberText,
-                  260,
+                  290,
                   robotoFont,
-                  12
+                  10
                 );
 
                 // Смещение влево на 20 единиц
                 page.drawText(truncatedTaskNumberText, {
-                  x: x + 25, // Изменено с x + 85 на x + 65
+                  x: x + 5, // Изменено с x + 85 на x + 65
                   y: y - 55,
                   font: robotoFont,
-                  size: 12,
+                  size: 10,
                 });
               }
 
@@ -375,7 +375,7 @@ const PdfGeneratorWP: React.FC<{
                     : 'N/A';
                 const truncatedCode = truncateText(
                   accustomerCode,
-                  80,
+                  85,
                   robotoFont,
                   12
                 );
@@ -394,8 +394,8 @@ const PdfGeneratorWP: React.FC<{
                   font: robotoFont,
                   size: 12,
                 });
-                page.drawText(accustomerCode, {
-                  x: x + 225, // Изменено с x + 85 на x + 65
+                page.drawText(truncatedCode, {
+                  x: x + 205, // Изменено с x + 85 на x + 65
                   y: y - 55,
                   font: robotoFont,
                   size: 12,
@@ -543,26 +543,36 @@ const PdfGeneratorWP: React.FC<{
 
       let { page, width, height, y } = addPage();
 
+      const checkValue = (value: any): string => {
+        if (
+          value === undefined ||
+          value === null ||
+          String(value).trim() === ''
+        ) {
+          return 'N/A';
+        }
+        return String(value);
+      };
       const cellDataNRC2 = [
         {
           label: 'Station',
           label1: 'Произв. база',
-          value: task.station !== undefined ? task.station : 'MSQ',
+          value: checkValue(task.station, 'MSQ'),
         },
         {
           label: '',
           label1: 'ATA ',
-          value: task.ata !== undefined ? task.ata : 'N/A',
+          value: checkValue(task.ata),
         },
         {
           label: 'Zone',
           label1: 'Зона',
-          value: task.zones !== undefined ? String(task.zones) : 'N/A',
+          value: checkValue(task.zones),
         },
         {
           label: 'AC Area',
           label1: 'Область',
-          value: task.taskArea !== undefined ? task.taskArea : 'N/A',
+          value: checkValue(task.taskArea),
         },
       ];
 
@@ -570,24 +580,22 @@ const PdfGeneratorWP: React.FC<{
         {
           label: 'Work Pack',
           label1: 'Пакет Работ',
-          value: task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
+          value: checkValue(task.WPNumber),
         },
         {
           label: 'Customer WO',
           label1: 'Заявка Заказчика',
-          value:
-            task.custumerWO !== undefined ? String(task.custumerWO) : 'N/A',
+          value: checkValue(task.custumerWO),
         },
         {
           label: 'Internal WO',
           label1: 'Заказ-Наряд',
-          value: task.WONumber !== undefined ? String(task.WONumber) : 'N/A',
+          value: checkValue(task.WONumber),
         },
         {
           label: 'WP Card Seq',
           label1: 'Номер в пакете',
-          value:
-            task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
+          value: checkValue(task.taskWONumber),
         },
       ];
 
@@ -595,152 +603,116 @@ const PdfGeneratorWP: React.FC<{
         {
           label: 'A/C Type',
           label1: 'Тип ВС',
-          value: truncateValue(
-            task.acType !== undefined ? String(task.acType) : 'N/A',
-            20
-          ), // Ограничение в 20 символов
+          value: truncateValue(checkValue(task.acType), 20),
+          value1: '',
         },
         {
           label: 'Work Pack',
           label1: 'Пакет Работ',
-          value: truncateValue(
-            task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
-            20
-          ), // Ограничение в 20 символов
+          value1: '',
+          value: truncateValue(checkValue(task.WPNumber), 20),
         },
         {
           label: 'Customer WO',
           label1: 'Заявка Заказчика',
-          value: truncateValue(
-            task.custumerWO !== undefined ? String(task.custumerWO) : 'N/A',
-            28
-          ), // Ограничение в 20 символов
+          value: '',
+          value1: truncateValue(checkValue(task.custumerWO), 38),
         },
         {
           label: 'Card No',
           label1: 'Карта №',
-          value: truncateValue(
-            task.cardNumber !== undefined ? String(task.cardNumber) : 'N/A',
-            20
-          ), // Ограничение в 20 символов
+          value1: '',
+          value: truncateValue(checkValue(task.cardNumber), 20),
         },
       ];
+
       const cellData3 = [
-        // {
-        //   label: '',
-        //   label1: 'ATA ',
-        //   value: task.ata !== undefined ? task.ata : 'N/A',
-        // },
         {
           label: 'MSN',
           label1: 'Заводской номер',
-          value: task.ACMSN !== undefined ? String(task.ACMSN) : 'N/A',
+          value: checkValue(task.ACMSN),
         },
         {
           label: 'Reference',
           label1: 'Ссылка на ЭТД',
-          value: task.amtoss !== undefined ? task.amtoss : 'N/A',
+          value: checkValue(task.amtoss),
         },
         {
           label: 'Raised Date',
           label1: 'Дата Создания',
-          value: task.createDate !== undefined ? task.createDate : 'N/A',
+          value: checkValue(task.createDate),
         },
       ];
+
       const cellData4 = [
         {
           label: 'Customer',
           label1: 'Заказчик',
-          value: task.customerCode !== undefined ? task.customerCode : 'N/A',
+          value: checkValue(task.customerCode),
         },
-        // {
-        //   label: 'Zone',
-        //   label1: 'Зона ',
-        //   value: task.zones !== undefined ? task.zones : 'N/A',
-        // },
         {
           label: 'Access',
           label1: 'Доступ',
-          value:
-            task.access !== undefined || task.access !== ''
-              ? task.access
-              : 'N/A',
+          value: checkValue(task.access),
         },
         {
           label: 'Raised By',
           label1: 'Подготовлено',
-          value: task.createBySing !== undefined ? task.createBySing : 'N/A',
+          value: checkValue(task.createBySing),
         },
       ];
-      const cellData5 = [
-        // {
-        //   label: 'Work Pack',
-        //   label1: 'Пакет Работ',
-        //   value: task.WPNumber !== undefined ? String(task.WPNumber) : 'N/A',
-        // },
 
+      const cellData5 = [
         {
           label: 'Cust. ID Code',
           label1: 'Код Заказчика',
-          value:
-            task.customerCodeID !== undefined ? task.customerCodeID : 'N/A',
+          value: checkValue(task.customerCodeID),
         },
-
-        //////////////
         {
           label: 'Zone',
           label1: 'Зона',
-          value: task.zones !== undefined ? String(task.zones) : 'N/A',
+          value: checkValue(task.zones),
         },
         {
           label: 'AC Area',
           label1: 'Область',
-          value: task.taskArea !== undefined ? task.taskArea : 'N/A',
+          value: checkValue(task.taskArea),
         },
         {
           label: 'Internal WO',
           label1: 'Заказ-Наряд',
-          value: task.WONumber !== undefined ? String(task.WONumber) : 'N/A',
+          value: checkValue(task.WONumber),
         },
       ];
+
       const cellData6 = [
         {
           label: 'Station',
           label1: 'Произв. база',
-          value: task.station !== undefined ? task.station : 'MSQ',
+          value: checkValue(task.station, 'MSQ'),
         },
-        // {
-        //   label: 'A/C Reg.',
-        //   label1: 'Рег. Номер ВС',
-        //   value:
-        //     task.ACRegistration !== undefined ? task.ACRegistration : 'N/A',
-        // },
         {
           label: 'Inspection',
           label1: 'Тип Инспекции',
-          value: task.taskCode !== undefined ? task.taskCode : 'N/A',
+          value: checkValue(task.taskCode),
         },
-
         {
           label: 'Skill',
           label1: 'Специализация',
-          value: task.skills !== undefined ? task.skills : 'N/A',
+          value: checkValue(task.skills),
         },
         {
           label: 'Mhrs',
           label1: 'Трудозатраты',
-          value:
-            task.mainWorkTime !== undefined ? String(task.mainWorkTime) : 'N/A',
+          value: checkValue(task.mainWorkTime),
         },
         {
           label: 'WP Card Seq',
           label1: 'Номер в пакете',
-          value:
-            task.taskWONumber !== undefined ? String(task.taskWONumber) : 'N/A',
+          value: checkValue(task.taskWONumber),
         },
       ];
 
-      //////
       const cellData7 = [
         {
           label: 'Related documents and references',
@@ -896,6 +868,12 @@ const PdfGeneratorWP: React.FC<{
           page.drawText(cell.value, {
             x: cellX + 50,
             y: y - 20,
+            font: robotoFont,
+            size: fontSize,
+          });
+          page.drawText(cell.value1, {
+            x: cellX + 5,
+            y: y - 10,
             font: robotoFont,
             size: fontSize,
           });
@@ -1968,7 +1946,8 @@ const PdfGeneratorWP: React.FC<{
 
       if (
         task.projectItemType !== 'NRC' &&
-        task.projectItemType !== 'NRC_ADD'
+        task.projectItemType !== 'NRC_ADD' &&
+        task.projectItemType !== 'HARD_ACCESS'
       ) {
         for (let i = 0; i < task.steps?.length; i++) {
           const step = task.steps[i];
@@ -2159,7 +2138,11 @@ const PdfGeneratorWP: React.FC<{
           y -= 5;
         }
       }
-      if (task.projectItemType == 'NRC' || task.projectItemType == 'NRC_ADD') {
+      if (
+        task.projectItemType == 'NRC' ||
+        task.projectItemType == 'NRC_ADD' ||
+        task.projectItemType == 'HARD_ACCESS'
+      ) {
         for (let i = 0; i < task.steps?.length; i++) {
           const step = task.steps[i];
           const cellData12 = {
@@ -2902,8 +2885,8 @@ const PdfGeneratorWP: React.FC<{
       }
       const cellData1234 = {
         value1:
-          wo?.projectID?.WOReferenceID?.certificateId !== undefined
-            ? String(wo?.projectID?.WOReferenceID?.certificateId?.description)
+          wo?.certificateId !== undefined
+            ? String(wo?.certificateId?.description)
             : 'N/A',
       };
 
@@ -3024,12 +3007,15 @@ const PdfGeneratorWP: React.FC<{
         : '';
 
       console.log(closeAction);
-      const diCloseUser = `${
-        diCloseAction?.userDurations[0].userID?.organizationAuthorization ||
-        diCloseAction?.userDurations[0].userID?.singNumber
-      } (${diCloseAction?.userDurations[0].userID?.firstNameEnglish} ${
-        diCloseAction?.userDurations[0].userID?.lastNameEnglish
-      }) `;
+      const diCloseUser = diCloseAction?.userDurations[0].userID
+        ? `${
+            diCloseAction?.userDurations[0].userID?.organizationAuthorization ??
+            diCloseAction?.userDurations[0].userID?.singNumber ??
+            ''
+          } (${
+            diCloseAction?.userDurations[0].userID?.firstNameEnglish ?? ''
+          } ${diCloseAction?.userDurations[0].userID?.lastNameEnglish ?? ''}) `
+        : '';
       const cellDataNotCritical = [
         {
           label: 'Form',
@@ -3042,7 +3028,10 @@ const PdfGeneratorWP: React.FC<{
           label41: 'Дата Изм.',
           label5: 'Approval №',
           label6: 'Одобрение №',
-          value5: '285-21-057',
+          value5:
+            wo?.certificateId !== undefined
+              ? String(wo?.certificateId?.code)
+              : 'N/A',
           label7: 'Unitary Enterprise «407 Technics»',
           label8: 'Унитарное предприятие «407 Техникс»',
           value8: '23/11/2022',
@@ -3069,8 +3058,8 @@ const PdfGeneratorWP: React.FC<{
           value10: closedDate || '',
         },
         {
-          label: 'Closing Sing/Stamp',
-          label1: 'Закрыто Печать/Штамп',
+          label: 'Closing Sign/Stamp',
+          label1: 'Закрыто Подпись/Штамп',
           value: '',
           value2: '',
           label2: '',
@@ -3100,7 +3089,10 @@ const PdfGeneratorWP: React.FC<{
           label41: 'Дата Изм.',
           label5: 'Approval №',
           label6: 'Одобрение №',
-          value5: '285-21-057',
+          value5:
+            wo?.certificateId !== undefined
+              ? String(wo?.certificateId?.code)
+              : 'N/A',
           label7: 'Unitary Enterprise «407 Technics»',
           label8: 'Унитарное предприятие «407 Техникс»',
           value8: '23.11.2022',
@@ -3126,8 +3118,8 @@ const PdfGeneratorWP: React.FC<{
           value10: closedDate || '',
         },
         {
-          label: 'Closing Sing/Stamp',
-          label1: 'Закрыто Печать/Штамп',
+          label: 'Closing Sign/Stamp',
+          label1: 'Закрыто Подпись/Штамп',
           value: '',
           value2: '',
           label2: '',
@@ -3396,8 +3388,10 @@ const PdfGeneratorWP: React.FC<{
       taskPages.forEach((page, index) => {
         const pageNumber = pages.length && pages.length + index + 1;
 
-        addAdditionalPageText(page, robotoFont);
-        addAdditionalPageNumber(page, pageNumber, blockTotalPages);
+        if (isAddTextVisible) {
+          addAdditionalPageText(page, robotoFont);
+          addAdditionalPageNumber(page, pageNumber, blockTotalPages);
+        }
         // // }
       });
     }
@@ -3460,7 +3454,7 @@ const PdfGeneratorWP: React.FC<{
     // Добавление нумерации страниц внизу страницы для дополнительных страниц
     page.drawText(`Page ${pageNumber} of ${totalPages}`, {
       x: width - 100,
-      y: page.getHeight() - 50,
+      y: page.getHeight() - 10,
       size: 8,
       font,
       color: rgb(0, 0, 0),
@@ -3515,7 +3509,7 @@ const PdfGeneratorWP: React.FC<{
       `    Work Order: ${wo?.WONumber}                               Aircraft: ${wo?.planeId?.regNbr}                                                                                   Station: MSQ`,
       {
         x: 50,
-        y: page.getHeight() - 50,
+        y: page.getHeight() - 10,
         size: 8,
         font,
         color: rgb(0, 0, 0),
@@ -3525,10 +3519,19 @@ const PdfGeneratorWP: React.FC<{
   };
 
   const handleGeneratePdf = async () => {
+    if (!isReady) {
+      notification.warning({
+        message: t('NOT READY'),
+        description: t('Please wait for the data to load completely.'),
+      });
+      return;
+    }
+
     Modal.confirm({
       title: t('ARE YOU SURE, YOU WANT TO GENERATE PDF?'),
       onOk: async () => {
         try {
+          setLoading(true);
           await generatePdf();
           Modal.destroyAll();
           onClick('generateTaskCard');
@@ -3538,6 +3541,8 @@ const PdfGeneratorWP: React.FC<{
             message: t('FAILED'),
             description: t('There was an error generating PDF.'),
           });
+        } finally {
+          setLoading(false);
         }
       },
     });
@@ -3546,12 +3551,12 @@ const PdfGeneratorWP: React.FC<{
   return (
     <div className="ml-4">
       <Button
-        // type=""
-        disabled={disabled || ids === null || ids === ''}
+        disabled={disabled || !isReady}
         size="small"
         onClick={handleGeneratePdf}
+        loading={loading}
       >
-        {`${t('GENERATE PDF AND SAVE')}`}
+        {loading ? t('GENERATING...') : t('GENERATE PDF AND SAVE')}
       </Button>
     </div>
   );

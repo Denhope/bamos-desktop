@@ -5,6 +5,7 @@ import { rolePermissions } from '@/services/utilites';
 import React from 'react';
 
 export enum Permission {
+  PRINT_AS_ORIGINAL = 'PRINT_AS_ORIGINAL',
   USER_ACTIONS = 'USER_ACTIONS',
   WO_ACTIONS = 'WO_ACTIONS',
   WP_ACTIONS = 'WP_ACTIONS',
@@ -45,6 +46,7 @@ export enum Permission {
   CLOSE_ACCESS = 'CLOSE_ACCESS',
   OPEN_ACCESS = 'OPEN_ACCESS',
   INSPECT_ACCESS = 'INSPECT_ACCESS',
+  CLOSE_CRITICAL_TASK = 'CLOSE_CRITICAL_TASK',
   ADD_ACTION = 'ADD_ACTION',
   DELETE_ACTION = 'DELETE_ACTION',
   EDIT_ACTION = 'EDIT_ACTION',

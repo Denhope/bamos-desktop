@@ -9,7 +9,21 @@ import {
   ProFormSelect,
 } from '@ant-design/pro-form';
 
-import { Button, Space, Tabs, Modal, Form, notification, Select, InputNumber, DatePicker, Popconfirm, Tooltip, List, Typography } from 'antd';
+import {
+  Button,
+  Space,
+  Tabs,
+  Modal,
+  Form,
+  notification,
+  Select,
+  InputNumber,
+  DatePicker,
+  Popconfirm,
+  Tooltip,
+  List,
+  Typography,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IRequirement, Requirement } from '@/models/IRequirement';
 import {
@@ -44,14 +58,27 @@ import BookedPartContainer from '@/components/layout/pickSlipConfirmationNew/Boo
 import PermissionGuard, { Permission } from '@/components/auth/PermissionGuard';
 import { useAddPickSlipMutation } from '@/features/pickSlipAdministration/pickSlipApi';
 import { AgGridReact } from 'ag-grid-react';
-import { DeleteOutlined, SaveOutlined, SwapOutlined, PlusOutlined, ClearOutlined, SendOutlined } from '@ant-design/icons';
-import { AvailableQuantity, useGetAvailableQuantityQuery } from '@/features/stockAdministration/stockApi';
+import {
+  DeleteOutlined,
+  SaveOutlined,
+  SwapOutlined,
+  PlusOutlined,
+  ClearOutlined,
+  SendOutlined,
+} from '@ant-design/icons';
+import {
+  AvailableQuantity,
+  useGetAvailableQuantityQuery,
+} from '@/features/stockAdministration/stockApi';
 import { useGetAltsPartNumbersQuery } from '@/features/partAdministration/altPartApi';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import dayjs from 'dayjs';
 import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 import { IPartNumber } from '@/models/IUser';
-import { useAddRequirementMutation, useUpdateRequirementMutation } from '@/features/requirementAdministration/requirementApi';
+import {
+  useAddRequirementMutation,
+  useUpdateRequirementMutation,
+} from '@/features/requirementAdministration/requirementApi';
 
 // Определите тип для usersGroup
 interface UserGroup {
@@ -70,10 +97,9 @@ const PickSlipAdministrationForm: FC<UserFormProps> = ({
   requierement,
   onSubmit,
 }) => {
-
   const [updateRequirement] = useUpdateRequirementMutation();
   const [addRequirement] = useAddRequirementMutation();
-const [WOID, setWOID] = useState<any>(null);
+  const [WOID, setWOID] = useState<any>(null);
   const [reqTypeID, setReqTypeID] = useState<any>('');
   const [form] = ProForm.useForm();
   const [projectId, setSelectedProjectId] = useState<any>();
@@ -99,7 +125,7 @@ const [WOID, setWOID] = useState<any>(null);
         projectID: requierement.projectID?._id,
         neededOnID: requierement?.neededOnID?._id,
         type: requierement?.type,
-        WOReferenceID:requierement.projectID?.WOReferenceID?._id,
+        WOReferenceID: requierement.projectID?.WOReferenceID?._id,
       });
     } else {
       form.resetFields();
@@ -114,14 +140,13 @@ const [WOID, setWOID] = useState<any>(null);
       ? { ...requierement, ...values }
       : { ...values };
 
-      requierement?.id && onSubmit(newUser);
-    !requierement?.id && setIsModalVisible(true)
-    
+    requierement?.id && onSubmit(newUser);
+    !requierement?.id && setIsModalVisible(true);
   };
 
   const SubmitButton = () => (
     <PermissionGuard requiredPermissions={[Permission.PICKSLIP_ACTIONS]}>
-      <Button  type="primary" htmlType="submit">
+      <Button type="primary" htmlType="submit">
         {requierement ? t('UPDATE') : t('CREATE')}
       </Button>
     </PermissionGuard>
@@ -141,7 +166,6 @@ const [WOID, setWOID] = useState<any>(null);
     { skip: !projectId }
   );
 
-  
   const { data: pickSlipItems } = useGetPickSlipItemsQuery(
     { pickSlipID: requierement?.id },
     { skip: !requierement }
@@ -173,16 +197,19 @@ const [WOID, setWOID] = useState<any>(null);
     isLoading: isLoadingWP,
     isFetching,
   } = useGetfilteredWOQuery({});
-  
+
   const [showSubmitButton, setShowSubmitButton] = useState(true);
   useEffect(() => {
     setShowSubmitButton(activeTabKey === '1');
   }, [activeTabKey]);
   const neededCodesValueEnum: Record<string, string> =
-    usersGroups?.reduce((acc: Record<string, string>, usersGroup: UserGroup) => {
-      acc[usersGroup.id] = usersGroup.title;
-      return acc;
-    }, {}) || {};
+    usersGroups?.reduce(
+      (acc: Record<string, string>, usersGroup: UserGroup) => {
+        acc[usersGroup.id] = usersGroup.title;
+        return acc;
+      },
+      {}
+    ) || {};
 
   // const partValueEnum: Record<string, any> =
   //   partNumbers?.reduce((acc, partNumber) => {
@@ -221,12 +248,12 @@ const [WOID, setWOID] = useState<any>(null);
   }
 
   const wpValueEnum: Record<string, string> =
-  wp?.reduce((acc, wp) => {
-    if (wp._id && wp?.WOName) {
-      acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
-    }
-    return acc;
-  }, {} as Record<string, string>) || {};
+    wp?.reduce((acc, wp) => {
+      if (wp._id && wp?.WOName) {
+        acc[wp._id] = `№:${wp?.WONumber}/${String(wp?.WOName).toUpperCase()}`;
+      }
+      return acc;
+    }, {} as Record<string, string>) || {};
   const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
     {
       headerName: `${t('PART No')}`,
@@ -411,15 +438,22 @@ const [WOID, setWOID] = useState<any>(null);
   const [addPickSlipItem] = useAddPickSlipItemMutation();
   const [bulkRowData, setBulkRowData] = useState<any[]>([{ id: Date.now() }]);
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
-  const [alternativesModalVisible, setAlternativesModalVisible] = useState(false);
-  const [selectedPartNumber, setSelectedPartNumber] = useState<string | undefined>(undefined);
+  const [alternativesModalVisible, setAlternativesModalVisible] =
+    useState(false);
+  const [selectedPartNumber, setSelectedPartNumber] = useState<
+    string | undefined
+  >(undefined);
 
-  const [selectedProjectStores, setSelectedProjectStores] = useState<string[]>([]);
+  const [selectedProjectStores, setSelectedProjectStores] = useState<string[]>(
+    []
+  );
 
   useEffect(() => {
     const projectID = form.getFieldValue('projectID');
     if (projectID && projects) {
-      const selectedProject = projects.find(project => project._id === projectID);
+      const selectedProject = projects.find(
+        (project) => project._id === projectID
+      );
       if (selectedProject && selectedProject.storesID) {
         setSelectedProjectStores(selectedProject.storesID);
       }
@@ -431,23 +465,29 @@ const [WOID, setWOID] = useState<any>(null);
     { skip: selectedProjectStores.length === 0 }
   );
 
-  const storeOptions = useMemo(() => 
-    stores?.map(store => ({ label: store.storeShortName, value: store.id })) || [],
+  const storeOptions = useMemo(
+    () =>
+      stores?.map((store) => ({
+        label: store.storeShortName,
+        value: store.id,
+      })) || [],
     [stores]
   );
 
-  const { data: alternatives, isLoading: isLoadingAlternatives } = useGetAltsPartNumbersQuery(
-    { partNumberID: selectedPartNumber },
-    { skip: !selectedPartNumber }
-  );
-
-  const updateSingleRow = useCallback((rowId: string, updates: Partial<any>) => {
-    setBulkRowData(prevData => 
-      prevData.map(row => 
-        row.id === rowId ? { ...row, ...updates } : row
-      )
+  const { data: alternatives, isLoading: isLoadingAlternatives } =
+    useGetAltsPartNumbersQuery(
+      { partNumberID: selectedPartNumber },
+      { skip: !selectedPartNumber }
     );
-  }, []);
+
+  const updateSingleRow = useCallback(
+    (rowId: string, updates: Partial<any>) => {
+      setBulkRowData((prevData) =>
+        prevData.map((row) => (row.id === rowId ? { ...row, ...updates } : row))
+      );
+    },
+    []
+  );
 
   const PartNumberSelector = (props: any) => {
     const [localValue, setLocalValue] = useState(props.value);
@@ -456,35 +496,43 @@ const [WOID, setWOID] = useState<any>(null);
       setLocalValue(props.value);
     }, [props.value]);
 
-    const onValueChange = useCallback((value: string) => {
-      const selectedPart = partNumbers?.find(part => part._id === value);
-      if (selectedPart) {
-        setLocalValue(value);
-        props.setValue(value);
-        updateSingleRow(props.data.id, {
-          PART_NUMBER: selectedPart._id,
-          DESCRIPTION: selectedPart.DESCRIPTION,
-          UNIT_OF_MEASURE: selectedPart.UNIT_OF_MEASURE
-        });
-        setSelectedRowId(props.data.id);
-        setSelectedPartNumber(value);
-        setAlternativesModalVisible(true);
-      }
-    }, [partNumbers, props]);
+    const onValueChange = useCallback(
+      (value: string) => {
+        const selectedPart = partNumbers?.find((part) => part._id === value);
+        if (selectedPart) {
+          setLocalValue(value);
+          props.setValue(value);
+          updateSingleRow(props.data.id, {
+            PART_NUMBER: selectedPart._id,
+            DESCRIPTION: selectedPart.DESCRIPTION,
+            UNIT_OF_MEASURE: selectedPart.UNIT_OF_MEASURE,
+          });
+          setSelectedRowId(props.data.id);
+          setSelectedPartNumber(value);
+          setAlternativesModalVisible(true);
+        }
+      },
+      [partNumbers, props]
+    );
 
     return (
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        height: '100%',
-        padding: '0 5px'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: '100%',
+          padding: '0 5px',
+        }}
+      >
         <Select
           showSearch
           style={{ width: '100%' }}
           value={localValue}
           onChange={onValueChange}
-          options={partNumbers?.map(part => ({ label: part.PART_NUMBER, value: part._id }))}
+          options={partNumbers?.map((part) => ({
+            label: part.PART_NUMBER,
+            value: part._id,
+          }))}
           filterOption={(input, option) =>
             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
           }
@@ -492,16 +540,16 @@ const [WOID, setWOID] = useState<any>(null);
         />
         {alternatives && alternatives.length > 0 && (
           <Tooltip title={t('Show alternatives')}>
-            <Button 
-              icon={<SwapOutlined />} 
+            <Button
+              icon={<SwapOutlined />}
               onClick={() => setAlternativesModalVisible(true)}
-              style={{ 
+              style={{
                 flexShrink: 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '22px',
-                width: '22px'
+                width: '22px',
               }}
             />
           </Tooltip>
@@ -529,7 +577,9 @@ const [WOID, setWOID] = useState<any>(null);
         style={{ width: '100%' }}
         value={props.value ? dayjs(props.value) : null}
         onChange={(date) => {
-          updateSingleRow(props.data.id, { plannedDate: date ? date.toDate() : null });
+          updateSingleRow(props.data.id, {
+            plannedDate: date ? date.toDate() : null,
+          });
         }}
         status={!props.value ? 'error' : undefined}
       />
@@ -538,7 +588,7 @@ const [WOID, setWOID] = useState<any>(null);
 
   const DeleteButton = (props: any) => {
     const onClick = () => {
-      const updatedData = bulkRowData.filter(row => row.id !== props.data.id);
+      const updatedData = bulkRowData.filter((row) => row.id !== props.data.id);
       setBulkRowData(updatedData);
     };
 
@@ -555,31 +605,39 @@ const [WOID, setWOID] = useState<any>(null);
   };
 
   // Обновите интерфейс ExtendedAvailableQuantity
-  interface ExtendedAvailableQuantity extends Omit<AvailableQuantity, 'storeAvailableQTY' | 'unitOfMeasure'> {
+  interface ExtendedAvailableQuantity
+    extends Omit<AvailableQuantity, 'storeAvailableQTY' | 'unitOfMeasure'> {
     unitOfMeasure: string;
     storeAvailableQTY: Array<{ storeName: string; availableQTY: number }>;
   }
 
   const AvailabilityIndicator = (props: any) => {
-    const { data: availableQuantity, isLoading } = useGetAvailableQuantityQuery({
-      companyID: requierement?.companyID,
-      partNumberID: props?.data.PART_NUMBER,
-      storeID: requierement?.projectID?.storesID?.join(','),
-      isAlternative: false,
-      isAllExpDate: false,
-    }, {
-      skip: !props.data.PART_NUMBER,
-    }) as { data: ExtendedAvailableQuantity | undefined, isLoading: boolean };
+    const { data: availableQuantity, isLoading } = useGetAvailableQuantityQuery(
+      {
+        companyID: requierement?.companyID,
+        partNumberID: props?.data.PART_NUMBER,
+        storeID: requierement?.projectID?.storesID?.join(','),
+        isAlternative: false,
+        isAllExpDate: false,
+      },
+      {
+        skip: !props.data.PART_NUMBER,
+      }
+    ) as { data: ExtendedAvailableQuantity | undefined; isLoading: boolean };
 
-    const { data: alternativesQuantity, isLoading: isLoadingAlternatives } = useGetAvailableQuantityQuery({
-      companyID: requierement?.companyID,
-      partNumberID: props?.data?.PART_NUMBER,
-      storeID: requierement?.projectID?.storesID?.join(','),
-      isAlternative: true,
-      isAllExpDate: false,
-    }, {
-      skip: !props.data.PART_NUMBER,
-    }) as { data: ExtendedAvailableQuantity | undefined, isLoading: boolean };
+    const { data: alternativesQuantity, isLoading: isLoadingAlternatives } =
+      useGetAvailableQuantityQuery(
+        {
+          companyID: requierement?.companyID,
+          partNumberID: props?.data?.PART_NUMBER,
+          storeID: requierement?.projectID?.storesID?.join(','),
+          isAlternative: true,
+          isAllExpDate: false,
+        },
+        {
+          skip: !props.data.PART_NUMBER,
+        }
+      ) as { data: ExtendedAvailableQuantity | undefined; isLoading: boolean };
 
     if (isLoading || isLoadingAlternatives) {
       return <span>{t('Loading...')}</span>;
@@ -596,9 +654,15 @@ const [WOID, setWOID] = useState<any>(null);
 
     const tooltipContent = (
       <div>
-        <div>{t('Main')}: {mainQty}</div>
-        <div>{t('Alternatives')}: {altQty}</div>
-        <div>{t('Total')}: {totalQty}</div>
+        <div>
+          {t('Main')}: {mainQty}
+        </div>
+        <div>
+          {t('Alternatives')}: {altQty}
+        </div>
+        <div>
+          {t('Total')}: {totalQty}
+        </div>
         {availableQuantity?.storeAvailableQTY?.map((store, index) => (
           <div key={index}>{`${store.storeName}: ${store.availableQTY}`}</div>
         ))}
@@ -608,88 +672,95 @@ const [WOID, setWOID] = useState<any>(null);
     return (
       <Tooltip title={tooltipContent}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ 
-            width: '12px', 
-            height: '12px', 
-            borderRadius: '50%', 
-            backgroundColor: color,
-          }}></div>
-          <span>{`${mainQty} + ${altQty} = ${totalQty} ${availableQuantity?.unitOfMeasure || ''}`}</span>
+          <div
+            style={{
+              width: '12px',
+              height: '12px',
+              borderRadius: '50%',
+              backgroundColor: color,
+            }}
+          ></div>
+          <span>{`${mainQty} + ${altQty} = ${totalQty} ${
+            availableQuantity?.unitOfMeasure || ''
+          }`}</span>
         </div>
       </Tooltip>
     );
   };
 
-  const bulkColumnDefs = useMemo<ColDef[]>(() => [
-    {
-      headerName: t('PART No'),
-      field: 'PART_NUMBER',
-      cellRenderer: PartNumberSelector,
-      cellStyle: (params) => {
-        if (!params.value) {
-          return { backgroundColor: '#ffcccb' };
-        }
+  const bulkColumnDefs = useMemo<ColDef[]>(
+    () => [
+      {
+        headerName: t('PART No'),
+        field: 'PART_NUMBER',
+        cellRenderer: PartNumberSelector,
+        cellStyle: (params) => {
+          if (!params.value) {
+            return { backgroundColor: '#ffcccb' };
+          }
+        },
+        width: 400,
+        flex: 4,
       },
-      width: 400,
-      flex: 4,
-    },
-    {
-      headerName: t('DESCRIPTION'),
-      field: 'DESCRIPTION',
-      editable: false,
-      flex: 3,
-    },
-    {
-      headerName: t('QUANTITY'),
-      field: 'amout',
-      cellRenderer: QuantityEditor,
-      cellStyle: (params) => {
-        if (!params.value) {
-          return { backgroundColor: '#ffcccb' };
-        }
+      {
+        headerName: t('DESCRIPTION'),
+        field: 'DESCRIPTION',
+        editable: false,
+        flex: 3,
       },
-      width: 120,
-      flex: 2, 
-    },
-    {
-      headerName: t('UNIT OF MEASURE'),
-      field: 'UNIT_OF_MEASURE',
-      editable: false,
-      width: 150,
-      flex: 2, 
-    },
-    {
-      headerName: t('PLANNED DATE'),
-      field: 'plannedDate',
-      cellRenderer: DateEditor,
-      valueFormatter: (params: any) => {
-        return params.value ? dayjs(params.value).format('YYYY-MM-DD') : '';
+      {
+        headerName: t('QUANTITY'),
+        field: 'amout',
+        cellRenderer: QuantityEditor,
+        cellStyle: (params) => {
+          if (!params.value) {
+            return { backgroundColor: '#ffcccb' };
+          }
+        },
+        width: 120,
+        flex: 2,
       },
-      cellStyle: (params) => {
-        if (!params.value) {
-          return { backgroundColor: '#ffcccb' };
-        }
+      {
+        headerName: t('UNIT OF MEASURE'),
+        field: 'UNIT_OF_MEASURE',
+        editable: false,
+        width: 150,
+        flex: 2,
       },
-      width: 260,
-      flex: 2,
-    },
-    {
-      headerName: t('AVAILABILITY'),
-      field: 'PART_NUMBER',
-      cellRenderer: AvailabilityIndicator,
-      width: 150,
-      flex: 3,
-    },
-    {
-      headerName: t('ACTIONS'),
-      field: 'actions',
-      cellRenderer: DeleteButton,
-      width: 100,
-    },
-  ], [t, partNumbers]);
+      {
+        headerName: t('PLANNED DATE'),
+        field: 'plannedDate',
+        cellRenderer: DateEditor,
+        valueFormatter: (params: any) => {
+          return params.value ? dayjs(params.value).format('YYYY-MM-DD') : '';
+        },
+        cellStyle: (params) => {
+          if (!params.value) {
+            return { backgroundColor: '#ffcccb' };
+          }
+        },
+        width: 260,
+        flex: 2,
+      },
+      {
+        headerName: t('AVAILABILITY'),
+        field: 'PART_NUMBER',
+        cellRenderer: AvailabilityIndicator,
+        width: 150,
+        flex: 3,
+      },
+      {
+        headerName: t('ACTIONS'),
+        field: 'actions',
+        cellRenderer: DeleteButton,
+        width: 100,
+      },
+    ],
+    [t, partNumbers]
+  );
 
   const addRow = useCallback(() => {
-    setBulkRowData(prev => [...prev, { id: Date.now() }]);
+    setBulkRowData((prev) => [...prev, { id: Date.now() }]);
   }, []);
 
   const resetAll = useCallback(() => {
@@ -701,11 +772,13 @@ const [WOID, setWOID] = useState<any>(null);
   }, [t]);
 
   const validateRows = useCallback((rows: any[]) => {
-    return rows.every(row => row.PART_NUMBER && row.amout && row.plannedDate);
+    return rows.every((row) => row.PART_NUMBER && row.amout && row.plannedDate);
   }, []);
 
   const handleCreatePickSlip = async () => {
-    const validRows = bulkRowData.filter(row => row.PART_NUMBER && row.amout && row.plannedDate);
+    const validRows = bulkRowData.filter(
+      (row) => row.PART_NUMBER && row.amout && row.plannedDate
+    );
     if (validRows.length === 0 || !validateRows(validRows)) {
       notification.warning({
         message: t('WARNING'),
@@ -720,7 +793,7 @@ const [WOID, setWOID] = useState<any>(null);
           neededOnID: form.getFieldValue('neededOnID'),
           getFromID: form.getFieldValue('getFromID'),
           plannedDate: form.getFieldValue('plannedDate'),
-          state: form.getFieldValue('status'),
+          state: form.getFieldValue('state'),
           type: form.getFieldValue('type'),
         },
         projectID: form.getFieldValue('projectID'),
@@ -730,15 +803,16 @@ const [WOID, setWOID] = useState<any>(null);
       const pickSlipID = pickSlipResponse.id;
 
       for (const row of validRows) {
-        const selectedPart = partNumbers&&partNumbers.find(part => part._id === row.PART_NUMBER);
+        const selectedPart =
+          partNumbers &&
+          partNumbers.find((part) => part._id === row.PART_NUMBER);
         const requirement = await addRequirement({
           requirement: {
-       
             plannedDate: row.plannedDate,
             projectID: form.getFieldValue('projectID'),
             projectTaskID: form.getFieldValue('projectTaskID'),
             group: selectedPart?.GROUP,
-            status: form.getFieldValue('status'),
+            status: form.getFieldValue('state'),
             type: form.getFieldValue('type'),
             partNumberID: row.PART_NUMBER,
             partNumber: selectedPart?.PART_NUMBER,
@@ -749,7 +823,7 @@ const [WOID, setWOID] = useState<any>(null);
           },
         }).unwrap();
 
-       
+        const requirementId = requirement.id || requirement._id;
 
         await addPickSlipItem({
           pickSlipID,
@@ -759,19 +833,19 @@ const [WOID, setWOID] = useState<any>(null);
             neededOnID: form.getFieldValue('neededOnID'),
             getFromID: form.getFieldValue('getFromID'),
             plannedDate: row.plannedDate,
-            state: form.getFieldValue('status'),
+            state: form.getFieldValue('state'),
             type: form.getFieldValue('type'),
           },
           projectID: form.getFieldValue('projectID'),
           projectTaskID: form.getFieldValue('projectTaskID'),
-        }).unwrap()
+          requirementID: requirementId,
+        }).unwrap();
         await updateRequirement({
           requestQuantity: row.amout,
           status: 'issued',
           _id: requirement.id,
           id: requirement.id,
           pickSlipID: pickSlipID,
-          
         }).unwrap();
       }
 
@@ -795,52 +869,74 @@ const [WOID, setWOID] = useState<any>(null);
       updateSingleRow(selectedRowId, {
         PART_NUMBER: alternative.altPartNumberID._id,
         DESCRIPTION: alternative.altPartNumberID.DESCRIPTION,
-        UNIT_OF_MEASURE: alternative.altPartNumberID.UNIT_OF_MEASURE
+        UNIT_OF_MEASURE: alternative.altPartNumberID.UNIT_OF_MEASURE,
       });
       setSelectedPartNumber(alternative.altPartNumberID._id);
       setAlternativesModalVisible(false);
     }
   };
 
-  const AlternativeItem = React.memo(({ item, order, onSelect }: { item: any; order: any; onSelect: (item: any) => void }) => {
-    const { data: availableQuantity, isLoading: isLoadingQuantity } = useGetAvailableQuantityQuery({
-      companyID: order?.companyID,
-      partNumberID: item?.altPartNumberID?._id,
-      storeID: order?.projectID?.storesID?.join(','),
-      isAlternative: false,
-      isAllExpDate: false,
-    }, {
-      skip: !item?.altPartNumberID?._id,
-    }) as { data: ExtendedAvailableQuantity | undefined, isLoading: boolean };
+  const AlternativeItem = React.memo(
+    ({
+      item,
+      order,
+      onSelect,
+    }: {
+      item: any;
+      order: any;
+      onSelect: (item: any) => void;
+    }) => {
+      const { data: availableQuantity, isLoading: isLoadingQuantity } =
+        useGetAvailableQuantityQuery(
+          {
+            companyID: order?.companyID,
+            partNumberID: item?.altPartNumberID?._id,
+            storeID: order?.projectID?.storesID?.join(','),
+            isAlternative: false,
+            isAllExpDate: false,
+          },
+          {
+            skip: !item?.altPartNumberID?._id,
+          }
+        ) as {
+          data: ExtendedAvailableQuantity | undefined;
+          isLoading: boolean;
+        };
 
-    if (isLoadingQuantity) {
-      return <List.Item>{t('Loading quantity data...')}</List.Item>;
-    }
+      if (isLoadingQuantity) {
+        return <List.Item>{t('Loading quantity data...')}</List.Item>;
+      }
 
-    return (
-      <List.Item
-        key={item.altPartNumberID?._id}
-        onClick={() => onSelect(item)}
-        className="cursor-pointer hover:bg-gray-100"
-      >
-        <List.Item.Meta
-          title={item.altPartNumberID?.PART_NUMBER}
-          description={item.altPartNumberID?.DESCRIPTION}
-        />
-        <div>
-          <Typography.Text>{`${item.altPartNumberID?.UNIT_OF_MEASURE}`}</Typography.Text>
-          <Typography.Text className="ml-2">
-            {`${t('Available')}: ${availableQuantity?.totalQuantity || 0} ${availableQuantity?.unitOfMeasure || ''}`}
-          </Typography.Text>
-          {availableQuantity?.storeAvailableQTY && availableQuantity.storeAvailableQTY.length > 0 && (
+      return (
+        <List.Item
+          key={item.altPartNumberID?._id}
+          onClick={() => onSelect(item)}
+          className="cursor-pointer hover:bg-gray-100"
+        >
+          <List.Item.Meta
+            title={item.altPartNumberID?.PART_NUMBER}
+            description={item.altPartNumberID?.DESCRIPTION}
+          />
+          <div>
+            <Typography.Text>{`${item.altPartNumberID?.UNIT_OF_MEASURE}`}</Typography.Text>
             <Typography.Text className="ml-2">
-              {`${t('Store')}: ${availableQuantity.storeAvailableQTY[0].storeName}`}
+              {`${t('Available')}: ${availableQuantity?.totalQuantity || 0} ${
+                availableQuantity?.unitOfMeasure || ''
+              }`}
             </Typography.Text>
-          )}
-        </div>
-      </List.Item>
-    );
-  });
+            {availableQuantity?.storeAvailableQTY &&
+              availableQuantity.storeAvailableQTY.length > 0 && (
+                <Typography.Text className="ml-2">
+                  {`${t('Store')}: ${
+                    availableQuantity.storeAvailableQTY[0].storeName
+                  }`}
+                </Typography.Text>
+              )}
+          </div>
+        </List.Item>
+      );
+    }
+  );
 
   return (
     <ProForm
@@ -848,6 +944,9 @@ const [WOID, setWOID] = useState<any>(null);
         form.resetFields();
         setSelectedProjectId(null);
       }}
+      disabled={
+        requierement?.state == 'closed' || requierement?.state == 'canceled'
+      }
       size="small"
       form={form}
       onFinish={handleSubmit}
@@ -875,36 +974,41 @@ const [WOID, setWOID] = useState<any>(null);
           <div className="h-[56vh] flex flex-col overflow-auto">
             <ProFormGroup>
               <ProFormSelect
-                // disabled
                 showSearch
                 rules={[{ required: true }]}
-                name="status"
+                name="state"
                 label={t('PICKSLIP STATUS')}
                 width="sm"
                 initialValue={'issued'}
                 options={[
-                  { value: 'draft', label: t('DRAFT') },
+                  { value: 'draft', label: t('DRAFT'), disabled: true }, // Отключаем отдельные опции
                   { value: 'open', label: t('OPEN') },
-                  { value: 'issued', label: t('ISSUED') },
+                  { value: 'issued', label: t('ISSUED'), disabled: true },
+                  { value: 'complete', label: t('COMPLETE'), disabled: true },
                   { value: 'onQuatation', label: t('QUATATION') },
                   { value: 'onShort', label: t('ON SHORT') },
-                  { value: 'closed', label: t('CLOSE') },
-                  { value: 'partlyCanceled', label: t('PARTLY CANCELLED') },
+                  { value: 'closed', label: t('CLOSE'), disabled: true },
+                  {
+                    value: 'partlyCanceled',
+                    label: t('PARTLY CANCELLED'),
+                    disabled: true,
+                  },
                   { value: 'canceled', label: t('CANCELED') },
+                  { value: 'tofix', label: t('ATTENTION') },
                 ]}
+                // Можно также добавить условие для отключения всего селекта
+                disabled={!requierement?.id} // Отключает весь селект если нет requierement.id
               />
               <ProFormSelect
                 showSearch
                 name="type"
                 label={t('PICKSLIP TYPE')}
                 width="sm"
-                options={[
-                  { value: 'partRequest', label: t('PART REQUEST') },
-                ]}
+                options={[{ value: 'partRequest', label: t('PART REQUEST') }]}
                 onChange={(value: any) => setReqTypeID(value)}
               />
               {/* Добавляем поле getFrom */}
-            
+
               {/* Добавляем поле plannedDate */}
               <ProFormDatePicker
                 rules={[{ required: true }]}
@@ -925,7 +1029,7 @@ const [WOID, setWOID] = useState<any>(null);
                   onChange={(value: any) => setWOID(value)}
                 />
                 <ProFormSelect
-                 disabled={!WOID}
+                  disabled={!WOID}
                   rules={[{ required: true }]}
                   name="projectID"
                   label={`${t(`WP`)}`}
@@ -934,22 +1038,24 @@ const [WOID, setWOID] = useState<any>(null);
                   onChange={async (value: any) => {
                     setSelectedProjectId(value);
                     if (projects) {
-                      const selectedProject = projects.find(project => project._id === value);
+                      const selectedProject = projects.find(
+                        (project) => project._id === value
+                      );
                       if (selectedProject && selectedProject.storesID) {
                         setSelectedProjectStores(selectedProject.storesID);
                       }
                     }
                   }}
                 />
-                  <ProFormSelect
-                  disabled={selectedProjectStores?.length <1}
-                showSearch
-                rules={[{ required: true }]}
-                name="getFromID"
-                label={t('GET FROM STORE')}
-                width="sm"
-                options={storeOptions}
-              />
+                <ProFormSelect
+                  disabled={selectedProjectStores?.length < 1}
+                  showSearch
+                  rules={[{ required: true }]}
+                  name="getFromID"
+                  label={t('GET FROM STORE')}
+                  width="sm"
+                  options={storeOptions}
+                />
               </ProForm.Group>
               <ProForm.Group>
                 <ProFormSelect
@@ -978,34 +1084,45 @@ const [WOID, setWOID] = useState<any>(null);
                 style: { resize: 'none' },
                 rows: 2,
               }}
-              name="note"
+              name="notes"
               colSize={1}
               label={t('REMARKS')}
               width="xl"
             />
-            
-            {/* Добавляем функциональность массового создания пикслипа */}
-         {!requierement?.id && <><Space style={{ marginBottom: 5 }}>
-              <Button icon={<PlusOutlined />} onClick={addRow}>{t('ADD ROW')}</Button>
-              <Button icon={<ClearOutlined />} onClick={resetAll}>{t('RESET ALL')}</Button>
-            </Space>
-            <div className="ag-theme-alpine" style={{ height: '30vh', width: '100%' }}>
-              <AgGridReact
-                columnDefs={bulkColumnDefs}
-                rowData={bulkRowData}
-                onCellValueChanged={(event: any) => {
-                  updateSingleRow(event.data.id, { [event.colDef.field]: event.newValue });
-                }}
-                onRowSelected={(event: any) => {
-                  if (event.node.isSelected()) {
-                    setSelectedRowId(event.data.id);
-                  }
-                }}
-              />
-            </div></>}
-         
 
-            
+            {/* Добавляем функциональность массового создания пикслипа */}
+            {!requierement?.id && (
+              <>
+                <Space style={{ marginBottom: 5 }}>
+                  <Button icon={<PlusOutlined />} onClick={addRow}>
+                    {t('ADD ROW')}
+                  </Button>
+                  <Button icon={<ClearOutlined />} onClick={resetAll}>
+                    {t('RESET ALL')}
+                  </Button>
+                </Space>
+                <div
+                  className="ag-theme-alpine"
+                  style={{ height: '30vh', width: '100%' }}
+                >
+                  <AgGridReact
+                    columnDefs={bulkColumnDefs}
+                    rowData={bulkRowData}
+                    onCellValueChanged={(event: any) => {
+                      updateSingleRow(event.data.id, {
+                        [event.colDef.field]: event.newValue,
+                      });
+                    }}
+                    onRowSelected={(event: any) => {
+                      if (event.node.isSelected()) {
+                        setSelectedRowId(event.data.id);
+                      }
+                    }}
+                  />
+                </div>
+              </>
+            )}
+
             {/* <Button 
               // onClick={() => setIsModalVisible(true)} 
               type="primary" 
@@ -1063,7 +1180,6 @@ const [WOID, setWOID] = useState<any>(null);
             </Split>
           </div>
         </Tabs.TabPane>
-      
       </Tabs>
       <Modal
         title={t('CREATE PICKSLIP')}
@@ -1071,16 +1187,21 @@ const [WOID, setWOID] = useState<any>(null);
         onOk={handleCreatePickSlip}
         onCancel={() => setIsModalVisible(false)}
       >
-        <p>{t('Are you sure you want to create a pick slip with these items?')}</p>
+        <p>
+          {t('Are you sure you want to create a pick slip with these items?')}
+        </p>
       </Modal>
       <Modal
         title={t('Alternatives')}
         visible={alternativesModalVisible}
         onCancel={() => setAlternativesModalVisible(false)}
         footer={[
-          <Button key="close" onClick={() => setAlternativesModalVisible(false)}>
+          <Button
+            key="close"
+            onClick={() => setAlternativesModalVisible(false)}
+          >
             {t('Close')}
-          </Button>
+          </Button>,
         ]}
       >
         {isLoadingAlternatives ? (
@@ -1089,11 +1210,11 @@ const [WOID, setWOID] = useState<any>(null);
           <List
             dataSource={alternatives}
             renderItem={(item: any) => (
-              <AlternativeItem 
+              <AlternativeItem
                 key={item.altPartNumberID?._id}
-                item={item} 
-                order={requierement} 
-                onSelect={handleAlternativeSelect} 
+                item={item}
+                order={requierement}
+                onSelect={handleAlternativeSelect}
               />
             )}
           />

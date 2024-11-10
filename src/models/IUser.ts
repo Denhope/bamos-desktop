@@ -136,11 +136,16 @@ export interface IVendor {
 }
 
 export interface IPartNumber {
+  isShelfLifeExpired?: boolean;
+  isRepair?: boolean;
+  isOverhaul?: boolean;
+  isBenchCheck?: boolean;
+  isCalibration?: boolean;
   TOOL_TYPE_CODE?: string;
   LOCATION?: string;
   locationName?: any;
   NAME_OF_MATERIAL?: any;
-  REMARKS: any;
+  REMARKS?: any;
   QUANTITY?: any;
   quantity?: number;
   id?: any;

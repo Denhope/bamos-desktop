@@ -5,8 +5,10 @@ import { $authHost } from '@/utils/api/http';
 import { useTranslation } from 'react-i18next';
 import { useGlobalState } from '../woAdministration/GlobalStateContext';
 import { useAppDispatch, useTypedSelector } from '@/hooks/useTypedSelector';
-import { subscribeToEventType, unsubscribeFromEventType } from '@/store/reducers/WebSocketSlice';
-
+import {
+  subscribeToEventType,
+  unsubscribeFromEventType,
+} from '@/store/reducers/WebSocketSlice';
 
 interface Subscription {
   _id: string;
@@ -114,4 +116,3 @@ const SubscriptionManager: React.FC<{ userId: string }> = ({ userId }) => {
 };
 
 export default SubscriptionManager;
-

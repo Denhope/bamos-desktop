@@ -27,6 +27,7 @@ export const pickSlipApi = createApi({
         includeAlternates?: boolean;
         storeFromID?: any;
         WOReferenceID?: any;
+        tabId?: string;
       }
     >({
       query: ({
@@ -43,6 +44,7 @@ export const pickSlipApi = createApi({
         startDate,
         storeFromID,
         WOReferenceID,
+        tabId,
       }) => ({
         url: `pickSlipAdministration/getFilteredPickSlips/company/${COMPANY_ID}`,
         params: {
@@ -59,6 +61,7 @@ export const pickSlipApi = createApi({
           startDate,
           storeFromID,
           WOReferenceID,
+          tabId,
         },
       }),
       providesTags: ['PickSlip'],
@@ -122,20 +125,22 @@ export const pickSlipApi = createApi({
       invalidatesTags: ['PickSlip'], // Указываем, что это мутация недействительна тега 'UserGroups'
     }),
     updatePickSlip: builder.mutation<any, any>({
-      query: (pickSlip) => ({
+      query: ({ pickSlip }) => ({
         url: `pickSlipAdministration/company/${COMPANY_ID}/pickSlip/${
           pickSlip?.id || pickSlip?._id
         }`,
         method: 'PUT',
         body: {
-          ...pickSlip,
-          updateUserID: USER_ID,
-          updateDate: new Date(),
+          pickSlip: {
+            ...pickSlip,
+            updateUserID: USER_ID,
+            updateDate: new Date(),
+          },
         },
       }),
       invalidatesTags: ['PickSlip'],
     }),
-    
+
     deletePickSlip: builder.mutation<
       { success: boolean; projectItem: string },
       string
@@ -143,6 +148,35 @@ export const pickSlipApi = createApi({
       query: (id) => ({
         url: `pickSlipAdministration/company/${COMPANY_ID}/order/${id}`,
         method: 'DELETE',
+      }),
+      invalidatesTags: ['PickSlip'],
+    }),
+
+    saveAndCompletePickSlip: builder.mutation<
+      void,
+      { pickSlipId: string; issuedData: any[] }
+    >({
+      query: ({ pickSlipId, issuedData }) => ({
+        url: `pickSlipAdministration/pickSlip/${pickSlipId}/saveAndComplete`,
+        method: 'POST',
+        body: { issuedData },
+      }),
+    }),
+
+    fastBookPickSlip: builder.mutation<
+      void,
+      {
+        pickSlipId: string;
+        issuedData: any[];
+        storeManID: string;
+        userID: string;
+        bookingDate: string;
+      }
+    >({
+      query: ({ pickSlipId, issuedData, storeManID, userID, bookingDate }) => ({
+        url: `pickSlipAdministration/pickSlip/${pickSlipId}/fastBook`,
+        method: 'POST',
+        body: { issuedData, storeManID, userID, bookingDate },
       }),
       invalidatesTags: ['PickSlip'],
     }),
@@ -157,4 +191,6 @@ export const {
   useGetPickSlipItemQuery,
 
   useAddMultiPickSlipItemsMutation,
+  useSaveAndCompletePickSlipMutation,
+  useFastBookPickSlipMutation,
 } = pickSlipApi;

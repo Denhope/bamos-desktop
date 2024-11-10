@@ -8,7 +8,9 @@ export const API_URL = getApiUrl();
 
 export const ROLE = localStorage.getItem('role');
 
-export const FULL_NAME = `${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`;
+export const FULL_NAME = `${localStorage.getItem(
+  'firstName'
+)} ${localStorage.getItem('lastName')}`;
 export const SING = `${localStorage.getItem('singNumber')}`;
 
 export let COMPANY_ID: string | null = localStorage.getItem('companyID');
@@ -50,7 +52,9 @@ const authInterceptor = (config: any) => {
 };
 
 const authRefInterceptor = (config: any) => {
-  config.headers.authorization = `Bearer ${localStorage.getItem('refreshtoken')}`;
+  config.headers.authorization = `Bearer ${localStorage.getItem(
+    'refreshtoken'
+  )}`;
   return config;
 };
 
@@ -61,10 +65,16 @@ $authHost.interceptors.response.use(
   (config) => config,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status == 401 && error.config && !error.config._isRetry) {
+    if (
+      error.response.status == 401 &&
+      error.config &&
+      !error.config._isRetry
+    ) {
       originalRequest._isRetry = true;
       try {
-        const response = await $authHostRefresh.get(`${API_URL}/users/${USER_ID}/tokens/refresh`);
+        const response = await $authHostRefresh.get(
+          `${API_URL}/users/${USER_ID}/tokens/refresh`
+        );
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('refreshToken', response.data.refreshToken);
         return $authHost.request(originalRequest);
@@ -89,12 +99,23 @@ export const updateApiUrl = (newUrl: string) => {
   $authHostRefresh.defaults.baseURL = updatedUrl;
 };
 
-export const checkApiConnection = async () => {
+export async function checkApiConnection(
+  timeout: number = 50000
+): Promise<boolean> {
   try {
-    await $host.get(`${API_URL}/api/health-check`, { timeout: 5000 });
-    return true;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    const response = await fetch(`${API_URL}/api/health-check`, {
+      signal: controller.signal,
+      method: 'GET',
+    });
+
+    clearTimeout(id);
+
+    return response.ok;
   } catch (error) {
     console.error('API connection check failed:', error);
     return false;
   }
-};
+}

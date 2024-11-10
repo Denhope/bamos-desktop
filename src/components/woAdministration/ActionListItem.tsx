@@ -334,6 +334,7 @@ const ActionList: React.FC<ActionListProps> = ({
                         {action?.type === 'doubleInspect' &&
                           `${t('DINSPECTION')}`}
                         {action?.type === 'closed' && `${t('CLOSE')}`}
+                        {action?.type === 'diClosed' && `${t('DI CLOSE')}`}
                       </div>
                       <Space
                         className="ml-auto font-bold"
@@ -351,9 +352,18 @@ const ActionList: React.FC<ActionListProps> = ({
                         </Tag>
                       </Space>
                       <Space className="font-bold" style={{ fontSize: '12px' }}>
-                        {moment(action?.createDate || new Date()).format(
-                          'YYYY-MM-DD HH:mm'
-                        )}
+                        {(task &&
+                          task.projectItemType == 'RC' &&
+                          (action?.type == 'inspect' ||
+                            action?.type == 'pfmd')) ||
+                        action?.type == 'closed' ||
+                        action?.type == 'diClosed'
+                          ? moment(action?.createDate || new Date())
+                              .utc()
+                              .format('YYYY-MM-DD HH:mm')
+                          : moment(action?.createDate || new Date()).format(
+                              'YYYY-MM-DD HH:mm'
+                            )}
                       </Space>
                     </Space>
                     <>
