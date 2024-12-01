@@ -89,6 +89,7 @@ const MaterialsReport: React.FC<IMaterialsReportProps> = ({
         projectWO: item.projectWO,
         projectTaskWO: item.projectTaskWO,
         taskNumber: item.projectTaskID?.taskNumber,
+        externalNumber: item?.projectTaskID.externalNumber,
         taskDescription: item.projectTaskID?.taskDescription,
         taskType: item.projectTaskID?.projectItemType,
         refTask: item.projectTaskID?.refTask,
@@ -231,6 +232,7 @@ const MaterialsReport: React.FC<IMaterialsReportProps> = ({
       [t('Task Type')]: getTaskTypeLabel(item.taskType || ''),
       [t('Task Number')]: item.taskNumber || '',
       [t('Reference')]: item.refTask || '',
+      [t('EXTERNAL No')]: item.externalNumber || '',
       [t('Customer WO')]: item.projectName || '',
     }));
 

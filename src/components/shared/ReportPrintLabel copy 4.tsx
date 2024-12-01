@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useState } from 'react';
 import xml2js from 'xml2js';
 import JsBarcode from 'jsbarcode';

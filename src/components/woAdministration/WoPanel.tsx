@@ -523,6 +523,9 @@ const WoPanel: React.FC<AdminPanelProps> = ({ projectSearchValues }) => {
       filter: true,
       cellRenderer: (params: any) => renderSkillTags(params.value || []),
     },
+    { field: 'WONumber', headerName: `${t('WO NUMBER')}`, filter: true },
+    { field: 'WOName', headerName: `${t('WO DESCRIPTION')}`, filter: true },
+
     {
       field: 'TASK_CODE',
       headerName: `${t('TASK CODE')}`,

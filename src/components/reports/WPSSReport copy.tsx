@@ -224,7 +224,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
         },
       },
       {
-        headerName: t('AUTORIZED STAFF'),
+        headerName: t('AUTHORIZED STAFF'),
         field: 'closed',
         cellRenderer: (params: any) => {
           const action = allActions?.find(
@@ -371,7 +371,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
       t('REFERENCE'),
       t('DESCRIPTION'),
       t('CLOSING DATE'),
-      t('AUTORIZED STAFF'),
+      t('AUTHORIZED STAFF'),
     ];
 
     // Подготовка данных для Excel
@@ -423,7 +423,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
       { wch: 15 }, // REFERENCE
       { wch: 50 }, // DESCRIPTION
       { wch: 15 }, // CLOSING DATE
-      { wch: 20 }, // AUTORIZED STAFF
+      { wch: 20 }, // AUTHORIZED STAFF
     ];
     worksheet['!cols'] = colWidths;
 

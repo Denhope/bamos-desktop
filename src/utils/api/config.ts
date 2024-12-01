@@ -7,11 +7,11 @@ export interface Config {
 
 const config: Config = {
   apiUrls: [
-    'http://localhost:3001',
+    'http://172.16.30.72:4000',
     'http://192.168.74.14',
     'http://82.209.232.250:4000',
   ],
-  currentApiUrl: 'http://82.209.232.250:4000',
+  currentApiUrl: 'http://172.16.30.72:4000',
 };
 
 // const config: Config = {

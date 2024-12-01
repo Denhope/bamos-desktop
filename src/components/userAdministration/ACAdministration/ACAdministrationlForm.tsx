@@ -136,7 +136,7 @@ const ACAdministrationlForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                     },
                   ]}
                   name="regNbr"
-                  label={t('AIRCRAFT ADMINISTRATION No')}
+                  label={t('AIRCRAFT REGISTRATION No')}
                   width="sm"
                 ></ProFormText>
                 <ProFormText

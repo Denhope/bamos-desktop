@@ -144,7 +144,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
 
   const handleDelete = (file: any) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотит�� удалить этот файл?',
+      title: 'Вы уверены, что хотит удалить этот файл?',
       onOk: async () => {
         try {
           const response = await dispatch(
@@ -441,17 +441,43 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                       <ProFormGroup>
                         <ProFormGroup>
                           {!useTaskNumberID && (
-                            <ProFormText
-                              disabled={
-                                project.status == 'CLOSED' ||
-                                project.status == 'COMPLETED'
-                              }
-                              rules={[{ required: true }]}
-                              width={'md'}
-                              name="taskNumber"
-                              label={t('TASK No')}
-                              hidden={useTaskNumberID}
-                            />
+                            <>
+                              <ProFormText
+                                disabled={
+                                  project.status == 'CLOSED' ||
+                                  project.status == 'COMPLETED'
+                                }
+                                rules={[{ required: true }]}
+                                width={'md'}
+                                name="taskNumber"
+                                label={t('TASK No')}
+                                hidden={useTaskNumberID}
+                              />
+
+                              <ProFormDigit
+                                rules={[{ required: true }]}
+                                disabled={
+                                  project.status == 'CLOSED' ||
+                                  project.status == 'COMPLETED'
+                                }
+                                width={'md'}
+                                name="mainWorkTime"
+                                label={t('MHS')}
+                                min={0}
+                                fieldProps={{ precision: 0 }}
+                                hidden={useTaskNumberID}
+                              />
+                              <ProFormText
+                                disabled={
+                                  project.status == 'CLOSED' ||
+                                  project.status == 'COMPLETED'
+                                }
+                                width={'xl'}
+                                name="title"
+                                label={t('TITLE')}
+                                hidden={useTaskNumberID}
+                              />
+                            </>
                           )}
                           {useTaskNumberID && (
                             <ProFormSelect

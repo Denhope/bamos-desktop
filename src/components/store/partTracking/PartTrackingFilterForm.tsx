@@ -45,6 +45,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
     isLoading: isLoadingWP,
     isFetching,
   } = useGetfilteredWOQuery({});
+
   const { data: usersGroups } = useGetGroupUsersQuery({});
   const [openStoreFindModal, setOpenStoreFind] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<any | null>(null);
@@ -227,6 +228,7 @@ const PartTrackingFilterForm: FC<PartTrackingFilterFormType> = ({
               })
             );
             if ((await result).meta.requestStatus === 'fulfilled') {
+              onBookingSearch([]);
               onBookingSearch((await result).payload || []);
             } else {
               message.error('Error');

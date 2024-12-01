@@ -323,18 +323,22 @@ const PdfGeneratorPanel: React.FC<{
     const partNumbersTable = [
       // ['ACCESS', 'REMOVED/OPENED', 'INSTALLED/CLOSED', 'Inspector'],
       ...(projectTasks && projectTasks.length > 0
-        ? projectTasks.map((part: any) => [
-            String(part?.accessItemID?.accessNbr || ''),
-            `${part?.removeUserId?.firstNameEnglish?.toUpperCase() || ''} ${
-              part?.removeUserId?.lastNameEnglish?.toUpperCase() || ''
-            }\n    ${part?.removeUserId?.organizationAuthorization || ''}`,
-            `${part?.inspectedUserID?.firstNameEnglish?.toUpperCase() || ''} ${
-              part?.inspectedUserID?.lastNameEnglish?.toUpperCase() || ''
-            }\n   ${part?.inspectedUserID?.organizationAuthorization || ''}`,
-            `${part?.installUserId?.firstNameEnglish?.toUpperCase() || ''} ${
-              part?.installUserId?.lastNameEnglish?.toUpperCase() || ''
-            } \n  ${part?.installUserId?.organizationAuthorization || ''}`,
-          ])
+        ? projectTasks
+            .filter((part) => part.status !== 'draft')
+            .map((part: any) => [
+              String(part?.accessItemID?.accessNbr || ''),
+              `${part?.removeUserId?.firstNameEnglish?.toUpperCase() || ''} ${
+                part?.removeUserId?.lastNameEnglish?.toUpperCase() || ''
+              }\n    ${part?.removeUserId?.organizationAuthorization || ''}`,
+              `${
+                part?.inspectedUserID?.firstNameEnglish?.toUpperCase() || ''
+              } ${
+                part?.inspectedUserID?.lastNameEnglish?.toUpperCase() || ''
+              }\n   ${part?.inspectedUserID?.organizationAuthorization || ''}`,
+              `${part?.installUserId?.firstNameEnglish?.toUpperCase() || ''} ${
+                part?.installUserId?.lastNameEnglish?.toUpperCase() || ''
+              } \n  ${part?.installUserId?.organizationAuthorization || ''}`,
+            ])
         : [
             // ['', '', '', '', ''],
             // ['', '', '', '', ''],
@@ -479,7 +483,7 @@ const PdfGeneratorPanel: React.FC<{
         size="small"
         onClick={generatePdf}
       >
-        {`${t('PRINT ACCESS PANELS/DOORS OPENING AND CLOSING CHECK LIST')}`}
+        {`${t('PRINT CHECK LIST')}`}
       </Button>
     </div>
   );

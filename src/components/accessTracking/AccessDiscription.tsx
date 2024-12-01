@@ -5,6 +5,7 @@ import { ProDescriptions } from '@ant-design/pro-components';
 import { Tag } from 'antd';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getStatusColor } from '@/services/utilites';
 
 type projectsDiscriptionType = {
   project: any | null;
@@ -17,6 +18,19 @@ const AccessDiscription: FC<projectsDiscriptionType> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Функция для форматирования даты
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return isNaN(date.getTime())
+      ? ''
+      : date.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+  };
+
   return (
     <div className="flex flex-col w-full">
       <ProDescriptions
@@ -27,6 +41,7 @@ const AccessDiscription: FC<projectsDiscriptionType> = ({
         <ProDescriptions.Item label={`${t('ACCESS No')}`} valueType="text">
           {(project?.accessNbr || project?.accessNbr) && (
             <Tag
+              color="geekblue"
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -43,12 +58,13 @@ const AccessDiscription: FC<projectsDiscriptionType> = ({
           )}
         </ProDescriptions.Item> */}
         <ProDescriptions.Item valueType="date" label={t('CREATE DATE')}>
-          {project?.createDate}
+          {formatDate(project?.createDate)}
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="text" label={t('OPEN BY')}>
           {project?.accessNbr && (
             <Tag
+              color="purple"
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -61,24 +77,22 @@ const AccessDiscription: FC<projectsDiscriptionType> = ({
         </ProDescriptions.Item>
 
         <ProDescriptions.Item valueType="date" label={t('OPEN DATE')}>
-          {project?.updateDate}
+          {formatDate(project?.updateDate)}
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('STATUS')}>
-          {project?.accessNbr && (
-            <Tag
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {project?.status?.toUpperCase()}
-            </Tag>
-          )}
+          {project?.accessNbr &&
+            (project?.status?.toUpperCase() === 'CLOSED' ? (
+              <Tag color={getStatusColor(project?.status)}>
+                {project?.status?.toUpperCase()}
+              </Tag>
+            ) : (
+              project?.status?.toUpperCase()
+            ))}
         </ProDescriptions.Item>
         <ProDescriptions.Item valueType="text" label={t('CLOSED BY')}>
           {project?.accessNbr && (
             <Tag
+              color="red"
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',

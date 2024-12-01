@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { PrinterOutlined, SaveOutlined } from '@ant-design/icons';
 import { Split } from '@geoffcox/react-splitter';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';

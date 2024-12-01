@@ -74,7 +74,7 @@ const PdfGenerator: React.FC<{
     return (
       projectTasks?.map((task) => ({
         ...task,
-        // Можно добавить дополнительные трансформации данных здесь
+        // Можно добавить дополнительные трансформации даных здесь
       })) || []
     );
   }, [projectTasks]);
@@ -1984,8 +1984,7 @@ const PdfGenerator: React.FC<{
             label2: 'Raised',
             label3: 'Подготовлено',
             label4: 'Описание шага рабочей операции',
-            value1:
-              step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
+            value1: i !== undefined ? String(i + 1) : 'N/A',
             value2:
               step?.createDate !== undefined
                 ? String(new Date(step?.createDate).toLocaleDateString('ru-RU'))
@@ -2176,10 +2175,9 @@ const PdfGenerator: React.FC<{
             label: 'Work Step Description',
             label1: 'Описание шага рабочей операции',
             label2: 'Raised',
-            label3: 'Подготовлено',
+            label3: 'Подотовлено',
             label4: 'Описание шага рабочей операции',
-            value1:
-              step?.stepNumber !== undefined ? String(step.stepNumber) : 'N/A',
+            value1: i !== undefined ? String(i + 1) : 'N/A',
             value2:
               step?.createDate !== undefined
                 ? String(new Date(step?.createDate).toLocaleDateString('ru-RU'))
@@ -2375,15 +2373,39 @@ const PdfGenerator: React.FC<{
             }
 
             actions.forEach((action, index) => {
+              // Вычисляем высоту текста описания действия
               const actionDescriptionHeight = getTextHeight(
                 action.description,
                 robotoFont,
                 12,
-                cellWidthAdjusted - 10 // Adjust for padding
+                cellWidthAdjusted - 10
               );
-              const actionY = y - actionDescriptionHeight - 50; // 50 is the height of the header and rectangles
 
-              // Draw the header for the action
+              // Проверяем, достаточно ли места на текущей странице
+              if (y - (actionDescriptionHeight + 50) < 50) {
+                // Если места недостаточно, создаем новую страницу
+                drawFooter(page);
+                ({ page, width, height, y } = addPage());
+
+                // Добавляем информацию о задаче на новой странице
+                // page.drawText(
+                //   `    Work Order: ${wo?.projectID?.WOReferenceID?.WONumber}                               Aircraft: ${wo?.projectID?.WOReferenceID?.planeId?.regNbr}                                                                                   Station: MSQ`,
+                //   {
+                //     x: 50,
+                //     y: height - 50,
+                //     size: 8,
+                //     font: robotoFont,
+                //     color: rgb(0, 0, 0),
+                //   }
+                // );
+
+                // Устанавливаем начальную позицию с большим отступом для первого действия
+                y = height - 100; // Увеличиваем отступ сверху для первого действия на новой странице
+              }
+
+              const actionY = y - actionDescriptionHeight - 50;
+
+              // Рисуем заголовок действия
               page.drawRectangle({
                 x: cellX,
                 y: actionY + actionDescriptionHeight + 35,
@@ -2391,47 +2413,28 @@ const PdfGenerator: React.FC<{
                 height: 15,
                 borderColor: rgb(0, 0, 0),
                 borderWidth: 1,
-                color: rgb(0.8, 0.8, 0.8), // Gray color
+                color: rgb(0.8, 0.8, 0.8),
               });
 
-              if (action.type === 'pfmd') {
-                page.drawText(`Action-step ${step.stepNumber}-${index + 1}`, {
-                  x: cellX + 5,
-                  y: actionY + actionDescriptionHeight + 40,
-                  font: robotoFont,
-                  size: fontSize,
-                });
+              // Отрисовка заголовка в зависимости от типа действия
+              const headerText =
+                action.type === 'pfmd'
+                  ? `Action-step ${i + 1}-${index + 1}`
+                  : `Inspection-step ${i + 1}-${index + 1}`;
 
+              page.drawText(headerText, {
+                x: cellX + 5,
+                y: actionY + actionDescriptionHeight + 40,
+                font: robotoFont,
+                size: fontSize,
+              });
+
+              // Отрисовка информации о пользователе
+              if (action?.createUserID) {
                 page.drawText(
-                  `${action?.createUserID?.firstNameEnglish} ${
-                    action?.createUserID?.lastNameEnglish
-                  } ${new Date(action?.createDate).toLocaleDateString(
-                    'ru-RU'
-                  )}`,
-                  {
-                    x: cellX + 390,
-                    y: actionY + actionDescriptionHeight + 40,
-                    font: robotoFont,
-                    size: 6,
-                  }
-                );
-              }
-              if (action.type === 'inspect') {
-                page.drawText(
-                  `Inspection-step ${step.stepNumber}-${index + 1}`,
-                  {
-                    x: cellX + 5,
-                    y: actionY + actionDescriptionHeight + 40,
-                    font: robotoFont,
-                    size: fontSize,
-                  }
-                );
-                page.drawText(
-                  `${action?.createUserID?.firstNameEnglish} ${
-                    action?.createUserID?.lastNameEnglish
-                  } ${new Date(action?.createDate).toLocaleDateString(
-                    'ru-RU'
-                  )}`,
+                  `${action.createUserID.firstNameEnglish || ''} ${
+                    action.createUserID.lastNameEnglish || ''
+                  } ${new Date(action.createDate).toLocaleDateString('ru-RU')}`,
                   {
                     x: cellX + 390,
                     y: actionY + actionDescriptionHeight + 40,
@@ -2441,58 +2444,37 @@ const PdfGenerator: React.FC<{
                 );
               }
 
-              if (action.type === 'diClosed') {
-                page.drawText(
-                  `Inspection-step ${step.stepNumber}-${index + 1}`,
-                  {
-                    x: cellX + 5,
-                    y: actionY + actionDescriptionHeight + 40,
-                    font: robotoFont,
-                    size: fontSize,
-                  }
-                );
-                page.drawText(
-                  `${action?.createUserID?.firstNameEnglish} ${
-                    action?.createUserID?.lastNameEnglish
-                  } ${new Date(action?.createDate).toLocaleDateString(
-                    'ru-RU'
-                  )}`,
-                  {
-                    x: cellX + 390,
-                    y: actionY + actionDescriptionHeight + 40,
-                    font: robotoFont,
-                    size: 6,
-                  }
-                );
-              }
-
-              // Draw the description of the action
+              // Рисуем описание действия
               page.drawRectangle({
                 x: cellX,
                 y: actionY,
                 width: cellWidthAdjusted,
-                height: actionDescriptionHeight + 50,
+                height: actionDescriptionHeight + 35,
                 borderColor: rgb(0, 0, 0),
                 borderWidth: 1,
               });
 
+              // Разбиваем описание на строки и отрисовываем
               const descriptionLines = splitTextIntoLines(
                 action.description,
                 robotoFont,
                 12,
-                cellWidthAdjusted - 10 // Adjust for padding
+                cellWidthAdjusted - 10
               );
 
-              let textY = actionY + actionDescriptionHeight + 15;
-              descriptionLines.forEach((line: string) => {
+              let textY = actionY + actionDescriptionHeight + 25;
+              descriptionLines.forEach((line) => {
                 page.drawText(line, {
                   x: cellX + 5,
                   y: textY,
                   font: robotoFont,
                   size: fontSize,
                 });
-                textY -= robotoFont.heightAtSize(12);
+                textY -= 15;
               });
+
+              // Обновляем позицию y для следующего действия
+              // let textY = actionY + actionDescriptionHeight + 15;
 
               // Draw rectangles based on action type
               const rectangleWidth = 100;
@@ -2615,7 +2597,7 @@ const PdfGenerator: React.FC<{
                 );
               }
 
-              y -= actionDescriptionHeight + 50; // 50 is the height of the header and rectangles
+              y = actionY - 0;
             });
           }
 
@@ -2755,6 +2737,7 @@ const PdfGenerator: React.FC<{
       //       y = drawComponentChangeTable(page, y, actions);
       //     }
       //   }
+      // }
       // }
       // }
       // y -= 5; //
@@ -3225,7 +3208,7 @@ const PdfGenerator: React.FC<{
         },
         {
           label: 'Double Inspected',
-          label1: 'Независимо проверено',
+          label1: 'Проверено дважды',
           value: '',
           value2: '',
           label2: '',
@@ -3419,7 +3402,7 @@ const PdfGenerator: React.FC<{
           error
         );
       }
-      // Объединение основного PDF-документа с дополнительными PDF-документами
+      // Объединене основного PDF-документа с дополнительными PDF-документами
       let taskPdfDoc: PDFDocument;
       try {
         taskPdfDoc = await PDFDocument.create();
@@ -3570,17 +3553,71 @@ const PdfGenerator: React.FC<{
       .padStart(2, '0')}`;
 
     // Добавление текста на дополнительные страницы
-    page.drawText(
-      `    Work Order: ${wo?.projectID?.WOReferenceID?.WONumber}                               Aircraft: ${wo?.projectID?.WOReferenceID?.planeId?.regNbr}                                                                                   Station: MSQ`,
-      {
-        x: 50,
-        y: page.getHeight() - 50,
-        size: 8,
-        font,
-        color: rgb(0, 0, 0),
-      }
-    );
+    // page.drawText(
+    //   `    Work Order: ${wo?.projectID?.WOReferenceID?.WONumber}                               Aircraft: ${wo?.projectID?.WOReferenceID?.planeId?.regNbr}                                                                                   Station: MSQ`,
+    //   {
+    //     x: 50,
+    //     y: page.getHeight() - 50,
+    //     size: 8,
+    //     font,
+    //     color: rgb(0, 0, 0),
+    //   }
+    // );
   };
+
+  // Добавляем параметр font и fontSize в функцию drawActions
+  const drawActions = async (
+    page: PDFPage,
+    actions: ActionType[],
+    y: number,
+    font: PDFFont,
+    fontSize: number
+  ) => {
+    const actionHeight = fontSize + 5; // Высота строки с отступом
+    const spaceThreshold = 70; // Минимальное пространство для новой страницы
+    const pageHeight = page.getSize().height;
+
+    for (const action of actions) {
+      const lines = splitTextIntoLines(action.description, font, fontSize, 400); // Максимальная ширина текста
+
+      for (const line of lines) {
+        if (y - actionHeight < spaceThreshold) {
+          // Добавляем новую страницу
+          page = pdfDoc.addPage([595.28, pageHeight]);
+          const { height } = page.getSize();
+          y = height - 30; // Устанавливаем y с отступом сверху
+        }
+
+        page.drawText(line, {
+          x: 50,
+          y: y - fontSize,
+          font,
+          size: fontSize,
+          color: rgb(0, 0, 0),
+        });
+
+        y -= actionHeight;
+      }
+      y -= 5; // Отступ между экшенами
+    }
+
+    return y;
+  };
+
+  // Вызов функции
+  const generatePdfDocument = async () => {
+    if (isPdfRequested && !isLoading && projectTasks) {
+      // ... существующий код ...
+
+      let y = 800; // Начальная позиция y
+
+      // Вызов обновленной функции drawActions с передачей шрифта и размера
+      y = await drawActions(page, task.actions, y, robotoFont, fontSize);
+
+      // ... существующий код ...
+    }
+  };
+
   useEffect(() => {
     if (isPdfRequested && !isLoading && projectTasks) {
       const generatePdfDocument = async () => {
@@ -3596,13 +3633,12 @@ const PdfGenerator: React.FC<{
 
           if (pdfAction === 'view') {
             try {
-              const fileName = `TASK-${firstTask?.taskNumber || 'unknown'}.pdf`;
               await window.electronAPI.openPdf(pdfBytes, fileName);
             } catch (error) {
               console.error('Error opening PDF:', error);
             }
           } else if (pdfAction === 'save') {
-            // Оставляем как есть, так как работает корректно
+            // Корректное сохранение PDF
             const fileURL = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = fileURL;

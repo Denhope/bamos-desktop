@@ -78,6 +78,7 @@ import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { useGetFilteredActionsQuery } from '@/features/projectItemWO/actionsApi';
+import { useUpdatePartTaskNumberMutation } from '@/features/tasksAdministration/partApi';
 
 // Инициализируем плагины
 dayjs.extend(weekOfYear);
@@ -526,6 +527,22 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       headerName: `${t('UNIT OF MEASURE')}`,
       cellDataType: 'text',
     },
+
+    {
+      field: 'isRequred',
+      headerName: `${t('IS REQUIRED')}`,
+      cellDataType: 'boolean',
+      editable: true,
+      cellRenderer: 'checkboxRenderer',
+      cellEditor: 'agCheckboxCellEditor',
+      cellStyle: { textAlign: 'center' },
+      cellRendererParams: {
+        checkbox: true,
+      },
+      valueFormatter: (params: any) => {
+        return params.value ? '✓' : '✗';
+      },
+    },
     // Добавьте другие колонки по необходимости
   ]);
 
@@ -819,6 +836,30 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
       setDateRange([dates[0], dates[1]]);
     }
   };
+
+  // Добавляем состояние для хранения данных таблицы
+  const [rowData, setRowData] = useState<any[]>([]);
+
+  // Обновляем компонент AG Grid
+  // <AgGridReact
+  //   // ... существующие пропсы ...
+  //   rowData={rowData}
+  //   onGridReady={(params: GridReadyEvent) => {
+  //     gridApi.current = params.api;
+  //     // Инициализация данных
+  //     setRowData(initialData);
+  //   }}
+  //   onCellValueChanged={(params: any) => {
+  //     if (params.column.colId === 'isRequired') {
+  //       // Обработка изменения уже включена в определение колонки
+  //       return;
+  //     }
+  //     // Обработка изменений других колонок
+  //   }}
+  // />;
+
+  // Используем существующий хук для обновления
+  // const [updatePartTaskNumber] = useUpdatePartTaskNumberMutation();
 
   return (
     <ProForm
@@ -1367,10 +1408,46 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   taskId={task.id}
                   columnDefs={columnDefs}
                   partNumbers={partNumbers || []}
-                  onUpdateData={function (data: any[]): void {
-                    console.log(data);
+                  onUpdateData={(updatedData: any[]) => {
+                    console.log('Updated data:', updatedData);
                   }}
-                ></PartList>
+                  // onCellValueChanged={async (params: any) => {
+                  //   if (params.column.colId !== 'isRequred') return;
+
+                  //   const updatedData = {
+                  //     partNumberID:
+                  //       params.data.PART_NUMBER_ID || params.data.partNumberID,
+                  //     quantity: params.data.QUANTITY || params.data.quantity,
+                  //     isRequred: params.newValue,
+                  //     id: params.data.id || params.data._id,
+                  //     updateDate: new Date().toISOString(),
+                  //     updateUserID: USER_ID,
+                  //   };
+
+                  //   console.log('Updating part with data:', updatedData);
+
+                  //   try {
+                  //     await updatePartTaskNumber({
+                  //       partTaskNumber: updatedData,
+                  //     }).unwrap();
+
+                  //     notification.success({
+                  //       message: t('SUCCESS'),
+                  //       description: t('PART_UPDATED_SUCCESSFULLY'),
+                  //     });
+                  //   } catch (error) {
+                  //     console.error('Failed to update part:', error);
+                  //     notification.error({
+                  //       message: t('ERROR'),
+                  //       description: t('FAILED_TO_UPDATE_PART'),
+                  //     });
+                  //     params.api.refreshCells({
+                  //       rowNodes: [params.node],
+                  //       columns: ['isRequred'],
+                  //     });
+                  //   }
+                  // }}
+                />
               </div>
             ) : (
               <Empty />
@@ -1389,8 +1466,49 @@ const AdminTaskPanelForm: FC<UserFormProps> = ({ task, onSubmit }) => {
                   fetchData={[]}
                   taskId={task.id}
                   columnDefs={columnDefs}
-                  onUpdateData={function (data: any[]): void {}}
-                ></PartList>
+                  partNumbers={partNumbers || []}
+                  onUpdateData={(updatedData: any[]) => {
+                    console.log('Updated data:', updatedData);
+                  }}
+                  // onCellValueChanged={async (params: any) => {
+                  //   if (params.column.colId !== 'isRequred') return;
+
+                  //   const { data, newValue } = params;
+                  //   console.log('Updating part:', {
+                  //     id: data.id || data._id,
+                  //     partNumberID: data.PART_NUMBER_ID || data.partNumberID,
+                  //     quantity: data.QUANTITY || data.quantity,
+                  //     isRequred: newValue,
+                  //   });
+
+                  //   try {
+                  //     await updatePartTaskNumber({
+                  //       partTaskNumber: {
+                  //         id: data.id || data._id,
+                  //         partNumberID:
+                  //           data.PART_NUMBER_ID || data.partNumberID,
+                  //         quantity: data.QUANTITY || data.quantity,
+                  //         isRequred: newValue,
+                  //       },
+                  //     }).unwrap();
+
+                  //     notification.success({
+                  //       message: t('SUCCESS'),
+                  //       description: t('PART_UPDATED_SUCCESSFULLY'),
+                  //     });
+                  //   } catch (error) {
+                  //     console.error('Failed to update part:', error);
+                  //     notification.error({
+                  //       message: t('ERROR'),
+                  //       description: t('FAILED_TO_UPDATE_PART'),
+                  //     });
+                  //     params.api.refreshCells({
+                  //       rowNodes: [params.node],
+                  //       columns: ['isRequred'],
+                  //     });
+                  //   }
+                  // }}
+                />
               </div>
             ) : (
               <Empty />

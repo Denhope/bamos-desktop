@@ -518,7 +518,7 @@ const TaskReport: FC<TaskReportProps> = ({ tasks, workOrder, filters }) => {
         // width: 180,
       },
       {
-        headerName: t('AUTORIZED STAFF'),
+        headerName: t('AUTHORIZED STAFF'),
         field: 'closed',
         cellRenderer: (params: any) => {
           const action = allActions?.find(
@@ -689,7 +689,7 @@ const TaskReport: FC<TaskReportProps> = ({ tasks, workOrder, filters }) => {
               hour12: false,
             })
           : '-',
-        [t('AUTORIZED STAFF')]:
+        [t('AUTHORIZED STAFF')]:
           closeAction?.userDurations?.[0]?.userID?.organizationAuthorization ||
           '-',
       };

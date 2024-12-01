@@ -979,29 +979,30 @@ export const transformToIStockPartNumber = (data: any) => {
             id: item.id || item._id,
             RECEIVED_DATE: item.RECEIVED_DATE,
             LOCAL_ID: item.LOCAL_ID,
-            PART_NUMBER: item.PART_NUMBER,
-            NAME_OF_MATERIAL: item.NAME_OF_MATERIAL,
-            GROUP: item.GROUP,
-            TYPE: item.TYPE,
+            PART_NUMBER: item?.partID?.PART_NUMBER,
+            NAME_OF_MATERIAL:
+              item?.partID?.DESCRIPTION || item.NAME_OF_MATERIAL,
+            GROUP: item?.partID?.GROUP,
+            TYPE: item?.partID?.TYPE,
             QUANTITY: quantity,
-            UNIT_OF_MEASURE: item.UNIT_OF_MEASURE,
+            UNIT_OF_MEASURE: item?.partID?.UNIT_OF_MEASURE,
             STOCK: item.storeID?.storeShortName || '',
             LOCATION: item.locationID?.locationName || item.LOCATION || '',
             SUPPLIER_BATCH_NUMBER: item.SUPPLIER_BATCH_NUMBER,
             SERIAL_NUMBER: item.SERIAL_NUMBER,
             CONDITION: item.CONDITION,
             PRODUCT_EXPIRATION_DATE: item.PRODUCT_EXPIRATION_DATE,
-            OWNER: item.OWNER || item.locationID?.ownerID?.title,
+            OWNER: item.locationID?.ownerID?.companyName || item?.OWNER,
             RECEIVING_NUMBER: item.RECEIVING_NUMBER,
             locationType: locationType,
             restrictionID: restrictionID,
-            isReserved: Boolean(item.isReserved),
+            isReserved: Boolean(item?.isReserved),
             reservedQTY: Number(item.reservedQTY || 0),
             DOC_NUMBER: item.DOC_NUMBER,
             DOC_TYPE: item.DOC_TYPE,
             storeID: item.storeID || '',
             STORE_ID: item.storeID?._id || '',
-            locationID: item.locationID,
+            locationID: item.locationID?._id,
             files: item.files || item.FILES,
             // Добавляем все возможные поля из locationID
             locationName: item.locationID?.locationName,
@@ -1043,19 +1044,22 @@ export const transformToIStockPartNumber = (data: any) => {
         id: item.id || item._id,
         RECEIVED_DATE: item.RECEIVED_DATE,
         LOCAL_ID: item.LOCAL_ID,
-        PART_NUMBER: item.PART_NUMBER,
-        NAME_OF_MATERIAL: item.NAME_OF_MATERIAL,
-        GROUP: item.GROUP,
-        TYPE: item.TYPE,
+        PART_NUMBER: item.partID?.PART_NUMBER || '',
+        NAME_OF_MATERIAL:
+          item.partID?.NAME_OF_MATERIAL ||
+          item.partID?.DESCRIPTION ||
+          item.NAME_OF_MATERIAL,
+        GROUP: item?.partID?.GROUP || item.GROUP,
+        TYPE: item?.partID?.TYPE || item.TYPE,
         QUANTITY: quantity,
-        UNIT_OF_MEASURE: item.UNIT_OF_MEASURE,
+        UNIT_OF_MEASURE: item?.partID?.UNIT_OF_MEASURE,
         STOCK: item.storeID?.storeShortName || '',
-        LOCATION: item.locationID?.locationName || item.LOCATION || '',
+        LOCATION: item.locationID?.locationName || '',
         SUPPLIER_BATCH_NUMBER: item.SUPPLIER_BATCH_NUMBER,
         SERIAL_NUMBER: item.SERIAL_NUMBER,
         CONDITION: item.CONDITION,
         PRODUCT_EXPIRATION_DATE: item.PRODUCT_EXPIRATION_DATE,
-        OWNER: item.OWNER || item.locationID?.ownerID?.title,
+        OWNER: item.locationID?.ownerID?.companyName || item?.OWNER,
         RECEIVING_NUMBER: item.RECEIVING_NUMBER,
         locationType: locationType,
         restrictionID: restrictionID,
@@ -1065,7 +1069,7 @@ export const transformToIStockPartNumber = (data: any) => {
         DOC_TYPE: item.DOC_TYPE,
         storeID: item.storeID?._id || '',
         STORE_ID: item.storeID?._id || '',
-        locationID: item.locationID,
+        locationID: item.locationID?._id,
         files: item.files || item.FILES,
         locationName: item.locationID?.locationName,
         locationOwner: item.locationID?.ownerID?.title,
@@ -1350,6 +1354,7 @@ export const getTaskTypeColor = (
       return ''; // Default color
   }
 };
+
 export const getStatusColor = (status: keyof ValueEnumType): string => {
   switch (status) {
     case 'tofix':
@@ -1418,58 +1423,20 @@ export const getStatusColor = (status: keyof ValueEnumType): string => {
       return ''; // Default color
   }
 };
+
 // export const getStatusColor = (status: keyof ValueEnumType): string => {
 //   switch (status) {
-//     case 'draft':
-//       return '#D3D3D3'; // Light Gray
-//     case 'DRAFT':
-//       return '#D3D3D3'; // Light Gray
-//     case 'onShort':
-//       return '#FFA07A'; // Light Salmon
-//     case 'inspect':
-//       return '#FFA07A'; // Light Salmon
-//     case 'inspected':
-//       return '#FFA07A'; // Light Salmon
-//     case 'progress':
-//       return '#800080'; // Dark Blue
-//     case 'inProgress':
-//       return '#800080'; // Dark Blue
-//     case 'onQuatation':
-//       return '#FFD700'; // Gold
-//     case 'complete':
-//       return '#FFD700'; // Gold
 //     case 'open':
-//       return '#00008B'; // Sky Blue
-//     case 'OPEN':
-//       return '#00008B'; // Sky Blue
+//       return 'red';
 //     case 'closed':
-//       return '#32CD32'; // Lime Green
-//     case 'RECEIVED':
-//       return '#32CD32'; // Lime Green
-//     case 'PARTLY_RECEIVED':
-//       return '#90EE90'; // Light Green
-//     case 'performed':
-//       return '#90EE90'; // Light Green
-//     case 'partlyClosed':
-//       return '#90EE90'; // Light Green
-//     case 'canceled':
-//       return '#FF6347'; // Tomato Red
-//     case 'cancelled':
-//       return '#FF6347'; // Tomato Red
-//     case 'partlyCanceled':
-//       return '#FF6347'; // Tomato Red
-//     case 'CANCELLED':
-//       return '#FF6347'; // Tomato Red
-//     case 'partyCancelled':
-//       return '#FF6347'; // Tomato Red
-//     case 'onOrder':
-//       return '#FFA07A'; // Light Salmon
-//     case 'transfer':
-//       return '#FFD700'; // Dark Blue
-//     case 'issued':
-//       return '#800080'; // Dark Blue
+//       return 'green';
+//     case 'inspected':
+//       return 'blue';
+//     case 'inProgress':
+//       return 'orange';
+//     // Добавьте другие статусы и соответствующие им цвета
 //     default:
-//       return ''; // Default color
+//       return 'default';
 //   }
 // };
 
@@ -1589,7 +1556,8 @@ export const transformToPartBooking = (data: any[]): any[] => {
     SERIAL_NUMBER:
       item?.MATERIAL_STORE_ID?.SERIAL_NUMBER || item?.SERIAL_NUMBER,
     SHELF_NUMBER:
-      item.MATERIAL_STORE_ID?.locationID?.locationName || item?.SHELF_NUMBER,
+      item?.SHELF_NUMBER || item.MATERIAL_STORE_ID?.locationID?.locationName,
+    UNITE_OF_MEASURE: item.UNIT_OF_MEASURE,
     files: item.MATERIAL_STORE_ID?.FILES,
     CREATE_BY: item?.createUserID?.name || item?.userID?.name,
     PICK_SLIP_NUMBER: item?.pickSlipID?.pickSlipNumberNew,
@@ -1598,6 +1566,7 @@ export const transformToPartBooking = (data: any[]): any[] => {
     woName: item?.projectID?.projectName,
     taskNumber: item?.projectTaskID?.taskNumber,
     taskDescription: item?.projectTaskID?.taskDescription,
+
     // index: item?.index,
     // PART_NUMBER: item.MATERIAL_STORE_ID?.PART_NUMBER,
     // DESCRIPTION: item.MATERIAL_STORE_ID?.NAME_OF_MATERIAL,
@@ -1682,7 +1651,7 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
           bookedItem?.storeItemID?.SUPPLIER_BATCH_NUMBER,
         PRODUCT_EXPIRATION_DATE:
           bookedItem?.storeItemID?.PRODUCT_EXPIRATION_DATE,
-        UNIT_OF_MEASURE: bookedItem?.storeItemID?.UNIT_OF_MEASURE,
+        UNIT_OF_MEASURE: bookedItem?.requirementID?.unit,
         LOCAL_ID: bookedItem?.storeItemID?.LOCAL_ID,
         OWNER: bookedItem?.storeItemID?.locationID?.ownerID?.title,
         STORE: bookedItem?.storeItemID?.storeID?.storeShortName,
@@ -1726,6 +1695,8 @@ export const transformToIProjectTask = (data: any[]): any[] => {
     zonesID: item?.zonesID,
     accessID: item?.accessID,
     projectWO: item?.projectID?.projectWO,
+    WONumber: item?.projectID?.WOReferenceID?.WONumber,
+    WOName: item?.projectID?.WOReferenceID?.WOName,
     projectName: item?.projectID?.projectName,
     mainWorkTime: item?.mainWorkTime || item?.taskId?.mainWorkTime,
     files: item?.FILES || item?.files || [],
@@ -2022,3 +1993,14 @@ export const getSubscriptionTypes = (t) => [
 
 // Тип для типа подписки
 export type SubscriptionTypeValue = SubscriptionType;
+
+import { format, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
+
+export const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) return '';
+  const date = parseISO(dateString);
+  return isNaN(date.getTime())
+    ? ''
+    : format(date, 'dd.MM.yyyy', { locale: ru });
+};

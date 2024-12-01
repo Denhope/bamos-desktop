@@ -184,8 +184,8 @@ const ActionForm: React.FC<ActionFormProps> = ({
           performedDate: currentAction?.createDate
             ? dayjs(currentAction.createDate).utc()
             : currentDateTime,
-          inspectedDate: currentAction?.inspectedDate
-            ? dayjs(currentAction.inspectDate).utc()
+          inspectedDate: currentAction?.createDate
+            ? dayjs(currentAction.createDate).utc()
             : currentDateTime,
         });
       } else {

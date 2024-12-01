@@ -49,7 +49,7 @@ const StoreLocationAdministrationTree: FC<reqTreeProps> = ({
       return {
         title: `${String(
           reqCode?.locationName
-        ).toUpperCase()}--${reqCode?.description?.toUpperCase()}--${reqCode?.locationType.toUpperCase()}`,
+        ).toUpperCase()}--${reqCode?.description?.toUpperCase()}--${reqCode?.locationType?.toUpperCase()}`,
         key: reqCode.id,
         reqCode: reqCode,
       };

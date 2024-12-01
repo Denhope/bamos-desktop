@@ -488,7 +488,7 @@ const TaskReport: FC<TaskReportProps> = ({ tasks, workOrder, filters }) => {
         // width: 180,
       },
       {
-        headerName: t('AUTORIZED STAFF'),
+        headerName: t('AUTHORIZED STAFF'),
         field: 'closed',
         cellRenderer: (params: any) => {
           const action = allActions?.find(

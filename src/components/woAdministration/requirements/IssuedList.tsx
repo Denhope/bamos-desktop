@@ -51,11 +51,8 @@ const IssuedList: React.FC<IssuedListProps> = ({
     const bookedQuantity = row.bookedQuantity || 0;
     const canceledQuantity = row.canceledQuantity || 0;
 
-    // Добавляем canceledQuantity к доступному количеству
-    return Math.max(
-      0,
-      amount - requestQuantity - bookedQuantity + canceledQuantity
-    );
+    // Для остальных статусов считаем без requestQuantity
+    return Math.max(0, amount - bookedQuantity + canceledQuantity);
   }, []);
 
   const memoizedRowData = useMemo(() => {

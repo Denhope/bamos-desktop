@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { ProCard } from '@ant-design/pro-components';
-import { Empty, Layout, Space, Tabs } from 'antd';
+import { Empty, Layout, Space, Tabs, Tag } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +77,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
       {partNumber ? (
         <div>
           <div
-            className="p-5 grid gap-4"
+            className="p-2 grid gap-4"
             style={{
               gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
             }}
@@ -163,16 +163,12 @@ const StockGridNew: React.FC<StockGridProps> = ({
             )}
           </div>
           <div className={`flex flex-col text-sm ml-auto font-bold`}>
-            <div className="ml-auto pr-24">
+            <div className="ml-auto pr-24 pb-2">
               {t('TOTAL STOCK QTY: ')}
-              <span
-                className={`highlight ${total ? 'bg-green-500' : 'bg-red-500'}`}
-              >
-                {total || 0}
-              </span>
+              <Tag color={total ? 'success' : 'error'}>{total || 0}</Tag>
             </div>
           </div>
-          <div className="py-5 flex flex-col w-[99%]">
+          <div className="py-0 flex flex-col w-[99%]">
             <Title level={5}>
               {t('DETAILS FOR STORE')} -
               <a className="font-bold text-lg">
@@ -203,7 +199,7 @@ const StockGridNew: React.FC<StockGridProps> = ({
                       item?.restrictionID === 'standart'
                   ) || []
                 }
-                height="28vh"
+                height="32vh"
                 partNumberID={partNumber?._id}
                 storeID={selectedKey}
               />

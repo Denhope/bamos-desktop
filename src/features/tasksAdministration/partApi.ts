@@ -80,6 +80,32 @@ export const partTaskNumberApi = createApi({
       }),
       invalidatesTags: ['PartTaskNumber'], // Invalidate the 'Users' tag after mutation
     }),
+
+    addMultiPartTasks: builder.mutation<
+      IPartNumber[],
+      {
+        parts: Array<{
+          partNumberID: string;
+          quantity: number;
+          taskId: string;
+        }>;
+      }
+    >({
+      query: ({ parts }) => ({
+        url: `task-admin-parts/multi/companyID/${COMPANY_ID}`,
+        method: 'POST',
+        body: {
+          parts: parts.map((part) => ({
+            ...part,
+            createUserID: USER_ID,
+            createDate: new Date(),
+            companyID: COMPANY_ID,
+          })),
+        },
+      }),
+      invalidatesTags: ['PartTaskNumber'],
+    }),
+
     addMultiPartTaskNumber: builder.mutation<
       IPartNumber[],
       {
@@ -107,6 +133,7 @@ export const partTaskNumberApi = createApi({
           quantity: partTaskNumber.quantity,
           updateUserID: USER_ID,
           updateDate: new Date(),
+          isRequred: partTaskNumber.isRequred,
         },
       }),
       invalidatesTags: ['PartTaskNumber'], // Invalidate the 'Users' tag after mutation
@@ -132,4 +159,5 @@ export const {
   useGetPartTaskNumbersQuery,
   useDeletePartTaskNumberMutation,
   useUpdatePartTaskNumberMutation,
+  useAddMultiPartTasksMutation,
 } = partTaskNumberApi;

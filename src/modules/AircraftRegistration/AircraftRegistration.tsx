@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { getItem } from '@/services/utilites';
 import { Layout, Menu, MenuProps, Typography } from 'antd';
 import React, { FC, useState } from 'react';

@@ -519,6 +519,7 @@ const PickSlipCancel: FC<PickSlipCancelProps> = ({ onFinishCancel }) => {
 
       setOpenPickCancel(false);
       setSelectedRows([]);
+      setIssuedRowData([]);
       notification.success({
         message: t('CANCEL PICKSLIP'),
         description: t('PICKSLIP ITEMS CANCELLED SUCCESSFULLY'),

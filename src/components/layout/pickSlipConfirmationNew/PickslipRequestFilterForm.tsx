@@ -242,10 +242,12 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
         <ProFormGroup>
           <ProFormSelect
             showSearch
-            // disabled={
-            //   pickSlip &&
-            //   (pickSlip.state == 'closed' || pickSlip.state == 'canceled')
-            // }
+            disabled={
+              pickSlip &&
+              (pickSlip.state == 'closed' ||
+                pickSlip.state == 'canceled' ||
+                pickSlip.state == 'partlyCanceled')
+            }
             name="storeManID"
             label={t('STOREMAN')}
             width="sm"
@@ -260,7 +262,9 @@ const PickslipRequestFilterForm: FC<PickslipRequestFilterFormType> = ({
             valueEnum={usersCodesValueEnum || []}
             disabled={
               pickSlip &&
-              (pickSlip.state == 'closed' || pickSlip.state == 'canceled')
+              (pickSlip.state == 'closed' ||
+                pickSlip.state == 'canceled' ||
+                pickSlip.state == 'partlyCanceled')
             }
           />
         </ProFormGroup>

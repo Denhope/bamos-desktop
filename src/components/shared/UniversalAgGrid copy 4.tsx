@@ -36,6 +36,7 @@ import { utils, writeFile } from 'xlsx';
 
 interface UniversalAgGridProps {
   gridId: string;
+  getRowNodeId?: string;
   rowData: any[];
   columnDefs: ColDef[];
   onRowSelect?: (selectedRows: any[]) => void;
@@ -64,6 +65,7 @@ interface UniversalAgGridProps {
 
 const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
   gridId,
+  getRowNodeId,
   rowData,
   columnDefs: initialColumnDefs,
   onRowSelect,
@@ -553,6 +555,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
             pagination={isPaginationEnabled}
             rowSelection={rowSelection}
             quickFilterText={searchText}
+            getRowNodeId={getRowNodeId}
             defaultColDef={{
               sortable: true,
               filter: true,

@@ -914,12 +914,12 @@ const WPForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   lineMaintanance: {
                     text: t('LINE MAINTENANCE'),
                   },
-                  repairPart: { text: t('REPAIR AC') },
+                  //repairPart: { text: t('REPAIR AC') },
                   partCange: { text: t('COMPONENT CHANGE') },
                   addWork: { text: t('ADD WORK') },
                   enginiring: { text: t('ENGINEERING SERVICES') },
                   nonProduction: { text: t('NOT PRODUCTION SERVICES') },
-                  production: { text: t('PRODUCTION PART') },
+                  // production: { text: t('PRODUCTION PART') },
                 }}
               />
             </ProFormGroup>

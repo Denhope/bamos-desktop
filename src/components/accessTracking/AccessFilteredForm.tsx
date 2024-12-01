@@ -83,6 +83,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
 
   const { data: usersGroups } = useGetGroupUsersQuery({});
   const { data: users } = useGetUsersQuery({});
+  const [isAddAccess, setIsAddAccess] = useState<boolean | undefined>(false);
   const [isOnlyWithPanels, setIsOnlyWithPanels] = useState<boolean>(false);
   const [isOnlyPanels, setIsOnlyPanels] = useState<boolean>(true);
   const projectsValueEnum: Record<string, string> =
@@ -123,6 +124,7 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         installUserId: form.getFieldValue('installUserId'),
         inspectedUserID: form.getFieldValue('inspectedUserID'),
         WOReferenceID: form.getFieldValue('WOReferenceID'),
+        isAddAccess: form.getFieldValue('isAddAccess'),
       };
 
       onProjectSearch(searchParams);
@@ -286,6 +288,14 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         initialValue={isOnlyPanels}
         onChange={(checked: boolean | ((prevState: boolean) => boolean)) =>
           setIsOnlyPanels(checked)
+        }
+      />
+      <ProFormCheckbox
+        name="isAddAccess"
+        label={t('ADD ACCESS')}
+        initialValue={isAddAccess}
+        onChange={(checked: boolean | ((prevState: boolean) => boolean)) =>
+          setIsAddAccess(checked)
         }
       />
     </ProForm>

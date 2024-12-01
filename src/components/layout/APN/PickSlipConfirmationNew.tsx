@@ -978,24 +978,24 @@ const PickSlipConfirmationNew: FC = () => {
                 (pickSlips && pickSlips[0]?.id),
             },
           });
-          try {
-            for (const item of issuedData) {
-              const addBookingResponse = await addBooking({
-                booking: {
-                  voucherModel: 'STORE_TO_A/C',
-                  ...item,
-                  ...item?.storeItemID,
-                  QUANTITY: -item?.QUANTITY,
-                },
-              });
-            }
-          } catch (error) {
-            notification.error({
-              message: t('ERROR'),
-              description: t('Error update pick slip or pick slip items.'),
-            });
-            return false;
-          }
+          // try {
+          //   for (const item of issuedData) {
+          //     const addBookingResponse = await addBooking({
+          //       booking: {
+          //         voucherModel: 'STORE_TO_A/C',
+          //         ...item,
+          //         ...item?.storeItemID,
+          //         QUANTITY: -item?.QUANTITY,
+          //       },
+          //     });
+          //   }
+          // } catch (error) {
+          //   notification.error({
+          //     message: t('ERROR'),
+          //     description: t('Error update pick slip or pick slip items.'),
+          //   });
+          //   return false;
+          // }
           pickSlipRefetch();
           refetchItems();
           refetch();

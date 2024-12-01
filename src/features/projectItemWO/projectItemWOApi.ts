@@ -202,6 +202,7 @@ export const projectItemWOApi = createApi({
         WOReferenceID?: string;
         projectTaskIds?: string;
         isFromWO?: boolean;
+        isAddAccess?: boolean;
       }
     >({
       query: ({
@@ -213,6 +214,7 @@ export const projectItemWOApi = createApi({
         WOReferenceID,
         projectTaskIds,
         isFromWO,
+        isAddAccess,
       }) => ({
         url: `projectsAccess/company/${COMPANY_ID}`,
         method: 'POST',
@@ -228,6 +230,7 @@ export const projectItemWOApi = createApi({
           WOReferenceID,
           projectTaskIds,
           isFromWO,
+          isAddAccess,
         },
       }),
       invalidatesTags: ['ProjectItemWO'], // Указываем, что это мутация недействительна тега 'UserGroups'
@@ -318,7 +321,7 @@ export const projectItemWOApi = createApi({
       any[],
       {
         status?: any;
-
+        isAddAccess?: boolean;
         companyID?: string;
         projectID?: string;
         vendorID?: string;
@@ -361,6 +364,7 @@ export const projectItemWOApi = createApi({
         userID,
         WOReferenceID,
         accessProjectNumber,
+        isAddAccess,
       }) => ({
         url: `projectsAccess/getFilteredProjectsAccess/company/${COMPANY_ID}`,
         params: {
@@ -384,6 +388,7 @@ export const projectItemWOApi = createApi({
           userID,
           WOReferenceID,
           accessProjectNumber,
+          isAddAccess,
         },
       }),
       providesTags: ['ProjectItemWO'],

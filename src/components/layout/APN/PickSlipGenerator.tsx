@@ -329,12 +329,16 @@ const PickSlipGenerator: React.FC<PickSlipGeneratorProps> = ({
       return { page, y };
     };
 
+    // Фильтруем данные перед отрисовкой
+    const filteredData = data.rowDataForSecondContainer.filter(
+      (item) => item.bookedQty && Number(item.bookedQty) > 0
+    );
+
     let { page, y } = await addPage();
 
-    // Table data
-    for (const item of data.rowDataForSecondContainer) {
+    // Table data - используем отфильтрованные данные
+    for (const item of filteredData) {
       if (y < 150) {
-        // Увеличен порог для новой страницы, чтобы учесть место для remarks
         const newPageResult = await addPage();
         page = newPageResult.page;
         y = newPageResult.y;

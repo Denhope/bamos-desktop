@@ -11,6 +11,8 @@ import {
   Upload,
   Image,
   UploadProps,
+  Tooltip,
+  Typography,
 } from 'antd';
 import { User, UserGroup } from '@/models/IUser';
 import { ProFormSelect } from '@ant-design/pro-components';
@@ -30,6 +32,7 @@ interface UserFormProps {
 }
 
 const { Search } = Input;
+const { Text } = Typography;
 
 const UserForm: FC<UserFormProps> = ({
   user,
@@ -112,14 +115,399 @@ const UserForm: FC<UserFormProps> = ({
     return t(permission);
   };
 
-  const permissionsTreeData = Object.values(Permission).map((permission) => ({
-    title: getPermissionLabel(permission),
-    key: permission,
-  }));
+  const groupPermissions = user?.userGroupID?.permissions || [];
 
-  const filteredTreeData = permissionsTreeData.filter((item) =>
-    item.title.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const disableCheckbox = (node: any) => {
+    if (node.children) {
+      return node.children.every((child: any) => disableCheckbox(child));
+    }
+    return groupPermissions.includes(node.key);
+  };
+
+  const permissionsTreeData = [
+    {
+      title: 'User Actions',
+      key: 'user-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.USER_ACTIONS),
+          key: Permission.USER_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.PERMISSIONS_ACTIONS),
+          key: Permission.PERMISSIONS_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Work Order Actions',
+      key: 'wo-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.WO_ACTIONS),
+          key: Permission.WO_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.PRINT_AS_ORIGINAL),
+          key: Permission.PRINT_AS_ORIGINAL,
+        },
+      ],
+    },
+    {
+      title: 'Work Package Actions',
+      key: 'wp-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.WP_ACTIONS),
+          key: Permission.WP_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Project Task Actions',
+      key: 'project-task-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PROJECT_TASK_ACTIONS),
+          key: Permission.PROJECT_TASK_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.EDIT_PROJECT_TASK),
+          key: Permission.EDIT_PROJECT_TASK,
+        },
+        {
+          title: getPermissionLabel(Permission.REOPEN_TASK),
+          key: Permission.REOPEN_TASK,
+        },
+        {
+          title: getPermissionLabel(Permission.ADD_NRC),
+          key: Permission.ADD_NRC,
+        },
+      ],
+    },
+    {
+      title: 'Requirement Actions',
+      key: 'requirement-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.REQUIREMENT_ACTIONS),
+          key: Permission.REQUIREMENT_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.ADD_REQUIREMENT),
+          key: Permission.ADD_REQUIREMENT,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_REQUIREMENT),
+          key: Permission.DELETE_REQUIREMENT,
+        },
+      ],
+    },
+    {
+      title: 'Order Actions',
+      key: 'order-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.ORDER_ACTIONS),
+          key: Permission.ORDER_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_ORDER),
+          key: Permission.DELETE_ORDER,
+        },
+        {
+          title: getPermissionLabel(Permission.ORDER_VIEWER),
+          key: Permission.ORDER_VIEWER,
+        },
+      ],
+    },
+    {
+      title: 'Pickslip Actions',
+      key: 'pickslip-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PICKSLIP_ACTIONS),
+          key: Permission.PICKSLIP_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.PICKSLIP_CONFIRMATION_ACTIONS),
+          key: Permission.PICKSLIP_CONFIRMATION_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_PICKSLIP),
+          key: Permission.DELETE_PICKSLIP,
+        },
+      ],
+    },
+    {
+      title: 'Part Number Actions',
+      key: 'part-number-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PART_NUMBER_EDIT),
+          key: Permission.PART_NUMBER_EDIT,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_PART_NUMBER),
+          key: Permission.DELETE_PART_NUMBER,
+        },
+        {
+          title: getPermissionLabel(Permission.ADD_ALTERNATIVE),
+          key: Permission.ADD_ALTERNATIVE,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_ALTERNATIVE),
+          key: Permission.DELETE_ALTERNATIVE,
+        },
+      ],
+    },
+    {
+      title: 'Part Actions',
+      key: 'part-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PART_TRANSFER_ACTIONS),
+          key: Permission.PART_TRANSFER_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.PART_EDIT_ACTIONS),
+          key: Permission.PART_EDIT_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Task Actions',
+      key: 'task-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.TASK_ACTIONS),
+          key: Permission.TASK_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Report Actions',
+      key: 'report-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PRINT_REPORT_TABLE),
+          key: Permission.PRINT_REPORT_TABLE,
+        },
+        {
+          title: getPermissionLabel(Permission.PRINT_REPORT_WP),
+          key: Permission.PRINT_REPORT_WP,
+        },
+        {
+          title: getPermissionLabel(Permission.PRINT_REPORT_MATERIAL),
+          key: Permission.PRINT_REPORT_MATERIAL,
+        },
+        {
+          title: getPermissionLabel(Permission.PRINT_REPORT_EXPIRY),
+          key: Permission.PRINT_REPORT_EXPIRY,
+        },
+      ],
+    },
+    {
+      title: 'Other Actions',
+      key: 'other-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.COPY_ROWS),
+          key: Permission.COPY_ROWS,
+        },
+        {
+          title: getPermissionLabel(Permission.EXPORT),
+          key: Permission.EXPORT,
+        },
+      ],
+    },
+    {
+      title: 'Vendor Actions',
+      key: 'vendor-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.VENDORS_ACTIONS),
+          key: Permission.VENDORS_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'AC Actions',
+      key: 'ac-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.AC_ACTIONS),
+          key: Permission.AC_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Skill Actions',
+      key: 'skill-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.SKILL_ACTIONS),
+          key: Permission.SKILL_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Company Actions',
+      key: 'company-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.COMPANY_ACTIONS),
+          key: Permission.COMPANY_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Store Actions',
+      key: 'store-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.STORE_ACTIONS),
+          key: Permission.STORE_ACTIONS,
+        },
+        {
+          title: getPermissionLabel(Permission.STORE_DELETE_ACTIONS),
+          key: Permission.STORE_DELETE_ACTIONS,
+        },
+      ],
+    },
+    {
+      title: 'Access Actions',
+      key: 'access-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.ADD_ACCESS),
+          key: Permission.ADD_ACCESS,
+        },
+        {
+          title: getPermissionLabel(Permission.CLOSE_ACCESS),
+          key: Permission.CLOSE_ACCESS,
+        },
+        {
+          title: getPermissionLabel(Permission.OPEN_ACCESS),
+          key: Permission.OPEN_ACCESS,
+        },
+        {
+          title: getPermissionLabel(Permission.INSPECT_ACCESS),
+          key: Permission.INSPECT_ACCESS,
+        },
+      ],
+    },
+    {
+      title: 'Critical Task Actions',
+      key: 'critical-task-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.CLOSE_CRITICAL_TASK),
+          key: Permission.CLOSE_CRITICAL_TASK,
+        },
+      ],
+    },
+    {
+      title: 'Action Actions',
+      key: 'action-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.ADD_ACTION),
+          key: Permission.ADD_ACTION,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_ACTION),
+          key: Permission.DELETE_ACTION,
+        },
+        {
+          title: getPermissionLabel(Permission.EDIT_ACTION),
+          key: Permission.EDIT_ACTION,
+        },
+      ],
+    },
+    {
+      title: 'Step Actions',
+      key: 'step-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.ADD_STEP),
+          key: Permission.ADD_STEP,
+        },
+        {
+          title: getPermissionLabel(Permission.DELETE_STEP),
+          key: Permission.DELETE_STEP,
+        },
+        {
+          title: getPermissionLabel(Permission.EDIT_STEP),
+          key: Permission.EDIT_STEP,
+        },
+      ],
+    },
+    {
+      title: 'Print Actions',
+      key: 'print-actions',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PRINT_TAG),
+          key: Permission.PRINT_TAG,
+        },
+        {
+          title: getPermissionLabel(Permission.PRINT_LABEL),
+          key: Permission.PRINT_LABEL,
+        },
+        {
+          title: getPermissionLabel(Permission.PRINT_TASK_CARD),
+          key: Permission.PRINT_TASK_CARD,
+        },
+      ],
+    },
+    {
+      title: 'Parts Modification',
+      key: 'parts-modification',
+      children: [
+        {
+          title: getPermissionLabel(Permission.PartsModification),
+          key: Permission.PartsModification,
+        },
+      ],
+    },
+  ];
+
+  const filteredTreeData = permissionsTreeData
+    .map((group) => ({
+      ...group,
+      children: group.children.filter((permission) =>
+        permission.title.toLowerCase().includes(searchValue.toLowerCase())
+      ),
+    }))
+    .filter((group) => group.children.length > 0)
+    .map((group) => ({
+      ...group,
+      disableCheckbox: disableCheckbox(group),
+      children: group.children.map((permission) => ({
+        ...permission,
+        disableCheckbox: disableCheckbox(permission),
+      })),
+    }));
+
+  const renderTreeTitle = (node: any) => {
+    if (node.disableCheckbox) {
+      return (
+        <Tooltip
+          title={t(
+            'This permission is inherited from the group and cannot be modified'
+          )}
+        >
+          <Text disabled>{node.title}</Text>
+        </Tooltip>
+      );
+    }
+    return (
+      <Tooltip title={t(`Permissions.${node.key}.description`)}>
+        <Text>{node.title}</Text>
+      </Tooltip>
+    );
+  };
 
   useEffect(() => {
     if (user && user.permissions) {
@@ -353,28 +741,27 @@ const UserForm: FC<UserFormProps> = ({
           </div>
         </Tabs.TabPane>
         <Tabs.TabPane tab={t('PERMISSIONS')} key="2">
-          <div className="h-[62vh] flex flex-col overflow-auto pb-3">
+          <div className="h-full flex flex-col overflow-auto pb-3">
             {user ? (
               <ProForm.Group>
-                <div
-                  className="flex flex-col gap-2 flex-grow"
-                  style={{ width: 800 }}
-                >
+                <div className="flex flex-col gap-2 w-full">
                   <Search
                     size="small"
                     allowClear
-                    onChange={handleSearch}
-                    style={{ marginBottom: 8, width: '100%' }}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="mb-2 w-full"
+                    style={{ width: 750 }}
                   />
                   <Tree
                     showLine
                     height={540}
-                    checkedKeys={checkedKeys}
                     checkable
+                    defaultExpandAll
+                    style={{ width: '100%', height: '100%' }}
                     treeData={filteredTreeData}
                     onCheck={handleCheck}
-                    defaultExpandAll
-                    style={{ width: '100%' }}
+                    checkedKeys={checkedKeys}
+                    titleRender={renderTreeTitle}
                   />
                 </div>
               </ProForm.Group>

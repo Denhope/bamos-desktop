@@ -224,6 +224,7 @@ const StoreView: FC<StoreViewType> = ({
           onSingleRowClick && onSingleRowClick(data[0]);
         }}
         gridId={'storeView'}
+        // getRowId={(params: any) => params.data._id} //
       />
     </div>
   );

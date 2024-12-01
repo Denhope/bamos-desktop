@@ -320,6 +320,7 @@ export interface IAreaCode {
 
 export interface IAccessCode {
   accessProjectNumber: any;
+  isAddAccess?: boolean;
   areaCode: any;
   _id: any;
   accessNbr: any;
@@ -346,6 +347,17 @@ export interface IAccessCode {
   accessNumber?: string | number;
   accessCodeId: string;
   status?: string;
+  accesses?: any[];
+  projectTaskIds?: IProjectTask[];
+}
+
+export interface IProjectTask {
+  _id: string;
+  taskNumber: string;
+  taskWO: string;
+  projectTaskWO: string;
+  taskDescription: string;
+  taskType: string;
 }
 
 export interface ITaskResponce {

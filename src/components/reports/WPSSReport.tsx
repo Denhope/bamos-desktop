@@ -233,7 +233,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
         },
       },
       {
-        headerName: t('AUTORIZED STAFF'),
+        headerName: t('AUTHORIZED STAFF'),
         field: 'closed',
         cellRenderer: (params: any) => {
           const action = allActions?.find(
@@ -336,7 +336,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
         3: { cellWidth: 30 }, // REFERENCE
         4: { cellWidth: 'auto' }, // DESCRIPTION
         5: { cellWidth: 30 }, // CLOSING DATE
-        6: { cellWidth: 50 }, // AUTORIZED STAFF - увеличиваем ширину для полного имени
+        6: { cellWidth: 50 }, // AUTHORIZED STAFF - увеличиваем ширину для полного имени
       },
     });
 
@@ -380,7 +380,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
       t('REFERENCE'),
       t('DESCRIPTION'),
       t('CLOSING DATE'),
-      t('AUTORIZED STAFF'),
+      t('AUTHORIZED STAFF'),
     ];
 
     // Подготовка данных для Excel
@@ -431,7 +431,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
       { wch: 15 }, // REFERENCE
       { wch: 50 }, // DESCRIPTION
       { wch: 15 }, // CLOSING DATE
-      { wch: 20 }, // AUTORIZED STAFF
+      { wch: 20 }, // AUTHORIZED STAFF
     ];
     worksheet['!cols'] = colWidths;
 
@@ -535,7 +535,7 @@ const WPSSReport: FC<TaskReportProps> = ({ results }) => {
                   },
                   {
                     field: 'authorizedStaff',
-                    headerName: t('AUTORIZED STAFF'),
+                    headerName: t('AUTHORIZED STAFF'),
                     width: 100, // Увеличили ширину с 50 до 80
                     valueGetter: (params: any) => {
                       const action = allActions?.find(

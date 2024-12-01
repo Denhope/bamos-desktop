@@ -1,0 +1,39 @@
+.splitPanel {
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.zonesTable {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.zonesTable th,
+.zonesTable td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ant-table-container {
+  overflow-x: auto;
+}
+
+/* Дополнительные стили для адаптивности */
+@media (max-width: 768px) {
+  .zonesTable th,
+  .zonesTable td {
+    padding: 8px 2px;
+    font-size: 12px;
+  }
+
+  .splitPanel {
+    flex-direction: column;
+  }
+}

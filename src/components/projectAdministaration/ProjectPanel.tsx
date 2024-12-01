@@ -11,6 +11,7 @@ import {
   Spin,
   Switch,
   notification,
+  Tag,
 } from 'antd';
 import { PlusSquareOutlined, MinusSquareOutlined } from '@ant-design/icons';
 
@@ -155,8 +156,32 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'projectType',
-      headerName: t('WO TYPE'),
-      valueFormatter: (params: any) => params?.value?.toUpperCase(),
+      headerName: `${t('WO TYPE')}`,
+      cellDataType: 'text',
+      cellRenderer: (params: any) => {
+        const typeMap = {
+          baseMaintanance: { text: t('BASE MAINTENANCE'), color: 'green' },
+          lineMaintanance: { text: t('LINE MAINTENANCE'), color: 'blue' },
+          repairPart: { text: t('REPAIR AC'), color: 'red' },
+          partCange: { text: t('COMPONENT CHANGE'), color: 'cyan' },
+          addWork: { text: t('ADD WORK'), color: 'purple' },
+          enginiring: { text: t('ENGINEERING SERVICES'), color: 'magenta' },
+          nonProduction: {
+            text: t('NOT PRODUCTION SERVICES'),
+            color: 'orange',
+          },
+        };
+
+        const type = typeMap[params.value as keyof typeof typeMap];
+
+        if (!type) return params.value?.toUpperCase();
+
+        return (
+          <Tag color={type.color} style={{ margin: '2px' }}>
+            {type.text}
+          </Tag>
+        );
+      },
     },
     {
       field: 'WONumber',

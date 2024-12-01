@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import debounce from 'lodash/debounce';
 import {
   ColDef,
   GridReadyEvent,
@@ -36,6 +37,7 @@ import { utils, writeFile } from 'xlsx';
 
 interface UniversalAgGridProps {
   gridId: string;
+  getRowNodeId?: string;
   rowData: any[];
   columnDefs: ColDef[];
   onRowSelect?: (selectedRows: any[]) => void;
@@ -62,8 +64,34 @@ interface UniversalAgGridProps {
   onSelectedDataChange?: (selectedData: any[]) => void;
 }
 
+const withHighlight =
+  (cellRenderer?: any, searchText?: string) => (params: any) => {
+    const cellValue = params.valueFormatted || params.value;
+    if (!searchText || !cellValue) {
+      return cellRenderer ? cellRenderer(params) : cellValue;
+    }
+
+    const regex = new RegExp(`(${searchText})`, 'gi');
+    const parts = cellValue.toString().split(regex);
+
+    return (
+      <>
+        {parts.map((part, index) =>
+          regex.test(part) ? (
+            <mark key={index} style={{ backgroundColor: 'yellow' }}>
+              {part}
+            </mark>
+          ) : (
+            <span key={index}>{part}</span>
+          )
+        )}
+      </>
+    );
+  };
+
 const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
   gridId,
+  getRowNodeId,
   rowData,
   columnDefs: initialColumnDefs,
   onRowSelect,
@@ -95,6 +123,8 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
 
   const [isColumnSettingsVisible, setIsColumnSettingsVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [quickFilterText, setQuickFilterText] = useState(searchText);
+  const [compositionText, setCompositionText] = useState('');
   const [selectedRowCount, setSelectedRowCount] = useState(0);
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -106,6 +136,19 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
   );
   const [isPaginationEnabled, setIsPaginationEnabled] = useState(pagination);
   const contextMenuRef = useRef<HTMLDivElement>(null);
+  const settingsMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value;
+    setCompositionText(searchValue);
+    if (gridApi) {
+      gridApi.setQuickFilter(searchValue);
+    }
+  };
+
+  const handleCompositionEnd = () => {
+    setSearchText(compositionText);
+  };
 
   useEffect(() => {
     if (!columnState) {
@@ -154,7 +197,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
 
   const handleColumnMoved = useCallback(
     (event: ColumnMovedEvent) => {
-      const newOrder = event.columnApi
+      const newOrder = event.api
         .getAllGridColumns()
         .map((column) => column.getColId());
       dispatch(setColumnOrder({ tableId: gridId, order: newOrder }));
@@ -185,7 +228,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
       const gridDiv = document.querySelector(`#${gridId}`);
       if (gridDiv) {
         gridDiv['api'] = params.api;
-        gridDiv['columnApi'] = params.columnApi;
+        gridDiv['api'] = params.api;
       }
 
       if (externalGridRef && 'current' in externalGridRef) {
@@ -193,7 +236,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
       }
 
       if (columnState && columnState.order.length) {
-        params.columnApi.applyColumnState({
+        params.api.applyColumnState({
           state: columnState.order.map((colId) => ({
             colId,
             hide: columnState.visibility[colId] === false,
@@ -356,10 +399,14 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
 
   const updatedColumnDefs = useMemo(
     () =>
-      isChekboxColumn
+      (isChekboxColumn
         ? [checkboxColumn, ...visibleColumnDefs]
-        : visibleColumnDefs,
-    [isChekboxColumn, checkboxColumn, visibleColumnDefs]
+        : visibleColumnDefs
+      ).map((column) => ({
+        ...column,
+        cellRenderer: withHighlight(column.cellRenderer, searchText),
+      })),
+    [isChekboxColumn, checkboxColumn, visibleColumnDefs, searchText]
   );
 
   const handlePaginationChange = useCallback(
@@ -447,7 +494,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
     const gridDiv = document.querySelector(`#${gridId}`);
     if (gridDiv) {
       gridDiv['api'] = params.api;
-      gridDiv['columnApi'] = params.columnApi;
+      gridDiv['api'] = params.api;
     }
   };
 
@@ -494,6 +541,30 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
     [onCellValueChanged, isRowValid, onSelectedDataChange]
   );
 
+  useEffect(() => {
+    setQuickFilterText(searchText);
+  }, [searchText]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        settingsMenuRef.current &&
+        !settingsMenuRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('.settings-button')
+      ) {
+        setIsColumnSettingsVisible(false);
+      }
+    }
+
+    if (isColumnSettingsVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isColumnSettingsVisible]);
+
   return (
     <div
       className="ag-theme-alpine flex flex-col gap-2 relative"
@@ -509,8 +580,9 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
               allowClear
               size="small"
               placeholder={t('Search')}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              value={compositionText}
+              onChange={handleSearchChange}
+              onCompositionEnd={handleCompositionEnd}
               className="flex-1 min-w-0"
             />
             {additionalButton && (
@@ -529,7 +601,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
               onClick={() =>
                 setIsColumnSettingsVisible(!isColumnSettingsVisible)
               }
-              className="flex-shrink-0"
+              className="flex-shrink-0 settings-button"
             />
           </div>
         </div>
@@ -552,7 +624,8 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
             onRowDoubleClicked={handleRowDoubleClicked}
             pagination={isPaginationEnabled}
             rowSelection={rowSelection}
-            quickFilterText={searchText}
+            quickFilterText={quickFilterText}
+            getRowNodeId={getRowNodeId}
             defaultColDef={{
               sortable: true,
               filter: true,
@@ -573,10 +646,14 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
                 ${t('Loading...')}
               </span>
             `}
+            onQuickFilterChanged={(params) =>
+              setSearchText(params.quickFilterText)
+            }
           />
         </div>
         {isColumnSettingsVisible && (
           <div
+            ref={settingsMenuRef}
             className="absolute top-0 right-0 bg-white border-l border-gray-200 p-3 h-full overflow-y-auto shadow-lg transition-all duration-300 ease-in-out"
             style={{ width: '220px', zIndex: 1000, fontSize: '12px' }}
           >

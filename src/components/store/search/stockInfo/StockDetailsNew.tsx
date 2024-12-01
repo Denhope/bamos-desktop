@@ -47,6 +47,34 @@ const StockDetailsNew: FC<StockDetailsNewProps> = ({
     cellDataType: CellDataType;
   }
 
+  const DateCell = (props: { value: string; style: any }) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    };
+
+    return (
+      <div
+        style={{
+          backgroundColor: props.style.backgroundColor,
+          border: `1px solid ${props.style.borderColor}`,
+          color: props.style.color,
+          borderRadius: '4px',
+          padding: '2px 8px',
+          display: 'inline-block',
+          fontSize: '12px',
+          textAlign: 'center',
+          minWidth: '90px',
+        }}
+      >
+        {formatDate(props.value)}
+      </div>
+    );
+  };
+
   const [columnDefs] = useState<ExtendedColDef[]>([
     {
       headerName: `${t('LOCAL_ID')}`,
@@ -110,6 +138,17 @@ const StockDetailsNew: FC<StockDetailsNewProps> = ({
       headerName: `${t('CONDITION')}`,
       cellDataType: 'text',
     },
+
+    {
+      field: 'SUPPLIER_BATCH_NUMBER',
+      headerName: `${t('BATCH NUMBER')}`,
+      cellDataType: 'text',
+    },
+    {
+      field: 'SERIAL_NUMBER',
+      headerName: `${t('SERIAL NUMBER')}`,
+      cellDataType: 'text',
+    },
     {
       field: 'OWNER',
       editable: false,
@@ -117,6 +156,65 @@ const StockDetailsNew: FC<StockDetailsNewProps> = ({
       headerName: `${t('OWNER')}`,
       cellDataType: 'text',
     },
+    {
+      field: 'PRODUCT_EXPIRATION_DATE',
+      headerName: `${t('PRODUCT EXPIRATION DATE')}`,
+      cellDataType: 'date',
+      cellRenderer: (params: any) => {
+        if (!params.value) return null;
+
+        const date = new Date(params.value);
+        const today = new Date();
+        const diffTime = date.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let style = {
+          backgroundColor: '#f6ffed',
+          borderColor: '#b7eb8f',
+          color: '#389e0d',
+        };
+
+        if (diffDays <= 0) {
+          style = {
+            backgroundColor: '#fff1f0',
+            borderColor: '#ffa39e',
+            color: '#cf1322',
+          };
+        } else if (diffDays <= 30) {
+          style = {
+            backgroundColor: '#fff7e6',
+            borderColor: '#ffd591',
+            color: '#d46b08',
+          };
+        } else if (diffDays <= 90) {
+          style = {
+            backgroundColor: '#feffe6',
+            borderColor: '#fffb8f',
+            color: '#ad8b00',
+          };
+        }
+
+        return <DateCell value={params.value} style={style} />;
+      },
+    },
+    {
+      field: 'RECEIVED_DATE',
+      headerName: `${t('RECEIVED DATE')}`,
+      cellDataType: 'date',
+      valueFormatter: (params: any) => {
+        if (!params.value) return '';
+        const date = new Date(params.value);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+      },
+    },
+    // {
+    //   field: 'FILES',
+    //   headerName: `${t('FILES')}`,
+    //   cellDataType: 'text',
+    // },
     ...(showInaccessibleOnly
       ? [
           {

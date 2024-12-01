@@ -72,6 +72,7 @@ import { useGetfilteredWOQuery } from '@/features/wpAdministration/wpApi';
 import UniversalAgGrid from '../shared/UniversalAgGrid';
 import TaskMultiCloseModal from '../woAdministration/TaskMultiCloseModal';
 import { useGetUsersQuery } from '@/features/userAdministration/userApi';
+import PdfGeneratorAdditionalHatches from '../woAdministration/PdfGeneratorAdditionalHatches';
 interface AdminPanelProps {
   projectSearchValues: any;
 }
@@ -151,6 +152,9 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           isOnlyWithPanels: projectSearchValues?.isOnlyWithPanels,
           userID: projectSearchValues?.userID,
           WOReferenceID: projectSearchValues?.WOReferenceID || '',
+          ...(projectSearchValues?.isAddAccess && {
+            isAddAccess: projectSearchValues.isAddAccess,
+          }),
         },
         { skip: !triggerQuery }
       )
@@ -170,6 +174,9 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
           isOnlyWithPanels: projectSearchValues?.isOnlyWithPanels,
           userID: projectSearchValues?.userID,
           WOReferenceID: projectSearchValues?.WOReferenceID || '',
+          ...(projectSearchValues?.isAddAccess && {
+            isAddAccess: projectSearchValues.isAddAccess,
+          }),
         },
         { skip: !triggerQuery }
       );
@@ -246,7 +253,7 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
   };
 
   const handleTaskMultiCloseModalSave = async (data: any) => {
-    console.log('Данные, полученные от TaskMultiCloseModal:', data);
+    console.log('Данные, поученные от TaskMultiCloseModal:', data);
 
     try {
       const actionData = data[0];
@@ -439,14 +446,26 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       filter: true,
       valueGetter: (params: { data: { status: keyof ValueEnumType } }) =>
         params.data.status,
-      valueFormatter: (params: { value: keyof ValueEnumType }) => {
+      cellRenderer: (params: { value: keyof ValueEnumType }) => {
         const status = params.value;
-        return valueEnum[status] || '';
+        return (
+          <Tag color={getStatusColor(status)}>
+            {valueEnum[status] || status}
+          </Tag>
+        );
       },
-      cellStyle: (params: { value: keyof ValueEnumType }) => ({
-        backgroundColor: getStatusColor(params.value),
-        //// color: '#ffffff', // Text color
-      }),
+      cellStyle: {
+        border: '1px solid #f0f0f0',
+      },
+    },
+    {
+      headerName: `${t('ADD ACCESS')}`,
+      field: 'isAddAccess',
+      editable: false,
+      cellDataType: 'boolean',
+      valueGetter: (params: any) => params.data.isAddAccess,
+      cellRenderer: (params: any) =>
+        params.value ? <Tag color="red">Yes</Tag> : <Tag color="blue">No</Tag>,
     },
     {
       headerName: `${t('LABEL')}`,
@@ -461,8 +480,9 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
       field: 'accessDescription',
       headerName: `${t('DESCRIPTION')}`,
       cellDataType: 'text',
-
       filter: true,
+      valueGetter: (params: any) =>
+        params.data.accessDescription || t('NO DESCRIPTION'),
     },
     {
       field: 'taskTypes',
@@ -631,6 +651,13 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
             data={[]}
           ></PdfGeneratorPanel>
         </Col>
+        <Col style={{ textAlign: 'right' }}>
+          <PdfGeneratorAdditionalHatches
+            wo={projects && projects[0]}
+            htmlTemplate={''}
+            data={[]}
+          ></PdfGeneratorAdditionalHatches>
+        </Col>
       </Space>
 
       <div className="h-[77vh] flex flex-col">
@@ -669,6 +696,15 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                     setSelectedKeys(selectedKeys);
                   }}
                   onRowSelect={(rowData) => handleEdit(rowData[0])}
+                  defaultColDef={{
+                    sortable: true,
+                    filter: true,
+                    resizable: true,
+                    cellStyle: {
+                      border: '1px solid #f0f0f0',
+                    },
+                  }}
+                  className="w-full"
                 />
               )
             )}
@@ -693,19 +729,21 @@ const AccessAdminPanel: React.FC<AdminPanelProps> = ({
                       onSubmit={function (accessCode: any): void {
                         console.log(accessCode);
                         Modal.confirm({
-                          title: t(' ARE YOU SURE, YOU WANT TO ADD ACCESS'),
+                          title: t('ARE YOU SURE, YOU WANT TO ADD ACCESS'),
                           onOk: async () => {
                             try {
                               await addPanels({
-                                accessIds: [accessCode.accessID],
+                                accessIds: accessCode.accesses,
+                                isAddAccess: accessCode.isAddAccess,
                                 WOReferenceID: accessCode.WOReferenceID,
                                 projectTaskIds: accessCode.projectTaskID,
                               }).unwrap();
-                              // refetchProjectItems();
-                              message.success(t('ДОСТУПЫ УСПЕШНО СОЗДАНЫ'));
+                              notification.success({
+                                message: t('ACCESSES SUCCESSFULLY ADDED'),
+                              });
                               Modal.destroyAll();
                             } catch (error) {
-                              message.error(t('ОШИБКА '));
+                              // Обработка ошибок
                             }
                           },
                         });

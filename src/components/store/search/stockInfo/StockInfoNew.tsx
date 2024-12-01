@@ -21,7 +21,7 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
           sm={24}
         >
           <ProDescriptions
-            className="bg-white px-4 py-3 rounded-md  align-middle "
+            className="bg-white px-4 py-3 rounded-md align-middle"
             loading={false}
             column={4}
             size="small"
@@ -30,16 +30,26 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
               label={`${t(`DESCRIPTIONS`)}`}
               valueType="text"
             >
-              <div className="font-bold truncate">
+              <Tag
+                color="orange"
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '100%',
+                  fontWeight: 'bold',
+                }}
+              >
                 {(selectedItem && selectedItem?.DESCRIPTION?.toUpperCase()) ||
                   (selectedItem &&
                     selectedItem?.NAME_OF_MATERIAL?.toUpperCase())}
-              </div>
+              </Tag>
             </ProDescriptions.Item>
 
             <ProDescriptions.Item label={`${t(`GROUP`)}`} valueType="text">
               {selectedItem && selectedItem?.GROUP && (
                 <Tag
+                  color="blue"
                   style={{
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -54,6 +64,7 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
             <ProDescriptions.Item label={`${t(`TYPE`)}`} valueType="text">
               {selectedItem && selectedItem?.TYPE && (
                 <Tag
+                  color="green"
                   style={{
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -70,6 +81,7 @@ const StockInfoNew: FC<StockInfoProps> = ({ selectedItem, searchValues }) => {
             >
               {selectedItem && (
                 <Tag
+                  color="purple"
                   style={{
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',

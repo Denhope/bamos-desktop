@@ -189,7 +189,7 @@ const ZoneCodeTree: FC<ZoneTreeProps> = ({
         checkable={false}
         treeData={filteredTreeData}
         onSelect={onSelect}
-        height={620}
+        height={500}
         searchQuery={searchQuery}
       />
     </div>

@@ -5,8 +5,7 @@ export const columnDefs = (t: TFunction): ColDef[] => [
   {
     field: 'createDate',
     headerName: t('CREATE DATE'),
-
-    flex: 1,
+    width: 150,
     valueFormatter: (params: any) => {
       if (!params.value) return '';
       return new Date(params.value).toLocaleDateString('ru-RU', {
@@ -21,65 +20,78 @@ export const columnDefs = (t: TFunction): ColDef[] => [
   {
     field: 'label',
     headerName: t('LABEL'),
+    width: 120,
   },
   {
     field: 'pickSlipNumber',
     headerName: t('PICKSLIP No'),
+    width: 120,
   },
   {
     field: 'partNumber',
     headerName: t('PART No'),
+    width: 120,
   },
-
   {
     field: 'batchNumber',
     headerName: t('BATCH'),
+    width: 120,
   },
   {
     field: 'serialNumber',
     headerName: t('SERIAL'),
+    width: 120,
   },
   {
     field: 'store',
     headerName: t('STORE'),
+    width: 120,
   },
   {
     field: 'location',
     headerName: t('LOCATION'),
+    width: 120,
   },
   {
     field: 'condition',
     headerName: t('CONDITION'),
+    width: 120,
   },
   {
     field: 'description',
     headerName: t('DESCRIPTION'),
+    width: 120,
   },
   {
     field: 'orderNumber',
     headerName: t('ORDER No'),
+    width: 120,
   },
   {
     field: 'projectWO',
     headerName: t('PROJECT No'),
+    width: 120,
   },
   {
     field: 'projectTaskWO',
     headerName: t('TRACE No'),
+    width: 120,
   },
+  { field: 'externalNumber', headerName: t('EXTERNAL No'), width: 120 },
   {
     field: 'taskNumber',
     headerName: t('TASK No'),
+    width: 120,
   },
   {
     field: 'taskDescription',
     headerName: t('TASK DESCRIPTION'),
+    width: 120,
   },
   {
     field: 'taskType',
     headerName: t('TASK TYPE'),
-
-    flex: 1,
+    width: 150,
     valueFormatter: (params: any) => {
       const valueEnumTask = {
         RC: t('TC'),
@@ -100,27 +112,23 @@ export const columnDefs = (t: TFunction): ColDef[] => [
   {
     field: 'quantity',
     headerName: t('QTY'),
-    minWidth: 80,
-    flex: 1,
+    width: 80,
     type: 'numericColumn',
   },
   {
     field: 'cancelledQty',
     headerName: t('CANCELLED QTY'),
-    minWidth: 120,
-    flex: 1,
+    width: 120,
     type: 'numericColumn',
   },
   {
     field: 'unitOfMeasure',
     headerName: t('UNIT OF MEASURE'),
-    minWidth: 120,
-    flex: 1,
+    width: 120,
   },
   {
     field: 'createdBy',
     headerName: t('CREATE BY'),
-    minWidth: 120,
-    flex: 1,
+    width: 120,
   },
 ];

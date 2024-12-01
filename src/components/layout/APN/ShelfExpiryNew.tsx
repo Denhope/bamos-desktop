@@ -241,14 +241,63 @@ const ShelfExpiryNew: FC = () => {
         width: columnWidthsExpiry['PRODUCT_EXPIRATION_DATE'],
         headerName: `${t('EXPIRY DATE')}`,
         cellDataType: 'date',
-        valueFormatter: (params: any) => {
+        cellRenderer: (params: any) => {
           if (!params.value) return '';
+
           const date = new Date(params.value);
-          return date.toLocaleDateString('ru-RU', {
+          const today = new Date();
+          const diffTime = date.getTime() - today.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          let style = {
+            backgroundColor: '#f6ffed',
+            borderColor: '#b7eb8f',
+            color: '#389e0d',
+          };
+
+          if (diffDays <= 0) {
+            style = {
+              backgroundColor: '#fff1f0',
+              borderColor: '#ffa39e',
+              color: '#cf1322',
+            };
+          } else if (diffDays <= 30) {
+            style = {
+              backgroundColor: '#fff7e6',
+              borderColor: '#ffd591',
+              color: '#d46b08',
+            };
+          } else if (diffDays <= 90) {
+            style = {
+              backgroundColor: '#feffe6',
+              borderColor: '#fffb8f',
+              color: '#ad8b00',
+            };
+          }
+
+          const formattedDate = date.toLocaleDateString('ru-RU', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
           });
+
+          return (
+            <div
+              style={{
+                backgroundColor: style.backgroundColor,
+                border: `1px solid ${style.borderColor}`,
+                color: style.color,
+                borderRadius: '4px',
+                padding: '2px 8px',
+                display: 'inline-block',
+                fontSize: '12px',
+                textAlign: 'center',
+                minWidth: '90px',
+              }}
+            >
+              {formattedDate}
+            </div>
+          );
         },
       },
       {

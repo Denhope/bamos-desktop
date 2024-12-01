@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import debounce from 'lodash/debounce';
 import {
   ColDef,
   GridReadyEvent,
@@ -36,6 +37,7 @@ import { utils, writeFile } from 'xlsx';
 
 interface UniversalAgGridProps {
   gridId: string;
+  getRowNodeId?: string;
   rowData: any[];
   columnDefs: ColDef[];
   onRowSelect?: (selectedRows: any[]) => void;
@@ -59,10 +61,37 @@ interface UniversalAgGridProps {
   gridRef?: React.RefObject<{ api: GridApi }>;
   isRowSelectable?: (params: any) => boolean;
   isRowValid?: (row: any) => boolean;
+  onSelectedDataChange?: (selectedData: any[]) => void;
 }
+
+const withHighlight =
+  (cellRenderer?: any, searchText?: string) => (params: any) => {
+    const cellValue = params.valueFormatted || params.value;
+    if (!searchText || !cellValue) {
+      return cellRenderer ? cellRenderer(params) : cellValue;
+    }
+
+    const regex = new RegExp(`(${searchText})`, 'gi');
+    const parts = cellValue.toString().split(regex);
+
+    return (
+      <span>
+        {parts.map((part, index) =>
+          regex.test(part) ? (
+            <mark key={index} style={{ backgroundColor: 'yellow' }}>
+              {part}
+            </mark>
+          ) : (
+            <span key={index}>{part}</span>
+          )
+        )}
+      </span>
+    );
+  };
 
 const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
   gridId,
+  getRowNodeId,
   rowData,
   columnDefs: initialColumnDefs,
   onRowSelect,
@@ -82,6 +111,7 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
   gridRef: externalGridRef,
   isRowSelectable,
   isRowValid,
+  onSelectedDataChange,
 }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -93,6 +123,8 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
 
   const [isColumnSettingsVisible, setIsColumnSettingsVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [quickFilterText, setQuickFilterText] = useState(searchText);
+  const [compositionText, setCompositionText] = useState('');
   const [selectedRowCount, setSelectedRowCount] = useState(0);
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -104,6 +136,18 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
   );
   const [isPaginationEnabled, setIsPaginationEnabled] = useState(pagination);
   const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value;
+    setCompositionText(searchValue);
+    if (gridApi) {
+      gridApi.setQuickFilter(searchValue);
+    }
+  };
+
+  const handleCompositionEnd = () => {
+    setSearchText(compositionText);
+  };
 
   useEffect(() => {
     if (!columnState) {
@@ -225,18 +269,26 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
 
     if (onRowSelect) {
       onRowSelect(selectedData);
+      setSelectedRowCount(selectedNodes.length);
     }
 
-    if (onCheckItems) {
+    if (onSelectedDataChange) {
       const validatedData = isRowValid
         ? selectedData.filter((row) => isRowValid(row))
         : selectedData;
 
-      onCheckItems(validatedData);
+      onSelectedDataChange(validatedData);
+    }
+
+    if (onCheckItems) {
+      const selectedIds = selectedNodes.map(
+        (node) => node?.data?.id || node?.data?._id
+      );
+      onCheckItems(selectedIds);
     }
 
     setSelectedRowCount(selectedData.length);
-  }, [onRowSelect, onCheckItems, isRowValid]);
+  }, [onRowSelect, onCheckItems, isRowValid, onSelectedDataChange]);
 
   const handleCellContextMenu = useCallback((event: CellContextMenuEvent) => {
     const mouseEvent = event.event as MouseEvent;
@@ -346,10 +398,14 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
 
   const updatedColumnDefs = useMemo(
     () =>
-      isChekboxColumn
+      (isChekboxColumn
         ? [checkboxColumn, ...visibleColumnDefs]
-        : visibleColumnDefs,
-    [isChekboxColumn, checkboxColumn, visibleColumnDefs]
+        : visibleColumnDefs
+      ).map((column) => ({
+        ...column,
+        cellRenderer: withHighlight(column.cellRenderer, searchText),
+      })),
+    [isChekboxColumn, checkboxColumn, visibleColumnDefs, searchText]
   );
 
   const handlePaginationChange = useCallback(
@@ -474,15 +530,19 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
         });
 
         // Вызываем onCheckItems с обновленными данными
-        if (onCheckItems) {
-          onCheckItems(validatedData);
+        if (onSelectedDataChange) {
+          onSelectedDataChange(validatedData);
         }
 
         setSelectedRowCount(validatedData.length);
       }
     },
-    [onCellValueChanged, isRowValid, onCheckItems]
+    [onCellValueChanged, isRowValid, onSelectedDataChange]
   );
+
+  useEffect(() => {
+    setQuickFilterText(searchText);
+  }, [searchText]);
 
   return (
     <div
@@ -499,8 +559,9 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
               allowClear
               size="small"
               placeholder={t('Search')}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              value={compositionText}
+              onChange={handleSearchChange}
+              onCompositionEnd={handleCompositionEnd}
               className="flex-1 min-w-0"
             />
             {additionalButton && (
@@ -542,7 +603,8 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
             onRowDoubleClicked={handleRowDoubleClicked}
             pagination={isPaginationEnabled}
             rowSelection={rowSelection}
-            quickFilterText={searchText}
+            quickFilterText={quickFilterText}
+            getRowNodeId={getRowNodeId}
             defaultColDef={{
               sortable: true,
               filter: true,
@@ -563,6 +625,9 @@ const UniversalAgGrid: React.FC<UniversalAgGridProps> = ({
                 ${t('Loading...')}
               </span>
             `}
+            onQuickFilterChanged={(params) =>
+              setSearchText(params.quickFilterText)
+            }
           />
         </div>
         {isColumnSettingsVisible && (

@@ -77,6 +77,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
         updateDate: item.updateDate,
         updateUserID: item.updateUserID ? item.updateUserID._id : '',
         acTypeID: '', // Добавить тип AC, если требуется
+        isRequired: item.isRequred,
       }));
   };
 
@@ -129,6 +130,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
           partTaskNumber: {
             partNumberID: taskPart.partId,
             quantity: taskPart.QUANTITY,
+            isRequired: taskPart.isRequired,
             id: taskPart.id,
           },
         }).unwrap();
@@ -142,6 +144,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
           partNumber: {
             partNumberID: taskPart.partId,
             quantity: taskPart.QUANTITY,
+            isRequired: taskPart.isRequired,
             taskId: taskId,
           },
         }).unwrap();
@@ -196,7 +199,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
   return (
     <div style={containerStyle}>
       <div style={gridStyle} className={'ag-theme-alpine'}>
-        <PartsTable 
+        <PartsTable
           isEditable={isEditable}
           height="65vh"
           isLoading={isLoading}

@@ -124,11 +124,7 @@ const StockInformationNew: FC = () => {
   };
   type MenuItem = Required<MenuProps>['items'][number];
   const items: MenuItem[] = [
-    getItem(
-      <>{t('STOCK INFORMATION (BAN:221)')}</>,
-      'sub1',
-      <ShoppingCartOutlined />
-    ),
+    getItem(<>{t('STOCK INFORMATION')}</>, 'sub1', <ShoppingCartOutlined />),
   ];
   const dispatch = useAppDispatch();
 
@@ -406,7 +402,7 @@ const StockInformationNew: FC = () => {
                   isAddVisiable={true}
                   isButtonVisiable={false}
                   isEditable={true}
-                  height={'38vh'}
+                  height={'41vh'}
                   columnDefs={columnDefs}
                   partNumbers={[]}
                   onUpdateData={(data: any[]): void => {}}

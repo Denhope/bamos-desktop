@@ -9,6 +9,7 @@ import {
   Spin,
   Switch,
   notification,
+  Tag,
 } from 'antd';
 import {
   PlusSquareOutlined,
@@ -167,9 +168,32 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
     },
     {
       field: 'WOType',
-      headerName: `${t('WO TYPE')}`,
+      headerName: `${t('WP TYPE')}`,
       cellDataType: 'text',
-      valueFormatter: (params: any) => params?.value?.toUpperCase(),
+      cellRenderer: (params: any) => {
+        const typeMap = {
+          baseMaintanance: { text: t('BASE MAINTENANCE'), color: 'green' },
+          lineMaintanance: { text: t('LINE MAINTENANCE'), color: 'blue' },
+          // repairPart: { text: t('REPAIR AC'), color: 'red' },
+          partCange: { text: t('COMPONENT CHANGE'), color: 'cyan' },
+          addWork: { text: t('ADD WORK'), color: 'purple' },
+          enginiring: { text: t('ENGINEERING SERVICES'), color: 'magenta' },
+          nonProduction: {
+            text: t('NOT PRODUCTION SERVICES'),
+            color: 'orange',
+          },
+        };
+
+        const type = typeMap[params.value as keyof typeof typeMap];
+
+        if (!type) return params.value?.toUpperCase();
+
+        return (
+          <Tag color={type.color} style={{ margin: '2px' }}>
+            {type.text}
+          </Tag>
+        );
+      },
     },
     {
       field: 'customerWO',
@@ -244,7 +268,7 @@ const ProjectPanelAdmin: React.FC<AdminPanelProps> = ({
       cellDataType: 'date',
       headerName: `${t('START DATE')}`,
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // ��роверка отсутствия значения
+        if (!params.value) return ''; // роверка отсутствия значения
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',

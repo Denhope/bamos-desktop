@@ -1,7 +1,7 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { TimePicker } from 'antd';
 import EditableTable from '@/components/shared/Table/EditableTable';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IBookingItem } from '@/models/IBooking';
 import PartContainer from '@/components/woAdministration/PartContainer';
@@ -13,12 +13,14 @@ import {
 } from '@/services/utilites';
 import { ColDef } from 'ag-grid-community';
 import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+
 type ListOfBookingType = {
   scroll: number;
   data: any[];
   onSingleRowClick?: (record: any, rowIndex?: any) => void;
   isLoading: boolean;
 };
+
 const ListOfBooking: FC<ListOfBookingType> = ({
   data,
   scroll,
@@ -27,19 +29,16 @@ const ListOfBooking: FC<ListOfBookingType> = ({
 }) => {
   const { t } = useTranslation();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [uniqueData, setUniqueData] = useState<any[]>([]);
 
-  const handleSelectedRowKeysChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const transformedPartNumbers = useMemo(() => {
-    return transformToPartBooking(data || []);
+  useEffect(() => {
+    // Очистка данных перед обновлением
+    setUniqueData([]); // Очищаем данные
+    const unique = Array.from(
+      new Map(data.map((item) => [item._id, item])).values()
+    );
+    setUniqueData(unique);
   }, [data]);
-  type CellDataType = 'text' | 'number' | 'date' | 'boolean';
-
-  interface ExtendedColDef extends ColDef {
-    cellDataType: CellDataType;
-  }
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
     CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
@@ -50,7 +49,11 @@ const ListOfBooking: FC<ListOfBookingType> = ({
     FC: t('FC'),
     HARD_ACCESS: t('HARD_ACCESS'),
   };
-  const [columnDefs, setColumnDefs] = useState<ExtendedColDef[]>([
+  const transformedPartNumbers = useMemo(() => {
+    return transformToPartBooking(uniqueData || []);
+  }, [uniqueData]);
+
+  const [columnDefs, setColumnDefs] = useState<any[]>([
     {
       field: 'createDate',
       editable: false,
@@ -151,13 +154,13 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       cellDataType: 'text',
     },
     {
-      field: 'woName',
-      headerName: `${t('WP NAME')}`,
+      field: 'projectTaskWO',
+      headerName: `${t('TRACE No')}`,
       cellDataType: 'text',
     },
     {
-      field: 'projectTaskWO',
-      headerName: `${t('TRACE No')}`,
+      field: 'woName',
+      headerName: `${t('WP NAME')}`,
       cellDataType: 'text',
     },
     {
@@ -170,6 +173,7 @@ const ListOfBooking: FC<ListOfBookingType> = ({
       headerName: `${t('TASK DESCRIPTION')}`,
       cellDataType: 'text',
     },
+
     {
       field: 'TASK_TYPE',
       headerName: `${t('TASK TYPE')}`,
@@ -223,6 +227,7 @@ const ListOfBooking: FC<ListOfBookingType> = ({
           onSingleRowClick && onSingleRowClick(data[0]);
         }}
         gridId={'bookingList'}
+        // getRowNodeId={(data: any) => data._id} // Убедитесь, что это уникальное поле
       />
     </div>
   );

@@ -1,18 +1,22 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ProForm, ProFormText, ProFormCheckbox } from '@ant-design/pro-form';
-import { Button, Empty, Tabs, Tree, Input } from 'antd';
+import { Button, Empty, Tabs, Tree, Input, Tooltip, Typography } from 'antd';
 import { UserGroup } from '@/models/IUser';
 import { ProFormSelect, ProFormTextArea } from '@ant-design/pro-components';
 import { useTranslation } from 'react-i18next';
 import { Permission } from '@/components/auth/PermissionGuard';
 
-interface UserFormProps {
+const { Text } = Typography;
+
+interface UserGroupFormProps {
   userGroup?: UserGroup;
   onSubmit: (userGroup: UserGroup) => void;
   onDelete?: (userGroupId: string) => void;
 }
+
 const { Search } = Input;
-const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
+
+const UserGroupForm: FC<UserGroupFormProps> = ({ userGroup, onSubmit }) => {
   const [form] = ProForm.useForm();
   const handleSubmit = async (values: UserGroup) => {
     const newUser: UserGroup = userGroup
@@ -62,6 +66,25 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
   const [checkedKeys, setCheckedKeys] = useState<any>([]);
   const handleCheck = (checkedKeys: any) => {
     setCheckedKeys(checkedKeys);
+  };
+
+  const renderTreeTitle = (node: any) => {
+    if (userGroup && userGroup.permissions.includes(node.key)) {
+      return (
+        <Tooltip
+          title={t(
+            'This permission is inherited from the group and cannot be modified'
+          )}
+        >
+          <Text disabled>{node.title}</Text>
+        </Tooltip>
+      );
+    }
+    return (
+      <Tooltip title={t(`Permissions.${node.key}.description`)}>
+        <Text>{node.title}</Text>
+      </Tooltip>
+    );
   };
 
   const filteredTreeData = permissionsTreeData.filter((item) =>
@@ -134,6 +157,7 @@ const UserGroupForm: FC<UserFormProps> = ({ userGroup, onSubmit }) => {
                     onCheck={handleCheck}
                     defaultExpandAll
                     style={{ width: '100%' }}
+                    titleRender={renderTreeTitle}
                   />
                 </div>
               </ProForm.Group>

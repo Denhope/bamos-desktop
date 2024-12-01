@@ -358,6 +358,7 @@ const TechnicalView: FC<TechnicalViewType> = ({
   return (
     <div>
       <UniversalAgGrid
+        // getRowNodeId={(data: any) => data?._id}
         isLoading={isLoading}
         isVisible={true}
         pagination={true}

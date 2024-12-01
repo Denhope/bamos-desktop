@@ -117,7 +117,7 @@ const BaseLayout: React.FC = () => {
     {
       APNNBR: '27',
       moduleNumber: '200',
-      descriptions: `${t('A/C REGISTRATION')}`,
+      descriptions: `${t('A/C ADMINISTRATION')}`,
       route: RouteNames.AC,
       group: 'aircraft',
     },

@@ -3,7 +3,7 @@ import { ITask } from './ITask';
 import { IPartNumber } from './IUser';
 
 export interface IACType {
-  _id: Key | null | undefined;
+  _id: any | null | undefined;
   id: string;
   code: string;
   name: string;

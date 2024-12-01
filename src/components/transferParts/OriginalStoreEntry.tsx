@@ -329,7 +329,9 @@ const OriginalStoreEntry: FC<OriginalStoreEntryType> = ({
               </ProDescriptions.Item>
               <ProDescriptions.Item label={t('UNIT')} valueType="text">
                 {parts && (parts[0]?._id || parts[0]?.id) && (
-                  <Tag>{String(parts[0]?.UNIT_OF_MEASURE).toUpperCase()}</Tag>
+                  <Tag>
+                    {String(parts[0]?.partID?.UNIT_OF_MEASURE).toUpperCase()}
+                  </Tag>
                 )}
               </ProDescriptions.Item>
               <ProDescriptions.Item label={t('QUANTITY')} valueType="text">

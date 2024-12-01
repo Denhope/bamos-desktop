@@ -1008,7 +1008,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                       <ProFormSelect
                         rules={[{ required: true }]}
                         name="status"
-                        label={t('NRC STATUS')}
+                        label={t('STATUS')}
                         width="sm"
                         initialValue={'closed'}
                         valueEnum={{
@@ -1574,7 +1574,7 @@ const WOAdminForm: FC<UserFormProps> = ({
                   <ProFormSelect
                     rules={[{ required: true }]}
                     name="status"
-                    label={t('NRC STATUS')}
+                    label={t('STATUS')}
                     width="sm"
                     initialValue={'closed'}
                     valueEnum={{

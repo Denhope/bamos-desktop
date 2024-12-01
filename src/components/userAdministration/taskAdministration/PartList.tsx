@@ -74,6 +74,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
         updateDate: item?.updateDate,
         updateUserID: item?.updateUserID ? item?.updateUserID?._id : '',
         acTypeID: item?.acTypeID, // Добавить тип AC, если требуется
+        isRequred: item.isRequred,
       }));
   };
 
@@ -109,30 +110,27 @@ const PartList: React.FC<ExampleComponentProps> = ({
   };
   const handleSubmit = async (taskPart: any) => {
     try {
-      // Проверка на наличие всех необходимых полей
-      if (!taskPart.partId || !taskPart.QUANTITY) {
-        notification.error({
-          message: t('ERROR'),
-          description: t(
-            'All fields must be filled and quantity must be greater than zero.'
-          ),
-        });
-        return;
-      }
+      // Добавим логирование для отладки
+      console.log('TaskPart data:', taskPart);
+      console.log('isRequred value:', taskPart.isRequred);
 
       if (taskPart.createUserID) {
-        console.log(taskPart);
-        await updateTaskPart({
+        const updateData = {
           partTaskNumber: {
             partNumberID: taskPart.partId,
             quantity: taskPart.QUANTITY,
             id: taskPart.id,
+            isRequred: Boolean(taskPart.isRequred), // явно приводим к boolean
+            taskId: taskId,
           },
-        }).unwrap();
+        };
+
+        console.log('Update payload:', updateData);
+        await updateTaskPart(updateData).unwrap();
 
         notification.success({
-          message: t('STEP SUCCESSFULLY UPDATED'),
-          description: t('The step has been successfully updated.'),
+          message: t('PART SUCCESSFULLY UPDATED'),
+          description: t('The part has been successfully updated.'),
         });
       } else {
         await addPart({
@@ -140,6 +138,7 @@ const PartList: React.FC<ExampleComponentProps> = ({
             partNumberID: taskPart.partId,
             quantity: taskPart.QUANTITY,
             taskId: taskId,
+            isRequred: taskPart.isRequred,
           },
         }).unwrap();
 

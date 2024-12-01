@@ -6,7 +6,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getItem } from '@/services/utilites';
 import { SwapOutlined } from '@ant-design/icons';
-import tabs from 'antd/es/tabs';
 import TabContent from '@/components/shared/Table/TabContent';
 import PartTrackingFilterForm from '@/components/store/partTracking/PartTrackingFilterForm';
 import ListOfBooking from '@/components/store/partTracking/ListOfBooking';
@@ -28,28 +27,32 @@ const PartsTracking: FC<PartsTracking> = ({
   onSingleRowClick,
 }) => {
   const { t } = useTranslation();
-  const [bookings, setBookings] = useState<any[] | []>([]);
-  const [data, setdata] = useState<any[] | []>(bookings);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
+
   useEffect(() => {
-    if (bookings) {
-      setdata(bookings);
-    }
+    // Очистка данных перед обновлением
+    setData([]); // Очищаем данные
+    const uniqueBookings = Array.from(
+      new Map(bookings.map((item) => [item._id, item])).values()
+    );
+    setData(uniqueBookings);
   }, [bookings]);
-  type MenuItem = Required<MenuProps>['items'][number];
-  const items: MenuItem[] = [
+
+  const items: MenuProps['items'] = [
     getItem(<>{t('PARTS TRACKING')}</>, 'sub1', <SwapOutlined />),
   ];
+
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null);
+
   const tabs = [
     {
       content: (
         <ListOfBooking
           scroll={48}
           data={data}
-          onSingleRowClick={function (part?: any): void {
-            setSelectedMaterial(part);
-          }}
+          onSingleRowClick={(part) => setSelectedMaterial(part)}
           isLoading={false}
         />
       ),
@@ -58,9 +61,7 @@ const PartsTracking: FC<PartsTracking> = ({
     {
       content: (
         <StoreView
-          onSingleRowClick={function (part?: any): void {
-            setSelectedMaterial(part);
-          }}
+          onSingleRowClick={(part) => setSelectedMaterial(part)}
           scroll={48}
           data={data}
           isLoading={false}
@@ -71,9 +72,7 @@ const PartsTracking: FC<PartsTracking> = ({
     {
       content: (
         <TechnicalView
-          onSingleRowClick={function (part?: any): void {
-            setSelectedMaterial(part);
-          }}
+          onSingleRowClick={(part) => setSelectedMaterial(part)}
           scroll={48}
           data={data}
           isLoading={false}
@@ -81,38 +80,24 @@ const PartsTracking: FC<PartsTracking> = ({
       ),
       title: `${t('TECHNICAL VIEW')}`,
     },
-    // {
-    //   content: <></>,
-    //   title: `${t('FINANCIAL VIEW')}`,
-    // },
   ];
+
   return (
     <Layout>
       <Sider
         collapsible
-        // color="rgba(255, 255, 255, 0.2)"
         collapsed={collapsed}
-        onCollapse={(value: boolean | ((prevState: boolean) => boolean)) =>
-          setCollapsed(value)
-        }
+        onCollapse={setCollapsed}
         className="h-[85vh] overflow-hidden"
         theme="light"
         width={400}
       >
         <Menu theme="light" mode="inline" items={items} />
         <div className="mx-auto px-5">
-          <div
-            style={{
-              display: !collapsed ? 'block' : 'none',
-            }}
-          >
+          <div style={{ display: !collapsed ? 'block' : 'none' }}>
             <PartTrackingFilterForm
-              onBookingSearch={function (bookings: any[] | []): void {
-                setBookings(bookings);
-              }}
-              onPartSearch={function (part?: any): void {
-                setSelectedMaterial(part);
-              }}
+              onBookingSearch={(bookings) => setBookings(bookings)} // Устанавливаем bookings
+              onPartSearch={(part) => setSelectedMaterial(part)}
             />
           </div>
         </div>
@@ -172,7 +157,7 @@ const PartsTracking: FC<PartsTracking> = ({
                 </Tag>
               </ProDescriptions.Item>
             </ProDescriptions>
-            <TabContent tabs={tabs}></TabContent>
+            <TabContent tabs={tabs} />
           </div>
         </div>
       </Content>
