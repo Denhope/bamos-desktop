@@ -18,7 +18,7 @@ jobs:
           node-version: '18.x'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Get version from package.json
         id: package-version
@@ -42,10 +42,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/**/*.AppImage
-            release/**/*.deb
-            release/**/*.exe
-            release/**/*.dmg
+            dist/**/*.AppImage
+            dist/**/*.deb
+            dist/**/*.exe
+            dist/**/*.dmg
           tag_name: v${{ steps.package-version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
