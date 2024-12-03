@@ -1,6 +1,6 @@
 {
   "name": "bamos",
-  "version": "0.1.58",
+  "version": "0.1.60",
   "private": true,
   "description": "planeSystem",
   "license": "MIT",
@@ -12,6 +12,7 @@
   "main": "dist-electron/main/index.js",
   "scripts": {
     "build": "tsc && vite build && electron-builder",
+    "build:release": "electron-builder build --publish never",
     "dev": "vite",
     "preview": "vite preview",
     "postinstall": "electron-builder install-app-deps && patch-package",
@@ -45,6 +46,7 @@
     "axios": "^1.6.5",
     "date-fns": "^3.6.0",
     "electron-fetch": "^1.9.1",
+    "electron-log": "^5.2.3",
     "electron-pdf-window": "^1.0.0",
     "electron-updater": "^6.3.4",
     "exceljs": "^4.4.0",

@@ -7,7 +7,14 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { useGetFilteredZonesQuery } from '@/features/zoneAdministration/zonesApi';
-import { DatePickerProps, Form, FormInstance, message } from 'antd';
+import {
+  DatePickerProps,
+  Form,
+  FormInstance,
+  message,
+  Checkbox,
+  notification,
+} from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { useGetStoresQuery } from '@/features/storeAdministration/StoreApi';
 import React, { FC, useEffect, useRef, useState, useMemo } from 'react';
@@ -113,14 +120,16 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       return acc;
     }, {} as Record<string, string>) || {};
   const zonesValueEnum = useMemo(() => {
-    return zones?.reduce((acc: Record<string, string>, zone: any) => {
-      const id = zone?.id || zone?._id;
-      const label = zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
-      if (id && label) {
-        acc[id] = label;
-      }
-      return acc;
-    }, {}) || {};
+    return (
+      zones?.reduce((acc: Record<string, string>, zone: any) => {
+        const id = zone?.id || zone?._id;
+        const label = zone?.areaNbr || zone?.subZoneNbr || zone?.majoreZoneNbr;
+        if (id && label) {
+          acc[id] = label;
+        }
+        return acc;
+      }, {}) || {}
+    );
   }, [zones]);
   const projectsValueEnum: Record<string, string> =
     projects?.reduce((acc, reqType: any) => {
@@ -139,8 +148,25 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
   //     return acc;
   //   }, {}) || {};
 
+  const [loadAllTasks, setLoadAllTasks] = useState(false);
+
   const onFinish = async (values: any) => {
     try {
+      const hasAnyFilter = Object.values(values).some((value) =>
+        Array.isArray(value) ? value.length > 0 : Boolean(value)
+      );
+
+      if (!hasAnyFilter && !loadAllTasks) {
+        notification.warning({
+          message: t('Warning'),
+          description: t(
+            'Please select at least one filter or enable "Load all tasks"'
+          ),
+          duration: 3,
+        });
+        return;
+      }
+
       const searchParams = {
         startDate: selectedStartDate || '',
         status: form.getFieldValue('woStatus'),
@@ -161,11 +187,16 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
         time: new Date(),
         defectCodeID: form.getFieldValue('defectCodeID'),
         ata: form.getFieldValue('ata'),
+        loadAllTasks,
       };
 
       onProjectSearch(searchParams);
     } catch (error) {
-      message.error('Failed to fetch requirements');
+      notification.error({
+        message: t('Error'),
+        description: t('Failed to fetch requirements'),
+        duration: 3,
+      });
     }
   };
   const { data: stores } = useGetStoresQuery({});
@@ -191,6 +222,14 @@ const WoFilteredForm: FC<RequirementsFilteredFormType> = ({
       form={form}
       onFinish={onFinish}
     >
+      <div className="mb-4">
+        <Checkbox
+          checked={loadAllTasks}
+          onChange={(e) => setLoadAllTasks(e.target.checked)}
+        >
+          {t('Load all tasks')}
+        </Checkbox>
+      </div>
       <ProFormText
         name="projectTaskWO"
         label={`${t('TRACE No')}`}

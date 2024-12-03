@@ -1641,7 +1641,7 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
         projectWO: bookedItem?.projectID?.projectWO,
         projectTaskWO: bookedItem.projectTaskID?.taskWO,
         registrationNumber: bookedItem?.projectID?.acRegistrationNumber,
-        PART_NUMBER_BOOKED: bookedItem?.storeItemID?.PART_NUMBER,
+        PART_NUMBER_BOOKED: bookedItem?.storeItemID?.partID?.PART_NUMBER,
         DESCRIPTION: bookedItem?.storeItemID?.NAME_OF_MATERIAL,
         GROUP: bookedItem?.storeItemID?.GROUP,
         CONDITION: bookedItem?.storeItemID?.CONDITION,
@@ -1701,7 +1701,7 @@ export const transformToIProjectTask = (data: any[]): any[] => {
     mainWorkTime: item?.mainWorkTime || item?.taskId?.mainWorkTime,
     files: item?.FILES || item?.files || [],
     taskDescription: item?.taskDescription,
-    amtoss: item?.taskId?.amtoss || item?.refTask,
+    amtoss: item?.taskId?.amtoss || item?.refTask || item?.amtoss,
     createBy: item?.createUserID?.name,
 
     // taskNumber: item?.taskNumber,

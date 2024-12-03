@@ -1240,7 +1240,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       console.groupEnd();
 
       const response = await addMultiTask({
-        parts: processedData,
+        taskNumberDTO: processedData,
       }).unwrap();
 
       notification.success({

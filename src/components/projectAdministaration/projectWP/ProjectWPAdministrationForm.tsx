@@ -105,7 +105,7 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
         projectItemNumberID: reqCode?.projectItemsWOID?.map(
           (item) => item?.taskWO
         ),
-        amtoss: reqCode?.taskNumberID?.amtoss,
+        amtoss: reqCode?.taskNumberID?.amtoss || reqCode?.amtoss,
         taskNumberID: reqCode?.taskNumberID?.id || reqCode?.taskNumberID?._id,
         type: reqCode?.taskNumberID?.type,
       });
@@ -464,7 +464,10 @@ const ProjectWPAdministrationForm: FC<FormProps> = ({
                                 name="mainWorkTime"
                                 label={t('MHS')}
                                 min={0}
-                                fieldProps={{ precision: 0 }}
+                                fieldProps={{
+                                  precision: 2, // Разрешаем 2 знака после запятой
+                                  step: 0.1, // Шаг изменения при использовании стрелок
+                                }}
                                 hidden={useTaskNumberID}
                               />
                               <ProFormText
