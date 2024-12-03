@@ -2,7 +2,8 @@ name: Release
 
 on:
   push:
-    branches: [test-realese]
+    branches:
+      - test-realese
     paths-ignore:
       - '**.md'
       - '**.spec.js'
