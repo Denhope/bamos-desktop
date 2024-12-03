@@ -1,69 +1,50 @@
-name: Release
+Для сборки Electron приложения в CI/CD нам нужно добавить отдельные сборки для разных платформ. Вот обновленный воркфлоу:
 
+```yaml:.github/workflows/release.yml
+name: Release
 on:
   push:
     branches:
-      - test-realese
-    paths-ignore:
-      - '**.md'
-      - '**.spec.js'
-      - '.idea'
-      - '.vscode'
-      - '.dockerignore'
-      - 'Dockerfile'
-      - '.gitignore'
-      - '.github/**'
-      # - '!.github/workflows/release.yml'
+      - test-release
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  release:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-
-      - name: Clear npm cache
-        run: npm cache clean --force
-
+          node-version: '18.x'
+          
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-
-      - name: Install Windows dependencies
-        if: matrix.os == 'windows-latest'
+          
+      - name: Install dependencies
         run: |
-          choco install gtk-runtime
-          choco install libjpeg-turbo
-
-      - name: Install Dependencies
-        run: |
-          npm install --no-audit --no-fund || true
-          npm run postinstall || true
-
+          npm install
+          npm rebuild canvas --update-binary
+          
       - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
+        
       - name: Build
         env:
-          NODE_OPTIONS: --max-old-space-size=8192
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: npm run build || true
-
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run build
+          
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,7 +53,7 @@ jobs:
           release_name: Release v${{ steps.package-version.outputs.version }}
           draft: false
           prerelease: false
-
+          
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
@@ -85,3 +66,53 @@ jobs:
           tag_name: v${{ steps.package-version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+А в package.json добавьте следующие скрипты:
+
+```json
+{
+  "scripts": {
+    "build": "electron-builder build -c.extraMetadata.main=build/electron/main/index.js",
+    "compile": "tsc && vite build"
+  }
+}
+```
+
+В electron-builder.json5 убедитесь, что есть настройки для всех платформ:
+
+```json5
+{
+  "appId": "com.your-app-id",
+  "productName": "Your App Name",
+  "directories": {
+    "output": "dist",
+    "buildResources": "build-resources"
+  },
+  "files": [
+    "build/**/*",
+    "node_modules/**/*"
+  ],
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "category": "Development"
+  },
+  "win": {
+    "target": ["nsis"]
+  },
+  "mac": {
+    "target": ["dmg"]
+  },
+  "publish": {
+    "provider": "generic",
+    "channel": "latest",
+    "url": "https://github.com/Denhope/bamos-desktop/releases/latest/download/"
+  }
+}
+```
+
+Основные изменения:
+1. Добавлена матрица для сборки под разные ОС
+2. Создание релиза происходит только один раз (на ubuntu)
+3. Сборка происходит параллельно для всех платформ
+4. Загрузка артефактов происходит для каждой платформы
