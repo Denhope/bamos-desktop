@@ -6,25 +6,41 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
-      - name: Get version from package.json
+      - name: Install dependencies
+        run: |
+          npm install
+          npm rebuild canvas --update-binary
+
+      - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
+      - name: Build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run build
+
       - name: Create Release
+        if: matrix.os == 'ubuntu-latest'
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -35,17 +51,15 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Build
-        run: npm run build
-
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/**/*.AppImage
-            dist/**/*.deb
-            dist/**/*.exe
-            dist/**/*.dmg
+            dist/*.AppImage
+            dist/*.deb
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
           tag_name: v${{ steps.package-version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
