@@ -29,7 +29,7 @@
   publish: {
     provider: 'generic',
     channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.1.61/',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
   },
   npmRebuild: true,
   extraResources: [
