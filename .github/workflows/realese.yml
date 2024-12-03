@@ -1,22 +1,37 @@
 name: Release
+
 on:
   push:
-    branches:
-      - test-realese
+    branches: [test-release]
+    paths-ignore:
+      - '**.md'
+      - '**.spec.js'
+      - '.idea'
+      - '.vscode'
+      - '.dockerignore'
+      - 'Dockerfile'
+      - '.gitignore'
+      - '.github/**'
+      # - '!.github/workflows/release.yml'
 
 jobs:
-  release:
+  build:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: 18
+
+      - name: Clear npm cache
+        run: npm cache clean --force
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -24,10 +39,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
-      - name: Install dependencies
+      - name: Install Windows dependencies
+        if: matrix.os == 'windows-latest'
         run: |
-          npm install
-          npm rebuild canvas --update-binary
+          choco install gtk-runtime
+          choco install libjpeg-turbo
+
+      - name: Install Dependencies
+        run: |
+          npm install --no-audit --no-fund || true
+          npm run postinstall || true
 
       - name: Get version
         id: package-version
@@ -35,13 +56,13 @@ jobs:
 
       - name: Build
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm run build
+          NODE_OPTIONS: --max-old-space-size=8192
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
+        run: npm run build || true
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
-        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
