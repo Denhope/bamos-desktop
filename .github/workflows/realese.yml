@@ -53,24 +53,17 @@ jobs:
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           tag_name: v${{ steps.package-version.outputs.version }}
-          release_name: Release v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
-        with:
           files: |
             dist/*.AppImage
             dist/*.deb
             dist/*.exe
             dist/*.dmg
             dist/*.zip
-          tag_name: v${{ steps.package-version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
