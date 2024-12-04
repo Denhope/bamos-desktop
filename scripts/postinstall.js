@@ -1,24 +1,40 @@
-const fs = require('fs');
-const path = require('path');
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join, basename } from 'path';
 
-function copyCanvasModules() {
-  const sourceDir = path.join(__dirname, '../node_modules/@napi-rs/canvas/');
-  const targetDir = path.join(__dirname, '../dist-electron/main');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(targetDir, { recursive: true });
-  }
+async function copyCanvasModules() {
+  const sourceDir = join(dirname(__dirname), 'node_modules/@napi-rs/canvas/');
+  const targetDir = join(dirname(__dirname), 'dist-electron/main');
 
-  if (fs.existsSync(sourceDir)) {
-    const files = fs.readdirSync(sourceDir, { recursive: true });
-    files.forEach((file) => {
-      if (typeof file === 'string' && file.endsWith('.node')) {
-        const sourcePath = path.join(sourceDir, file);
-        const targetPath = path.join(targetDir, path.basename(file));
-        fs.copyFileSync(sourcePath, targetPath);
+  try {
+    await fs.mkdir(targetDir, { recursive: true });
+
+    if (
+      await fs
+        .access(sourceDir)
+        .then(() => true)
+        .catch(() => false)
+    ) {
+      const files = await fs.readdir(sourceDir, { recursive: true });
+
+      for (const file of files) {
+        if (typeof file === 'string' && file.endsWith('.node')) {
+          const sourcePath = join(sourceDir, file);
+          const targetPath = join(targetDir, basename(file));
+          await fs.copyFile(sourcePath, targetPath);
+        }
       }
-    });
+    }
+  } catch (error) {
+    console.error('Error copying canvas modules:', error);
+    process.exit(1);
   }
 }
 
-copyCanvasModules();
+copyCanvasModules().catch((error) => {
+  console.error('Failed to copy canvas modules:', error);
+  process.exit(1);
+});
