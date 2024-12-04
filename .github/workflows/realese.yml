@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Generate package-lock.json
+        run: npm install --package-lock-only
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -30,7 +34,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm ci
+          npm ci --ignore-scripts
           npm config set canvas_binary_host_mirror https://github.com/Automattic/node-canvas/releases/download/
           npm rebuild canvas --update-binary
 

@@ -1,0 +1,56 @@
+{
+  appId: 'com.bamos.app',
+  productName: 'Bamos',
+  asar: true,
+  directories: {
+    output: 'release/${version}',
+  },
+  files: ['dist-electron', 'dist', 'node_modules/**/*'],
+  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
+  mac: {
+    artifactName: '${productName}_${version}.${ext}',
+    target: ['dmg', 'zip'],
+  },
+  win: {
+    target: [
+      {
+        target: 'nsis',
+        arch: ['x64'],
+      },
+    ],
+    artifactName: '${productName}_${version}.${ext}',
+  },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false,
+  },
+  publish: {
+    provider: 'generic',
+    channel: 'latest',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
+  },
+  npmRebuild: true,
+  extraResources: [
+    {
+      from: 'node_modules/canvas/build/Release/',
+      to: 'canvas/build/Release/',
+      filter: ['*.node'],
+    },
+  ],
+  /// linux
+  linux: {
+    target: ['AppImage', 'deb'],
+    category: 'Office',
+    icon: 'build/icons',
+    desktop: {
+      Name: 'Bamos',
+      Comment: 'Plane System',
+      Categories: 'Office;',
+      Type: 'Application',
+      Terminal: false,
+      Icon: 'bamos',
+    },
+  },
+}
