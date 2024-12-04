@@ -48,14 +48,17 @@ jobs:
           npm_config_build_from_source: true
         run: |
           npm install --force
-          npm rebuild canvas --update-binary
+          npm install canvas@2.9.0 --build-from-source
+          npm rebuild
 
       - name: Build
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: npm run build:linux
+        run: |
+          npm run build:linux
+          ls -la release/
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
