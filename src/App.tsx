@@ -31,6 +31,7 @@ import UTCClock from '@/components/shared/UTCClock';
 import ConnectionIndicator from '@/components/shared/ConnectionIndicator';
 import ApiSwitcher from '@/components/layout/ApiSwitcher';
 import SupportRequestButton from '@/components/SupportRequestButton';
+import { UpdateNotification } from './components/update/UpdateNotification';
 
 const { Footer } = Layout;
 
@@ -182,6 +183,7 @@ const App: FC = () => {
     <div className="App">
       <ConfigProvider locale={language === 'ru' ? ruRU : enUS}>
         <ConnectionContext.Provider value={{ isConnected, setIsConnected }}>
+          <UpdateNotification />
           <Main />
         </ConnectionContext.Provider>
       </ConfigProvider>
