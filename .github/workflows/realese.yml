@@ -1,7 +1,8 @@
 name: Release
 on:
   push:
-    branches: [feature/formatedInputs]
+    branches:
+      - test-realese
     paths-ignore:
       - '**.md'
       - '**.spec.js'
