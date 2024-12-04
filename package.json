@@ -15,7 +15,7 @@
     "build:release": "npm run rebuild:electron && tsc && vite build && electron-builder --publish always",
     "dev": "vite",
     "preview": "vite preview",
-    "postinstall": "patch-package",
+    "postinstall": "electron-builder install-app-deps",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
