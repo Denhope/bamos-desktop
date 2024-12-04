@@ -62,8 +62,9 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/*.AppImage
-            dist/*.deb
-            dist/*.exe
-            dist/*.dmg
-            dist/*.zip
+            release/**/*.AppImage
+            release/**/*.deb
+            release/**/*.exe
+            release/**/*.dmg
+            release/**/*.zip
+            release/**/*.yml

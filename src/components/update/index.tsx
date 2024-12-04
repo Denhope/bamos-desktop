@@ -6,27 +6,6 @@ import './update.css';
 import { Button } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-
-interface ErrorMessage {
-  type: string;
-  message: string;
-}
-
-function getErrorMessage(error: ErrorType): ErrorMessage {
-  if (error.message?.includes('Cannot find channel')) {
-    return {
-      type: 'update-not-found',
-      message:
-        'Update server is temporarily unavailable. Please try again later.',
-    };
-  }
-
-  return {
-    type: 'unknown',
-    message: 'Unable to check for updates. Please try again later.',
-  };
-}
-
 const Update = () => {
   const { t } = useTranslation();
   const [checking, setChecking] = useState(false);
@@ -135,11 +114,9 @@ const Update = () => {
       >
         <div className="modal-slot">
           {updateError ? (
-            <div className="flex flex-col items-center gap-2 p-4">
-              <CloudUploadOutlined className="text-2xl text-red-500" />
-              <p className="text-base font-medium">
-                {getErrorMessage(updateError).message}
-              </p>
+            <div>
+              <p>Error downloading the latest version.</p>
+              <p>{updateError.message}</p>
             </div>
           ) : updateAvailable ? (
             <div>
