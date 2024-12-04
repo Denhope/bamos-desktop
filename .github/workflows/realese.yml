@@ -34,10 +34,9 @@ jobs:
             librsvg2-dev \
             pkg-config
 
-      - name: Configure npm
+      - name: Setup canvas env
         run: |
-          npm config set canvas_binary_host_mirror https://registry.npmmirror.com/-/binary/canvas
-          npm config set registry https://registry.npmjs.org/
+          echo "CANVAS_BINARY_HOST_MIRROR=https://registry.npmmirror.com/-/binary/canvas" >> $GITHUB_ENV
 
       - name: Get version
         id: package-version
