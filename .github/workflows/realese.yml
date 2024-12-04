@@ -57,7 +57,7 @@ jobs:
         run: |
           npm install --force
           npm install canvas-prebuilt@2.6.1 --save-exact
-          npm rebuild
+          npm rebuild canvas --update-binary
 
       - name: Build
         env:
