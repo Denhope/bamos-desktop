@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout Code
@@ -50,8 +50,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
         run: |
-          npm run tsc
-          npm run vite build
+          npm run compile
+          npm run compile:vite
           npm run build:release
           ls -la release/
 
