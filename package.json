@@ -1,6 +1,6 @@
 {
   "name": "bamos",
-  "version": "0.1.61",
+  "version": "0.1.62",
   "private": true,
   "description": "planeSystem",
   "license": "MIT",
@@ -24,7 +24,8 @@
     "rebuild": "electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview",
-    "build:linux": "tsc && vite build && electron-builder --linux"
+    "build:linux": "tsc && vite build && electron-builder --linux",
+    "electron:build": "electron-builder --publish never"
   },
   "dependencies": {
     "@ant-design/charts": "^2.0.2",

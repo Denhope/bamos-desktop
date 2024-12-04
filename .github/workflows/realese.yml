@@ -27,7 +27,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+          sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev build-essential
+          sudo apt-get install -y python3-pip
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
         run: |
@@ -35,8 +36,8 @@ jobs:
           choco install libjpeg-turbo
       - name: Install Dependencies
         run: |
-          npm install --no-audit --no-fund || true
-          npm run postinstall || true
+          npm install --no-audit --no-fund
+          npm rebuild canvas --update-binary
       - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
@@ -46,7 +47,9 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: npm run build || true
+        run: |
+          npm run build
+          npm run electron:build
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
