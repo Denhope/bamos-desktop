@@ -59,9 +59,9 @@ jobs:
           npm_config_build_from_source: true
           npm_config_canvas_binary_host_mirror: https://registry.npmmirror.com/-/binary/canvas
         run: |
-          npm install --force
+          npm install --force --ignore-scripts
           npm install canvas@2.6.1 --build-from-source
-          @electron/rebuild --force --only=canvas
+          npx @electron/rebuild --force --only=canvas
 
       - name: Build
         env:
