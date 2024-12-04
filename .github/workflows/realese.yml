@@ -48,6 +48,11 @@ jobs:
           rm -rf package-lock.json
           npm cache clean --force
 
+      - name: Install Global Dependencies
+        run: |
+          npm install -g @electron/rebuild
+          npm install -g node-gyp
+
       - name: Install Dependencies
         env:
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
@@ -56,8 +61,7 @@ jobs:
         run: |
           npm install --force
           npm install canvas@2.6.1 --build-from-source
-          npm install @electron/rebuild -g
-          npx @electron/rebuild --force --only=canvas
+          @electron/rebuild --force --only=canvas
 
       - name: Build
         env:
