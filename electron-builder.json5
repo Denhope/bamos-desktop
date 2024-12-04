@@ -40,16 +40,13 @@
     url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
   },
   npmRebuild: true,
-  buildDependenciesFromSource: true,
   extraResources: [
     {
       from: 'node_modules/canvas/build/Release/',
       to: 'canvas/build/Release/',
       filter: ['*.node'],
-      warning: 'warn',
     },
   ],
-  /// linux
   linux: {
     target: ['AppImage', 'deb'],
     category: 'Office',

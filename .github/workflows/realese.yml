@@ -34,28 +34,24 @@ jobs:
             librsvg2-dev \
             pkg-config
 
-      - name: Setup canvas env
-        run: |
-          echo "CANVAS_BINARY_HOST_MIRROR=https://registry.npmmirror.com/-/binary/canvas" >> $GITHUB_ENV
-
       - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      - name: Clean install
+      - name: Install Dependencies
+        env:
+          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
+          npm_config_build_from_source: true
         run: |
-          rm -rf node_modules package-lock.json
-          npm install --no-save canvas@2.9.3
-          npm ci || npm install
+          npm install --force
+          npm rebuild canvas --build-from-source
 
       - name: Build
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: |
-          npm rebuild canvas --update-binary
-          npm run build
+        run: npm run build
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
