@@ -5,7 +5,15 @@
   directories: {
     output: 'release/${version}',
   },
-  files: ['dist-electron', 'dist', 'node_modules/**/*'],
+  files: [
+    'dist-electron',
+    'dist',
+    {
+      from: 'node_modules',
+      to: 'node_modules',
+      filter: ['canvas/**/*'],
+    },
+  ],
   asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
   mac: {
     artifactName: '${productName}_${version}.${ext}',

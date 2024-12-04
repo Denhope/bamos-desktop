@@ -19,9 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-
-      - name: Clear npm cache
-        run: npm cache clean --force
+          cache: 'npm'
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -29,18 +27,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev build-essential
           sudo apt-get install -y python3-pip
-      - name: Install Windows dependencies
-        if: matrix.os == 'windows-latest'
-        run: |
-          choco install gtk-runtime
-          choco install libjpeg-turbo
+
       - name: Install Dependencies
         run: |
-          npm install --no-audit --no-fund
+          npm ci
+          npm config set canvas_binary_host_mirror https://github.com/Automattic/node-canvas/releases/download/
           npm rebuild canvas --update-binary
-      - name: Get version
-        id: package-version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Build
         env:
