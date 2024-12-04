@@ -25,7 +25,7 @@
     "rebuild:electron": "electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview",
-    "build:linux": "npm run rebuild:electron && tsc && vite build && electron-builder --linux",
+    "build:linux": "npm run rebuild:electron && tsc && vite build && electron-builder --linux --publish never",
     "electron:build": "npm run rebuild:electron && electron-builder --publish never"
   },
   "dependencies": {

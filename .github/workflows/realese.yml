@@ -32,7 +32,11 @@ jobs:
             libjpeg-dev \
             libgif-dev \
             librsvg2-dev \
-            pkg-config
+            pkg-config \
+            python3-pip \
+            python3-setuptools \
+            mesa-common-dev \
+            libglu1-mesa-dev
 
       - name: Get version
         id: package-version
@@ -44,14 +48,14 @@ jobs:
           npm_config_build_from_source: true
         run: |
           npm install --force
-          npm rebuild canvas --build-from-source
+          npm rebuild canvas --update-binary
 
       - name: Build
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: npm run build
+        run: npm run build:linux
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
@@ -64,8 +68,5 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/*.AppImage
-            dist/*.deb
-            dist/*.exe
-            dist/*.dmg
-            dist/*.zip
+            release/**/*.AppImage
+            release/**/*.deb
