@@ -98,7 +98,7 @@
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
     "zod": "^3.23.8",
-    "skia-canvas": "^1.0.1"
+    "node-canvas-webgl": "^0.2.10"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",

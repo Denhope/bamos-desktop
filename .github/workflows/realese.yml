@@ -36,7 +36,8 @@ jobs:
             python3-pip \
             python3-setuptools \
             mesa-common-dev \
-            libglu1-mesa-dev
+            libglu1-mesa-dev \
+            libgl1-mesa-dev
 
       - name: Get version
         id: package-version
@@ -54,6 +55,7 @@ jobs:
           npm_config_build_from_source: true
         run: |
           npm install --force
+          npm rebuild node-canvas-webgl --build-from-source
 
       - name: Build
         env:

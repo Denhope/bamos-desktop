@@ -9,7 +9,7 @@
     'dist-electron',
     'dist',
     {
-      from: 'node_modules/skia-canvas/lib',
+      from: 'node_modules/node-canvas-webgl/build/Release',
       to: 'lib',
       filter: ['*.node'],
     },
