@@ -99,7 +99,7 @@
     "xml2js": "^0.6.2",
     "zod": "^3.23.8",
     "canvas": "2.6.1",
-    "canvas-prebuilt": "2.6.1"
+    "node-canvas-prebuilt": "^2.6.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
@@ -149,6 +149,7 @@
   "binary": {
     "module_name": "canvas",
     "module_path": "./build/Release/",
-    "host": "https://registry.npmmirror.com/-/binary/canvas"
+    "host": "https://registry.npmmirror.com/-/binary/canvas",
+    "remote_path": "./v{version}"
   }
 }

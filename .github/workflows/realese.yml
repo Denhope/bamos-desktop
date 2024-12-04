@@ -56,7 +56,7 @@ jobs:
           CANVAS_PREBUILT: 1
         run: |
           npm install --force
-          npm install canvas-prebuilt@2.6.1 --save-exact
+          npm install node-canvas-prebuilt --save-exact
           npm rebuild canvas --update-binary
 
       - name: Build
