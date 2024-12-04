@@ -42,10 +42,11 @@ jobs:
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      - name: Remove old patches
+      - name: Clean Install
         run: |
-          rm -f patches/canvas*.patch || true
-          rm -rf node_modules || true
+          rm -rf node_modules
+          rm -rf package-lock.json
+          npm cache clean --force
 
       - name: Install Dependencies
         env:
@@ -53,8 +54,9 @@ jobs:
           npm_config_build_from_source: true
         run: |
           npm install --force
-          npm install canvas@2.9.0 --build-from-source
-          npm rebuild
+          npm install canvas@2.8.0 --build-from-source
+          npm install @electron/rebuild -g
+          npx @electron/rebuild --force --types --only=canvas
 
       - name: Build
         env:

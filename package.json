@@ -27,7 +27,7 @@
     "start": "electron-vite preview",
     "build:linux": "npm run prebuild && tsc && vite build && electron-builder --linux --publish never",
     "electron:build": "npm run rebuild:electron && electron-builder --publish never",
-    "prebuild": "electron-builder install-app-deps"
+    "prebuild": "@electron/rebuild --force --types --only=canvas"
   },
   "dependencies": {
     "@ant-design/charts": "^2.0.2",
@@ -98,7 +98,7 @@
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
     "zod": "^3.23.8",
-    "canvas": "2.9.0"
+    "canvas": "2.8.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
@@ -118,7 +118,7 @@
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.16",
-    "electron": "^28.3.3",
+    "electron": "^22.3.27",
     "electron-builder": "^24.13.3",
     "electron-rebuild": "^3.2.9",
     "eslint": "^8.56.0",

@@ -39,7 +39,7 @@
     channel: 'latest',
     url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
   },
-  npmRebuild: true,
+  npmRebuild: false,
   buildDependenciesFromSource: true,
   extraResources: [
     {
