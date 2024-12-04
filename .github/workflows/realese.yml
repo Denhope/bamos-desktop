@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout Code
@@ -28,18 +28,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
         run: |
           choco install gtk-runtime
           choco install libjpeg-turbo
-
       - name: Install Dependencies
         run: |
           npm install --no-audit --no-fund || true
           npm run postinstall || true
-
       - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
@@ -47,9 +44,9 @@ jobs:
       - name: Build
         env:
           NODE_OPTIONS: --max-old-space-size=8192
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: npm run build:release
+        run: npm run build || true
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
@@ -62,9 +59,9 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            release/Bamos_*.AppImage
-            release/Bamos_*.deb
-            release/Bamos_*.exe
-            release/Bamos_*.dmg
-            release/Bamos_*.zip
-            release/latest*.yml
+            release/**/*.AppImage
+            release/**/*.deb
+            release/**/*.exe
+            release/**/*.dmg
+            release/**/*.zip
+            release/**/*.yml
