@@ -32,6 +32,7 @@
     url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
   },
   npmRebuild: true,
+  buildDependenciesFromSource: true,
   extraResources: [
     {
       from: 'node_modules/canvas/build/Release/',

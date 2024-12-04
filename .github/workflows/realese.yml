@@ -3,16 +3,6 @@ on:
   push:
     branches:
       - test-realese
-    paths-ignore:
-      - '**.md'
-      - '**.spec.js'
-      - '.idea'
-      - '.vscode'
-      - '.dockerignore'
-      - 'Dockerfile'
-      - '.gitignore'
-      - '.github/**'
-      # - '!.github/workflows/build.yml'
 
 jobs:
   build:
