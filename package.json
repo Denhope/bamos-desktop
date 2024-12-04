@@ -96,8 +96,7 @@
     "xlsx": "^0.18.5",
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
-    "zod": "^3.23.8",
-    "canvas": "2.11.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
@@ -141,21 +140,7 @@
     "vite-plugin-require-transform": "^1.0.21",
     "@electron/rebuild": "^3.6.0",
     "node-gyp": "^10.0.1",
-    "node-addon-api": "^7.0.0",
-    "canvas": "2.9.3"
+    "node-addon-api": "^7.0.0"
   },
-  "canvas_binary_host_mirror": "https://registry.npmmirror.com/-/binary/canvas",
-  "config": {
-    "canvas": {
-      "build-from-source": true
-    }
-  },
-  "build": {
-    "beforeBuild": "npm run rebuild:electron",
-    "npmRebuild": true,
-    "buildDependenciesFromSource": true
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "canvas_binary_host_mirror": "https://registry.npmmirror.com/-/binary/canvas"
 }
