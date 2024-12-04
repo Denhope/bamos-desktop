@@ -9,7 +9,7 @@
     'dist-electron',
     'dist',
     {
-      from: 'node_modules/node-canvas-webgl/build/Release',
+      from: 'node_modules/@napi-rs/canvas/',
       to: 'lib',
       filter: ['*.node'],
     },

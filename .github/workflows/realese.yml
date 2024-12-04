@@ -55,7 +55,6 @@ jobs:
           npm_config_build_from_source: true
         run: |
           npm install --force
-          npm rebuild node-canvas-webgl --build-from-source
 
       - name: Build
         env:
