@@ -3,7 +3,7 @@
   productName: 'Bamos',
   asar: true,
   directories: {
-    output: 'release/${version}',
+    output: 'release',
   },
   files: ['dist-electron', 'dist', 'node_modules/**/*'],
   asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
@@ -27,10 +27,13 @@
     deleteAppDataOnUninstall: false,
   },
   publish: {
-    provider: 'generic',
-    channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
+    provider: 'github',
+    owner: 'Denhope',
+    repo: 'bamos-desktop',
+    private: true,
+    releaseType: 'release',
   },
+  generateUpdatesFilesForAllChannels: true,
   npmRebuild: true,
   extraResources: [
     {
@@ -39,7 +42,6 @@
       filter: ['*.node'],
     },
   ],
-  /// linux
   linux: {
     target: ['AppImage', 'deb'],
     category: 'Office',
