@@ -78,3 +78,6 @@ jobs:
           files: |
             release/**/*.AppImage
             release/**/*.deb
+            release/**/latest-linux.yml
+            release/**/builder-debug.yml
+            release/**/builder-effective-config.yaml
