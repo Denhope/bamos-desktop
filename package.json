@@ -15,7 +15,7 @@
     "build:release": "npm run rebuild:electron && tsc && vite build && electron-builder --publish always",
     "dev": "vite",
     "preview": "vite preview",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "@electron/rebuild --force --only=canvas",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
@@ -25,9 +25,9 @@
     "rebuild:electron": "electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview",
-    "build:linux": "npm run prebuild && tsc && vite build && electron-builder --linux --publish never",
+    "build:linux": "tsc && vite build && electron-builder --linux --publish never",
     "electron:build": "npm run rebuild:electron && electron-builder --publish never",
-    "prebuild": "@electron/rebuild --force --types --only=canvas"
+    "prebuild": "@electron/rebuild --force --only=canvas"
   },
   "dependencies": {
     "@ant-design/charts": "^2.0.2",
@@ -98,7 +98,7 @@
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
     "zod": "^3.23.8",
-    "canvas": "2.8.0"
+    "canvas": "2.6.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
