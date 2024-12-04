@@ -25,13 +25,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev build-essential
-          sudo apt-get install -y python3-pip
 
       - name: Install Dependencies
         run: |
-          npm install
-          npm config set canvas_binary_host_mirror https://github.com/Automattic/node-canvas/releases/download/
+          export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+          npm install --ignore-scripts
           npm rebuild canvas --update-binary
+
+      - name: Build Electron
+        run: |
+          npm install electron@28.3.3 --save-dev
+          npm run postinstall
 
       - name: Build
         env:
