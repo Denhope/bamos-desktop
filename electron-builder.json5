@@ -9,12 +9,12 @@
     'dist-electron',
     'dist',
     {
-      from: 'node_modules/canvas/build/Release/',
-      to: 'node_modules/canvas/build/Release/',
+      from: 'node_modules/skia-canvas/lib',
+      to: 'lib',
       filter: ['*.node'],
     },
   ],
-  asarUnpack: ['node_modules/canvas/build/Release/*.node'],
+  asarUnpack: ['lib/*.node'],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
     target: ['dmg', 'zip'],

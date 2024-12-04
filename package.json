@@ -15,7 +15,7 @@
     "build:release": "npm run rebuild:electron && tsc && vite build && electron-builder --publish always",
     "dev": "vite",
     "preview": "vite preview",
-    "postinstall": "npm rebuild canvas --update-binary",
+    "postinstall": "node scripts/postinstall.js",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
@@ -27,7 +27,7 @@
     "start": "electron-vite preview",
     "build:linux": "tsc && vite build && electron-builder --linux --publish never",
     "electron:build": "npm run rebuild:electron && electron-builder --publish never",
-    "prebuild": "npm rebuild canvas --update-binary"
+    "prebuild": "node scripts/postinstall.js"
   },
   "dependencies": {
     "@ant-design/charts": "^2.0.2",
@@ -98,8 +98,7 @@
     "xlsx-style": "^0.8.13",
     "xml2js": "^0.6.2",
     "zod": "^3.23.8",
-    "canvas": "2.6.1",
-    "node-canvas-prebuilt": "^2.6.0"
+    "skia-canvas": "^1.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",

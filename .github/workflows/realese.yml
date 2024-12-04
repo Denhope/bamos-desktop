@@ -52,12 +52,8 @@ jobs:
         env:
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
           npm_config_build_from_source: true
-          npm_config_canvas_binary_host_mirror: https://registry.npmmirror.com/-/binary/canvas
-          CANVAS_PREBUILT: 1
         run: |
           npm install --force
-          npm install node-canvas-prebuilt --save-exact
-          npm rebuild canvas --update-binary
 
       - name: Build
         env:
