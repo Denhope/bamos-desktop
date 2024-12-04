@@ -1,8 +1,7 @@
 name: Release
 on:
   push:
-    branches:
-      - test-realese
+    branches: [feature/formatedInputs]
     paths-ignore:
       - '**.md'
       - '**.spec.js'
@@ -12,7 +11,7 @@ on:
       - 'Dockerfile'
       - '.gitignore'
       - '.github/**'
-      # - "!.github/workflows/release.yml"
+      # - '!.github/workflows/build.yml'
 
 jobs:
   build:
@@ -24,21 +23,18 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-
-      - name: Clear npm cache
-        run: npm cache clean --force
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+          sudo apt-get install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
 
       - name: Install Windows dependencies
         if: matrix.os == 'windows-latest'
@@ -48,33 +44,14 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --no-audit --no-fund || true
-          npm run postinstall || true
+          npm install --no-audit --no-fund
+          npm run rebuild
 
       - name: Build
+        run: npm run build
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: npm run build || true
-
-      - name: Check for build artifacts
-        if: matrix.os != 'windows-latest'
-        run: |
-          if [ -d "release" ]; then
-            echo "Build artifacts found"
-          else
-            echo "No build artifacts found, but continuing anyway"
-          fi
-
-      - name: Check for build artifacts (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          if (Test-Path "release") {
-            echo "Build artifacts found"
-          } else {
-            echo "No build artifacts found, but continuing anyway"
-          }
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
