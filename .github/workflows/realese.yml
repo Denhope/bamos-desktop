@@ -49,11 +49,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-        run: |
-          npm run compile
-          npm run compile:vite
-          npm run build:release
-          ls -la release/
+        run: npm run build:release
 
       - name: Create Release
         if: matrix.os == 'ubuntu-latest'
