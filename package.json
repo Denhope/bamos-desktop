@@ -15,7 +15,7 @@
     "build:release": "electron-builder build --publish never",
     "dev": "vite",
     "preview": "vite preview",
-    "postinstall": "electron-builder install-app-deps && patch-package",
+    "postinstall": "node scripts/postinstall.js",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
