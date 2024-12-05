@@ -24,27 +24,46 @@ const Update = () => {
     onOk: () => window.ipcRenderer.invoke('start-download'),
   });
 
-  const checkUpdate = async () => {
+  const checkUpdate = async (showModal = true) => {
+    console.log('🚀 Starting update check...', { showModal });
     setChecking(true);
-    /**
-     * @type {import('electron-updater').UpdateCheckResult | null | { message: string, error: Error }}
-     */
-    const result = await window.ipcRenderer.invoke('check-update');
-    setProgressInfo({ percent: 0 });
-    setChecking(false);
-    setModalOpen(true);
-    if (result?.error) {
-      setUpdateAvailable(false);
-      setUpdateError(result?.error);
+
+    try {
+      const result = await window.ipcRenderer.invoke('check-update');
+      console.log('📦 Update check result:', result);
+
+      setProgressInfo({ percent: 0 });
+      setChecking(false);
+
+      if (showModal) {
+        console.log('🔔 Opening modal window');
+        setModalOpen(true);
+      }
+
+      if (result?.error) {
+        console.error('❌ Update check error:', result.error);
+        setUpdateAvailable(false);
+        setUpdateError(result?.error);
+      }
+    } catch (error) {
+      console.error('💥 Update check failed:', error);
+      setChecking(false);
+      setUpdateError(error as ErrorType);
     }
   };
 
   const onUpdateCanAvailable = useCallback(
     (_event: Electron.IpcRendererEvent, arg1: VersionInfo) => {
+      console.log('✨ Update availability check:', arg1);
       setVersionInfo(arg1);
       setUpdateError(undefined);
-      // Can be update
+
       if (arg1.update) {
+        console.log('🆕 Update is available:', {
+          currentVersion: arg1.version,
+          newVersion: arg1.newVersion,
+        });
+
         setModalBtn((state) => ({
           ...state,
           cancelText: 'Cancel',
@@ -52,7 +71,9 @@ const Update = () => {
           onOk: () => window.ipcRenderer.invoke('start-download'),
         }));
         setUpdateAvailable(true);
+        setModalOpen(true);
       } else {
+        console.log('✅ Application is up to date');
         setUpdateAvailable(false);
       }
     },
@@ -61,6 +82,7 @@ const Update = () => {
 
   const onUpdateError = useCallback(
     (_event: Electron.IpcRendererEvent, arg1: ErrorType) => {
+      console.error('❌ Update error occurred:', arg1);
       setUpdateAvailable(false);
       setUpdateError(arg1);
     },
@@ -69,6 +91,7 @@ const Update = () => {
 
   const onDownloadProgress = useCallback(
     (_event: Electron.IpcRendererEvent, arg1: ProgressInfo) => {
+      console.log('📥 Download progress:', arg1);
       setProgressInfo(arg1);
     },
     []
@@ -76,6 +99,7 @@ const Update = () => {
 
   const onUpdateDownloaded = useCallback(
     (_event: Electron.IpcRendererEvent, ...args: any[]) => {
+      console.log('✅ Update downloaded successfully', args);
       setProgressInfo({ percent: 100 });
       setModalBtn((state) => ({
         ...state,
@@ -88,13 +112,17 @@ const Update = () => {
   );
 
   useEffect(() => {
-    // Get version information and whether to update
+    console.log('🔄 Component mounted, initializing update check...');
+    checkUpdate(false);
+
+    console.log('📡 Setting up update event listeners...');
     window.ipcRenderer.on('update-can-available', onUpdateCanAvailable);
     window.ipcRenderer.on('update-error', onUpdateError);
     window.ipcRenderer.on('download-progress', onDownloadProgress);
     window.ipcRenderer.on('update-downloaded', onUpdateDownloaded);
 
     return () => {
+      console.log('🧹 Cleaning up update event listeners...');
       window.ipcRenderer.off('update-can-available', onUpdateCanAvailable);
       window.ipcRenderer.off('update-error', onUpdateError);
       window.ipcRenderer.off('download-progress', onDownloadProgress);
@@ -110,13 +138,12 @@ const Update = () => {
         okText={modalBtn?.okText}
         onCancel={modalBtn?.onCancel}
         onOk={modalBtn?.onOk}
-        footer={updateAvailable ? /* hide footer */ null : undefined}
+        footer={updateAvailable ? null : undefined}
       >
         <div className="modal-slot">
           {updateError ? (
             <div>
               <p>Error downloading the latest version.</p>
-              {/* <p>{updateError.message}</p> */}
             </div>
           ) : updateAvailable ? (
             <div>
@@ -139,9 +166,9 @@ const Update = () => {
         </div>
       </Modal>
       <Button
-        className="w-full  text-start  border-none hover:bg-gray-200"
+        className="w-full text-start border-none hover:bg-gray-200"
         disabled={checking}
-        onClick={checkUpdate}
+        onClick={() => checkUpdate(true)}
       >
         <CloudUploadOutlined /> {checking ? 'Checking...' : t('Check update')}
       </Button>

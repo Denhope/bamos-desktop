@@ -79,6 +79,7 @@ import ApiSwitcher from './ApiSwitcher';
 import TaskAdministration from '@/modules/TaskAdministration/TaskAdministration';
 import AircraftTypes from '@/modules/AircraftTypes';
 import AircraftRegistration from '@/modules/AircraftRegistration';
+import AutoUpdater from '@/components/update/AutoUpdater';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -593,6 +594,7 @@ const BaseLayout: React.FC = () => {
   const filteredAPN = filterAPNByRole(APN, user.role);
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <AutoUpdater />
       {location.pathname === RouteNames.WEB ? (
         <Header
           className="flex justify-between "
