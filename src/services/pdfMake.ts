@@ -1,12 +1,19 @@
+import pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
-const pdfMake = require('pdfmake/build/pdfmake');
+type PdfFonts = {
+  pdfMake: {
+    vfs: { [key: string]: string };
+  };
+};
 
 console.log('pdfMake:', pdfMake);
 console.log('pdfFonts:', pdfFonts);
 
-if (pdfFonts && pdfFonts.pdfMake && pdfFonts.pdfMake.vfs) {
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+const typedPdfFonts = pdfFonts as PdfFonts;
+
+if (typedPdfFonts?.pdfMake?.vfs) {
+  pdfMake.vfs = typedPdfFonts.pdfMake.vfs;
 } else {
   console.error('pdfFonts.pdfMake.vfs is undefined');
 }
