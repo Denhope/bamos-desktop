@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout Code
@@ -42,12 +42,14 @@ jobs:
       - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Clean Install
         run: |
           rm -rf node_modules
           rm -rf package-lock.json
           npm cache clean --force
+        shell: bash
 
       - name: Install Dependencies
         env:
@@ -56,7 +58,8 @@ jobs:
         run: |
           npm install --force
 
-      - name: Build
+      - name: Build Linux
+        if: matrix.os == 'ubuntu-latest'
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -65,7 +68,17 @@ jobs:
           npm run build:linux
           ls -la release/
 
-      - name: Create Release
+      - name: Build Windows
+        if: matrix.os == 'windows-latest'
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
+        run: |
+          npm run build:win
+          dir release
+
+      - name: Create Release Linux
         if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
         env:
@@ -79,5 +92,21 @@ jobs:
             release/**/*.AppImage
             release/**/*.deb
             release/**/latest-linux.yml
+            release/**/builder-debug.yml
+            release/**/builder-effective-config.yaml
+
+      - name: Create Release Windows
+        if: matrix.os == 'windows-latest'
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            release/**/*.exe
+            release/**/latest.yml
             release/**/builder-debug.yml
             release/**/builder-effective-config.yaml
