@@ -40,7 +40,6 @@
     private: true,
     owner: 'Denhope',
     repo: 'bamos-desktop',
-    token: '${GH_TOKEN}',
   },
   npmRebuild: false,
   buildDependenciesFromSource: true,
