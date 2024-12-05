@@ -15,16 +15,16 @@
     "build:release": "electron-builder build --publish never",
     "dev": "vite",
     "preview": "vite preview",
-    "postinstall": "node scripts/postinstall.js",
+    "postinstall": "electron-builder install-app-deps",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
     "lint-fix": "eslint --fix",
     "build:win": "cross-env GH_TOKEN=$(grep GH_TOKEN .env | cut -d '=' -f2) tsc && vite build && electron-builder --win --x64",
-    "rebuild": "electron-rebuild -f -w canvas",
+    "rebuild": " electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview",
-    "build:linux": "tsc && vite build && electron-builder --linux"
+    "build:linux": "cross-env GH_TOKEN=$(grep GH_TOKEN .env | cut -d '=' -f2) tsc && vite build && electron-builder --linux"
   },
   "dependencies": {
     "@ant-design/charts": "^2.0.2",
