@@ -1,21 +1,20 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
-type PdfFonts = {
-  pdfMake: {
-    vfs: { [key: string]: string };
-  };
-};
+interface VFSFonts {
+  [key: string]: string;
+}
 
 console.log('pdfMake:', pdfMake);
 console.log('pdfFonts:', pdfFonts);
 
-const typedPdfFonts = pdfFonts as PdfFonts;
+// Безопасное приведение типов с проверкой
+const vfs = (pdfFonts as any)?.pdfMake?.vfs as VFSFonts;
 
-if (typedPdfFonts?.pdfMake?.vfs) {
-  pdfMake.vfs = typedPdfFonts.pdfMake.vfs;
+if (vfs) {
+  pdfMake.vfs = vfs;
 } else {
-  console.error('pdfFonts.pdfMake.vfs is undefined');
+  console.error('Virtual file system fonts are not available');
 }
 
 console.log('pdfMake.vfs:', pdfMake.vfs);
