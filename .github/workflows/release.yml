@@ -66,6 +66,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=8192
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
         run: |
+          export GH_TOKEN=${{ secrets.GH_TOKEN }}
           npm run build:linux
           ls -la release/
 
@@ -77,6 +78,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=8192
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
         run: |
+          $env:GH_TOKEN="${{ secrets.GH_TOKEN }}"
           npm run build:win
           dir release
 
