@@ -15,16 +15,16 @@
     "build:release": "electron-builder build --publish never",
     "dev": "vite",
     "preview": "vite preview",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "node scripts/postinstall.js",
     "e2e": "playwright test",
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
     "lint-fix": "eslint --fix",
-    "build:win": "cross-env GH_TOKEN=$(grep GH_TOKEN .env | cut -d '=' -f2) tsc && vite build && electron-builder --win --x64",
-    "rebuild": " electron-rebuild -f -w canvas",
+    "build:win": "tsc && vite build && electron-builder --win --x64",
+    "rebuild": "electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview",
-    "build:linux": "cross-env GH_TOKEN=$(grep GH_TOKEN .env | cut -d '=' -f2) tsc && vite build && electron-builder --linux"
+    "build:linux": "tsc && vite build && electron-builder --linux"
   },
   "dependencies": {
     "@ant-design/charts": "^2.0.2",
@@ -36,7 +36,6 @@
     "@reduxjs/toolkit": "^2.1.0",
     "@types/jspdf": "^2.0.0",
     "@types/lodash.get": "^4.4.9",
-    "@types/pdfmake": "^0.2.9",
     "@types/qrcode": "^1.5.5",
     "@types/react-highlight-words": "^0.16.7",
     "@types/react-router-dom": "^5.3.3",
@@ -66,6 +65,7 @@
     "pdfjs-dist": "^3.11.174",
     "pdfkit": "^0.15.0",
     "pdfmake": "^0.2.10",
+    "@types/pdfmake": "^0.2.9",
     "qrcode": "^1.5.3",
     "qrcode.react": "^3.1.0",
     "react-dnd": "^16.0.1",
@@ -115,7 +115,6 @@
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.16",
-    "cross-env": "^7.0.3",
     "electron": "^28.3.3",
     "electron-builder": "^24.13.3",
     "electron-rebuild": "^3.2.9",
@@ -137,8 +136,7 @@
     "vite-plugin-electron": "^0.28.7",
     "vite-plugin-electron-renderer": "^0.14.5",
     "vite-plugin-node-polyfills": "^0.19.0",
-    "vite-plugin-require-transform": "^1.0.21",
-    "dotenv": "^16.0.0"
+    "vite-plugin-require-transform": "^1.0.21"
   },
   "canvas_binary_host_mirror": "https://github.com/node-gfx/node-canvas-prebuilt/releases/download/"
 }
