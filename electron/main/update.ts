@@ -7,25 +7,48 @@ import type {
 } from 'electron-updater';
 
 const { autoUpdater } = createRequire(import.meta.url)('electron-updater');
+const log = require('electron-log');
 
 export function update(win: Electron.BrowserWindow) {
-  // When set to false, the update download will be triggered through the API
+  // Настройка логирования
+  autoUpdater.logger = log;
+  autoUpdater.logger.transports.file.level = 'debug';
+
+  // Базовые настройки
   autoUpdater.autoDownload = false;
   autoUpdater.disableWebInstaller = false;
   autoUpdater.allowDowngrade = false;
 
-  // start check
-  autoUpdater.on('checking-for-update', function () {});
-  // update available
+  // Добавляем GitHub токен для приватного репозитория
+  if (process.env.GH_TOKEN) {
+    log.info('Setting up GitHub token for private repository');
+    autoUpdater.requestHeaders = {
+      Authorization: `token ${process.env.GH_TOKEN}`,
+    };
+  }
+
+  // Добавляем обработку ошибок
+  autoUpdater.on('error', (error: any) => {
+    log.error('Error in auto-updater:', error);
+    win.webContents.send('update-error', error);
+  });
+
+  // Остальные обработчики событий
+  autoUpdater.on('checking-for-update', () => {
+    log.info('Checking for updates...');
+  });
+
   autoUpdater.on('update-available', (arg: UpdateInfo) => {
+    log.info('Update available:', arg);
     win.webContents.send('update-can-available', {
       update: true,
       version: app.getVersion(),
       newVersion: arg?.version,
     });
   });
-  // update not available
+
   autoUpdater.on('update-not-available', (arg: UpdateInfo) => {
+    log.info('Update not available:', arg);
     win.webContents.send('update-can-available', {
       update: false,
       version: app.getVersion(),
@@ -33,43 +56,46 @@ export function update(win: Electron.BrowserWindow) {
     });
   });
 
-  // Checking for updates
+  // IPC handlers
   ipcMain.handle('check-update', async () => {
     if (!app.isPackaged) {
       const error = new Error(
         'The update feature is only available after the package.'
       );
+      log.error(error);
       return { message: error.message, error };
     }
 
     try {
+      log.info('Manually checking for updates...');
       return await autoUpdater.checkForUpdatesAndNotify();
     } catch (error) {
+      log.error('Update check failed:', error);
       return { message: 'Network error', error };
     }
   });
 
-  // Start downloading and feedback on progress
   ipcMain.handle('start-download', (event: Electron.IpcMainInvokeEvent) => {
+    log.info('Starting update download...');
     startDownload(
       (error, progressInfo) => {
         if (error) {
-          // feedback download error message
+          log.error('Download error:', error);
           event.sender.send('update-error', { message: error.message, error });
         } else {
-          // feedback update progress message
+          log.info('Download progress:', progressInfo);
           event.sender.send('download-progress', progressInfo);
         }
       },
       () => {
-        // feedback update downloaded message
+        log.info('Update downloaded successfully');
         event.sender.send('update-downloaded');
       }
     );
   });
 
-  // Install now
   ipcMain.handle('quit-and-install', () => {
+    log.info('Quitting and installing update...');
     autoUpdater.quitAndInstall(false, true);
   });
 }
