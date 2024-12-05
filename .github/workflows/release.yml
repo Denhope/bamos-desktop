@@ -38,7 +38,6 @@ jobs:
             mesa-common-dev \
             libglu1-mesa-dev \
             libgl1-mesa-dev
-
       - name: Get version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
@@ -57,31 +56,24 @@ jobs:
           npm_config_build_from_source: true
         run: |
           npm install --force
-
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
         run: |
-          export GH_TOKEN=${{ secrets.GH_TOKEN }}
           npm run build:linux
           ls -la release/
-
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
         run: |
-          $env:GH_TOKEN="${{ secrets.GH_TOKEN }}"
           npm run build:win
           dir release
-
       - name: Create Release Linux
         if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
@@ -98,7 +90,6 @@ jobs:
             release/**/latest-linux.yml
             release/**/builder-debug.yml
             release/**/builder-effective-config.yaml
-
       - name: Create Release Windows
         if: matrix.os == 'windows-latest'
         uses: softprops/action-gh-release@v1
