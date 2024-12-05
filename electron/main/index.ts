@@ -17,6 +17,10 @@ import { fileURLToPath } from 'node:url';
 import { update } from './update';
 // import path from 'path';
 import * as fs from 'fs/promises';
+import { createRequire } from 'node:module';
+
+// Создаем require для ES модулей
+const require = createRequire(import.meta.url);
 
 // // Импортируйте необходимые типы из electron-updater
 // import { autoUpdater, UpdateInfo, ProgressInfo } from 'electron-updater';

@@ -31,3 +31,10 @@ yarn.lock
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+dev-app-update.yml
+prod-app-update.yml
+
+# Env files
+.env
+.env.local
