@@ -1,0 +1,83 @@
+name: Release
+on:
+  push:
+    branches:
+      - test/release
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            libcairo2-dev \
+            libpango1.0-dev \
+            libjpeg-dev \
+            libgif-dev \
+            librsvg2-dev \
+            pkg-config \
+            python3-pip \
+            python3-setuptools \
+            mesa-common-dev \
+            libglu1-mesa-dev \
+            libgl1-mesa-dev
+
+      - name: Get version
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Clean Install
+        run: |
+          rm -rf node_modules
+          rm -rf package-lock.json
+          npm cache clean --force
+
+      - name: Install Dependencies
+        env:
+          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
+          npm_config_build_from_source: true
+        run: |
+          npm install --force
+
+      - name: Build
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
+        run: |
+          npm run build:linux
+          ls -la release/
+
+      - name: Create Release
+        if: matrix.os == 'ubuntu-latest'
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            release/**/*.AppImage
+            release/**/*.deb
+            release/**/latest-linux.yml
+            release/**/builder-debug.yml
+            release/**/builder-effective-config.yaml

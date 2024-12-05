@@ -206,16 +206,16 @@ const template: Electron.MenuItemConstructorOptions[] = [
   {
     label: 'View',
     submenu: [
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: 'CmdOrCtrl+Shift+I',
-        click: () => {
-          const win = BrowserWindow.getFocusedWindow();
-          if (win) {
-            win.webContents.toggleDevTools();
-          }
-        },
-      },
+      // {
+      //   label: 'Toggle Developer Tools',
+      //   accelerator: 'CmdOrCtrl+Shift+I',
+      //   click: () => {
+      //     const win = BrowserWindow.getFocusedWindow();
+      //     if (win) {
+      //       win.webContents.toggleDevTools();
+      //     }
+      //   },
+      // },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',

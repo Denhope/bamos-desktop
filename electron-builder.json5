@@ -5,8 +5,17 @@
   directories: {
     output: 'release/${version}',
   },
-  files: ['dist-electron', 'dist', 'node_modules/**/*'],
-  asarUnpack: ['node_modules/pdfmake/build/vfs_fonts.js'],
+  files: [
+    'dist-electron',
+    'dist',
+    {
+      from: 'node_modules/@napi-rs/canvas/',
+      to: 'lib',
+      filter: ['*.node'],
+    },
+    'node_modules/**/*',
+  ],
+  asarUnpack: ['lib/*.node', 'node_modules/pdfmake/build/vfs_fonts.js'],
   mac: {
     artifactName: '${productName}_${version}.${ext}',
     target: ['dmg', 'zip'],
@@ -29,9 +38,10 @@
   publish: {
     provider: 'generic',
     channel: 'latest',
-    url: 'https://github.com/Denhope/bamos-desktop/releases/download/v0.1.61/',
+    url: 'https://github.com/Denhope/bamos-desktop/releases/latest/download/',
   },
-  npmRebuild: true,
+  npmRebuild: false,
+  buildDependenciesFromSource: true,
   extraResources: [
     {
       from: 'node_modules/canvas/build/Release/',
@@ -39,7 +49,6 @@
       filter: ['*.node'],
     },
   ],
-  /// linux
   linux: {
     target: ['AppImage', 'deb'],
     category: 'Office',
@@ -52,5 +61,6 @@
       Terminal: false,
       Icon: 'bamos',
     },
+    artifactName: '${productName}_${version}.${ext}',
   },
 }

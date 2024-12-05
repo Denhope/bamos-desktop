@@ -116,7 +116,7 @@ const Update = () => {
           {updateError ? (
             <div>
               <p>Error downloading the latest version.</p>
-              <p>{updateError.message}</p>
+              {/* <p>{updateError.message}</p> */}
             </div>
           ) : updateAvailable ? (
             <div>
