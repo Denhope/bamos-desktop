@@ -1,6 +1,6 @@
 {
   "name": "bamos",
-  "version": "0.1.67",
+  "version": "0.1.68",
   "private": true,
   "description": "planeSystem",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "format": "prettier --write --cache .",
     "lint": "eslint --cache .",
     "lint-fix": "eslint --fix",
-    "build:win": "tsc && vite build && electron-builder --win --x64",
+    "build:win": "tsc && vite build && electron-builder --win --x64 --publish always",
     "rebuild": "electron-rebuild -f -w canvas",
     "typecheck": "tsc -p scripts --noEmit && pnpm -r --parallel run typecheck",
     "start": "electron-vite preview",
