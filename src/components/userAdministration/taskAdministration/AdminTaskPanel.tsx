@@ -130,7 +130,7 @@ const validateInterval = (interval: string): boolean => {
     return true;
   }
 
-  // Проверяем ста��дартные форматы (3000 FC, 5000 FH и т.д.)
+  // Проверяем стадартные форматы (3000 FC, 5000 FH и т.д.)
   const standardPattern = /^\d+\s*(FC|FH|MO|YR|WK|DY)$/i;
   return standardPattern.test(trimmedInterval);
 };
@@ -166,7 +166,7 @@ const translations = {
         'Неверный формат интервала: {{value}}. Примеры: 3000 FC, 5000 FH, 12 MO, 1C, 2A, 8C',
       INVALID_INTERVAL_REPEAT_FORMAT:
         'Неверный формат интервала повторения: {{value}}. Примеры: 3000 FC, 5000 FH, 12 MO, 1C, 2A, 8C',
-      INTERVAL_REQUIRED: 'Интервал обязателен для задач типа SMC',
+      INTERVAL_REQUIRED: 'Интервал обя��ателен для задач типа SMC',
       INTERVAL_REPEAT_REQUIRED:
         'Интервал повторения обязателен для задач типа SMC',
       TASK_NUMBER_REQUIRED: 'Номер задачи обязателен',
@@ -200,7 +200,7 @@ interface Zone {
   areaDescription?: string;
 }
 
-// Функция для создания пол��ого номера зоны
+// Функция для создания полго номера зоны
 const createFullZoneNumber = (zone: Zone): string[] => {
   const results: string[] = [];
 
@@ -251,7 +251,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
 
   // Получаем зоны для выбранного типа
   const { data: zones, isLoading: zonesLoading } = useGetFilteredZonesQuery(
-    { acTypeId: selectedAcType },
+    { acTypeId: selectedAcType || values?.acTypeId },
     { skip: !selectedAcType }
   );
 
@@ -426,38 +426,160 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
       headerName: `${t('REVISION')}`,
       filter: true,
     },
-    { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
+    {
+      field: 'zonesID',
+      headerName: `${t('ZONE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return '';
+
+        return params.value
+          .map((zoneId: string) => {
+            const zone = zones?.find((z) => z._id === zoneId);
+            if (!zone) return '';
+
+            // Возвращаем только последний непустой номер зоны
+            if (zone.areaNbr) {
+              return String(zone.areaNbr).padStart(3, '0');
+            }
+            if (zone.subZoneNbr) {
+              return String(zone.subZoneNbr).padStart(3, '0');
+            }
+            return String(zone.majoreZoneNbr).padStart(3, '0');
+          })
+          .filter(Boolean)
+          .join(', ');
+      },
+      // Тултип с полной информацией о зоне
+      tooltipValueGetter: (params: any) => {
+        if (!params.value) return '';
+
+        return params.value
+          .map((zoneId: string) => {
+            const zone = zones?.find((z) => z._id === zoneId);
+            if (!zone) return '';
+
+            const descriptions = [];
+            if (zone.majoreZoneDescription) {
+              descriptions.push(
+                `${zone.majoreZoneNbr}: ${zone.majoreZoneDescription}`
+              );
+            }
+            if (zone.subZoneDescription) {
+              descriptions.push(
+                `${zone.subZoneNbr}: ${zone.subZoneDescription}`
+              );
+            }
+            if (zone.areaDescription) {
+              descriptions.push(`${zone.areaNbr}: ${zone.areaDescription}`);
+            }
+
+            return descriptions.join(' > ');
+          })
+          .filter(Boolean)
+          .join('\n');
+      },
+    },
+    // { field: 'MPD', headerName: `${t('MPD')}`, filter: true },
     { field: 'amtoss', headerName: `${t('REFERENCE')}`, filter: true },
-    { field: 'ZONE', headerName: `${t('ZONE')}`, filter: true },
+
     { field: 'ACCESS', headerName: `${t('ACCESS')}`, filter: true },
     { field: 'ACCESS_NOTE', headerName: `${t('ACCESS_NOTE')}`, filter: true },
-    { field: 'SKILL_CODE1', headerName: `${t('SKILL_CODE')}`, filter: true },
-    { field: 'TASK_CODE', headerName: `${t('TASK_CODE')}`, filter: true },
     {
-      field: 'SUB TASK_CODE',
-      headerName: `${t('SUB TASK_CODE')}`,
+      field: 'skillCodeID',
+      headerName: `${t('SKILL_CODES')}`,
       filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return '';
+        // Преобразуем массив ID навыков в строку с кодами навыков
+        return params.value
+          .map((skillId: string) => {
+            const skill = skills?.find((s) => s.id === skillId);
+            return skill ? skill.code : '';
+          })
+          .filter(Boolean)
+          .join(', ');
+      },
     },
+    {
+      field: 'code',
+      headerName: `${t('TASK_CODE')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        if (!params.value) return '';
+
+        // Проверяем, является ли значение массивом
+        const codes = Array.isArray(params.value)
+          ? params.value
+          : [params.value];
+
+        return codes
+          .map((codeId: string) => {
+            const taskCode = taskCodes?.find((code) => code.id === codeId);
+            return taskCode ? taskCode.code : '';
+          })
+          .filter(Boolean)
+          .join(', ');
+      },
+      tooltipValueGetter: (params: any) => {
+        if (!params.value) return '';
+
+        // Проверяем, является ли значение массивом
+        const codes = Array.isArray(params.value)
+          ? params.value
+          : [params.value];
+
+        return codes
+          .map((codeId: string) => {
+            const taskCode = taskCodes?.find((code) => code.id === codeId);
+            if (!taskCode) return '';
+            return `${taskCode.code}: ${taskCode.description || ''}`;
+          })
+          .filter(Boolean)
+          .join('\n');
+      },
+    },
+    // {
+    //   field: 'code',
+    //   headerName: `${t('TASK_CODE')}`,
+    //   filter: true,
+    //   valueFormatter: (params: any) => {
+    //     if (!params.value) return '';
+    //     // Преобразуем массив ID навыков в строку с кодами навыков
+    //     return params.value
+    //       .map((skillId: string) => {
+    //         const skill = taskCodes?.find((s) => s.id === skillId);
+    //         return skill ? skill.code : '';
+    //       })
+    //       .filter(Boolean)
+    //       .join(', ');
+    //   },
+    //   tooltipValueGetter: (params: any) => {
+    //     if (!params.value) return '';
+
+    //     // Для тултипа показываем описание кода если есть
+    //     const taskCode = taskCodes?.find((code) => code.id === params.value);
+    //     return taskCode?.description || '';
+    //   },
+    // },
     { field: 'PHASES', headerName: `${t('PHASES')}`, filter: true },
-    {
-      field: 'RESTRICTION_1',
-      headerName: `${t('RESTRICTION_1')}`,
-      filter: true,
-    },
     {
       field: 'PREPARATION_CODE',
       headerName: `${t('PREPARATION_CODE')}`,
       filter: true,
     },
     {
-      field: 'REFERENCE_2',
-      headerName: `${t('REFERENCE_2')}`,
-      filter: true,
-    },
-    {
       field: 'mainWorkTime',
       headerName: `${t('MHS')}`,
       filter: true,
+    },
+    {
+      field: 'isCriticalTask',
+      headerName: `${t('CRITICAL TASK')}`,
+      filter: true,
+      valueFormatter: (params: any) => {
+        return params.value ? t('YES') : t('NO');
+      },
     },
     {
       field: 'createDate',
@@ -498,8 +620,8 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     if (!skills) return [];
 
     return skills.map((skill) => [
-      skill.code,
-      skill.name || skill.description || skill.code,
+      skill?.code,
+      skill?.description || skill?.code,
     ]);
   }, [skills]);
 
@@ -1302,7 +1424,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         '2. Выберите MPD коды для импорта',
         '3. Заполните седующие обязательные поля:',
         '   - taskNumber: Уникальный номер задачи (например, SMC-001)',
-        '   - taskDescription: Подрбное описание работы',
+        '   - taskDescription: Подрбное опи��ание работы',
         '   - code: Код типа задачи из списка доступных',
         '   - mainWorkTime: Время выполнения в часах',
         '   - skillCodeID: Коды требуемых специальностей через запятую',
@@ -1361,6 +1483,43 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         '4. Проверьте данные в предпросмотре',
         '5. Исправьте ошибки если они есть',
         '6. Нажмите Import для завершения',
+      ],
+      MATERIALS_SINGLE: [
+        '1. Выберите тип воздушного судна (AC Type)',
+        '2. Выберите задачу из списка',
+        '3. Заполните следующие обязательные поля:',
+        '   - partNumberID: Номер д��тали из списка доступных',
+        '   - quantity: Количество (положительное число, до 3 знаков после запятой)',
+        '   - isRequired: Обязательность детали (true/false)',
+        '4. Загрузите заполненный файл',
+        '5. Проверьте данные в предпросмотре',
+        '6. Исправьте ошибки если они есть',
+        '7. Нажмите Import для завершения',
+        '',
+        'Примечания:',
+        '- Номера деталей должны существовать в системе',
+        '- Количество может быть целым или дробным (например: 1, 1.5, 0.75)',
+        '- Максимум 3 знака после запятой в количестве',
+        '- Для каждой детали укажите, является ли она обязательной',
+      ],
+      MATERIALS_MULTIPLE: [
+        '1. Заполните следующие обязательные поля:',
+        '   - partNumberID: Номер детали из списка доступных',
+        '   - quantity: Количество (положительное число, до 3 знаков после запятой)',
+        '   - isRequired: Обязательность детали (true/false)',
+        '   - taskNumber: Номер задачи, к которой относится материал',
+        '2. Загрузите заполненный файл',
+        '3. Проверьте данные в предпросмотре',
+        '4. Исправьте ошибки если они есть',
+        '5. Нажмите Import для завершения',
+        '',
+        'Примечания:',
+        '- Номера деталей должны существовать в системе',
+        '- Количество может быть целым или дробным (например: 1, 1.5, 0.75)',
+        '- Максимум 3 знака после запятой в количестве',
+        '- Для каждой детали укажите, является ли она обязательной',
+        '- Номера задач должны существовать в системе',
+        '- Можно добавлять материалы к разным задачам одновременно',
       ],
     }[taskType],
   });
@@ -1435,7 +1594,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
   const validatePartNumber = (partNumber: string) => {
     console.group(`🔍 Validating Part Number: ${partNumber}`);
 
-    // Ищем партномер в списке доступных
+    // Ищем партномер в списке д��ступных
     const foundPart = partNumbers?.find(
       (part) =>
         String(part.PART_NUMBER) === String(partNumber) ||
@@ -1605,7 +1764,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
           throw new Error(t('PLEASE_SELECT_TASK_FIRST'));
         }
 
-        // Проверяем существование задачи
+        // Пров��ряем существование задачи
         const taskExists = transformedTasks?.some(
           (task) => task.id === selectedTaskId
         );
@@ -1750,65 +1909,14 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     };
   };
 
-  // Обновляем translations
-  // const translations = {
-  //   ru: {
-  //     // Основные переводы
-  //     PART_NUMBER: 'Номер детали',
-  //     QUANTITY: 'Количество',
-  //     UNIT: 'Единица измерения',
-  //     DESCRIPTION: 'Описане',
-  //     TASK: 'Задача',
-  //     CREATE_DATE: 'Дата создания',
-  //     IMPORT_MATERIALS: 'Импорт материалов',
-  //     MATERIALS_IMPORTED_SUCCESSFULLY: 'Материалы успешно импортированы',
-  //     ERROR_IMPORTING_MATERIALS: 'Ошибка при импорте материалов',
-  //     CLICK_TO_VIEW_MATERIALS_TEMPLATE:
-  //       'Нажмите для просмотра шаблона материалов',
-  //     AVAILABLE_PARTS: 'Доступные детали',
-  //     EXAMPLE: 'Пример заполнения',
-  //     SUCCESS: 'Успешно',
-  //     ERROR: 'Ошибка',
-  //     VALIDATION_ERROR: 'Ошибка валидации',
-  //     PLEASE_CHECK_VALIDATION_RESULTS:
-  //       'Пожалуйста, проверьте результаты валидации',
-
-  //     // Переводы для валидации
-  //     VALIDATION: {
-  //       PART_NUMBER_REQUIRED: 'Номер детали обязателен',
-  //       INVALID_PART_NUMBER: 'Неверный номер детали',
-  //       QUANTITY_REQUIRED: 'Количество обязательно',
-  //       QUANTITY_NOT_NUMBER: 'Количество должно быть числом',
-  //       QUANTITY_MUST_BE_POSITIVE: 'Количество должно быть положительным',
-  //       QUANTITY_MUST_BE_INTEGER: 'Количество должно быть целым числом',
-  //       TASK_ID_REQUIRED: 'ID задачи обязателен',
-  //       INVALID_TASK_ID: 'Неверный ID задачи',
-  //     },
-
-  //     // Описания полей
-  //     FIELD: {
-  //       PART_NUMBER_DESCRIPTION: 'Номер детали из списка доступных',
-  //       QUANTITY_DESCRIPTION: 'Количество (целое положительное число)',
-  //       TASK_DESCRIPTION: 'Задача, к которой относится материал',
-  //     },
-
-  //     // Инструкции
-  //     INSTRUCTIONS: 'Инструкции',
-  //     AVAILABLE_PARTS: 'Доступные детали',
-  //     EXAMPLE: 'Пример заполнения',
-  //     PLEASE_SELECT_TASK_FIRST:
-  //       'Пожалуйста, выберите задачу перед импортом материалов',
-  //     SELECTED_TASK_NOT_FOUND: 'Выбранная задача не найдена',
-  //     TASK_SELECTION_REQUIRED: 'Необходимо выбрать задачу',
-  //   },
-  // };
-
   // Добавляем enum для режимов загрузки
   const [selectedImportMode, setSelectedImportMode] =
     useState<MaterialImportMode>(MaterialImportMode.SELECT_TASK);
 
   // В начале компонента добавляем состояние дя режима импорта
-  const [importMode, setImportMode] = useState<'single' | 'multiple'>('single');
+  const [importMode, setImportMode] = useState<'single' | 'multiple'>(
+    'multiple'
+  );
 
   // Добавляем эффект для логирования изменений
   useEffect(() => {
@@ -1824,6 +1932,73 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
     console.log('Selecting task:', value);
     setSelectedTaskId(value);
   };
+
+  // Отдельная функция для инструкций по таскам
+  const getTaskInstructionsConfig = (taskType: string) => ({
+    type: 'text',
+    content: {
+      SMC: [
+        // ... существующие инструкции для SMC ...
+      ],
+      HARD_ACCESS: [
+        // ... существующие инструкции для HARD_ACCESS ...
+      ],
+      // ... другие типы тасков ...
+    }[taskType],
+  });
+
+  // Отдельная функция для инструкций по материалам
+  const getMaterialInstructionsConfig = (mode: 'single' | 'multiple') => ({
+    type: 'text',
+    content: {
+      single: [
+        'ВАЖНО: Перед загрузкой материалов необходимо:',
+        '- Загрузить все задачи в систему',
+        '- Убедиться, что все необходимые номера деталей доступны',
+        '',
+        '1. Выберите тип воздушного судна (AC Type)',
+        '2. Выберите задачу из списка',
+        '3. Заполните следующие обязательные поля:',
+        '   - partNumberID: Номер д��тали из списка доступных',
+        '   - quantity: Количество (положительное число, до 3 знаков после запятой)',
+        '   - isRequired: Обязательность детали (true/false)',
+        '4. Загрузите заполненный файл',
+        '5. Проверьте данные в предпросмотре',
+        '6. Исправьте ошибки если они есть',
+        '7. Нажмите Import для завершения',
+        '',
+        'Примечания:',
+        '- Номера деталей должны существовать в системе',
+        '- Количество может быть целым или дробным (например: 1, 1.5, 0.75)',
+        '- Максимум 3 знака после запятой в количестве',
+        '- Для каждой детали укажите, является ли она обязательной',
+      ],
+      multiple: [
+        'ВАЖНО: Перед загрузкой материалов необходимо:',
+        '- Загрузить все задачи в систему',
+        '- Убедиться, что все номера задач существуют',
+        '- Убедиться, что все необходимые номера деталей доступны',
+        '',
+        '1. Заполните следующие обязательные поля:',
+        '   - partNumberID: Номер детали из списка доступных',
+        '   - quantity: Количество (положительное число, до 3 знаков после запятой)',
+        '   - isRequired: Обязательность детали (true/false)',
+        '   - taskNumber: Номер задачи, к которой относится материал',
+        '2. Загрузите заполненный файл',
+        '3. Проверьте данные в предпросмотре',
+        '4. Исправьте ошибки если они есть',
+        '5. Нажмите Import для завершения',
+        '',
+        'Примечания:',
+        '- Номера деталей должны существовать в системе',
+        '- Количество может быть целым или дробным (например: 1, 1.5, 0.75)',
+        '- Максимум 3 знака после запятой в количестве',
+        '- Для каждой детали укажите, является ли она обязательной',
+        '- Номера задач должны существовать в системе',
+        '- Можно добавлять материалы к разным задачам одновременно',
+      ],
+    }[mode],
+  });
 
   return (
     <>
@@ -1842,7 +2017,11 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
         <PermissionGuard requiredPermissions={[Permission.TASK_ACTIONS]}>
           <Space className="gap-6">
             <FileUploaderV2
-              templateConfig={getTemplateConfig(selectedTaskType)}
+              templateConfig={{
+                ...getTemplateConfig(selectedTaskType),
+                additionalInstructions:
+                  getTaskTypeInstructions(selectedTaskType),
+              }}
               onFileProcessed={handleAddMultiItems}
               buttonText="IMPORT_TASKS"
               modalTitle="IMPORT_TASKS"
@@ -1874,6 +2053,7 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
 
             <Space direction="horizontal" size="small">
               <Switch
+                disabled
                 checkedChildren={t('SINGLE')}
                 unCheckedChildren={t('MULTIPLE')}
                 defaultChecked
@@ -1883,7 +2063,25 @@ const AdminTaskPanel: React.FC<AdminPanelProps> = ({ values, isLoadingF }) => {
                 }}
               />
               <FileUploaderV2
-                templateConfig={getMaterialsTemplateConfig()}
+                templateConfig={{
+                  ...getMaterialsTemplateConfig(),
+                  additionalInstructions: {
+                    tabs: [
+                      {
+                        key: 'instructions',
+                        label: t('INSTRUCTIONS'),
+                        content: getMaterialInstructionsConfig(
+                          importMode === 'single' ? 'single' : 'multiple'
+                        ),
+                      },
+                      {
+                        key: 'available_parts',
+                        label: t('AVAILABLE_PARTS'),
+                        content: getPartsTableConfig(),
+                      },
+                    ],
+                  },
+                }}
                 onFileProcessed={handleAddMaterials}
                 buttonText="IMPORT_MATERIALS"
                 modalTitle="IMPORT_MATERIALS"
