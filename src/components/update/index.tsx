@@ -144,6 +144,7 @@ const Update = () => {
           {updateError ? (
             <div>
               <p>Error downloading the latest version.</p>
+              <p>{JSON.stringify(updateError, null, 2)}</p>
             </div>
           ) : updateAvailable ? (
             <div>
