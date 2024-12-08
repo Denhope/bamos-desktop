@@ -1642,16 +1642,20 @@ export const transformToPickSlipItemBooked = (data: any[]): any[] => {
         projectTaskWO: bookedItem.projectTaskID?.taskWO,
         registrationNumber: bookedItem?.projectID?.acRegistrationNumber,
         PART_NUMBER_BOOKED: bookedItem?.storeItemID?.partID?.PART_NUMBER,
-        DESCRIPTION: bookedItem?.storeItemID?.NAME_OF_MATERIAL,
-        GROUP: bookedItem?.storeItemID?.GROUP,
+        DESCRIPTION:
+          bookedItem?.storeItemID?.partID?.NAME_OF_MATERIAL ||
+          bookedItem?.storeItemID?.partID?.DESCRIPTION,
+        GROUP: bookedItem?.storeItemID?.partID?.GROUP,
         CONDITION: bookedItem?.storeItemID?.CONDITION,
-        TYPE: bookedItem?.storeItemID?.TYPE,
+        TYPE: bookedItem?.storeItemID?.partID?.TYPE,
         SERIAL_NUMBER:
           bookedItem?.storeItemID?.SERIAL_NUMBER ||
           bookedItem?.storeItemID?.SUPPLIER_BATCH_NUMBER,
         PRODUCT_EXPIRATION_DATE:
           bookedItem?.storeItemID?.PRODUCT_EXPIRATION_DATE,
         UNIT_OF_MEASURE: bookedItem?.requirementID?.unit,
+        UNIT_OF_MEASURE_BOOKED:
+          bookedItem?.storeItemID?.partID?.UNIT_OF_MEASURE,
         LOCAL_ID: bookedItem?.storeItemID?.LOCAL_ID,
         OWNER: bookedItem?.storeItemID?.locationID?.ownerID?.title,
         STORE: bookedItem?.storeItemID?.storeID?.storeShortName,

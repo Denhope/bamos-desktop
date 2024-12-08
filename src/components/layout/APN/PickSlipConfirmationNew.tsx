@@ -521,7 +521,7 @@ const PickSlipConfirmationNew: FC = () => {
       width: 130,
     },
     {
-      field: 'UNIT_OF_MEASURE',
+      field: 'UNIT_OF_MEASURE_BOOKED',
       editable: false,
       filter: false,
       headerName: `${t('UOM')}`,
