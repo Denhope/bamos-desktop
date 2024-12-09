@@ -33,7 +33,7 @@ import { ProFormSelect } from '@ant-design/pro-components';
 import { useGlobalState } from '@/components/woAdministration/GlobalStateContext';
 import { updateFilePrintAsAttachment } from '@/utils/api/thunks';
 import { useGetPlanesQuery } from '@/features/acAdministration/acApi';
-
+import { useGetCustomerCodesQuery } from '@/features/customerCodeAdministration/customerCodeApi';
 // types.ts
 export interface FileData {
   _id: string;
@@ -90,11 +90,13 @@ const FileListE: React.FC<FileListEProps> = ({
   const [newFile, setNewFile] = useState<Partial<NewFileData> | null>(null);
   const [uploadFile, setUploadFile] = useState<RcFile | null>(null);
   const dispatch = useAppDispatch();
-  // Пример данных для Select
-  const customerOptions = [
-    { id: '66a7c334af08e2143903684a', name: 'LCV' },
-    { id: '66a9eec7af08e2143903688b', name: 'THY' },
-  ];
+  const { data: customerCodes, isLoading: isCustomerCodesLoading } =
+    useGetCustomerCodesQuery({});
+  const customerOptions =
+    customerCodes?.map((code) => ({
+      value: code.id,
+      label: code?.prefix, // Используем customerName, если оно есть, иначе используем code
+    })) || [];
 
   const typeOptions = [
     { id: 'TASK_CARD', name: 'TASK CARD' },
@@ -336,13 +338,11 @@ const FileListE: React.FC<FileListEProps> = ({
         >
           {isCuctomerCode && (
             <Form.Item label={`${t('CUSTOMER ID')}`} name="customerCodeID">
-              <Select allowClear placeholder="Выберите значение">
-                {customerOptions.map((option) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Select
+                allowClear
+                placeholder="Выберите значение"
+                options={customerOptions}
+              />
             </Form.Item>
           )}
           <Form.Item

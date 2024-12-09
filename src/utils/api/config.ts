@@ -9,7 +9,7 @@ const config: Config = {
   apiUrls: [
     'http://172.16.30.72:4000',
     'http://192.168.74.14',
-    'http://82.209.232.250:4000',
+    'http://localhost:80',
   ],
   currentApiUrl: 'http://172.16.30.72:4000',
 };

@@ -406,7 +406,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   name="customerWO"
                   label={t('CUSTOMER WO No')}
                 />
-                {/* <ProFormSelect
+                <ProFormSelect
                   showSearch
                   rules={[{ required: true }]}
                   name="customerID"
@@ -423,7 +423,7 @@ const ProjectForm: FC<UserFormProps> = ({ project, onSubmit }) => {
                   valueEnum={planesValueEnum}
                   onChange={(value: any) => setSelectedAcTypeID(value)}
                   // disabled={!acTypeID} // Disable the select if acTypeID is not set
-                /> */}
+                />
               </ProFormGroup>
               <ProFormTextArea
                 width={'xl'}

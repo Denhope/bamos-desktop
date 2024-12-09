@@ -22,7 +22,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { IProjectItem } from '@/models/AC';
-import FileUploader from '../../shared/FileUploader';
+import FileUploaderV2 from '@/components/shared/FileUploaderV2';
 import ProjectWPAdministrationTree from './ProjectWPAdministrationTree';
 import ProjectWPAdministrationForm from './ProjectWPAdministrationForm';
 import {
@@ -52,24 +52,75 @@ import {
 } from '@/services/utilites';
 import CircleTaskRenderer from './CircleTaskRenderer';
 import UniversalAgGrid from '@/components/shared/UniversalAgGrid';
+import { useGetACTypesQuery } from '@/features/acTypeAdministration/acTypeApi';
+import { useGetMPDCodesQuery } from '@/features/MPDAdministration/mpdCodesApi';
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface AdditionalSelect {
+  key: string;
+  label: string;
+  options: SelectOption[];
+  required?: boolean;
+  width?: number;
+  mode?: 'multiple' | 'single';
+  dependsOn?: string;
+}
+
+interface Project {
+  status: string;
+  projectType: string;
+  planeId?: {
+    _id: string;
+  };
+}
+
 interface AdminPanelRProps {
   projectID: string;
-  project: any;
+  project: Project;
 }
 
 const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
   projectID,
   project,
 }) => {
+  // Все хуки должны быть в начале компонента
+  const { t } = useTranslation();
   const [editingReqCode, setEditingReqCode] = useState<IProjectItem | null>(
     null
   );
-  const { t } = useTranslation();
-
   const [isTreeView, setIsTreeView] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-  // let projectItems = null;
-  // let isLoading = false;
+  const [selectedAcType, setSelectedAcType] = useState<string>('');
+  const [selectedMpdCodes, setSelectedMpdCodes] = useState<string[]>([]);
+
+  // API queries
+  const { data: acTypes } = useGetACTypesQuery({});
+  const { data: mpdCodes } = useGetMPDCodesQuery(
+    { acTypeID: selectedAcType },
+    { skip: !selectedAcType }
+  );
+  const {
+    data: projectItems,
+    isLoading: loading,
+    isFetching,
+    refetch: refetchProjectItems,
+  } = useGetProjectItemsQuery({
+    projectID,
+  });
+
+  // Mutations
+  const [createWO] = useAddProjectItemWOMutation({});
+  const [addProjectItem] = useAddProjectItemMutation({});
+  const [addMultiProjectItems] = useAddMultiProjectItemsMutation({});
+  const [updateProjectItem] = useUpdateProjectItemsMutation();
+  const [reloadProjectItem] = useReloadProjectItemMutation();
+  const [deleteProjectItem] = useDeleteProjectItemMutation();
+  const [addPanels] = useAddProjectPanelsMutation({});
+
   const valueEnumTask: ValueEnumTypeTask = {
     RC: t('TC'),
     CR_TASK: t('CR TASK (CRITICAL TASK/DI)'),
@@ -81,28 +132,10 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     HARD_ACCESS: t('HARD ACCESS'),
   };
 
-  // if (projectID) {
-  const {
-    data: projectItems,
-    isLoading: loading,
-    isFetching: isFetching,
-    refetch: refetchProjectItems,
-  } = useGetProjectItemsQuery({
-    projectID,
-  });
-  // projectItems = data;
-  // isLoading = loading;
-  // }
-  const [createWO] = useAddProjectItemWOMutation({});
-  const [addProjectItem] = useAddProjectItemMutation({});
-  const [addMultiProjectItems] = useAddMultiProjectItemsMutation({});
-  const [updateProjectItem] = useUpdateProjectItemsMutation();
-
-  const [reloadProjectItem] = useReloadProjectItemMutation();
-  const [deleteProjectItem] = useDeleteProjectItemMutation();
   const transformedItems = useMemo(() => {
     return transformToIProjectItem(projectItems || []);
   }, [projectItems]);
+
   const handleCreate = () => {
     setEditingReqCode(null);
   };
@@ -110,7 +143,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
   const handleEdit = (reqCode: IProjectItem) => {
     setEditingReqCode(reqCode);
   };
-  const [addPanels] = useAddProjectPanelsMutation({});
+
   const handleDelete = async (ids: string[]) => {
     const selectedItems = transformedItems.filter((item) =>
       ids.includes(item._id)
@@ -147,6 +180,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
     });
   };
+
   const handleReload = async (ids: string[]) => {
     const selectedItems = transformedItems.filter((item) =>
       ids.includes(item._id)
@@ -183,6 +217,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
     });
   };
+
   const handleGenerateWOTasks = async (ids: any[]) => {
     const selectedItems = transformedItems.filter((item) =>
       ids.includes(item._id)
@@ -234,7 +269,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           message: t('SUCCESSFULLY UPDATED'),
           description: t('Item has been successfully updated.'),
         });
-        // setEditingReqCode(null);
       } else {
         if (project && project.projectType == 'production') {
           await addProjectItem({
@@ -262,8 +296,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             message: t('SUCCESSFULLY UPDATED'),
             description: t('Item has been successfully updated.'),
           });
-
-          // setEditingReqCode(null);
         }
       }
     } catch (error) {
@@ -273,41 +305,49 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       });
     }
   };
+
   const handleAddMultiItems = async (data: any) => {
     try {
-      if (project && project.projectType == 'production') {
-        {
-          await addMultiProjectItems({
-            projectItemsDTO: data,
-            projectID: projectID,
-            planeID: project?.planeId?._id,
-            taskType: 'FC',
-          }).unwrap();
-          notification.success({
-            message: t('SUCCESSFULLY UPDATED'),
-            description: t('Item has been successfully updated.'),
-          });
-        }
-      } else if (
-        (project && project.projectType === 'baseMaintanance') ||
-        (project && project.projectType === 'addWork') ||
-        project.projectType === 'lineMaintanance'
-      ) {
-        await addMultiProjectItems({
-          projectItemsDTO: data,
-          projectID: projectID,
-          planeID: project?.planeId?._id,
-          taskType: 'RC',
-        }).unwrap();
-        notification.success({
-          message: t('SUCCESSFULLY UPDATED'),
-          description: t('Item has been successfully updated.'),
+      if (!selectedAcType || !selectedMpdCodes.length) {
+        notification.error({
+          message: t('VALIDATION_ERROR'),
+          description: t('Please select Aircraft Type and MPD Code'),
         });
+        return;
       }
+
+      const enrichedData = data.map((item: any) => ({
+        ...item,
+        // Обязательные поля
+        acTypeId: selectedAcType,
+        mpdDocumentationId: selectedMpdCodes[0],
+        taskType:
+          item.taskType || (project.projectType === 'production' ? 'FC' : 'RC'),
+        isCriticalTask: item?.isCriticalTask || false,
+
+        // Необязательные поля - добавляем их только если они есть в исходных данных
+        ...(item.taskDescription
+          ? { taskDescription: item.taskDescription }
+          : {}),
+        ...(item.mainWorkTime
+          ? { mainWorkTime: Number(item.mainWorkTime) }
+          : {}),
+      }));
+
+      await addMultiProjectItems({
+        projectItemsDTO: enrichedData,
+        projectID,
+        planeID: project.planeId?._id,
+      }).unwrap();
+
+      notification.success({
+        message: t('SUCCESSFULLY UPDATED'),
+        description: t('Items have been successfully updated.'),
+      });
     } catch (error) {
       notification.error({
         message: t('FAILED TO SAVE'),
-        description: 'There was an error adding Item.',
+        description: 'There was an error adding Items.',
       });
     }
   };
@@ -320,13 +360,38 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
     );
   }
 
+  // Определяем additionalSelects после инициализации хуков
+  // const additionalSelects: AdditionalSelect[] = [
+  //   {
+  //     key: 'acTypeId',
+  //     label: 'SELECT_AC_TYPE',
+  //     options: (acTypes || []).map((acType) => ({
+  //       value: acType.id,
+  //       label: acType.name,
+  //     })),
+  //     required: true,
+  //     width: 400,
+  //   },
+  //   {
+  //     key: 'mpdDocumentationId',
+  //     label: 'SELECT_MPD_CODES',
+  //     options: (mpdCodes || []).map((mpdCode) => ({
+  //       value: mpdCode.id,
+  //       label: mpdCode.code,
+  //     })),
+  //     mode: 'multiple',
+  //     dependsOn: 'acTypeId',
+  //     width: 400,
+  //   },
+  // ];
+
   const columnItems = [
     {
       field: 'readyStatus',
       headerName: ``,
       cellRenderer: CircleTaskRenderer,
       width: 80,
-      filter: 'agSetColumnFilter', // Использование фильтра со списком значений
+      filter: 'agSetColumnFilter',
       sortable: true,
       comparator: (valueA: any, valueB: any) => {
         const colorA = valueA === 'green' ? 1 : 0;
@@ -336,13 +401,11 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
         return colorA > colorB ? -1 : 1;
       },
       valueGetter: (params: any) => {
-        // Определяет значение для фильтрации и сортировки
         return params.data.taskNumberID ? 'green' : 'red';
       },
       filterParams: {
-        values: (params: any) => ['green', 'red'], // Значения для фильтрации
+        values: (params: any) => ['green', 'red'],
         cellRenderer: (params: any) => {
-          // Отображение цветного круга в выпадающем списке фильтра
           const color = params.value;
           const circleStyle = {
             width: '15px',
@@ -364,18 +427,15 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           params?.data?.taskNumberID?.reference &&
           params?.data?.taskNumberID?.reference?.length
             ? params?.data?.taskNumberID?.reference
-            : params?.data?.reference; // Проверяем taskNumberID.reference, затем reference
-        if (!files || files.length === 0) return null; // Проверка на наличие файлов
+            : params?.data?.reference;
+        if (!files || files.length === 0) return null;
 
-        // Предполагаем, что вы хотите взять первый файл из массива
         const file = files[0];
 
         return (
           <div
             className="cursor-pointer hover:text-blue-500"
-            onClick={() => {
-              // handleFileOpenTask(file.fileId, 'uploads', file.filename);
-            }}
+            onClick={() => {}}
           >
             <FileOutlined />
           </div>
@@ -383,7 +443,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
       sortable: true,
       comparator: (valueA: any, valueB: any) => {
-        // Сравниваем по наличию файлов
         const hasFileA = valueA && valueA.length > 0;
         const hasFileB = valueB && valueB.length > 0;
 
@@ -391,7 +450,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
         return hasFileA ? -1 : 1;
       },
       valueGetter: (params: any) => {
-        // Извлекаем значения для сортировки
         const files =
           params?.data?.taskNumberID?.reference &&
           params?.data?.taskNumberID?.reference?.length
@@ -427,14 +485,13 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       filter: true,
       width: 120,
       valueGetter: (params: any) => {
-        const projectItemsWOID = params.data.projectItemsWOID; // Предполагаем, что projectItemsWOID — это массив объектов
+        const projectItemsWOID = params.data.projectItemsWOID;
         if (projectItemsWOID && projectItemsWOID.length > 0) {
-          return projectItemsWOID[0].taskWO; // Возвращаем taskWO первого объекта в массиве
+          return projectItemsWOID[0].taskWO;
         }
-        return null; // Возвращаем null, если массив пуст или не существует
+        return null;
       },
     },
-
     {
       field: 'taskNumber',
       headerName: `${t('TASK No')}`,
@@ -447,7 +504,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       headerName: `${t('TASK DESCREIPTION')}`,
       cellDataType: 'text',
     },
-
     {
       field: 'taskType',
       width: 120,
@@ -461,11 +517,8 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       },
       cellStyle: (params: { value: keyof ValueEnumTypeTask }) => ({
         backgroundColor: getTaskTypeColor(params.value),
-        // color: '#ffffff', // Text color
       }),
-      // hide: true,
     },
-
     {
       field: 'createDate',
       width: 120,
@@ -473,7 +526,7 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       cellDataType: 'date',
       headerName: `${t('CREATE DATE')}`,
       valueFormatter: (params: any) => {
-        if (!params.value) return ''; // Проверка отсутствия значения
+        if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleDateString('ru-RU', {
           year: 'numeric',
@@ -486,6 +539,190 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
       field: 'name',
       headerName: `${t('CREATE BY')}`,
       cellDataType: 'text',
+    },
+  ];
+
+  // Добавляем конфигурацию шаблона
+  const getTemplateConfig = (projectType: string) => ({
+    fields: [
+      ...(projectType === 'baseMaintanance' ||
+      projectType === 'addWork' ||
+      projectType === 'lineMaintanance'
+        ? [
+            {
+              name: 'taskNumber',
+              displayName: t('TASK_NUMBER'),
+              required: true,
+              description: t('TASK_NUMBER_DESCRIPTION'),
+              example: 'TASK-001',
+              width: 20,
+            },
+            {
+              name: 'taskType',
+              displayName: t('TASK_TYPE'),
+              required: true,
+              description: t('TASK_TYPE_DESCRIPTION'),
+              example: 'RC',
+              width: 15,
+            },
+            {
+              name: 'taskDescription',
+              displayName: t('TASK_DESCRIPTION'),
+              required: false,
+              description: t('TASK_DESCRIPTION_HELP'),
+              example: 'Check and inspect...',
+              width: 40,
+            },
+            {
+              name: 'mainWorkTime',
+              displayName: t('MAIN_WORK_TIME'),
+              required: false,
+              description: t('MAIN_WORK_TIME_HELP'),
+              example: '2.5',
+              width: 15,
+            },
+            {
+              name: 'isCriticalTask',
+              displayName: t('IS_CRITICAL_TASK'),
+              required: false,
+              description: t('IS_CRITICAL_TASK_DESCRIPTION'),
+              example: 'false',
+              width: 15,
+            },
+          ]
+        : [
+            {
+              name: 'PART_NUMBER',
+              displayName: t('PART_NUMBER'),
+              required: true,
+              description: t('PART_NUMBER_DESCRIPTION'),
+              example: 'PN12345',
+              width: 20,
+            },
+            {
+              name: 'QUANTITY',
+              displayName: t('QUANTITY'),
+              required: true,
+              description: t('QUANTITY_DESCRIPTION'),
+              example: '1',
+              width: 10,
+            },
+            {
+              name: 'taskType',
+              displayName: t('TASK_TYPE'),
+              required: true,
+              description: t('TASK_TYPE_DESCRIPTION'),
+              example: 'FC',
+              width: 15,
+            },
+            {
+              name: 'taskDescription',
+              displayName: t('TASK_DESCRIPTION'),
+              required: false,
+              description: t('TASK_DESCRIPTION_HELP'),
+              example: 'Install part...',
+              width: 40,
+            },
+            {
+              name: 'mainWorkTime',
+              displayName: t('MAIN_WORK_TIME'),
+              required: false,
+              description: t('MAIN_WORK_TIME_HELP'),
+              example: '1.5',
+              width: 15,
+            },
+            {
+              name: 'isCriticalTask',
+              displayName: t('IS_CRITICAL_TASK'),
+              required: false,
+              description: t('IS_CRITICAL_TASK_DESCRIPTION'),
+              example: 'false',
+              width: 15,
+            },
+          ]),
+    ],
+    templateFileName: `wp_template_${projectType.toLowerCase()}.xlsx`,
+    additionalInstructions: {
+      tabs: [
+        {
+          key: 'instructions',
+          label: t('INSTRUCTIONS'),
+          content: getInstructionsConfig(projectType),
+        },
+        {
+          key: 'taskTypes',
+          label: t('TASK_TYPES'),
+          content: {
+            type: 'text',
+            content: [
+              t('Available task types:'),
+              'FC - Fabrication card',
+              'RC - TC (MPD, Customer MP, Access, CDCCL, ALI, STR inspection)',
+              'NRC_ADD - ADHOC(Adhoc Task)',
+            ],
+          },
+        },
+      ],
+    },
+  });
+
+  // Обновляем инструкции
+  const getInstructionsConfig = (projectType: string) => ({
+    type: 'text',
+    content:
+      projectType === 'baseMaintanance' ||
+      projectType === 'addWork' ||
+      projectType === 'lineMaintanance'
+        ? [
+            '1. Заполните номер задачи в поле taskNumber (обязательно)',
+            '2. Укажите тип задачи в поле taskType (RC, NRC_ADD) - можно указывать разные типы для разных задач (обязательно)',
+            '3. При необходимости добавьте описание задачи в поле taskDescription (необязательно)',
+            '4. При необходимости укажите время выполнения в поле mainWorkTime в часах (необязательно)',
+            '5. Убедитесь, что задача существует в системе',
+            '6. Загрузите заполненный файл',
+            '7. Проверьте данные в предпросмотре',
+            '8. Нажмите Import для завершения',
+            '3. При необходимости укажите критичность задачи в поле isCriticalTask (true/false, по умолчанию false)',
+          ]
+        : [
+            '1. Заполните номер детали в поле PART_NUMBER (обязательно)',
+            '2. Укажите количество в поле QUANTITY (обязательно)',
+            '3. Укажите тип задачи в поле taskType (FC, RC, NRC_ADD) - можно указывать разные типы для разных задач (обязательно)',
+            '4. При необходимости добавьте описание задачи в поле taskDescription (необязательно)',
+            '5. При необходимости укажите время выполнения в поле mainWorkTime в часах (необязательно)',
+            '6. Загрузите заполненный файл',
+            '7. Проверьте данные в предпросмотре',
+            '8. Нажмите Import для завершения',
+            '4. При необходимости укажите критичность задачи в поле isCriticalTask (true/false, по умолчанию false)',
+          ],
+  });
+
+  // Определяем селекты
+  const additionalSelects: AdditionalSelect[] = [
+    {
+      key: 'acTypeId',
+      label: 'SELECT_AC_TYPE',
+      options: (acTypes || []).map(
+        (acType): SelectOption => ({
+          value: acType.id || '',
+          label: acType.name || '',
+        })
+      ),
+      required: true,
+      width: 400,
+    },
+    {
+      key: 'mpdDocumentationId',
+      label: 'SELECT_MPD_CODES',
+      options: (mpdCodes || []).map(
+        (mpdCode): SelectOption => ({
+          value: mpdCode.id || '',
+          label: mpdCode.code || '',
+        })
+      ),
+      mode: 'multiple',
+      dependsOn: 'acTypeId',
+      width: 400,
     },
   ];
 
@@ -505,21 +742,25 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
           </Button>
         </Col>
         <Col>
-          <FileUploader
-            isDisabled={
-              project.status == 'CLOSED' || project.status == 'COMPLETED'
+          <FileUploaderV2
+            templateConfig={getTemplateConfig(project.projectType)}
+            onFileProcessed={handleAddMultiItems}
+            buttonText="IMPORT_WP"
+            modalTitle="IMPORT_WORK_PACKAGES"
+            tooltipText="CLICK_TO_VIEW_WP_TEMPLATE"
+            disabled={
+              project.status === 'CLOSED' || project.status === 'COMPLETED'
             }
-            onFileProcessed={function (data: any[]): void {
-              handleAddMultiItems(data);
+            additionalSelects={additionalSelects}
+            onSelectChange={(key, value) => {
+              if (key === 'acTypeId') {
+                setSelectedAcType(value);
+                setSelectedMpdCodes([]); // Сбрасываем MPD коды при смене типа самолета
+              } else if (key === 'mpdDocumentationId') {
+                setSelectedMpdCodes(value);
+              }
             }}
-            requiredFields={
-              (project && project.projectType === 'baseMaintanance') ||
-              (project && project.projectType === 'addWork') ||
-              project.projectType === 'lineMaintanance'
-                ? ['taskNumber']
-                : ['PART_NUMBER', 'QUANTITY']
-            }
-          ></FileUploader>
+          />
         </Col>
         <Col style={{ textAlign: 'right' }}>
           {
@@ -573,7 +814,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
             </Button>
           </Col>
         </Col>
-
         <Col>
           <Switch
             size="default"
@@ -606,7 +846,6 @@ const ProjectTestWPAdmin: React.FC<AdminPanelRProps> = ({
                 onRowSelect={(selectedRows) => {
                   if (selectedRows.length > 0) {
                     handleEdit(selectedRows[0]);
-                    // setSelectedKeys(selectedRows.map((row) => row.id));
                   }
                 }}
                 isLoading={loading || isFetching}

@@ -1681,6 +1681,7 @@ export const transformToIProjectItem = (data: any[]): any[] => {
     taskType: item.taskType,
     _id: item?.id || item._id,
     reference: item?.reference,
+    isCriticalTask: item?.isCriticalTask || item?.taskNumberID?.isCriticalTask,
   }));
 
   console.log('Output data from transformToIProjectItem:', result); // Вывод результата
